@@ -5,6 +5,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import ShareResultSection from "@/components/ShareResultSection";
+import MysticalOnboarding from "@/components/MysticalOnboarding";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -19,10 +20,12 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!name.trim()) return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
+  };
+
+  const handleOnboardingComplete = () => {
     setSubmitted(true);
     setIsLoading(false);
     setAiLoading(true);
