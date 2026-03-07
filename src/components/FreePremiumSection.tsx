@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Star, Sparkles, Crown } from "lucide-react";
+import { Star, Sparkles, Crown, Gift } from "lucide-react";
+import { isInLaunchPeriod } from "@/lib/launchConfig";
 
 const freeItems = [
   { title: "תובנה יומית לפי המזל", description: "קבלו מסר אסטרולוגי קצר בהתאם למזל שלכם" },
@@ -27,6 +28,8 @@ const premiumPackages = [
     popular: false,
   },
 ];
+
+const isLaunch = isInLaunchPeriod();
 
 const FreePremiumSection = () => {
   return (
@@ -83,14 +86,18 @@ const FreePremiumSection = () => {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Crown className="w-5 h-5 text-gold" />
-            <span className="text-gold font-heading text-sm tracking-widest">✦ פרימיום ✦</span>
+            <span className="text-gold font-heading text-sm tracking-widest">
+              {isLaunch ? "✦ פתוח בחינם לרגל ההשקה ✦" : "✦ פרימיום ✦"}
+            </span>
             <Crown className="w-5 h-5 text-gold" />
           </div>
           <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-4">
             קריאות אישיות מעמיקות
           </h2>
           <p className="text-muted-foreground font-body text-lg max-w-lg mx-auto">
-            חוויה רוחנית בלעדית — מותאמת אישית רק בשבילכם
+            {isLaunch
+              ? "לרגל ההשקה — כל הקריאות הפרימיום פתוחות לכם כמתנה מיוחדת"
+              : "חוויה רוחנית בלעדית — מותאמת אישית רק בשבילכם"}
           </p>
         </motion.div>
 
@@ -109,12 +116,29 @@ const FreePremiumSection = () => {
             >
               {pkg.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gold text-primary-foreground text-xs font-bold font-body">
-                  הכי פופולרי
+                  {isLaunch ? "מומלץ" : "הכי פופולרי"}
                 </div>
               )}
               <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
               <h3 className="font-heading text-lg text-gold mb-2">{pkg.title}</h3>
-              <div className="text-3xl font-bold text-foreground font-body mb-6">{pkg.price}</div>
+
+              {/* Price with launch override */}
+              <div className="mb-6">
+                {isLaunch ? (
+                  <div className="flex flex-col items-center gap-1">
+                    <span className="text-muted-foreground/50 font-body text-lg line-through">{pkg.price}</span>
+                    <div className="flex items-center gap-2">
+                      <Gift className="w-4 h-4 text-gold" />
+                      <span className="font-heading text-2xl text-gold">חינם</span>
+                      <Gift className="w-4 h-4 text-gold" />
+                    </div>
+                    <span className="text-xs text-muted-foreground font-body">לתקופת ההשקה</span>
+                  </div>
+                ) : (
+                  <div className="text-3xl font-bold text-foreground font-body">{pkg.price}</div>
+                )}
+              </div>
+
               <ul className="space-y-2 mb-8 text-right">
                 {pkg.features.map((f) => (
                   <li key={f} className="text-sm text-foreground/70 font-body flex items-center gap-2 justify-end">
@@ -124,7 +148,7 @@ const FreePremiumSection = () => {
                 ))}
               </ul>
               <button className={pkg.popular ? "btn-gold font-body w-full" : "btn-outline-gold font-body w-full"}>
-                הזמינו עכשיו
+                {isLaunch ? "התחילו עכשיו — בחינם" : "הזמינו עכשיו"}
               </button>
             </motion.div>
           ))}
