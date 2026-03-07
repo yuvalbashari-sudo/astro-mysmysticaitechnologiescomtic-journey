@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, MessageCircle, Flame, AlertTriangle, Lightbulb, Crown, Share2, Copy, Check } from "lucide-react";
 import { getSignFromDate, getSignHebrew, getSignSymbol, getCompatibility, CompatibilityResult } from "@/data/compatibilityData";
 import { toast } from "@/components/ui/sonner";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -28,8 +29,16 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     await new Promise((r) => setTimeout(r, 2500));
     const s1 = getSignFromDate(new Date(date1));
     const s2 = getSignFromDate(new Date(date2));
-    setResult({ compatibility: getCompatibility(s1, s2), sign1: s1, sign2: s2 });
+    const compat = getCompatibility(s1, s2);
+    setResult({ compatibility: compat, sign1: s1, sign2: s2 });
     setIsLoading(false);
+    readingsStorage.save({
+      type: "compatibility",
+      title: `התאמה זוגית — ${getSignHebrew(s1)} + ${getSignHebrew(s2)}`,
+      subtitle: `ציון: ${compat.score}%`,
+      symbol: `${getSignSymbol(s1)}💕${getSignSymbol(s2)}`,
+      data: { compatibility: compat, sign1: s1, sign2: s2, date1, date2 },
+    });
   };
 
   const handleClose = () => { onClose(); setTimeout(() => { setResult(null); setDate1(""); setDate2(""); setIsLoading(false); }, 300); };

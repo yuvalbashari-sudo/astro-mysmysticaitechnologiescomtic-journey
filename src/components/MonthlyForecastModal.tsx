@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Sparkles, Heart, Coins, Briefcase, Activity, Eye, Flame, Star, Crown, Share2, Copy, Check } from "lucide-react";
 import { getZodiacSign, ZodiacSign } from "@/data/zodiacData";
 import { toast } from "@/components/ui/sonner";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 interface Props {
   isOpen: boolean;
@@ -55,6 +56,13 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     const sign = getZodiacSign(date);
     setResult(sign);
     setIsLoading(false);
+    readingsStorage.save({
+      type: "forecast",
+      title: `תחזית חודשית — ${sign.hebrewName}`,
+      subtitle: sign.dateRange,
+      symbol: sign.symbol,
+      data: { ...sign, birthDate },
+    });
   };
 
   const handleClose = () => {
