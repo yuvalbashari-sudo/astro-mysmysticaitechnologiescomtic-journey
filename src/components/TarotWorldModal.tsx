@@ -4,6 +4,7 @@ import { X, Sparkles, Crown, Share2, Copy, Check, Lock, ChevronRight, Loader2 } 
 import { spreads, drawCardsForSpread, getInterpretation, type SpreadConfig, type TarotWorldCard } from "@/data/tarotWorldData";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
+import ShareResultSection from "@/components/ShareResultSection";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -659,6 +660,15 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       </motion.p>
                       <p className="font-body text-foreground/30 text-xs">פירוש אישי נוצר עבורכם</p>
                     </div>
+                  )}
+
+                  {/* Share Section */}
+                  {!aiLoading && (aiText || aiError) && (
+                    <ShareResultSection
+                      symbol={drawnCards[0]?.symbol || "🔮"}
+                      title={selectedSpread.hebrewName}
+                      subtitle={`${drawnCards.length} קלפים`}
+                    />
                   )}
 
                   {/* Premium CTA */}
