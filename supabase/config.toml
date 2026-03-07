@@ -2,3 +2,6 @@ project_id = "itowaiysuwaipcfirzmp"
 
 [functions.tarot-reading]
 verify_jwt = false
+
+[functions.mystical-reading]
+verify_jwt = false
