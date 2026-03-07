@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Hand, Heart, Briefcase, Eye, Flame, Crown, Share2, Copy, Check } from "lucide-react";
 import { generatePalmReading, PalmReadingResult } from "@/data/palmData";
 import { toast } from "@/components/ui/sonner";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -27,8 +28,16 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     if (!name.trim()) return;
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 2500));
-    setResult(generatePalmReading(name));
+    const palmResult = generatePalmReading(name);
+    setResult(palmResult);
     setIsLoading(false);
+    readingsStorage.save({
+      type: "palm",
+      title: `קריאת כף יד — ${name}`,
+      subtitle: palmResult.dominantHand,
+      symbol: "✋",
+      data: { ...palmResult, name },
+    });
   };
 
   const handleClose = () => { onClose(); setTimeout(() => { setResult(null); setName(""); setIsLoading(false); }, 300); };

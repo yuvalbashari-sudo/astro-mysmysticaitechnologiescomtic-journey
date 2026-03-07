@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, Sparkles, Eye, Shield, Compass, Flame, Crown, Share2, Copy, Check } from "lucide-react";
 import { getRisingSign, RisingSignResult } from "@/data/risingSignData";
 import { toast } from "@/components/ui/sonner";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -26,8 +27,16 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 2000));
     const [h, m] = birthTime.split(":").map(Number);
-    setResult(getRisingSign(h, m));
+    const rising = getRisingSign(h, m);
+    setResult(rising);
     setIsLoading(false);
+    readingsStorage.save({
+      type: "rising",
+      title: `מזל עולה — ${rising.hebrewName}`,
+      subtitle: `יסוד ${rising.element}`,
+      symbol: rising.symbol,
+      data: { ...rising, birthTime },
+    });
   };
 
   const handleClose = () => { onClose(); setTimeout(() => { setResult(null); setBirthTime(""); setIsLoading(false); }, 300); };

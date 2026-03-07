@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Check } from "lucide-react";
 import { drawTarotCards, TarotCard } from "@/data/tarotData";
 import { toast } from "@/components/ui/sonner";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -23,8 +24,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const handleDraw = async () => {
     setIsLoading(true);
     await new Promise((r) => setTimeout(r, 2500));
-    setCards(drawTarotCards(3));
+    const drawn = drawTarotCards(3);
+    setCards(drawn);
     setIsLoading(false);
+    readingsStorage.save({
+      type: "tarot",
+      title: `פתיחת טארוט`,
+      subtitle: drawn.map(c => c.hebrewName).join(" • "),
+      symbol: "🔮",
+      data: { cards: drawn },
+    });
   };
 
   const handleClose = () => { onClose(); setTimeout(() => { setCards(null); setIsLoading(false); setActiveCard(0); }, 300); };
