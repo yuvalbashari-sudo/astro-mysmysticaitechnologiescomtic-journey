@@ -4,6 +4,7 @@ import heroBg from "@/assets/hero-mystical-bg.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
 import oracle from "@/assets/oracle.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import MonthlyForecastModal from "./MonthlyForecastModal";
 
 const menuItems = [
   { icon: Star, label: "תחזית חודשית לפי תאריך לידה", angle: -72 },
@@ -166,6 +167,7 @@ const EnergyLine = ({ fromX, fromY, isMobile }: { fromX: number; fromY: number; 
 const HeroSection = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [forecastOpen, setForecastOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   // Mouse tracking
@@ -473,6 +475,7 @@ const HeroSection = () => {
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.12, zIndex: 50 }}
+                  onClick={() => { if (i === 0) setForecastOpen(true); }}
                 >
                   <motion.div
                     className={`
