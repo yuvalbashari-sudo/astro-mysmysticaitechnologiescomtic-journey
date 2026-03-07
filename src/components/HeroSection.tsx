@@ -249,7 +249,65 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
       </motion.div>
 
-      {/* ── Layer 2: Living constellations (parallax) ── */}
+      {/* ── Layer 1.5: Aura glow from hands area ── */}
+      <div className="absolute inset-0 pointer-events-none z-[2]">
+        {/* Primary gold aura pulse */}
+        <motion.div
+          className="absolute"
+          style={{
+            left: "50%",
+            top: "55%",
+            width: isMobile ? "200px" : "350px",
+            height: isMobile ? "150px" : "250px",
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(ellipse, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
+            filter: "blur(30px)",
+          }}
+          animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.15, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        />
+        {/* Secondary celestial shimmer */}
+        <motion.div
+          className="absolute"
+          style={{
+            left: "50%",
+            top: "55%",
+            width: isMobile ? "280px" : "480px",
+            height: isMobile ? "200px" : "320px",
+            transform: "translate(-50%, -50%)",
+            background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.08) 0%, hsl(var(--gold) / 0.04) 50%, transparent 70%)",
+            filter: "blur(50px)",
+          }}
+          animate={{ opacity: [0.3, 0.6, 0.3], scale: [1.05, 0.95, 1.05] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        {/* Tiny spark particles from hands */}
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={`hand-spark-${i}`}
+            className="absolute rounded-full bg-gold/50"
+            style={{
+              left: `${48 + (Math.random() - 0.5) * 8}%`,
+              top: `${53 + (Math.random() - 0.5) * 6}%`,
+              width: "3px",
+              height: "3px",
+            }}
+            animate={{
+              opacity: [0, 0.9, 0],
+              y: [0, -(15 + Math.random() * 30)],
+              x: [(Math.random() - 0.5) * 20],
+              scale: [0, 1.5, 0],
+            }}
+            transition={{
+              duration: 2.5 + Math.random() * 1.5,
+              repeat: Infinity,
+              delay: i * 0.7,
+              ease: "easeOut",
+            }}
+          />
+        ))}
+      </div>
+
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={isMobile ? {} : { x: constellationX, y: constellationY }}
