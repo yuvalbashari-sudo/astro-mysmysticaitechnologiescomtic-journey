@@ -1,14 +1,40 @@
 import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { Send, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const LeadSection = () => {
   const [formData, setFormData] = useState({ name: "", birthDate: "", email: "", interest: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // placeholder
-    alert("תודה! נחזור אליכם בהקדם ✦");
+
+    if (!formData.name.trim() || !formData.email.trim()) {
+      toast.error("אנא מלאו שם ואימייל");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from("leads").insert({
+        full_name: formData.name.trim().slice(0, 100),
+        email: formData.email.trim().slice(0, 255),
+        birth_date: formData.birthDate || null,
+        interest: formData.interest || null,
+      });
+
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      toast.success("הפרטים נשלחו בהצלחה! ✦");
+    } catch {
+      toast.error("שגיאה בשליחה, נסו שוב מאוחר יותר");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -30,69 +56,91 @@ const LeadSection = () => {
           </p>
         </motion.div>
 
-        <motion.form
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          onSubmit={handleSubmit}
-          className="mystical-card p-8 md:p-10 space-y-5"
-        >
-          <div>
-            <label className="block text-sm text-gold/80 font-body mb-2">שם מלא</label>
-            <input
-              type="text"
-              className="mystical-input font-body"
-              placeholder="הכניסו את שמכם"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gold/80 font-body mb-2">תאריך לידה</label>
-            <input
-              type="date"
-              className="mystical-input font-body"
-              value={formData.birthDate}
-              onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gold/80 font-body mb-2">אימייל</label>
-            <input
-              type="email"
-              className="mystical-input font-body"
-              placeholder="your@email.com"
-              dir="ltr"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gold/80 font-body mb-2">מה מעניין אתכם?</label>
-            <select
-              className="mystical-input font-body"
-              value={formData.interest}
-              onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+        {isSubmitted ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mystical-card p-12 text-center"
+          >
+            <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
+            <h3 className="font-heading text-2xl text-gold mb-3">תודה רבה! ✦</h3>
+            <p className="text-foreground/70 font-body">
+              קיבלנו את הפרטים שלכם ונחזור אליכם בהקדם עם תובנות מיסטיות מותאמות אישית.
+            </p>
+          </motion.div>
+        ) : (
+          <motion.form
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            onSubmit={handleSubmit}
+            className="mystical-card p-8 md:p-10 space-y-5"
+          >
+            <div>
+              <label className="block text-sm text-gold/80 font-body mb-2">שם מלא</label>
+              <input
+                type="text"
+                required
+                maxLength={100}
+                className="mystical-input font-body"
+                placeholder="הכניסו את שמכם"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gold/80 font-body mb-2">תאריך לידה</label>
+              <input
+                type="date"
+                className="mystical-input font-body"
+                value={formData.birthDate}
+                onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gold/80 font-body mb-2">אימייל</label>
+              <input
+                type="email"
+                required
+                maxLength={255}
+                className="mystical-input font-body"
+                placeholder="your@email.com"
+                dir="ltr"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="block text-sm text-gold/80 font-body mb-2">מה מעניין אתכם?</label>
+              <select
+                className="mystical-input font-body"
+                value={formData.interest}
+                onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
+              >
+                <option value="">בחרו נושא...</option>
+                <option value="astrology">מפת לידה אסטרולוגית</option>
+                <option value="compatibility">התאמה זוגית</option>
+                <option value="tarot">קריאה בטארוט</option>
+                <option value="palm">קריאת כף יד</option>
+                <option value="full">חבילה מלאה</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="btn-gold font-body w-full flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <option value="">בחרו נושא...</option>
-              <option value="astrology">מפת לידה אסטרולוגית</option>
-              <option value="compatibility">התאמה זוגית</option>
-              <option value="tarot">קריאה בטארוט</option>
-              <option value="palm">קריאת כף יד</option>
-              <option value="full">חבילה מלאה</option>
-            </select>
-          </div>
+              <Send className="w-4 h-4" />
+              {isSubmitting ? "שולח..." : "שלחו פרטים"}
+            </button>
 
-          <button type="submit" className="btn-gold font-body w-full flex items-center justify-center gap-2">
-            <Send className="w-4 h-4" />
-            שלחו פרטים
-          </button>
-
-          <p className="text-center text-xs text-muted-foreground font-body mt-4">
-            ✦ הפרטים שלכם שמורים ומאובטחים ✦
-          </p>
-        </motion.form>
+            <p className="text-center text-xs text-muted-foreground font-body mt-4">
+              ✦ הפרטים שלכם שמורים ומאובטחים ✦
+            </p>
+          </motion.form>
+        )}
 
         <motion.div
           initial={{ opacity: 0 }}
