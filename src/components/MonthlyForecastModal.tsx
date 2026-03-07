@@ -24,6 +24,27 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [birthDate, setBirthDate] = useState("");
   const [result, setResult] = useState<ZodiacSign | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const generateShareText = (sign: ZodiacSign) => {
+    const monthName = new Date().toLocaleDateString("he-IL", { month: "long" });
+    return `✨ התחזית החודשית שלי - ${sign.hebrewName} ${sign.symbol}\nחודש ${monthName}\n\n⭐ אישיות: ${sign.personality.slice(0, 80)}...\n❤️ אהבה: ${sign.love.slice(0, 80)}...\n\n🔮 גלו גם את התחזית שלכם בחינם:\n${window.location.origin}`;
+  };
+
+  const handleShareWhatsApp = () => {
+    if (!result) return;
+    const text = generateShareText(result);
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+  };
+
+  const handleCopyLink = async () => {
+    if (!result) return;
+    const text = generateShareText(result);
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    toast("הטקסט הועתק בהצלחה ✦");
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleSubmit = async () => {
     if (!birthDate) return;
