@@ -353,49 +353,7 @@ const HeroSection = () => {
         {/* ── Central mystical scene ── */}
         <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "420px" : "520px" }}>
 
-          {/* Oracle character - desktop (parallax layer) */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, delay: 0.6 }}
-            className="absolute z-10 hidden md:block"
-            style={{ left: "2%", bottom: "0", x: oracleX, y: oracleY }}
-          >
-            {/* Oracle aura glow */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "radial-gradient(ellipse at 50% 40%, hsl(var(--gold) / 0.08) 0%, transparent 60%)",
-              }}
-              animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.05, 1] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.img
-              src={oracle}
-              alt="Oracle"
-              className="h-[440px] lg:h-[500px] object-contain"
-              animate={{
-                y: [0, -6, 0],
-                filter: [
-                  "drop-shadow(0 0 25px hsl(43 80% 55% / 0.15))",
-                  "drop-shadow(0 0 40px hsl(43 80% 55% / 0.25))",
-                  "drop-shadow(0 0 25px hsl(43 80% 55% / 0.15))",
-                ],
-              }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Shimmer overlay when hovering crystal area */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "linear-gradient(135deg, transparent 30%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
-              }}
-              animate={{
-                opacity: hoveredItem !== null ? [0, 0.6, 0] : 0,
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.div>
+          {/* Oracle is now part of the background image */}
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
