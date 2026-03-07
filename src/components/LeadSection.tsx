@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const LeadSection = () => {
-  const [formData, setFormData] = useState({ name: "", birthDate: "", email: "", interest: "" });
+  const [formData, setFormData] = useState({ name: "", birthDate: "", email: "", phone: "", interest: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -23,7 +23,9 @@ const LeadSection = () => {
         full_name: formData.name.trim().slice(0, 100),
         email: formData.email.trim().slice(0, 255),
         birth_date: formData.birthDate || null,
+        phone: formData.phone.trim().slice(0, 20) || null,
         interest: formData.interest || null,
+        message: formData.message.trim().slice(0, 1000) || null,
       });
 
       if (error) throw error;
@@ -99,6 +101,18 @@ const LeadSection = () => {
               />
             </div>
             <div>
+              <label className="block text-sm text-gold/80 font-body mb-2">טלפון</label>
+              <input
+                type="tel"
+                maxLength={20}
+                className="mystical-input font-body"
+                placeholder="050-0000000"
+                dir="ltr"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              />
+            </div>
+            <div>
               <label className="block text-sm text-gold/80 font-body mb-2">אימייל</label>
               <input
                 type="email"
@@ -125,6 +139,17 @@ const LeadSection = () => {
                 <option value="palm">קריאת כף יד</option>
                 <option value="full">חבילה מלאה</option>
               </select>
+            </div>
+            <div>
+              <label className="block text-sm text-gold/80 font-body mb-2">הודעה (אופציונלי)</label>
+              <textarea
+                maxLength={1000}
+                rows={3}
+                className="mystical-input font-body resize-none"
+                placeholder="ספרו לנו מה תרצו לדעת..."
+                value={formData.message}
+                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              />
             </div>
 
             <button
