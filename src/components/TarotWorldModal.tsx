@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Crown, Share2, Copy, Check, Lock, ChevronRight } from "lucide-react";
-import { spreads, drawCardsForSpread, getInterpretation, type SpreadConfig, type SpreadType, type TarotWorldCard } from "@/data/tarotWorldData";
+import { X, Sparkles, Crown, Share2, Copy, Check, Lock, ChevronRight, Loader2 } from "lucide-react";
+import { spreads, drawCardsForSpread, getInterpretation, type SpreadConfig, type TarotWorldCard } from "@/data/tarotWorldData";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 
@@ -55,6 +55,153 @@ const SmokeEffect = () => (
   </div>
 );
 
+// Stream AI reading
+async function streamTarotReading(
+  spreadType: string,
+  cards: { hebrewName: string; symbol: string; positionLabel: string }[],
+  onDelta: (text: string) => void,
+  onDone: () => void,
+  onError: (err: string) => void,
+) {
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
+  try {
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+      },
+      body: JSON.stringify({ spreadType, cards }),
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({ error: "שגיאה לא צפויה" }));
+      onError(errData.error || "שגיאה בשירות");
+      return;
+    }
+
+    if (!resp.body) { onError("No response body"); return; }
+
+    const reader = resp.body.getReader();
+    const decoder = new TextDecoder();
+    let textBuffer = "";
+    let streamDone = false;
+
+    while (!streamDone) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      textBuffer += decoder.decode(value, { stream: true });
+
+      let newlineIndex: number;
+      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+        let line = textBuffer.slice(0, newlineIndex);
+        textBuffer = textBuffer.slice(newlineIndex + 1);
+
+        if (line.endsWith("\r")) line = line.slice(0, -1);
+        if (line.startsWith(":") || line.trim() === "") continue;
+        if (!line.startsWith("data: ")) continue;
+
+        const jsonStr = line.slice(6).trim();
+        if (jsonStr === "[DONE]") { streamDone = true; break; }
+
+        try {
+          const parsed = JSON.parse(jsonStr);
+          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+          if (content) onDelta(content);
+        } catch {
+          textBuffer = line + "\n" + textBuffer;
+          break;
+        }
+      }
+    }
+
+    // Flush remaining
+    if (textBuffer.trim()) {
+      for (let raw of textBuffer.split("\n")) {
+        if (!raw) continue;
+        if (raw.endsWith("\r")) raw = raw.slice(0, -1);
+        if (raw.startsWith(":") || raw.trim() === "") continue;
+        if (!raw.startsWith("data: ")) continue;
+        const jsonStr = raw.slice(6).trim();
+        if (jsonStr === "[DONE]") continue;
+        try {
+          const parsed = JSON.parse(jsonStr);
+          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+          if (content) onDelta(content);
+        } catch { /* ignore */ }
+      }
+    }
+
+    onDone();
+  } catch (e) {
+    onError(e instanceof Error ? e.message : "שגיאה בחיבור");
+  }
+}
+
+// Simple markdown-like renderer for Hebrew mystical text
+function renderMysticalText(text: string) {
+  const lines = text.split("\n");
+  const elements: React.ReactNode[] = [];
+  
+  lines.forEach((line, i) => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      elements.push(<div key={i} className="h-2" />);
+      return;
+    }
+    if (trimmed === "---") {
+      elements.push(<div key={i} className="section-divider max-w-[80px] mx-auto my-6" />);
+      return;
+    }
+    if (trimmed.startsWith("### ✨")) {
+      elements.push(
+        <div key={i} className="mt-6 rounded-xl p-5 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+          <Sparkles className="w-5 h-5 text-gold mx-auto mb-2" />
+          <h3 className="font-heading text-sm text-gold mb-2">{trimmed.replace("### ✨ ", "").replace("### ✨", "")}</h3>
+        </div>
+      );
+      return;
+    }
+    if (trimmed.startsWith("### ")) {
+      elements.push(
+        <div key={i} className="flex items-center gap-3 mt-6 mb-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" }}>
+            <span className="text-lg">{trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
+          </div>
+          <h3 className="font-heading text-base text-gold">{trimmed.replace("### ", "")}</h3>
+        </div>
+      );
+      return;
+    }
+    if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
+      const label = trimmed.slice(2, -2);
+      elements.push(
+        <div key={i} className="flex items-center gap-2 mt-4 mb-1">
+          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
+            <span className="text-xs">{label.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
+          </div>
+          <h4 className="font-heading text-xs text-gold">{label.replace(/[\p{Emoji}]\s?/u, "").trim()}</h4>
+        </div>
+      );
+      return;
+    }
+    if (trimmed.startsWith("״") || trimmed.startsWith('"')) {
+      elements.push(
+        <div key={i} className="rounded-xl p-4 text-center mt-2 mb-2" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+          <p className="text-gold/80 font-body text-sm leading-relaxed italic">{trimmed}</p>
+        </div>
+      );
+      return;
+    }
+    // Regular paragraph
+    elements.push(
+      <p key={i} className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{trimmed.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
+    );
+  });
+
+  return <div className="space-y-0">{elements}</div>;
+}
+
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [phase, setPhase] = useState<Phase>("select");
   const [selectedSpread, setSelectedSpread] = useState<SpreadConfig | null>(null);
@@ -63,6 +210,11 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [shuffleStep, setShuffleStep] = useState(0);
   const [copied, setCopied] = useState(false);
   const [showPremium, setShowPremium] = useState(false);
+  const [aiText, setAiText] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const aiTextRef = useRef("");
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleClose = () => {
     onClose();
@@ -73,13 +225,16 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       setRevealedIndices(new Set());
       setShuffleStep(0);
       setShowPremium(false);
+      setAiText("");
+      setAiLoading(false);
+      setAiError(null);
+      aiTextRef.current = "";
     }, 300);
   };
 
   const handleSelectSpread = (spread: SpreadConfig) => {
     setSelectedSpread(spread);
     setPhase("shuffle");
-    // Run shuffle animation
     let step = 0;
     const interval = setInterval(() => {
       step++;
@@ -97,7 +252,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
     if (!selectedSpread) return;
     if (revealedIndices.has(index)) return;
     
-    // Check premium: if not free, only allow freeRevealCount cards
     if (!selectedSpread.isFree && revealedIndices.size >= selectedSpread.freeRevealCount) {
       setShowPremium(true);
       return;
@@ -110,24 +264,57 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => {
     if (allRevealed && selectedSpread && drawnCards.length > 0) {
-      // Auto transition to result after small delay
       const timer = setTimeout(() => setPhase("result"), 1200);
       return () => clearTimeout(timer);
     }
   }, [allRevealed, selectedSpread, drawnCards]);
 
-  // Save reading when result is shown
+  // Trigger AI when entering result phase
   useEffect(() => {
-    if (phase === "result" && selectedSpread && drawnCards.length > 0) {
-      readingsStorage.save({
-        type: "tarot",
-        title: `טארוט — ${selectedSpread.hebrewName}`,
-        subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
-        symbol: selectedSpread.icon,
-        data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName) },
-      });
+    if (phase === "result" && selectedSpread && drawnCards.length > 0 && !aiText && !aiLoading) {
+      setAiLoading(true);
+      setAiError(null);
+      aiTextRef.current = "";
+
+      const cards = drawnCards.map((c, i) => ({
+        hebrewName: c.hebrewName,
+        symbol: c.symbol,
+        positionLabel: selectedSpread.positionLabels[i],
+      }));
+
+      streamTarotReading(
+        selectedSpread.key,
+        cards,
+        (delta) => {
+          aiTextRef.current += delta;
+          setAiText(aiTextRef.current);
+        },
+        () => {
+          setAiLoading(false);
+          // Save reading
+          readingsStorage.save({
+            type: "tarot",
+            title: `טארוט — ${selectedSpread.hebrewName}`,
+            subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
+            symbol: selectedSpread.icon,
+            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current },
+          });
+        },
+        (err) => {
+          setAiLoading(false);
+          setAiError(err);
+          toast(err);
+        },
+      );
     }
-  }, [phase, selectedSpread, drawnCards]);
+  }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);
+
+  // Auto-scroll during streaming
+  useEffect(() => {
+    if (aiLoading && scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [aiText, aiLoading]);
 
   const handleShare = () => {
     if (!drawnCards.length || !selectedSpread) return;
@@ -137,7 +324,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!drawnCards.length) return;
-    await navigator.clipboard.writeText(`🔮 ${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ")}`);
+    const textToCopy = aiText || drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ");
+    await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true);
     toast("הטקסט הועתק ✦");
     setTimeout(() => setCopied(false), 2000);
@@ -150,6 +338,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           <motion.div className="absolute inset-0 bg-background/85 backdrop-blur-xl" onClick={handleClose} />
           
           <motion.div
+            ref={scrollRef}
             className="relative z-10 w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl"
             style={{
               background: "linear-gradient(160deg, hsl(0 30% 8% / 0.98), hsl(222 47% 6% / 0.99), hsl(0 20% 6% / 0.98))",
@@ -164,7 +353,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
             <Particles />
             <SmokeEffect />
 
-            {/* Close button */}
             <button onClick={handleClose} className="absolute top-4 left-4 z-30 w-9 h-9 rounded-full flex items-center justify-center bg-muted/20 hover:bg-muted/40 transition-colors" style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}>
               <X className="w-4 h-4 text-gold/70" />
             </button>
@@ -173,7 +361,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
               {/* PHASE 1: Selection */}
               {phase === "select" && (
                 <motion.div key="select" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, x: -30 }} className="relative p-6 md:p-10">
-                  {/* Header */}
                   <div className="text-center mb-8">
                     <motion.div
                       className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center relative"
@@ -190,7 +377,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   </div>
                   <div className="section-divider max-w-[150px] mx-auto mb-8" />
 
-                  {/* Spread options grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
                     {spreads.map((spread, i) => (
                       <motion.button
@@ -240,7 +426,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
               {phase === "shuffle" && (
                 <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[400px]">
                   <div className="relative w-32 h-44 mb-8">
-                    {/* Shuffling cards */}
                     {[0, 1, 2, 3, 4].map(i => (
                       <motion.div
                         key={i}
@@ -280,7 +465,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     <p className="text-foreground/50 font-body text-sm">לחצו על כל קלף כדי לחשוף אותו</p>
                   </div>
 
-                  <div className={`flex items-center justify-center gap-4 md:gap-6 flex-wrap mb-8`}>
+                  <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap mb-8">
                     {drawnCards.map((card, i) => {
                       const isRevealed = revealedIndices.has(i);
                       const isLocked = !selectedSpread.isFree && !isRevealed && revealedIndices.size >= selectedSpread.freeRevealCount;
@@ -308,9 +493,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                   backfaceVisibility: "hidden",
                                   background: "linear-gradient(145deg, hsl(0 40% 18%), hsl(0 25% 10%))",
                                   border: "1px solid hsl(var(--gold) / 0.3)",
-                                  boxShadow: isLocked
-                                    ? "0 0 20px hsl(var(--crimson) / 0.15)"
-                                    : "0 0 25px hsl(var(--gold) / 0.15), 0 8px 30px hsl(0 0% 0% / 0.4)",
+                                  boxShadow: isLocked ? "0 0 20px hsl(var(--crimson) / 0.15)" : "0 0 25px hsl(var(--gold) / 0.15), 0 8px 30px hsl(0 0% 0% / 0.4)",
                                 }}
                               >
                                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center" style={{ border: "1px solid hsl(var(--gold) / 0.25)", background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent)" }}>
@@ -339,7 +522,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                               </div>
                             </motion.div>
                           </div>
-                          {/* Glow effect when revealed */}
                           {isRevealed && (
                             <motion.div
                               className="absolute -inset-2 rounded-2xl -z-10"
@@ -354,7 +536,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     })}
                   </div>
 
-                  {/* Premium prompt inline */}
                   <AnimatePresence>
                     {showPremium && (
                       <motion.div
@@ -384,7 +565,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* PHASE 4: Results */}
+              {/* PHASE 4: AI Results */}
               {phase === "result" && selectedSpread && drawnCards.length > 0 && (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-10">
                   {/* Header */}
@@ -395,7 +576,6 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{selectedSpread.hebrewName}</h2>
                     <p className="text-foreground/50 font-body text-sm">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
                     
-                    {/* Share buttons */}
                     <div className="flex items-center justify-center gap-3 mt-4">
                       <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                         <Share2 className="w-3.5 h-3.5" />שתפו
@@ -409,96 +589,84 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
                   <div className="section-divider max-w-[120px] mx-auto mb-8" />
 
-                  {/* Card results */}
-                  <div className="space-y-8">
-                    {drawnCards.map((card, i) => {
-                      const isFreeLocked = !selectedSpread.isFree && i >= selectedSpread.freeRevealCount;
-                      const interp = getInterpretation(card, selectedSpread.key, selectedSpread.positionLabels[i]);
+                  {/* AI Generated Content */}
+                  {aiText ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      {renderMysticalText(aiText)}
                       
-                      return (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.3 }}
-                        >
-                          {/* Card header */}
-                          <div className="flex items-center gap-4 mb-4">
-                            <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 relative" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 20px hsl(var(--gold) / 0.1)" }}>
-                              <motion.span className="text-2xl" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity }}>{card.symbol}</motion.span>
-                            </div>
-                            <div className="text-right">
-                              <h3 className="font-heading text-lg text-gold">{card.hebrewName}</h3>
-                              <span className="font-body text-xs text-foreground/40">{interp.positionLabel}</span>
-                            </div>
-                          </div>
-
-                          {isFreeLocked ? (
-                            /* Locked card - teaser */
-                            <div className="rounded-xl p-6 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                              <p className="text-foreground/40 font-body text-sm leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>
-                                {interp.spreadMeaning.substring(0, 80)}...
-                              </p>
-                              <Lock className="w-5 h-5 text-gold/30 mx-auto mb-2" />
-                              <p className="text-foreground/40 font-body text-xs">
-                                הקלף הזה מחכה לכם בקריאה המלאה ✦
-                              </p>
-                            </div>
-                          ) : (
-                            /* Revealed card - full interpretation */
-                            <div className="space-y-3">
-                              {/* Main meaning */}
-                              <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
-                                    <span className="text-xs">✦</span>
-                                  </div>
-                                  <h4 className="font-heading text-xs text-gold">משמעות הקלף</h4>
-                                </div>
-                                <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.mainMeaning}</p>
-                              </div>
-
-                              {/* Spread-specific meaning */}
-                              <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--crimson) / 0.12)" }}>
-                                    <span className="text-xs">{selectedSpread.icon}</span>
-                                  </div>
-                                  <h4 className="font-heading text-xs text-gold">{selectedSpread.hebrewName} — {interp.positionLabel}</h4>
-                                </div>
-                                <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.spreadMeaning}</p>
-                              </div>
-
-                              {/* Spiritual message */}
-                              <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(215 70% 15% / 0.3), hsl(var(--deep-blue) / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                                <div className="flex items-center gap-2 mb-2">
-                                  <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--celestial) / 0.15)" }}>
-                                    <Sparkles className="w-3 h-3 text-gold" />
-                                  </div>
-                                  <h4 className="font-heading text-xs text-gold">מסר רוחני</h4>
-                                </div>
-                                <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.spiritualMessage}</p>
-                              </div>
-
-                              {/* Advice */}
-                              <div className="rounded-xl p-4 text-center" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                                <p className="text-gold/80 font-body text-sm leading-relaxed italic">״{interp.advice}״</p>
-                              </div>
-                            </div>
-                          )}
-
-                          {i < drawnCards.length - 1 && <div className="section-divider max-w-[80px] mx-auto mt-8" />}
+                      {aiLoading && (
+                        <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                          <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
+                          <span className="font-body text-xs text-gold/50">הקלפים מדברים...</span>
                         </motion.div>
-                      );
-                    })}
-                  </div>
+                      )}
+                    </motion.div>
+                  ) : aiError ? (
+                    /* Fallback to static content on error */
+                    <div className="space-y-8">
+                      <div className="text-center rounded-xl p-4 mb-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                        <p className="text-foreground/50 font-body text-xs">{aiError} — מציג פירוש קלאסי</p>
+                      </div>
+                      {drawnCards.map((card, i) => {
+                        const isFreeLocked = !selectedSpread.isFree && i >= selectedSpread.freeRevealCount;
+                        const interp = getInterpretation(card, selectedSpread.key, selectedSpread.positionLabels[i]);
+                        return (
+                          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.3 }}>
+                            <div className="flex items-center gap-4 mb-4">
+                              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 20px hsl(var(--gold) / 0.1)" }}>
+                                <span className="text-2xl">{card.symbol}</span>
+                              </div>
+                              <div className="text-right">
+                                <h3 className="font-heading text-lg text-gold">{card.hebrewName}</h3>
+                                <span className="font-body text-xs text-foreground/40">{interp.positionLabel}</span>
+                              </div>
+                            </div>
+                            {isFreeLocked ? (
+                              <div className="rounded-xl p-6 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
+                                <p className="text-foreground/40 font-body text-sm leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>{interp.spreadMeaning.substring(0, 80)}...</p>
+                                <Lock className="w-5 h-5 text-gold/30 mx-auto mb-2" />
+                                <p className="text-foreground/40 font-body text-xs">הקלף הזה מחכה לכם בקריאה המלאה ✦</p>
+                              </div>
+                            ) : (
+                              <div className="space-y-3">
+                                <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
+                                  <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.mainMeaning}</p>
+                                </div>
+                                <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                                  <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.spreadMeaning}</p>
+                                </div>
+                                <div className="rounded-xl p-4 text-center" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                                  <p className="text-gold/80 font-body text-sm leading-relaxed italic">״{interp.advice}״</p>
+                                </div>
+                              </div>
+                            )}
+                            {i < drawnCards.length - 1 && <div className="section-divider max-w-[80px] mx-auto mt-8" />}
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    /* Loading state */
+                    <div className="flex flex-col items-center justify-center py-12">
+                      <motion.div
+                        className="w-16 h-16 rounded-full mb-6"
+                        style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
+                        animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                      />
+                      <motion.p className="font-body text-gold/70 text-sm mb-1" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                        הקלפים מגלים את המסר שלהם...
+                      </motion.p>
+                      <p className="font-body text-foreground/30 text-xs">פירוש אישי נוצר עבורכם</p>
+                    </div>
+                  )}
 
-                  {/* Premium CTA at bottom for partial readings */}
-                  {!selectedSpread.isFree && (
+                  {/* Premium CTA */}
+                  {!selectedSpread.isFree && !aiLoading && (aiText || aiError) && (
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      transition={{ delay: 1.5 }}
+                      transition={{ delay: 1 }}
                       className="text-center rounded-xl p-6 mt-8"
                       style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}
                     >
@@ -513,16 +681,18 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     </motion.div>
                   )}
 
-                  {/* New reading button */}
-                  <div className="text-center mt-6">
-                    <motion.button
-                      onClick={() => { setPhase("select"); setSelectedSpread(null); setDrawnCards([]); setRevealedIndices(new Set()); setShowPremium(false); }}
-                      className="font-body text-xs text-gold/50 hover:text-gold transition-colors"
-                      whileHover={{ scale: 1.05 }}
-                    >
-                      ← קריאה חדשה
-                    </motion.button>
-                  </div>
+                  {/* New reading */}
+                  {!aiLoading && (
+                    <div className="text-center mt-6">
+                      <motion.button
+                        onClick={() => { setPhase("select"); setSelectedSpread(null); setDrawnCards([]); setRevealedIndices(new Set()); setShowPremium(false); setAiText(""); setAiError(null); aiTextRef.current = ""; }}
+                        className="font-body text-xs text-gold/50 hover:text-gold transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        ← קריאה חדשה
+                      </motion.button>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
