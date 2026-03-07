@@ -5,6 +5,10 @@ import crystalBall from "@/assets/crystal-ball.png";
 import oracle from "@/assets/oracle.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import MonthlyForecastModal from "./MonthlyForecastModal";
+import RisingSignModal from "./RisingSignModal";
+import CompatibilityModal from "./CompatibilityModal";
+import TarotModal from "./TarotModal";
+import PalmReadingModal from "./PalmReadingModal";
 
 const menuItems = [
   { icon: Star, label: "תחזית חודשית לפי תאריך לידה", angle: -72 },
@@ -168,6 +172,10 @@ const HeroSection = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
+  const [risingOpen, setRisingOpen] = useState(false);
+  const [compatibilityOpen, setCompatibilityOpen] = useState(false);
+  const [tarotOpen, setTarotOpen] = useState(false);
+  const [palmOpen, setPalmOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   // Mouse tracking
@@ -475,7 +483,7 @@ const HeroSection = () => {
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.12, zIndex: 50 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); }}
+                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 >
                   <motion.div
                     className={`
@@ -588,6 +596,10 @@ const HeroSection = () => {
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
+      <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
+      <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
+      <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
+      <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
     </section>
   );
 };
