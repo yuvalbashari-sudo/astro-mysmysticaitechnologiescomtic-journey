@@ -6,6 +6,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import ShareResultSection from "@/components/ShareResultSection";
+import MysticalOnboarding from "@/components/MysticalOnboarding";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -22,10 +23,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   const monthName = new Date().toLocaleDateString("he-IL", { month: "long" });
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!birthDate) return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
+  };
+
+  const handleOnboardingComplete = () => {
     const date = new Date(birthDate);
     const sign = getZodiacSign(date);
     setSignInfo({ name: sign.hebrewName, symbol: sign.symbol, dateRange: sign.dateRange, element: sign.element });
@@ -104,9 +107,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   <p className="text-[11px] text-muted-foreground font-body mt-6">✦ ניתוח מיסטי מבוסס על המזל שלכם — לגמרי בחינם ✦</p>
                 </motion.div>
               ) : isLoading ? (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[300px]">
-                  <motion.div className="w-20 h-20 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent)", border: "1px solid hsl(var(--gold) / 0.3)" }} animate={{ scale: [1, 1.2, 1], boxShadow: ["0 0 20px hsl(43 80% 55% / 0.15)", "0 0 50px hsl(43 80% 55% / 0.35)", "0 0 20px hsl(43 80% 55% / 0.15)"] }} transition={{ duration: 1.5, repeat: Infinity }} />
-                  <motion.p className="font-body text-gold/80 text-base" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>הכוכבים מפענחים את המסר שלכם...</motion.p>
+                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <MysticalOnboarding onComplete={handleOnboardingComplete} />
                 </motion.div>
               ) : signInfo ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10">

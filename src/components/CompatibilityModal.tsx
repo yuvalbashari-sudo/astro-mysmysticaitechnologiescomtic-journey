@@ -6,6 +6,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import ShareResultSection from "@/components/ShareResultSection";
+import MysticalOnboarding from "@/components/MysticalOnboarding";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -21,10 +22,12 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!date1 || !date2) return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, 1500));
+  };
+
+  const handleOnboardingComplete = () => {
     const s1 = getSignFromDate(new Date(date1));
     const s2 = getSignFromDate(new Date(date2));
     const compat = getCompatibility(s1, s2);
@@ -104,9 +107,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />גלו את ההתאמה שלנו</motion.button>
                 </motion.div>
               ) : isLoading ? (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[300px]">
-                  <motion.div className="w-20 h-20 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.2), transparent)", border: "1px solid hsl(var(--crimson) / 0.3)" }} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
-                  <motion.p className="font-body text-gold/80 text-base" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>בודקים את ההתאמה הקוסמית ביניכם...</motion.p>
+                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <MysticalOnboarding onComplete={handleOnboardingComplete} />
                 </motion.div>
               ) : matchInfo ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10">
