@@ -1,8 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
-import heroBg from "@/assets/hero-mystical-bg.jpg";
+import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
-import oracle from "@/assets/oracle.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import RisingSignModal from "./RisingSignModal";
