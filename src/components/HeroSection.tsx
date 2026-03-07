@@ -571,21 +571,7 @@ const HeroSection = () => {
             })}
           </motion.div>
 
-          {/* Oracle on mobile */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 0.7, x: 0 }}
-            transition={{ duration: 1.2, delay: 0.8 }}
-            className="absolute z-10 md:hidden"
-            style={{ right: "-10%", bottom: "5%" }}
-          >
-            <img
-              src={oracle}
-              alt="Oracle"
-              className="h-[200px] object-contain opacity-60"
-              style={{ filter: "drop-shadow(0 0 20px hsl(43 80% 55% / 0.15))" }}
-            />
-          </motion.div>
+          {/* Oracle on mobile - part of background */}
         </div>
 
         {/* CTAs */}
