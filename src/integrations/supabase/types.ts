@@ -22,6 +22,8 @@ export type Database = {
           full_name: string
           id: string
           interest: string | null
+          message: string | null
+          phone: string | null
         }
         Insert: {
           birth_date?: string | null
@@ -30,6 +32,8 @@ export type Database = {
           full_name: string
           id?: string
           interest?: string | null
+          message?: string | null
+          phone?: string | null
         }
         Update: {
           birth_date?: string | null
@@ -38,6 +42,8 @@ export type Database = {
           full_name?: string
           id?: string
           interest?: string | null
+          message?: string | null
+          phone?: string | null
         }
         Relationships: []
       }
