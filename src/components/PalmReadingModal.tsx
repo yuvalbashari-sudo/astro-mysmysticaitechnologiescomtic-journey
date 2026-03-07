@@ -97,9 +97,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                   <p className="text-[11px] text-muted-foreground font-body mt-6">✦ קריאה מיסטית מבוססת על אנרגיית השם — בחינם ✦</p>
                 </motion.div>
               ) : isLoading ? (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[300px]">
-                  <motion.div className="w-20 h-20 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent)", border: "1px solid hsl(var(--gold) / 0.3)" }} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
-                  <motion.p className="font-body text-gold/80 text-base" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>קוראים את הקווים בכף ידכם...</motion.p>
+                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <MysticalOnboarding onComplete={handleOnboardingComplete} />
                 </motion.div>
               ) : submitted ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10">
