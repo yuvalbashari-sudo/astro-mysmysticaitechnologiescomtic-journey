@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Star, Heart, Sparkles, Crown, Moon, Sun, Hand, Layers } from "lucide-react";
 
 const packages = [
@@ -169,11 +170,22 @@ const PricingSection = ({ onOrderClick }: PricingSectionProps) => {
       </motion.div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 relative z-10">
-        {packages.map((pkg, i) => (
+        {packages.map((pkg, i) => {
+          const cardRef = useRef<HTMLDivElement>(null);
+          const { scrollYProgress } = useScroll({
+            target: cardRef,
+            offset: ["start end", "end start"],
+          });
+          const y = useTransform(scrollYProgress, [0, 1], [40 - i * 15, -20 + i * 10]);
+          const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.98]);
+
+          return (
           <motion.div
+            ref={cardRef}
             key={pkg.title}
+            style={{ y, scale }}
             initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: i * 0.12 }}
             className={`group relative mystical-card p-8 md:p-9 flex flex-col text-center transition-all duration-500 hover:mystical-glow ${
@@ -238,7 +250,8 @@ const PricingSection = ({ onOrderClick }: PricingSectionProps) => {
               {pkg.cta}
             </button>
           </motion.div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
