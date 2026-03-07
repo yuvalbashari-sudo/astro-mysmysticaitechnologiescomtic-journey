@@ -69,9 +69,72 @@ function getFeatureIcon(feature: string) {
   return Star;
 }
 
+const FloatingParticles = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {Array.from({ length: 30 }).map((_, i) => {
+      const size = Math.random() * 3 + 1;
+      const isGold = Math.random() > 0.3;
+      return (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: size,
+            height: size,
+            background: isGold
+              ? `hsl(var(--gold) / ${Math.random() * 0.4 + 0.1})`
+              : `hsl(var(--crimson) / ${Math.random() * 0.2 + 0.05})`,
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            y: [0, -(20 + Math.random() * 50), 0],
+            x: [0, (Math.random() - 0.5) * 30, 0],
+            opacity: [0.1, 0.7, 0.1],
+            scale: [1, 1.5, 1],
+          }}
+          transition={{
+            duration: 4 + Math.random() * 6,
+            repeat: Infinity,
+            delay: Math.random() * 5,
+            ease: "easeInOut",
+          }}
+        />
+      );
+    })}
+    {/* Twinkling stars */}
+    {Array.from({ length: 12 }).map((_, i) => (
+      <motion.div
+        key={`star-${i}`}
+        className="absolute text-gold/20"
+        style={{
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          fontSize: `${Math.random() * 6 + 6}px`,
+        }}
+        animate={{
+          opacity: [0, 0.6, 0],
+          scale: [0.8, 1.2, 0.8],
+        }}
+        transition={{
+          duration: 3 + Math.random() * 4,
+          repeat: Infinity,
+          delay: Math.random() * 6,
+          ease: "easeInOut",
+        }}
+      >
+        ✦
+      </motion.div>
+    ))}
+  </div>
+);
+
 const PricingSection = () => {
   return (
     <section className="py-28 px-4 relative overflow-hidden">
+      {/* Floating particles */}
+      <FloatingParticles />
+
       {/* Cosmic background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-gold/[0.04] blur-[120px]" />
