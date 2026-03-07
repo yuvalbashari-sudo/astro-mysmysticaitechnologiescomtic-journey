@@ -11,6 +11,7 @@ import FooterCTA from "@/components/FooterCTA";
 import ReadingsHistory from "@/components/ReadingsHistory";
 import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 import LeadFormModal from "@/components/LeadFormModal";
+import StarField from "@/components/StarField";
 
 const Index = () => {
   const [leadModalOpen, setLeadModalOpen] = useState(false);
@@ -22,7 +23,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
+    <div className="min-h-screen bg-background overflow-x-hidden relative">
+      <StarField />
       <HeroSection />
       <MysticalNav />
       <ReadingsHistory />
