@@ -47,18 +47,27 @@ const Particle = ({ delay, x, y }: { delay: number; x: number; y: number }) => (
   />
 );
 
+const ONBOARDING_SEEN_KEY = "astrologai_onboarding_seen";
+
 const MysticalOnboarding = ({ onComplete }: Props) => {
   const [step, setStep] = useState(0);
   const [autoProgress, setAutoProgress] = useState(true);
+  const hasSeenBefore = typeof window !== "undefined" && localStorage.getItem(ONBOARDING_SEEN_KEY) === "true";
 
   const goNext = useCallback(() => {
     if (step < steps.length - 1) {
       setStep((s) => s + 1);
       setAutoProgress(true);
     } else {
+      localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
       onComplete();
     }
   }, [step, onComplete]);
+
+  const handleSkip = useCallback(() => {
+    localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
+    onComplete();
+  }, [onComplete]);
 
   // Auto-advance timer — user can also click CTA to skip
   useEffect(() => {
