@@ -129,7 +129,11 @@ const FloatingParticles = () => (
   </div>
 );
 
-const PricingSection = () => {
+interface PricingSectionProps {
+  onOrderClick?: (interest: string) => void;
+}
+
+const PricingSection = ({ onOrderClick }: PricingSectionProps) => {
   return (
     <section className="py-28 px-4 relative overflow-hidden">
       {/* Floating particles */}
@@ -224,6 +228,7 @@ const PricingSection = () => {
 
             {/* CTA */}
             <button
+              onClick={() => onOrderClick?.(pkg.highlighted ? "compatibility" : i === 0 ? "astrology" : "full")}
               className={`w-full py-3.5 rounded-lg font-body font-bold text-sm tracking-wider transition-all duration-300 ${
                 pkg.highlighted
                   ? "btn-gold"

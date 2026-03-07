@@ -1,3 +1,4 @@
+import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
 import MysticalNav from "@/components/MysticalNav";
 import AboutSection from "@/components/AboutSection";
@@ -8,8 +9,18 @@ import FAQSection from "@/components/FAQSection";
 import PricingSection from "@/components/PricingSection";
 import FooterCTA from "@/components/FooterCTA";
 import ReadingsHistory from "@/components/ReadingsHistory";
+import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
+import LeadFormModal from "@/components/LeadFormModal";
 
 const Index = () => {
+  const [leadModalOpen, setLeadModalOpen] = useState(false);
+  const [selectedInterest, setSelectedInterest] = useState("");
+
+  const handleOrderClick = (interest: string) => {
+    setSelectedInterest(interest);
+    setLeadModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <HeroSection />
@@ -19,9 +30,15 @@ const Index = () => {
       <FreePremiumSection />
       <LeadSection />
       <TestimonialsSection />
-      <PricingSection />
+      <PricingSection onOrderClick={handleOrderClick} />
       <FAQSection />
       <FooterCTA />
+      <WhatsAppFloatingButton />
+      <LeadFormModal
+        isOpen={leadModalOpen}
+        onClose={() => setLeadModalOpen(false)}
+        preselectedInterest={selectedInterest}
+      />
     </div>
   );
 };
