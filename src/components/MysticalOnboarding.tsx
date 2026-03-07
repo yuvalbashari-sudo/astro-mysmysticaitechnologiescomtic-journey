@@ -47,18 +47,27 @@ const Particle = ({ delay, x, y }: { delay: number; x: number; y: number }) => (
   />
 );
 
+const ONBOARDING_SEEN_KEY = "astrologai_onboarding_seen";
+
 const MysticalOnboarding = ({ onComplete }: Props) => {
   const [step, setStep] = useState(0);
   const [autoProgress, setAutoProgress] = useState(true);
+  const hasSeenBefore = typeof window !== "undefined" && localStorage.getItem(ONBOARDING_SEEN_KEY) === "true";
 
   const goNext = useCallback(() => {
     if (step < steps.length - 1) {
       setStep((s) => s + 1);
       setAutoProgress(true);
     } else {
+      localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
       onComplete();
     }
   }, [step, onComplete]);
+
+  const handleSkip = useCallback(() => {
+    localStorage.setItem(ONBOARDING_SEEN_KEY, "true");
+    onComplete();
+  }, [onComplete]);
 
   // Auto-advance timer — user can also click CTA to skip
   useEffect(() => {
@@ -79,7 +88,19 @@ const MysticalOnboarding = ({ onComplete }: Props) => {
 
   return (
     <div className="relative min-h-[380px] flex flex-col items-center justify-center p-8 md:p-12 overflow-hidden">
-      {/* Particles */}
+      {/* Skip button for returning users */}
+      {hasSeenBefore && (
+        <motion.button
+          onClick={handleSkip}
+          className="absolute top-3 left-3 z-20 text-gold/40 hover:text-gold/70 font-body text-xs transition-colors duration-300"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          דלגו ←
+        </motion.button>
+      )}
+
       {particles.map((p, i) => (
         <Particle key={i} {...p} />
       ))}
