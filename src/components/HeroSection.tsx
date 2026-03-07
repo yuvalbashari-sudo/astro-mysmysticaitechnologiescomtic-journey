@@ -5,6 +5,10 @@ import crystalBall from "@/assets/crystal-ball.png";
 import oracle from "@/assets/oracle.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import MonthlyForecastModal from "./MonthlyForecastModal";
+import RisingSignModal from "./RisingSignModal";
+import CompatibilityModal from "./CompatibilityModal";
+import TarotModal from "./TarotModal";
+import PalmReadingModal from "./PalmReadingModal";
 
 const menuItems = [
   { icon: Star, label: "תחזית חודשית לפי תאריך לידה", angle: -72 },
@@ -475,7 +479,7 @@ const HeroSection = () => {
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.12, zIndex: 50 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); }}
+                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 >
                   <motion.div
                     className={`
