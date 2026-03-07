@@ -303,6 +303,42 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     >
                       תחזית חודש {monthName}
                     </motion.p>
+                    {/* Share buttons */}
+                    <motion.div
+                      className="flex items-center justify-center gap-3 mt-5"
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <motion.button
+                        onClick={handleShareWhatsApp}
+                        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body transition-colors"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))",
+                          border: "1px solid hsl(142 70% 45% / 0.3)",
+                          color: "hsl(142 70% 60%)",
+                        }}
+                        whileHover={{ scale: 1.05, boxShadow: "0 0 15px hsl(142 70% 45% / 0.2)" }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        <Share2 className="w-3.5 h-3.5" />
+                        שתפו בוואטסאפ
+                      </motion.button>
+                      <motion.button
+                        onClick={handleCopyLink}
+                        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body transition-colors"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+                          border: "1px solid hsl(var(--gold) / 0.2)",
+                          color: "hsl(var(--gold))",
+                        }}
+                        whileHover={{ scale: 1.05, boxShadow: "0 0 15px hsl(var(--gold) / 0.15)" }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copied ? "הועתק!" : "העתקת טקסט"}
+                      </motion.button>
+                    </motion.div>
                   </div>
 
                   {/* Sections */}
