@@ -45,7 +45,7 @@ const MysticalNav = () => {
 
   return (
     <>
-      <section className="py-24 px-4 relative">
+      <section className="py-24 px-4 relative cosmic-section-bg">
         <div className="section-divider max-w-xl mx-auto mb-20" />
 
         <motion.div
@@ -71,10 +71,10 @@ const MysticalNav = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="mystical-card p-6 text-center cursor-pointer group transition-all duration-300 hover:mystical-glow"
+              className="mystical-card p-6 text-center cursor-pointer group transition-all duration-300 hover:mystical-glow-intense"
               onClick={() => handleClick(cat.action)}
             >
-              <div className="w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center bg-gold/10 group-hover:bg-gold/20 transition-colors">
+              <div className="icon-glow w-16 h-16 mx-auto mb-5">
                 <cat.icon className="w-7 h-7 text-gold" />
               </div>
               <h3 className="font-heading text-lg text-gold mb-3">{cat.title}</h3>

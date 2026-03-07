@@ -37,10 +37,11 @@ const faqItems = [
 
 const FAQSection = () => {
   return (
-    <section className="py-28 px-4 relative overflow-hidden">
+    <section className="py-28 px-4 relative overflow-hidden cosmic-section-bg">
       {/* Cosmic accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full bg-celestial/5 blur-[100px]" />
+        <div className="absolute top-1/4 right-1/4 w-48 h-48 rounded-full bg-crimson/4 blur-[90px]" />
       </div>
 
       <div className="section-divider max-w-xl mx-auto mb-20" />
@@ -81,7 +82,7 @@ const FAQSection = () => {
             >
               <AccordionTrigger className="font-body text-foreground/90 text-right hover:no-underline hover:text-gold transition-colors py-6 gap-4">
                 <div className="flex items-center gap-4 flex-1 text-right">
-                  <div className="w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center bg-gold/10 border border-gold/20">
+                <div className="icon-glow w-9 h-9 flex-shrink-0">
                     <item.icon className="w-4 h-4 text-gold/70" />
                   </div>
                   <span className="text-[15px]">{item.q}</span>
