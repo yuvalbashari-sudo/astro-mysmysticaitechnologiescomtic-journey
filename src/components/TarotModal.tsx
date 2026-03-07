@@ -4,6 +4,7 @@ import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Che
 import { drawTarotCards, TarotCard } from "@/data/tarotData";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
+import ShareResultSection from "@/components/ShareResultSection";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -116,6 +117,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       })}
                     </motion.div>
                   </AnimatePresence>
+                  <ShareResultSection symbol={cards[activeCard].symbol} title={cards[activeCard].hebrewName} subtitle="קריאת טארוט" />
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                     <Crown className="w-6 h-6 text-gold mx-auto mb-3" />

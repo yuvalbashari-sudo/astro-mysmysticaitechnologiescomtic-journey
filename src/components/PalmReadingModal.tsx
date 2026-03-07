@@ -4,6 +4,7 @@ import { X, Sparkles, Hand, Crown, Share2, Copy, Check, Loader2 } from "lucide-r
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import ShareResultSection from "@/components/ShareResultSection";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -132,6 +133,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
 
                   {!aiLoading && (aiText || aiError) && (
                     <>
+                      <ShareResultSection symbol="✋" title={`קריאת כף היד — ${name}`} />
                       <div className="section-divider max-w-[200px] mx-auto my-8" />
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                         <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
