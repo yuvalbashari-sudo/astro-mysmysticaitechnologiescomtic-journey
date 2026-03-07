@@ -30,7 +30,11 @@ const premiumPackages = [
 
 const FreePremiumSection = () => {
   return (
-    <section id="free" className="py-24 px-4 relative">
+    <section id="free" className="py-24 px-4 relative cosmic-section-bg overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 rounded-full bg-gold/4 blur-[120px]" />
+        <div className="absolute bottom-1/4 right-1/3 w-56 h-56 rounded-full bg-crimson/4 blur-[100px]" />
+      </div>
       <div className="section-divider max-w-xl mx-auto mb-20" />
 
       {/* Free section */}
