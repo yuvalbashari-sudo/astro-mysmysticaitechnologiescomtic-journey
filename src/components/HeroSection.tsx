@@ -1,8 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
-import heroBg from "@/assets/hero-mystical-bg.jpg";
+import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
-import oracle from "@/assets/oracle.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import RisingSignModal from "./RisingSignModal";
@@ -235,9 +234,9 @@ const HeroSection = () => {
     >
       {/* ── Layer 1: Background cosmic sky (parallax) ── */}
       <motion.div className="absolute inset-0" style={isMobile ? {} : { x: bgX, y: bgY }}>
-        <img src={heroBg} alt="" className="w-full h-full object-cover scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/20" />
+        <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </motion.div>
 
       {/* ── Layer 2: Living constellations (parallax) ── */}
@@ -354,49 +353,7 @@ const HeroSection = () => {
         {/* ── Central mystical scene ── */}
         <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "420px" : "520px" }}>
 
-          {/* Oracle character - desktop (parallax layer) */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1.2, delay: 0.6 }}
-            className="absolute z-10 hidden md:block"
-            style={{ left: "2%", bottom: "0", x: oracleX, y: oracleY }}
-          >
-            {/* Oracle aura glow */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "radial-gradient(ellipse at 50% 40%, hsl(var(--gold) / 0.08) 0%, transparent 60%)",
-              }}
-              animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.05, 1] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.img
-              src={oracle}
-              alt="Oracle"
-              className="h-[440px] lg:h-[500px] object-contain"
-              animate={{
-                y: [0, -6, 0],
-                filter: [
-                  "drop-shadow(0 0 25px hsl(43 80% 55% / 0.15))",
-                  "drop-shadow(0 0 40px hsl(43 80% 55% / 0.25))",
-                  "drop-shadow(0 0 25px hsl(43 80% 55% / 0.15))",
-                ],
-              }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Shimmer overlay when hovering crystal area */}
-            <motion.div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background: "linear-gradient(135deg, transparent 30%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
-              }}
-              animate={{
-                opacity: hoveredItem !== null ? [0, 0.6, 0] : 0,
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.div>
+          {/* Oracle is now part of the background image */}
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
@@ -614,21 +571,7 @@ const HeroSection = () => {
             })}
           </motion.div>
 
-          {/* Oracle on mobile */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 0.7, x: 0 }}
-            transition={{ duration: 1.2, delay: 0.8 }}
-            className="absolute z-10 md:hidden"
-            style={{ right: "-10%", bottom: "5%" }}
-          >
-            <img
-              src={oracle}
-              alt="Oracle"
-              className="h-[200px] object-contain opacity-60"
-              style={{ filter: "drop-shadow(0 0 20px hsl(43 80% 55% / 0.15))" }}
-            />
-          </motion.div>
+          {/* Oracle on mobile - part of background */}
         </div>
 
         {/* CTAs */}
