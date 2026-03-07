@@ -64,6 +64,13 @@
   body {
     @apply bg-background text-foreground font-body;
     direction: rtl;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  p {
+    line-height: 1.85;
   }
 
   h1, h2, h3, h4, h5, h6 {

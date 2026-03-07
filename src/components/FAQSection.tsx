@@ -53,8 +53,8 @@ const FAQSection = () => {
       >
         <div className="flex items-center justify-center gap-3 mb-6">
           <Sparkles className="w-4 h-4 text-gold/50" />
-          <span className="text-gold/40 font-body text-xs tracking-[0.2em] uppercase">
-            FAQ
+          <span className="text-gold/40 font-body text-xs tracking-[0.15em]">
+            ✦ שאלות ותשובות ✦
           </span>
           <Sparkles className="w-4 h-4 text-gold/50" />
         </div>

@@ -49,8 +49,8 @@ const AboutSection = () => {
         >
           <div className="flex items-center justify-center gap-3 mb-6">
             <Sparkles className="w-5 h-5 text-gold/60" />
-            <span className="text-gold/50 font-body text-sm tracking-widest uppercase">
-              Discover Your Path
+            <span className="text-gold/50 font-body text-sm tracking-widest">
+              ✦ גלו את הדרך שלכם ✦
             </span>
             <Sparkles className="w-5 h-5 text-gold/60" />
           </div>

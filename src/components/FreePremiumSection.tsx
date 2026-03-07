@@ -78,7 +78,7 @@ const FreePremiumSection = () => {
         >
           <div className="inline-flex items-center gap-2 mb-4">
             <Crown className="w-5 h-5 text-gold" />
-            <span className="text-gold font-heading text-sm tracking-widest">פרימיום</span>
+            <span className="text-gold font-heading text-sm tracking-widest">✦ פרימיום ✦</span>
             <Crown className="w-5 h-5 text-gold" />
           </div>
           <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-4">
