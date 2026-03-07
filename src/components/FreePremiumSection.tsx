@@ -56,7 +56,8 @@ const FreePremiumSection = () => {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
+              transition={{ delay: i * 0.12, duration: 0.6, ease: "easeOut" }}
+              whileHover={{ y: -4, transition: { duration: 0.3 } }}
               className="mystical-card p-6 text-center"
             >
               <Star className="w-8 h-8 text-gold mx-auto mb-4" />
@@ -96,7 +97,8 @@ const FreePremiumSection = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.15 }}
+              transition={{ delay: i * 0.15, duration: 0.7, ease: "easeOut" }}
+              whileHover={{ y: -6, transition: { duration: 0.3 } }}
               className={`mystical-card p-8 text-center relative ${
                 pkg.popular ? "ring-2 ring-gold/40 animate-pulse-glow" : ""
               }`}

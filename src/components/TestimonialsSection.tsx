@@ -70,7 +70,8 @@ const TestimonialsSection = () => {
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.08 }}
+            transition={{ delay: i * 0.08, duration: 0.6, ease: "easeOut" }}
+            whileHover={{ y: -4, transition: { duration: 0.3 } }}
             className="group mystical-card p-7 md:p-8 flex flex-col hover:mystical-glow transition-all duration-500"
           >
             <div className="flex items-center justify-between mb-5">

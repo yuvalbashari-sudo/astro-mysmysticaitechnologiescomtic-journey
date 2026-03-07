@@ -7,9 +7,10 @@ const FooterCTA = () => {
       <div className="section-divider max-w-xl mx-auto mb-20" />
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
         className="max-w-3xl mx-auto text-center"
       >
         <h2 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-6">
