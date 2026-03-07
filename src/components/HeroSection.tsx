@@ -234,9 +234,9 @@ const HeroSection = () => {
     >
       {/* ── Layer 1: Background cosmic sky (parallax) ── */}
       <motion.div className="absolute inset-0" style={isMobile ? {} : { x: bgX, y: bgY }}>
-        <img src={heroBg} alt="" className="w-full h-full object-cover scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/20" />
+        <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
       </motion.div>
 
       {/* ── Layer 2: Living constellations (parallax) ── */}
