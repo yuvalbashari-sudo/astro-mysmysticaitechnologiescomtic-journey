@@ -6,12 +6,14 @@ import LeadSection from "@/components/LeadSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FAQSection from "@/components/FAQSection";
 import FooterCTA from "@/components/FooterCTA";
+import ReadingsHistory from "@/components/ReadingsHistory";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <HeroSection />
       <MysticalNav />
+      <ReadingsHistory />
       <AboutSection />
       <FreePremiumSection />
       <LeadSection />
