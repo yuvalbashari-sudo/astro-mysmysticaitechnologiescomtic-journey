@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
+import heroBg from "@/assets/hero-mystical-bg.jpg";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
@@ -234,9 +235,36 @@ const HeroSection = () => {
     >
       {/* ── Layer 1: Background cosmic sky (parallax) ── */}
       <motion.div className="absolute inset-0" style={isMobile ? {} : { x: bgX, y: bgY }}>
-        <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+        <img src={heroBg} alt="" className="w-full h-full object-cover scale-110" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
+      </motion.div>
+
+      {/* ── Layer 1.5: Large mystical figure behind content ── */}
+      <motion.div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]"
+        style={isMobile ? {} : { x: oracleX, y: oracleY }}
+        initial={{ opacity: 0, scale: 1.05 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+      >
+        <img
+          src={heroFigure}
+          alt=""
+          className="w-full h-full object-cover object-top"
+          style={{
+            maskImage: "radial-gradient(ellipse 80% 85% at 50% 40%, black 40%, transparent 100%)",
+            WebkitMaskImage: "radial-gradient(ellipse 80% 85% at 50% 40%, black 40%, transparent 100%)",
+          }}
+        />
+        {/* Glow behind figure */}
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: "radial-gradient(ellipse at 50% 35%, hsl(var(--gold) / 0.08) 0%, transparent 60%)",
+          }}
+          animate={{ opacity: [0.5, 0.8, 0.5] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
       </motion.div>
 
       {/* ── Layer 2: Living constellations (parallax) ── */}
