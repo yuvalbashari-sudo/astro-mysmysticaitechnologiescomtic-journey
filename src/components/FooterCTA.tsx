@@ -3,7 +3,11 @@ import { Star, Sparkles } from "lucide-react";
 
 const FooterCTA = () => {
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-24 px-4 relative cosmic-section-bg overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gold/4 blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-crimson/5 blur-[100px]" />
+      </div>
       <div className="section-divider max-w-xl mx-auto mb-20" />
 
       <motion.div

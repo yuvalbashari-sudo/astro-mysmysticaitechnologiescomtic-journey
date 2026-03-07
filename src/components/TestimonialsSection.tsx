@@ -36,10 +36,11 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-28 px-4 relative overflow-hidden">
+    <section className="py-28 px-4 relative overflow-hidden cosmic-section-bg">
       {/* Cosmic glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-crimson/5 blur-[120px]" />
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-gold/3 blur-[100px]" />
       </div>
 
       <div className="section-divider max-w-xl mx-auto mb-20" />
@@ -72,7 +73,7 @@ const TestimonialsSection = () => {
             viewport={{ once: true }}
             transition={{ delay: i * 0.08, duration: 0.6, ease: "easeOut" }}
             whileHover={{ y: -4, transition: { duration: 0.3 } }}
-            className="group mystical-card p-7 md:p-8 flex flex-col hover:mystical-glow transition-all duration-500"
+            className="group mystical-card p-7 md:p-8 flex flex-col hover:mystical-glow-intense transition-all duration-500"
           >
             <div className="flex items-center justify-between mb-5">
               <Quote className="w-7 h-7 text-gold/30 group-hover:text-gold/50 transition-colors duration-500" />

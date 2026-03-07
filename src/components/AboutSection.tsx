@@ -31,11 +31,12 @@ const disciplines = [
 
 const AboutSection = () => {
   return (
-    <section className="py-28 px-4 relative overflow-hidden">
+    <section className="py-28 px-4 relative overflow-hidden cosmic-section-bg">
       {/* Cosmic background accents */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-1/4 w-64 h-64 rounded-full bg-gold/5 blur-[100px]" />
         <div className="absolute bottom-20 right-1/4 w-48 h-48 rounded-full bg-celestial/10 blur-[80px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full bg-crimson/3 blur-[120px]" />
       </div>
 
       <div className="section-divider max-w-xl mx-auto mb-20" />
@@ -90,12 +91,12 @@ const AboutSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group mystical-card p-7 md:p-8 text-center hover:mystical-glow transition-all duration-500 cursor-default"
+              className="group mystical-card p-7 md:p-8 text-center hover:mystical-glow-intense transition-all duration-500 cursor-default"
             >
-              <div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center bg-gold/10 border border-gold/20 group-hover:bg-gold/15 group-hover:border-gold/35 transition-all duration-500">
+              <div className="icon-glow w-14 h-14 mx-auto mb-5">
                 <d.icon className="w-6 h-6 text-gold group-hover:text-gold-light transition-colors duration-500" />
               </div>
-              <h3 className="font-heading text-lg text-foreground mb-3">{d.title}</h3>
+              <h3 className="font-heading text-lg text-foreground mb-3 group-hover:text-gold transition-colors duration-500">{d.title}</h3>
               <p className="font-body text-sm text-foreground/65 leading-relaxed">{d.desc}</p>
             </motion.div>
           ))}

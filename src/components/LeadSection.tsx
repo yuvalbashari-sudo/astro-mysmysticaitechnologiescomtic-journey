@@ -40,7 +40,11 @@ const LeadSection = () => {
   };
 
   return (
-    <section className="py-24 px-4 relative">
+    <section className="py-24 px-4 relative cosmic-section-bg overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-gold/4 blur-[120px]" />
+        <div className="absolute bottom-1/4 left-1/3 w-56 h-56 rounded-full bg-celestial/5 blur-[100px]" />
+      </div>
       <div className="section-divider max-w-xl mx-auto mb-20" />
 
       <div className="max-w-2xl mx-auto">
@@ -77,7 +81,7 @@ const LeadSection = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             onSubmit={handleSubmit}
-            className="mystical-card p-8 md:p-10 space-y-5"
+            className="mystical-card-elevated p-8 md:p-10 space-y-5"
           >
             <div>
               <label className="block text-sm text-gold/80 font-body mb-2">שם מלא</label>
