@@ -88,7 +88,19 @@ const MysticalOnboarding = ({ onComplete }: Props) => {
 
   return (
     <div className="relative min-h-[380px] flex flex-col items-center justify-center p-8 md:p-12 overflow-hidden">
-      {/* Particles */}
+      {/* Skip button for returning users */}
+      {hasSeenBefore && (
+        <motion.button
+          onClick={handleSkip}
+          className="absolute top-3 left-3 z-20 text-gold/40 hover:text-gold/70 font-body text-xs transition-colors duration-300"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          דלגו ←
+        </motion.button>
+      )}
+
       {particles.map((p, i) => (
         <Particle key={i} {...p} />
       ))}
