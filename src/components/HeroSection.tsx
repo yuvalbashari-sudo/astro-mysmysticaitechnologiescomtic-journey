@@ -172,6 +172,10 @@ const HeroSection = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
+  const [risingOpen, setRisingOpen] = useState(false);
+  const [compatibilityOpen, setCompatibilityOpen] = useState(false);
+  const [tarotOpen, setTarotOpen] = useState(false);
+  const [palmOpen, setPalmOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   // Mouse tracking
@@ -592,6 +596,10 @@ const HeroSection = () => {
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
+      <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
+      <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
+      <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
+      <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
     </section>
   );
 };
