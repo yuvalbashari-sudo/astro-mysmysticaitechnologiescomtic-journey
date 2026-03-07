@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, Sparkles, Heart, Coins, Briefcase, Activity, Eye, Flame, Star, Crown } from "lucide-react";
+import { X, Calendar, Sparkles, Heart, Coins, Briefcase, Activity, Eye, Flame, Star, Crown, Share2, Copy, Check } from "lucide-react";
 import { getZodiacSign, ZodiacSign } from "@/data/zodiacData";
+import { toast } from "@/components/ui/sonner";
 
 interface Props {
   isOpen: boolean;
