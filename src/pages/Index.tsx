@@ -19,6 +19,7 @@ const Index = () => {
       <FreePremiumSection />
       <LeadSection />
       <TestimonialsSection />
+      <PricingSection />
       <FAQSection />
       <FooterCTA />
     </div>
