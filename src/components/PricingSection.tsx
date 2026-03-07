@@ -156,8 +156,8 @@ const PricingSection = ({ onOrderClick }: PricingSectionProps) => {
       >
         <div className="flex items-center justify-center gap-3 mb-6">
           <Crown className="w-5 h-5 text-gold/60" />
-          <span className="text-gold/40 font-body text-xs tracking-[0.2em] uppercase">
-            Premium Readings
+          <span className="text-gold/40 font-body text-xs tracking-[0.15em]">
+            ✦ קריאות פרימיום ✦
           </span>
           <Crown className="w-5 h-5 text-gold/60" />
         </div>
