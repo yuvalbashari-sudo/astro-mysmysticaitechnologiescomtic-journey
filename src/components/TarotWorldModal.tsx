@@ -340,7 +340,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!drawnCards.length || !selectedSpread) return;
-    const text = `🔮 ${selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ קבלו גם אתם קריאת טארוט:\n${window.location.origin}`;
+    const text = `🔮 ${selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
@@ -349,7 +349,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
     const textToCopy = aiText || drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ");
     await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true);
-    toast("הטקסט הועתק ✦");
+    toast(t.share_copy_toast);
     setTimeout(() => setCopied(false), 2000);
   };
 
