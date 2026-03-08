@@ -1605,8 +1605,10 @@ const HeroSection = () => {
 
             {/* Crystal ball image */}
             <motion.div
+              ref={crystalRef}
               className="relative z-20 cursor-pointer"
               style={{ width: isMobile ? "180px" : "280px", height: isMobile ? "180px" : "280px" }}
+              onClick={handleCrystalClick}
             >
               <motion.img
                 src={crystalBall}
