@@ -102,7 +102,7 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {isShuffling ? "הקלפים מתערבבים..." : isSettling || isDone ? "הקלפים מוכנים" : "טקס ערבוב הקלפים"}
+        {isShuffling ? t.tarot_shuffle_title_shuffling : isSettling || isDone ? t.tarot_shuffle_title_ready : t.tarot_shuffle_title_idle}
       </motion.h3>
       <motion.p
         className="relative z-10 text-foreground/50 font-body text-xs mb-10"
@@ -111,10 +111,10 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
         transition={{ delay: 0.4 }}
       >
         {isShuffling
-          ? "האנרגיה הקוסמית בוחרת את הקלפים שלכם..."
+          ? t.tarot_shuffle_desc_shuffling
           : isSettling || isDone
-            ? "הקלפים נבחרו עבורכם"
-            : "לחצו כדי לערבב את הקלפים ולהתחיל את הטקס"}
+            ? t.tarot_shuffle_desc_ready
+            : t.tarot_shuffle_desc_idle}
       </motion.p>
 
       {/* Card deck area */}
