@@ -1494,366 +1494,557 @@ const HeroSection = () => {
 
       {/* Content container */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16">
-        {/* Brand name */}
-        <motion.div
-          initial={{ opacity: 0, y: -30, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-          className="text-center mb-2 md:mb-6"
-        >
-          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl gold-gradient-text tracking-wider">
-            ASTROLOGAI
-          </h1>
-        </motion.div>
 
-        {/* Headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1 }}
-          className="text-center mb-1 md:mb-4"
-        >
-          <h2 className="font-body text-xl md:text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
-            {t.hero_headline}
-          </h2>
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.3 }}
-          className="text-center text-muted-foreground font-body text-sm md:text-base mb-4 md:mb-6 max-w-xl mx-auto"
-        >
-          {t.hero_subheadline}
-        </motion.p>
-
-        {/* ── Central mystical scene ── */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "700px" : "520px", marginTop: isMobile ? "-30px" : "0" }}>
-
-          {/* Crystal ball center (parallax layer) */}
-          <motion.div
-            className="relative flex items-center justify-center"
-            style={isMobile ? {} : { x: crystalX, y: crystalY }}
-          >
-            {!isMobile && (
-              <motion.div
-                className="absolute rounded-full z-15 pointer-events-none"
-                style={{
-                  width: "120px", height: "120px",
-                  x: glowShiftX, y: glowShiftY,
-                  background: activeColor
-                    ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
-                    : "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
-                }}
-              />
-            )}
-
-            {/* Main aura glow - reacts to hovered item color */}
-            <motion.div
-              className="absolute rounded-full"
-              style={{
-                width: isMobile ? "220px" : "320px",
-                height: isMobile ? "220px" : "320px",
-                background: hoveredItem !== null
-                  ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}15 40%, transparent 70%)`
-                  : "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
-              }}
-              animate={{
-                scale: hoveredItem !== null ? [1, 1.25, 1] : [1, 1.15, 1],
-                opacity: hoveredItem !== null ? [0.6, 1, 0.6] : [0.5, 0.8, 0.5],
-              }}
-              transition={{ duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* Rotating conic gradient */}
-            <motion.div
-              className="absolute rounded-full pointer-events-none z-15"
-              style={{
-                width: isMobile ? "140px" : "220px",
-                height: isMobile ? "140px" : "220px",
-                background: "conic-gradient(from 0deg, transparent 0%, hsl(var(--gold) / 0.08) 15%, transparent 30%, hsl(var(--celestial) / 0.06) 50%, transparent 65%, hsl(var(--crimson) / 0.05) 80%, transparent 100%)",
-              }}
-              animate={{ rotate: [0, 360] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-            />
-
-            {/* Inner pulse */}
-            <motion.div
-              className="absolute rounded-full pointer-events-none z-15"
-              style={{
-                width: isMobile ? "100px" : "160px",
-                height: isMobile ? "100px" : "160px",
-                background: activeColor
-                  ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
-                  : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
-              }}
-              animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.3, 0.7, 0.3] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* Outer rings */}
-            <motion.div
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: isMobile ? "240px" : "350px",
-                height: isMobile ? "240px" : "350px",
-                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.04) 70%, transparent 90%)",
-              }}
-              animate={{ rotate: [0, 360], scale: [1, 1.08, 1] }}
-              transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
-            />
-
-            <motion.div
-              className="absolute rounded-full mystical-border"
-              style={{ width: isMobile ? "260px" : "380px", height: isMobile ? "260px" : "380px", borderColor: "hsl(var(--gold) / 0.1)" }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute rounded-full mystical-border"
-              style={{ width: isMobile ? "300px" : "420px", height: isMobile ? "300px" : "420px", borderColor: "hsl(var(--gold) / 0.06)" }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-            />
-
-            <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
-
-            {/* Arcane Portal Ring */}
-            {entranceComplete && (
-              <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
-            )}
-
-            {/* Zodiac Wheel */}
-            {entranceComplete && (
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
-            )}
-
-            {/* Crystal Ball Internal Energy */}
-            <CrystalBallEnergy isMobile={isMobile} />
-
-            {/* Crystal ball image */}
-            <motion.div
-              ref={crystalRef}
-              className="relative z-20 cursor-pointer"
-              style={{ width: isMobile ? "180px" : "280px", height: isMobile ? "180px" : "280px" }}
-              onClick={handleCrystalClick}
+        {/* ══════════════════════════════════════════════ */}
+        {/* ── MOBILE LAYOUT ─────────────────────────── */}
+        {/* ══════════════════════════════════════════════ */}
+        {isMobile ? (
+          <div className="flex flex-col items-center gap-4">
+            {/* Brand */}
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="font-heading text-4xl gold-gradient-text tracking-wider text-center"
             >
-              <motion.img
-                src={crystalBall}
-                alt="Crystal Ball"
-                className="w-full h-full"
-                style={{ objectFit: "contain" }}
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{
-                  opacity: 1,
-                  scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
-                  filter: hoveredItem !== null
-                    ? [
-                        `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                        `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
-                        `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                      ]
-                    : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
+              ASTROLOGAI
+            </motion.h1>
+
+            {/* Headline */}
+            <motion.h2
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="font-body text-foreground/90 font-light leading-snug text-center px-4"
+              style={{ fontSize: "22px" }}
+            >
+              {t.hero_headline}
+            </motion.h2>
+
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              className="text-center text-muted-foreground font-body px-6"
+              style={{ fontSize: "14px" }}
+            >
+              {t.hero_subheadline}
+            </motion.p>
+
+            {/* Crystal Ball Scene */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.2, delay: 1 }}
+              className="relative flex items-center justify-center"
+              style={{ height: "38vh", maxHeight: "320px", width: "100%" }}
+            >
+              {/* Aura glow */}
+              <motion.div
+                className="absolute rounded-full"
+                style={{
+                  width: "200px", height: "200px",
+                  background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
                 }}
-                transition={{
-                  opacity: { duration: 1.5, delay: 1 },
-                  scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-                  filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
-                }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Ripple effect on mouse proximity */}
-              <AnimatePresence>
-                {isNearBall && (
-                  <>
-                    {[0, 1, 2].map((i) => (
-                      <motion.div
-                        key={`ripple-${i}`}
-                        className="absolute rounded-full pointer-events-none"
-                        style={{
-                          inset: 0,
-                          border: "1px solid hsl(var(--gold) / 0.12)",
-                        }}
-                        initial={{ scale: 0.85, opacity: 0 }}
-                        animate={{
-                          scale: [0.85, 1.15],
-                          opacity: [0.4, 0],
-                        }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          delay: i * 0.6,
-                          ease: "easeOut",
-                        }}
-                      />
-                    ))}
-                    {/* Surface shimmer */}
-                    <motion.div
-                      className="absolute inset-[10%] rounded-full pointer-events-none overflow-hidden"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <motion.div
-                        className="absolute"
-                        style={{
-                          width: "40%",
-                          height: "100%",
-                          background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.1), transparent)",
-                          filter: "blur(6px)",
-                          borderRadius: "50%",
-                          top: 0,
-                        }}
-                        animate={{ left: ["-40%", "140%"] }}
-                        transition={{
-                          duration: 2.5,
-                          repeat: Infinity,
-                          repeatDelay: 1,
-                          ease: "easeInOut",
-                        }}
-                      />
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
+              {/* Zodiac Wheel */}
+              {entranceComplete && (
+                <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+              )}
 
-              {/* Tarot Card Reveal inside crystal ball */}
-              <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
-                {entranceComplete && (
-                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
-                )}
-              </div>
+              {/* Crystal Ball Internal Energy */}
+              <CrystalBallEnergy isMobile={isMobile} />
+
+              {/* Crystal ball image */}
+              <motion.div
+                ref={crystalRef}
+                className="relative z-20 cursor-pointer"
+                style={{ width: "160px", height: "160px" }}
+                onClick={handleCrystalClick}
+              >
+                <motion.img
+                  src={crystalBall}
+                  alt="Crystal Ball"
+                  className="w-full h-full"
+                  style={{ objectFit: "contain" }}
+                  animate={{
+                    opacity: 1,
+                    filter: ["drop-shadow(0 0 25px hsl(43 80% 55% / 0.3))", "drop-shadow(0 0 45px hsl(43 80% 55% / 0.5))", "drop-shadow(0 0 25px hsl(43 80% 55% / 0.3))"],
+                  }}
+                  transition={{ filter: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
+                />
+
+                {/* Tarot Card Reveal inside crystal ball */}
+                <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
+                  {entranceComplete && (
+                    <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
+                  )}
+                </div>
+              </motion.div>
+
+              <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
             </motion.div>
 
-            {/* Fortune Preview */}
-            {entranceComplete && (
-              <FortunePreview onReveal={handleFortuneReveal} hidden={cardPhase === "flipping" || cardPhase === "revealed"} />
-            )}
+            {/* Primary CTA */}
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.8 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setTarotOpen(true)}
+              className="relative px-8 py-3 rounded-full font-heading text-sm tracking-wider overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.35))",
+                border: "1px solid hsl(var(--gold) / 0.5)",
+                color: "hsl(var(--gold))",
+                boxShadow: "0 0 30px hsl(var(--gold) / 0.15), inset 0 0 20px hsl(var(--gold) / 0.05)",
+              }}
+            >
+              <motion.div
+                className="absolute inset-0 rounded-full pointer-events-none"
+                animate={{
+                  boxShadow: [
+                    "0 0 15px hsl(43 80% 55% / 0.1)",
+                    "0 0 35px hsl(43 80% 55% / 0.25)",
+                    "0 0 15px hsl(43 80% 55% / 0.1)",
+                  ],
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+              ✦ גלו את המסר המיסטי שלכם ✦
+            </motion.button>
 
-            {/* ── Energy lines from hovered item to crystal ball ── */}
-            <AnimatePresence>
-              {hoveredItem !== null && !isMobile && (() => {
-                const item = menuItems[hoveredItem];
-                const angleRad = (item.angle * Math.PI) / 180;
-                const itemX = Math.sin(angleRad) * orbRadius;
-                const itemY = -Math.cos(angleRad) * orbRadius * 0.55;
-                return (
-                  <EnergyLine
-                    key={`energy-line-${hoveredItem}`}
-                    fromX={itemX}
-                    fromY={itemY}
-                    color={ITEM_COLORS[hoveredItem].glow}
-                    isMobile={isMobile}
-                  />
-                );
-              })()}
-            </AnimatePresence>
-
-            {/* ── Floating menu items ── */}
-            {menuItems.map((item, i) => {
-              const angleRad = (item.angle * Math.PI) / 180;
-              const x = isMobile ? 0 : Math.sin(angleRad) * orbRadius;
-              const y = isMobile
-                ? 195 + i * 44
-                : -Math.cos(angleRad) * orbRadius * 0.55;
-              const itemColor = ITEM_COLORS[i];
-
-              return (
-                <motion.div
+            {/* 2x2 Mystical Worlds Grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 2 }}
+              className="grid grid-cols-2 gap-3 w-full max-w-xs mt-2"
+            >
+              {[
+                { icon: Eye, label: t.hero_menu_tarot, color: ITEM_COLORS[3], action: () => setTarotOpen(true) },
+                { icon: Sparkles, label: t.hero_menu_compatibility, color: ITEM_COLORS[2], action: () => setCompatibilityOpen(true) },
+                { icon: Moon, label: t.hero_menu_rising, color: ITEM_COLORS[1], action: () => setRisingOpen(true) },
+                { icon: Hand, label: t.hero_menu_palm, color: ITEM_COLORS[4], action: () => setPalmOpen(true) },
+              ].map((item, i) => (
+                <motion.button
                   key={i}
-                  className="absolute z-30 cursor-pointer"
+                  onClick={item.action}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl backdrop-blur-md transition-all"
                   style={{
-                    left: isMobile ? `calc(50% - 100px)` : `calc(50% + ${x}px - 80px)`,
-                    width: isMobile ? "200px" : undefined,
-                    top: `calc(50% + ${y}px - 20px)`,
+                    background: "hsl(var(--muted) / 0.15)",
+                    border: "1px solid hsl(var(--gold) / 0.12)",
+                    boxShadow: "0 0 15px hsl(var(--gold) / 0.06)",
                   }}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 1.5 + i * 0.2 }}
-                  onMouseEnter={() => setHoveredItem(i)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                  whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 >
-                  <motion.div
-                    className="relative flex items-center justify-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap w-full"
-                    style={{
-                      borderWidth: "1px",
-                      borderStyle: "solid",
-                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
-                      background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.2)",
-                      boxShadow: hoveredItem === i
-                        ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
-                        : "0 0 10px hsl(var(--gold) / 0.1)",
-                    }}
-                    animate={{ y: [0, -4 - i * 0.5, 0] }}
-                    transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+                  <item.icon
+                    className="w-5 h-5"
+                    style={{ color: item.color.glow }}
+                  />
+                  <span
+                    className="font-body text-[11px] leading-tight text-center"
+                    style={{ color: "hsl(var(--foreground) / 0.75)" }}
                   >
-                    <motion.div
-                      animate={hoveredItem === i ? {
-                        filter: [`drop-shadow(0 0 4px ${itemColor.glow}88)`, `drop-shadow(0 0 10px ${itemColor.glow})`, `drop-shadow(0 0 4px ${itemColor.glow}88)`],
-                      } : { filter: "none" }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    >
-                      <item.icon
-                        className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0 transition-colors duration-300"
-                        style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.6)" }}
-                      />
-                    </motion.div>
-                    <span
-                      className="font-body text-[10px] md:text-xs transition-colors duration-300"
-                      style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.7)" }}
-                    >
-                      {item.label}
-                    </span>
+                    {item.label}
+                  </span>
+                </motion.button>
+              ))}
+            </motion.div>
 
-                    {/* Hover glow aura */}
-                    {hoveredItem === i && (
-                      <motion.div
-                        className="absolute -inset-3 rounded-full pointer-events-none"
-                        style={{ background: `radial-gradient(circle, ${itemColor.glow}15, transparent 70%)` }}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: [0, 0.8, 0.4], scale: [0.8, 1.4, 1.2] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      />
-                    )}
+            {/* Monthly forecast as a wide button */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.2 }}
+              onClick={() => setForecastOpen(true)}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center justify-center gap-2 w-full max-w-xs py-2.5 rounded-full backdrop-blur-md"
+              style={{
+                background: "hsl(var(--muted) / 0.12)",
+                border: "1px solid hsl(var(--gold) / 0.1)",
+              }}
+            >
+              <Star className="w-4 h-4" style={{ color: ITEM_COLORS[0].glow }} />
+              <span className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.7)" }}>
+                {t.hero_menu_forecast}
+              </span>
+            </motion.button>
 
-                    {/* Mystical icon that appears on hover */}
-                    <AnimatePresence>
-                      {hoveredItem === i && (
-                        <motion.span
-                          className="absolute -top-5 left-1/2 text-sm pointer-events-none"
-                          style={{ transform: "translateX(-50%)" }}
-                          initial={{ opacity: 0, y: 5, scale: 0.5 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -5, scale: 0.5 }}
-                          transition={{ duration: 0.3 }}
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.5 }}
+              className="text-center pb-6"
+            >
+              <span className="text-xs text-gold/50 font-body tracking-wider">
+                {t.hero_badge}
+              </span>
+            </motion.div>
+          </div>
+        ) : (
+          /* ══════════════════════════════════════════════ */
+          /* ── DESKTOP LAYOUT (unchanged) ────────────── */
+          /* ══════════════════════════════════════════════ */
+          <>
+            {/* Brand name */}
+            <motion.div
+              initial={{ opacity: 0, y: -30, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+              className="text-center mb-6"
+            >
+              <h1 className="font-heading text-7xl lg:text-8xl gold-gradient-text tracking-wider">
+                ASTROLOGAI
+              </h1>
+            </motion.div>
+
+            {/* Headline */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 1 }}
+              className="text-center mb-4"
+            >
+              <h2 className="font-body text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
+                {t.hero_headline}
+              </h2>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1.3 }}
+              className="text-center text-muted-foreground font-body text-base mb-6 max-w-xl mx-auto"
+            >
+              {t.hero_subheadline}
+            </motion.p>
+
+            {/* ── Central mystical scene ── */}
+            <div className="relative flex items-center justify-center" style={{ minHeight: "520px" }}>
+
+              {/* Crystal ball center (parallax layer) */}
+              <motion.div
+                className="relative flex items-center justify-center"
+                style={{ x: crystalX, y: crystalY }}
+              >
+                <motion.div
+                  className="absolute rounded-full z-15 pointer-events-none"
+                  style={{
+                    width: "120px", height: "120px",
+                    x: glowShiftX, y: glowShiftY,
+                    background: activeColor
+                      ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
+                      : "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
+                  }}
+                />
+
+                {/* Main aura glow */}
+                <motion.div
+                  className="absolute rounded-full"
+                  style={{
+                    width: "320px", height: "320px",
+                    background: hoveredItem !== null
+                      ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}15 40%, transparent 70%)`
+                      : "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
+                  }}
+                  animate={{
+                    scale: hoveredItem !== null ? [1, 1.25, 1] : [1, 1.15, 1],
+                    opacity: hoveredItem !== null ? [0.6, 1, 0.6] : [0.5, 0.8, 0.5],
+                  }}
+                  transition={{ duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
+                />
+
+                {/* Rotating conic gradient */}
+                <motion.div
+                  className="absolute rounded-full pointer-events-none z-15"
+                  style={{
+                    width: "220px", height: "220px",
+                    background: "conic-gradient(from 0deg, transparent 0%, hsl(var(--gold) / 0.08) 15%, transparent 30%, hsl(var(--celestial) / 0.06) 50%, transparent 65%, hsl(var(--crimson) / 0.05) 80%, transparent 100%)",
+                  }}
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+                />
+
+                {/* Inner pulse */}
+                <motion.div
+                  className="absolute rounded-full pointer-events-none z-15"
+                  style={{
+                    width: "160px", height: "160px",
+                    background: activeColor
+                      ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
+                      : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
+                  }}
+                  animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.3, 0.7, 0.3] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+
+                {/* Outer rings */}
+                <motion.div
+                  className="absolute rounded-full pointer-events-none"
+                  style={{
+                    width: "350px", height: "350px",
+                    background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.04) 70%, transparent 90%)",
+                  }}
+                  animate={{ rotate: [0, 360], scale: [1, 1.08, 1] }}
+                  transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
+                />
+
+                <motion.div
+                  className="absolute rounded-full mystical-border"
+                  style={{ width: "380px", height: "380px", borderColor: "hsl(var(--gold) / 0.1)" }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                />
+                <motion.div
+                  className="absolute rounded-full mystical-border"
+                  style={{ width: "420px", height: "420px", borderColor: "hsl(var(--gold) / 0.06)" }}
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                />
+
+                <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
+
+                {/* Arcane Portal Ring */}
+                {entranceComplete && (
+                  <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
+                )}
+
+                {/* Zodiac Wheel */}
+                {entranceComplete && (
+                  <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+                )}
+
+                {/* Crystal Ball Internal Energy */}
+                <CrystalBallEnergy isMobile={isMobile} />
+
+                {/* Crystal ball image */}
+                <motion.div
+                  ref={crystalRef}
+                  className="relative z-20 cursor-pointer"
+                  style={{ width: "280px", height: "280px" }}
+                  onClick={handleCrystalClick}
+                >
+                  <motion.img
+                    src={crystalBall}
+                    alt="Crystal Ball"
+                    className="w-full h-full"
+                    style={{ objectFit: "contain" }}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{
+                      opacity: 1,
+                      scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
+                      filter: hoveredItem !== null
+                        ? [
+                            `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
+                            `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
+                            `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
+                          ]
+                        : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
+                    }}
+                    transition={{
+                      opacity: { duration: 1.5, delay: 1 },
+                      scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+                      filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
+                    }}
+                  />
+
+                  {/* Ripple effect on mouse proximity */}
+                  <AnimatePresence>
+                    {isNearBall && (
+                      <>
+                        {[0, 1, 2].map((i) => (
+                          <motion.div
+                            key={`ripple-${i}`}
+                            className="absolute rounded-full pointer-events-none"
+                            style={{
+                              inset: 0,
+                              border: "1px solid hsl(var(--gold) / 0.12)",
+                            }}
+                            initial={{ scale: 0.85, opacity: 0 }}
+                            animate={{
+                              scale: [0.85, 1.15],
+                              opacity: [0.4, 0],
+                            }}
+                            exit={{ opacity: 0 }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: i * 0.6,
+                              ease: "easeOut",
+                            }}
+                          />
+                        ))}
+                        {/* Surface shimmer */}
+                        <motion.div
+                          className="absolute inset-[10%] rounded-full pointer-events-none overflow-hidden"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.5 }}
                         >
-                          {["⭐", "🌙", "💫", "🔮", "✋"][i]}
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
+                          <motion.div
+                            className="absolute"
+                            style={{
+                              width: "40%",
+                              height: "100%",
+                              background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.1), transparent)",
+                              filter: "blur(6px)",
+                              borderRadius: "50%",
+                              top: 0,
+                            }}
+                            animate={{ left: ["-40%", "140%"] }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              repeatDelay: 1,
+                              ease: "easeInOut",
+                            }}
+                          />
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
 
-        {/* Bottom subtle badge */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.3 }}
-          className="text-center pb-6 mt-4"
-        >
-          <span className="text-xs text-gold/50 font-body tracking-wider">
-            {t.hero_badge}
-          </span>
-        </motion.div>
+                  {/* Tarot Card Reveal inside crystal ball */}
+                  <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
+                    {entranceComplete && (
+                      <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
+                    )}
+                  </div>
+                </motion.div>
+
+                {/* Fortune Preview */}
+                {entranceComplete && (
+                  <FortunePreview onReveal={handleFortuneReveal} hidden={cardPhase === "flipping" || cardPhase === "revealed"} />
+                )}
+
+                {/* ── Energy lines from hovered item to crystal ball ── */}
+                <AnimatePresence>
+                  {hoveredItem !== null && (() => {
+                    const item = menuItems[hoveredItem];
+                    const angleRad = (item.angle * Math.PI) / 180;
+                    const itemX = Math.sin(angleRad) * orbRadius;
+                    const itemY = -Math.cos(angleRad) * orbRadius * 0.55;
+                    return (
+                      <EnergyLine
+                        key={`energy-line-${hoveredItem}`}
+                        fromX={itemX}
+                        fromY={itemY}
+                        color={ITEM_COLORS[hoveredItem].glow}
+                        isMobile={isMobile}
+                      />
+                    );
+                  })()}
+                </AnimatePresence>
+
+                {/* ── Floating menu items ── */}
+                {menuItems.map((item, i) => {
+                  const angleRad = (item.angle * Math.PI) / 180;
+                  const x = Math.sin(angleRad) * orbRadius;
+                  const y = -Math.cos(angleRad) * orbRadius * 0.55;
+                  const itemColor = ITEM_COLORS[i];
+
+                  return (
+                    <motion.div
+                      key={i}
+                      className="absolute z-30 cursor-pointer"
+                      style={{
+                        left: `calc(50% + ${x}px - 80px)`,
+                        top: `calc(50% + ${y}px - 20px)`,
+                      }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.6, delay: 1.5 + i * 0.2 }}
+                      onMouseEnter={() => setHoveredItem(i)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                      whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
+                    >
+                      <motion.div
+                        className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
+                        style={{
+                          borderWidth: "1px",
+                          borderStyle: "solid",
+                          borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
+                          background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.2)",
+                          boxShadow: hoveredItem === i
+                            ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
+                            : "0 0 10px hsl(var(--gold) / 0.1)",
+                        }}
+                        animate={{ y: [0, -4 - i * 0.5, 0] }}
+                        transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+                      >
+                        <motion.div
+                          animate={hoveredItem === i ? {
+                            filter: [`drop-shadow(0 0 4px ${itemColor.glow}88)`, `drop-shadow(0 0 10px ${itemColor.glow})`, `drop-shadow(0 0 4px ${itemColor.glow}88)`],
+                          } : { filter: "none" }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        >
+                          <item.icon
+                            className="w-4 h-4 flex-shrink-0 transition-colors duration-300"
+                            style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.6)" }}
+                          />
+                        </motion.div>
+                        <span
+                          className="font-body text-xs transition-colors duration-300"
+                          style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.7)" }}
+                        >
+                          {item.label}
+                        </span>
+
+                        {/* Hover glow aura */}
+                        {hoveredItem === i && (
+                          <motion.div
+                            className="absolute -inset-3 rounded-full pointer-events-none"
+                            style={{ background: `radial-gradient(circle, ${itemColor.glow}15, transparent 70%)` }}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: [0, 0.8, 0.4], scale: [0.8, 1.4, 1.2] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          />
+                        )}
+
+                        {/* Mystical icon that appears on hover */}
+                        <AnimatePresence>
+                          {hoveredItem === i && (
+                            <motion.span
+                              className="absolute -top-5 left-1/2 text-sm pointer-events-none"
+                              style={{ transform: "translateX(-50%)" }}
+                              initial={{ opacity: 0, y: 5, scale: 0.5 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: -5, scale: 0.5 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              {["⭐", "🌙", "💫", "🔮", "✋"][i]}
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </div>
+
+            {/* Bottom subtle badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.3 }}
+              className="text-center pb-6 mt-4"
+            >
+              <span className="text-xs text-gold/50 font-body tracking-wider">
+                {t.hero_badge}
+              </span>
+            </motion.div>
+          </>
+        )}
       </div>
 
       {/* ── Cinematic vignette ── */}
