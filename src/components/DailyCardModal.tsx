@@ -6,6 +6,7 @@ import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { useT } from "@/i18n/LanguageContext";
 
@@ -208,6 +209,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         if (saved) {
           saveDailyCard({ ...saved, aiText: aiTextRef.current });
         }
+        // Record in mystical profile
+        mysticalProfile.recordDailyCard(selectedCard.hebrewName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
           title: `קלף יומי — ${selectedCard.hebrewName}`,

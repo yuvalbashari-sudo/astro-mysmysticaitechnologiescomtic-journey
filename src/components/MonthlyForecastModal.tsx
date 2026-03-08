@@ -5,6 +5,7 @@ import { getZodiacSign } from "@/data/zodiacData";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
@@ -39,6 +40,9 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     setIsLoading(false);
     setAiLoading(true);
     aiTextRef.current = "";
+
+    // Record zodiac in mystical profile
+    mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
 
     streamMysticalReading(
       "forecast",

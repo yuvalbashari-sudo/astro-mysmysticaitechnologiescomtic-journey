@@ -390,7 +390,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { type, data } = await req.json();
+    const { type, data, profileContext } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -399,6 +399,11 @@ serve(async (req) => {
     if (!promptBuilder) throw new Error(`Unknown reading type: ${type}`);
 
     const { system, user } = promptBuilder(data);
+
+    // Inject mystical profile context into system prompt
+    const enrichedSystem = profileContext 
+      ? `${system}\n\n${profileContext}`
+      : system;
 
     // For palm with image, use a vision-capable model
     const isPalmWithImage = type === "palm" && !!data.palmImage;
@@ -418,7 +423,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model,
         messages: [
-          { role: "system", content: system },
+          { role: "system", content: enrichedSystem },
           userMessage,
         ],
         stream: true,

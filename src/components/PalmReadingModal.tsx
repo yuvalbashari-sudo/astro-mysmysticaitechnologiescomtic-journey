@@ -4,6 +4,7 @@ import { X, Sparkles, Hand, Crown, Share2, Copy, Check, Loader2, Camera, Upload,
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT } from "@/i18n/LanguageContext";
@@ -48,7 +49,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     setSubmitted(true); setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
     streamMysticalReading("palm", { name: name.trim(), rightPalmImage, leftPalmImage },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-      () => { setAiLoading(false); readingsStorage.save({ type: "palm", title: `${t.readings_type_palm} — ${name}`, subtitle: t.palm_result_subtitle, symbol: "✋", data: { name, aiReading: aiTextRef.current } }); },
+      () => { setAiLoading(false); mysticalProfile.recordPalmReading(); readingsStorage.save({ type: "palm", title: `${t.readings_type_palm} — ${name}`, subtitle: t.palm_result_subtitle, symbol: "✋", data: { name, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
     );
   };

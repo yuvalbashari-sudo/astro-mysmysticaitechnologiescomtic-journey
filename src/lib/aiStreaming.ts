@@ -1,6 +1,7 @@
 import { toast } from "@/components/ui/sonner";
 import { Sparkles } from "lucide-react";
 import React from "react";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 
 // Stream AI reading from edge function
 export async function streamMysticalReading(
@@ -11,6 +12,10 @@ export async function streamMysticalReading(
   onError: (err: string) => void,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mystical-reading`;
+
+  // Inject mystical profile context
+  const profileContext = mysticalProfile.buildContextForAI();
+
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -18,7 +23,7 @@ export async function streamMysticalReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ type, data }),
+      body: JSON.stringify({ type, data, profileContext }),
     });
 
     if (!resp.ok) {

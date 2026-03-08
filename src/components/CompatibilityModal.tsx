@@ -6,6 +6,7 @@ import { Clock } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT } from "@/i18n/LanguageContext";
@@ -43,6 +44,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     setIsLoading(false);
     setAiLoading(true);
     aiTextRef.current = "";
+
+    // Record in mystical profile
+    mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
+    mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
 
     streamMysticalReading(
       "compatibility",
