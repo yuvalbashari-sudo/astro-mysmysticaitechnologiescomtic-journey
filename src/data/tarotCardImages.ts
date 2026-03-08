@@ -7,10 +7,14 @@ import hierophantImg from "@/assets/tarot/hierophant.jpg";
 import loversImg from "@/assets/tarot/lovers.jpg";
 import chariotImg from "@/assets/tarot/chariot.jpg";
 import strengthImg from "@/assets/tarot/strength.jpg";
+import hermitImg from "@/assets/tarot/hermit.jpg";
 import wheelImg from "@/assets/tarot/wheel-of-fortune.jpg";
 import justiceImg from "@/assets/tarot/justice.jpg";
 import hangedManImg from "@/assets/tarot/hanged-man.jpg";
 import deathImg from "@/assets/tarot/death.jpg";
+import temperanceImg from "@/assets/tarot/temperance.jpg";
+import devilImg from "@/assets/tarot/devil.jpg";
+import towerImg from "@/assets/tarot/tower.jpg";
 import starImg from "@/assets/tarot/star.jpg";
 import moonImg from "@/assets/tarot/moon.jpg";
 import sunImg from "@/assets/tarot/sun.jpg";
@@ -28,10 +32,14 @@ export const tarotCardImages: Record<string, string> = {
   "The Lovers": loversImg,
   "The Chariot": chariotImg,
   "Strength": strengthImg,
+  "The Hermit": hermitImg,
   "The Wheel of Fortune": wheelImg,
   "Justice": justiceImg,
   "The Hanged Man": hangedManImg,
   "Death": deathImg,
+  "Temperance": temperanceImg,
+  "The Devil": devilImg,
+  "The Tower": towerImg,
   "The Star": starImg,
   "The Moon": moonImg,
   "The Sun": sunImg,
