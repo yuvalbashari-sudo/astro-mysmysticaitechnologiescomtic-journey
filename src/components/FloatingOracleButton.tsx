@@ -5,7 +5,6 @@ import TarotModal from "./TarotModal";
 import CompatibilityModal from "./CompatibilityModal";
 import RisingSignModal from "./RisingSignModal";
 import PalmReadingModal from "./PalmReadingModal";
-import { drawTarotCards } from "@/data/tarotData";
 import { useT } from "@/i18n";
 
 const MENU_ITEMS = [
