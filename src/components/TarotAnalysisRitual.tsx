@@ -1,19 +1,39 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye } from "lucide-react";
+import { useLanguage, type Language } from "@/i18n";
 
 interface Props {
   question: string;
   onComplete: () => void;
 }
 
-const RITUAL_PHASES = [
-  { text: "מפרשים את הכוונה שמאחורי שאלתכם...", icon: "🔍" },
-  { text: "הקלפים מסתנכרנים עם האנרגיה שסביבכם...", icon: "✦" },
-  { text: "המסר מתחיל להתבהר...", icon: "🌟" },
-];
+const RITUAL_PHASES: Record<Language, { text: string; icon: string }[]> = {
+  he: [
+    { text: "מפרשים את הכוונה שמאחורי שאלתכם...", icon: "🔍" },
+    { text: "הקלפים מסתנכרנים עם האנרגיה שסביבכם...", icon: "✦" },
+    { text: "המסר מתחיל להתבהר...", icon: "🌟" },
+  ],
+  en: [
+    { text: "Interpreting the intention behind your question...", icon: "🔍" },
+    { text: "The cards are syncing with the energy around you...", icon: "✦" },
+    { text: "The message is beginning to unfold...", icon: "🌟" },
+  ],
+  ru: [
+    { text: "Раскрываем намерение за вашим вопросом...", icon: "🔍" },
+    { text: "Карты синхронизируются с вашей энергией...", icon: "✦" },
+    { text: "Послание начинает проясняться...", icon: "🌟" },
+  ],
+  ar: [
+    { text: "نفسّر النية الكامنة خلف سؤالك...", icon: "🔍" },
+    { text: "تتزامن البطاقات مع الطاقة من حولك...", icon: "✦" },
+    { text: "تبدأ الرسالة بالاتضاح...", icon: "🌟" },
+  ],
+};
 
 const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
+  const { language, dir } = useLanguage();
+  const ritualPhases = RITUAL_PHASES[language];
   const [phaseIndex, setPhaseIndex] = useState(0);
   const stableComplete = useCallback(onComplete, []);
 
@@ -218,9 +238,9 @@ const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
             exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-lg">{RITUAL_PHASES[phaseIndex].icon}</span>
+            <span className="text-lg">{ritualPhases[phaseIndex].icon}</span>
             <p className="font-heading text-base md:text-lg gold-gradient-text text-center">
-              {RITUAL_PHASES[phaseIndex].text}
+              {ritualPhases[phaseIndex].text}
             </p>
           </motion.div>
         </AnimatePresence>
@@ -260,7 +280,7 @@ const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
           {/* Quote marks */}
           <span className="absolute top-2 right-4 text-gold/10 text-2xl font-heading">״</span>
           <span className="absolute bottom-1 left-4 text-gold/10 text-2xl font-heading">״</span>
-          <p className="text-foreground/40 font-body text-[13px] leading-[1.8] line-clamp-2 px-3" dir="rtl">
+          <p className="text-foreground/40 font-body text-[13px] leading-[1.8] line-clamp-2 px-3" dir={dir}>
             {question}
           </p>
         </motion.div>

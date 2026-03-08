@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Eye } from "lucide-react";
+import { useLanguage, type Language } from "@/i18n";
 
 interface Props {
   spreadType: string;
@@ -8,32 +9,115 @@ interface Props {
   onSubmit: (question: string) => void;
 }
 
-const PLACEHOLDERS: Record<string, string[]> = {
-  love: [
-    "האם נכון לי להיכנס לקשר הזה?",
-    "מה מחזיק אותי מלהתחבר ברגש?",
-    "מה הצעד הבא שלי באהבה?",
-  ],
-  career: [
-    "מה מעכב אותי בקריירה שלי?",
-    "מה הצעד הנכון עבורי בקריירה?",
-    "האם אני בכיוון הנכון מקצועית?",
-  ],
-  decision: [
-    "איך נכון לי לקבל את ההחלטה שמולי?",
-    "מה אני לא רואה בסיטואציה הזו?",
-    "מה יקרה אם אבחר את הכיוון הזה?",
-  ],
-  universe: [
-    "מה היקום רוצה שאדע עכשיו?",
-    "מה המסר שמחכה לי היום?",
-    "מה הנשמה שלי מנסה להגיד לי?",
-  ],
-  timeline: [
-    "מה הסיפור שמתפתח סביבי?",
-    "מה ההשפעות שפועלות עליי כרגע?",
-    "לאן התהליך הזה מוביל אותי?",
-  ],
+const PLACEHOLDERS: Record<Language, Record<string, string[]>> = {
+  he: {
+    love: [
+      "האם נכון לי להיכנס לקשר הזה?",
+      "מה מחזיק אותי מלהתחבר ברגש?",
+      "מה הצעד הבא שלי באהבה?",
+    ],
+    career: [
+      "מה מעכב אותי בקריירה שלי?",
+      "מה הצעד הנכון עבורי בקריירה?",
+      "האם אני בכיוון הנכון מקצועית?",
+    ],
+    decision: [
+      "איך נכון לי לקבל את ההחלטה שמולי?",
+      "מה אני לא רואה בסיטואציה הזו?",
+      "מה יקרה אם אבחר את הכיוון הזה?",
+    ],
+    universe: [
+      "מה היקום רוצה שאדע עכשיו?",
+      "מה המסר שמחכה לי היום?",
+      "מה הנשמה שלי מנסה להגיד לי?",
+    ],
+    timeline: [
+      "מה הסיפור שמתפתח סביבי?",
+      "מה ההשפעות שפועלות עליי כרגע?",
+      "לאן התהליך הזה מוביל אותי?",
+    ],
+  },
+  en: {
+    love: [
+      "Is this relationship right for me?",
+      "What is blocking emotional connection?",
+      "What should my next step in love be?",
+    ],
+    career: [
+      "What is holding me back in my career?",
+      "What is the right next career move for me?",
+      "Am I on the right professional path?",
+    ],
+    decision: [
+      "How should I approach this decision?",
+      "What am I not seeing in this situation?",
+      "What will happen if I choose this path?",
+    ],
+    universe: [
+      "What does the universe want me to know now?",
+      "What message is waiting for me today?",
+      "What is my soul trying to tell me?",
+    ],
+    timeline: [
+      "What story is unfolding around me?",
+      "What energies are influencing me right now?",
+      "Where is this process leading me?",
+    ],
+  },
+  ru: {
+    love: [
+      "Подходит ли мне эта связь?",
+      "Что мешает мне открыться чувствам?",
+      "Какой мой следующий шаг в любви?",
+    ],
+    career: [
+      "Что сдерживает меня в карьере?",
+      "Какой следующий шаг в карьере верный?",
+      "Я двигаюсь в правильном направлении?",
+    ],
+    decision: [
+      "Как лучше принять это решение?",
+      "Чего я не вижу в этой ситуации?",
+      "Что будет, если я выберу этот путь?",
+    ],
+    universe: [
+      "Что Вселенная хочет сказать мне сейчас?",
+      "Какое послание ждёт меня сегодня?",
+      "Что пытается сказать моя душа?",
+    ],
+    timeline: [
+      "Какой сюжет разворачивается вокруг меня?",
+      "Какие влияния действуют на меня сейчас?",
+      "Куда ведёт этот процесс?",
+    ],
+  },
+  ar: {
+    love: [
+      "هل هذه العلاقة مناسبة لي؟",
+      "ما الذي يمنعني من الارتباط عاطفياً؟",
+      "ما هي خطوتي القادمة في الحب؟",
+    ],
+    career: [
+      "ما الذي يعيقني في مساري المهني؟",
+      "ما هي الخطوة المهنية الصحيحة لي؟",
+      "هل أنا على الطريق المهني الصحيح؟",
+    ],
+    decision: [
+      "كيف أتخذ القرار الصحيح الآن؟",
+      "ما الذي لا أراه في هذا الموقف؟",
+      "ماذا سيحدث إذا اخترت هذا الاتجاه؟",
+    ],
+    universe: [
+      "ماذا يريد الكون أن يخبرني الآن؟",
+      "ما الرسالة التي تنتظرني اليوم؟",
+      "ماذا تحاول روحي أن تقول لي؟",
+    ],
+    timeline: [
+      "ما القصة التي تتكشف من حولي؟",
+      "ما التأثيرات التي تعمل عليّ الآن؟",
+      "إلى أين يقودني هذا المسار؟",
+    ],
+  },
 };
 
 const SPREAD_ICONS: Record<string, string> = {
@@ -44,14 +128,64 @@ const SPREAD_ICONS: Record<string, string> = {
   timeline: "⏳",
 };
 
+const UI_COPY: Record<Language, {
+  title: string;
+  description: string;
+  questionLabel: string;
+  guidance: string;
+  continueCta: string;
+  skipCta: string;
+  validation: string;
+}> = {
+  he: {
+    title: "לפני שהקלפים נפתחים",
+    description: "הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה. כתבו את השאלה, ההתלבטות או התחום שמעסיק אתכם כעת.",
+    questionLabel: "מה השאלה שלכם?",
+    guidance: "ככל שהשאלה תהיה ברורה ואישית יותר, כך הקריאה תהיה מדויקת יותר.",
+    continueCta: "המשיכו לפתיחת הקלפים",
+    skipCta: "דלגו והמשיכו ללא שאלה",
+    validation: "כדי שהקלפים יוכלו להעניק מסר מדויק יותר, נסחו שאלה מעט מפורטת יותר.",
+  },
+  en: {
+    title: "Before the cards are revealed",
+    description: "Cards respond better when your intention is clear. Write your question, dilemma, or the area that currently occupies your mind.",
+    questionLabel: "What is your question?",
+    guidance: "The clearer and more personal your question is, the more accurate the reading will be.",
+    continueCta: "Continue to reveal the cards",
+    skipCta: "Skip and continue without a question",
+    validation: "For a more precise message, please write a slightly more detailed question.",
+  },
+  ru: {
+    title: "Перед открытием карт",
+    description: "Карты лучше откликаются на чёткое намерение. Напишите вопрос, сомнение или тему, которая волнует вас сейчас.",
+    questionLabel: "Какой у вас вопрос?",
+    guidance: "Чем яснее и личнее вопрос, тем точнее будет чтение.",
+    continueCta: "Продолжить к открытию карт",
+    skipCta: "Пропустить и продолжить без вопроса",
+    validation: "Чтобы получить более точное послание, сформулируйте вопрос чуть подробнее.",
+  },
+  ar: {
+    title: "قبل أن تنكشف البطاقات",
+    description: "تستجيب البطاقات بشكل أفضل عندما تكون نيتك واضحة. اكتب سؤالك أو حيرتك أو المجال الذي يشغلك الآن.",
+    questionLabel: "ما سؤالك؟",
+    guidance: "كلما كان السؤال أوضح وأكثر شخصية، كانت القراءة أدق.",
+    continueCta: "تابع لكشف البطاقات",
+    skipCta: "تخطَّ وتابع بدون سؤال",
+    validation: "للحصول على رسالة أدق، يُرجى صياغة سؤال أكثر تفصيلاً قليلاً.",
+  },
+};
+
 const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
+  const { language, dir } = useLanguage();
+  const copy = UI_COPY[language];
   const [question, setQuestion] = useState("");
   const [validationMsg, setValidationMsg] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const placeholders = PLACEHOLDERS[spreadType] || PLACEHOLDERS.timeline;
+  const placeholdersBySpread = PLACEHOLDERS[language];
+  const placeholders = placeholdersBySpread[spreadType] || placeholdersBySpread["timeline"];
   const spreadIcon = SPREAD_ICONS[spreadType] || "🔮";
 
   // Rotate placeholder
@@ -64,7 +198,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
 
   const handleSubmit = () => {
     if (question.trim().length > 0 && question.trim().length < 5) {
-      setValidationMsg("כדי שהקלפים יוכלו להעניק מסר מדויק יותר, נסחו שאלה מעט מפורטת יותר.");
+      setValidationMsg(copy.validation);
       return;
     }
     setValidationMsg("");
@@ -173,7 +307,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.6 }}
       >
-        לפני שהקלפים נפתחים
+        {copy.title}
       </motion.h2>
 
       {/* Spread badge */}
@@ -197,11 +331,9 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        dir="rtl"
+        dir={dir}
       >
-        הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה.{" "}
-        <br className="hidden md:block" />
-        כתבו את השאלה, ההתלבטות או התחום שמעסיק אתכם כעת.
+        {copy.description}
       </motion.p>
 
       {/* Elegant divider */}
@@ -223,8 +355,8 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
       >
-        <label className="block text-xs text-gold/50 font-body mb-2.5 text-right" dir="rtl">
-          מה השאלה שלכם?
+        <label className="block text-xs text-gold/50 font-body mb-2.5 text-right" dir={dir}>
+          {copy.questionLabel}
         </label>
 
         <motion.div
@@ -271,7 +403,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={placeholders[placeholderIdx]}
-            dir="rtl"
+            dir={dir}
             rows={4}
             maxLength={500}
             className="w-full bg-transparent text-foreground/90 font-body text-sm p-5 pt-4 resize-none focus:outline-none placeholder:text-foreground/20 leading-[1.9] relative z-10"
@@ -295,12 +427,12 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         {/* Micro guidance */}
         <motion.p
           className="text-[10px] text-foreground/25 font-body mt-2.5 text-right leading-relaxed"
-          dir="rtl"
+          dir={dir}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          ככל שהשאלה תהיה ברורה ואישית יותר, כך הקריאה תהיה מדויקת יותר.
+          {copy.guidance}
         </motion.p>
       </motion.div>
 
@@ -317,7 +449,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: -5, height: 0 }}
           >
-            <p className="text-foreground/50 font-body text-[11px] leading-relaxed" dir="rtl">
+            <p className="text-foreground/50 font-body text-[11px] leading-relaxed" dir={dir}>
               {validationMsg}
             </p>
           </motion.div>
@@ -357,7 +489,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
           />
         )}
         <Sparkles className="w-4 h-4 relative z-10" />
-        <span className="relative z-10">המשיכו לפתיחת הקלפים</span>
+        <span className="relative z-10">{copy.continueCta}</span>
       </motion.button>
 
       {/* Skip option */}
@@ -368,7 +500,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        דלגו והמשיכו ללא שאלה
+        {copy.skipCta}
       </motion.button>
     </motion.div>
   );
