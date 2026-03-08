@@ -522,63 +522,27 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
                               {/* Card front */}
                               <div
-                                className="absolute inset-0 rounded-xl flex flex-col items-center justify-center overflow-hidden"
+                                className="absolute inset-0 rounded-xl overflow-hidden"
                                 style={{
                                   backfaceVisibility: "hidden",
                                   transform: "rotateY(180deg)",
-                                  background: "linear-gradient(160deg, hsl(222 45% 12%), hsl(260 30% 8%), hsl(0 20% 7%))",
                                   border: "2px solid hsl(var(--gold) / 0.4)",
-                                  boxShadow: "0 0 30px hsl(var(--gold) / 0.2), 0 8px 30px hsl(0 0% 0% / 0.4), inset 0 0 40px hsl(var(--gold) / 0.03)",
+                                  boxShadow: "0 0 30px hsl(var(--gold) / 0.2), 0 8px 30px hsl(0 0% 0% / 0.4)",
                                 }}
                               >
-                                {/* Inner decorative frame */}
-                                <div className="absolute inset-[4px] rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
-                                <div className="absolute inset-[8px] rounded-md" style={{ border: "1px solid hsl(var(--gold) / 0.08)" }} />
-                                
-                                {/* Radial glow behind symbol */}
-                                <div className="absolute inset-0" style={{ background: "radial-gradient(circle at 50% 45%, hsl(var(--gold) / 0.08), transparent 60%)" }} />
-                                
-                                {/* Roman numeral at top */}
-                                <span className="font-heading text-[9px] md:text-[11px] tracking-[0.2em] text-gold/50 absolute top-2.5 md:top-3"
-                                  style={{ textShadow: "0 0 8px hsl(var(--gold) / 0.3)" }}>
-                                  {toRoman(card.number)}
-                                </span>
-
-                                {/* Main symbol */}
-                                <motion.div 
-                                  className="w-14 h-14 md:w-18 md:h-18 rounded-full flex items-center justify-center relative mt-1"
-                                  style={{ 
-                                    background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent)",
-                                    boxShadow: "0 0 20px hsl(var(--gold) / 0.1)"
-                                  }}
-                                  animate={{ boxShadow: ["0 0 15px hsl(var(--gold) / 0.08)", "0 0 30px hsl(var(--gold) / 0.18)", "0 0 15px hsl(var(--gold) / 0.08)"] }}
-                                  transition={{ duration: 3, repeat: Infinity }}
-                                >
-                                  <span className="text-3xl md:text-4xl" style={{ filter: "drop-shadow(0 0 6px hsl(var(--gold) / 0.4))" }}>
-                                    {card.symbol}
+                                <img 
+                                  src={tarotCardImages[card.name] || ""} 
+                                  alt={card.hebrewName} 
+                                  className="w-full h-full object-cover"
+                                />
+                                {/* Bottom overlay with card name */}
+                                <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-2 pt-6" style={{ background: "linear-gradient(to top, hsl(0 0% 0% / 0.8), transparent)" }}>
+                                  <span className="font-heading text-[10px] md:text-xs text-gold text-center px-2 leading-tight"
+                                    style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.4)" }}>
+                                    {card.hebrewName}
                                   </span>
-                                </motion.div>
-
-                                {/* Card name */}
-                                <span className="font-heading text-[10px] md:text-xs text-gold text-center px-2 mt-1.5 leading-tight"
-                                  style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.2)" }}>
-                                  {card.hebrewName}
-                                </span>
-                                
-                                {/* Position label */}
-                                <span className="font-body text-[8px] md:text-[9px] text-foreground/35 mt-0.5">{selectedSpread.positionLabels[i]}</span>
-
-                                {/* Number at bottom */}
-                                <span className="font-heading text-[9px] md:text-[11px] tracking-[0.2em] text-gold/50 absolute bottom-2.5 md:bottom-3"
-                                  style={{ textShadow: "0 0 8px hsl(var(--gold) / 0.3)" }}>
-                                  {toRoman(card.number)}
-                                </span>
-                                
-                                {/* Corner decorations */}
-                                <span className="absolute top-2 left-2.5 text-[7px] text-gold/25">✦</span>
-                                <span className="absolute top-2 right-2.5 text-[7px] text-gold/25">✦</span>
-                                <span className="absolute bottom-2 left-2.5 text-[7px] text-gold/25">✦</span>
-                                <span className="absolute bottom-2 right-2.5 text-[7px] text-gold/25">✦</span>
+                                  <span className="font-body text-[8px] md:text-[9px] text-foreground/40 mt-0.5">{selectedSpread.positionLabels[i]}</span>
+                                </div>
                               </div>
                             </motion.div>
                           </div>
