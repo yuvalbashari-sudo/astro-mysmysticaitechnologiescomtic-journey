@@ -578,7 +578,7 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
           return (
             <motion.span
               key={`arcane-${i}`}
-              className="absolute font-heading"
+              className="absolute font-heading select-none"
               style={{
                 left: x - 6,
                 top: y - 7,
@@ -593,32 +593,11 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
                   "0 0 12px hsl(43 80% 55% / 0.35)",
                   "0 0 4px hsl(43 80% 55% / 0.1)",
                 ],
-                // counter-rotate to stay upright
                 rotate: [360, 0],
               }}
               transition={{
                 opacity: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
                 textShadow: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
-                rotate: { duration: 90, repeat: Infinity, ease: "linear" },
-              }}
-            />
-          );
-          return (
-            <motion.span
-              key={`arcane-${i}`}
-              className="absolute font-heading select-none"
-              style={{
-                left: x - 6,
-                top: y - 7,
-                fontSize: isMobile ? "9px" : "12px",
-                color: "hsl(var(--gold) / 0.2)",
-              }}
-              animate={{
-                opacity: [0.15, 0.45, 0.15],
-                rotate: [360, 0],
-              }}
-              transition={{
-                opacity: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
                 rotate: { duration: 90, repeat: Infinity, ease: "linear" },
               }}
             >
