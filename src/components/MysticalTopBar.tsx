@@ -84,27 +84,31 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="absolute top-full mt-1 right-0 rounded-xl overflow-hidden z-[70]"
+                className="absolute top-full mt-2 right-0 rounded-xl overflow-hidden z-[70]"
                 style={{
                   background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
                   border: "1px solid hsl(var(--gold) / 0.2)",
                   boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
-                  minWidth: "140px",
+                  minWidth: "170px",
                 }}
               >
                 {languages.map((lang) => (
                   <button
                     key={lang}
-                    onClick={() => { setLanguage(lang); setLangOpen(false); }}
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-xs font-body transition-colors ${
+                    onPointerDown={(e) => {
+                      e.stopPropagation();
+                      setLanguage(lang);
+                      setLangOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-3 px-5 py-3 text-sm font-body transition-colors cursor-pointer ${
                       lang === language
                         ? "text-gold bg-gold/10"
                         : "text-foreground/70 hover:text-gold hover:bg-gold/5"
                     }`}
                   >
-                    <span className="text-sm">{languageConfig[lang].flag}</span>
+                    <span className="text-base">{languageConfig[lang].flag}</span>
                     <span>{languageConfig[lang].label}</span>
-                    {lang === language && <span className="mr-auto text-gold/50 text-xs">✦</span>}
+                    {lang === language && <span className="mr-auto text-gold/50 text-[10px]">✦</span>}
                   </button>
                 ))}
               </motion.div>
