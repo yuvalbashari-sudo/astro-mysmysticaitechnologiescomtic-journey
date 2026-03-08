@@ -244,7 +244,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       {SPREAD_OPTIONS.map((spread) => (
                         <motion.button
                           key={spread.key}
-                          onClick={() => setSelectedSpread(spread)}
+                          onClick={() => setSelectedSpreadKey(spread.key)}
                           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-body transition-all ${selectedSpread.key === spread.key ? "ring-1 ring-gold/40" : ""}`}
                           style={{
                             background: selectedSpread.key === spread.key
