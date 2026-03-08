@@ -238,7 +238,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Spread type selector */}
                   <div className="mb-8">
-                    <p className="text-gold/60 font-body text-xs mb-4">בחרו סוג קריאה</p>
+                    <p className="text-gold/60 font-body text-xs mb-4">{t.tarot_spread_choose}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-md mx-auto">
                       {SPREAD_OPTIONS.map((spread) => (
                         <motion.button
