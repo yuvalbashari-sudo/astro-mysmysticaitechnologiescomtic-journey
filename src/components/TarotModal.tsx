@@ -137,6 +137,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // AI state
@@ -148,9 +149,23 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const handleDraw = () => { setIsLoading(true); };
 
   const handleOnboardingComplete = () => {
-    const drawn = drawTarotCards(selectedSpread.cardCount);
-    setCards(drawn);
     setIsLoading(false);
+    setIsShuffling(true);
+    // After shuffle animation, reveal cards
+    setTimeout(() => {
+      const drawn = drawTarotCards(selectedSpread.cardCount);
+      setCards(drawn);
+      setIsShuffling(false);
+      startAIReading(drawn);
+      readingsStorage.save({
+        type: "tarot",
+        title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
+        subtitle: drawn.map(c => c.hebrewName).join(" • "),
+        symbol: "🔮",
+        data: { spread: selectedSpread.key, cards: drawn },
+      });
+    }, 3500);
+  };
 
     // Start AI reading immediately
     startAIReading(drawn);
