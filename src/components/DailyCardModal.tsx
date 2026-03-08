@@ -571,7 +571,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       >
                         <Clock className="w-3.5 h-3.5 text-gold/60" />
                         <span className="font-body text-xs text-gold/70">
-                          הקלף הבא ייפתח בעוד {timeLeft}
+                          {t.daily_next_card} {timeLeft}
                         </span>
                       </motion.div>
                     )}
