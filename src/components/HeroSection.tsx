@@ -1229,7 +1229,10 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
+  const [isNearBall, setIsNearBall] = useState(false);
+  const [clickBurst, setClickBurst] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const crystalRef = useRef<HTMLDivElement>(null);
 
   const menuItems = useMemo(() => [
     { icon: Star, label: t.hero_menu_forecast, angle: -72 },
