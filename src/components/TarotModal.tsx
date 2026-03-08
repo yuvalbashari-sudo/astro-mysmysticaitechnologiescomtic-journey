@@ -306,7 +306,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           transition={{ delay: 0.3 + i * 0.2 }}
                         >
                           {tarotCardImages[card.name]
-                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-14 h-20 object-cover rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-12 h-16 sm:w-14 sm:h-20 object-cover rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
                             : <span className="text-3xl">{card.symbol}</span>}
                           <span className="font-body text-xs text-gold mt-1">{card.hebrewName}</span>
                           <span className="text-[10px] text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>

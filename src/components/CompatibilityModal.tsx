@@ -135,10 +135,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </div>
                   <div className="max-w-sm mx-auto mb-8">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                       <div className="relative">
-                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
+                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
                         <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
                       </div>
                     </div>
