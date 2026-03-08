@@ -1528,7 +1528,7 @@ const HeroSection = () => {
         </motion.p>
 
         {/* ── Central mystical scene ── */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "620px" : "520px" }}>
+        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "680px" : "520px", marginTop: isMobile ? "-20px" : "0" }}>
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
