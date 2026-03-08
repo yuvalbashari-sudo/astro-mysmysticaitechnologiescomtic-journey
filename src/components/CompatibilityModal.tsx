@@ -124,10 +124,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.compat_desc}</p>
                   <div className="max-w-sm mx-auto mb-6">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                       <div className="relative">
-                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
+                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
                         <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
                       </div>
                     </div>
