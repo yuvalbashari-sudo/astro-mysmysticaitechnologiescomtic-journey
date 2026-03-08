@@ -113,11 +113,14 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
 );
 
 /* ── Energy Pulse ──────────────────────────────────── */
-const EnergyPulse = ({ isMobile, activeColor }: { isMobile: boolean; activeColor?: string }) => {
+const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobile: boolean; activeColor?: string; isNearBall?: boolean; clickBurst?: number }) => {
   const baseSize = isMobile ? 180 : 280;
   const pulseColor = activeColor || "hsl(var(--gold) / 0.15)";
+  const intensity = isNearBall ? 1.4 : 1;
+
   return (
     <>
+      {/* Primary expanding rings — randomized natural timing */}
       {[0, 1, 2].map((i) => (
         <motion.div
           key={i}
@@ -126,43 +129,152 @@ const EnergyPulse = ({ isMobile, activeColor }: { isMobile: boolean; activeColor
             width: baseSize,
             height: baseSize,
             border: `1px solid ${pulseColor}`,
+            boxShadow: `0 0 ${isNearBall ? 15 : 8}px ${pulseColor}`,
           }}
           animate={{
-            scale: [1, 2.2],
-            opacity: [0.4, 0],
+            scale: [1, 2.5],
+            opacity: [0.4 * intensity, 0],
           }}
           transition={{
-            duration: 3,
+            duration: 3.5,
             repeat: Infinity,
-            delay: i * 1 + 5,
-            repeatDelay: 6,
+            delay: i * 1.2 + 6 + Math.random() * 2,
+            repeatDelay: 6 + Math.random() * 4,
             ease: "easeOut",
           }}
         />
       ))}
-      {[...Array(8)].map((_, i) => {
-        const angle = (i / 8) * Math.PI * 2;
+
+      {/* Secondary blue cosmic wave */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none z-10"
+        style={{
+          width: baseSize * 0.8,
+          height: baseSize * 0.8,
+          background: "radial-gradient(circle, hsl(var(--celestial) / 0.08) 0%, transparent 70%)",
+        }}
+        animate={{
+          scale: [0.8, 2.8],
+          opacity: [0.3 * intensity, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          delay: 8 + Math.random() * 2,
+          repeatDelay: 7 + Math.random() * 3,
+          ease: "easeOut",
+        }}
+      />
+
+      {/* Light wave shimmer across sphere surface */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none z-[21] overflow-hidden"
+        style={{
+          width: isMobile ? 140 : 220,
+          height: isMobile ? 140 : 220,
+        }}
+      >
+        <motion.div
+          className="absolute"
+          style={{
+            width: "30%",
+            height: "120%",
+            top: "-10%",
+            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08), transparent)",
+            filter: "blur(8px)",
+            borderRadius: "50%",
+          }}
+          animate={{
+            left: ["-30%", "130%"],
+            opacity: [0, 0.6 * intensity, 0],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: 7,
+            repeatDelay: 8 + Math.random() * 4,
+            ease: "easeInOut",
+          }}
+        />
+      </motion.div>
+
+      {/* Scatter particles */}
+      {[...Array(isMobile ? 8 : 12)].map((_, i) => {
+        const angle = (i / (isMobile ? 8 : 12)) * Math.PI * 2;
+        const dist = isMobile ? 80 : 130;
         return (
           <motion.div
             key={`bp-${i}`}
-            className="absolute w-1 h-1 rounded-full pointer-events-none z-10"
-            style={{ background: activeColor || "hsl(var(--gold) / 0.6)" }}
+            className="absolute rounded-full pointer-events-none z-10"
+            style={{
+              width: i % 3 === 0 ? 3 : 2,
+              height: i % 3 === 0 ? 3 : 2,
+              background: i % 2 === 0
+                ? (activeColor || "hsl(var(--gold) / 0.7)")
+                : "hsl(var(--celestial) / 0.5)",
+            }}
             animate={{
-              x: [0, Math.cos(angle) * (isMobile ? 80 : 120)],
-              y: [0, Math.sin(angle) * (isMobile ? 80 : 120)],
-              opacity: [0, 0.8, 0],
+              x: [0, Math.cos(angle) * dist * intensity],
+              y: [0, Math.sin(angle) * dist * intensity],
+              opacity: [0, 0.8 * intensity, 0],
               scale: [0, 1.5, 0],
             }}
             transition={{
-              duration: 2,
+              duration: 2.5,
               repeat: Infinity,
-              delay: 5,
-              repeatDelay: 7,
+              delay: 6 + Math.random() * 2,
+              repeatDelay: 6 + Math.random() * 4,
               ease: "easeOut",
             }}
           />
         );
       })}
+
+      {/* Click burst — strong pulse on click */}
+      <AnimatePresence>
+        {clickBurst && clickBurst > 0 && (
+          <>
+            {[0, 1, 2, 3].map((i) => (
+              <motion.div
+                key={`click-ring-${clickBurst}-${i}`}
+                className="absolute rounded-full pointer-events-none z-10"
+                style={{
+                  width: baseSize * 0.6,
+                  height: baseSize * 0.6,
+                  border: `2px solid ${activeColor || "hsl(var(--gold) / 0.4)"}`,
+                  boxShadow: `0 0 20px ${activeColor || "hsl(var(--gold) / 0.3)"}`,
+                }}
+                initial={{ scale: 0.5, opacity: 0.8 }}
+                animate={{ scale: 3, opacity: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, delay: i * 0.15, ease: "easeOut" }}
+              />
+            ))}
+            {[...Array(16)].map((_, i) => {
+              const angle = (i / 16) * Math.PI * 2;
+              return (
+                <motion.div
+                  key={`click-p-${clickBurst}-${i}`}
+                  className="absolute rounded-full pointer-events-none z-10"
+                  style={{
+                    width: i % 3 === 0 ? 4 : 2,
+                    height: i % 3 === 0 ? 4 : 2,
+                    background: i % 3 === 0 ? "hsl(var(--gold))" : i % 3 === 1 ? "hsl(var(--celestial))" : "hsl(var(--crimson) / 0.6)",
+                  }}
+                  initial={{ x: 0, y: 0, opacity: 0 }}
+                  animate={{
+                    x: Math.cos(angle) * (100 + Math.random() * 60),
+                    y: Math.sin(angle) * (100 + Math.random() * 60),
+                    opacity: [0, 1, 0],
+                    scale: [0, 2, 0],
+                  }}
+                  transition={{ duration: 1.2 + Math.random() * 0.5, ease: "easeOut" }}
+                />
+              );
+            })}
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };
