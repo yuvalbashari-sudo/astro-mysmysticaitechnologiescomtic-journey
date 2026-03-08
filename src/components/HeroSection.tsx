@@ -1619,12 +1619,7 @@ const HeroSection = () => {
             </motion.button>
 
             {/* 2x2 Mystical Worlds Grid */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 2 }}
-              className="grid grid-cols-2 gap-3 w-full max-w-xs mt-2"
-            >
+            <div className="grid grid-cols-2 gap-3 w-full max-w-xs mt-2">
               {[
                 { icon: Eye, label: t.hero_menu_tarot, color: ITEM_COLORS[3], action: () => setTarotOpen(true) },
                 { icon: Sparkles, label: t.hero_menu_compatibility, color: ITEM_COLORS[2], action: () => setCompatibilityOpen(true) },
@@ -1633,6 +1628,9 @@ const HeroSection = () => {
               ].map((item, i) => (
                 <motion.button
                   key={i}
+                  initial={{ opacity: 0, y: 20, scale: 0.85 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 2 + i * 0.15, ease: "easeOut" }}
                   onClick={item.action}
                   whileTap={{ scale: 0.95 }}
                   className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl backdrop-blur-md transition-all"
@@ -1654,7 +1652,7 @@ const HeroSection = () => {
                   </span>
                 </motion.button>
               ))}
-            </motion.div>
+            </div>
 
             {/* Monthly forecast as a wide button */}
             <motion.button
