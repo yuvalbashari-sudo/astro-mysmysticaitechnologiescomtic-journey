@@ -8,16 +8,8 @@ import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import PalmReadingModal from "./PalmReadingModal";
+import { useT } from "@/i18n";
 
-const menuItems = [
-  { icon: Star, label: "תחזית חודשית לפי תאריך לידה", angle: -72 },
-  { icon: Moon, label: "המזל העולה לפי שעת לידה", angle: -36 },
-  { icon: Sparkles, label: "התאמה זוגית לפי המזלות", angle: 0 },
-  { icon: Eye, label: "פתיחת טארוט", angle: 36 },
-  { icon: Hand, label: "קריאת כף יד", angle: 72 },
-];
-
-// Constellation data - zodiac-inspired star patterns
 const constellations = [
   { stars: [[12, 15], [18, 12], [22, 18], [28, 14], [25, 8]], opacity: 0.4 },
   { stars: [[65, 10], [70, 15], [68, 22], [75, 18], [72, 8]], opacity: 0.35 },
@@ -59,7 +51,6 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
     animate={{ opacity: [0, 0.4, 0.4, 0] }}
     transition={{ duration: 8, repeat: Infinity, delay: baseDelay, ease: "easeInOut" }}
   >
-    {/* Lines */}
     {stars.slice(0, -1).map((star, j) => (
       <motion.line
         key={`l-${j}`}
@@ -73,7 +64,6 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
         transition={{ duration: 8, repeat: Infinity, delay: baseDelay + j * 0.3, ease: "easeInOut" }}
       />
     ))}
-    {/* Stars */}
     {stars.map((star, j) => (
       <motion.circle
         key={`s-${j}`}
@@ -108,13 +98,12 @@ const EnergyPulse = ({ isMobile }: { isMobile: boolean }) => {
           transition={{
             duration: 3,
             repeat: Infinity,
-            delay: i * 1 + 5, // stagger, start after 5s
+            delay: i * 1 + 5,
             repeatDelay: 6,
             ease: "easeOut",
           }}
         />
       ))}
-      {/* Burst particles */}
       {[...Array(8)].map((_, i) => {
         const angle = (i / 8) * Math.PI * 2;
         return (
@@ -141,33 +130,9 @@ const EnergyPulse = ({ isMobile }: { isMobile: boolean }) => {
   );
 };
 
-/* ── Energy line from tab to crystal ball ──────────── */
-const EnergyLine = ({ fromX, fromY, isMobile }: { fromX: number; fromY: number; isMobile: boolean }) => {
-  const centerX = isMobile ? 50 : 50;
-  return (
-    <motion.svg
-      className="absolute inset-0 w-full h-full pointer-events-none z-20"
-      style={{ overflow: "visible" }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <motion.line
-        x1={fromX} y1={fromY}
-        x2="50%" y2="50%"
-        stroke="hsl(43, 80%, 55%)"
-        strokeWidth="1"
-        strokeOpacity="0.3"
-        initial={{ pathLength: 0, opacity: 0 }}
-        animate={{ pathLength: 1, opacity: [0, 0.4, 0.2] }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      />
-    </motion.svg>
-  );
-};
-
 /* ── Main Hero ─────────────────────────────────────── */
 const HeroSection = () => {
+  const t = useT();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
@@ -177,13 +142,20 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
+  const menuItems = useMemo(() => [
+    { icon: Star, label: t.hero_menu_forecast, angle: -72 },
+    { icon: Moon, label: t.hero_menu_rising, angle: -36 },
+    { icon: Sparkles, label: t.hero_menu_compatibility, angle: 0 },
+    { icon: Eye, label: t.hero_menu_tarot, angle: 36 },
+    { icon: Hand, label: t.hero_menu_palm, angle: 72 },
+  ], [t]);
+
   // Mouse tracking
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
   const smoothX = useSpring(mouseX, { stiffness: 40, damping: 20 });
   const smoothY = useSpring(mouseY, { stiffness: 40, damping: 20 });
 
-  // Parallax transforms for layers (depth multiplier)
   const bgX = useTransform(smoothX, [0, 1], [8, -8]);
   const bgY = useTransform(smoothY, [0, 1], [5, -5]);
   const constellationX = useTransform(smoothX, [0, 1], [12, -12]);
@@ -192,10 +164,6 @@ const HeroSection = () => {
   const smokeY = useTransform(smoothY, [0, 1], [10, -10]);
   const crystalX = useTransform(smoothX, [0, 1], [20, -20]);
   const crystalY = useTransform(smoothY, [0, 1], [15, -15]);
-  const oracleX = useTransform(smoothX, [0, 1], [6, -6]);
-  const oracleY = useTransform(smoothY, [0, 1], [4, -4]);
-
-  // Crystal ball inner glow shift
   const glowShiftX = useTransform(smoothX, [0, 1], [-15, 15]);
   const glowShiftY = useTransform(smoothY, [0, 1], [-10, 10]);
 
@@ -215,7 +183,6 @@ const HeroSection = () => {
 
   const orbRadius = isMobile ? 140 : 240;
 
-  // Generate particles once
   const particles = useMemo(() => {
     const types: Array<"dust" | "spark" | "orb"> = ["dust", "spark", "orb"];
     return [...Array(isMobile ? 20 : 45)].map((_, i) => ({
@@ -241,17 +208,13 @@ const HeroSection = () => {
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
         <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
-        {/* Top vignette */}
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
-        {/* Bottom fade to page */}
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        {/* Side vignettes */}
         <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
       </motion.div>
 
       {/* ── Layer 1.5: Aura glow from hands area ── */}
       <div className="absolute inset-0 pointer-events-none z-[2]">
-        {/* Primary gold aura pulse */}
         <motion.div
           className="absolute"
           style={{
@@ -266,7 +229,6 @@ const HeroSection = () => {
           animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.15, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
-        {/* Secondary celestial shimmer */}
         <motion.div
           className="absolute"
           style={{
@@ -281,7 +243,6 @@ const HeroSection = () => {
           animate={{ opacity: [0.3, 0.6, 0.3], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
-        {/* Tiny spark particles from hands */}
         {[...Array(6)].map((_, i) => (
           <motion.div
             key={`hand-spark-${i}`}
@@ -322,41 +283,28 @@ const HeroSection = () => {
         className="absolute inset-0 pointer-events-none"
         style={isMobile ? {} : { x: smokeX, y: smokeY }}
       >
-        {/* Primary gold mist */}
         <motion.div
           className="absolute inset-0"
-          style={{
-            background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)",
-          }}
+          style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)" }}
           animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.05, 1], x: [0, 15, -10, 0] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
-        {/* Drifting crimson wisps */}
         <motion.div
           className="absolute inset-0"
-          style={{
-            background: "radial-gradient(ellipse at 40% 70%, hsl(var(--crimson) / 0.04) 0%, transparent 40%)",
-          }}
+          style={{ background: "radial-gradient(ellipse at 40% 70%, hsl(var(--crimson) / 0.04) 0%, transparent 40%)" }}
           animate={{ opacity: [0.2, 0.5, 0.2], x: [-10, 20, -10], y: [0, -8, 0] }}
           transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
         />
-        {/* Celestial drift layer */}
         <motion.div
           className="absolute inset-0"
-          style={{
-            background: "radial-gradient(ellipse at 60% 50%, hsl(var(--celestial) / 0.04) 0%, transparent 45%)",
-          }}
+          style={{ background: "radial-gradient(ellipse at 60% 50%, hsl(var(--celestial) / 0.04) 0%, transparent 45%)" }}
           animate={{ opacity: [0.2, 0.4, 0.2], x: [10, -15, 10], y: [5, -5, 5] }}
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 4 }}
         />
-        {/* Slow drifting smoke bands */}
         <motion.div
           className="absolute"
           style={{
-            top: "40%",
-            left: "-10%",
-            width: "120%",
-            height: "30%",
+            top: "40%", left: "-10%", width: "120%", height: "30%",
             background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.03) 30%, hsl(var(--gold) / 0.05) 50%, hsl(var(--gold) / 0.03) 70%, transparent 100%)",
             filter: "blur(40px)",
           }}
@@ -366,10 +314,7 @@ const HeroSection = () => {
         <motion.div
           className="absolute"
           style={{
-            top: "55%",
-            left: "-5%",
-            width: "110%",
-            height: "20%",
+            top: "55%", left: "-5%", width: "110%", height: "20%",
             background: "linear-gradient(90deg, transparent 0%, hsl(var(--crimson) / 0.02) 40%, hsl(var(--crimson) / 0.04) 60%, transparent 100%)",
             filter: "blur(50px)",
           }}
@@ -405,7 +350,7 @@ const HeroSection = () => {
           className="text-center mb-2 md:mb-4"
         >
           <h2 className="font-body text-xl md:text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
-            הכוכבים יודעים את מה שעדיין לא גיליתם
+            {t.hero_headline}
           </h2>
         </motion.div>
 
@@ -415,34 +360,28 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-center text-muted-foreground font-body text-sm md:text-base mb-8 md:mb-6 max-w-xl mx-auto"
         >
-          גורל, אהבה, תובנות רוחניות — הכל מחכה לכם בתוך כדור הקריסטל
+          {t.hero_subheadline}
         </motion.p>
 
         {/* ── Central mystical scene ── */}
         <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "420px" : "520px" }}>
-
-          {/* Oracle is now part of the background image */}
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
             className="relative flex items-center justify-center"
             style={isMobile ? {} : { x: crystalX, y: crystalY }}
           >
-            {/* Inner glow that follows mouse */}
             {!isMobile && (
               <motion.div
                 className="absolute rounded-full z-15 pointer-events-none"
                 style={{
-                  width: "120px",
-                  height: "120px",
-                  x: glowShiftX,
-                  y: glowShiftY,
+                  width: "120px", height: "120px",
+                  x: glowShiftX, y: glowShiftY,
                   background: "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
                 }}
               />
             )}
 
-            {/* Outer aura - reacts to hovered tab */}
             <motion.div
               className="absolute rounded-full"
               style={{
@@ -463,7 +402,6 @@ const HeroSection = () => {
               transition={{ duration: hoveredItem !== null ? 2.5 : 4, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            {/* Inner shimmer - rotating light refraction */}
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
@@ -475,7 +413,6 @@ const HeroSection = () => {
               transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
             />
 
-            {/* Inner energy pulse */}
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
@@ -483,14 +420,10 @@ const HeroSection = () => {
                 height: isMobile ? "100px" : "160px",
                 background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
               }}
-              animate={{
-                scale: [0.8, 1.3, 0.8],
-                opacity: [0.3, 0.7, 0.3],
-              }}
+              animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
 
-            {/* Aura distortion ring (reacts to mouse proximity) */}
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
@@ -502,56 +435,33 @@ const HeroSection = () => {
               transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
             />
 
-            {/* Sacred geometry rings */}
             <motion.div
               className="absolute rounded-full mystical-border"
-              style={{
-                width: isMobile ? "260px" : "380px",
-                height: isMobile ? "260px" : "380px",
-                borderColor: "hsl(var(--gold) / 0.1)",
-              }}
+              style={{ width: isMobile ? "260px" : "380px", height: isMobile ? "260px" : "380px", borderColor: "hsl(var(--gold) / 0.1)" }}
               animate={{ rotate: 360 }}
               transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
             />
             <motion.div
               className="absolute rounded-full mystical-border"
-              style={{
-                width: isMobile ? "300px" : "420px",
-                height: isMobile ? "300px" : "420px",
-                borderColor: "hsl(var(--gold) / 0.06)",
-              }}
+              style={{ width: isMobile ? "300px" : "420px", height: isMobile ? "300px" : "420px", borderColor: "hsl(var(--gold) / 0.06)" }}
               animate={{ rotate: -360 }}
               transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
             />
 
-            {/* Energy pulse rings */}
             <EnergyPulse isMobile={isMobile} />
 
-            {/* Crystal ball image */}
             <motion.img
               src={crystalBall}
               alt="Crystal Ball"
               className="relative z-20"
-              style={{
-                width: isMobile ? "180px" : "280px",
-                height: isMobile ? "180px" : "280px",
-                objectFit: "contain",
-              }}
+              style={{ width: isMobile ? "180px" : "280px", height: isMobile ? "180px" : "280px", objectFit: "contain" }}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: 1,
                 scale: hoveredItem !== null ? [1, 1.03, 1] : 1,
                 filter: hoveredItem !== null
-                  ? [
-                      "drop-shadow(0 0 40px hsl(43 80% 55% / 0.35))",
-                      "drop-shadow(0 0 65px hsl(43 80% 55% / 0.55))",
-                      "drop-shadow(0 0 40px hsl(43 80% 55% / 0.35))",
-                    ]
-                  : [
-                      "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))",
-                      "drop-shadow(0 0 50px hsl(43 80% 55% / 0.4))",
-                      "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))",
-                    ],
+                  ? ["drop-shadow(0 0 40px hsl(43 80% 55% / 0.35))", "drop-shadow(0 0 65px hsl(43 80% 55% / 0.55))", "drop-shadow(0 0 40px hsl(43 80% 55% / 0.35))"]
+                  : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 50px hsl(43 80% 55% / 0.4))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
               }}
               transition={{
                 opacity: { duration: 1, delay: 0.4 },
@@ -595,19 +505,10 @@ const HeroSection = () => {
                     style={{
                       borderWidth: "1px",
                       borderStyle: "solid",
-                      borderColor: hoveredItem === i
-                        ? "hsl(var(--gold) / 0.6)"
-                        : "hsl(var(--gold) / 0.15)",
+                      borderColor: hoveredItem === i ? "hsl(var(--gold) / 0.6)" : "hsl(var(--gold) / 0.15)",
                     }}
-                    animate={{
-                      y: [0, -4 - i * 0.5, 0],
-                    }}
-                    transition={{
-                      duration: 3 + i * 0.3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: i * 0.4,
-                    }}
+                    animate={{ y: [0, -4 - i * 0.5, 0] }}
+                    transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
                   >
                     <motion.div
                       animate={hoveredItem === i ? {
@@ -621,13 +522,10 @@ const HeroSection = () => {
                       {item.label}
                     </span>
 
-                    {/* Aura glow */}
                     {hoveredItem === i && (
                       <motion.div
                         className="absolute -inset-2 rounded-full pointer-events-none"
-                        style={{
-                          background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)",
-                        }}
+                        style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)" }}
                         initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: [0, 0.6, 0.3], scale: [0.8, 1.3, 1.1] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
@@ -638,8 +536,6 @@ const HeroSection = () => {
               );
             })}
           </motion.div>
-
-          {/* Oracle on mobile - part of background */}
         </div>
 
         {/* CTAs */}
@@ -651,7 +547,7 @@ const HeroSection = () => {
         >
           <a href="#free" className="btn-gold font-body flex items-center gap-2 text-sm md:text-base">
             <Sparkles className="w-4 h-4" />
-            גלו את ההתחלה המיסטית שלכם
+            {t.hero_cta_free}
           </a>
           <a
             href="https://wa.me/972500000000"
@@ -659,7 +555,7 @@ const HeroSection = () => {
             rel="noopener noreferrer"
             className="btn-outline-gold font-body flex items-center gap-2 text-sm md:text-base"
           >
-            💬 דברו איתנו בוואטסאפ
+            {t.hero_cta_whatsapp}
           </a>
         </motion.div>
 
@@ -671,12 +567,11 @@ const HeroSection = () => {
           className="text-center pb-6"
         >
           <span className="text-xs text-gold/50 font-body tracking-wider">
-            ✦ חוויה מיסטית בלעדית ומותאמת אישית ✦
+            {t.hero_badge}
           </span>
         </motion.div>
       </div>
 
-      {/* Bottom gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />

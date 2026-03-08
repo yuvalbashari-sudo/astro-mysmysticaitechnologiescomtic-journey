@@ -6,39 +6,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-const faqItems = [
-  {
-    icon: User,
-    q: "האם הניתוח באמת אישי?",
-    a: "בהחלט. כל קריאה נבנית על סמך הפרטים האישיים שלכם — תאריך לידה, שעת לידה ומקום. המערכת מנתחת את המידע דרך מערכות סמליות שונות (אסטרולוגיה, טארוט, נומרולוגיה) ויוצרת פירוש ייחודי שמותאם אך ורק לכם. אין שתי קריאות זהות.",
-  },
-  {
-    icon: CreditCard,
-    q: "מה בחינם ומה בתשלום?",
-    a: "חלק מהחוויות זמינות בחינם — כמו קלף טארוט יומי, תובנה לפי המזל ובדיקת התאמה בסיסית. קריאות מעמיקות יותר, דו״חות מפורטים וניתוחים מתקדמים (כמו מפת לידה מלאה או קריאת כף יד) עשויים להיות חלק מהחבילות הפרימיום.",
-  },
-  {
-    icon: Hand,
-    q: "איך קריאת כף יד עובדת?",
-    a: "המשתמש מעלה תמונות של שתי כפות הידיים. המערכת מנתחת את הקווים הסמליים — קו החיים, קו הלב, קו הגורל וקו השכל — ומפיקה פירוש מפורט שמאיר את הפוטנציאל הפנימי, נטיות רגשיות ומאפייני אישיות.",
-  },
-  {
-    icon: Clock,
-    q: "האם חייבים לדעת את שעת הלידה?",
-    a: "שעת הלידה נדרשת בעיקר לניתוח המזל העולה, שחושף את האופן שבו אחרים תופסים אתכם. שאר החוויות — אסטרולוגיה, טארוט, התאמה זוגית וקריאת כף יד — אינן דורשות שעת לידה ופועלות על סמך תאריך הלידה או אינטראקציה ישירה.",
-  },
-  {
-    icon: Layers,
-    q: "איך בחירת קלפי הטארוט מתבצעת?",
-    a: "החפיסה נערבבת באופן אקראי בכל פעם מחדש, והקלפים הנבחרים נחשפים באופן דינמי במהלך החוויה. כל קלף מקבל פירוש ייחודי המותאם לשאלה, למיקום בפריסה ולהקשר האישי שלכם — מה שהופך כל קריאה לרגע ייחודי ובלתי חוזר.",
-  },
-];
+import { useT } from "@/i18n";
 
 const FAQSection = () => {
+  const t = useT();
+
+  const faqItems = [
+    { icon: User, q: t.faq_q1, a: t.faq_a1 },
+    { icon: CreditCard, q: t.faq_q2, a: t.faq_a2 },
+    { icon: Hand, q: t.faq_q3, a: t.faq_a3 },
+    { icon: Clock, q: t.faq_q4, a: t.faq_a4 },
+    { icon: Layers, q: t.faq_q5, a: t.faq_a5 },
+  ];
+
   return (
     <section className="py-28 px-4 relative overflow-hidden cosmic-section-bg">
-      {/* Cosmic accent */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute bottom-0 left-1/3 w-72 h-72 rounded-full bg-celestial/5 blur-[100px]" />
         <div className="absolute top-1/4 right-1/4 w-48 h-48 rounded-full bg-crimson/4 blur-[90px]" />
@@ -55,15 +37,15 @@ const FAQSection = () => {
         <div className="flex items-center justify-center gap-3 mb-6">
           <Sparkles className="w-4 h-4 text-gold/50" />
           <span className="text-gold/40 font-body text-xs tracking-[0.15em]">
-            ✦ שאלות ותשובות ✦
+            {t.faq_label}
           </span>
           <Sparkles className="w-4 h-4 text-gold/50" />
         </div>
         <h2 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-4">
-          שאלות נפוצות
+          {t.faq_title}
         </h2>
         <p className="text-muted-foreground font-body text-lg max-w-lg mx-auto">
-          כל מה שרציתם לדעת על החוויה המיסטית
+          {t.faq_subtitle}
         </p>
       </motion.div>
 
@@ -82,7 +64,7 @@ const FAQSection = () => {
             >
               <AccordionTrigger className="font-body text-foreground/90 text-right hover:no-underline hover:text-gold transition-colors py-6 gap-4">
                 <div className="flex items-center gap-4 flex-1 text-right">
-                <div className="icon-glow w-9 h-9 flex-shrink-0">
+                  <div className="icon-glow w-9 h-9 flex-shrink-0">
                     <item.icon className="w-4 h-4 text-gold/70" />
                   </div>
                   <span className="text-[15px]">{item.q}</span>

@@ -1,47 +1,25 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Sun, Heart, Layers, Hand } from "lucide-react";
 import TarotWorldModal from "@/components/TarotWorldModal";
 import MonthlyForecastModal from "@/components/MonthlyForecastModal";
 import CompatibilityModal from "@/components/CompatibilityModal";
 import PalmReadingModal from "@/components/PalmReadingModal";
-
-const categories = [
-  {
-    icon: Sun,
-    title: "אסטרולוגיה ומפת לידה",
-    description: "גלו את המפה הקוסמית שלכם — כוכבי הלכת, הבתים האסטרולוגיים והמסר האישי שנכתב בכוכבים",
-    cta: "גלו את המפה שלכם",
-    action: "forecast",
-  },
-  {
-    icon: Heart,
-    title: "התאמה זוגית",
-    description: "בדקו את הכימיה הרוחנית בינכם לבין בן/בת הזוג — ברמה הקוסמית העמוקה ביותר",
-    cta: "בדקו התאמה",
-    action: "compatibility",
-  },
-  {
-    icon: Layers,
-    title: "קריאה בטארוט",
-    description: "קבלו תשובות מהיקום — קלפי הטארוט חושפים את מה שהנשמה שלכם צריכה לדעת",
-    cta: "שאלו את הקלפים",
-    action: "tarot-world",
-  },
-  {
-    icon: Hand,
-    title: "קריאת כף היד",
-    description: "כף היד שלכם מספרת סיפור — קווי החיים, הלב והגורל מחכים להיחשף",
-    cta: "חשפו את הסיפור",
-    action: "palm",
-  },
-];
+import { useT } from "@/i18n";
 
 const MysticalNav = () => {
+  const t = useT();
   const [tarotWorldOpen, setTarotWorldOpen] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
+
+  const categories = useMemo(() => [
+    { icon: Sun, title: t.nav_astrology_title, description: t.nav_astrology_desc, cta: t.nav_astrology_cta, action: "forecast" },
+    { icon: Heart, title: t.nav_compatibility_title, description: t.nav_compatibility_desc, cta: t.nav_compatibility_cta, action: "compatibility" },
+    { icon: Layers, title: t.nav_tarot_title, description: t.nav_tarot_desc, cta: t.nav_tarot_cta, action: "tarot-world" },
+    { icon: Hand, title: t.nav_palm_title, description: t.nav_palm_desc, cta: t.nav_palm_cta, action: "palm" },
+  ], [t]);
 
   const handleClick = (action: string) => {
     if (action === "tarot-world") setTarotWorldOpen(true);
@@ -62,17 +40,17 @@ const MysticalNav = () => {
           className="text-center mb-16"
         >
           <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-4">
-            שערים מיסטיים
+            {t.nav_title}
           </h2>
           <p className="text-muted-foreground font-body text-lg max-w-lg mx-auto">
-            בחרו את השער שלכם לעולם הרוחני
+            {t.nav_subtitle}
           </p>
         </motion.div>
 
         <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((cat, i) => (
             <motion.div
-              key={cat.title}
+              key={cat.action}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

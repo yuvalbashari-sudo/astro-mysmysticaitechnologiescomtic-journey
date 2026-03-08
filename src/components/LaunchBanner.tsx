@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
 import { Crown, Sparkles, Gift } from "lucide-react";
 import { getLaunchDaysRemaining } from "@/lib/launchConfig";
+import { useT } from "@/i18n";
 
 const LaunchBanner = () => {
+  const t = useT();
   const daysLeft = getLaunchDaysRemaining();
 
   return (
     <section className="py-20 px-4 relative overflow-hidden">
-      {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full bg-gold/[0.04] blur-[120px]" />
         <div className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-crimson/[0.03] blur-[80px]" />
@@ -22,18 +23,10 @@ const LaunchBanner = () => {
         transition={{ duration: 0.8 }}
         className="max-w-3xl mx-auto relative z-10"
       >
-        {/* Outer ornamental frame */}
         <div className="mystical-card-elevated relative p-10 md:p-14 text-center overflow-hidden">
-          {/* Inner glow effect */}
           <div className="absolute inset-0 pointer-events-none">
-            <div
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }}
-            />
-            <div
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }}
-            />
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }} />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }} />
             <motion.div
               className="absolute inset-0"
               style={{ background: "radial-gradient(ellipse at 50% 30%, hsl(var(--gold) / 0.04) 0%, transparent 60%)" }}
@@ -42,7 +35,6 @@ const LaunchBanner = () => {
             />
           </div>
 
-          {/* Crown icon */}
           <motion.div
             className="flex items-center justify-center gap-2 mb-6"
             initial={{ opacity: 0, scale: 0.8 }}
@@ -55,7 +47,6 @@ const LaunchBanner = () => {
             <Sparkles className="w-4 h-4 text-gold/50" />
           </motion.div>
 
-          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -69,12 +60,11 @@ const LaunchBanner = () => {
           >
             <Crown className="w-4 h-4 text-gold" />
             <span className="font-body text-gold text-sm font-semibold tracking-wide">
-              מתנת השקה מיוחדת
+              {t.launch_gift}
             </span>
             <Crown className="w-4 h-4 text-gold" />
           </motion.div>
 
-          {/* Main heading */}
           <motion.h2
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -82,10 +72,9 @@ const LaunchBanner = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="font-heading text-3xl md:text-4xl lg:text-5xl gold-gradient-text mb-5 leading-tight"
           >
-            כל השערים פתוחים בפניכם
+            {t.launch_title}
           </motion.h2>
 
-          {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -93,9 +82,9 @@ const LaunchBanner = () => {
             transition={{ delay: 0.5 }}
             className="font-body text-foreground/80 text-lg md:text-xl mb-4 leading-relaxed max-w-xl mx-auto"
           >
-            לרגל ההשקה — כל הקריאות, הניתוחים והכלים המיסטיים
+            {t.launch_subtitle}
             <br />
-            <span className="text-gold font-semibold">פתוחים לכם בחינם לתקופה מוגבלת</span>
+            <span className="text-gold font-semibold">{t.launch_free_highlight}</span>
           </motion.p>
 
           <motion.p
@@ -105,12 +94,11 @@ const LaunchBanner = () => {
             transition={{ delay: 0.6 }}
             className="font-body text-muted-foreground text-sm mb-8 leading-relaxed max-w-lg mx-auto"
           >
-            ניתוח אסטרולוגי אישי • מזל עולה • התאמה זוגית • קריאת טארוט • קריאת כף יד
+            {t.launch_includes}
             <br />
-            הכל כלול. הכל פתוח. הכל מחכה לכם.
+            {t.launch_all_included}
           </motion.p>
 
-          {/* Days remaining */}
           {daysLeft > 0 && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -124,34 +112,29 @@ const LaunchBanner = () => {
               }}
             >
               <span className="font-body text-muted-foreground text-sm">
-                נותרו
+                {t.launch_days_remaining_prefix}
               </span>
               <span className="font-heading text-2xl text-gold">
                 {daysLeft}
               </span>
               <span className="font-body text-muted-foreground text-sm">
-                ימים להצעת ההשקה
+                {t.launch_days_remaining_suffix}
               </span>
             </motion.div>
           )}
 
-          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.8 }}
           >
-            <a
-              href="#free"
-              className="btn-gold inline-flex items-center gap-2 text-base"
-            >
-              <span>חקרו את החוויה המיסטית המלאה</span>
+            <a href="#free" className="btn-gold inline-flex items-center gap-2 text-base">
+              <span>{t.launch_cta}</span>
               <Sparkles className="w-4 h-4" />
             </a>
           </motion.div>
 
-          {/* Ornamental bottom symbol */}
           <motion.div
             className="mt-8 text-gold/25 text-sm tracking-[0.3em]"
             initial={{ opacity: 0 }}
