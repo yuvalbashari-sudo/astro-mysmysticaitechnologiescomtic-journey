@@ -383,7 +383,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
             title: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`,
             subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
             symbol: selectedSpread.icon,
-            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current },
+            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current, userQuestion: userQuestion || undefined },
           });
         },
         (err) => {
@@ -391,6 +391,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           setAiError(err);
           toast(err);
         },
+        userQuestion || undefined,
       );
     }
   }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);
