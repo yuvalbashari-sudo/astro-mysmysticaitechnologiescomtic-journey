@@ -295,7 +295,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <motion.h2 className="font-heading text-2xl gold-gradient-text mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.tarot_cards_title}</motion.h2>
 
                     {/* Card display */}
-                    <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6 flex-wrap">
                       {cards.map((card, i) => (
                         <motion.div
                           key={i}
