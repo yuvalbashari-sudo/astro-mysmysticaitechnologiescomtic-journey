@@ -107,7 +107,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   <AnimatePresence mode="wait">
                     <motion.div key={activeCard} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                       <div className="text-center mb-4">
-                        <span className="text-4xl">{cards[activeCard].symbol}</span>
+                        {tarotCardImages[cards[activeCard].name] ? (
+                          <img src={tarotCardImages[cards[activeCard].name]} alt={cards[activeCard].hebrewName} className="w-32 h-48 object-cover rounded-lg mx-auto shadow-lg" style={{ border: "2px solid hsl(var(--gold) / 0.3)" }} />
+                        ) : (
+                          <span className="text-4xl">{cards[activeCard].symbol}</span>
+                        )}
                         <h3 className="font-heading text-lg text-gold mt-2">{cards[activeCard].hebrewName}</h3>
                       </div>
                       {cardSections.map((section, i) => {
