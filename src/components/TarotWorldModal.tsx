@@ -510,6 +510,58 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
+              {/* PHASE: Question Input */}
+              {phase === "question" && selectedSpread && (
+                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, x: -30 }} className="relative p-6 md:p-10">
+                  <div className="text-center mb-8">
+                    <motion.div
+                      className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center relative"
+                      style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), hsl(var(--gold) / 0.08), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
+                      animate={{ boxShadow: ["0 0 20px hsl(var(--gold) / 0.1)", "0 0 40px hsl(var(--gold) / 0.2)", "0 0 20px hsl(var(--gold) / 0.1)"] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      <span className="text-3xl">❓</span>
+                    </motion.div>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.tarot_question_title}</h2>
+                    <p className="text-foreground/60 font-body text-sm max-w-md mx-auto leading-relaxed">{t.tarot_question_desc}</p>
+                  </div>
+
+                  <div className="max-w-lg mx-auto">
+                    <label className="block text-gold/80 font-body text-sm mb-3 text-right">{t.tarot_question_label}</label>
+                    <textarea
+                      value={userQuestion}
+                      onChange={(e) => setUserQuestion(e.target.value)}
+                      placeholder={t.tarot_question_placeholder}
+                      maxLength={300}
+                      rows={3}
+                      className="w-full rounded-xl p-4 font-body text-sm text-foreground/90 placeholder:text-foreground/30 resize-none focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all text-right"
+                      style={{
+                        background: "hsl(var(--deep-blue-light) / 0.4)",
+                        border: "1px solid hsl(var(--gold) / 0.15)",
+                      }}
+                      dir="rtl"
+                    />
+                    <p className="text-foreground/30 font-body text-[10px] mt-1 text-left">{userQuestion.length}/300</p>
+
+                    <motion.button
+                      onClick={handleQuestionSubmit}
+                      disabled={!userQuestion.trim()}
+                      className="w-full mt-6 py-3.5 rounded-xl font-heading text-sm tracking-wide transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      style={{
+                        background: userQuestion.trim() ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--crimson) / 0.15))" : "hsl(var(--muted) / 0.2)",
+                        border: "1px solid hsl(var(--gold) / 0.25)",
+                        color: "hsl(var(--gold))",
+                        boxShadow: userQuestion.trim() ? "0 0 20px hsl(var(--gold) / 0.1)" : "none",
+                      }}
+                      whileHover={userQuestion.trim() ? { scale: 1.02, boxShadow: "0 0 30px hsl(var(--gold) / 0.2)" } : {}}
+                      whileTap={userQuestion.trim() ? { scale: 0.98 } : {}}
+                    >
+                      {t.tarot_question_cta}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              )}
+
               {/* PHASE 2: Shuffle */}
               {phase === "shuffle" && (
                 <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[400px]">
