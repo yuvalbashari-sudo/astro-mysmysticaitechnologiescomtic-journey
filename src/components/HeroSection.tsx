@@ -907,10 +907,32 @@ const TarotCardReveal = ({
     return () => clearTimeout(timer);
   }, []);
 
+  // Auto-close revealed card after 10 seconds
+  useEffect(() => {
+    if (phase !== "revealed") return;
+    const timer = setTimeout(() => {
+      setPhase("idle");
+      setTimeout(() => {
+        const [drawn] = drawTarotCards(1);
+        setCard(drawn);
+        setPhase("silhouette");
+      }, 3000);
+    }, 10000);
+    return () => clearTimeout(timer);
+  }, [phase]);
+
   const handleClick = useCallback(() => {
     if (phase === "silhouette") {
       setPhase("flipping");
       setTimeout(() => setPhase("revealed"), 1200);
+    } else if (phase === "revealed") {
+      setPhase("idle");
+      // Re-draw a new card and show silhouette again after a brief pause
+      setTimeout(() => {
+        const [drawn] = drawTarotCards(1);
+        setCard(drawn);
+        setPhase("silhouette");
+      }, 3000);
     }
   }, [phase]);
 
