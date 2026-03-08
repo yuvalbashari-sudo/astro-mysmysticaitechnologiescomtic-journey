@@ -1462,6 +1462,11 @@ const HeroSection = () => {
 
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} />
 
+            {/* Arcane Portal Ring */}
+            {entranceComplete && (
+              <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
+            )}
+
             {/* Zodiac Wheel */}
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
