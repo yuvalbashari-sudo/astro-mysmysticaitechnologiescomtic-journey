@@ -32,7 +32,7 @@ export function getZodiacSign(date: Date): ZodiacSign {
   return zodiacData.pisces;
 }
 
-const zodiacData: Record<string, ZodiacSign> = {
+export const zodiacData: Record<string, ZodiacSign> = {
   aries: {
     name: "Aries",
     hebrewName: "טלה",
