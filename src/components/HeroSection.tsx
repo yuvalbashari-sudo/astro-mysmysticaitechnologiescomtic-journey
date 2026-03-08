@@ -2083,12 +2083,56 @@ const HeroSection = () => {
               </motion.div>
             </div>
 
-            {/* Bottom subtle badge */}
+            {/* Primary CTA + Social Proof */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.2 }}
+              className="text-center mt-2"
+            >
+              <motion.button
+                onClick={() => setTarotOpen(true)}
+                className="btn-gold rounded-full font-heading text-base tracking-wider px-12 py-4"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {t.hero_cta_personal}
+              </motion.button>
+              <p className="text-muted-foreground/40 font-body text-xs mt-3">
+                ✦ {t.hero_social_proof} ✦
+              </p>
+            </motion.div>
+
+            {/* How it works */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2.3 }}
-              className="text-center pb-6 mt-4"
+              transition={{ delay: 2.5 }}
+              className="mt-6 mb-4"
+            >
+              <p className="text-center text-gold/40 font-heading text-xs tracking-widest mb-4 uppercase">
+                {t.hero_how_title}
+              </p>
+              <div className="flex justify-center items-start gap-12">
+                {[
+                  { emoji: "🔮", text: t.hero_how_step1 },
+                  { emoji: "✨", text: t.hero_how_step2 },
+                  { emoji: "🌙", text: t.hero_how_step3 },
+                ].map((step, i) => (
+                  <div key={i} className="flex flex-col items-center text-center gap-1.5">
+                    <span className="text-xl">{step.emoji}</span>
+                    <span className="text-xs text-muted-foreground/60 font-body">{step.text}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.8 }}
+              className="text-center pb-6"
             >
               <span className="text-xs text-gold/50 font-body tracking-wider">
                 {t.hero_badge}
