@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { useT } from "@/i18n/LanguageContext";
 
 interface Props {
   onComplete: () => void;
 }
 
 const TarotShufflePhase = ({ onComplete }: Props) => {
+  const t = useT();
   const [phase, setPhase] = useState<"idle" | "shuffling" | "settling" | "done">("idle");
   const [intensity, setIntensity] = useState(0);
 
@@ -100,7 +102,7 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {isShuffling ? "הקלפים מתערבבים..." : isSettling || isDone ? "הקלפים מוכנים" : "טקס ערבוב הקלפים"}
+        {isShuffling ? t.tarot_shuffle_title_shuffling : isSettling || isDone ? t.tarot_shuffle_title_ready : t.tarot_shuffle_title_idle}
       </motion.h3>
       <motion.p
         className="relative z-10 text-foreground/50 font-body text-xs mb-10"
@@ -109,10 +111,10 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
         transition={{ delay: 0.4 }}
       >
         {isShuffling
-          ? "האנרגיה הקוסמית בוחרת את הקלפים שלכם..."
+          ? t.tarot_shuffle_desc_shuffling
           : isSettling || isDone
-            ? "הקלפים נבחרו עבורכם"
-            : "לחצו כדי לערבב את הקלפים ולהתחיל את הטקס"}
+            ? t.tarot_shuffle_desc_ready
+            : t.tarot_shuffle_desc_idle}
       </motion.p>
 
       {/* Card deck area */}
@@ -243,7 +245,7 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
             whileTap={{ scale: 0.97 }}
           >
             <Sparkles className="w-4 h-4" />
-            שקשקו את הקלפים
+            {t.tarot_shuffle_cta}
           </motion.button>
         )}
         {isShuffling && (
@@ -256,7 +258,7 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
             transition={{ duration: 1.5, repeat: Infinity }}
           >
             <Sparkles className="w-4 h-4 text-gold/70" />
-            <span className="font-body text-xs text-gold/60">הקלפים מתערבבים...</span>
+            <span className="font-body text-xs text-gold/60">{t.tarot_shuffle_status}</span>
           </motion.div>
         )}
         {(isSettling || isDone) && (
@@ -267,7 +269,7 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            ✦ הקלפים מוכנים עבורכם ✦
+            {t.tarot_shuffle_done}
           </motion.p>
         )}
       </AnimatePresence>

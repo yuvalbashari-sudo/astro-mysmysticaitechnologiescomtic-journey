@@ -79,6 +79,7 @@ async function streamTarotReading(
   onDone: () => void,
   onError: (err: string) => void,
   userQuestion?: string,
+  errorMessages?: { unexpected: string; service: string; connection: string },
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
 
@@ -97,8 +98,8 @@ async function streamTarotReading(
     });
 
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: "שגיאה לא צפויה" }));
-      onError(errData.error || "שגיאה בשירות");
+      const errData = await resp.json().catch(() => ({ error: errorMessages?.unexpected || "Unexpected error" }));
+      onError(errData.error || errorMessages?.service || "Service error");
       return;
     }
 
@@ -156,7 +157,7 @@ async function streamTarotReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "שגיאה בחיבור");
+    onError(e instanceof Error ? e.message : errorMessages?.connection || "Connection error");
   }
 }
 
@@ -402,6 +403,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           toast(err);
         },
         userQuestion || undefined,
+        { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
       );
     }
   }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);

@@ -58,6 +58,7 @@ async function streamTarotReading(
   onDone: () => void,
   onError: (err: string) => void,
   userQuestion?: string,
+  errorMessages?: { unexpected: string; service: string; connection: string },
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
@@ -73,8 +74,8 @@ async function streamTarotReading(
     });
 
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: "שגיאה לא צפויה" }));
-      onError(errData.error || "שגיאה בשירות");
+      const errData = await resp.json().catch(() => ({ error: errorMessages.unexpected }));
+      onError(errData.error || errorMessages.service);
       return;
     }
 
@@ -128,7 +129,7 @@ async function streamTarotReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "שגיאה בחיבור");
+    onError(e instanceof Error ? e.message : errorMessages.connection);
   }
 }
 
@@ -260,6 +261,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
+      { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
     );
   };
 
@@ -388,7 +390,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     ))}
                   </motion.div>
                   <p className="text-gold/40 font-body text-[10px] tracking-wider mb-6">
-                    שלב 1 מתוך 3 — בחרו את סוג הקריאה
+                    {t.tarot_step_label} 1 — {t.tarot_step1_desc}
                   </p>
 
                   {/* Title */}
@@ -490,7 +492,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     whileTap={{ scale: 0.97 }}
                   >
                     <Sparkles className="w-4 h-4" />
-                    פתחו את הקלפים
+                    {t.tarot_open_cards_cta}
                   </motion.button>
                   <p className="text-[10px] text-muted-foreground/40 font-body mt-5">{t.tarot_note}</p>
                 </motion.div>
@@ -558,7 +560,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     ))}
                   </motion.div>
-                  <p className="relative z-10 text-gold/40 font-body text-[10px] tracking-wider mb-2">שלב 2 מתוך 3 — בחרו את הקלפים שלכם</p>
+                  <p className="relative z-10 text-gold/40 font-body text-[10px] tracking-wider mb-2">{t.tarot_step_label} 2 — {t.tarot_step2_desc}</p>
 
                   <motion.h3
                     className="relative z-10 font-heading text-lg gold-gradient-text mb-2"
@@ -566,7 +568,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    הקלפים מחכים לכם על השולחן
+                    {t.tarot_table_title}
                   </motion.h3>
                   <motion.p
                     className="relative z-10 text-foreground/40 font-body text-xs mb-8"
@@ -574,7 +576,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                   >
-                    לחצו על כל קלף כדי לחשוף אותו
+                    {t.tarot_table_hint}
                   </motion.p>
 
                   {/* Tarot table cards */}
@@ -781,8 +783,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                   >
                     {flippedIndices.size === tableCards.length
-                      ? "✦ כל הקלפים נחשפו... מפענחים את המסר ✦"
-                      : `${flippedIndices.size} / ${tableCards.length} קלפים נחשפו`}
+                      ? t.tarot_table_all_revealed
+                      : `${flippedIndices.size} / ${tableCards.length} ${t.tarot_table_progress}`}
                   </motion.p>
                 </motion.div>
               ) : cards ? (
