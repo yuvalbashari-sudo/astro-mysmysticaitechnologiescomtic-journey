@@ -8,10 +8,12 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
+import { useT } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const CompatibilityModal = ({ isOpen, onClose }: Props) => {
+  const t = useT();
   const [date1, setDate1] = useState("");
   const [date2, setDate2] = useState("");
   const [time1, setTime1] = useState("");
@@ -64,8 +66,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
         setAiLoading(false);
         readingsStorage.save({
           type: "compatibility",
-          title: `התאמה זוגית — ${info.sign1Name} + ${info.sign2Name}`,
-          subtitle: `ציון: ${info.score}%`,
+          title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
+          subtitle: `${t.compat_score_label}: ${info.score}%`,
           symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
           data: { ...info, date1, date2, aiReading: aiTextRef.current },
         });
@@ -88,14 +90,14 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!matchInfo) return;
-    const text = `💕 התאמה זוגית: ${matchInfo.sign1Name} ${matchInfo.sign1Symbol} + ${matchInfo.sign2Name} ${matchInfo.sign2Symbol}\nציון: ${matchInfo.score}%\n\n🔮 בדקו גם אתם:\n${window.location.origin}`;
+    const text = `💕 ${t.readings_type_compatibility}: ${matchInfo.sign1Name} ${matchInfo.sign1Symbol} + ${matchInfo.sign2Name} ${matchInfo.sign2Symbol}\n${matchInfo.score}%\n\n🔮 ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!matchInfo) return;
-    await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ציון: ${matchInfo.score}%`);
-    setCopied(true); toast("הטקסט הועתק ✦"); setTimeout(() => setCopied(false), 2000);
+    await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%`);
+    setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -105,7 +107,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           <motion.div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={handleClose} />
           <motion.div ref={scrollRef} className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: "linear-gradient(145deg, hsl(222 40% 8% / 0.97), hsl(222 47% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 60px hsl(var(--gold) / 0.1)" }} initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}>
             <button onClick={handleClose} className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors" style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}><X className="w-4 h-4 text-gold/70" /></button>
-            <div className="absolute top-4 right-4 z-20"><span className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))", border: "1px solid hsl(var(--gold) / 0.3)", color: "hsl(var(--gold))" }}>✦ חינם</span></div>
+            <div className="absolute top-4 right-4 z-20"><span className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))", border: "1px solid hsl(var(--gold) / 0.3)", color: "hsl(var(--gold))" }}>{t.common_free}</span></div>
 
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
@@ -113,31 +115,31 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
                     <Heart className="w-7 h-7 text-crimson-light" />
                   </motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">התאמה זוגית</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">גלו את רמת ההתאמה הקוסמית ביניכם. הזינו את תאריכי הלידה של שניכם וקבלו ניתוח מעמיק על הקשר, הרגש, התשוקה והצמיחה המשותפת.</p>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.compat_title}</h2>
+                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.compat_desc}</p>
                   <div className="max-w-sm mx-auto mb-6">
-                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">תאריך לידה — שלי</label>
+                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
                     <div className="flex gap-2">
                       <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                       <div className="relative">
-                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} placeholder="שעה" />
+                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
                         <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
                       </div>
                     </div>
-                    {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">אופציונלי — לניתוח מזל עולה</p>}
+                    {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
                   </div>
                   <div className="max-w-sm mx-auto mb-8">
-                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">תאריך לידה — בן/בת הזוג</label>
+                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
                     <div className="flex gap-2">
                       <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                       <div className="relative">
-                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} placeholder="שעה" />
+                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
                         <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
                       </div>
                     </div>
-                    {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">אופציונלי — לניתוח מזל עולה</p>}
+                    {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
                   </div>
-                  <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />גלו את ההתאמה שלנו</motion.button>
+                  <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
                 </motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -152,12 +154,12 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                     <motion.h2 className="font-heading text-xl md:text-2xl gold-gradient-text mb-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>{matchInfo.sign1Name} + {matchInfo.sign2Name}</motion.h2>
                     <motion.div className="mt-4 mb-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.5, type: "spring" }}>
                       <span className="text-4xl font-heading gold-gradient-text">{matchInfo.score}%</span>
-                      <p className="text-gold/60 font-body text-xs mt-1">ציון התאמה קוסמית</p>
+                      <p className="text-gold/60 font-body text-xs mt-1">{t.compat_score_label}</p>
                     </motion.div>
                     <motion.div className="section-divider max-w-[120px] mx-auto mt-4" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.6 }} />
                     <motion.div className="flex items-center justify-center gap-3 mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-3.5 h-3.5" />שתפו בוואטסאפ</motion.button>
-                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}{copied ? "הועתק!" : "העתקת טקסט"}</motion.button>
+                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-3.5 h-3.5" />{t.compat_share}</motion.button>
+                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}{copied ? t.share_copied : t.share_copy}</motion.button>
                     </motion.div>
                   </div>
 
@@ -167,7 +169,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                           <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                          <span className="font-body text-xs text-gold/50">הכוכבים חוקרים את הקשר...</span>
+                          <span className="font-body text-xs text-gold/50">{t.compat_loading}</span>
                         </motion.div>
                       )}
                     </motion.div>
@@ -178,19 +180,19 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   ) : (
                     <div className="flex flex-col items-center justify-center py-12">
                       <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                      <motion.p className="font-body text-gold/70 text-sm" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>בודקים את הכימיה הקוסמית...</motion.p>
+                      <motion.p className="font-body text-gold/70 text-sm" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
                     </div>
                   )}
 
                   {!aiLoading && (aiText || aiError) && (
                     <>
-                      <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`ציון: ${matchInfo.score}%`} />
+                      <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} />
                       <div className="section-divider max-w-[200px] mx-auto my-8" />
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                         <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                        <h4 className="font-heading text-base text-gold mb-2">רוצים ניתוח זוגי מעמיק?</h4>
-                        <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">הזמינו קריאה זוגית מלאה הכוללת מפות לידה של שניכם, ניתוח סינסטרי מפורט ועוד</p>
-                        <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" />הזמינו קריאה פרימיום</a>
+                        <h4 className="font-heading text-base text-gold mb-2">{t.compat_premium_title}</h4>
+                        <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.compat_premium_desc}</p>
+                        <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" />{t.compat_premium_cta}</a>
                       </motion.div>
                     </>
                   )}
