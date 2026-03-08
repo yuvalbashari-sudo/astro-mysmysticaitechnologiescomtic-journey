@@ -307,7 +307,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15, duration: 0.6 }}
       >
-        לפני שהקלפים נפתחים
+        {copy.title}
       </motion.h2>
 
       {/* Spread badge */}
@@ -331,11 +331,9 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        dir="rtl"
+        dir={dir}
       >
-        הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה.{" "}
-        <br className="hidden md:block" />
-        כתבו את השאלה, ההתלבטות או התחום שמעסיק אתכם כעת.
+        {copy.description}
       </motion.p>
 
       {/* Elegant divider */}
@@ -357,8 +355,8 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
       >
-        <label className="block text-xs text-gold/50 font-body mb-2.5 text-right" dir="rtl">
-          מה השאלה שלכם?
+        <label className="block text-xs text-gold/50 font-body mb-2.5 text-right" dir={dir}>
+          {copy.questionLabel}
         </label>
 
         <motion.div
