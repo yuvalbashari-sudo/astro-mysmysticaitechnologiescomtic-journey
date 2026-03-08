@@ -238,9 +238,9 @@ const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
             exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-lg">{RITUAL_PHASES[phaseIndex].icon}</span>
+            <span className="text-lg">{ritualPhases[phaseIndex].icon}</span>
             <p className="font-heading text-base md:text-lg gold-gradient-text text-center">
-              {RITUAL_PHASES[phaseIndex].text}
+              {ritualPhases[phaseIndex].text}
             </p>
           </motion.div>
         </AnimatePresence>
