@@ -1522,7 +1522,7 @@ const HeroSection = () => {
         </motion.p>
 
         {/* ── Central mystical scene ── */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "420px" : "520px" }}>
+        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "620px" : "520px" }}>
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
@@ -1748,8 +1748,10 @@ const HeroSection = () => {
             {/* ── Floating menu items ── */}
             {menuItems.map((item, i) => {
               const angleRad = (item.angle * Math.PI) / 180;
-              const x = Math.sin(angleRad) * orbRadius;
-              const y = -Math.cos(angleRad) * orbRadius * 0.55;
+              const x = isMobile ? 0 : Math.sin(angleRad) * orbRadius;
+              const y = isMobile
+                ? 155 + i * 42
+                : -Math.cos(angleRad) * orbRadius * 0.55;
               const itemColor = ITEM_COLORS[i];
 
               return (
@@ -1757,7 +1759,7 @@ const HeroSection = () => {
                   key={i}
                   className="absolute z-30 cursor-pointer"
                   style={{
-                    left: `calc(50% + ${x}px - ${isMobile ? 60 : 80}px)`,
+                    left: isMobile ? `calc(50% - 65px)` : `calc(50% + ${x}px - 80px)`,
                     top: `calc(50% + ${y}px - 20px)`,
                   }}
                   initial={{ opacity: 0, scale: 0 }}
