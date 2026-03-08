@@ -1634,6 +1634,63 @@ const HeroSection = () => {
                 }}
               />
 
+              {/* Ripple effect on mouse proximity */}
+              <AnimatePresence>
+                {isNearBall && (
+                  <>
+                    {[0, 1, 2].map((i) => (
+                      <motion.div
+                        key={`ripple-${i}`}
+                        className="absolute rounded-full pointer-events-none"
+                        style={{
+                          inset: 0,
+                          border: "1px solid hsl(var(--gold) / 0.12)",
+                        }}
+                        initial={{ scale: 0.85, opacity: 0 }}
+                        animate={{
+                          scale: [0.85, 1.15],
+                          opacity: [0.4, 0],
+                        }}
+                        exit={{ opacity: 0 }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: i * 0.6,
+                          ease: "easeOut",
+                        }}
+                      />
+                    ))}
+                    {/* Surface shimmer */}
+                    <motion.div
+                      className="absolute inset-[10%] rounded-full pointer-events-none overflow-hidden"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <motion.div
+                        className="absolute"
+                        style={{
+                          width: "40%",
+                          height: "100%",
+                          background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.1), transparent)",
+                          filter: "blur(6px)",
+                          borderRadius: "50%",
+                          top: 0,
+                        }}
+                        animate={{ left: ["-40%", "140%"] }}
+                        transition={{
+                          duration: 2.5,
+                          repeat: Infinity,
+                          repeatDelay: 1,
+                          ease: "easeInOut",
+                        }}
+                      />
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+
               {/* Tarot Card Reveal inside crystal ball */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
