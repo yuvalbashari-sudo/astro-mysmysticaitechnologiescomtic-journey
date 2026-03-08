@@ -481,13 +481,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-4"
                 >
-                  <div className="flex justify-center gap-3">
+                  <div className="flex flex-wrap justify-center gap-3">
                     <button
                       onClick={handleCopy}
                       className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
                     >
                       {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       {copied ? t.forecast_copied : t.forecast_copy}
+                    </button>
+                    <button
+                      onClick={handleDownloadImage}
+                      disabled={downloading}
+                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                    >
+                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Image className="w-4 h-4" />}
+                      {t.birth_chart_save_image}
+                    </button>
+                    <button
+                      onClick={handleDownloadPDF}
+                      disabled={downloading}
+                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                    >
+                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                      {t.birth_chart_save_pdf}
                     </button>
                   </div>
 
