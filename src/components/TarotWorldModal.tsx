@@ -850,6 +850,10 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         </motion.div>
       )}
     </AnimatePresence>
+
+    {/* Daily Card Modal */}
+    <DailyCardModal isOpen={showDailyCard} onClose={() => setShowDailyCard(false)} />
+    </>
   );
 };
 
