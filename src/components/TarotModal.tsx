@@ -199,7 +199,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setAiText("");
       setAiLoading(false);
       aiTextRef.current = "";
-      setSelectedSpread(SPREAD_OPTIONS[0]);
+      setSelectedSpreadKey("timeline");
     }, 300);
   };
 
