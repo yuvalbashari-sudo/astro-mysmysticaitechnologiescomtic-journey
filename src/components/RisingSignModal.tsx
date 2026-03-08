@@ -23,7 +23,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleSubmit = () => {
-    if (!birthTime) return;
+    if (!birthTime || !birthDate) return;
     setIsLoading(true);
   };
 
