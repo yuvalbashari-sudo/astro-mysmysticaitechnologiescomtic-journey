@@ -1021,7 +1021,6 @@ const TarotCardReveal = ({
   if (!card) return null;
 
   const cardImage = tarotCardImages[card.name] || cardBack;
-  const t = useT();
   const message = TAROT_MESSAGES[language]?.[card.name] || `${card.hebrewName} ${t.hero_tarot_fallback_message}`;
 
   return (
