@@ -255,19 +255,20 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 };
 
 /* ── Zodiac Wheel ──────────────────────────────────── */
+const ZODIAC_ICONS = [ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon, libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon];
 const ZODIAC_WHEEL = [
-  { symbol: "♈", name: "טלה", en: "Aries" },
-  { symbol: "♉", name: "שור", en: "Taurus" },
-  { symbol: "♊", name: "תאומים", en: "Gemini" },
-  { symbol: "♋", name: "סרטן", en: "Cancer" },
-  { symbol: "♌", name: "אריה", en: "Leo" },
-  { symbol: "♍", name: "בתולה", en: "Virgo" },
-  { symbol: "♎", name: "מאזניים", en: "Libra" },
-  { symbol: "♏", name: "עקרב", en: "Scorpio" },
-  { symbol: "♐", name: "קשת", en: "Sagittarius" },
-  { symbol: "♑", name: "גדי", en: "Capricorn" },
-  { symbol: "♒", name: "דלי", en: "Aquarius" },
-  { symbol: "♓", name: "דגים", en: "Pisces" },
+  { name: "טלה", en: "Aries" },
+  { name: "שור", en: "Taurus" },
+  { name: "תאומים", en: "Gemini" },
+  { name: "סרטן", en: "Cancer" },
+  { name: "אריה", en: "Leo" },
+  { name: "בתולה", en: "Virgo" },
+  { name: "מאזניים", en: "Libra" },
+  { name: "עקרב", en: "Scorpio" },
+  { name: "קשת", en: "Sagittarius" },
+  { name: "גדי", en: "Capricorn" },
+  { name: "דלי", en: "Aquarius" },
+  { name: "דגים", en: "Pisces" },
 ];
 
 const ZodiacWheel = ({
