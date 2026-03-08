@@ -114,6 +114,7 @@
     background: linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)));
     color: hsl(var(--deep-blue));
     box-shadow: 0 4px 20px hsl(var(--gold) / 0.3);
+    min-height: 48px;
   }
 
   .btn-gold:hover {
@@ -199,6 +200,8 @@
     background: hsl(var(--deep-blue-light) / 0.6);
     border: 1px solid hsl(var(--gold) / 0.15);
     color: hsl(var(--foreground));
+    min-height: 48px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
   }
 
   .mystical-input:focus {

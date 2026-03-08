@@ -239,7 +239,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           <motion.div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={handleClose} />
           <motion.div
             ref={scrollRef}
-            className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl"
+            className="relative z-10 w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl mx-2 sm:mx-auto"
             style={{ background: "linear-gradient(145deg, hsl(222 40% 8% / 0.97), hsl(222 47% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 60px hsl(var(--gold) / 0.1)" }}
             initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
           >
@@ -295,7 +295,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <motion.h2 className="font-heading text-2xl gold-gradient-text mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.tarot_cards_title}</motion.h2>
 
                     {/* Card display */}
-                    <div className="flex items-center justify-center gap-4 mb-6">
+                    <div className="flex items-center justify-center gap-2 sm:gap-4 mb-6 flex-wrap">
                       {cards.map((card, i) => (
                         <motion.div
                           key={i}
@@ -306,7 +306,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           transition={{ delay: 0.3 + i * 0.2 }}
                         >
                           {tarotCardImages[card.name]
-                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-14 h-20 object-cover rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-12 h-16 sm:w-14 sm:h-20 object-cover rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
                             : <span className="text-3xl">{card.symbol}</span>}
                           <span className="font-body text-xs text-gold mt-1">{card.hebrewName}</span>
                           <span className="text-[10px] text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
