@@ -252,18 +252,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        // Record cards in tarot memory
-        tarotMemory.recordReading(
-          selectedSpread.key,
-          cardsPayload
-        );
-        // Record in mystical profile
+        tarotMemory.recordReading(selectedSpread.key, cardsPayload);
         mysticalProfile.recordTarotCards(
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
       },
       (err) => { setAiLoading(false); toast(err); },
+      userQuestion,
     );
   };
 
