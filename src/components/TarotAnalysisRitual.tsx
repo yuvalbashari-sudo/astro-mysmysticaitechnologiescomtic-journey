@@ -1,17 +1,35 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye } from "lucide-react";
+import { useLanguage, type Language } from "@/i18n";
 
 interface Props {
   question: string;
   onComplete: () => void;
 }
 
-const RITUAL_PHASES = [
-  { text: "מפרשים את הכוונה שמאחורי שאלתכם...", icon: "🔍" },
-  { text: "הקלפים מסתנכרנים עם האנרגיה שסביבכם...", icon: "✦" },
-  { text: "המסר מתחיל להתבהר...", icon: "🌟" },
-];
+const RITUAL_PHASES: Record<Language, { text: string; icon: string }[]> = {
+  he: [
+    { text: "מפרשים את הכוונה שמאחורי שאלתכם...", icon: "🔍" },
+    { text: "הקלפים מסתנכרנים עם האנרגיה שסביבכם...", icon: "✦" },
+    { text: "המסר מתחיל להתבהר...", icon: "🌟" },
+  ],
+  en: [
+    { text: "Interpreting the intention behind your question...", icon: "🔍" },
+    { text: "The cards are syncing with the energy around you...", icon: "✦" },
+    { text: "The message is beginning to unfold...", icon: "🌟" },
+  ],
+  ru: [
+    { text: "Раскрываем намерение за вашим вопросом...", icon: "🔍" },
+    { text: "Карты синхронизируются с вашей энергией...", icon: "✦" },
+    { text: "Послание начинает проясняться...", icon: "🌟" },
+  ],
+  ar: [
+    { text: "نفسّر النية الكامنة خلف سؤالك...", icon: "🔍" },
+    { text: "تتزامن البطاقات مع الطاقة من حولك...", icon: "✦" },
+    { text: "تبدأ الرسالة بالاتضاح...", icon: "🌟" },
+  ],
+};
 
 const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
   const [phaseIndex, setPhaseIndex] = useState(0);
