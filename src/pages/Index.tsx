@@ -26,6 +26,7 @@ const Index = () => {
       />
       <StarField />
       <HeroSection />
+      <DailyRitualSection />
       <MysticalDashboard />
       <ReadingsHistoryModal
         isOpen={historyOpen}
