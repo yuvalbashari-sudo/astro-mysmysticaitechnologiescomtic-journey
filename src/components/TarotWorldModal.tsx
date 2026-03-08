@@ -12,7 +12,7 @@ import { useT } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-type Phase = "select" | "shuffle" | "reveal" | "showcase" | "result";
+type Phase = "select" | "question" | "shuffle" | "reveal" | "showcase" | "result";
 
 // Roman numeral converter
 const toRoman = (n: number): string => {
