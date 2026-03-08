@@ -895,7 +895,11 @@ const TarotCardReveal = ({
   onPhaseChange?: (phase: "idle" | "silhouette" | "flipping" | "revealed") => void;
 }) => {
   const t = useT();
-  const [phase, setPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const [phase, setPhaseInternal] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const setPhase = useCallback((p: "idle" | "silhouette" | "flipping" | "revealed") => {
+    setPhaseInternal(p);
+    onPhaseChange?.(p);
+  }, [onPhaseChange]);
   const [card, setCard] = useState<TarotCard | null>(null);
   const cardSize = isMobile ? 70 : 100;
 
