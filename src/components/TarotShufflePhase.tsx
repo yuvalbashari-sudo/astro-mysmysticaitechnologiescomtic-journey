@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import { useT } from "@/i18n/LanguageContext";
 
 interface Props {
   onComplete: () => void;
 }
 
 const TarotShufflePhase = ({ onComplete }: Props) => {
+  const t = useT();
   const [phase, setPhase] = useState<"idle" | "shuffling" | "settling" | "done">("idle");
   const [intensity, setIntensity] = useState(0);
 
