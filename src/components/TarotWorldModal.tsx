@@ -346,7 +346,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           // Save reading
           readingsStorage.save({
             type: "tarot",
-            title: `טארוט — ${selectedSpread.hebrewName}`,
+            title: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`,
             subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
             symbol: selectedSpread.icon,
             data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current },
