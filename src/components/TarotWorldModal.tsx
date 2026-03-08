@@ -480,7 +480,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                 <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-10">
                   <div className="text-center mb-8">
                     <h2 className="font-heading text-2xl gold-gradient-text mb-2">{selectedSpread.hebrewName}</h2>
-                    <p className="text-foreground/50 font-body text-sm">לחצו על כל קלף כדי לחשוף אותו</p>
+                    <p className="text-foreground/50 font-body text-sm">{t.tarot_world_reveal_hint}</p>
                   </div>
 
                   <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap mb-8">
