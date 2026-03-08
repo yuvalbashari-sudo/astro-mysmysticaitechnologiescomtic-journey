@@ -911,6 +911,14 @@ const TarotCardReveal = ({
     if (phase === "silhouette") {
       setPhase("flipping");
       setTimeout(() => setPhase("revealed"), 1200);
+    } else if (phase === "revealed") {
+      setPhase("idle");
+      // Re-draw a new card and show silhouette again after a brief pause
+      setTimeout(() => {
+        const [drawn] = drawTarotCards(1);
+        setCard(drawn);
+        setPhase("silhouette");
+      }, 3000);
     }
   }, [phase]);
 
