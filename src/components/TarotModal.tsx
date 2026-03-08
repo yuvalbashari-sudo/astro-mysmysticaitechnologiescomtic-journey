@@ -21,17 +21,18 @@ interface SpreadOption {
   icon: React.ReactNode;
   cardCount: number;
   positionLabels: string[];
+  descKey: string;
 }
 
 // These will be populated with translations inside the component
 function getSpreadOptions(t: ReturnType<typeof useT>): SpreadOption[] {
   return [
-    { key: "timeline", icon: <Compass className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future] },
-    { key: "love", icon: <Heart className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction] },
-    { key: "career", icon: <Briefcase className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity] },
-    { key: "decision", icon: <Eye className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_dilemma, t.tarot_pos_hidden, t.tarot_pos_right_path] },
-    { key: "daily", icon: <Sun className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_daily_card] },
-    { key: "universe", icon: <Star className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_universe_msg] },
+    { key: "timeline", icon: <Compass className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future], descKey: "tarot_spread_timeline_desc" },
+    { key: "love", icon: <Heart className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction], descKey: "tarot_spread_love_desc" },
+    { key: "career", icon: <Briefcase className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity], descKey: "tarot_spread_career_desc" },
+    { key: "decision", icon: <Eye className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_dilemma, t.tarot_pos_hidden, t.tarot_pos_right_path], descKey: "tarot_spread_decision_desc" },
+    { key: "daily", icon: <Sun className="w-7 h-7" />, cardCount: 1, positionLabels: [t.tarot_pos_daily_card], descKey: "tarot_spread_daily_desc" },
+    { key: "universe", icon: <Star className="w-7 h-7" />, cardCount: 1, positionLabels: [t.tarot_pos_universe_msg], descKey: "tarot_spread_universe_desc" },
   ];
 }
 
