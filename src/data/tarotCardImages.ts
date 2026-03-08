@@ -32,6 +32,7 @@ export const tarotCardImages: Record<string, string> = {
   "The Lovers": loversImg,
   "The Chariot": chariotImg,
   "Strength": strengthImg,
+  "The Hermit": hermitImg,
   "The Wheel of Fortune": wheelImg,
   "Justice": justiceImg,
   "The Hanged Man": hangedManImg,
