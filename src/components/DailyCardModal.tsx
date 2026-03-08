@@ -591,17 +591,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                         {copied ? t.share_copied : t.share_copy}
                       </motion.button>
-                        style={{
-                          background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
-                          border: "1px solid hsl(var(--gold) / 0.2)",
-                          color: "hsl(var(--gold))",
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.97 }}
-                      >
-                        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        {copied ? "הועתק!" : "העתקת טקסט"}
-                      </motion.button>
                     </motion.div>
                   </div>
 
