@@ -56,6 +56,9 @@ export function getSignFromDate(date: Date): string {
 
 export function getSignHebrew(key: string) { return signNames[key] || key; }
 export function getSignSymbol(key: string) { return signSymbols[key] || "★"; }
+export function getSignElement(key: string) { return signElements[key] || "לא ידוע"; }
+export function getSignModality(key: string) { return signModalities[key] || "לא ידוע"; }
+export function getSignRuler(key: string) { return signRulers[key] || "לא ידוע"; }
 
 export function getCompatibility(sign1: string, sign2: string): CompatibilityResult {
   // Element-based compatibility logic
