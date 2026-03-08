@@ -555,7 +555,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.4 }}
                     >
-                      הקלף היומי שלכם ✦ ארקנה מספר {card.number}
+                      {t.daily_arcana_label} {card.number}
                     </motion.p>
 
                     {phase === "locked" && (
