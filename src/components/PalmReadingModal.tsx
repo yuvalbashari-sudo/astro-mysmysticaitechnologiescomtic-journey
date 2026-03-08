@@ -11,7 +11,8 @@ interface Props { isOpen: boolean; onClose: () => void; }
 
 const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const [name, setName] = useState("");
-  const [palmImage, setPalmImage] = useState<string | null>(null);
+  const [rightPalmImage, setRightPalmImage] = useState<string | null>(null);
+  const [leftPalmImage, setLeftPalmImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -20,31 +21,28 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const rightFileRef = useRef<HTMLInputElement>(null);
+  const leftFileRef = useRef<HTMLInputElement>(null);
+  const rightCameraRef = useRef<HTMLInputElement>(null);
+  const leftCameraRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = (side: "right" | "left") => (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast("נא להעלות קובץ תמונה בלבד");
-      return;
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      toast("הקובץ גדול מדי — עד 10MB");
-      return;
-    }
+    if (!file.type.startsWith("image/")) { toast("נא להעלות קובץ תמונה בלבד"); return; }
+    if (file.size > 10 * 1024 * 1024) { toast("הקובץ גדול מדי — עד 10MB"); return; }
     const reader = new FileReader();
     reader.onload = () => {
-      setPalmImage(reader.result as string);
+      if (side === "right") setRightPalmImage(reader.result as string);
+      else setLeftPalmImage(reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
   const handleSubmit = () => {
     if (!name.trim()) return;
-    if (!palmImage) {
-      toast("נא להעלות תמונה של כף היד");
+    if (!rightPalmImage || !leftPalmImage) {
+      toast("נא להעלות תמונות של שתי כפות הידיים");
       return;
     }
     setIsLoading(true);
@@ -58,14 +56,14 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
 
     streamMysticalReading(
       "palm",
-      { name: name.trim(), palmImage },
+      { name: name.trim(), rightPalmImage, leftPalmImage },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
         readingsStorage.save({
           type: "palm",
           title: `קריאת כף יד — ${name}`,
-          subtitle: "קריאה אישית מתמונה",
+          subtitle: "ניתוח שתי כפות הידיים",
           symbol: "✋",
           data: { name, aiReading: aiTextRef.current },
         });
@@ -77,7 +75,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      setSubmitted(false); setName(""); setPalmImage(null); setIsLoading(false);
+      setSubmitted(false); setName(""); setRightPalmImage(null); setLeftPalmImage(null); setIsLoading(false);
       setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
     }, 300);
   };
@@ -97,6 +95,50 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     setCopied(true); toast("הטקסט הועתק ✦"); setTimeout(() => setCopied(false), 2000);
   };
 
+  const renderHandUpload = (side: "right" | "left", image: string | null, setImage: (v: string | null) => void, fileRef: React.RefObject<HTMLInputElement>, cameraRef: React.RefObject<HTMLInputElement>) => {
+    const label = side === "right" ? "יד ימין — ההווה והפעולה" : "יד שמאל — הפוטנציאל והנשמה";
+    const emoji = side === "right" ? "🤚" : "✋";
+
+    return (
+      <div className="flex-1 min-w-0">
+        <label className="block text-sm text-gold/70 font-body mb-2 text-right">{emoji} {label}</label>
+        {image ? (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative rounded-xl overflow-hidden" style={{ border: "2px solid hsl(var(--gold) / 0.3)", boxShadow: "0 0 20px hsl(var(--gold) / 0.08)" }}>
+            <img src={image} alt={`כף יד ${side === "right" ? "ימין" : "שמאל"}`} className="w-full h-40 object-cover" />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(222 40% 8% / 0.4), transparent)" }} />
+            <button onClick={() => setImage(null)} className="absolute top-2 left-2 w-6 h-6 rounded-full flex items-center justify-center bg-background/70 hover:bg-background/90 transition-colors" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }}>
+              <X className="w-3 h-3 text-gold/70" />
+            </button>
+            <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full text-[9px] font-body" style={{ background: "hsl(142 70% 35% / 0.3)", border: "1px solid hsl(142 70% 45% / 0.4)", color: "hsl(142 70% 70%)" }}>
+              <Check className="w-2.5 h-2.5 inline mr-0.5" />הועלתה
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div className="rounded-xl p-5 cursor-pointer group transition-all duration-300" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.04), hsl(var(--gold) / 0.02))", border: "2px dashed hsl(var(--gold) / 0.2)" }} whileHover={{ scale: 1.01 }} onClick={() => fileRef.current?.click()}>
+            <div className="flex flex-col items-center gap-2">
+              <motion.div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.15)" }} animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3, repeat: Infinity }}>
+                <ImageIcon className="w-5 h-5 text-gold/60 group-hover:text-gold/80 transition-colors" />
+              </motion.div>
+              <p className="text-foreground/50 font-body text-[11px]">לחצו להעלאה</p>
+            </div>
+          </motion.div>
+        )}
+        <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload(side)} />
+        <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload(side)} />
+        {!image && (
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <motion.button onClick={() => cameraRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-body" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Camera className="w-3 h-3" />צלמו
+            </motion.button>
+            <motion.button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-body" style={{ background: "hsl(var(--foreground) / 0.04)", border: "1px solid hsl(var(--foreground) / 0.1)", color: "hsl(var(--foreground) / 0.6)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Upload className="w-3 h-3" />גלריה
+            </motion.button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -113,108 +155,33 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                     <Hand className="w-7 h-7 text-gold" />
                   </motion.div>
                   <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">קריאת כף יד</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">צלמו את כף היד שלכם ✋ וקבלו קריאה מיסטית מעמיקה מבוססת ניתוח חזותי של קווי כף היד.</p>
-                  
+                  <p className="text-foreground/70 font-body text-sm md:text-base mb-4 max-w-md mx-auto leading-relaxed">צלמו את שתי כפות הידיים שלכם וקבלו ניתוח מעמיק — יד ימין חושפת את ההווה והפעולה, יד שמאל חושפת את הפוטנציאל הנסתר.</p>
+
                   {/* Name input */}
                   <div className="max-w-xs mx-auto mb-6">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">השם שלכם</label>
                     <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="הזינו את שמכם" className="mystical-input font-body text-center" dir="rtl" />
                   </div>
 
-                  {/* Image upload area */}
-                  <div className="max-w-sm mx-auto mb-8">
-                    <label className="block text-sm text-gold/70 font-body mb-3 text-right">תמונת כף היד</label>
-                    
-                    {palmImage ? (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="relative rounded-xl overflow-hidden mx-auto"
-                        style={{ border: "2px solid hsl(var(--gold) / 0.3)", boxShadow: "0 0 30px hsl(var(--gold) / 0.1)" }}
-                      >
-                        <img src={palmImage} alt="כף יד" className="w-full max-h-64 object-cover" />
-                        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, hsl(222 40% 8% / 0.4), transparent)" }} />
-                        <button
-                          onClick={() => setPalmImage(null)}
-                          className="absolute top-2 left-2 w-7 h-7 rounded-full flex items-center justify-center bg-background/70 hover:bg-background/90 transition-colors"
-                          style={{ border: "1px solid hsl(var(--gold) / 0.2)" }}
-                        >
-                          <X className="w-3.5 h-3.5 text-gold/70" />
-                        </button>
-                        <div className="absolute bottom-2 right-2 px-3 py-1 rounded-full text-[10px] font-body" style={{ background: "hsl(142 70% 35% / 0.3)", border: "1px solid hsl(142 70% 45% / 0.4)", color: "hsl(142 70% 70%)" }}>
-                          <Check className="w-3 h-3 inline mr-1" />תמונה הועלתה
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        className="rounded-xl p-8 cursor-pointer group transition-all duration-300"
-                        style={{ 
-                          background: "linear-gradient(135deg, hsl(var(--gold) / 0.04), hsl(var(--gold) / 0.02))", 
-                          border: "2px dashed hsl(var(--gold) / 0.2)" 
-                        }}
-                        whileHover={{ scale: 1.01 }}
-                        onClick={() => fileInputRef.current?.click()}
-                      >
-                        <div className="flex flex-col items-center gap-3">
-                          <motion.div
-                            className="w-14 h-14 rounded-full flex items-center justify-center"
-                            style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.15)" }}
-                            animate={{ scale: [1, 1.05, 1] }}
-                            transition={{ duration: 3, repeat: Infinity }}
-                          >
-                            <ImageIcon className="w-6 h-6 text-gold/60 group-hover:text-gold/80 transition-colors" />
-                          </motion.div>
-                          <div>
-                            <p className="text-foreground/60 font-body text-sm mb-1">לחצו להעלאת תמונה</p>
-                            <p className="text-foreground/40 font-body text-[11px]">JPG, PNG — עד 10MB</p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    )}
-
-                    {/* Hidden file inputs */}
-                    <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                    <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload} />
-
-                    {/* Upload buttons */}
-                    {!palmImage && (
-                      <div className="flex items-center justify-center gap-3 mt-4">
-                        <motion.button
-                          onClick={() => cameraInputRef.current?.click()}
-                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-body transition-all"
-                          style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }}
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                        >
-                          <Camera className="w-4 h-4" />
-                          צלמו עכשיו
-                        </motion.button>
-                        <motion.button
-                          onClick={() => fileInputRef.current?.click()}
-                          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-body transition-all"
-                          style={{ background: "linear-gradient(135deg, hsl(var(--foreground) / 0.06), hsl(var(--foreground) / 0.03))", border: "1px solid hsl(var(--foreground) / 0.12)", color: "hsl(var(--foreground) / 0.7)" }}
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                        >
-                          <Upload className="w-4 h-4" />
-                          בחרו מהגלריה
-                        </motion.button>
-                      </div>
-                    )}
+                  {/* Two hand upload areas */}
+                  <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4" dir="rtl">
+                    {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
+                    {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
                   </div>
 
                   {/* Tips */}
-                  <div className="max-w-sm mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                    <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">✦ טיפים לתמונה מושלמת:</p>
+                  <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                    <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">✦ טיפים לתמונות מושלמות:</p>
                     <ul className="text-foreground/50 font-body text-[11px] space-y-1 leading-relaxed">
-                      <li>• פרשו את כף היד בתאורה טובה</li>
+                      <li>• פרשו את כפות הידיים בתאורה טובה</li>
                       <li>• צלמו מקרוב כך שקווי כף היד ייראו בבירור</li>
-                      <li>• השתמשו ביד הדומיננטית (בד״כ יד ימין)</li>
+                      <li>• יד ימין = מה שאתם עושים בפועל, הפעולה בעולם</li>
+                      <li>• יד שמאל = הפוטנציאל הטבוע, הנשמה והמתנות הנולדות</li>
                     </ul>
                   </div>
 
-                  <motion.button onClick={handleSubmit} disabled={!name.trim() || !palmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />קראו את כף היד שלי</motion.button>
-                  <p className="text-[11px] text-muted-foreground font-body mt-6">✦ ניתוח חזותי מיסטי של קווי כף היד — בחינם ✦</p>
+                  <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />קראו את כפות הידיים שלי</motion.button>
+                  <p className="text-[11px] text-muted-foreground font-body mt-6">✦ ניתוח חזותי מיסטי של שתי כפות הידיים — בחינם ✦</p>
                 </motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -223,9 +190,11 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
               ) : submitted ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10">
                   <div className="text-center mb-8">
-                    <motion.div className="text-5xl mb-3" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>✋</motion.div>
+                    <motion.div className="text-5xl mb-3 flex items-center justify-center gap-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
+                      <span>🤚</span><span className="text-gold text-2xl">✦</span><span>✋</span>
+                    </motion.div>
                     <motion.h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>קריאת כף היד — {name}</motion.h2>
-                    <motion.p className="text-foreground/50 font-body text-xs mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>ניתוח מבוסס תמונת כף היד שלכם</motion.p>
+                    <motion.p className="text-foreground/50 font-body text-xs mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>ניתוח משולב של שתי כפות הידיים</motion.p>
                     <motion.div className="section-divider max-w-[120px] mx-auto mt-4" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5 }} />
                     <motion.div className="flex items-center justify-center gap-3 mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
                       <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-3.5 h-3.5" />שתפו בוואטסאפ</motion.button>
@@ -239,7 +208,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                           <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                          <span className="font-body text-xs text-gold/50">מנתח את קווי כף היד...</span>
+                          <span className="font-body text-xs text-gold/50">מנתח את קווי כפות הידיים...</span>
                         </motion.div>
                       )}
                     </motion.div>
@@ -250,7 +219,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                   ) : (
                     <div className="flex flex-col items-center justify-center py-12">
                       <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                      <motion.p className="font-body text-gold/70 text-sm" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>מנתח את תמונת כף היד שלכם...</motion.p>
+                      <motion.p className="font-body text-gold/70 text-sm" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>מנתח את תמונות כפות הידיים שלכם...</motion.p>
                     </div>
                   )}
 
