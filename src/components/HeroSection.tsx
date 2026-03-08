@@ -392,20 +392,32 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
 /* ── Zodiac Wheel ──────────────────────────────────── */
 const ZODIAC_ICONS = [ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon, libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon];
-const ZODIAC_WHEEL = [
-  { name: "טלה", en: "Aries" },
-  { name: "שור", en: "Taurus" },
-  { name: "תאומים", en: "Gemini" },
-  { name: "סרטן", en: "Cancer" },
-  { name: "אריה", en: "Leo" },
-  { name: "בתולה", en: "Virgo" },
-  { name: "מאזניים", en: "Libra" },
-  { name: "עקרב", en: "Scorpio" },
-  { name: "קשת", en: "Sagittarius" },
-  { name: "גדי", en: "Capricorn" },
-  { name: "דלי", en: "Aquarius" },
-  { name: "דגים", en: "Pisces" },
-];
+const ZODIAC_WHEEL: Record<Language, { name: string; en: string }[]> = {
+  he: [
+    { name: "טלה", en: "Aries" }, { name: "שור", en: "Taurus" }, { name: "תאומים", en: "Gemini" },
+    { name: "סרטן", en: "Cancer" }, { name: "אריה", en: "Leo" }, { name: "בתולה", en: "Virgo" },
+    { name: "מאזניים", en: "Libra" }, { name: "עקרב", en: "Scorpio" }, { name: "קשת", en: "Sagittarius" },
+    { name: "גדי", en: "Capricorn" }, { name: "דלי", en: "Aquarius" }, { name: "דגים", en: "Pisces" },
+  ],
+  en: [
+    { name: "Aries", en: "Aries" }, { name: "Taurus", en: "Taurus" }, { name: "Gemini", en: "Gemini" },
+    { name: "Cancer", en: "Cancer" }, { name: "Leo", en: "Leo" }, { name: "Virgo", en: "Virgo" },
+    { name: "Libra", en: "Libra" }, { name: "Scorpio", en: "Scorpio" }, { name: "Sagittarius", en: "Sagittarius" },
+    { name: "Capricorn", en: "Capricorn" }, { name: "Aquarius", en: "Aquarius" }, { name: "Pisces", en: "Pisces" },
+  ],
+  ru: [
+    { name: "Овен", en: "Aries" }, { name: "Телец", en: "Taurus" }, { name: "Близнецы", en: "Gemini" },
+    { name: "Рак", en: "Cancer" }, { name: "Лев", en: "Leo" }, { name: "Дева", en: "Virgo" },
+    { name: "Весы", en: "Libra" }, { name: "Скорпион", en: "Scorpio" }, { name: "Стрелец", en: "Sagittarius" },
+    { name: "Козерог", en: "Capricorn" }, { name: "Водолей", en: "Aquarius" }, { name: "Рыбы", en: "Pisces" },
+  ],
+  ar: [
+    { name: "الحمل", en: "Aries" }, { name: "الثور", en: "Taurus" }, { name: "الجوزاء", en: "Gemini" },
+    { name: "السرطان", en: "Cancer" }, { name: "الأسد", en: "Leo" }, { name: "العذراء", en: "Virgo" },
+    { name: "الميزان", en: "Libra" }, { name: "العقرب", en: "Scorpio" }, { name: "القوس", en: "Sagittarius" },
+    { name: "الجدي", en: "Capricorn" }, { name: "الدلو", en: "Aquarius" }, { name: "الحوت", en: "Pisces" },
+  ],
+};
 
 const ZodiacWheel = ({
   isMobile,
