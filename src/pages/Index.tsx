@@ -13,6 +13,7 @@ import ReadingsHistory from "@/components/ReadingsHistory";
 import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 import LeadFormModal from "@/components/LeadFormModal";
 import StarField from "@/components/StarField";
+import MysticalDashboard from "@/components/MysticalDashboard";
 import LanguageSelector from "@/components/LanguageSelector";
 import { useLanguage } from "@/i18n";
 
