@@ -1306,7 +1306,7 @@ const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: b
         }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <p className="text-gold/80 font-body text-xs leading-relaxed mb-2" dir="rtl">
+        <p className="text-gold/80 font-body text-xs leading-relaxed mb-2" dir={dir}>
           ✦ {message}
         </p>
         <motion.button
