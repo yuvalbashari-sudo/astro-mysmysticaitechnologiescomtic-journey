@@ -331,7 +331,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       const cards = drawnCards.map((c, i) => ({
         hebrewName: c.hebrewName,
         symbol: c.symbol,
-        positionLabel: selectedSpread.positionLabels[i],
+        positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
       }));
 
       streamTarotReading(
