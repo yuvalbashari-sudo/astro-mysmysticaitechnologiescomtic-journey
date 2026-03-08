@@ -316,7 +316,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   >
                     <div className="flex items-center justify-center gap-3 mb-6">
                       <Layers className="w-5 h-5 text-gold" />
-                      <h3 className="font-heading text-lg gold-gradient-text">פירוש מיסטי</h3>
+                      <h3 className="font-heading text-lg gold-gradient-text">{t.tarot_mystical_interp}</h3>
                     </div>
 
                     <div className="flex items-center justify-center gap-3 mb-6">
