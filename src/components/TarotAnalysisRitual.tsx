@@ -280,7 +280,7 @@ const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
           {/* Quote marks */}
           <span className="absolute top-2 right-4 text-gold/10 text-2xl font-heading">״</span>
           <span className="absolute bottom-1 left-4 text-gold/10 text-2xl font-heading">״</span>
-          <p className="text-foreground/40 font-body text-[13px] leading-[1.8] line-clamp-2 px-3" dir="rtl">
+          <p className="text-foreground/40 font-body text-[13px] leading-[1.8] line-clamp-2 px-3" dir={dir}>
             {question}
           </p>
         </motion.div>
