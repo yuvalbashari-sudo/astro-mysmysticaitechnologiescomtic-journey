@@ -77,6 +77,7 @@ async function streamTarotReading(
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  userQuestion?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
 
@@ -90,7 +91,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined } }),
     });
 
     if (!resp.ok) {
