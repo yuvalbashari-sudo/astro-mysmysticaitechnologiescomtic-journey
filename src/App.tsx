@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "@/i18n";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import TarotCardPage from "./pages/TarotCardPage";
+import ZodiacSignPage from "./pages/ZodiacSignPage";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +20,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/tarot/:slug" element={<TarotCardPage />} />
+            <Route path="/zodiac/:slug" element={<ZodiacSignPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

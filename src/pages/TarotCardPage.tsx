@@ -1,40 +1,17 @@
 import { useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Heart, Briefcase, Eye, Star, MessageCircle } from "lucide-react";
-import { TAROT_SLUG_MAP, tarotSeoMeta, cardSlug } from "@/data/seoData";
+import { TAROT_SLUG_MAP, tarotSeoMeta } from "@/data/seoData";
+import { majorArcana } from "@/data/tarotWorldData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import StarField from "@/components/StarField";
 
-// Import all major arcana data
-import { type TarotWorldCard } from "@/data/tarotWorldData";
-
-// We need the raw data — import it dynamically
-const majorArcanaData: Record<string, () => Promise<TarotWorldCard | undefined>> = {};
-
-function useTarotCards() {
-  // We'll import the data module directly
-  const mod = require("@/data/tarotWorldData");
-  // drawCardsForSpread needs a spread, but we need raw data — access via module
-  return null;
-}
-
-// Since we can't easily access the private majorArcana array, we'll reconstruct from the module
-// Better approach: export the cards from tarotWorldData
-import * as tarotWorld from "@/data/tarotWorldData";
-
-// We need to export majorArcana from tarotWorldData — for now, use drawCardsForSpread with a large spread
-// Actually, let's just duplicate the card lookup here using the slug map and card images
-
 const TarotCardPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
 
   const cardName = slug ? TAROT_SLUG_MAP[slug] : undefined;
-  
-  // Get card data by drawing all cards and finding the match
-  const allCards = tarotWorld.drawCardsForSpread({ key: "daily", hebrewName: "", description: "", icon: "", cardCount: 100, isFree: true, freeRevealCount: 100, positionLabels: [] });
-  const card = allCards.find(c => c.name === cardName);
+  const card = cardName ? majorArcana.find(c => c.name === cardName) : undefined;
   const cardImage = cardName ? tarotCardImages[cardName] : undefined;
 
   useEffect(() => {
@@ -43,8 +20,7 @@ const TarotCardPage = () => {
     document.title = meta.title;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", meta.description);
-    
-    // JSON-LD
+
     const jsonLd = document.createElement("script");
     jsonLd.type = "application/ld+json";
     jsonLd.id = "tarot-jsonld";
@@ -73,14 +49,13 @@ const TarotCardPage = () => {
 
   const m = card.meanings;
   const sections = [
-    { icon: <Eye className="w-5 h-5" />, emoji: "🔮", title: "משמעות כללית", titleEn: "General Meaning", content: m.general },
-    { icon: <Heart className="w-5 h-5" />, emoji: "❤️", title: "אהבה", titleEn: "Love", content: m.love },
-    { icon: <Briefcase className="w-5 h-5" />, emoji: "💼", title: "קריירה", titleEn: "Career", content: m.career },
-    { icon: <Sparkles className="w-5 h-5" />, emoji: "✨", title: "מסר רוחני", titleEn: "Spiritual Message", content: m.spiritual },
-    { icon: <Star className="w-5 h-5" />, emoji: "🌟", title: "עצה", titleEn: "Advice", content: m.advice },
+    { emoji: "🔮", title: "משמעות כללית", titleEn: "General Meaning", content: m.general },
+    { emoji: "❤️", title: "אהבה", titleEn: "Love", content: m.love },
+    { emoji: "💼", title: "קריירה", titleEn: "Career", content: m.career },
+    { emoji: "✨", title: "מסר רוחני", titleEn: "Spiritual Message", content: m.spiritual },
+    { emoji: "🌟", title: "עצה", titleEn: "Advice", content: m.advice },
   ];
 
-  // Sibling cards for navigation
   const allSlugs = Object.keys(TAROT_SLUG_MAP);
   const currentIdx = allSlugs.indexOf(slug || "");
   const prevSlug = currentIdx > 0 ? allSlugs[currentIdx - 1] : null;
@@ -89,7 +64,7 @@ const TarotCardPage = () => {
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <StarField />
-      
+
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-12 md:py-20">
         {/* Breadcrumb */}
         <nav className="mb-8 flex items-center gap-2 text-foreground/40 font-body text-xs">
@@ -101,12 +76,7 @@ const TarotCardPage = () => {
         </nav>
 
         {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          {/* Card Image */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
           {cardImage && (
             <motion.div
               className="w-48 h-72 md:w-56 md:h-80 mx-auto mb-8 rounded-xl overflow-hidden relative"
@@ -122,10 +92,7 @@ const TarotCardPage = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
             </motion.div>
           )}
-
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <span className="text-4xl">{card.symbol}</span>
-          </div>
+          <span className="text-4xl block mb-3">{card.symbol}</span>
           <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{card.hebrewName}</h1>
           <p className="font-body text-foreground/50 text-lg mb-1">{card.name}</p>
           <p className="font-body text-foreground/30 text-sm">Arcana #{card.number}</p>
@@ -148,13 +115,7 @@ const TarotCardPage = () => {
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{
-                    background: "hsl(var(--gold) / 0.08)",
-                    border: "1px solid hsl(var(--gold) / 0.15)",
-                  }}
-                >
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)" }}>
                   <span className="text-lg">{section.emoji}</span>
                 </div>
                 <div>
@@ -162,32 +123,28 @@ const TarotCardPage = () => {
                   <p className="font-body text-foreground/30 text-xs">{section.titleEn}</p>
                 </div>
               </div>
-              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-right" dir="rtl">
-                {section.content}
-              </p>
+              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-right" dir="rtl">{section.content}</p>
             </motion.div>
           ))}
         </div>
 
         <div className="section-divider max-w-[100px] mx-auto my-12" />
 
-        {/* Navigation between cards */}
+        {/* Nav between cards */}
         <div className="flex justify-between items-center mb-12">
           {prevSlug ? (
             <Link to={`/tarot/${prevSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              <ArrowRight className="w-4 h-4 rotate-180" />
-              {TAROT_SLUG_MAP[prevSlug]}
+              <ArrowRight className="w-4 h-4 rotate-180" /> {TAROT_SLUG_MAP[prevSlug]}
             </Link>
           ) : <div />}
           {nextSlug ? (
             <Link to={`/tarot/${nextSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              {TAROT_SLUG_MAP[nextSlug]}
-              <ArrowRight className="w-4 h-4" />
+              {TAROT_SLUG_MAP[nextSlug]} <ArrowRight className="w-4 h-4" />
             </Link>
           ) : <div />}
         </div>
 
-        {/* CTA Section */}
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -205,8 +162,8 @@ const TarotCardPage = () => {
             קבלו קריאת טארוט אישית ומיסטית — הקלפים מחכים לחשוף את המסר שנועד רק לכם
           </p>
           <Link
-            to="/#tarot"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-heading text-sm tracking-wide transition-all"
+            to="/"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-heading text-sm tracking-wide transition-all hover:scale-105"
             style={{
               background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--crimson) / 0.15))",
               border: "1px solid hsl(var(--gold) / 0.3)",
@@ -242,11 +199,8 @@ const TarotCardPage = () => {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="text-center mt-16 pb-8">
-          <Link to="/" className="text-gold/40 hover:text-gold transition-colors font-body text-xs">
-            ← ASTROLOGAI
-          </Link>
+          <Link to="/" className="text-gold/40 hover:text-gold transition-colors font-body text-xs">← ASTROLOGAI</Link>
         </div>
       </div>
     </div>

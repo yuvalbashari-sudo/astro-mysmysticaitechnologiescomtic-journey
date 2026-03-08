@@ -1,38 +1,15 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sparkles, Heart, Briefcase, Star, Brain, Flame, MessageCircle, ArrowRight } from "lucide-react";
+import { Sparkles, Heart, ArrowRight, MessageCircle } from "lucide-react";
 import { ZODIAC_SLUG_MAP, zodiacSeoMeta } from "@/data/seoData";
+import { zodiacData, getZodiacSign } from "@/data/zodiacData";
 import StarField from "@/components/StarField";
-
-// Import zodiac data
-const zodiacDataModule = await import("@/data/zodiacData");
-
-// We need the raw zodiac data record — let's access it  
-import type { ZodiacSign } from "@/data/zodiacData";
-
-// Build a lookup from the exported zodiacData
-function useZodiacData(): Record<string, ZodiacSign> | null {
-  // We'll use getZodiacSign with specific dates to extract each sign
-  return null;
-}
 
 const ZodiacSignPage = () => {
   const { slug } = useParams<{ slug: string }>();
 
-  // We need direct access to zodiac data — import the module
-  const zodiacKey = slug && ZODIAC_SLUG_MAP[slug] ? slug : undefined;
-  
-  // Use getZodiacSign with known dates for each sign
-  const signDates: Record<string, string> = {
-    aries: "2000-04-01", taurus: "2000-05-01", gemini: "2000-06-01",
-    cancer: "2000-07-01", leo: "2000-08-01", virgo: "2000-09-01",
-    libra: "2000-10-01", scorpio: "2000-11-01", sagittarius: "2000-12-01",
-    capricorn: "2000-01-01", aquarius: "2000-02-01", pisces: "2000-03-01",
-  };
-
-  const { getZodiacSign } = zodiacDataModule;
-  const sign = zodiacKey ? getZodiacSign(new Date(signDates[zodiacKey])) : undefined;
+  const sign = slug && zodiacData[slug] ? zodiacData[slug] : undefined;
 
   useEffect(() => {
     if (!sign) return;
@@ -96,11 +73,7 @@ const ZodiacSignPage = () => {
         </nav>
 
         {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
           <motion.div
             className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
             style={{
@@ -108,14 +81,12 @@ const ZodiacSignPage = () => {
               border: "1px solid hsl(var(--gold) / 0.2)",
               boxShadow: "0 0 40px hsl(var(--gold) / 0.1)",
             }}
-            animate={{
-              boxShadow: ["0 0 20px hsl(var(--gold) / 0.1)", "0 0 40px hsl(var(--gold) / 0.2)", "0 0 20px hsl(var(--gold) / 0.1)"],
-            }}
+            animate={{ boxShadow: ["0 0 20px hsl(var(--gold) / 0.1)", "0 0 40px hsl(var(--gold) / 0.2)", "0 0 20px hsl(var(--gold) / 0.1)"] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
             <span className="text-5xl">{sign.symbol}</span>
           </motion.div>
-          
+
           <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{sign.hebrewName}</h1>
           <p className="font-body text-foreground/50 text-lg mb-1">{sign.name}</p>
           <div className="flex items-center justify-center gap-4 mt-3">
@@ -145,10 +116,7 @@ const ZodiacSignPage = () => {
               }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)" }}
-                >
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)" }}>
                   <span className="text-lg">{section.emoji}</span>
                 </div>
                 <div>
@@ -156,9 +124,7 @@ const ZodiacSignPage = () => {
                   <p className="font-body text-foreground/30 text-xs">{section.titleEn}</p>
                 </div>
               </div>
-              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-right" dir="rtl">
-                {section.content}
-              </p>
+              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-right" dir="rtl">{section.content}</p>
             </motion.div>
           ))}
         </div>
@@ -169,44 +135,31 @@ const ZodiacSignPage = () => {
         <div className="flex justify-between items-center mb-12">
           {prevSlug ? (
             <Link to={`/zodiac/${prevSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              <ArrowRight className="w-4 h-4 rotate-180" />
-              {prevSlug.charAt(0).toUpperCase() + prevSlug.slice(1)}
+              <ArrowRight className="w-4 h-4 rotate-180" /> {prevSlug.charAt(0).toUpperCase() + prevSlug.slice(1)}
             </Link>
           ) : <div />}
           {nextSlug ? (
             <Link to={`/zodiac/${nextSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              {nextSlug.charAt(0).toUpperCase() + nextSlug.slice(1)}
-              <ArrowRight className="w-4 h-4" />
+              {nextSlug.charAt(0).toUpperCase() + nextSlug.slice(1)} <ArrowRight className="w-4 h-4" />
             </Link>
           ) : <div />}
         </div>
 
         {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
           <Link
-            to="/#compatibility"
+            to="/"
             className="rounded-xl p-6 text-center transition-all hover:scale-[1.02]"
-            style={{
-              background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.06))",
-              border: "1px solid hsl(var(--gold) / 0.15)",
-            }}
+            style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.06))", border: "1px solid hsl(var(--gold) / 0.15)" }}
           >
             <Heart className="w-6 h-6 text-gold mx-auto mb-3" />
             <h3 className="font-heading text-sm text-gold mb-2" dir="rtl">בדקו התאמה זוגית</h3>
             <p className="text-foreground/40 font-body text-xs" dir="rtl">גלו את הכימיה הרוחנית שלכם</p>
           </Link>
           <Link
-            to="/#tarot"
+            to="/"
             className="rounded-xl p-6 text-center transition-all hover:scale-[1.02]"
-            style={{
-              background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--deep-blue-light) / 0.3))",
-              border: "1px solid hsl(var(--gold) / 0.15)",
-            }}
+            style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--deep-blue-light) / 0.3))", border: "1px solid hsl(var(--gold) / 0.15)" }}
           >
             <Sparkles className="w-6 h-6 text-gold mx-auto mb-3" />
             <h3 className="font-heading text-sm text-gold mb-2" dir="rtl">קריאת טארוט אישית</h3>
@@ -219,7 +172,8 @@ const ZodiacSignPage = () => {
           <h2 className="font-heading text-xl text-gold text-center mb-8">כל המזלות</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {allSlugs.map((s) => {
-              const signData = getZodiacSign(new Date(signDates[s]));
+              const sd = zodiacData[s];
+              if (!sd) return null;
               return (
                 <Link
                   key={s}
@@ -230,8 +184,8 @@ const ZodiacSignPage = () => {
                     border: "1px solid hsl(var(--gold) / 0.08)",
                   }}
                 >
-                  <span className="text-2xl block mb-1">{signData.symbol}</span>
-                  <p className="font-body text-[10px] text-foreground/50">{signData.hebrewName}</p>
+                  <span className="text-2xl block mb-1">{sd.symbol}</span>
+                  <p className="font-body text-[10px] text-foreground/50">{sd.hebrewName}</p>
                   <p className="font-body text-[9px] text-foreground/30">{s}</p>
                 </Link>
               );
@@ -240,9 +194,7 @@ const ZodiacSignPage = () => {
         </div>
 
         <div className="text-center mt-16 pb-8">
-          <Link to="/" className="text-gold/40 hover:text-gold transition-colors font-body text-xs">
-            ← ASTROLOGAI
-          </Link>
+          <Link to="/" className="text-gold/40 hover:text-gold transition-colors font-body text-xs">← ASTROLOGAI</Link>
         </div>
       </div>
     </div>
