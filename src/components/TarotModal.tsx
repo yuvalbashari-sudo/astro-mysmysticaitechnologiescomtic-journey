@@ -560,7 +560,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     ))}
                   </motion.div>
-                  <p className="relative z-10 text-gold/40 font-body text-[10px] tracking-wider mb-2">שלב 2 מתוך 3 — בחרו את הקלפים שלכם</p>
+                  <p className="relative z-10 text-gold/40 font-body text-[10px] tracking-wider mb-2">{t.tarot_step_label} 2 — {t.tarot_step2_desc}</p>
 
                   <motion.h3
                     className="relative z-10 font-heading text-lg gold-gradient-text mb-2"
