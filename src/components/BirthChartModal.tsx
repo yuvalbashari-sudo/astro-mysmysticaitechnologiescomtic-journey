@@ -472,6 +472,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           {/* Loading / Result phase — show chart + text */}
           {(phase === "loading" || phase === "result") && chartData && (
             <motion.div
+              ref={chartContentRef}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="space-y-6"
