@@ -371,7 +371,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     whileTap={{ scale: 0.97 }}
                   >
                     <Sparkles className="w-5 h-5" />
-                    חשפו את הקלף היומי
+                    {t.daily_cta}
                   </motion.button>
                 </motion.div>
               )}
