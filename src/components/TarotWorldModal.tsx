@@ -247,6 +247,12 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleSelectSpread = (spread: SpreadConfig) => {
+    // Intercept daily card to open dedicated modal
+    if (spread.key === "daily") {
+      setShowDailyCard(true);
+      return;
+    }
+
     setSelectedSpread(spread);
     setPhase("shuffle");
     let step = 0;
