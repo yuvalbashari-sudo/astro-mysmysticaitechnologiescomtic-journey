@@ -380,6 +380,8 @@ export const ru: TranslationKeys = {
   nav_birthchart_title: "Натальная карта",
   nav_birthchart_desc: "Откройте космическую карту, записанную в момент вашего рождения — планеты, дома и ваше личное послание",
   nav_birthchart_cta: "Создайте свою карту",
+  birth_chart_save_image: "Сохранить как изображение",
+  birth_chart_save_pdf: "Скачать PDF",
 
   common_free: "✦ Бесплатно",
   common_close: "Закрыть",

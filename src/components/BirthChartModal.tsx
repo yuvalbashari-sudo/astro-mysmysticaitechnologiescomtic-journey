@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Loader2, Share2, Copy, Check } from "lucide-react";
+import { X, Sparkles, Loader2, Share2, Copy, Check, Download, Image } from "lucide-react";
+import html2canvas from "html2canvas";
 import { getZodiacSign } from "@/data/zodiacData";
 import { getRisingSign } from "@/data/risingSignData";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
@@ -193,6 +194,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [birthCity, setBirthCity] = useState("");
   const [resultText, setResultText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const chartContentRef = useRef<HTMLDivElement>(null);
 
   // Chart data
   const [chartData, setChartData] = useState<{
@@ -292,6 +295,65 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     toast.success(t.forecast_copied);
     setTimeout(() => setCopied(false), 2000);
   }, [resultText, t]);
+
+  const handleDownloadImage = useCallback(async () => {
+    if (!chartContentRef.current) return;
+    setDownloading(true);
+    try {
+      const canvas = await html2canvas(chartContentRef.current, {
+        backgroundColor: "#0a0f1e",
+        scale: 2,
+        useCORS: true,
+      });
+      const link = document.createElement("a");
+      link.download = `astrologai-birth-chart-${birthDate}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast.success("התמונה הורדה בהצלחה ✦");
+    } catch {
+      toast.error("שגיאה בהורדת התמונה");
+    }
+    setDownloading(false);
+  }, [birthDate]);
+
+  const handleDownloadPDF = useCallback(async () => {
+    if (!chartContentRef.current) return;
+    setDownloading(true);
+    try {
+      const canvas = await html2canvas(chartContentRef.current, {
+        backgroundColor: "#0a0f1e",
+        scale: 2,
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      // Create a printable HTML page with the image
+      const printWindow = window.open("", "_blank");
+      if (printWindow) {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html dir="rtl">
+          <head>
+            <title>ASTROLOGAI — מפת לידה</title>
+            <style>
+              body { margin: 0; padding: 20px; background: #0a0f1e; display: flex; justify-content: center; }
+              img { max-width: 100%; height: auto; }
+              @media print { body { background: white; } }
+            </style>
+          </head>
+          <body>
+            <img src="${imgData}" />
+            <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }
+      toast.success("PDF מוכן להורדה ✦");
+    } catch {
+      toast.error("שגיאה ביצירת PDF");
+    }
+    setDownloading(false);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -410,6 +472,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           {/* Loading / Result phase — show chart + text */}
           {(phase === "loading" || phase === "result") && chartData && (
             <motion.div
+              ref={chartContentRef}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="space-y-6"
@@ -478,13 +541,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-4"
                 >
-                  <div className="flex justify-center gap-3">
+                  <div className="flex flex-wrap justify-center gap-3">
                     <button
                       onClick={handleCopy}
                       className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
                     >
                       {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                       {copied ? t.forecast_copied : t.forecast_copy}
+                    </button>
+                    <button
+                      onClick={handleDownloadImage}
+                      disabled={downloading}
+                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                    >
+                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Image className="w-4 h-4" />}
+                      {t.birth_chart_save_image}
+                    </button>
+                    <button
+                      onClick={handleDownloadPDF}
+                      disabled={downloading}
+                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                    >
+                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                      {t.birth_chart_save_pdf}
                     </button>
                   </div>
 

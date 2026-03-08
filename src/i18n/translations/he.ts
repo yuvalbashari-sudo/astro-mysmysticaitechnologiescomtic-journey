@@ -380,6 +380,8 @@ export const he: TranslationKeys = {
   nav_birthchart_title: "מפת לידה",
   nav_birthchart_desc: "גלו את המפה הקוסמית שנכתבה ברגע שנולדתם — כוכבי הלכת, הבתים והמסר האישי",
   nav_birthchart_cta: "צרו את המפה שלכם",
+  birth_chart_save_image: "שמירה כתמונה",
+  birth_chart_save_pdf: "הורדה כ-PDF",
 
   common_free: "✦ חינם",
   common_close: "סגירה",

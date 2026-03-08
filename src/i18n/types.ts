@@ -413,6 +413,8 @@ export type TranslationKeys = {
   nav_birthchart_title: string;
   nav_birthchart_desc: string;
   nav_birthchart_cta: string;
+  birth_chart_save_image: string;
+  birth_chart_save_pdf: string;
 
   // Common
   common_free: string;
