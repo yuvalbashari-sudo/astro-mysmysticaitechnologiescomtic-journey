@@ -21,23 +21,28 @@ interface SpreadOption {
   positionLabels: string[];
 }
 
-const SPREAD_OPTIONS: SpreadOption[] = [
-  { key: "timeline", icon: <Compass className="w-4 h-4" />, cardCount: 3, positionLabels: ["עבר", "הווה", "עתיד"] },
-  { key: "love", icon: <Heart className="w-4 h-4" />, cardCount: 3, positionLabels: ["הלב שלכם", "האנרגיה סביבכם", "לאן זה מוביל"] },
-  { key: "career", icon: <Briefcase className="w-4 h-4" />, cardCount: 3, positionLabels: ["המצב הנוכחי", "האתגר", "ההזדמנות"] },
-  { key: "decision", icon: <Eye className="w-4 h-4" />, cardCount: 3, positionLabels: ["הדילמה", "מה שנסתר", "הכיוון הנכון"] },
-  { key: "daily", icon: <Sun className="w-4 h-4" />, cardCount: 1, positionLabels: ["קלף היום"] },
-  { key: "universe", icon: <Star className="w-4 h-4" />, cardCount: 1, positionLabels: ["מסר מהיקום"] },
-];
+// These will be populated with translations inside the component
+function getSpreadOptions(t: ReturnType<typeof useT>): SpreadOption[] {
+  return [
+    { key: "timeline", icon: <Compass className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future] },
+    { key: "love", icon: <Heart className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction] },
+    { key: "career", icon: <Briefcase className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity] },
+    { key: "decision", icon: <Eye className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_dilemma, t.tarot_pos_hidden, t.tarot_pos_right_path] },
+    { key: "daily", icon: <Sun className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_daily_card] },
+    { key: "universe", icon: <Star className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_universe_msg] },
+  ];
+}
 
-const SPREAD_LABELS: Record<SpreadType, string> = {
-  timeline: "עבר / הווה / עתיד",
-  love: "פתיחה לאהבה",
-  career: "פתיחה לקריירה",
-  decision: "פתיחה להחלטה",
-  daily: "קלף יומי",
-  universe: "מסר מהיקום",
-};
+function getSpreadLabels(t: ReturnType<typeof useT>): Record<SpreadType, string> {
+  return {
+    timeline: t.tarot_spread_timeline,
+    love: t.tarot_spread_love,
+    career: t.tarot_spread_career,
+    decision: t.tarot_spread_decision,
+    daily: t.tarot_spread_daily,
+    universe: t.tarot_spread_universe,
+  };
+}
 
 // Stream AI tarot reading
 async function streamTarotReading(
