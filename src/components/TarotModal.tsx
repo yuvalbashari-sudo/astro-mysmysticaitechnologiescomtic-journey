@@ -390,7 +390,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     ))}
                   </motion.div>
                   <p className="text-gold/40 font-body text-[10px] tracking-wider mb-6">
-                    שלב 1 מתוך 3 — בחרו את סוג הקריאה
+                    {t.tarot_step_label} 1 — {t.tarot_step1_desc}
                   </p>
 
                   {/* Title */}
