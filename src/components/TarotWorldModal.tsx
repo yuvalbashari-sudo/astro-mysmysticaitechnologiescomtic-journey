@@ -747,7 +747,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}>
                       <span className="text-3xl">{selectedSpread.icon}</span>
                     </motion.div>
-                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{selectedSpread.hebrewName}</h2>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
                     <p className="text-foreground/50 font-body text-sm">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
                     
                     <div className="flex items-center justify-center gap-3 mt-4">
