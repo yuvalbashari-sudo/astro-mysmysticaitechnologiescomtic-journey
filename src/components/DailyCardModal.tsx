@@ -495,7 +495,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 2 }}
                   >
-                    הקלף שנבחר עבורכם להיום
+                    {t.daily_card_chosen}
                   </motion.p>
                 </motion.div>
               )}
