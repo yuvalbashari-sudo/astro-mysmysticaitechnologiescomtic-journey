@@ -84,6 +84,7 @@ async function streamTarotReading(
 
   // Build memory context for returning cards
   const memoryContext = tarotMemory.buildMemoryContext(cards);
+  const profileContext = mysticalProfile.buildContextForAI();
 
   try {
     const resp = await fetch(url, {
@@ -92,7 +93,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext } }),
     });
 
     if (!resp.ok) {
