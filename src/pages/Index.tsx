@@ -1,6 +1,6 @@
 import { useState } from "react";
 import HeroSection from "@/components/HeroSection";
-import MysticalNav from "@/components/MysticalNav";
+
 import AboutSection from "@/components/AboutSection";
 import LaunchBanner from "@/components/LaunchBanner";
 import FreePremiumSection from "@/components/FreePremiumSection";
@@ -32,7 +32,7 @@ const Index = () => {
       <LanguageSelector />
       <StarField />
       <HeroSection />
-      <MysticalNav />
+      
       <ReadingsHistory />
       <LaunchBanner />
       <AboutSection />
