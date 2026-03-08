@@ -274,8 +274,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         readingsStorage.save({
           type: "birth-chart",
           title: `מפת לידה — ${sunSign.hebrewName} ${sunSign.symbol}`,
-          date: new Date().toISOString(),
-          snippet: `☉ ${sunSign.hebrewName} | ⬆ ${risingData.hebrewName} | ☽ ${moonSignName}`,
+          subtitle: `☉ ${sunSign.hebrewName} | ⬆ ${risingData.hebrewName} | ☽ ${moonSignName}`,
+          symbol: "🌌",
+          data: { birthDate, birthTime, birthCity },
         });
       },
       (err) => {
