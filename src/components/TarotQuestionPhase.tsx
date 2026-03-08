@@ -489,7 +489,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
           />
         )}
         <Sparkles className="w-4 h-4 relative z-10" />
-        <span className="relative z-10">המשיכו לפתיחת הקלפים</span>
+        <span className="relative z-10">{copy.continueCta}</span>
       </motion.button>
 
       {/* Skip option */}
@@ -500,7 +500,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        דלגו והמשיכו ללא שאלה
+        {copy.skipCta}
       </motion.button>
     </motion.div>
   );
