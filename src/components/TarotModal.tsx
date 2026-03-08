@@ -137,7 +137,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isShuffling, setIsShuffling] = useState(false);
+  const [isTablePhase, setIsTablePhase] = useState(false);
+  const [tableCards, setTableCards] = useState<TarotCard[]>([]);
+  const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [copied, setCopied] = useState(false);
 
   // AI state
@@ -150,21 +152,33 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleOnboardingComplete = () => {
     setIsLoading(false);
-    setIsShuffling(true);
-    // After shuffle animation, reveal cards
-    setTimeout(() => {
-      const drawn = drawTarotCards(selectedSpread.cardCount);
-      setCards(drawn);
-      setIsShuffling(false);
-      startAIReading(drawn);
-      readingsStorage.save({
-        type: "tarot",
-        title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-        subtitle: drawn.map(c => c.hebrewName).join(" • "),
-        symbol: "🔮",
-        data: { spread: selectedSpread.key, cards: drawn },
-      });
-    }, 3500);
+    const drawn = drawTarotCards(selectedSpread.cardCount);
+    setTableCards(drawn);
+    setFlippedIndices(new Set());
+    setIsTablePhase(true);
+  };
+
+  const handleCardFlip = (index: number) => {
+    if (flippedIndices.has(index)) return;
+    const newFlipped = new Set(flippedIndices);
+    newFlipped.add(index);
+    setFlippedIndices(newFlipped);
+
+    // All cards flipped → transition to results
+    if (newFlipped.size === tableCards.length) {
+      setTimeout(() => {
+        setCards(tableCards);
+        setIsTablePhase(false);
+        startAIReading(tableCards);
+        readingsStorage.save({
+          type: "tarot",
+          title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
+          subtitle: tableCards.map(c => c.hebrewName).join(" • "),
+          symbol: "🔮",
+          data: { spread: selectedSpread.key, cards: tableCards },
+        });
+      }, 2000);
+    }
   };
 
 
