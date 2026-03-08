@@ -21,7 +21,6 @@ const FloatingOracleButton = () => {
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [risingOpen, setRisingOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
-  const [drawnCards] = useState(() => drawTarotCards(3));
 
   const handleAction = (action: string) => {
     setIsOpen(false);
