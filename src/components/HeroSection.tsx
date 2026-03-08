@@ -1493,13 +1493,13 @@ const HeroSection = () => {
       ))}
 
       {/* Content container */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-12 md:pt-16">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16">
         {/* Brand name */}
         <motion.div
           initial={{ opacity: 0, y: -30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-          className="text-center mb-4 md:mb-6"
+          className="text-center mb-2 md:mb-6"
         >
           <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl gold-gradient-text tracking-wider">
             ASTROLOGAI
@@ -1511,7 +1511,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          className="text-center mb-2 md:mb-4"
+          className="text-center mb-1 md:mb-4"
         >
           <h2 className="font-body text-xl md:text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
             {t.hero_headline}
@@ -1522,13 +1522,13 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.3 }}
-          className="text-center text-muted-foreground font-body text-sm md:text-base mb-8 md:mb-6 max-w-xl mx-auto"
+          className="text-center text-muted-foreground font-body text-sm md:text-base mb-4 md:mb-6 max-w-xl mx-auto"
         >
           {t.hero_subheadline}
         </motion.p>
 
         {/* ── Central mystical scene ── */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "680px" : "520px", marginTop: isMobile ? "-20px" : "0" }}>
+        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "700px" : "520px", marginTop: isMobile ? "-30px" : "0" }}>
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
