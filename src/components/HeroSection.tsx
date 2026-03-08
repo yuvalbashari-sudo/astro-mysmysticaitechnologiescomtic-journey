@@ -1499,7 +1499,7 @@ const HeroSection = () => {
         {/* ── MOBILE LAYOUT ─────────────────────────── */}
         {/* ══════════════════════════════════════════════ */}
         {isMobile ? (
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-3">
             {/* Brand */}
             <motion.h1
               initial={{ opacity: 0, y: -20 }}
@@ -1532,13 +1532,23 @@ const HeroSection = () => {
               {t.hero_subheadline}
             </motion.p>
 
+            {/* Services line */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1.3 }}
+              className="text-center text-gold/60 font-body text-xs tracking-wider px-4"
+            >
+              {t.hero_services_line}
+            </motion.p>
+
             {/* Crystal Ball Scene */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1.2, delay: 1 }}
               className="relative flex items-center justify-center"
-              style={{ height: "38vh", maxHeight: "320px", width: "100%" }}
+              style={{ height: "32vh", maxHeight: "280px", width: "100%" }}
             >
               {/* Aura glow */}
               <motion.div
@@ -1563,7 +1573,7 @@ const HeroSection = () => {
               <motion.div
                 ref={crystalRef}
                 className="relative z-20 cursor-pointer"
-                style={{ width: "160px", height: "160px" }}
+                style={{ width: "150px", height: "150px" }}
                 onClick={handleCrystalClick}
               >
                 <motion.img
@@ -1587,39 +1597,48 @@ const HeroSection = () => {
               </motion.div>
 
               <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
+
+              {/* Crystal ball hint message */}
+              {entranceComplete && cardPhase === "idle" && (
+                <motion.div
+                  className="absolute z-30 text-center"
+                  style={{ bottom: "8px", width: "200px" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.7, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, delay: 4 }}
+                >
+                  <span className="text-gold/50 font-body text-[10px]">
+                    {t.hero_crystal_hint}
+                  </span>
+                </motion.div>
+              )}
             </motion.div>
 
             {/* Primary CTA */}
             <motion.button
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.8 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setTarotOpen(true)}
-              className="relative px-8 py-3 rounded-full font-heading text-sm tracking-wider overflow-hidden"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.35))",
-                border: "1px solid hsl(var(--gold) / 0.5)",
-                color: "hsl(var(--gold))",
-                boxShadow: "0 0 30px hsl(var(--gold) / 0.15), inset 0 0 20px hsl(var(--gold) / 0.05)",
-              }}
+              className="btn-gold rounded-full font-heading text-sm tracking-wider px-10 py-3.5"
             >
-              <motion.div
-                className="absolute inset-0 rounded-full pointer-events-none"
-                animate={{
-                  boxShadow: [
-                    "0 0 15px hsl(43 80% 55% / 0.1)",
-                    "0 0 35px hsl(43 80% 55% / 0.25)",
-                    "0 0 15px hsl(43 80% 55% / 0.1)",
-                  ],
-                }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              />
-              ✦ גלו את המסר המיסטי שלכם ✦
+              {t.hero_cta_personal}
             </motion.button>
 
+            {/* Social proof */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.9 }}
+              className="text-muted-foreground/50 font-body text-[11px] text-center"
+            >
+              ✦ {t.hero_social_proof} ✦
+            </motion.p>
+
             {/* 2x2 Mystical Worlds Grid */}
-            <div className="grid grid-cols-2 gap-3 w-full max-w-xs mt-2">
+            <div className="grid grid-cols-2 gap-3 w-full max-w-xs mt-1">
               {[
                 { icon: Eye, label: t.hero_menu_tarot, color: ITEM_COLORS[3], action: () => setTarotOpen(true) },
                 { icon: Sparkles, label: t.hero_menu_compatibility, color: ITEM_COLORS[2], action: () => setCompatibilityOpen(true) },
@@ -1633,7 +1652,7 @@ const HeroSection = () => {
                   transition={{ duration: 0.5, delay: 2 + i * 0.15, ease: "easeOut" }}
                   onClick={item.action}
                   whileTap={{ scale: 0.95 }}
-                  className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl backdrop-blur-md transition-all"
+                  className="flex flex-col items-center gap-1.5 py-3 px-2 rounded-2xl backdrop-blur-md transition-all min-h-[52px]"
                   style={{
                     background: "hsl(var(--muted) / 0.15)",
                     border: "1px solid hsl(var(--gold) / 0.12)",
@@ -1661,7 +1680,7 @@ const HeroSection = () => {
               transition={{ delay: 2.2 }}
               onClick={() => setForecastOpen(true)}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center justify-center gap-2 w-full max-w-xs py-2.5 rounded-full backdrop-blur-md"
+              className="flex items-center justify-center gap-2 w-full max-w-xs py-2.5 rounded-full backdrop-blur-md min-h-[48px]"
               style={{
                 background: "hsl(var(--muted) / 0.12)",
                 border: "1px solid hsl(var(--gold) / 0.1)",
@@ -1673,12 +1692,36 @@ const HeroSection = () => {
               </span>
             </motion.button>
 
+            {/* How it works */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.5 }}
+              className="w-full max-w-xs mt-2 mb-2"
+            >
+              <p className="text-center text-gold/50 font-heading text-xs tracking-wider mb-3">
+                {t.hero_how_title}
+              </p>
+              <div className="flex justify-between items-start gap-2">
+                {[
+                  { emoji: "🔮", text: t.hero_how_step1 },
+                  { emoji: "✨", text: t.hero_how_step2 },
+                  { emoji: "🌙", text: t.hero_how_step3 },
+                ].map((step, i) => (
+                  <div key={i} className="flex flex-col items-center text-center flex-1 gap-1">
+                    <span className="text-lg">{step.emoji}</span>
+                    <span className="text-[10px] text-muted-foreground/70 font-body leading-tight">{step.text}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2.5 }}
-              className="text-center pb-6"
+              transition={{ delay: 2.8 }}
+              className="text-center pb-4"
             >
               <span className="text-xs text-gold/50 font-body tracking-wider">
                 {t.hero_badge}
@@ -1707,7 +1750,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1 }}
-              className="text-center mb-4"
+              className="text-center mb-2"
             >
               <h2 className="font-body text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
                 {t.hero_headline}
@@ -1718,9 +1761,19 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.3 }}
-              className="text-center text-muted-foreground font-body text-base mb-6 max-w-xl mx-auto"
+              className="text-center text-muted-foreground font-body text-base mb-2 max-w-xl mx-auto"
             >
               {t.hero_subheadline}
+            </motion.p>
+
+            {/* Services line */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1.5 }}
+              className="text-center text-gold/50 font-body text-sm tracking-wider mb-6 max-w-lg mx-auto"
+            >
+              {t.hero_services_line}
             </motion.p>
 
             {/* ── Central mystical scene ── */}
@@ -2030,12 +2083,56 @@ const HeroSection = () => {
               </motion.div>
             </div>
 
-            {/* Bottom subtle badge */}
+            {/* Primary CTA + Social Proof */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.2 }}
+              className="text-center mt-2"
+            >
+              <motion.button
+                onClick={() => setTarotOpen(true)}
+                className="btn-gold rounded-full font-heading text-base tracking-wider px-12 py-4"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {t.hero_cta_personal}
+              </motion.button>
+              <p className="text-muted-foreground/40 font-body text-xs mt-3">
+                ✦ {t.hero_social_proof} ✦
+              </p>
+            </motion.div>
+
+            {/* How it works */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 2.3 }}
-              className="text-center pb-6 mt-4"
+              transition={{ delay: 2.5 }}
+              className="mt-6 mb-4"
+            >
+              <p className="text-center text-gold/40 font-heading text-xs tracking-widest mb-4 uppercase">
+                {t.hero_how_title}
+              </p>
+              <div className="flex justify-center items-start gap-12">
+                {[
+                  { emoji: "🔮", text: t.hero_how_step1 },
+                  { emoji: "✨", text: t.hero_how_step2 },
+                  { emoji: "🌙", text: t.hero_how_step3 },
+                ].map((step, i) => (
+                  <div key={i} className="flex flex-col items-center text-center gap-1.5">
+                    <span className="text-xl">{step.emoji}</span>
+                    <span className="text-xs text-muted-foreground/60 font-body">{step.text}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 2.8 }}
+              className="text-center pb-6"
             >
               <span className="text-xs text-gold/50 font-body tracking-wider">
                 {t.hero_badge}
