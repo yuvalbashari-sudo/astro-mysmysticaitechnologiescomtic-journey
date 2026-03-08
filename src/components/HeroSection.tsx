@@ -391,8 +391,8 @@ const ZodiacWheel = ({
   hoveredMenuItem: number | null;
 }) => {
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 140 : 338;
-  const iconSize = isMobile ? 32 : 62;
+  const radius = isMobile ? 110 : 175;
+  const iconSize = isMobile ? 28 : 44;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
   const isCompatMode = hoveredMenuItem === 2;
