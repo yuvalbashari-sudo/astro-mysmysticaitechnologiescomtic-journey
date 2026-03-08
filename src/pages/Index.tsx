@@ -13,10 +13,13 @@ import ReadingsHistory from "@/components/ReadingsHistory";
 import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 import LeadFormModal from "@/components/LeadFormModal";
 import StarField from "@/components/StarField";
+import LanguageSelector from "@/components/LanguageSelector";
+import { useLanguage } from "@/i18n";
 
 const Index = () => {
   const [leadModalOpen, setLeadModalOpen] = useState(false);
   const [selectedInterest, setSelectedInterest] = useState("");
+  const { dir } = useLanguage();
 
   const handleOrderClick = (interest: string) => {
     setSelectedInterest(interest);
@@ -24,7 +27,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative">
+    <div className="min-h-screen bg-background overflow-x-hidden relative" dir={dir}>
+      <LanguageSelector />
       <StarField />
       <HeroSection />
       <MysticalNav />
