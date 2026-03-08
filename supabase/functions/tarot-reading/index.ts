@@ -58,6 +58,7 @@ serve(async (req) => {
     if (context?.userQuestion) contextLines.push(`שאלת השואל/ת: ${context.userQuestion}`);
     if (context?.previousReadings?.length) contextLines.push(`קריאות קודמות: ${context.previousReadings.join(", ")}`);
     if (context?.memoryContext) contextLines.push(context.memoryContext);
+    if (context?.profileContext) contextLines.push(context.profileContext);
     const contextBlock = contextLines.length > 0 ? `\n\nהקשר אישי:\n${contextLines.join("\n")}` : "";
 
     const systemPrompt = `אתה קורא טארוט מיסטי, חכם ואינטואיטיבי עם עשרות שנות ניסיון. אתה כותב בעברית בלבד.
