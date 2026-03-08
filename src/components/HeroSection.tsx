@@ -1756,7 +1756,7 @@ const HeroSection = () => {
               const angleRad = (item.angle * Math.PI) / 180;
               const x = isMobile ? 0 : Math.sin(angleRad) * orbRadius;
               const y = isMobile
-                ? 155 + i * 42
+                ? 195 + i * 44
                 : -Math.cos(angleRad) * orbRadius * 0.55;
               const itemColor = ITEM_COLORS[i];
 
