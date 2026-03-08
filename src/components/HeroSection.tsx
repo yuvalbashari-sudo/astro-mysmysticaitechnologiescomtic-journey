@@ -1730,7 +1730,7 @@ const HeroSection = () => {
 
             {/* Fortune Preview */}
             {entranceComplete && (
-              <FortunePreview onReveal={handleFortuneReveal} />
+              <FortunePreview onReveal={handleFortuneReveal} hidden={cardPhase === "flipping" || cardPhase === "revealed"} />
             )}
 
             {/* ── Energy lines from hovered item to crystal ball ── */}
