@@ -155,9 +155,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleOnboardingComplete = () => {
     setIsLoading(false);
+    setIsShufflePhase(true);
+  };
+
+  const handleShuffleComplete = () => {
     const drawn = drawTarotCards(selectedSpread.cardCount);
     setTableCards(drawn);
     setFlippedIndices(new Set());
+    setIsShufflePhase(false);
     setIsTablePhase(true);
   };
 
