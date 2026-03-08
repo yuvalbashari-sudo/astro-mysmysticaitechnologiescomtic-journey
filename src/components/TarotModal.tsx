@@ -54,6 +54,7 @@ async function streamTarotReading(
   onError: (err: string) => void,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
+  const memoryContext = tarotMemory.buildMemoryContext(cards);
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -61,7 +62,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext } }),
     });
 
     if (!resp.ok) {
