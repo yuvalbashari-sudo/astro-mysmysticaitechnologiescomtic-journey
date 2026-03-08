@@ -217,6 +217,7 @@ function renderMysticalText(text: string) {
 
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [phase, setPhase] = useState<Phase>("select");
+  const [showDailyCard, setShowDailyCard] = useState(false);
   const [selectedSpread, setSelectedSpread] = useState<SpreadConfig | null>(null);
   const [drawnCards, setDrawnCards] = useState<TarotWorldCard[]>([]);
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set());
