@@ -43,6 +43,7 @@ const Index = () => {
       <FAQSection />
       <FooterCTA />
       <WhatsAppFloatingButton />
+      <MysticalDashboard />
       <LeadFormModal
         isOpen={leadModalOpen}
         onClose={() => setLeadModalOpen(false)}
