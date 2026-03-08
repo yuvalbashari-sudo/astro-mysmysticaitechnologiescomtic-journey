@@ -261,6 +261,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
+      { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
     );
   };
 
