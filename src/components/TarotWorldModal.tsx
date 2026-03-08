@@ -393,9 +393,9 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     >
                       <span className="text-3xl">🔮</span>
                     </motion.div>
-                    <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">עולם הטארוט</h2>
+                    <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.tarot_world_title}</h2>
                     <p className="text-foreground/60 font-body text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-                      הקלפים מחכים לכם. בחרו את סוג הקריאה וקבלו הדרכה אינטואיטיבית, מסרים נסתרים ותובנות סמליות עמוקות מהארקנה הגדולה
+                      {t.tarot_world_desc}
                     </p>
                   </div>
                   <div className="section-divider max-w-[150px] mx-auto mb-8" />
