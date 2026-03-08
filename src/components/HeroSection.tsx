@@ -242,6 +242,288 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   );
 };
 
+/* ── Zodiac Wheel ──────────────────────────────────── */
+const ZODIAC_WHEEL = [
+  { symbol: "♈", name: "טלה", en: "Aries" },
+  { symbol: "♉", name: "שור", en: "Taurus" },
+  { symbol: "♊", name: "תאומים", en: "Gemini" },
+  { symbol: "♋", name: "סרטן", en: "Cancer" },
+  { symbol: "♌", name: "אריה", en: "Leo" },
+  { symbol: "♍", name: "בתולה", en: "Virgo" },
+  { symbol: "♎", name: "מאזניים", en: "Libra" },
+  { symbol: "♏", name: "עקרב", en: "Scorpio" },
+  { symbol: "♐", name: "קשת", en: "Sagittarius" },
+  { symbol: "♑", name: "גדי", en: "Capricorn" },
+  { symbol: "♒", name: "דלי", en: "Aquarius" },
+  { symbol: "♓", name: "דגים", en: "Pisces" },
+];
+
+const ZodiacWheel = ({
+  isMobile,
+  hoveredMenuItem,
+}: {
+  isMobile: boolean;
+  hoveredMenuItem: number | null;
+}) => {
+  const [hoveredSign, setHoveredSign] = useState<number | null>(null);
+  const radius = isMobile ? 155 : 235;
+
+  // Compatibility mode: highlight two signs when compatibility tab hovered
+  const isCompatMode = hoveredMenuItem === 2;
+  const isRisingMode = hoveredMenuItem === 1;
+  const compatHighlight = isCompatMode ? [0, 6] : []; // Aries & Libra as example pair
+
+  return (
+    <motion.div
+      className="absolute pointer-events-none z-[16]"
+      style={{ width: radius * 2 + 40, height: radius * 2 + 40 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 2, delay: 1.5 }}
+    >
+      {/* Slowly rotating container */}
+      <motion.div
+        className="relative w-full h-full"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+      >
+        {/* Faint circle track */}
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: radius * 2,
+            height: radius * 2,
+            left: 20,
+            top: 20,
+            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : 0.06})`,
+          }}
+          animate={isRisingMode ? {
+            boxShadow: [
+              "0 0 10px hsl(43 80% 55% / 0.05)",
+              "0 0 30px hsl(43 80% 55% / 0.15)",
+              "0 0 10px hsl(43 80% 55% / 0.05)",
+            ],
+          } : {}}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {ZODIAC_WHEEL.map((sign, i) => {
+          const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+          const x = Math.cos(angle) * radius + radius + 20;
+          const y = Math.sin(angle) * radius + radius + 20;
+          const isHighlighted = compatHighlight.includes(i);
+          const isHovered = hoveredSign === i;
+
+          return (
+            <motion.div
+              key={sign.en}
+              className="absolute pointer-events-auto cursor-pointer"
+              style={{
+                left: x - 14,
+                top: y - 14,
+                width: 28,
+                height: 28,
+              }}
+              onMouseEnter={() => setHoveredSign(i)}
+              onMouseLeave={() => setHoveredSign(null)}
+              // Counter-rotate to keep symbols upright
+              animate={{ rotate: -360 }}
+              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+            >
+              {/* Symbol */}
+              <motion.div
+                className="w-full h-full flex items-center justify-center rounded-full"
+                style={{
+                  fontSize: isMobile ? "12px" : "15px",
+                  color: isHovered || isHighlighted
+                    ? "hsl(var(--gold))"
+                    : "hsl(var(--gold) / 0.45)",
+                  textShadow: isHovered || isHighlighted
+                    ? "0 0 12px hsl(43 80% 55% / 0.8)"
+                    : "none",
+                }}
+                animate={isHighlighted ? {
+                  scale: [1, 1.3, 1],
+                  textShadow: [
+                    "0 0 8px hsl(340 70% 60% / 0.4)",
+                    "0 0 20px hsl(340 70% 60% / 0.8)",
+                    "0 0 8px hsl(340 70% 60% / 0.4)",
+                  ],
+                } : {}}
+                whileHover={{ scale: 1.4 }}
+                transition={{ duration: 1.5, repeat: isHighlighted ? Infinity : 0, ease: "easeInOut" }}
+              >
+                {sign.symbol}
+              </motion.div>
+
+              {/* Tooltip on hover */}
+              <AnimatePresence>
+                {isHovered && (
+                  <motion.div
+                    className="absolute z-50 whitespace-nowrap"
+                    style={{
+                      left: "50%",
+                      bottom: "calc(100% + 6px)",
+                      transform: "translateX(-50%)",
+                    }}
+                    initial={{ opacity: 0, y: 5, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 5, scale: 0.8 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div
+                      className="px-2 py-1 rounded-md text-[10px] font-heading backdrop-blur-md"
+                      style={{
+                        background: "hsl(var(--deep-blue-light) / 0.9)",
+                        border: "1px solid hsl(var(--gold) / 0.25)",
+                        color: "hsl(var(--gold))",
+                        boxShadow: "0 0 15px hsl(var(--gold) / 0.1)",
+                      }}
+                    >
+                      {sign.name}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Occasional particle emission */}
+              {(i % 4 === 0) && (
+                <motion.div
+                  className="absolute rounded-full"
+                  style={{
+                    width: 2,
+                    height: 2,
+                    left: "50%",
+                    top: "50%",
+                    background: "hsl(var(--gold))",
+                  }}
+                  animate={{
+                    y: [0, -15, -25],
+                    opacity: [0, 0.7, 0],
+                    scale: [0, 1.5, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: i * 0.8,
+                    ease: "easeOut",
+                  }}
+                />
+              )}
+            </motion.div>
+          );
+        })}
+
+        {/* Compatibility energy lines between two signs */}
+        <AnimatePresence>
+          {isCompatMode && (
+            <motion.svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {(() => {
+                const a1 = (compatHighlight[0] / 12) * Math.PI * 2 - Math.PI / 2;
+                const a2 = (compatHighlight[1] / 12) * Math.PI * 2 - Math.PI / 2;
+                const x1 = Math.cos(a1) * radius + radius + 20;
+                const y1 = Math.sin(a1) * radius + radius + 20;
+                const x2 = Math.cos(a2) * radius + radius + 20;
+                const y2 = Math.sin(a2) * radius + radius + 20;
+                return (
+                  <>
+                    <motion.line
+                      x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="hsl(340, 70%, 60%)"
+                      strokeWidth="1"
+                      strokeOpacity="0.4"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                    <motion.circle
+                      r="3"
+                      fill="hsl(340, 70%, 60%)"
+                      animate={{
+                        cx: [x1, x2],
+                        cy: [y1, y2],
+                        opacity: [0.8, 0],
+                      }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeIn" }}
+                    />
+                  </>
+                );
+              })()}
+            </motion.svg>
+          )}
+        </AnimatePresence>
+
+        {/* Energy line from hovered sign to center */}
+        <AnimatePresence>
+          {hoveredSign !== null && (
+            <motion.svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {(() => {
+                const angle = (hoveredSign / 12) * Math.PI * 2 - Math.PI / 2;
+                const sx = Math.cos(angle) * radius + radius + 20;
+                const sy = Math.sin(angle) * radius + radius + 20;
+                const cx = radius + 20;
+                const cy = radius + 20;
+                return (
+                  <>
+                    <motion.line
+                      x1={sx} y1={sy} x2={cx} y2={cy}
+                      stroke="hsl(43, 80%, 55%)"
+                      strokeWidth="0.8"
+                      strokeOpacity="0.35"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.4, ease: "easeOut" }}
+                    />
+                    <motion.circle
+                      r="2"
+                      fill="hsl(43, 80%, 55%)"
+                      animate={{
+                        cx: [sx, cx],
+                        cy: [sy, cy],
+                        opacity: [0.6, 0],
+                      }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "easeIn" }}
+                    />
+                  </>
+                );
+              })()}
+            </motion.svg>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Cosmic energy pulse on wheel */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: radius * 2,
+          height: radius * 2,
+          left: 20,
+          top: 20,
+          border: "1px solid hsl(var(--gold) / 0.08)",
+        }}
+        animate={{
+          scale: [1, 1.05, 1],
+          opacity: [0.3, 0.6, 0.3],
+        }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </motion.div>
+  );
+};
+
 /* ── Energy Line connecting tab to crystal ball ───── */
 const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: number; color: string; isMobile: boolean }) => {
   if (isMobile) return null;
