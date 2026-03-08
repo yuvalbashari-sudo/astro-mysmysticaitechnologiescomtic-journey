@@ -216,8 +216,38 @@ function renderMysticalText(text: string) {
   return <div className="space-y-0">{elements}</div>;
 }
 
+// Helper to get translated spread info
+function useTranslatedSpread(t: ReturnType<typeof useT>) {
+  const nameMap: Record<string, string> = {
+    daily: t.tarot_world_spread_daily_name,
+    timeline: t.tarot_world_spread_timeline_name,
+    love: t.tarot_world_spread_love_name,
+    career: t.tarot_world_spread_career_name,
+    decision: t.tarot_world_spread_decision_name,
+    universe: t.tarot_world_spread_universe_name,
+  };
+  const descMap: Record<string, string> = {
+    daily: t.tarot_world_spread_daily_desc,
+    timeline: t.tarot_world_spread_timeline_desc,
+    love: t.tarot_world_spread_love_desc,
+    career: t.tarot_world_spread_career_desc,
+    decision: t.tarot_world_spread_decision_desc,
+    universe: t.tarot_world_spread_universe_desc,
+  };
+  const posMap: Record<string, string[]> = {
+    daily: [t.tarot_world_pos_today],
+    timeline: [t.tarot_world_pos_past, t.tarot_world_pos_present, t.tarot_world_pos_future],
+    love: [t.tarot_world_pos_heart, t.tarot_world_pos_energy, t.tarot_world_pos_direction],
+    career: [t.tarot_world_pos_current, t.tarot_world_pos_challenge, t.tarot_world_pos_opportunity],
+    decision: [t.tarot_world_pos_dilemma, t.tarot_world_pos_hidden, t.tarot_world_pos_right_path],
+    universe: [t.tarot_world_pos_message],
+  };
+  return { nameMap, descMap, posMap };
+}
+
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { nameMap, descMap, posMap } = useTranslatedSpread(t);
   const [phase, setPhase] = useState<Phase>("select");
   const [showDailyCard, setShowDailyCard] = useState(false);
   const [selectedSpread, setSelectedSpread] = useState<SpreadConfig | null>(null);
@@ -301,7 +331,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       const cards = drawnCards.map((c, i) => ({
         hebrewName: c.hebrewName,
         symbol: c.symbol,
-        positionLabel: selectedSpread.positionLabels[i],
+        positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
       }));
 
       streamTarotReading(
@@ -316,7 +346,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           // Save reading
           readingsStorage.save({
             type: "tarot",
-            title: `טארוט — ${selectedSpread.hebrewName}`,
+            title: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`,
             subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
             symbol: selectedSpread.icon,
             data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current },
@@ -340,7 +370,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!drawnCards.length || !selectedSpread) return;
-    const text = `🔮 ${selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
+    const text = `🔮 ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
@@ -426,14 +456,14 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-heading text-sm text-gold group-hover:text-gold-light transition-colors">{spread.hebrewName}</h3>
+                              <h3 className="font-heading text-sm text-gold group-hover:text-gold-light transition-colors">{nameMap[spread.key] || spread.hebrewName}</h3>
                               {spread.isFree ? (
                                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--gold) / 0.15)", border: "1px solid hsl(var(--gold) / 0.25)", color: "hsl(var(--gold))" }}>{t.tarot_world_free}</span>
                               ) : (
                                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--crimson) / 0.15)", border: "1px solid hsl(var(--crimson) / 0.25)", color: "hsl(var(--crimson-light))" }}>{t.tarot_world_premium}</span>
                               )}
                             </div>
-                            <p className="text-foreground/50 font-body text-xs leading-relaxed">{spread.description}</p>
+                            <p className="text-foreground/50 font-body text-xs leading-relaxed">{descMap[spread.key] || spread.description}</p>
                           </div>
                           <ChevronRight className="w-4 h-4 text-gold/30 group-hover:text-gold/60 transition-colors flex-shrink-0 mt-1 rotate-180" />
                         </div>
@@ -479,7 +509,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
               {phase === "reveal" && selectedSpread && (
                 <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-10">
                   <div className="text-center mb-8">
-                    <h2 className="font-heading text-2xl gold-gradient-text mb-2">{selectedSpread.hebrewName}</h2>
+                    <h2 className="font-heading text-2xl gold-gradient-text mb-2">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
                     <p className="text-foreground/50 font-body text-sm">{t.tarot_world_reveal_hint}</p>
                   </div>
 
@@ -516,8 +546,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                 <img src={cardBack} alt="Card back" className="w-full h-full object-cover" />
                                 {/* Overlay for position label */}
                                 <div className="absolute inset-0 flex flex-col items-center justify-end pb-3" style={{ background: "linear-gradient(to top, hsl(0 0% 0% / 0.7), transparent 40%)" }}>
-                                  <span className="font-body text-[10px] text-gold/60">{selectedSpread.positionLabels[i]}</span>
-                                  {isLocked && <span className="font-body text-[9px] text-crimson-light/60 mt-0.5">פרימיום</span>}
+                                  <span className="font-body text-[10px] text-gold/60">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</span>
+                                  {isLocked && <span className="font-body text-[9px] text-crimson-light/60 mt-0.5">{t.tarot_world_locked}</span>}
                                 </div>
                                 {isLocked && (
                                   <div className="absolute inset-0 flex items-center justify-center bg-background/30">
@@ -547,7 +577,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                     style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.4)" }}>
                                     {card.hebrewName}
                                   </span>
-                                  <span className="font-body text-[8px] md:text-[9px] text-foreground/40 mt-0.5">{selectedSpread.positionLabels[i]}</span>
+                                  <span className="font-body text-[8px] md:text-[9px] text-foreground/40 mt-0.5">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</span>
                                 </div>
                               </div>
                             </motion.div>
@@ -654,7 +684,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                           <span className="font-heading text-base md:text-lg text-gold" style={{ textShadow: "0 0 15px hsl(var(--gold) / 0.3)" }}>
                             {card.hebrewName}
                           </span>
-                          <p className="font-body text-[11px] text-foreground/40 mt-1">{selectedSpread.positionLabels[i]}</p>
+                          <p className="font-body text-[11px] text-foreground/40 mt-1">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</p>
                         </motion.div>
                       </motion.div>
                     ))}
@@ -717,7 +747,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}>
                       <span className="text-3xl">{selectedSpread.icon}</span>
                     </motion.div>
-                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{selectedSpread.hebrewName}</h2>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
                     <p className="text-foreground/50 font-body text-sm">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
                     
                     <div className="flex items-center justify-center gap-3 mt-4">
@@ -753,7 +783,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       </div>
                       {drawnCards.map((card, i) => {
                         const isFreeLocked = !selectedSpread.isFree && i >= selectedSpread.freeRevealCount;
-                        const interp = getInterpretation(card, selectedSpread.key, selectedSpread.positionLabels[i]);
+                        const interp = getInterpretation(card, selectedSpread.key, posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]);
                         return (
                           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.3 }}>
                             <div className="flex items-center gap-4 mb-4">
@@ -809,8 +839,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   {!aiLoading && (aiText || aiError) && (
                     <ShareResultSection
                       symbol={drawnCards[0]?.symbol || "🔮"}
-                      title={selectedSpread.hebrewName}
-                      subtitle={`${drawnCards.length} קלפים`}
+                      title={nameMap[selectedSpread.key] || selectedSpread.hebrewName}
+                      subtitle={`${drawnCards.length} ${t.tarot_n_cards}`}
                     />
                   )}
 
