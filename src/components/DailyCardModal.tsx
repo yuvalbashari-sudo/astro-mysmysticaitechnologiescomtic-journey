@@ -7,6 +7,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import ShareResultSection from "@/components/ShareResultSection";
+import { useT } from "@/i18n/LanguageContext";
 
 interface Props {
   isOpen: boolean;
