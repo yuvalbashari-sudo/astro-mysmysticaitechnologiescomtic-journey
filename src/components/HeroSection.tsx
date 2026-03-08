@@ -1588,7 +1588,7 @@ const HeroSection = () => {
               transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
             />
 
-            <EnergyPulse isMobile={isMobile} activeColor={activeColor} />
+            <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
 
             {/* Arcane Portal Ring */}
             {entranceComplete && (
