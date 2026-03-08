@@ -1499,7 +1499,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: -30, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-          className="text-center mb-4 md:mb-6"
+          className="text-center mb-2 md:mb-6"
         >
           <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl gold-gradient-text tracking-wider">
             ASTROLOGAI
