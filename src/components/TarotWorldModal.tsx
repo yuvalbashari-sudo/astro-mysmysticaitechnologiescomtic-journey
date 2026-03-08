@@ -610,7 +610,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                   >
-                    {drawnCards.length === 1 ? "הקלף שנבחר לכם" : "הקלפים שנבחרו לכם"}
+                    {drawnCards.length === 1 ? t.tarot_world_cards_chosen_single : t.tarot_world_cards_chosen_plural}
                   </motion.h2>
 
                   <div className="flex items-center justify-center gap-6 flex-wrap mb-8">
