@@ -348,6 +348,16 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         () => {
           setAiLoading(false);
+          // Record cards in tarot memory
+          tarotMemory.recordReading(
+            selectedSpread.key,
+            drawnCards.map((c, i) => ({
+              name: c.name,
+              hebrewName: c.hebrewName,
+              symbol: c.symbol,
+              positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
+            }))
+          );
           // Save reading
           readingsStorage.save({
             type: "tarot",
