@@ -4,6 +4,7 @@ import StarField from "@/components/StarField";
 import MysticalDashboard from "@/components/MysticalDashboard";
 import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
+import FloatingOracleButton from "@/components/FloatingOracleButton";
 import { useLanguage } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
 
@@ -29,6 +30,7 @@ const Index = () => {
         isOpen={historyOpen}
         onClose={() => setHistoryOpen(false)}
       />
+      <FloatingOracleButton />
     </div>
   );
 };
