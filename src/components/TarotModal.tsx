@@ -137,6 +137,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
   const [copied, setCopied] = useState(false);
 
   // AI state
@@ -148,21 +149,24 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const handleDraw = () => { setIsLoading(true); };
 
   const handleOnboardingComplete = () => {
-    const drawn = drawTarotCards(selectedSpread.cardCount);
-    setCards(drawn);
     setIsLoading(false);
-
-    // Start AI reading immediately
-    startAIReading(drawn);
-
-    readingsStorage.save({
-      type: "tarot",
-      title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-      subtitle: drawn.map(c => c.hebrewName).join(" • "),
-      symbol: "🔮",
-      data: { spread: selectedSpread.key, cards: drawn },
-    });
+    setIsShuffling(true);
+    // After shuffle animation, reveal cards
+    setTimeout(() => {
+      const drawn = drawTarotCards(selectedSpread.cardCount);
+      setCards(drawn);
+      setIsShuffling(false);
+      startAIReading(drawn);
+      readingsStorage.save({
+        type: "tarot",
+        title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
+        subtitle: drawn.map(c => c.hebrewName).join(" • "),
+        symbol: "🔮",
+        data: { spread: selectedSpread.key, cards: drawn },
+      });
+    }, 3500);
   };
+
 
   const startAIReading = (drawnCards: TarotCard[]) => {
     setAiLoading(true);
@@ -212,6 +216,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setTimeout(() => {
       setCards(null);
       setIsLoading(false);
+      setIsShuffling(false);
       setCopied(false);
       setAiText("");
       setAiLoading(false);
@@ -425,6 +430,109 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+              ) : isShuffling ? (
+                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 md:p-12 flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden">
+                  {/* Shuffle particles */}
+                  {[...Array(20)].map((_, i) => (
+                    <motion.div
+                      key={`sp-${i}`}
+                      className="absolute rounded-full"
+                      style={{
+                        width: 2 + Math.random() * 2,
+                        height: 2 + Math.random() * 2,
+                        left: `${10 + Math.random() * 80}%`,
+                        top: `${10 + Math.random() * 80}%`,
+                        background: i % 2 === 0 ? "hsl(var(--gold) / 0.5)" : "hsl(var(--celestial) / 0.3)",
+                      }}
+                      animate={{ opacity: [0, 0.8, 0], y: [0, -(20 + Math.random() * 40)], scale: [0, 1.5, 0] }}
+                      transition={{ duration: 2 + Math.random() * 2, repeat: Infinity, delay: i * 0.15 }}
+                    />
+                  ))}
+
+                  {/* Step 2 indicator */}
+                  <motion.div className="flex items-center justify-center gap-3 mb-8" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+                    {[1, 2, 3].map((step) => (
+                      <div key={step} className="flex items-center gap-2">
+                        <motion.div
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-heading"
+                          style={{
+                            background: step <= 2 ? "linear-gradient(135deg, hsl(var(--gold) / 0.3), hsl(var(--gold) / 0.15))" : "hsl(var(--muted) / 0.2)",
+                            border: `1px solid hsl(var(--gold) / ${step === 2 ? "0.5" : step === 1 ? "0.3" : "0.1"})`,
+                            color: step <= 2 ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))",
+                            boxShadow: step === 2 ? "0 0 12px hsl(var(--gold) / 0.2)" : "none",
+                          }}
+                          animate={step === 2 ? { boxShadow: ["0 0 8px hsl(43 80% 55% / 0.15)", "0 0 18px hsl(43 80% 55% / 0.3)", "0 0 8px hsl(43 80% 55% / 0.15)"] } : {}}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          {step <= 1 ? "✓" : step}
+                        </motion.div>
+                        {step < 3 && <div className="w-8 h-px" style={{ background: `linear-gradient(90deg, hsl(var(--gold) / ${step < 2 ? "0.3" : "0.1"}), hsl(var(--gold) / 0.05))` }} />}
+                      </div>
+                    ))}
+                  </motion.div>
+                  <p className="text-gold/40 font-body text-[10px] tracking-wider mb-6">שלב 2 מתוך 3 — ערבוב הקלפים</p>
+
+                  {/* Shuffling cards animation */}
+                  <div className="relative w-48 h-64 mb-8">
+                    {[...Array(7)].map((_, i) => (
+                      <motion.div
+                        key={`card-${i}`}
+                        className="absolute w-24 h-36 rounded-lg"
+                        style={{
+                          left: "50%",
+                          top: "50%",
+                          marginLeft: -48,
+                          marginTop: -72,
+                          background: "linear-gradient(145deg, hsl(var(--gold) / 0.12), hsl(222 40% 12%))",
+                          border: "1px solid hsl(var(--gold) / 0.25)",
+                          boxShadow: "0 4px 20px hsl(0 0% 0% / 0.3)",
+                          zIndex: 7 - i,
+                        }}
+                        initial={{ x: 0, y: 0, rotate: 0 }}
+                        animate={{
+                          x: [0, (i % 2 === 0 ? 1 : -1) * (40 + i * 12), 0, (i % 2 === 0 ? -1 : 1) * (30 + i * 8), 0],
+                          y: [0, -(20 + i * 5), 10, -(15 + i * 3), 0],
+                          rotate: [0, (i % 2 === 0 ? 1 : -1) * (15 + i * 3), 0, (i % 2 === 0 ? -1 : 1) * (10 + i * 2), 0],
+                          scale: [1, 1.05, 0.98, 1.02, 1],
+                        }}
+                        transition={{
+                          duration: 2.2,
+                          repeat: Infinity,
+                          delay: i * 0.12,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        {/* Card back design */}
+                        <div className="w-full h-full rounded-lg flex items-center justify-center" style={{ background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 47% 14%))", border: "1px solid hsl(var(--gold) / 0.15)" }}>
+                          <motion.div
+                            className="w-12 h-16 rounded border flex items-center justify-center"
+                            style={{ borderColor: "hsl(var(--gold) / 0.2)", background: "linear-gradient(135deg, hsl(var(--gold) / 0.05), transparent)" }}
+                            animate={{ opacity: [0.4, 0.8, 0.4] }}
+                            transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                          >
+                            <span className="text-gold/40 text-lg">✦</span>
+                          </motion.div>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {/* Central glow */}
+                    <motion.div
+                      className="absolute inset-0 pointer-events-none"
+                      style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent 60%)" }}
+                      animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.9, 1.1, 0.9] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    />
+                  </div>
+
+                  <motion.p
+                    className="font-heading text-lg gold-gradient-text mb-2"
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    הקלפים מתערבבים...
+                  </motion.p>
+                  <p className="text-foreground/40 font-body text-xs">התמקדו בשאלה שלכם</p>
+                </motion.div>
               ) : cards ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10">
                   {/* Header */}
