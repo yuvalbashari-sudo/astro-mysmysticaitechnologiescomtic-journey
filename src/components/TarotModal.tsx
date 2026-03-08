@@ -261,7 +261,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       ))}
                     </div>
                     <p className="text-[10px] text-muted-foreground font-body mt-3">
-                      {selectedSpread.cardCount === 1 ? "קלף אחד" : `${selectedSpread.cardCount} קלפים`} • {selectedSpread.positionLabels.join(" · ")}
+                      {selectedSpread.cardCount === 1 ? t.tarot_one_card : `${selectedSpread.cardCount} ${t.tarot_n_cards}`} • {selectedSpread.positionLabels.join(" · ")}
                     </p>
                   </div>
 
