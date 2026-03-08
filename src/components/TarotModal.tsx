@@ -248,42 +248,183 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
             <AnimatePresence mode="wait">
               {!cards && !isLoading ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
-                  <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Eye className="w-7 h-7 text-gold" /></motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.tarot_title}</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.tarot_desc}</p>
+                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-6 md:p-10 text-center relative overflow-hidden">
 
-                  {/* Spread type selector */}
-                  <div className="mb-8">
-                    <p className="text-gold/60 font-body text-xs mb-4">{t.tarot_spread_choose}</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-md mx-auto">
-                      {SPREAD_OPTIONS.map((spread) => (
-                        <motion.button
-                          key={spread.key}
-                          onClick={() => setSelectedSpreadKey(spread.key)}
-                          className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-body transition-all ${selectedSpread.key === spread.key ? "ring-1 ring-gold/40" : ""}`}
-                          style={{
-                            background: selectedSpread.key === spread.key
-                              ? "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))"
-                              : "hsl(var(--deep-blue-light) / 0.3)",
-                            border: `1px solid hsl(var(--gold) / ${selectedSpread.key === spread.key ? "0.3" : "0.08"})`,
-                            color: selectedSpread.key === spread.key ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.6)",
-                          }}
-                          whileHover={{ scale: 1.03 }}
-                          whileTap={{ scale: 0.97 }}
-                        >
-                          <span className="text-gold/70">{spread.icon}</span>
-                          <span>{SPREAD_LABELS[spread.key]}</span>
-                        </motion.button>
-                      ))}
-                    </div>
-                    <p className="text-[10px] text-muted-foreground font-body mt-3">
-                      {selectedSpread.cardCount === 1 ? t.tarot_one_card : `${selectedSpread.cardCount} ${t.tarot_n_cards}`} • {selectedSpread.positionLabels.join(" · ")}
-                    </p>
+                  {/* Atmospheric background particles */}
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                    {[...Array(12)].map((_, i) => (
+                      <motion.div
+                        key={`p-${i}`}
+                        className="absolute rounded-full"
+                        style={{
+                          width: i % 3 === 0 ? 3 : 2,
+                          height: i % 3 === 0 ? 3 : 2,
+                          left: `${10 + Math.random() * 80}%`,
+                          top: `${10 + Math.random() * 80}%`,
+                          background: i % 2 === 0 ? "hsl(var(--gold) / 0.4)" : "hsl(var(--celestial) / 0.3)",
+                        }}
+                        animate={{
+                          opacity: [0, 0.7, 0],
+                          y: [0, -(15 + Math.random() * 30)],
+                          scale: [0, 1.5, 0],
+                        }}
+                        transition={{
+                          duration: 3 + Math.random() * 2,
+                          repeat: Infinity,
+                          delay: i * 0.5,
+                          ease: "easeOut",
+                        }}
+                      />
+                    ))}
+                    {/* Subtle constellation lines */}
+                    <svg className="absolute inset-0 w-full h-full opacity-[0.04]">
+                      <line x1="15%" y1="20%" x2="35%" y2="35%" stroke="hsl(43, 80%, 55%)" strokeWidth="0.5" />
+                      <line x1="35%" y1="35%" x2="25%" y2="55%" stroke="hsl(43, 80%, 55%)" strokeWidth="0.5" />
+                      <line x1="65%" y1="15%" x2="80%" y2="30%" stroke="hsl(43, 80%, 55%)" strokeWidth="0.5" />
+                      <line x1="80%" y1="30%" x2="70%" y2="50%" stroke="hsl(43, 80%, 55%)" strokeWidth="0.5" />
+                    </svg>
                   </div>
 
-                  <motion.button onClick={handleDraw} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.tarot_cta}</motion.button>
-                  <p className="text-[11px] text-muted-foreground font-body mt-6">{t.tarot_note}</p>
+                  {/* Progress indicator */}
+                  <motion.div
+                    className="flex items-center justify-center gap-3 mb-6"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    {[1, 2, 3].map((step) => (
+                      <div key={step} className="flex items-center gap-2">
+                        <motion.div
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-heading"
+                          style={{
+                            background: step === 1
+                              ? "linear-gradient(135deg, hsl(var(--gold) / 0.3), hsl(var(--gold) / 0.15))"
+                              : "hsl(var(--muted) / 0.2)",
+                            border: `1px solid hsl(var(--gold) / ${step === 1 ? "0.5" : "0.1"})`,
+                            color: step === 1 ? "hsl(var(--gold))" : "hsl(var(--muted-foreground))",
+                            boxShadow: step === 1 ? "0 0 12px hsl(var(--gold) / 0.2)" : "none",
+                          }}
+                          animate={step === 1 ? { boxShadow: ["0 0 8px hsl(43 80% 55% / 0.15)", "0 0 18px hsl(43 80% 55% / 0.3)", "0 0 8px hsl(43 80% 55% / 0.15)"] } : {}}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          {step}
+                        </motion.div>
+                        {step < 3 && (
+                          <div className="w-8 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))" }} />
+                        )}
+                      </div>
+                    ))}
+                  </motion.div>
+                  <p className="text-gold/40 font-body text-[10px] tracking-wider mb-6">
+                    שלב 1 מתוך 3 — בחרו את סוג הקריאה
+                  </p>
+
+                  {/* Title */}
+                  <motion.div
+                    className="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center"
+                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
+                    animate={{ boxShadow: ["0 0 15px hsl(43 80% 55% / 0.1)", "0 0 30px hsl(43 80% 55% / 0.2)", "0 0 15px hsl(43 80% 55% / 0.1)"] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <Eye className="w-6 h-6 text-gold" />
+                  </motion.div>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-2">{t.tarot_title}</h2>
+                  <p className="text-foreground/60 font-body text-sm mb-8 max-w-md mx-auto leading-relaxed">{t.tarot_desc}</p>
+
+                  {/* Mystical card selector */}
+                  <div className="mb-8">
+                    <p className="text-gold/50 font-body text-xs mb-4 tracking-wider">{t.tarot_spread_choose}</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
+                      {SPREAD_OPTIONS.map((spread, idx) => {
+                        const isSelected = selectedSpread.key === spread.key;
+                        return (
+                          <motion.button
+                            key={spread.key}
+                            onClick={() => setSelectedSpreadKey(spread.key)}
+                            className="relative flex flex-col items-center gap-2 px-3 py-4 rounded-xl text-xs font-body transition-all overflow-hidden"
+                            style={{
+                              background: isSelected
+                                ? "linear-gradient(145deg, hsl(var(--gold) / 0.12), hsl(var(--deep-blue-light) / 0.8))"
+                                : "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.5), hsl(var(--deep-blue) / 0.6))",
+                              border: `1px solid hsl(var(--gold) / ${isSelected ? "0.4" : "0.08"})`,
+                              color: isSelected ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.6)",
+                              boxShadow: isSelected ? "0 0 20px hsl(var(--gold) / 0.12), inset 0 0 15px hsl(var(--gold) / 0.05)" : "none",
+                            }}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 + idx * 0.08 }}
+                            whileHover={{ scale: 1.04, borderColor: "hsl(var(--gold) / 0.3)" }}
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            {/* Selection glow */}
+                            {isSelected && (
+                              <motion.div
+                                className="absolute inset-0 rounded-xl pointer-events-none"
+                                style={{ background: "radial-gradient(circle at 50% 30%, hsl(var(--gold) / 0.08), transparent 70%)" }}
+                                animate={{ opacity: [0.5, 1, 0.5] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                              />
+                            )}
+                            <span className={`text-lg relative z-10 ${isSelected ? "text-gold" : "text-gold/50"}`}>
+                              {spread.icon}
+                            </span>
+                            <span className="relative z-10 font-semibold">{SPREAD_LABELS[spread.key]}</span>
+                            <span className="relative z-10 text-[9px] text-muted-foreground/50">
+                              {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
+                            </span>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                    <motion.p
+                      className="text-[10px] text-muted-foreground/50 font-body mt-4"
+                      key={selectedSpread.key}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
+                      {selectedSpread.positionLabels.join(" · ")}
+                    </motion.p>
+                  </div>
+
+                  {/* Tarot deck visual */}
+                  <motion.div
+                    className="relative flex items-center justify-center mb-6 h-12"
+                    animate={{
+                      filter: [
+                        "drop-shadow(0 0 8px hsl(43 80% 55% / 0.1))",
+                        "drop-shadow(0 0 18px hsl(43 80% 55% / 0.25))",
+                        "drop-shadow(0 0 8px hsl(43 80% 55% / 0.1))",
+                      ],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    {[...Array(5)].map((_, i) => (
+                      <motion.div
+                        key={`deck-${i}`}
+                        className="absolute w-8 h-12 rounded"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--deep-blue-light)))",
+                          border: "1px solid hsl(var(--gold) / 0.2)",
+                          transform: `translateX(${(i - 2) * 6}px) rotate(${(i - 2) * 3}deg)`,
+                          zIndex: 5 - Math.abs(i - 2),
+                        }}
+                        animate={{ y: [0, -2, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.15 }}
+                      />
+                    ))}
+                  </motion.div>
+
+                  {/* CTA Button */}
+                  <motion.button
+                    onClick={handleDraw}
+                    className="btn-gold font-heading flex items-center justify-center gap-2 mx-auto px-10 py-3.5 rounded-xl text-sm tracking-wider"
+                    whileHover={{ scale: 1.04, boxShadow: "0 0 40px hsl(43 80% 55% / 0.4)" }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    פתחו את הקלפים
+                  </motion.button>
+                  <p className="text-[10px] text-muted-foreground/40 font-body mt-5">{t.tarot_note}</p>
                 </motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
