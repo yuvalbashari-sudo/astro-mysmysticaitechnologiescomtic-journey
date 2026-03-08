@@ -1779,7 +1779,7 @@ const HeroSection = () => {
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 >
                   <motion.div
-                    className="relative flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
+                    className="relative flex items-center justify-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap w-full"
                     style={{
                       borderWidth: "1px",
                       borderStyle: "solid",
