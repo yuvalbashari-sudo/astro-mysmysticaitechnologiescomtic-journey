@@ -5,6 +5,7 @@ import { drawTarotCards, TarotCard } from "@/data/tarotData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
+import { tarotMemory } from "@/lib/tarotMemory";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
@@ -53,6 +54,7 @@ async function streamTarotReading(
   onError: (err: string) => void,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
+  const memoryContext = tarotMemory.buildMemoryContext(cards);
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -60,7 +62,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext } }),
     });
 
     if (!resp.ok) {
@@ -178,7 +180,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current += delta;
         setAiText(aiTextRef.current);
       },
-      () => setAiLoading(false),
+      () => {
+        setAiLoading(false);
+        // Record cards in tarot memory
+        tarotMemory.recordReading(
+          selectedSpread.key,
+          cardsPayload
+        );
+      },
       (err) => { setAiLoading(false); toast(err); },
     );
   };

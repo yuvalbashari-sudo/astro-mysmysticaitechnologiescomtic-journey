@@ -5,6 +5,7 @@ import { spreads, drawCardsForSpread, getInterpretation, type SpreadConfig, type
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
+import { tarotMemory } from "@/lib/tarotMemory";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { useT } from "@/i18n/LanguageContext";
@@ -72,12 +73,16 @@ const SmokeEffect = () => (
 // Stream AI reading
 async function streamTarotReading(
   spreadType: string,
-  cards: { hebrewName: string; symbol: string; positionLabel: string }[],
+  cards: { hebrewName: string; symbol: string; positionLabel: string; name?: string }[],
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
+
+  // Build memory context for returning cards
+  const memoryContext = tarotMemory.buildMemoryContext(cards);
+
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -85,7 +90,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext } }),
     });
 
     if (!resp.ok) {
@@ -343,6 +348,16 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         () => {
           setAiLoading(false);
+          // Record cards in tarot memory
+          tarotMemory.recordReading(
+            selectedSpread.key,
+            drawnCards.map((c, i) => ({
+              name: c.name,
+              hebrewName: c.hebrewName,
+              symbol: c.symbol,
+              positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
+            }))
+          );
           // Save reading
           readingsStorage.save({
             type: "tarot",
