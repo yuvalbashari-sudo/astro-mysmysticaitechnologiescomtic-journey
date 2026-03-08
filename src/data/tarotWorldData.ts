@@ -105,7 +105,7 @@ export const spreads: SpreadConfig[] = [
   },
 ];
 
-const majorArcana: TarotWorldCard[] = [
+export const majorArcana: TarotWorldCard[] = [
   {
     name: "The Fool", hebrewName: "השוטה", number: 0, symbol: "🃏", image: "🃏",
     meanings: {
