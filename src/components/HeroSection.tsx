@@ -888,9 +888,11 @@ const TAROT_MESSAGES: Record<string, string> = {
 const TarotCardReveal = ({
   isMobile,
   onOpenTarot,
+  onPhaseChange,
 }: {
   isMobile: boolean;
   onOpenTarot: () => void;
+  onPhaseChange?: (phase: "idle" | "silhouette" | "flipping" | "revealed") => void;
 }) => {
   const t = useT();
   const [phase, setPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
