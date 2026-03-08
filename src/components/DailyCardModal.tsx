@@ -616,7 +616,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           transition={{ duration: 2, repeat: Infinity }}
                         >
                           <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                          <span className="font-body text-xs text-gold/50">המסר היומי מתגלה...</span>
+                          <span className="font-body text-xs text-gold/50">{t.daily_loading}</span>
                         </motion.div>
                       )}
                     </motion.div>
