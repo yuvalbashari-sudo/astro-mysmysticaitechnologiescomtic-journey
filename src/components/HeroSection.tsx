@@ -279,8 +279,8 @@ const ZodiacWheel = ({
   hoveredMenuItem: number | null;
 }) => {
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 165 : 260;
-  const iconSize = isMobile ? 36 : 48;
+  const radius = isMobile ? 215 : 338;
+  const iconSize = isMobile ? 46 : 62;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
   const isCompatMode = hoveredMenuItem === 2;
@@ -358,10 +358,10 @@ const ZodiacWheel = ({
                   alt={sign.name}
                   className="w-full h-full object-contain transition-all duration-300"
                   style={{
-                    opacity: isHovered || isHighlighted ? 1 : 0.55,
+                    opacity: isHovered || isHighlighted ? 1 : 0.75,
                     filter: isHovered || isHighlighted
-                      ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.7))"
-                      : "drop-shadow(0 0 3px hsl(43 80% 55% / 0.2))",
+                      ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
+                      : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
                   }}
                 />
               </motion.div>
