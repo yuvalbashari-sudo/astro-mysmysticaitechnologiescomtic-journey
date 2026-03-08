@@ -114,6 +114,7 @@
     background: linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)));
     color: hsl(var(--deep-blue));
     box-shadow: 0 4px 20px hsl(var(--gold) / 0.3);
+    min-height: 48px;
   }
 
   .btn-gold:hover {
