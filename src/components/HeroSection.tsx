@@ -907,17 +907,55 @@ const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: n
 };
 
 /* ── Tarot Card Messages ───────────────────────────── */
-const TAROT_MESSAGES: Record<string, string> = {
-  "The Fool": "קלף השוטה הופיע עבורך — סימן שהתחלות חדשות ומרגשות ממתינות לך.",
-  "The Magician": "קלף הקוסם הופיע עבורך היום — סימן שהאנרגיה סביבך תומכת ביצירה ובהתחלות חדשות.",
-  "The High Priestess": "הכוהנת הגדולה מזמינה אותך להקשיב לקול הפנימי — האמת כבר בתוכך.",
-  "The Empress": "הקיסרית מבשרת על שפע וצמיחה — פתח את ליבך לקבל.",
-  "The Emperor": "הקיסר מופיע כשהזמן נכון לקחת אחריות ולהוביל מתוך חוכמה.",
-  "The Lovers": "האוהבים מאירים את דרכך — בחירה חשובה מחכה, עקוב אחר הלב.",
-  "The Wheel of Fortune": "גלגל המזל סובב לטובתך — שינוי משמעותי בדרך.",
-  "The Star": "הכוכב מאיר את דרכך — תקווה, ריפוי והשראה ממלאים את חייך.",
-  "The Moon": "הירח חושף סודות נסתרים — הקשב לחלומות ולאינטואיציה.",
-  "The Sun": "השמש מאירה את חייך — שמחה, הצלחה ואור ממלאים כל פינה.",
+const TAROT_MESSAGES: Record<Language, Record<string, string>> = {
+  he: {
+    "The Fool": "קלף השוטה הופיע עבורך — סימן שהתחלות חדשות ומרגשות ממתינות לך.",
+    "The Magician": "קלף הקוסם הופיע עבורך היום — סימן שהאנרגיה סביבך תומכת ביצירה ובהתחלות חדשות.",
+    "The High Priestess": "הכוהנת הגדולה מזמינה אותך להקשיב לקול הפנימי — האמת כבר בתוכך.",
+    "The Empress": "הקיסרית מבשרת על שפע וצמיחה — פתח את ליבך לקבל.",
+    "The Emperor": "הקיסר מופיע כשהזמן נכון לקחת אחריות ולהוביל מתוך חוכמה.",
+    "The Lovers": "האוהבים מאירים את דרכך — בחירה חשובה מחכה, עקוב אחר הלב.",
+    "The Wheel of Fortune": "גלגל המזל סובב לטובתך — שינוי משמעותי בדרך.",
+    "The Star": "הכוכב מאיר את דרכך — תקווה, ריפוי והשראה ממלאים את חייך.",
+    "The Moon": "הירח חושף סודות נסתרים — הקשב לחלומות ולאינטואיציה.",
+    "The Sun": "השמש מאירה את חייך — שמחה, הצלחה ואור ממלאים כל פינה.",
+  },
+  en: {
+    "The Fool": "The Fool appears for you — a sign that exciting new beginnings await.",
+    "The Magician": "The Magician appears for you today — the energy around you supports creation and new starts.",
+    "The High Priestess": "The High Priestess invites you to listen to your inner voice — the truth is already within you.",
+    "The Empress": "The Empress heralds abundance and growth — open your heart to receive.",
+    "The Emperor": "The Emperor appears when it's time to take responsibility and lead with wisdom.",
+    "The Lovers": "The Lovers illuminate your path — an important choice awaits, follow your heart.",
+    "The Wheel of Fortune": "The Wheel of Fortune turns in your favor — a significant change is coming.",
+    "The Star": "The Star lights your way — hope, healing and inspiration fill your life.",
+    "The Moon": "The Moon reveals hidden secrets — listen to your dreams and intuition.",
+    "The Sun": "The Sun illuminates your life — joy, success and light fill every corner.",
+  },
+  ru: {
+    "The Fool": "Шут появляется для вас — знак того, что впереди захватывающие новые начинания.",
+    "The Magician": "Маг появляется для вас сегодня — энергия вокруг вас поддерживает творчество и новые начинания.",
+    "The High Priestess": "Верховная Жрица приглашает вас прислушаться к внутреннему голосу — истина уже внутри вас.",
+    "The Empress": "Императрица предвещает изобилие и рост — откройте сердце для получения.",
+    "The Emperor": "Император появляется, когда пришло время взять ответственность и вести с мудростью.",
+    "The Lovers": "Влюблённые освещают ваш путь — впереди важный выбор, следуйте за сердцем.",
+    "The Wheel of Fortune": "Колесо Фортуны вращается в вашу пользу — значительные перемены на подходе.",
+    "The Star": "Звезда освещает ваш путь — надежда, исцеление и вдохновение наполняют вашу жизнь.",
+    "The Moon": "Луна раскрывает скрытые тайны — прислушайтесь к мечтам и интуиции.",
+    "The Sun": "Солнце освещает вашу жизнь — радость, успех и свет наполняют каждый уголок.",
+  },
+  ar: {
+    "The Fool": "بطاقة المجنون تظهر لك — علامة على بدايات جديدة ومثيرة تنتظرك.",
+    "The Magician": "الساحر يظهر لك اليوم — الطاقة من حولك تدعم الإبداع والبدايات الجديدة.",
+    "The High Priestess": "الكاهنة العليا تدعوك للاستماع إلى صوتك الداخلي — الحقيقة بداخلك بالفعل.",
+    "The Empress": "الإمبراطورة تبشّر بالوفرة والنمو — افتح قلبك للتلقي.",
+    "The Emperor": "الإمبراطور يظهر عندما يحين وقت تحمل المسؤولية والقيادة بحكمة.",
+    "The Lovers": "العشاق ينيرون طريقك — خيار مهم ينتظرك، اتبع قلبك.",
+    "The Wheel of Fortune": "عجلة الحظ تدور لصالحك — تغيير كبير في الطريق.",
+    "The Star": "النجمة تنير طريقك — الأمل والشفاء والإلهام يملأون حياتك.",
+    "The Moon": "القمر يكشف الأسرار الخفية — استمع إلى أحلامك وحدسك.",
+    "The Sun": "الشمس تنير حياتك — الفرح والنجاح والنور يملأون كل زاوية.",
+  },
 };
 
 /* ── Tarot Card Reveal in Crystal Ball ─────────────── */
