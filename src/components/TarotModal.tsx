@@ -11,6 +11,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT } from "@/i18n/LanguageContext";
+import TarotShufflePhase from "@/components/TarotShufflePhase";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -138,6 +139,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTablePhase, setIsTablePhase] = useState(false);
+  const [isShufflePhase, setIsShufflePhase] = useState(false);
   const [tableCards, setTableCards] = useState<TarotCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
@@ -153,9 +155,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleOnboardingComplete = () => {
     setIsLoading(false);
+    setIsShufflePhase(true);
+  };
+
+  const handleShuffleComplete = () => {
     const drawn = drawTarotCards(selectedSpread.cardCount);
     setTableCards(drawn);
     setFlippedIndices(new Set());
+    setIsShufflePhase(false);
     setIsTablePhase(true);
   };
 
@@ -244,6 +251,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setCards(null);
       setIsLoading(false);
       setIsTablePhase(false);
+      setIsShufflePhase(false);
       setTableCards([]);
       setFlippedIndices(new Set());
       setActiveRevealIndex(null);
@@ -283,7 +291,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             <div className="absolute top-4 right-4 z-20"><span className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))", border: "1px solid hsl(var(--gold) / 0.3)", color: "hsl(var(--gold))" }}>{t.common_free}</span></div>
 
             <AnimatePresence mode="wait">
-              {!cards && !isLoading && !isTablePhase ? (
+              {!cards && !isLoading && !isTablePhase && !isShufflePhase ? (
                 <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-6 md:p-10 text-center relative overflow-hidden">
 
                   {/* Atmospheric background particles */}
@@ -460,6 +468,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+              ) : isShufflePhase ? (
+                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotShufflePhase onComplete={handleShuffleComplete} /></motion.div>
               ) : isTablePhase ? (
                 <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-[480px] relative overflow-hidden">
                   {/* Velvet table background */}
