@@ -41,6 +41,9 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     setAiLoading(true);
     aiTextRef.current = "";
 
+    // Record zodiac in mystical profile
+    mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
+
     streamMysticalReading(
       "forecast",
       { signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element, dateRange: sign.dateRange, monthName },

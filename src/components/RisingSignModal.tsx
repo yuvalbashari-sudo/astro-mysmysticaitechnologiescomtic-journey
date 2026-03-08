@@ -40,6 +40,10 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     setSignInfo({ name: rising.hebrewName, symbol: rising.symbol, element: rising.element, sunSign: sunSign.hebrewName, sunSymbol: sunSign.symbol, sunElement: sunSign.element });
     setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
 
+    // Record in mystical profile
+    mysticalProfile.recordZodiac(sunSign.hebrewName, sunSign.symbol, sunSign.element, birthDate);
+    mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
+
     streamMysticalReading("rising",
       { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sunSign.hebrewName, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },

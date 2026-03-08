@@ -45,6 +45,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     setAiLoading(true);
     aiTextRef.current = "";
 
+    // Record in mystical profile
+    mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
+    mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
+
     streamMysticalReading(
       "compatibility",
       {

@@ -209,6 +209,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         if (saved) {
           saveDailyCard({ ...saved, aiText: aiTextRef.current });
         }
+        // Record in mystical profile
+        mysticalProfile.recordDailyCard(selectedCard.hebrewName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
           title: `קלף יומי — ${selectedCard.hebrewName}`,
