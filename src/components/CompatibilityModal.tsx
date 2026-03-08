@@ -39,7 +39,13 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
     streamMysticalReading(
       "compatibility",
-      { sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol, sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol, score: info.score },
+      {
+        sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
+        sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
+        sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
+        sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
+        score: info.score,
+      },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
