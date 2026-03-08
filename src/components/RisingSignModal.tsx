@@ -13,7 +13,7 @@ interface Props { isOpen: boolean; onClose: () => void; }
 
 const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const [birthTime, setBirthTime] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [birthDate, setBirthDate] = useState("");
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<{ name: string; symbol: string; element: string } | null>(null);
   const [aiText, setAiText] = useState("");
