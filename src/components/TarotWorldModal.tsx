@@ -441,7 +441,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
 
-                  <p className="text-center text-[10px] text-muted-foreground font-body mt-8">✦ קלף יומי — בחינם • שאר הקריאות כוללות תצוגה מקדימה חינמית ✦</p>
+                  <p className="text-center text-[10px] text-muted-foreground font-body mt-8">{t.tarot_world_daily_note}</p>
                 </motion.div>
               )}
 
