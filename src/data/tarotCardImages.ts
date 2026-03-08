@@ -7,6 +7,7 @@ import hierophantImg from "@/assets/tarot/hierophant.jpg";
 import loversImg from "@/assets/tarot/lovers.jpg";
 import chariotImg from "@/assets/tarot/chariot.jpg";
 import strengthImg from "@/assets/tarot/strength.jpg";
+import hermitImg from "@/assets/tarot/hermit.jpg";
 import wheelImg from "@/assets/tarot/wheel-of-fortune.jpg";
 import justiceImg from "@/assets/tarot/justice.jpg";
 import hangedManImg from "@/assets/tarot/hanged-man.jpg";
