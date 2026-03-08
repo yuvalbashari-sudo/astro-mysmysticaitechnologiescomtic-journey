@@ -11,6 +11,18 @@ import PalmReadingModal from "./PalmReadingModal";
 import { useT } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import ariesIcon from "@/assets/zodiac-icons/aries.png";
+import taurusIcon from "@/assets/zodiac-icons/taurus.png";
+import geminiIcon from "@/assets/zodiac-icons/gemini.png";
+import cancerIcon from "@/assets/zodiac-icons/cancer.png";
+import leoIcon from "@/assets/zodiac-icons/leo.png";
+import virgoIcon from "@/assets/zodiac-icons/virgo.png";
+import libraIcon from "@/assets/zodiac-icons/libra.png";
+import scorpioIcon from "@/assets/zodiac-icons/scorpio.png";
+import sagittariusIcon from "@/assets/zodiac-icons/sagittarius.png";
+import capricornIcon from "@/assets/zodiac-icons/capricorn.png";
+import aquariusIcon from "@/assets/zodiac-icons/aquarius.png";
+import piscesIcon from "@/assets/zodiac-icons/pisces.png";
 
 const constellations = [
   { stars: [[12, 15], [18, 12], [22, 18], [28, 14], [25, 8]], opacity: 0.4 },
@@ -243,19 +255,20 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 };
 
 /* ── Zodiac Wheel ──────────────────────────────────── */
+const ZODIAC_ICONS = [ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon, libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon];
 const ZODIAC_WHEEL = [
-  { symbol: "♈", name: "טלה", en: "Aries" },
-  { symbol: "♉", name: "שור", en: "Taurus" },
-  { symbol: "♊", name: "תאומים", en: "Gemini" },
-  { symbol: "♋", name: "סרטן", en: "Cancer" },
-  { symbol: "♌", name: "אריה", en: "Leo" },
-  { symbol: "♍", name: "בתולה", en: "Virgo" },
-  { symbol: "♎", name: "מאזניים", en: "Libra" },
-  { symbol: "♏", name: "עקרב", en: "Scorpio" },
-  { symbol: "♐", name: "קשת", en: "Sagittarius" },
-  { symbol: "♑", name: "גדי", en: "Capricorn" },
-  { symbol: "♒", name: "דלי", en: "Aquarius" },
-  { symbol: "♓", name: "דגים", en: "Pisces" },
+  { name: "טלה", en: "Aries" },
+  { name: "שור", en: "Taurus" },
+  { name: "תאומים", en: "Gemini" },
+  { name: "סרטן", en: "Cancer" },
+  { name: "אריה", en: "Leo" },
+  { name: "בתולה", en: "Virgo" },
+  { name: "מאזניים", en: "Libra" },
+  { name: "עקרב", en: "Scorpio" },
+  { name: "קשת", en: "Sagittarius" },
+  { name: "גדי", en: "Capricorn" },
+  { name: "דלי", en: "Aquarius" },
+  { name: "דגים", en: "Pisces" },
 ];
 
 const ZodiacWheel = ({
@@ -266,7 +279,8 @@ const ZodiacWheel = ({
   hoveredMenuItem: number | null;
 }) => {
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 155 : 235;
+  const radius = isMobile ? 165 : 260;
+  const iconSize = isMobile ? 36 : 48;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
   const isCompatMode = hoveredMenuItem === 2;
@@ -319,10 +333,10 @@ const ZodiacWheel = ({
               key={sign.en}
               className="absolute pointer-events-auto cursor-pointer"
               style={{
-                left: x - 14,
-                top: y - 14,
-                width: 28,
-                height: 28,
+                left: x - iconSize / 2,
+                top: y - iconSize / 2,
+                width: iconSize,
+                height: iconSize,
               }}
               onMouseEnter={() => setHoveredSign(i)}
               onMouseLeave={() => setHoveredSign(null)}
@@ -330,30 +344,26 @@ const ZodiacWheel = ({
               animate={{ rotate: -360 }}
               transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
             >
-              {/* Symbol */}
+              {/* Zodiac illustration */}
               <motion.div
-                className="w-full h-full flex items-center justify-center rounded-full"
-                style={{
-                  fontSize: isMobile ? "12px" : "15px",
-                  color: isHovered || isHighlighted
-                    ? "hsl(var(--gold))"
-                    : "hsl(var(--gold) / 0.45)",
-                  textShadow: isHovered || isHighlighted
-                    ? "0 0 12px hsl(43 80% 55% / 0.8)"
-                    : "none",
-                }}
+                className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
                 animate={isHighlighted ? {
                   scale: [1, 1.3, 1],
-                  textShadow: [
-                    "0 0 8px hsl(340 70% 60% / 0.4)",
-                    "0 0 20px hsl(340 70% 60% / 0.8)",
-                    "0 0 8px hsl(340 70% 60% / 0.4)",
-                  ],
                 } : {}}
-                whileHover={{ scale: 1.4 }}
+                whileHover={{ scale: 1.35 }}
                 transition={{ duration: 1.5, repeat: isHighlighted ? Infinity : 0, ease: "easeInOut" }}
               >
-                {sign.symbol}
+                <img
+                  src={ZODIAC_ICONS[i]}
+                  alt={sign.name}
+                  className="w-full h-full object-contain transition-all duration-300"
+                  style={{
+                    opacity: isHovered || isHighlighted ? 1 : 0.55,
+                    filter: isHovered || isHighlighted
+                      ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.7))"
+                      : "drop-shadow(0 0 3px hsl(43 80% 55% / 0.2))",
+                  }}
+                />
               </motion.div>
 
               {/* Tooltip on hover */}
