@@ -115,7 +115,7 @@ const FloatingOracleButton = () => {
       </motion.button>
 
       {/* Modals */}
-      <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} drawnCards={drawnCards} />
+      <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
