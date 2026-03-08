@@ -146,7 +146,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current = saved.aiText;
       }
       setPhase("locked");
-      toast("הקלף היומי שלך כבר נחשף ✦");
+      toast(t.daily_already_drawn);
       return;
     }
 
