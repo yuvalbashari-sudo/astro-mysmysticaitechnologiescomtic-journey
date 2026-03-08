@@ -577,7 +577,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                     style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.4)" }}>
                                     {card.hebrewName}
                                   </span>
-                                  <span className="font-body text-[8px] md:text-[9px] text-foreground/40 mt-0.5">{selectedSpread.positionLabels[i]}</span>
+                                  <span className="font-body text-[8px] md:text-[9px] text-foreground/40 mt-0.5">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</span>
                                 </div>
                               </div>
                             </motion.div>
