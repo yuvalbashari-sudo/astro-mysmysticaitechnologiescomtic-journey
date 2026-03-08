@@ -441,9 +441,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     {[0, 1, 2, 3, 4].map(i => (
                       <motion.div
                         key={i}
-                        className="absolute inset-0 rounded-xl"
+                        className="absolute inset-0 rounded-xl overflow-hidden"
                         style={{
-                          background: "linear-gradient(145deg, hsl(0 40% 18%), hsl(0 30% 12%))",
                           border: "1px solid hsl(var(--gold) / 0.3)",
                           boxShadow: "0 4px 20px hsl(0 0% 0% / 0.3)",
                         }}
@@ -454,11 +453,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                       >
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="w-10 h-10 rounded-full" style={{ border: "1px solid hsl(var(--gold) / 0.3)", background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent)" }}>
-                            <div className="w-full h-full flex items-center justify-center text-lg">✦</div>
-                          </div>
-                        </div>
+                        <img src={cardBack} alt="Card" className="w-full h-full object-cover" />
                       </motion.div>
                     ))}
                   </div>
