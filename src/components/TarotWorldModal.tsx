@@ -9,7 +9,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-type Phase = "select" | "shuffle" | "reveal" | "result";
+type Phase = "select" | "shuffle" | "reveal" | "showcase" | "result";
 
 // Roman numeral converter
 const toRoman = (n: number): string => {
