@@ -1207,7 +1207,7 @@ const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: b
   return (
     <motion.div
       className="absolute z-30 text-center left-1/2"
-      style={{ top: "calc(50% + 130px)", transform: "translateX(-50%)", width: "260px" }}
+      style={{ top: "calc(50% + 110px)", transform: "translateX(-50%)", width: "260px" }}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: hidden ? 0 : 1, y: hidden ? 10 : 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
