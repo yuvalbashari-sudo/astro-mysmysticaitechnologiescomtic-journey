@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Check } from "lucide-react";
 import { drawTarotCards, TarotCard } from "@/data/tarotData";
+import { tarotCardImages } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import ShareResultSection from "@/components/ShareResultSection";
@@ -86,7 +87,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <div className="flex items-center justify-center gap-4 mb-6">
                       {cards.map((card, i) => (
                         <motion.button key={i} onClick={() => setActiveCard(i)} className={`flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all ${activeCard === i ? "ring-1 ring-gold/40" : ""}`} style={{ background: activeCard === i ? "hsl(var(--gold) / 0.1)" : "hsl(var(--deep-blue-light) / 0.3)", border: `1px solid hsl(var(--gold) / ${activeCard === i ? "0.3" : "0.08"})` }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.2 }} whileHover={{ scale: 1.05 }}>
-                          <span className="text-2xl">{card.symbol}</span>
+                          {tarotCardImages[card.name] ? (
+                            <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-10 h-14 object-cover rounded" />
+                          ) : (
+                            <span className="text-2xl">{card.symbol}</span>
+                          )}
                           <span className={`font-body text-xs ${activeCard === i ? "text-gold" : "text-foreground/60"}`}>{card.hebrewName}</span>
                           <span className="text-[10px] text-muted-foreground font-body">קלף {i + 1}</span>
                         </motion.button>
@@ -102,7 +107,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   <AnimatePresence mode="wait">
                     <motion.div key={activeCard} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                       <div className="text-center mb-4">
-                        <span className="text-4xl">{cards[activeCard].symbol}</span>
+                        {tarotCardImages[cards[activeCard].name] ? (
+                          <img src={tarotCardImages[cards[activeCard].name]} alt={cards[activeCard].hebrewName} className="w-32 h-48 object-cover rounded-lg mx-auto shadow-lg" style={{ border: "2px solid hsl(var(--gold) / 0.3)" }} />
+                        ) : (
+                          <span className="text-4xl">{cards[activeCard].symbol}</span>
+                        )}
                         <h3 className="font-heading text-lg text-gold mt-2">{cards[activeCard].hebrewName}</h3>
                       </div>
                       {cardSections.map((section, i) => {
