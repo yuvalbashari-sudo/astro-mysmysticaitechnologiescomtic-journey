@@ -180,7 +180,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current += delta;
         setAiText(aiTextRef.current);
       },
-      () => setAiLoading(false),
+      () => {
+        setAiLoading(false);
+        // Record cards in tarot memory
+        tarotMemory.recordReading(
+          selectedSpread.key,
+          cardsPayload
+        );
+      },
       (err) => { setAiLoading(false); toast(err); },
     );
   };
