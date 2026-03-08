@@ -584,23 +584,13 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.6 }}
                     >
-                      <motion.button
-                        onClick={handleShare}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body"
-                        style={{
-                          background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))",
-                          border: "1px solid hsl(142 70% 45% / 0.3)",
-                          color: "hsl(142 70% 60%)",
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.97 }}
-                      >
-                        <Share2 className="w-3.5 h-3.5" />
-                        שתפו בוואטסאפ
+                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
                       </motion.button>
-                      <motion.button
-                        onClick={handleCopy}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body"
+                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                        {copied ? t.share_copied : t.share_copy}
+                      </motion.button>
                         style={{
                           background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
                           border: "1px solid hsl(var(--gold) / 0.2)",
