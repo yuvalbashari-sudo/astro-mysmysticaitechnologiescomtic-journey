@@ -79,8 +79,17 @@ export function getRisingSign(sunSign: string, birthTime: string): string {
   return signOrder[risingIndex];
 }
 
+// Deterministic hash for a sign pair so same pair always gets same score
+function pairHash(a: string, b: string): number {
+  const key = [a, b].sort().join("+");
+  let h = 0;
+  for (let i = 0; i < key.length; i++) {
+    h = ((h << 5) - h + key.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
+}
+
 export function getCompatibility(sign1: string, sign2: string): CompatibilityResult {
-  // Element-based compatibility logic
   const elements: Record<string, string> = {
     aries: "fire", taurus: "earth", gemini: "air", cancer: "water",
     leo: "fire", virgo: "earth", libra: "air", scorpio: "water",
@@ -94,11 +103,20 @@ export function getCompatibility(sign1: string, sign2: string): CompatibilityRes
   const opposite = (e1 === "fire" && e2 === "water") || (e1 === "water" && e2 === "fire") ||
     (e1 === "earth" && e2 === "air") || (e1 === "air" && e2 === "earth");
 
-  if (same) return sameSignResult;
-  if (sameElement) return sameElementResult;
-  if (compatible) return compatibleResult;
-  if (opposite) return oppositeResult;
-  return neutralResult;
+  // Base range per category, then add pair-specific variation
+  const hash = pairHash(sign1, sign2);
+  const variation = (hash % 17) - 8; // -8 to +8
+
+  let base: CompatibilityResult;
+  let baseScore: number;
+
+  if (same) { base = sameSignResult; baseScore = 75 + (hash % 11); }
+  else if (sameElement) { base = sameElementResult; baseScore = 80 + (hash % 13); }
+  else if (compatible) { base = compatibleResult; baseScore = 85 + (hash % 11); }
+  else if (opposite) { base = oppositeResult; baseScore = 55 + (hash % 16); }
+  else { base = neutralResult; baseScore = 62 + (hash % 18); }
+
+  return { ...base, score: Math.min(99, Math.max(45, baseScore + variation)) };
 }
 
 const sameSignResult: CompatibilityResult = {
