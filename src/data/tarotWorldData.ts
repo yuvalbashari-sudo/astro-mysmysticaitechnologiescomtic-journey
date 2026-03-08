@@ -93,6 +93,16 @@ export const spreads: SpreadConfig[] = [
     freeRevealCount: 1,
     positionLabels: ["המסר שלכם"],
   },
+  {
+    key: "question",
+    hebrewName: "שאלה לקלפים",
+    description: "שאלו שאלה אישית וקבלו תשובה מהקלפים",
+    icon: "❓",
+    cardCount: 3,
+    isFree: true,
+    freeRevealCount: 3,
+    positionLabels: ["השפעה נסתרת", "אנרגיה נוכחית", "כיוון אפשרי"],
+  },
 ];
 
 const majorArcana: TarotWorldCard[] = [
