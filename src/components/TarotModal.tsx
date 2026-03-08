@@ -87,7 +87,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <div className="flex items-center justify-center gap-4 mb-6">
                       {cards.map((card, i) => (
                         <motion.button key={i} onClick={() => setActiveCard(i)} className={`flex flex-col items-center gap-1 px-4 py-3 rounded-xl transition-all ${activeCard === i ? "ring-1 ring-gold/40" : ""}`} style={{ background: activeCard === i ? "hsl(var(--gold) / 0.1)" : "hsl(var(--deep-blue-light) / 0.3)", border: `1px solid hsl(var(--gold) / ${activeCard === i ? "0.3" : "0.08"})` }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.2 }} whileHover={{ scale: 1.05 }}>
-                          <span className="text-2xl">{card.symbol}</span>
+                          {tarotCardImages[card.name] ? (
+                            <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-10 h-14 object-cover rounded" />
+                          ) : (
+                            <span className="text-2xl">{card.symbol}</span>
+                          )}
                           <span className={`font-body text-xs ${activeCard === i ? "text-gold" : "text-foreground/60"}`}>{card.hebrewName}</span>
                           <span className="text-[10px] text-muted-foreground font-body">קלף {i + 1}</span>
                         </motion.button>
