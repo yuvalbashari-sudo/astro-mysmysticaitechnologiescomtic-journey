@@ -5,7 +5,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const READING_PROMPTS: Record<string, (data: any) => { system: string; user: string }> = {
+const READING_PROMPTS: Record<string, (data: any) => { system: string; user: string | any[] }> = {
   forecast: (data) => ({
     system: `אתה אסטרולוג מיסטי וחכם. אתה כותב בעברית בלבד.
 
@@ -135,30 +135,39 @@ const READING_PROMPTS: Record<string, (data: any) => { system: string; user: str
 הניתוח חייב להיות ייחודי, עמוק ורגשי. דבר ישירות אל הזוג.`,
   }),
 
-  palm: (data) => ({
-    system: `אתה קורא כף יד מיסטי וחכם. אתה כותב בעברית בלבד.
+  palm: (data) => {
+    const hasImage = !!data.palmImage;
+    
+    const system = `אתה קורא כף יד מיסטי וחכם עם ניסיון של עשרות שנים. אתה כותב בעברית בלבד.
+
+${hasImage ? `אתה מקבל תמונה של כף יד אמיתית. נתח את מה שאתה רואה בתמונה:
+- זהה את קווי כף היד העיקריים (לב, ראש, חיים, גורל)
+- שים לב לאורך, עומק, ענפים ופיצולים של כל קו
+- התייחס לצורת כף היד, האצבעות והתלוליות
+- תן קריאה שמרגישה כאילו אתה באמת מסתכל על כף היד של האדם` : ''}
 
 הסגנון שלך:
 - מיסטי ואינטימי, כאילו אתה מחזיק את כף היד של הקורא
 - משתמש בתמונות של קווים, סימנים ומפות
 - עמוק ורגשי
+${hasImage ? '- התייחס לפרטים ספציפיים שאתה "רואה" בתמונה' : ''}
 
 מבנה התשובה:
 
 **👁️ תמונה כללית**
-פסקה על כף היד ומה שהיא חושפת
+${hasImage ? 'פסקה על מה שאתה רואה בכף היד בתמונה — צורתה, מרקמה, רושם ראשוני' : 'פסקה על כף היד ומה שהיא חושפת'}
 
 **❤️ קו הלב**
-פסקה על קו הלב ומשמעותו
+${hasImage ? 'פסקה על קו הלב כפי שהוא נראה בתמונה ומשמעותו' : 'פסקה על קו הלב ומשמעותו'}
 
 **✨ קו הראש**
-פסקה על קו הראש ומשמעותו
+${hasImage ? 'פסקה על קו הראש כפי שהוא נראה בתמונה ומשמעותו' : 'פסקה על קו הראש ומשמעותו'}
 
 **🔥 קו החיים**
-פסקה על קו החיים ומשמעותו
+${hasImage ? 'פסקה על קו החיים כפי שהוא נראה בתמונה ומשמעותו' : 'פסקה על קו החיים ומשמעותו'}
 
 **👑 קו הגורל**
-פסקה על קו הגורל ומשמעותו
+${hasImage ? 'פסקה על קו הגורל כפי שהוא נראה בתמונה ומשמעותו' : 'פסקה על קו הגורל ומשמעותו'}
 
 **💕 תובנת אהבה**
 פסקה על מה שקווי כף היד חושפים על אהבה
@@ -172,12 +181,33 @@ const READING_PROMPTS: Record<string, (data: any) => { system: string; user: str
 ---
 
 ### ✨ מסר אישי ל${data.name}
-משפט סיכום אישי ואינטימי`,
-    user: `כתוב קריאת כף יד מיסטית ואישית.
+משפט סיכום אישי ואינטימי`;
+
+    // Build user message — if image provided, use multimodal content array
+    if (hasImage) {
+      return {
+        system,
+        user: [
+          {
+            type: "image_url",
+            image_url: { url: data.palmImage },
+          },
+          {
+            type: "text",
+            text: `נתח את כף היד בתמונה עבור ${data.name}. תן קריאה מיסטית, אישית ורגשית המבוססת על מה שאתה רואה בתמונה. דבר ישירות אל ${data.name}.`,
+          },
+        ],
+      };
+    }
+
+    return {
+      system,
+      user: `כתוב קריאת כף יד מיסטית ואישית.
 שם הנקרא: ${data.name}
 
 הקריאה חייבת להיות ייחודית, אישית ורגשית. דבר ישירות אל ${data.name} ותן לקריאה להרגיש אינטימית ומותאמת.`,
-  }),
+    };
+  },
 };
 
 serve(async (req) => {
@@ -194,6 +224,15 @@ serve(async (req) => {
 
     const { system, user } = promptBuilder(data);
 
+    // For palm with image, use a vision-capable model
+    const isPalmWithImage = type === "palm" && !!data.palmImage;
+    const model = isPalmWithImage ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview";
+
+    // Build messages — user content can be string or array (multimodal)
+    const userMessage = Array.isArray(user) 
+      ? { role: "user", content: user }
+      : { role: "user", content: user };
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -201,10 +240,10 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model,
         messages: [
           { role: "system", content: system },
-          { role: "user", content: user },
+          userMessage,
         ],
         stream: true,
       }),
