@@ -7,6 +7,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import ShareResultSection from "@/components/ShareResultSection";
+import { useT } from "@/i18n/LanguageContext";
 
 interface Props {
   isOpen: boolean;
@@ -81,6 +82,7 @@ const Particles = () => (
 type Phase = "ready" | "shuffle" | "reveal" | "result" | "locked";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
+  const t = useT();
   const [phase, setPhase] = useState<Phase>("ready");
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [shuffleStep, setShuffleStep] = useState(0);
@@ -144,7 +146,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current = saved.aiText;
       }
       setPhase("locked");
-      toast("הקלף היומי שלך כבר נחשף ✦");
+      toast(t.daily_already_drawn);
       return;
     }
 
@@ -247,16 +249,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!card) return;
-    const text = `🔮 הקלף היומי שלי: ${card.symbol} ${card.hebrewName}\n\n✨ גלו גם אתם את הקלף היומי שלכם:\n${window.location.origin}`;
+    const text = `🔮 ${t.daily_title}: ${card.symbol} ${card.hebrewName}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!aiText) return;
-    await navigator.clipboard.writeText(`🔮 קלף יומי — ${card?.hebrewName}\n\n${aiText.slice(0, 400)}...`);
-    setCopied(true);
-    toast("הטקסט הועתק ✦");
-    setTimeout(() => setCopied(false), 2000);
+    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${card?.hebrewName}\n\n${aiText.slice(0, 400)}...`);
+    setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
   const cardImage = card ? tarotCardImages[card.name] : null;
@@ -336,13 +336,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     <Sun className="w-9 h-9 text-gold" />
                   </motion.div>
 
-                  <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">הקלף היומי</h2>
-                  <p className="text-foreground/60 font-body text-sm md:text-base max-w-md mx-auto leading-relaxed mb-2">
-                    קלף אחד שנבחר עבורכם מהארקנה הגדולה — מסר מיסטי שמאיר את היום שלכם באור חדש
-                  </p>
-                  <p className="text-foreground/40 font-body text-xs mb-8">
-                    ✦ ניתן לפתוח קלף יומי אחד כל 24 שעות ✦
-                  </p>
+                  <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.daily_title}</h2>
+                  <p className="text-foreground/60 font-body text-sm md:text-base max-w-md mx-auto leading-relaxed mb-2">{t.daily_desc}</p>
+                  <p className="text-foreground/40 font-body text-xs mb-8">{t.daily_note}</p>
 
                   <div className="section-divider max-w-[100px] mx-auto mb-8" />
 
@@ -375,7 +371,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     whileTap={{ scale: 0.97 }}
                   >
                     <Sparkles className="w-5 h-5" />
-                    חשפו את הקלף היומי
+                    {t.daily_cta}
                   </motion.button>
                 </motion.div>
               )}
@@ -415,9 +411,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: [0.4, 1, 0.4] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    הקלפים נערבבים...
+                  {t.daily_shuffle}
                   </motion.p>
-                  <p className="font-body text-foreground/40 text-xs">התרכזו ברגע הזה ✦</p>
+                  <p className="font-body text-foreground/40 text-xs">{t.daily_shuffle_focus}</p>
                 </motion.div>
               )}
 
@@ -499,7 +495,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 2 }}
                   >
-                    הקלף שנבחר עבורכם להיום
+                    {t.daily_card_chosen}
                   </motion.p>
                 </motion.div>
               )}
@@ -559,7 +555,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.4 }}
                     >
-                      הקלף היומי שלכם ✦ ארקנה מספר {card.number}
+                      {t.daily_arcana_label} {card.number}
                     </motion.p>
 
                     {phase === "locked" && (
@@ -575,7 +571,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       >
                         <Clock className="w-3.5 h-3.5 text-gold/60" />
                         <span className="font-body text-xs text-gold/70">
-                          הקלף הבא ייפתח בעוד {timeLeft}
+                          {t.daily_next_card} {timeLeft}
                         </span>
                       </motion.div>
                     )}
@@ -588,33 +584,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.6 }}
                     >
-                      <motion.button
-                        onClick={handleShare}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body"
-                        style={{
-                          background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))",
-                          border: "1px solid hsl(142 70% 45% / 0.3)",
-                          color: "hsl(142 70% 60%)",
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.97 }}
-                      >
-                        <Share2 className="w-3.5 h-3.5" />
-                        שתפו בוואטסאפ
+                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
                       </motion.button>
-                      <motion.button
-                        onClick={handleCopy}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body"
-                        style={{
-                          background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
-                          border: "1px solid hsl(var(--gold) / 0.2)",
-                          color: "hsl(var(--gold))",
-                        }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.97 }}
-                      >
+                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        {copied ? "הועתק!" : "העתקת טקסט"}
+                        {copied ? t.share_copied : t.share_copy}
                       </motion.button>
                     </motion.div>
                   </div>
@@ -630,7 +605,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           transition={{ duration: 2, repeat: Infinity }}
                         >
                           <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                          <span className="font-body text-xs text-gold/50">המסר היומי מתגלה...</span>
+                          <span className="font-body text-xs text-gold/50">{t.daily_loading}</span>
                         </motion.div>
                       )}
                     </motion.div>
@@ -660,7 +635,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: [0.4, 1, 0.4] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        מפענחים את המסר היומי שלכם...
+                        {t.daily_loading}
                       </motion.p>
                     </div>
                   ) : null}
@@ -685,16 +660,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         }}
                       >
                         <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                        <h4 className="font-heading text-base text-gold mb-2">רוצים קריאה מעמיקה יותר?</h4>
-                        <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">
-                          נסו קריאת טארוט מלאה עם מספר קלפים ופירוש אישי מפורט
-                        </p>
-                        <button
-                          onClick={handleClose}
-                          className="btn-gold font-body text-xs inline-flex items-center gap-2"
-                        >
-                          <Sparkles className="w-3.5 h-3.5" />
-                          חזרו לעולם הטארוט
+                        <h4 className="font-heading text-base text-gold mb-2">{t.daily_premium_title}</h4>
+                        <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.daily_premium_desc}</p>
+                        <button onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5" />{t.daily_premium_cta}
                         </button>
                       </motion.div>
                     </>

@@ -7,6 +7,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
+import { useT } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -216,6 +217,7 @@ function renderMysticalText(text: string) {
 }
 
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
+  const t = useT();
   const [phase, setPhase] = useState<Phase>("select");
   const [showDailyCard, setShowDailyCard] = useState(false);
   const [selectedSpread, setSelectedSpread] = useState<SpreadConfig | null>(null);
@@ -338,7 +340,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!drawnCards.length || !selectedSpread) return;
-    const text = `🔮 ${selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ קבלו גם אתם קריאת טארוט:\n${window.location.origin}`;
+    const text = `🔮 ${selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
@@ -347,7 +349,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
     const textToCopy = aiText || drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ");
     await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true);
-    toast("הטקסט הועתק ✦");
+    toast(t.share_copy_toast);
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -391,9 +393,9 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     >
                       <span className="text-3xl">🔮</span>
                     </motion.div>
-                    <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">עולם הטארוט</h2>
+                    <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.tarot_world_title}</h2>
                     <p className="text-foreground/60 font-body text-sm md:text-base max-w-lg mx-auto leading-relaxed">
-                      הקלפים מחכים לכם. בחרו את סוג הקריאה וקבלו הדרכה אינטואיטיבית, מסרים נסתרים ותובנות סמליות עמוקות מהארקנה הגדולה
+                      {t.tarot_world_desc}
                     </p>
                   </div>
                   <div className="section-divider max-w-[150px] mx-auto mb-8" />
@@ -426,9 +428,9 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="font-heading text-sm text-gold group-hover:text-gold-light transition-colors">{spread.hebrewName}</h3>
                               {spread.isFree ? (
-                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--gold) / 0.15)", border: "1px solid hsl(var(--gold) / 0.25)", color: "hsl(var(--gold))" }}>חינם</span>
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--gold) / 0.15)", border: "1px solid hsl(var(--gold) / 0.25)", color: "hsl(var(--gold))" }}>{t.tarot_world_free}</span>
                               ) : (
-                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--crimson) / 0.15)", border: "1px solid hsl(var(--crimson) / 0.25)", color: "hsl(var(--crimson-light))" }}>✦ פרימיום</span>
+                                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--crimson) / 0.15)", border: "1px solid hsl(var(--crimson) / 0.25)", color: "hsl(var(--crimson-light))" }}>{t.tarot_world_premium}</span>
                               )}
                             </div>
                             <p className="text-foreground/50 font-body text-xs leading-relaxed">{spread.description}</p>
@@ -439,7 +441,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
 
-                  <p className="text-center text-[10px] text-muted-foreground font-body mt-8">✦ קלף יומי — בחינם • שאר הקריאות כוללות תצוגה מקדימה חינמית ✦</p>
+                  <p className="text-center text-[10px] text-muted-foreground font-body mt-8">{t.tarot_world_daily_note}</p>
                 </motion.div>
               )}
 
@@ -467,9 +469,9 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
                   <motion.p className="font-body text-gold/80 text-base mb-2" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>
-                    הקלפים נערבבים...
+                    {t.tarot_world_shuffle}
                   </motion.p>
-                  <p className="font-body text-foreground/40 text-xs">התרכזו בשאלה שבליבכם</p>
+                  <p className="font-body text-foreground/40 text-xs">{t.tarot_world_shuffle_focus}</p>
                 </motion.div>
               )}
 
@@ -478,7 +480,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                 <motion.div key="reveal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-10">
                   <div className="text-center mb-8">
                     <h2 className="font-heading text-2xl gold-gradient-text mb-2">{selectedSpread.hebrewName}</h2>
-                    <p className="text-foreground/50 font-body text-sm">לחצו על כל קלף כדי לחשוף אותו</p>
+                    <p className="text-foreground/50 font-body text-sm">{t.tarot_world_reveal_hint}</p>
                   </div>
 
                   <div className="flex items-center justify-center gap-4 md:gap-6 flex-wrap mb-8">
@@ -574,12 +576,12 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.1), hsl(var(--gold) / 0.06))", border: "1px solid hsl(var(--gold) / 0.15)" }}
                       >
                         <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                        <h4 className="font-heading text-sm text-gold mb-2">גלו את הקריאה המלאה</h4>
+                        <h4 className="font-heading text-sm text-gold mb-2">{t.tarot_world_premium_title}</h4>
                         <p className="text-foreground/50 font-body text-xs mb-4 leading-relaxed">
-                          חשפו את כל הקלפים וקבלו פירוש מעמיק, מסר רוחני אישי ותובנות סמליות שמיועדות רק לכם
+                          {t.tarot_world_premium_desc}
                         </p>
                         <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                          <Sparkles className="w-3.5 h-3.5" />פתחו קריאה מלאה
+                          <Sparkles className="w-3.5 h-3.5" />{t.tarot_world_premium_cta}
                         </a>
                       </motion.div>
                     )}
@@ -587,7 +589,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
                   {allRevealed && (
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-gold/60 font-body text-sm">
-                      <Sparkles className="w-4 h-4 inline-block ml-1" />כל הקלפים נחשפו — הדוח שלכם מתגלה...
+                      <Sparkles className="w-4 h-4 inline-block ml-1" />{t.tarot_world_all_revealed}
                     </motion.p>
                   )}
                 </motion.div>
@@ -608,7 +610,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                   >
-                    {drawnCards.length === 1 ? "הקלף שנבחר לכם" : "הקלפים שנבחרו לכם"}
+                    {drawnCards.length === 1 ? t.tarot_world_cards_chosen_single : t.tarot_world_cards_chosen_plural}
                   </motion.h2>
 
                   <div className="flex items-center justify-center gap-6 flex-wrap mb-8">
@@ -720,11 +722,11 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     
                     <div className="flex items-center justify-center gap-3 mt-4">
                       <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        <Share2 className="w-3.5 h-3.5" />שתפו
+                        <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
                       </motion.button>
                       <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(var(--gold) / 0.12)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        {copied ? "הועתק!" : "העתקה"}
+                        {copied ? t.share_copied : t.share_copy}
                       </motion.button>
                     </div>
                   </div>
@@ -739,7 +741,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                           <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                          <span className="font-body text-xs text-gold/50">הקלפים מדברים...</span>
+                          <span className="font-body text-xs text-gold/50">{t.tarot_world_ai_loading}</span>
                         </motion.div>
                       )}
                     </motion.div>
@@ -822,12 +824,12 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}
                     >
                       <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                      <h4 className="font-heading text-base text-gold mb-2">גלו את הקריאה המלאה</h4>
+                      <h4 className="font-heading text-base text-gold mb-2">{t.tarot_world_premium_title}</h4>
                       <p className="text-foreground/50 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">
-                        קבלו פירוש מעמיק לכל הקלפים, מסרים רוחניים אישיים ותובנות סמליות שנועדו רק לנשמה שלכם
+                        {t.tarot_world_premium_desc}
                       </p>
                       <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5" />הזמינו קריאה פרימיום
+                        <Sparkles className="w-3.5 h-3.5" />{t.tarot_premium_cta}
                       </a>
                     </motion.div>
                   )}
