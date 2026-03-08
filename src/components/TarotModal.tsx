@@ -45,7 +45,30 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     });
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setCards(null); setIsLoading(false); setActiveCard(0); }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setCards(null); setIsLoading(false); setActiveCard(0); setCombinedReading(""); setIsCombinedLoading(false); setShowCombined(false); }, 300); };
+
+  const handleCombinedReading = () => {
+    if (!cards || isCombinedLoading || combinedReading) {
+      setShowCombined(true);
+      return;
+    }
+    setShowCombined(true);
+    setIsCombinedLoading(true);
+    streamMysticalReading(
+      "tarotSpread",
+      {
+        card1Name: cards[0].name,
+        card1Hebrew: cards[0].hebrewName,
+        card2Name: cards[1].name,
+        card2Hebrew: cards[1].hebrewName,
+        card3Name: cards[2].name,
+        card3Hebrew: cards[2].hebrewName,
+      },
+      (delta) => setCombinedReading((prev) => prev + delta),
+      () => setIsCombinedLoading(false),
+      (err) => { setIsCombinedLoading(false); toast(err); }
+    );
+  };
 
   const handleShare = () => {
     if (!cards) return;
