@@ -140,6 +140,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [isTablePhase, setIsTablePhase] = useState(false);
   const [tableCards, setTableCards] = useState<TarotCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
+  const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
 
   // AI state
@@ -159,26 +160,38 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleCardFlip = (index: number) => {
-    if (flippedIndices.has(index)) return;
-    const newFlipped = new Set(flippedIndices);
-    newFlipped.add(index);
-    setFlippedIndices(newFlipped);
-
-    // All cards flipped → transition to results
-    if (newFlipped.size === tableCards.length) {
+    if (flippedIndices.has(index) || activeRevealIndex !== null) return;
+    
+    // Phase 1: Focus/lift (0.6s)
+    setActiveRevealIndex(index);
+    
+    // Phase 2: Flip after lift
+    setTimeout(() => {
+      const newFlipped = new Set(flippedIndices);
+      newFlipped.add(index);
+      setFlippedIndices(newFlipped);
+      
+      // Phase 3: Reset active after reveal completes
       setTimeout(() => {
-        setCards(tableCards);
-        setIsTablePhase(false);
-        startAIReading(tableCards);
-        readingsStorage.save({
-          type: "tarot",
-          title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-          subtitle: tableCards.map(c => c.hebrewName).join(" • "),
-          symbol: "🔮",
-          data: { spread: selectedSpread.key, cards: tableCards },
-        });
-      }, 2000);
-    }
+        setActiveRevealIndex(null);
+        
+        // All cards flipped → transition to results
+        if (newFlipped.size === tableCards.length) {
+          setTimeout(() => {
+            setCards(tableCards);
+            setIsTablePhase(false);
+            startAIReading(tableCards);
+            readingsStorage.save({
+              type: "tarot",
+              title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
+              subtitle: tableCards.map(c => c.hebrewName).join(" • "),
+              symbol: "🔮",
+              data: { spread: selectedSpread.key, cards: tableCards },
+            });
+          }, 1800);
+        }
+      }, 1200);
+    }, 800);
   };
 
 
@@ -233,6 +246,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setIsTablePhase(false);
       setTableCards([]);
       setFlippedIndices(new Set());
+      setActiveRevealIndex(null);
       setCopied(false);
       setAiText("");
       setAiLoading(false);
@@ -447,11 +461,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isTablePhase ? (
-                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-[450px] relative overflow-hidden">
+                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-[480px] relative overflow-hidden">
                   {/* Velvet table background */}
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(222 35% 12%), hsl(222 45% 6%))" }} />
                   {/* Table edge glow */}
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, hsl(var(--gold) / 0.06), transparent 50%)" }} />
+
+                  {/* Darkening overlay when a card is being revealed */}
+                  <AnimatePresence>
+                    {activeRevealIndex !== null && (
+                      <motion.div
+                        className="absolute inset-0 z-20 pointer-events-none"
+                        style={{ background: "hsl(222 45% 4% / 0.6)", backdropFilter: "blur(2px)" }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    )}
+                  </AnimatePresence>
 
                   {/* Floating particles */}
                   {[...Array(15)].map((_, i) => (
@@ -508,36 +536,116 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
 
                   {/* Tarot table cards */}
-                  <div className="relative z-10 flex items-center justify-center gap-4 sm:gap-6 mb-8">
+                  <div className="relative z-30 flex items-center justify-center gap-4 sm:gap-6 mb-6">
                     {tableCards.map((card, i) => {
                       const isFlipped = flippedIndices.has(i);
+                      const isActive = activeRevealIndex === i;
+                      const cardW = tableCards.length === 1 ? 130 : 105;
+                      const cardH = tableCards.length === 1 ? 185 : 155;
                       return (
                         <motion.div
                           key={i}
-                          className="relative cursor-pointer"
-                          style={{ perspective: 800, width: tableCards.length === 1 ? 120 : 100, height: tableCards.length === 1 ? 170 : 145 }}
-                          initial={{ opacity: 0, y: 30, rotate: (i - Math.floor(tableCards.length / 2)) * 5 }}
-                          animate={{ opacity: 1, y: 0, rotate: (i - Math.floor(tableCards.length / 2)) * 5 }}
-                          transition={{ delay: 0.6 + i * 0.2, type: "spring", stiffness: 200 }}
+                          className="relative"
+                          style={{ perspective: 1000, width: cardW, height: cardH, zIndex: isActive ? 50 : isFlipped ? 10 : 5, cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default" }}
+                          initial={{ opacity: 0, y: 40, rotate: (i - Math.floor(tableCards.length / 2)) * 6 }}
+                          animate={{
+                            opacity: 1,
+                            y: isActive ? -20 : 0,
+                            rotate: isActive ? 0 : (i - Math.floor(tableCards.length / 2)) * 6,
+                            scale: isActive ? 1.15 : 1,
+                          }}
+                          transition={isActive ? { duration: 0.6, ease: "easeOut" } : { delay: 0.6 + i * 0.2, type: "spring", stiffness: 200 }}
                           onClick={() => handleCardFlip(i)}
-                          whileHover={!isFlipped ? { y: -8, scale: 1.05 } : {}}
-                          whileTap={!isFlipped ? { scale: 0.97 } : {}}
+                          whileHover={!isFlipped && activeRevealIndex === null ? { y: -10, scale: 1.06 } : {}}
+                          whileTap={!isFlipped && activeRevealIndex === null ? { scale: 0.97 } : {}}
                         >
-                          {/* Card glow on hover */}
-                          {!isFlipped && (
+                          {/* Pre-flip hover glow */}
+                          {!isFlipped && !isActive && (
                             <motion.div
-                              className="absolute -inset-2 rounded-xl pointer-events-none"
-                              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 70%)" }}
-                              animate={{ opacity: [0.3, 0.6, 0.3] }}
+                              className="absolute -inset-3 rounded-xl pointer-events-none"
+                              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)" }}
+                              animate={{ opacity: [0.2, 0.5, 0.2] }}
                               transition={{ duration: 2, repeat: Infinity, delay: i * 0.4 }}
                             />
+                          )}
+
+                          {/* Active reveal: intensified particle swirl */}
+                          {isActive && (
+                            <>
+                              {[...Array(10)].map((_, pi) => (
+                                <motion.div
+                                  key={`swirl-${pi}`}
+                                  className="absolute rounded-full pointer-events-none"
+                                  style={{
+                                    width: 2 + Math.random() * 3,
+                                    height: 2 + Math.random() * 3,
+                                    left: "50%",
+                                    top: "50%",
+                                    background: pi % 2 === 0 ? "hsl(var(--gold) / 0.8)" : "hsl(var(--celestial) / 0.6)",
+                                  }}
+                                  animate={{
+                                    x: [0, Math.cos(pi * 0.628) * (40 + pi * 8), Math.cos(pi * 0.628) * (25 + pi * 5)],
+                                    y: [0, Math.sin(pi * 0.628) * (40 + pi * 8) - 20, Math.sin(pi * 0.628) * (25 + pi * 5) - 30],
+                                    opacity: [0, 1, 0],
+                                    scale: [0, 1.5, 0],
+                                  }}
+                                  transition={{ duration: 1.2, delay: pi * 0.06, ease: "easeOut" }}
+                                />
+                              ))}
+                              {/* Golden glow around card */}
+                              <motion.div
+                                className="absolute -inset-4 rounded-2xl pointer-events-none"
+                                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 60%)" }}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: [0, 0.8, 0.5], scale: [0.8, 1.3, 1.1] }}
+                                transition={{ duration: 0.8 }}
+                              />
+                            </>
+                          )}
+
+                          {/* Energy pulse ring on flip */}
+                          {isFlipped && (
+                            <>
+                              <motion.div
+                                className="absolute pointer-events-none rounded-full"
+                                style={{
+                                  left: "50%", top: "50%",
+                                  width: 20, height: 20,
+                                  marginLeft: -10, marginTop: -10,
+                                  border: "2px solid hsl(var(--gold) / 0.6)",
+                                }}
+                                initial={{ scale: 0, opacity: 1 }}
+                                animate={{ scale: [0, 8], opacity: [0.8, 0] }}
+                                transition={{ duration: 1.2, ease: "easeOut" }}
+                              />
+                              <motion.div
+                                className="absolute pointer-events-none rounded-full"
+                                style={{
+                                  left: "50%", top: "50%",
+                                  width: 14, height: 14,
+                                  marginLeft: -7, marginTop: -7,
+                                  border: "1px solid hsl(var(--gold) / 0.4)",
+                                }}
+                                initial={{ scale: 0, opacity: 1 }}
+                                animate={{ scale: [0, 10], opacity: [0.5, 0] }}
+                                transition={{ duration: 1.5, delay: 0.15, ease: "easeOut" }}
+                              />
+                              {/* Light burst */}
+                              <motion.div
+                                className="absolute -inset-6 pointer-events-none"
+                                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.35), transparent 50%)" }}
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: [0, 1, 0.3], scale: [0.5, 1.5, 1] }}
+                                transition={{ duration: 0.8 }}
+                              />
+                            </>
                           )}
 
                           <motion.div
                             className="relative w-full h-full"
                             style={{ transformStyle: "preserve-3d" }}
                             animate={{ rotateY: isFlipped ? 180 : 0 }}
-                            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
                           >
                             {/* Card back */}
                             <div
@@ -546,14 +654,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 backfaceVisibility: "hidden",
                                 background: "linear-gradient(145deg, hsl(222 35% 14%), hsl(222 45% 8%))",
                                 border: "1px solid hsl(var(--gold) / 0.2)",
-                                boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4), 0 0 15px hsl(var(--gold) / 0.08)",
+                                boxShadow: isActive
+                                  ? "0 15px 50px hsl(0 0% 0% / 0.6), 0 0 30px hsl(var(--gold) / 0.2)"
+                                  : "0 8px 30px hsl(0 0% 0% / 0.4), 0 0 15px hsl(var(--gold) / 0.08)",
                               }}
                             >
                               <div className="w-[60%] h-[70%] rounded-lg border flex items-center justify-center" style={{ borderColor: "hsl(var(--gold) / 0.15)", background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--gold) / 0.02))" }}>
                                 <motion.span
                                   className="text-gold/30 text-2xl"
-                                  animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.95, 1.05, 0.95] }}
-                                  transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.3 }}
+                                  animate={isActive ? { opacity: [0.5, 1, 0.5], scale: [1, 1.3, 1] } : { opacity: [0.3, 0.7, 0.3], scale: [0.95, 1.05, 0.95] }}
+                                  transition={{ duration: isActive ? 0.6 : 2.5, repeat: Infinity, delay: isActive ? 0 : i * 0.3 }}
                                 >
                                   ✦
                                 </motion.span>
@@ -567,32 +677,59 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 backfaceVisibility: "hidden",
                                 transform: "rotateY(180deg)",
                                 background: "linear-gradient(145deg, hsl(222 30% 16%), hsl(222 40% 10%))",
-                                border: "1px solid hsl(var(--gold) / 0.3)",
-                                boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4), 0 0 20px hsl(var(--gold) / 0.15)",
+                                border: "1.5px solid hsl(var(--gold) / 0.4)",
+                                boxShadow: "0 10px 40px hsl(0 0% 0% / 0.5), 0 0 25px hsl(var(--gold) / 0.2)",
                               }}
                             >
                               {tarotCardImages[card.name]
-                                ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[75%] h-[65%] object-cover rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                                ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[78%] h-[62%] object-cover rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)" }} />
                                 : <span className="text-4xl mb-1">{card.symbol}</span>}
                               <span className="font-heading text-[11px] text-gold text-center leading-tight mt-1">{card.hebrewName}</span>
                               <span className="text-[9px] text-muted-foreground/60 font-body">{selectedSpread.positionLabels[i]}</span>
                             </div>
                           </motion.div>
 
-                          {/* Reveal glow effect */}
-                          {isFlipped && (
+                          {/* Persistent breathing glow for revealed cards */}
+                          {isFlipped && !isActive && (
                             <motion.div
-                              className="absolute -inset-3 rounded-xl pointer-events-none"
-                              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 70%)" }}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: [0, 0.8, 0.4], scale: [0.8, 1.2, 1] }}
-                              transition={{ duration: 1 }}
+                              className="absolute -inset-2 rounded-xl pointer-events-none"
+                              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 60%)" }}
+                              animate={{ opacity: [0.3, 0.6, 0.3] }}
+                              transition={{ duration: 3, repeat: Infinity }}
                             />
                           )}
                         </motion.div>
                       );
                     })}
                   </div>
+
+                  {/* Card name reveal below table */}
+                  <AnimatePresence>
+                    {flippedIndices.size > 0 && (
+                      <motion.div
+                        className="relative z-10 flex flex-wrap items-center justify-center gap-3 mb-4"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        {tableCards.map((card, i) => (
+                          flippedIndices.has(i) && (
+                            <motion.div
+                              key={`name-${i}`}
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+                              style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)" }}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: 0.2 }}
+                            >
+                              <span className="text-sm">{card.symbol}</span>
+                              <span className="font-heading text-xs text-gold">{card.hebrewName}</span>
+                            </motion.div>
+                          )
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   {/* Progress text */}
                   <motion.p
