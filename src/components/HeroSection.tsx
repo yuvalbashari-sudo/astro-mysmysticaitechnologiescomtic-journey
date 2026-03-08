@@ -1006,29 +1006,41 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
 
             {/* Crystal ball image */}
-            <motion.img
-              src={crystalBall}
-              alt="Crystal Ball"
-              className="relative z-20"
-              style={{ width: isMobile ? "180px" : "280px", height: isMobile ? "180px" : "280px", objectFit: "contain" }}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{
-                opacity: 1,
-                scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
-                filter: hoveredItem !== null
-                  ? [
-                      `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                      `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
-                      `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                    ]
-                  : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
-              }}
-              transition={{
-                opacity: { duration: 1.5, delay: 1 },
-                scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-                filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
-              }}
-            />
+            <motion.div
+              className="relative z-20 cursor-pointer"
+              style={{ width: isMobile ? "180px" : "280px", height: isMobile ? "180px" : "280px" }}
+            >
+              <motion.img
+                src={crystalBall}
+                alt="Crystal Ball"
+                className="w-full h-full"
+                style={{ objectFit: "contain" }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{
+                  opacity: 1,
+                  scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
+                  filter: hoveredItem !== null
+                    ? [
+                        `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
+                        `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
+                        `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
+                      ]
+                    : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
+                }}
+                transition={{
+                  opacity: { duration: 1.5, delay: 1 },
+                  scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
+                  filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
+                }}
+              />
+
+              {/* Tarot Card Reveal inside crystal ball */}
+              <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
+                {entranceComplete && (
+                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} />
+                )}
+              </div>
+            </motion.div>
 
             {/* Fortune Preview */}
             {entranceComplete && (
