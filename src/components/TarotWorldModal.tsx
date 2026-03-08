@@ -546,8 +546,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                 <img src={cardBack} alt="Card back" className="w-full h-full object-cover" />
                                 {/* Overlay for position label */}
                                 <div className="absolute inset-0 flex flex-col items-center justify-end pb-3" style={{ background: "linear-gradient(to top, hsl(0 0% 0% / 0.7), transparent 40%)" }}>
-                                  <span className="font-body text-[10px] text-gold/60">{selectedSpread.positionLabels[i]}</span>
-                                  {isLocked && <span className="font-body text-[9px] text-crimson-light/60 mt-0.5">פרימיום</span>}
+                                  <span className="font-body text-[10px] text-gold/60">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</span>
+                                  {isLocked && <span className="font-body text-[9px] text-crimson-light/60 mt-0.5">{t.tarot_world_locked}</span>}
                                 </div>
                                 {isLocked && (
                                   <div className="absolute inset-0 flex items-center justify-center bg-background/30">
