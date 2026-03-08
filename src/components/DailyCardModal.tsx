@@ -249,16 +249,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!card) return;
-    const text = `🔮 הקלף היומי שלי: ${card.symbol} ${card.hebrewName}\n\n✨ גלו גם אתם את הקלף היומי שלכם:\n${window.location.origin}`;
+    const text = `🔮 ${t.daily_title}: ${card.symbol} ${card.hebrewName}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!aiText) return;
-    await navigator.clipboard.writeText(`🔮 קלף יומי — ${card?.hebrewName}\n\n${aiText.slice(0, 400)}...`);
-    setCopied(true);
-    toast("הטקסט הועתק ✦");
-    setTimeout(() => setCopied(false), 2000);
+    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${card?.hebrewName}\n\n${aiText.slice(0, 400)}...`);
+    setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
   const cardImage = card ? tarotCardImages[card.name] : null;
