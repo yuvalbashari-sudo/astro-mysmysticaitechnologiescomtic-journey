@@ -434,4 +434,6 @@ export const en: TranslationKeys = {
   tarot_error_unexpected: "Unexpected error",
   tarot_error_service: "Service error",
   tarot_error_connection: "Connection error",
+  hero_open_full_reading: "Open full reading",
+  hero_tarot_fallback_message: "appears for you — a mystical sign from the universe.",
 };

@@ -470,4 +470,6 @@ export type TranslationKeys = {
   tarot_error_unexpected: string;
   tarot_error_service: string;
   tarot_error_connection: string;
+  hero_open_full_reading: string;
+  hero_tarot_fallback_message: string;
 };

@@ -8,7 +8,8 @@ import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import PalmReadingModal from "./PalmReadingModal";
-import { useT } from "@/i18n";
+import { useT, useLanguage } from "@/i18n";
+import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import ariesIcon from "@/assets/zodiac-icons/aries.png";
@@ -35,13 +36,36 @@ const constellations = [
   { stars: [[15, 80], [20, 75], [25, 82], [18, 85]], opacity: 0.2 },
 ];
 
-const FORTUNE_MESSAGES = [
-  "היקום מאותת לך לשים לב להזדמנות שמופיעה היום.",
-  "כוח נסתר מתעורר בתוכך — הקשיבו לאינטואיציה.",
-  "הכוכבים מיישרים קו לטובתכם... משהו משמעותי מתקרב.",
-  "אנרגיה חדשה נכנסת לחייכם — היו פתוחים לשינוי.",
-  "המסלול הקוסמי שלכם מתחיל להיחשף... גלו אותו.",
-];
+const FORTUNE_MESSAGES: Record<Language, string[]> = {
+  he: [
+    "היקום מאותת לך לשים לב להזדמנות שמופיעה היום.",
+    "כוח נסתר מתעורר בתוכך — הקשיבו לאינטואיציה.",
+    "הכוכבים מיישרים קו לטובתכם... משהו משמעותי מתקרב.",
+    "אנרגיה חדשה נכנסת לחייכם — היו פתוחים לשינוי.",
+    "המסלול הקוסמי שלכם מתחיל להיחשף... גלו אותו.",
+  ],
+  en: [
+    "The universe signals you to notice an opportunity appearing today.",
+    "A hidden force awakens within you — listen to your intuition.",
+    "The stars are aligning in your favor... something meaningful approaches.",
+    "New energy enters your life — be open to change.",
+    "Your cosmic path begins to reveal itself... discover it.",
+  ],
+  ru: [
+    "Вселенная подаёт вам знак — обратите внимание на возможность, появляющуюся сегодня.",
+    "Скрытая сила пробуждается в вас — прислушайтесь к интуиции.",
+    "Звёзды выстраиваются в вашу пользу... что-то значимое приближается.",
+    "Новая энергия входит в вашу жизнь — будьте открыты переменам.",
+    "Ваш космический путь начинает раскрываться... откройте его.",
+  ],
+  ar: [
+    "الكون يشير لك للانتباه إلى فرصة تظهر اليوم.",
+    "قوة خفية تستيقظ بداخلك — استمع إلى حدسك.",
+    "النجوم تصطف لصالحك... شيء مهم يقترب.",
+    "طاقة جديدة تدخل حياتك — كن منفتحاً على التغيير.",
+    "مسارك الكوني يبدأ بالانكشاف... اكتشفه.",
+  ],
+};
 
 /* ── Energy colors per menu item ── */
 const ITEM_COLORS = [
@@ -368,20 +392,32 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
 /* ── Zodiac Wheel ──────────────────────────────────── */
 const ZODIAC_ICONS = [ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon, libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon];
-const ZODIAC_WHEEL = [
-  { name: "טלה", en: "Aries" },
-  { name: "שור", en: "Taurus" },
-  { name: "תאומים", en: "Gemini" },
-  { name: "סרטן", en: "Cancer" },
-  { name: "אריה", en: "Leo" },
-  { name: "בתולה", en: "Virgo" },
-  { name: "מאזניים", en: "Libra" },
-  { name: "עקרב", en: "Scorpio" },
-  { name: "קשת", en: "Sagittarius" },
-  { name: "גדי", en: "Capricorn" },
-  { name: "דלי", en: "Aquarius" },
-  { name: "דגים", en: "Pisces" },
-];
+const ZODIAC_WHEEL: Record<Language, { name: string; en: string }[]> = {
+  he: [
+    { name: "טלה", en: "Aries" }, { name: "שור", en: "Taurus" }, { name: "תאומים", en: "Gemini" },
+    { name: "סרטן", en: "Cancer" }, { name: "אריה", en: "Leo" }, { name: "בתולה", en: "Virgo" },
+    { name: "מאזניים", en: "Libra" }, { name: "עקרב", en: "Scorpio" }, { name: "קשת", en: "Sagittarius" },
+    { name: "גדי", en: "Capricorn" }, { name: "דלי", en: "Aquarius" }, { name: "דגים", en: "Pisces" },
+  ],
+  en: [
+    { name: "Aries", en: "Aries" }, { name: "Taurus", en: "Taurus" }, { name: "Gemini", en: "Gemini" },
+    { name: "Cancer", en: "Cancer" }, { name: "Leo", en: "Leo" }, { name: "Virgo", en: "Virgo" },
+    { name: "Libra", en: "Libra" }, { name: "Scorpio", en: "Scorpio" }, { name: "Sagittarius", en: "Sagittarius" },
+    { name: "Capricorn", en: "Capricorn" }, { name: "Aquarius", en: "Aquarius" }, { name: "Pisces", en: "Pisces" },
+  ],
+  ru: [
+    { name: "Овен", en: "Aries" }, { name: "Телец", en: "Taurus" }, { name: "Близнецы", en: "Gemini" },
+    { name: "Рак", en: "Cancer" }, { name: "Лев", en: "Leo" }, { name: "Дева", en: "Virgo" },
+    { name: "Весы", en: "Libra" }, { name: "Скорпион", en: "Scorpio" }, { name: "Стрелец", en: "Sagittarius" },
+    { name: "Козерог", en: "Capricorn" }, { name: "Водолей", en: "Aquarius" }, { name: "Рыбы", en: "Pisces" },
+  ],
+  ar: [
+    { name: "الحمل", en: "Aries" }, { name: "الثور", en: "Taurus" }, { name: "الجوزاء", en: "Gemini" },
+    { name: "السرطان", en: "Cancer" }, { name: "الأسد", en: "Leo" }, { name: "العذراء", en: "Virgo" },
+    { name: "الميزان", en: "Libra" }, { name: "العقرب", en: "Scorpio" }, { name: "القوس", en: "Sagittarius" },
+    { name: "الجدي", en: "Capricorn" }, { name: "الدلو", en: "Aquarius" }, { name: "الحوت", en: "Pisces" },
+  ],
+};
 
 const ZodiacWheel = ({
   isMobile,
@@ -390,6 +426,7 @@ const ZodiacWheel = ({
   isMobile: boolean;
   hoveredMenuItem: number | null;
 }) => {
+  const { language } = useLanguage();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
   const radius = isMobile ? 110 : 175;
   const iconSize = isMobile ? 28 : 44;
@@ -433,7 +470,7 @@ const ZodiacWheel = ({
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {ZODIAC_WHEEL.map((sign, i) => {
+        {ZODIAC_WHEEL[language].map((sign, i) => {
           const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
           const x = Math.cos(angle) * radius + radius + 20;
           const y = Math.sin(angle) * radius + radius + 20;
@@ -871,17 +908,55 @@ const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: n
 };
 
 /* ── Tarot Card Messages ───────────────────────────── */
-const TAROT_MESSAGES: Record<string, string> = {
-  "The Fool": "קלף השוטה הופיע עבורך — סימן שהתחלות חדשות ומרגשות ממתינות לך.",
-  "The Magician": "קלף הקוסם הופיע עבורך היום — סימן שהאנרגיה סביבך תומכת ביצירה ובהתחלות חדשות.",
-  "The High Priestess": "הכוהנת הגדולה מזמינה אותך להקשיב לקול הפנימי — האמת כבר בתוכך.",
-  "The Empress": "הקיסרית מבשרת על שפע וצמיחה — פתח את ליבך לקבל.",
-  "The Emperor": "הקיסר מופיע כשהזמן נכון לקחת אחריות ולהוביל מתוך חוכמה.",
-  "The Lovers": "האוהבים מאירים את דרכך — בחירה חשובה מחכה, עקוב אחר הלב.",
-  "The Wheel of Fortune": "גלגל המזל סובב לטובתך — שינוי משמעותי בדרך.",
-  "The Star": "הכוכב מאיר את דרכך — תקווה, ריפוי והשראה ממלאים את חייך.",
-  "The Moon": "הירח חושף סודות נסתרים — הקשב לחלומות ולאינטואיציה.",
-  "The Sun": "השמש מאירה את חייך — שמחה, הצלחה ואור ממלאים כל פינה.",
+const TAROT_MESSAGES: Record<Language, Record<string, string>> = {
+  he: {
+    "The Fool": "קלף השוטה הופיע עבורך — סימן שהתחלות חדשות ומרגשות ממתינות לך.",
+    "The Magician": "קלף הקוסם הופיע עבורך היום — סימן שהאנרגיה סביבך תומכת ביצירה ובהתחלות חדשות.",
+    "The High Priestess": "הכוהנת הגדולה מזמינה אותך להקשיב לקול הפנימי — האמת כבר בתוכך.",
+    "The Empress": "הקיסרית מבשרת על שפע וצמיחה — פתח את ליבך לקבל.",
+    "The Emperor": "הקיסר מופיע כשהזמן נכון לקחת אחריות ולהוביל מתוך חוכמה.",
+    "The Lovers": "האוהבים מאירים את דרכך — בחירה חשובה מחכה, עקוב אחר הלב.",
+    "The Wheel of Fortune": "גלגל המזל סובב לטובתך — שינוי משמעותי בדרך.",
+    "The Star": "הכוכב מאיר את דרכך — תקווה, ריפוי והשראה ממלאים את חייך.",
+    "The Moon": "הירח חושף סודות נסתרים — הקשב לחלומות ולאינטואיציה.",
+    "The Sun": "השמש מאירה את חייך — שמחה, הצלחה ואור ממלאים כל פינה.",
+  },
+  en: {
+    "The Fool": "The Fool appears for you — a sign that exciting new beginnings await.",
+    "The Magician": "The Magician appears for you today — the energy around you supports creation and new starts.",
+    "The High Priestess": "The High Priestess invites you to listen to your inner voice — the truth is already within you.",
+    "The Empress": "The Empress heralds abundance and growth — open your heart to receive.",
+    "The Emperor": "The Emperor appears when it's time to take responsibility and lead with wisdom.",
+    "The Lovers": "The Lovers illuminate your path — an important choice awaits, follow your heart.",
+    "The Wheel of Fortune": "The Wheel of Fortune turns in your favor — a significant change is coming.",
+    "The Star": "The Star lights your way — hope, healing and inspiration fill your life.",
+    "The Moon": "The Moon reveals hidden secrets — listen to your dreams and intuition.",
+    "The Sun": "The Sun illuminates your life — joy, success and light fill every corner.",
+  },
+  ru: {
+    "The Fool": "Шут появляется для вас — знак того, что впереди захватывающие новые начинания.",
+    "The Magician": "Маг появляется для вас сегодня — энергия вокруг вас поддерживает творчество и новые начинания.",
+    "The High Priestess": "Верховная Жрица приглашает вас прислушаться к внутреннему голосу — истина уже внутри вас.",
+    "The Empress": "Императрица предвещает изобилие и рост — откройте сердце для получения.",
+    "The Emperor": "Император появляется, когда пришло время взять ответственность и вести с мудростью.",
+    "The Lovers": "Влюблённые освещают ваш путь — впереди важный выбор, следуйте за сердцем.",
+    "The Wheel of Fortune": "Колесо Фортуны вращается в вашу пользу — значительные перемены на подходе.",
+    "The Star": "Звезда освещает ваш путь — надежда, исцеление и вдохновение наполняют вашу жизнь.",
+    "The Moon": "Луна раскрывает скрытые тайны — прислушайтесь к мечтам и интуиции.",
+    "The Sun": "Солнце освещает вашу жизнь — радость, успех и свет наполняют каждый уголок.",
+  },
+  ar: {
+    "The Fool": "بطاقة المجنون تظهر لك — علامة على بدايات جديدة ومثيرة تنتظرك.",
+    "The Magician": "الساحر يظهر لك اليوم — الطاقة من حولك تدعم الإبداع والبدايات الجديدة.",
+    "The High Priestess": "الكاهنة العليا تدعوك للاستماع إلى صوتك الداخلي — الحقيقة بداخلك بالفعل.",
+    "The Empress": "الإمبراطورة تبشّر بالوفرة والنمو — افتح قلبك للتلقي.",
+    "The Emperor": "الإمبراطور يظهر عندما يحين وقت تحمل المسؤولية والقيادة بحكمة.",
+    "The Lovers": "العشاق ينيرون طريقك — خيار مهم ينتظرك، اتبع قلبك.",
+    "The Wheel of Fortune": "عجلة الحظ تدور لصالحك — تغيير كبير في الطريق.",
+    "The Star": "النجمة تنير طريقك — الأمل والشفاء والإلهام يملأون حياتك.",
+    "The Moon": "القمر يكشف الأسرار الخفية — استمع إلى أحلامك وحدسك.",
+    "The Sun": "الشمس تنير حياتك — الفرح والنجاح والنور يملأون كل زاوية.",
+  },
 };
 
 /* ── Tarot Card Reveal in Crystal Ball ─────────────── */
@@ -894,6 +969,7 @@ const TarotCardReveal = ({
   onOpenTarot: () => void;
   onPhaseChange?: (phase: "idle" | "silhouette" | "flipping" | "revealed") => void;
 }) => {
+  const { language, dir } = useLanguage();
   const t = useT();
   const [phase, setPhaseInternal] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const setPhase = useCallback((p: "idle" | "silhouette" | "flipping" | "revealed") => {
@@ -945,7 +1021,7 @@ const TarotCardReveal = ({
   if (!card) return null;
 
   const cardImage = tarotCardImages[card.name] || cardBack;
-  const message = TAROT_MESSAGES[card.name] || `${card.hebrewName} מופיע עבורך — סימן מיסטי מהיקום.`;
+  const message = TAROT_MESSAGES[language]?.[card.name] || `${card.hebrewName} ${t.hero_tarot_fallback_message}`;
 
   return (
     <div
@@ -1162,7 +1238,7 @@ const TarotCardReveal = ({
                 <p className="font-heading text-primary text-sm mb-1">
                   {card.symbol} {card.hebrewName}
                 </p>
-                <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir="rtl">
+                <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir={dir}>
                   {message}
                 </p>
                 <motion.button
@@ -1180,7 +1256,7 @@ const TarotCardReveal = ({
                   animate={{ opacity: [0.8, 1, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  פתחו קריאה מלאה ✦
+                  {t.hero_open_full_reading} ✦
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -1194,7 +1270,9 @@ const TarotCardReveal = ({
 /* ── Fortune Preview ──────────────────────────────── */
 const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: boolean }) => {
   const t = useT();
-  const [message] = useState(() => FORTUNE_MESSAGES[Math.floor(Math.random() * FORTUNE_MESSAGES.length)]);
+  const { language, dir } = useLanguage();
+  const msgs = FORTUNE_MESSAGES[language];
+  const [message] = useState(() => msgs[Math.floor(Math.random() * msgs.length)]);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -1228,7 +1306,7 @@ const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: b
         }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       >
-        <p className="text-gold/80 font-body text-xs leading-relaxed mb-2" dir="rtl">
+        <p className="text-gold/80 font-body text-xs leading-relaxed mb-2" dir={dir}>
           ✦ {message}
         </p>
         <motion.button
