@@ -416,6 +416,20 @@ export type TranslationKeys = {
   birth_chart_save_image: string;
   birth_chart_save_pdf: string;
 
+  // Dashboard
+  dashboard_title: string;
+  dashboard_subtitle: string;
+  dashboard_empty_title: string;
+  dashboard_empty_desc: string;
+  dashboard_identity: string;
+  dashboard_rising: string;
+  dashboard_readings: string;
+  dashboard_unique_cards: string;
+  dashboard_days: string;
+  dashboard_recurring_cards: string;
+  dashboard_energy_themes: string;
+  dashboard_compatibility: string;
+
   // Common
   common_free: string;
   common_close: string;
