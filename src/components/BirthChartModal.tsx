@@ -296,6 +296,65 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setTimeout(() => setCopied(false), 2000);
   }, [resultText, t]);
 
+  const handleDownloadImage = useCallback(async () => {
+    if (!chartContentRef.current) return;
+    setDownloading(true);
+    try {
+      const canvas = await html2canvas(chartContentRef.current, {
+        backgroundColor: "#0a0f1e",
+        scale: 2,
+        useCORS: true,
+      });
+      const link = document.createElement("a");
+      link.download = `astrologai-birth-chart-${birthDate}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast.success("התמונה הורדה בהצלחה ✦");
+    } catch {
+      toast.error("שגיאה בהורדת התמונה");
+    }
+    setDownloading(false);
+  }, [birthDate]);
+
+  const handleDownloadPDF = useCallback(async () => {
+    if (!chartContentRef.current) return;
+    setDownloading(true);
+    try {
+      const canvas = await html2canvas(chartContentRef.current, {
+        backgroundColor: "#0a0f1e",
+        scale: 2,
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      // Create a printable HTML page with the image
+      const printWindow = window.open("", "_blank");
+      if (printWindow) {
+        printWindow.document.write(`
+          <!DOCTYPE html>
+          <html dir="rtl">
+          <head>
+            <title>ASTROLOGAI — מפת לידה</title>
+            <style>
+              body { margin: 0; padding: 20px; background: #0a0f1e; display: flex; justify-content: center; }
+              img { max-width: 100%; height: auto; }
+              @media print { body { background: white; } }
+            </style>
+          </head>
+          <body>
+            <img src="${imgData}" />
+            <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }
+      toast.success("PDF מוכן להורדה ✦");
+    } catch {
+      toast.error("שגיאה ביצירת PDF");
+    }
+    setDownloading(false);
+  }, []);
+
   if (!isOpen) return null;
 
   return (
