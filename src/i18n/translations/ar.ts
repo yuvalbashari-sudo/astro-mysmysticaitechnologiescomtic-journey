@@ -434,4 +434,6 @@ export const ar: TranslationKeys = {
   tarot_error_unexpected: "خطأ غير متوقع",
   tarot_error_service: "خطأ في الخدمة",
   tarot_error_connection: "خطأ في الاتصال",
+  hero_open_full_reading: "افتح القراءة الكاملة",
+  hero_tarot_fallback_message: "يظهر لك — إشارة غامضة من الكون.",
 };
