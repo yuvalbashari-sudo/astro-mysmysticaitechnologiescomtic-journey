@@ -411,9 +411,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: [0.4, 1, 0.4] }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    הקלפים נערבבים...
+                  {t.daily_shuffle}
                   </motion.p>
-                  <p className="font-body text-foreground/40 text-xs">התרכזו ברגע הזה ✦</p>
+                  <p className="font-body text-foreground/40 text-xs">{t.daily_shuffle_focus}</p>
                 </motion.div>
               )}
 
