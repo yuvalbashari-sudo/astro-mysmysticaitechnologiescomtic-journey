@@ -1207,7 +1207,7 @@ const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: b
   return (
     <motion.div
       className="absolute z-30 text-center left-1/2"
-      style={{ top: "calc(50% + 130px)", transform: "translateX(-50%)", width: "260px" }}
+      style={{ top: "calc(50% + 110px)", transform: "translateX(-50%)", width: "260px" }}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: hidden ? 0 : 1, y: hidden ? 10 : 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
@@ -1528,7 +1528,7 @@ const HeroSection = () => {
         </motion.p>
 
         {/* ── Central mystical scene ── */}
-        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "620px" : "520px" }}>
+        <div className="relative flex items-center justify-center" style={{ minHeight: isMobile ? "680px" : "520px", marginTop: isMobile ? "-20px" : "0" }}>
 
           {/* Crystal ball center (parallax layer) */}
           <motion.div
@@ -1756,7 +1756,7 @@ const HeroSection = () => {
               const angleRad = (item.angle * Math.PI) / 180;
               const x = isMobile ? 0 : Math.sin(angleRad) * orbRadius;
               const y = isMobile
-                ? 155 + i * 42
+                ? 195 + i * 44
                 : -Math.cos(angleRad) * orbRadius * 0.55;
               const itemColor = ITEM_COLORS[i];
 
@@ -1765,7 +1765,8 @@ const HeroSection = () => {
                   key={i}
                   className="absolute z-30 cursor-pointer"
                   style={{
-                    left: isMobile ? `calc(50% - 65px)` : `calc(50% + ${x}px - 80px)`,
+                    left: isMobile ? `calc(50% - 100px)` : `calc(50% + ${x}px - 80px)`,
+                    width: isMobile ? "200px" : undefined,
                     top: `calc(50% + ${y}px - 20px)`,
                   }}
                   initial={{ opacity: 0, scale: 0 }}
@@ -1778,7 +1779,7 @@ const HeroSection = () => {
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 >
                   <motion.div
-                    className="relative flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
+                    className="relative flex items-center justify-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap w-full"
                     style={{
                       borderWidth: "1px",
                       borderStyle: "solid",
