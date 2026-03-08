@@ -1493,7 +1493,7 @@ const HeroSection = () => {
       ))}
 
       {/* Content container */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-12 md:pt-16">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16">
         {/* Brand name */}
         <motion.div
           initial={{ opacity: 0, y: -30, scale: 0.9 }}
