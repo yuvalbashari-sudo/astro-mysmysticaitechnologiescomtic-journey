@@ -277,6 +277,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setIsLoading(false);
       setIsTablePhase(false);
       setIsShufflePhase(false);
+      setIsQuestionPhase(false);
+      setIsAnalysisPhase(false);
+      setUserQuestion("");
       setTableCards([]);
       setFlippedIndices(new Set());
       setActiveRevealIndex(null);
