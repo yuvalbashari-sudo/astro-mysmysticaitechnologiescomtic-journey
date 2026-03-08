@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Check } from "lucide-react";
+import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Check, Layers } from "lucide-react";
 import { drawTarotCards, TarotCard } from "@/data/tarotData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
+import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -23,6 +24,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [combinedReading, setCombinedReading] = useState("");
+  const [isCombinedLoading, setIsCombinedLoading] = useState(false);
+  const [showCombined, setShowCombined] = useState(false);
 
   const handleDraw = () => {
     setIsLoading(true);
@@ -41,7 +45,30 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     });
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setCards(null); setIsLoading(false); setActiveCard(0); }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setCards(null); setIsLoading(false); setActiveCard(0); setCombinedReading(""); setIsCombinedLoading(false); setShowCombined(false); }, 300); };
+
+  const handleCombinedReading = () => {
+    if (!cards || isCombinedLoading || combinedReading) {
+      setShowCombined(true);
+      return;
+    }
+    setShowCombined(true);
+    setIsCombinedLoading(true);
+    streamMysticalReading(
+      "tarotSpread",
+      {
+        card1Name: cards[0].name,
+        card1Hebrew: cards[0].hebrewName,
+        card2Name: cards[1].name,
+        card2Hebrew: cards[1].hebrewName,
+        card3Name: cards[2].name,
+        card3Hebrew: cards[2].hebrewName,
+      },
+      (delta) => setCombinedReading((prev) => prev + delta),
+      () => setIsCombinedLoading(false),
+      (err) => { setIsCombinedLoading(false); toast(err); }
+    );
+  };
 
   const handleShare = () => {
     if (!cards) return;
@@ -129,6 +156,57 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     </motion.div>
                   </AnimatePresence>
                   <ShareResultSection symbol={cards[activeCard].symbol} title={cards[activeCard].hebrewName} subtitle="קריאת טארוט" />
+                  
+                  {/* Combined Analysis Section */}
+                  <div className="section-divider max-w-[200px] mx-auto my-8" />
+                  {!showCombined ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center">
+                      <motion.button
+                        onClick={handleCombinedReading}
+                        className="btn-gold font-body flex items-center justify-center gap-2 mx-auto"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Layers className="w-4 h-4" />
+                        ניתוח משולב של כל הקלפים
+                      </motion.button>
+                      <p className="text-[11px] text-muted-foreground font-body mt-3">✦ גלו את המסר המשותף של שלושת הקלפים ✦</p>
+                    </motion.div>
+                  ) : (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl p-6 md:p-8" style={{ background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.6), hsl(var(--deep-blue) / 0.4))", border: "1px solid hsl(var(--gold) / 0.15)", boxShadow: "0 0 40px hsl(var(--gold) / 0.05)" }}>
+                      <div className="flex items-center justify-center gap-3 mb-6">
+                        <Layers className="w-5 h-5 text-gold" />
+                        <h3 className="font-heading text-lg gold-gradient-text">ניתוח משולב</h3>
+                      </div>
+                      <div className="flex items-center justify-center gap-3 mb-6">
+                        {cards.map((card, i) => (
+                          <div key={i} className="flex flex-col items-center gap-1">
+                            {tarotCardImages[card.name] ? (
+                              <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-12 h-16 object-cover rounded" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                            ) : (
+                              <span className="text-xl">{card.symbol}</span>
+                            )}
+                            <span className="text-[10px] text-gold/60 font-body">{card.hebrewName}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="section-divider max-w-[80px] mx-auto mb-6" />
+                      {isCombinedLoading && !combinedReading && (
+                        <div className="flex items-center justify-center gap-2 py-8">
+                          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}>
+                            <Sparkles className="w-5 h-5 text-gold" />
+                          </motion.div>
+                          <span className="text-gold/70 font-body text-sm">מפענח את המסר המשולב...</span>
+                        </div>
+                      )}
+                      {combinedReading && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} dir="rtl">
+                          {renderMysticalText(combinedReading)}
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  )}
+
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                     <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
