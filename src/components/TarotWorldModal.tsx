@@ -79,6 +79,7 @@ async function streamTarotReading(
   onDone: () => void,
   onError: (err: string) => void,
   userQuestion?: string,
+  errorMessages?: { unexpected: string; service: string; connection: string },
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
 
