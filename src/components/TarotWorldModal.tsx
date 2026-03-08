@@ -216,9 +216,38 @@ function renderMysticalText(text: string) {
   return <div className="space-y-0">{elements}</div>;
 }
 
+// Helper to get translated spread info
+function useTranslatedSpread(t: ReturnType<typeof useT>) {
+  const nameMap: Record<string, string> = {
+    daily: t.tarot_world_spread_daily_name,
+    timeline: t.tarot_world_spread_timeline_name,
+    love: t.tarot_world_spread_love_name,
+    career: t.tarot_world_spread_career_name,
+    decision: t.tarot_world_spread_decision_name,
+    universe: t.tarot_world_spread_universe_name,
+  };
+  const descMap: Record<string, string> = {
+    daily: t.tarot_world_spread_daily_desc,
+    timeline: t.tarot_world_spread_timeline_desc,
+    love: t.tarot_world_spread_love_desc,
+    career: t.tarot_world_spread_career_desc,
+    decision: t.tarot_world_spread_decision_desc,
+    universe: t.tarot_world_spread_universe_desc,
+  };
+  const posMap: Record<string, string[]> = {
+    daily: [t.tarot_world_pos_today],
+    timeline: [t.tarot_world_pos_past, t.tarot_world_pos_present, t.tarot_world_pos_future],
+    love: [t.tarot_world_pos_heart, t.tarot_world_pos_energy, t.tarot_world_pos_direction],
+    career: [t.tarot_world_pos_current, t.tarot_world_pos_challenge, t.tarot_world_pos_opportunity],
+    decision: [t.tarot_world_pos_dilemma, t.tarot_world_pos_hidden, t.tarot_world_pos_right_path],
+    universe: [t.tarot_world_pos_message],
+  };
+  return { nameMap, descMap, posMap };
+}
+
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
-  const [phase, setPhase] = useState<Phase>("select");
+  const { nameMap, descMap, posMap } = useTranslatedSpread(t);
   const [showDailyCard, setShowDailyCard] = useState(false);
   const [selectedSpread, setSelectedSpread] = useState<SpreadConfig | null>(null);
   const [drawnCards, setDrawnCards] = useState<TarotWorldCard[]>([]);
