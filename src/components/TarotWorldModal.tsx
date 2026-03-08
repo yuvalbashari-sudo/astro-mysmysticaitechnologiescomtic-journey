@@ -6,6 +6,7 @@ import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import ShareResultSection from "@/components/ShareResultSection";
+import DailyCardModal from "@/components/DailyCardModal";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -216,6 +217,7 @@ function renderMysticalText(text: string) {
 
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [phase, setPhase] = useState<Phase>("select");
+  const [showDailyCard, setShowDailyCard] = useState(false);
   const [selectedSpread, setSelectedSpread] = useState<SpreadConfig | null>(null);
   const [drawnCards, setDrawnCards] = useState<TarotWorldCard[]>([]);
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set());
@@ -245,6 +247,12 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleSelectSpread = (spread: SpreadConfig) => {
+    // Intercept daily card to open dedicated modal
+    if (spread.key === "daily") {
+      setShowDailyCard(true);
+      return;
+    }
+
     setSelectedSpread(spread);
     setPhase("shuffle");
     let step = 0;
@@ -344,6 +352,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
+    <>
     <AnimatePresence>
       {isOpen && (
         <motion.div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -842,6 +851,10 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         </motion.div>
       )}
     </AnimatePresence>
+
+    {/* Daily Card Modal */}
+    <DailyCardModal isOpen={showDailyCard} onClose={() => setShowDailyCard(false)} />
+    </>
   );
 };
 
