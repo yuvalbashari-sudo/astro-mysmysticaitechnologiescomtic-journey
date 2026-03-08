@@ -1,10 +1,11 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sun, Heart, Layers, Hand } from "lucide-react";
+import { Sun, Heart, Layers, Hand, Globe } from "lucide-react";
 import TarotWorldModal from "@/components/TarotWorldModal";
 import MonthlyForecastModal from "@/components/MonthlyForecastModal";
 import CompatibilityModal from "@/components/CompatibilityModal";
 import PalmReadingModal from "@/components/PalmReadingModal";
+import BirthChartModal from "@/components/BirthChartModal";
 import { useT } from "@/i18n";
 
 const MysticalNav = () => {
@@ -13,9 +14,11 @@ const MysticalNav = () => {
   const [forecastOpen, setForecastOpen] = useState(false);
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
+  const [birthChartOpen, setBirthChartOpen] = useState(false);
 
   const categories = useMemo(() => [
     { icon: Sun, title: t.nav_astrology_title, description: t.nav_astrology_desc, cta: t.nav_astrology_cta, action: "forecast" },
+    { icon: Globe, title: t.nav_birthchart_title, description: t.nav_birthchart_desc, cta: t.nav_birthchart_cta, action: "birthchart" },
     { icon: Heart, title: t.nav_compatibility_title, description: t.nav_compatibility_desc, cta: t.nav_compatibility_cta, action: "compatibility" },
     { icon: Layers, title: t.nav_tarot_title, description: t.nav_tarot_desc, cta: t.nav_tarot_cta, action: "tarot-world" },
     { icon: Hand, title: t.nav_palm_title, description: t.nav_palm_desc, cta: t.nav_palm_cta, action: "palm" },
@@ -26,6 +29,7 @@ const MysticalNav = () => {
     else if (action === "forecast") setForecastOpen(true);
     else if (action === "compatibility") setCompatibilityOpen(true);
     else if (action === "palm") setPalmOpen(true);
+    else if (action === "birthchart") setBirthChartOpen(true);
   };
 
   return (
@@ -47,7 +51,7 @@ const MysticalNav = () => {
           </p>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.action}
@@ -78,6 +82,7 @@ const MysticalNav = () => {
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
     </>
   );
 };
