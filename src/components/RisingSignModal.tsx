@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Clock, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
+import { X, Clock, Sparkles, Crown, Share2, Copy, Check, Loader2, Calendar } from "lucide-react";
 import { getRisingSign } from "@/data/risingSignData";
+import { getZodiacSign } from "@/data/zodiacData";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
