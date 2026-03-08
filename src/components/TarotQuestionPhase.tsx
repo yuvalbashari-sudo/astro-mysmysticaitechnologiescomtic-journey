@@ -403,7 +403,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             placeholder={placeholders[placeholderIdx]}
-            dir="rtl"
+            dir={dir}
             rows={4}
             maxLength={500}
             className="w-full bg-transparent text-foreground/90 font-body text-sm p-5 pt-4 resize-none focus:outline-none placeholder:text-foreground/20 leading-[1.9] relative z-10"
