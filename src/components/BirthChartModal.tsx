@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Loader2, Share2, Copy, Check } from "lucide-react";
+import { X, Sparkles, Loader2, Share2, Copy, Check, Download, Image } from "lucide-react";
+import html2canvas from "html2canvas";
 import { getZodiacSign } from "@/data/zodiacData";
 import { getRisingSign } from "@/data/risingSignData";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
