@@ -839,8 +839,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   {!aiLoading && (aiText || aiError) && (
                     <ShareResultSection
                       symbol={drawnCards[0]?.symbol || "🔮"}
-                      title={selectedSpread.hebrewName}
-                      subtitle={`${drawnCards.length} קלפים`}
+                      title={nameMap[selectedSpread.key] || selectedSpread.hebrewName}
+                      subtitle={`${drawnCards.length} ${t.tarot_n_cards}`}
                     />
                   )}
 
