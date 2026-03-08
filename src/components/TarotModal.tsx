@@ -128,7 +128,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const SPREAD_OPTIONS = getSpreadOptions(t);
   const SPREAD_LABELS = getSpreadLabels(t);
 
-  const [selectedSpread, setSelectedSpread] = useState<SpreadOption>(SPREAD_OPTIONS[0]);
+  const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
+  const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
