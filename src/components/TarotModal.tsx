@@ -167,17 +167,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }, 3500);
   };
 
-    // Start AI reading immediately
-    startAIReading(drawn);
-
-    readingsStorage.save({
-      type: "tarot",
-      title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-      subtitle: drawn.map(c => c.hebrewName).join(" • "),
-      symbol: "🔮",
-      data: { spread: selectedSpread.key, cards: drawn },
-    });
-  };
 
   const startAIReading = (drawnCards: TarotCard[]) => {
     setAiLoading(true);
