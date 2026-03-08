@@ -1750,7 +1750,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1 }}
-              className="text-center mb-4"
+              className="text-center mb-2"
             >
               <h2 className="font-body text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
                 {t.hero_headline}
@@ -1761,9 +1761,19 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.3 }}
-              className="text-center text-muted-foreground font-body text-base mb-6 max-w-xl mx-auto"
+              className="text-center text-muted-foreground font-body text-base mb-2 max-w-xl mx-auto"
             >
               {t.hero_subheadline}
+            </motion.p>
+
+            {/* Services line */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1.5 }}
+              className="text-center text-gold/50 font-body text-sm tracking-wider mb-6 max-w-lg mx-auto"
+            >
+              {t.hero_services_line}
             </motion.p>
 
             {/* ── Central mystical scene ── */}
