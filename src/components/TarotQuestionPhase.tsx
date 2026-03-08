@@ -176,13 +176,16 @@ const UI_COPY: Record<Language, {
 };
 
 const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
+  const { language, dir } = useLanguage();
+  const copy = UI_COPY[language];
   const [question, setQuestion] = useState("");
   const [validationMsg, setValidationMsg] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const placeholders = PLACEHOLDERS[spreadType] || PLACEHOLDERS.timeline;
+  const placeholdersBySpread = PLACEHOLDERS[language];
+  const placeholders = placeholdersBySpread[spreadType] || placeholdersBySpread["timeline"];
   const spreadIcon = SPREAD_ICONS[spreadType] || "🔮";
 
   // Rotate placeholder
@@ -195,7 +198,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
 
   const handleSubmit = () => {
     if (question.trim().length > 0 && question.trim().length < 5) {
-      setValidationMsg("כדי שהקלפים יוכלו להעניק מסר מדויק יותר, נסחו שאלה מעט מפורטת יותר.");
+      setValidationMsg(copy.validation);
       return;
     }
     setValidationMsg("");

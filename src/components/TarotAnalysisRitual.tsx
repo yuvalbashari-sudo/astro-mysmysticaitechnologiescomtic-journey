@@ -32,6 +32,8 @@ const RITUAL_PHASES: Record<Language, { text: string; icon: string }[]> = {
 };
 
 const TarotAnalysisRitual = ({ question, onComplete }: Props) => {
+  const { language, dir } = useLanguage();
+  const ritualPhases = RITUAL_PHASES[language];
   const [phaseIndex, setPhaseIndex] = useState(0);
   const stableComplete = useCallback(onComplete, []);
 
