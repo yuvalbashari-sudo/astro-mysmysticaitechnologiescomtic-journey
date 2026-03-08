@@ -282,6 +282,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       setAiLoading(false);
       setAiError(null);
       aiTextRef.current = "";
+      setUserQuestion("");
     }, 300);
   };
 
