@@ -216,6 +216,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setTimeout(() => {
       setCards(null);
       setIsLoading(false);
+      setIsShuffling(false);
       setCopied(false);
       setAiText("");
       setAiLoading(false);
