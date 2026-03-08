@@ -888,12 +888,18 @@ const TAROT_MESSAGES: Record<string, string> = {
 const TarotCardReveal = ({
   isMobile,
   onOpenTarot,
+  onPhaseChange,
 }: {
   isMobile: boolean;
   onOpenTarot: () => void;
+  onPhaseChange?: (phase: "idle" | "silhouette" | "flipping" | "revealed") => void;
 }) => {
   const t = useT();
-  const [phase, setPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const [phase, setPhaseInternal] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const setPhase = useCallback((p: "idle" | "silhouette" | "flipping" | "revealed") => {
+    setPhaseInternal(p);
+    onPhaseChange?.(p);
+  }, [onPhaseChange]);
   const [card, setCard] = useState<TarotCard | null>(null);
   const cardSize = isMobile ? 70 : 100;
 
@@ -1186,7 +1192,7 @@ const TarotCardReveal = ({
 };
 
 /* ── Fortune Preview ──────────────────────────────── */
-const FortunePreview = ({ onReveal }: { onReveal: () => void }) => {
+const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: boolean }) => {
   const t = useT();
   const [message] = useState(() => FORTUNE_MESSAGES[Math.floor(Math.random() * FORTUNE_MESSAGES.length)]);
   const [visible, setVisible] = useState(false);
@@ -1200,11 +1206,11 @@ const FortunePreview = ({ onReveal }: { onReveal: () => void }) => {
 
   return (
     <motion.div
-      className="absolute z-30 text-center"
-      style={{ top: "50%", right: "-320px", transform: "translateY(-50%)", width: "260px" }}
+      className="absolute z-30 text-center left-1/2"
+      style={{ top: "calc(50% + 130px)", transform: "translateX(-50%)", width: "260px" }}
       initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
+      animate={{ opacity: hidden ? 0 : 1, y: hidden ? 10 : 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.div
         className="rounded-xl px-4 py-3 backdrop-blur-md"
@@ -1253,6 +1259,7 @@ const HeroSection = () => {
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
+  const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const sectionRef = useRef<HTMLElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
@@ -1716,14 +1723,14 @@ const HeroSection = () => {
               {/* Tarot Card Reveal inside crystal ball */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
-                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} />
+                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
                 )}
               </div>
             </motion.div>
 
             {/* Fortune Preview */}
             {entranceComplete && (
-              <FortunePreview onReveal={handleFortuneReveal} />
+              <FortunePreview onReveal={handleFortuneReveal} hidden={cardPhase === "flipping" || cardPhase === "revealed"} />
             )}
 
             {/* ── Energy lines from hovered item to crystal ball ── */}
