@@ -267,6 +267,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [userQuestion, setUserQuestion] = useState("");
 
   const handleClose = () => {
     onClose();
