@@ -396,6 +396,24 @@ export type TranslationKeys = {
   not_found_text: string;
   not_found_cta: string;
 
+  // Birth Chart
+  birth_chart_title: string;
+  birth_chart_desc: string;
+  birth_chart_date_label: string;
+  birth_chart_time_label: string;
+  birth_chart_city_label: string;
+  birth_chart_city_placeholder: string;
+  birth_chart_cta: string;
+  birth_chart_note: string;
+  birth_chart_loading: string;
+  birth_chart_sun: string;
+  birth_chart_rising: string;
+  birth_chart_moon: string;
+  birth_chart_error_required: string;
+  nav_birthchart_title: string;
+  nav_birthchart_desc: string;
+  nav_birthchart_cta: string;
+
   // Common
   common_free: string;
   common_close: string;
