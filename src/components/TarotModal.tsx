@@ -783,8 +783,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                   >
                     {flippedIndices.size === tableCards.length
-                      ? "✦ כל הקלפים נחשפו... מפענחים את המסר ✦"
-                      : `${flippedIndices.size} / ${tableCards.length} קלפים נחשפו`}
+                      ? t.tarot_table_all_revealed
+                      : `${flippedIndices.size} / ${tableCards.length} ${t.tarot_table_progress}`}
                   </motion.p>
                 </motion.div>
               ) : cards ? (
