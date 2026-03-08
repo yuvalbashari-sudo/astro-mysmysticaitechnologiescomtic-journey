@@ -381,6 +381,11 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
               positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
             }))
           );
+          // Record in mystical profile
+          mysticalProfile.recordTarotCards(
+            drawnCards.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
+            selectedSpread.key
+          );
           // Save reading
           readingsStorage.save({
             type: "tarot",
