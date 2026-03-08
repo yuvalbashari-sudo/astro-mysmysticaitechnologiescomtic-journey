@@ -156,6 +156,57 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     </motion.div>
                   </AnimatePresence>
                   <ShareResultSection symbol={cards[activeCard].symbol} title={cards[activeCard].hebrewName} subtitle="קריאת טארוט" />
+                  
+                  {/* Combined Analysis Section */}
+                  <div className="section-divider max-w-[200px] mx-auto my-8" />
+                  {!showCombined ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center">
+                      <motion.button
+                        onClick={handleCombinedReading}
+                        className="btn-gold font-body flex items-center justify-center gap-2 mx-auto"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Layers className="w-4 h-4" />
+                        ניתוח משולב של כל הקלפים
+                      </motion.button>
+                      <p className="text-[11px] text-muted-foreground font-body mt-3">✦ גלו את המסר המשותף של שלושת הקלפים ✦</p>
+                    </motion.div>
+                  ) : (
+                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl p-6 md:p-8" style={{ background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.6), hsl(var(--deep-blue) / 0.4))", border: "1px solid hsl(var(--gold) / 0.15)", boxShadow: "0 0 40px hsl(var(--gold) / 0.05)" }}>
+                      <div className="flex items-center justify-center gap-3 mb-6">
+                        <Layers className="w-5 h-5 text-gold" />
+                        <h3 className="font-heading text-lg gold-gradient-text">ניתוח משולב</h3>
+                      </div>
+                      <div className="flex items-center justify-center gap-3 mb-6">
+                        {cards.map((card, i) => (
+                          <div key={i} className="flex flex-col items-center gap-1">
+                            {tarotCardImages[card.name] ? (
+                              <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-12 h-16 object-cover rounded" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                            ) : (
+                              <span className="text-xl">{card.symbol}</span>
+                            )}
+                            <span className="text-[10px] text-gold/60 font-body">{card.hebrewName}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="section-divider max-w-[80px] mx-auto mb-6" />
+                      {isCombinedLoading && !combinedReading && (
+                        <div className="flex items-center justify-center gap-2 py-8">
+                          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}>
+                            <Sparkles className="w-5 h-5 text-gold" />
+                          </motion.div>
+                          <span className="text-gold/70 font-body text-sm">מפענח את המסר המשולב...</span>
+                        </div>
+                      )}
+                      {combinedReading && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} dir="rtl">
+                          {renderMysticalText(combinedReading)}
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  )}
+
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                     <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
