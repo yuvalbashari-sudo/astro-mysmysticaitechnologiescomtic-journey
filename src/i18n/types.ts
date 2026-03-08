@@ -17,9 +17,17 @@ export type TranslationKeys = {
   // Hero
   hero_headline: string;
   hero_subheadline: string;
+  hero_services_line: string;
   hero_cta_free: string;
+  hero_cta_personal: string;
   hero_cta_whatsapp: string;
   hero_badge: string;
+  hero_social_proof: string;
+  hero_how_title: string;
+  hero_how_step1: string;
+  hero_how_step2: string;
+  hero_how_step3: string;
+  hero_crystal_hint: string;
   hero_menu_forecast: string;
   hero_menu_rising: string;
   hero_menu_compatibility: string;
