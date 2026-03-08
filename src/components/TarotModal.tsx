@@ -139,6 +139,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTablePhase, setIsTablePhase] = useState(false);
+  const [isShufflePhase, setIsShufflePhase] = useState(false);
   const [tableCards, setTableCards] = useState<TarotCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
