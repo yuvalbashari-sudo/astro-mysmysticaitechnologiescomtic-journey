@@ -494,6 +494,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.button>
                   <p className="text-[10px] text-muted-foreground/40 font-body mt-5">{t.tarot_note}</p>
                 </motion.div>
+              ) : isQuestionPhase ? (
+                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} /></motion.div>
+              ) : isAnalysisPhase ? (
+                <motion.div key="analysis" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotAnalysisRitual question={userQuestion} onComplete={handleAnalysisComplete} /></motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isShufflePhase ? (
