@@ -1842,33 +1842,12 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 2 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6 md:mt-10 pb-8"
-        >
-          <a href="#free" className="btn-gold font-body flex items-center gap-2 text-sm md:text-base">
-            <Sparkles className="w-4 h-4" />
-            {t.hero_cta_free}
-          </a>
-          <a
-            href="https://wa.me/972500000000"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-outline-gold font-body flex items-center gap-2 text-sm md:text-base"
-          >
-            {t.hero_cta_whatsapp}
-          </a>
-        </motion.div>
-
-        {/* Premium badge */}
+        {/* Bottom subtle badge */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.3 }}
-          className="text-center pb-6"
+          className="text-center pb-6 mt-4"
         >
           <span className="text-xs text-gold/50 font-body tracking-wider">
             {t.hero_badge}
