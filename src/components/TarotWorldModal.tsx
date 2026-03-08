@@ -576,12 +576,12 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.1), hsl(var(--gold) / 0.06))", border: "1px solid hsl(var(--gold) / 0.15)" }}
                       >
                         <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                        <h4 className="font-heading text-sm text-gold mb-2">גלו את הקריאה המלאה</h4>
+                        <h4 className="font-heading text-sm text-gold mb-2">{t.tarot_world_premium_title}</h4>
                         <p className="text-foreground/50 font-body text-xs mb-4 leading-relaxed">
-                          חשפו את כל הקלפים וקבלו פירוש מעמיק, מסר רוחני אישי ותובנות סמליות שמיועדות רק לכם
+                          {t.tarot_world_premium_desc}
                         </p>
                         <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                          <Sparkles className="w-3.5 h-3.5" />פתחו קריאה מלאה
+                          <Sparkles className="w-3.5 h-3.5" />{t.tarot_world_premium_cta}
                         </a>
                       </motion.div>
                     )}
