@@ -57,6 +57,7 @@ async function streamTarotReading(
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  userQuestion?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
