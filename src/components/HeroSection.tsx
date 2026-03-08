@@ -1256,7 +1256,7 @@ const TarotCardReveal = ({
                   animate={{ opacity: [0.8, 1, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  פתחו קריאה מלאה ✦
+                  {t.hero_open_full_reading} ✦
                 </motion.button>
               </motion.div>
             </motion.div>
