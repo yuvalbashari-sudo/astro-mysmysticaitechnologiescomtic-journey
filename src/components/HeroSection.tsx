@@ -333,10 +333,10 @@ const ZodiacWheel = ({
               key={sign.en}
               className="absolute pointer-events-auto cursor-pointer"
               style={{
-                left: x - 14,
-                top: y - 14,
-                width: 28,
-                height: 28,
+                left: x - iconSize / 2,
+                top: y - iconSize / 2,
+                width: iconSize,
+                height: iconSize,
               }}
               onMouseEnter={() => setHoveredSign(i)}
               onMouseLeave={() => setHoveredSign(null)}
@@ -344,30 +344,26 @@ const ZodiacWheel = ({
               animate={{ rotate: -360 }}
               transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
             >
-              {/* Symbol */}
+              {/* Zodiac illustration */}
               <motion.div
-                className="w-full h-full flex items-center justify-center rounded-full"
-                style={{
-                  fontSize: isMobile ? "12px" : "15px",
-                  color: isHovered || isHighlighted
-                    ? "hsl(var(--gold))"
-                    : "hsl(var(--gold) / 0.45)",
-                  textShadow: isHovered || isHighlighted
-                    ? "0 0 12px hsl(43 80% 55% / 0.8)"
-                    : "none",
-                }}
+                className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
                 animate={isHighlighted ? {
                   scale: [1, 1.3, 1],
-                  textShadow: [
-                    "0 0 8px hsl(340 70% 60% / 0.4)",
-                    "0 0 20px hsl(340 70% 60% / 0.8)",
-                    "0 0 8px hsl(340 70% 60% / 0.4)",
-                  ],
                 } : {}}
-                whileHover={{ scale: 1.4 }}
+                whileHover={{ scale: 1.35 }}
                 transition={{ duration: 1.5, repeat: isHighlighted ? Infinity : 0, ease: "easeInOut" }}
               >
-                {sign.symbol}
+                <img
+                  src={ZODIAC_ICONS[i]}
+                  alt={sign.name}
+                  className="w-full h-full object-contain transition-all duration-300"
+                  style={{
+                    opacity: isHovered || isHighlighted ? 1 : 0.55,
+                    filter: isHovered || isHighlighted
+                      ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.7))"
+                      : "drop-shadow(0 0 3px hsl(43 80% 55% / 0.2))",
+                  }}
+                />
               </motion.div>
 
               {/* Tooltip on hover */}
