@@ -293,7 +293,18 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
+    // Intercept question spread to show question input
+    if (spread.key === "question") {
+      setSelectedSpread(spread);
+      setPhase("question");
+      return;
+    }
+
     setSelectedSpread(spread);
+    startShuffle(spread);
+  };
+
+  const startShuffle = (spread: SpreadConfig) => {
     setPhase("shuffle");
     let step = 0;
     const interval = setInterval(() => {
@@ -306,6 +317,11 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         setTimeout(() => setPhase("reveal"), 500);
       }
     }, 300);
+  };
+
+  const handleQuestionSubmit = () => {
+    if (!userQuestion.trim() || !selectedSpread) return;
+    startShuffle(selectedSpread);
   };
 
   const handleRevealCard = useCallback((index: number) => {
