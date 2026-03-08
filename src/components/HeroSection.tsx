@@ -1284,6 +1284,11 @@ const HeroSection = () => {
 
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} />
 
+            {/* Zodiac Wheel */}
+            {entranceComplete && (
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+            )}
+
             {/* Crystal Ball Internal Energy */}
             <CrystalBallEnergy isMobile={isMobile} />
 
