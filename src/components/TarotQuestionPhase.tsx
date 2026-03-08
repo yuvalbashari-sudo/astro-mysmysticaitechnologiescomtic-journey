@@ -427,12 +427,12 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         {/* Micro guidance */}
         <motion.p
           className="text-[10px] text-foreground/25 font-body mt-2.5 text-right leading-relaxed"
-          dir="rtl"
+          dir={dir}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          ככל שהשאלה תהיה ברורה ואישית יותר, כך הקריאה תהיה מדויקת יותר.
+          {copy.guidance}
         </motion.p>
       </motion.div>
 
