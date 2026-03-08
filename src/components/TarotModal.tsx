@@ -246,6 +246,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setIsTablePhase(false);
       setTableCards([]);
       setFlippedIndices(new Set());
+      setActiveRevealIndex(null);
       setCopied(false);
       setAiText("");
       setAiLoading(false);
