@@ -32,7 +32,7 @@ const Index = () => {
       <LanguageSelector />
       <StarField />
       <HeroSection />
-      <MysticalNav />
+      
       <ReadingsHistory />
       <LaunchBanner />
       <AboutSection />
