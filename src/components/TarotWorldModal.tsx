@@ -9,7 +9,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-type Phase = "select" | "shuffle" | "reveal" | "result";
+type Phase = "select" | "shuffle" | "reveal" | "showcase" | "result";
 
 // Roman numeral converter
 const toRoman = (n: number): string => {
@@ -276,7 +276,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => {
     if (allRevealed && selectedSpread && drawnCards.length > 0) {
-      const timer = setTimeout(() => setPhase("result"), 1200);
+      const timer = setTimeout(() => setPhase("showcase"), 1200);
       return () => clearTimeout(timer);
     }
   }, [allRevealed, selectedSpread, drawnCards]);
@@ -581,6 +581,120 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       <Sparkles className="w-4 h-4 inline-block ml-1" />כל הקלפים נחשפו — הדוח שלכם מתגלה...
                     </motion.p>
                   )}
+                </motion.div>
+              )}
+
+              {/* PHASE 3.5: Showcase - Full card reveal */}
+              {phase === "showcase" && selectedSpread && drawnCards.length > 0 && (
+                <motion.div
+                  key="showcase"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative p-6 md:p-10 flex flex-col items-center justify-center min-h-[500px]"
+                >
+                  <motion.h2
+                    className="font-heading text-2xl md:text-3xl gold-gradient-text mb-8 text-center"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    {drawnCards.length === 1 ? "הקלף שנבחר לכם" : "הקלפים שנבחרו לכם"}
+                  </motion.h2>
+
+                  <div className="flex items-center justify-center gap-6 flex-wrap mb-8">
+                    {drawnCards.map((card, i) => (
+                      <motion.div
+                        key={i}
+                        className="relative"
+                        initial={{ opacity: 0, scale: 0.5, rotateY: 90 }}
+                        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                        transition={{ delay: 0.3 + i * 0.3, duration: 0.8, type: "spring", damping: 12 }}
+                      >
+                        <div
+                          className="relative w-44 h-64 md:w-56 md:h-80 rounded-xl overflow-hidden"
+                          style={{
+                            border: "2px solid hsl(var(--gold) / 0.5)",
+                            boxShadow: "0 0 40px hsl(var(--gold) / 0.25), 0 0 80px hsl(215 70% 50% / 0.15), 0 20px 60px hsl(0 0% 0% / 0.5)",
+                          }}
+                        >
+                          <img
+                            src={tarotCardImages[card.name] || ""}
+                            alt={card.hebrewName}
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Shimmer overlay */}
+                          <motion.div
+                            className="absolute inset-0"
+                            style={{
+                              background: "linear-gradient(105deg, transparent 40%, hsl(var(--gold) / 0.15) 45%, hsl(var(--gold) / 0.25) 50%, hsl(var(--gold) / 0.15) 55%, transparent 60%)",
+                            }}
+                            animate={{ x: ["-100%", "200%"] }}
+                            transition={{ duration: 2, delay: 0.8 + i * 0.3, ease: "easeInOut" }}
+                          />
+                        </div>
+                        {/* Card name below */}
+                        <motion.div
+                          className="text-center mt-4"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.8 + i * 0.3 }}
+                        >
+                          <span className="font-heading text-base md:text-lg text-gold" style={{ textShadow: "0 0 15px hsl(var(--gold) / 0.3)" }}>
+                            {card.hebrewName}
+                          </span>
+                          <p className="font-body text-[11px] text-foreground/40 mt-1">{selectedSpread.positionLabels[i]}</p>
+                        </motion.div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Cosmic particles around cards */}
+                  <motion.div
+                    className="absolute inset-0 pointer-events-none"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    {Array.from({ length: 12 }).map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute rounded-full"
+                        style={{
+                          width: 2 + Math.random() * 3,
+                          height: 2 + Math.random() * 3,
+                          background: `hsl(var(--gold) / ${0.3 + Math.random() * 0.4})`,
+                          left: `${20 + Math.random() * 60}%`,
+                          top: `${20 + Math.random() * 60}%`,
+                        }}
+                        animate={{
+                          y: [0, -20 - Math.random() * 30, 0],
+                          x: [0, (Math.random() - 0.5) * 20, 0],
+                          opacity: [0, 1, 0],
+                          scale: [0.5, 1.5, 0.5],
+                        }}
+                        transition={{
+                          duration: 2 + Math.random() * 2,
+                          repeat: Infinity,
+                          delay: Math.random() * 2,
+                        }}
+                      />
+                    ))}
+                  </motion.div>
+
+                  {/* Continue button */}
+                  <motion.button
+                    className="btn-gold font-body text-sm mt-4 flex items-center gap-2"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1 + drawnCards.length * 0.3 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.97 }}
+                    onClick={() => setPhase("result")}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    גלו את הפירוש המלא
+                  </motion.button>
                 </motion.div>
               )}
 
