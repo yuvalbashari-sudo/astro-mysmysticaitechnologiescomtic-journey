@@ -301,6 +301,299 @@ const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: n
   );
 };
 
+/* ── Tarot Card Messages ───────────────────────────── */
+const TAROT_MESSAGES: Record<string, string> = {
+  "The Fool": "קלף השוטה הופיע עבורך — סימן שהתחלות חדשות ומרגשות ממתינות לך.",
+  "The Magician": "קלף הקוסם הופיע עבורך היום — סימן שהאנרגיה סביבך תומכת ביצירה ובהתחלות חדשות.",
+  "The High Priestess": "הכוהנת הגדולה מזמינה אותך להקשיב לקול הפנימי — האמת כבר בתוכך.",
+  "The Empress": "הקיסרית מבשרת על שפע וצמיחה — פתח את ליבך לקבל.",
+  "The Emperor": "הקיסר מופיע כשהזמן נכון לקחת אחריות ולהוביל מתוך חוכמה.",
+  "The Lovers": "האוהבים מאירים את דרכך — בחירה חשובה מחכה, עקוב אחר הלב.",
+  "The Wheel of Fortune": "גלגל המזל סובב לטובתך — שינוי משמעותי בדרך.",
+  "The Star": "הכוכב מאיר את דרכך — תקווה, ריפוי והשראה ממלאים את חייך.",
+  "The Moon": "הירח חושף סודות נסתרים — הקשב לחלומות ולאינטואיציה.",
+  "The Sun": "השמש מאירה את חייך — שמחה, הצלחה ואור ממלאים כל פינה.",
+};
+
+/* ── Tarot Card Reveal in Crystal Ball ─────────────── */
+const TarotCardReveal = ({
+  isMobile,
+  onOpenTarot,
+}: {
+  isMobile: boolean;
+  onOpenTarot: () => void;
+}) => {
+  const t = useT();
+  const [phase, setPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const [card, setCard] = useState<TarotCard | null>(null);
+  const cardSize = isMobile ? 70 : 100;
+
+  // Show silhouette after delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const [drawn] = drawTarotCards(1);
+      setCard(drawn);
+      setPhase("silhouette");
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleClick = useCallback(() => {
+    if (phase === "silhouette") {
+      setPhase("flipping");
+      setTimeout(() => setPhase("revealed"), 1200);
+    }
+  }, [phase]);
+
+  if (!card) return null;
+
+  const cardImage = tarotCardImages[card.name] || cardBack;
+  const message = TAROT_MESSAGES[card.name] || `${card.hebrewName} מופיע עבורך — סימן מיסטי מהיקום.`;
+
+  return (
+    <div
+      className="absolute z-[22] flex items-center justify-center pointer-events-auto cursor-pointer"
+      style={{ width: cardSize * 1.2, height: cardSize * 1.7 }}
+      onClick={handleClick}
+    >
+      <AnimatePresence mode="wait">
+        {/* Phase 1: Faint silhouette */}
+        {phase === "silhouette" && (
+          <motion.div
+            key="silhouette"
+            className="relative"
+            style={{ width: cardSize, height: cardSize * 1.5, perspective: "600px" }}
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          >
+            {/* Swirling particles around card */}
+            {[...Array(8)].map((_, i) => {
+              const angle = (i / 8) * Math.PI * 2;
+              return (
+                <motion.div
+                  key={`swirl-${i}`}
+                  className="absolute rounded-full"
+                  style={{
+                    width: 3,
+                    height: 3,
+                    left: "50%",
+                    top: "50%",
+                    background: i % 2 === 0 ? "hsl(var(--gold))" : "hsl(var(--celestial))",
+                  }}
+                  animate={{
+                    x: [Math.cos(angle) * 20, Math.cos(angle + Math.PI) * 35, Math.cos(angle) * 20],
+                    y: [Math.sin(angle) * 25, Math.sin(angle + Math.PI) * 40, Math.sin(angle) * 25],
+                    opacity: [0.3, 0.8, 0.3],
+                    scale: [0.5, 1.5, 0.5],
+                  }}
+                  transition={{ duration: 3 + i * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                />
+              );
+            })}
+
+            {/* Card silhouette with slow rotation */}
+            <motion.div
+              className="w-full h-full rounded-lg overflow-hidden"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.08), hsl(var(--celestial) / 0.12))",
+                border: "1px solid hsl(var(--gold) / 0.15)",
+                boxShadow: "0 0 25px hsl(var(--gold) / 0.15), inset 0 0 15px hsl(var(--gold) / 0.05)",
+              }}
+              animate={{
+                rotateY: [0, 8, -8, 0],
+                boxShadow: [
+                  "0 0 20px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.03)",
+                  "0 0 40px hsl(43 80% 55% / 0.25), inset 0 0 20px hsl(43 80% 55% / 0.08)",
+                  "0 0 20px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.03)",
+                ],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <img
+                src={cardBack}
+                alt=""
+                className="w-full h-full object-cover"
+                style={{ opacity: 0.35, filter: "blur(1px)" }}
+              />
+            </motion.div>
+
+            {/* Pulsing light overlay */}
+            <motion.div
+              className="absolute inset-0 rounded-lg"
+              style={{
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, transparent 70%)",
+              }}
+              animate={{ opacity: [0.3, 0.8, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </motion.div>
+        )}
+
+        {/* Phase 2: Flipping animation */}
+        {phase === "flipping" && (
+          <motion.div
+            key="flipping"
+            className="relative"
+            style={{ width: cardSize, height: cardSize * 1.5, perspective: "800px" }}
+            initial={{ y: 0, scale: 1 }}
+            animate={{ y: isMobile ? -30 : -50, scale: 1.15 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
+            {/* Burst particles */}
+            {[...Array(16)].map((_, i) => {
+              const angle = (i / 16) * Math.PI * 2;
+              return (
+                <motion.div
+                  key={`burst-${i}`}
+                  className="absolute rounded-full"
+                  style={{
+                    width: i % 3 === 0 ? 4 : 2,
+                    height: i % 3 === 0 ? 4 : 2,
+                    left: "50%",
+                    top: "50%",
+                    background: i % 3 === 0 ? "hsl(var(--gold))" : i % 3 === 1 ? "hsl(var(--crimson) / 0.8)" : "hsl(var(--celestial))",
+                  }}
+                  initial={{ x: 0, y: 0, opacity: 0 }}
+                  animate={{
+                    x: Math.cos(angle) * (60 + Math.random() * 30),
+                    y: Math.sin(angle) * (60 + Math.random() * 30),
+                    opacity: [0, 1, 0],
+                    scale: [0, 2, 0],
+                  }}
+                  transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+                />
+              );
+            })}
+
+            {/* Flip card */}
+            <motion.div
+              className="w-full h-full rounded-lg overflow-hidden"
+              style={{
+                transformStyle: "preserve-3d",
+                boxShadow: "0 0 50px hsl(43 80% 55% / 0.4)",
+              }}
+              initial={{ rotateY: 0 }}
+              animate={{ rotateY: 180 }}
+              transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+            >
+              {/* Back face */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden"
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <img src={cardBack} alt="" className="w-full h-full object-cover" />
+              </div>
+              {/* Front face */}
+              <div
+                className="absolute inset-0 rounded-lg overflow-hidden"
+                style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+              >
+                <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+              </div>
+            </motion.div>
+
+            {/* Glow ring during flip */}
+            <motion.div
+              className="absolute -inset-4 rounded-xl pointer-events-none"
+              style={{
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.2) 0%, transparent 70%)",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 1, 0.5] }}
+              transition={{ duration: 1.2 }}
+            />
+          </motion.div>
+        )}
+
+        {/* Phase 3: Revealed */}
+        {phase === "revealed" && (
+          <motion.div
+            key="revealed"
+            className="relative flex flex-col items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Card */}
+            <motion.div
+              className="relative rounded-lg overflow-hidden"
+              style={{
+                width: cardSize,
+                height: cardSize * 1.5,
+                boxShadow: "0 0 40px hsl(43 80% 55% / 0.35), 0 0 80px hsl(43 80% 55% / 0.15)",
+              }}
+              initial={{ y: isMobile ? -30 : -50, scale: 1.15 }}
+              animate={{
+                y: isMobile ? -20 : -35,
+                scale: 1.1,
+                boxShadow: [
+                  "0 0 30px hsl(43 80% 55% / 0.25), 0 0 60px hsl(43 80% 55% / 0.1)",
+                  "0 0 50px hsl(43 80% 55% / 0.4), 0 0 90px hsl(43 80% 55% / 0.2)",
+                  "0 0 30px hsl(43 80% 55% / 0.25), 0 0 60px hsl(43 80% 55% / 0.1)",
+                ],
+              }}
+              transition={{
+                y: { duration: 0.5 },
+                boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+              }}
+            >
+              <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+            </motion.div>
+
+            {/* Card info below */}
+            <motion.div
+              className="absolute text-center"
+              style={{
+                top: `${cardSize * 1.5 + (isMobile ? -5 : 0)}px`,
+                width: isMobile ? "220px" : "280px",
+                transform: "translateY(-10px)",
+              }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+            >
+              <motion.div
+                className="rounded-xl px-3 py-2.5 backdrop-blur-md"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.96))",
+                  border: "1px solid hsl(var(--gold) / 0.2)",
+                  boxShadow: "0 0 25px hsl(var(--gold) / 0.08)",
+                }}
+              >
+                <p className="font-heading text-primary text-sm mb-1">
+                  {card.symbol} {card.hebrewName}
+                </p>
+                <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir="rtl">
+                  {message}
+                </p>
+                <motion.button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenTarot();
+                  }}
+                  className="text-primary font-heading text-[11px] tracking-wide px-3 py-1 rounded-full"
+                  style={{
+                    background: "hsl(var(--gold) / 0.1)",
+                    border: "1px solid hsl(var(--gold) / 0.25)",
+                  }}
+                  whileHover={{ scale: 1.08, boxShadow: "0 0 15px hsl(43 80% 55% / 0.3)" }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={{ opacity: [0.8, 1, 0.8] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  פתחו קריאה מלאה ✦
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 /* ── Fortune Preview ──────────────────────────────── */
 const FortunePreview = ({ onReveal }: { onReveal: () => void }) => {
   const t = useT();
