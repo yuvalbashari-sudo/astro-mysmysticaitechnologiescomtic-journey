@@ -84,14 +84,12 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="fixed right-4 rounded-xl overflow-hidden"
+                className="absolute top-full mt-1 right-0 rounded-xl overflow-hidden z-[70]"
                 style={{
-                  top: "52px",
                   background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
                   border: "1px solid hsl(var(--gold) / 0.2)",
                   boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
                   minWidth: "140px",
-                  zIndex: 70,
                 }}
               >
                 {languages.map((lang) => (
