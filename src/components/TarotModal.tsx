@@ -21,23 +21,28 @@ interface SpreadOption {
   positionLabels: string[];
 }
 
-const SPREAD_OPTIONS: SpreadOption[] = [
-  { key: "timeline", icon: <Compass className="w-4 h-4" />, cardCount: 3, positionLabels: ["עבר", "הווה", "עתיד"] },
-  { key: "love", icon: <Heart className="w-4 h-4" />, cardCount: 3, positionLabels: ["הלב שלכם", "האנרגיה סביבכם", "לאן זה מוביל"] },
-  { key: "career", icon: <Briefcase className="w-4 h-4" />, cardCount: 3, positionLabels: ["המצב הנוכחי", "האתגר", "ההזדמנות"] },
-  { key: "decision", icon: <Eye className="w-4 h-4" />, cardCount: 3, positionLabels: ["הדילמה", "מה שנסתר", "הכיוון הנכון"] },
-  { key: "daily", icon: <Sun className="w-4 h-4" />, cardCount: 1, positionLabels: ["קלף היום"] },
-  { key: "universe", icon: <Star className="w-4 h-4" />, cardCount: 1, positionLabels: ["מסר מהיקום"] },
-];
+// These will be populated with translations inside the component
+function getSpreadOptions(t: ReturnType<typeof useT>): SpreadOption[] {
+  return [
+    { key: "timeline", icon: <Compass className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future] },
+    { key: "love", icon: <Heart className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction] },
+    { key: "career", icon: <Briefcase className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity] },
+    { key: "decision", icon: <Eye className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_dilemma, t.tarot_pos_hidden, t.tarot_pos_right_path] },
+    { key: "daily", icon: <Sun className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_daily_card] },
+    { key: "universe", icon: <Star className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_universe_msg] },
+  ];
+}
 
-const SPREAD_LABELS: Record<SpreadType, string> = {
-  timeline: "עבר / הווה / עתיד",
-  love: "פתיחה לאהבה",
-  career: "פתיחה לקריירה",
-  decision: "פתיחה להחלטה",
-  daily: "קלף יומי",
-  universe: "מסר מהיקום",
-};
+function getSpreadLabels(t: ReturnType<typeof useT>): Record<SpreadType, string> {
+  return {
+    timeline: t.tarot_spread_timeline,
+    love: t.tarot_spread_love,
+    career: t.tarot_spread_career,
+    decision: t.tarot_spread_decision,
+    daily: t.tarot_spread_daily,
+    universe: t.tarot_spread_universe,
+  };
+}
 
 // Stream AI tarot reading
 async function streamTarotReading(
@@ -120,8 +125,11 @@ async function streamTarotReading(
 
 const TarotModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const SPREAD_OPTIONS = getSpreadOptions(t);
+  const SPREAD_LABELS = getSpreadLabels(t);
 
-  const [selectedSpread, setSelectedSpread] = useState<SpreadOption>(SPREAD_OPTIONS[0]);
+  const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
+  const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
   const [cards, setCards] = useState<TarotCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -191,7 +199,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setAiText("");
       setAiLoading(false);
       aiTextRef.current = "";
-      setSelectedSpread(SPREAD_OPTIONS[0]);
+      setSelectedSpreadKey("timeline");
     }, 300);
   };
 
@@ -231,12 +239,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Spread type selector */}
                   <div className="mb-8">
-                    <p className="text-gold/60 font-body text-xs mb-4">בחרו סוג קריאה</p>
+                    <p className="text-gold/60 font-body text-xs mb-4">{t.tarot_spread_choose}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-w-md mx-auto">
                       {SPREAD_OPTIONS.map((spread) => (
                         <motion.button
                           key={spread.key}
-                          onClick={() => setSelectedSpread(spread)}
+                          onClick={() => setSelectedSpreadKey(spread.key)}
                           className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-body transition-all ${selectedSpread.key === spread.key ? "ring-1 ring-gold/40" : ""}`}
                           style={{
                             background: selectedSpread.key === spread.key
@@ -254,7 +262,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       ))}
                     </div>
                     <p className="text-[10px] text-muted-foreground font-body mt-3">
-                      {selectedSpread.cardCount === 1 ? "קלף אחד" : `${selectedSpread.cardCount} קלפים`} • {selectedSpread.positionLabels.join(" · ")}
+                      {selectedSpread.cardCount === 1 ? t.tarot_one_card : `${selectedSpread.cardCount} ${t.tarot_n_cards}`} • {selectedSpread.positionLabels.join(" · ")}
                     </p>
                   </div>
 
@@ -309,7 +317,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   >
                     <div className="flex items-center justify-center gap-3 mb-6">
                       <Layers className="w-5 h-5 text-gold" />
-                      <h3 className="font-heading text-lg gold-gradient-text">פירוש מיסטי</h3>
+                      <h3 className="font-heading text-lg gold-gradient-text">{t.tarot_mystical_interp}</h3>
                     </div>
 
                     <div className="flex items-center justify-center gap-3 mb-6">
