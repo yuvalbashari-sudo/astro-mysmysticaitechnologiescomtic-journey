@@ -1276,7 +1276,20 @@ const HeroSection = () => {
     const rect = sectionRef.current.getBoundingClientRect();
     mouseX.set((e.clientX - rect.left) / rect.width);
     mouseY.set((e.clientY - rect.top) / rect.height);
+
+    // Check proximity to crystal ball center
+    if (crystalRef.current) {
+      const ballRect = crystalRef.current.getBoundingClientRect();
+      const cx = ballRect.left + ballRect.width / 2;
+      const cy = ballRect.top + ballRect.height / 2;
+      const dist = Math.hypot(e.clientX - cx, e.clientY - cy);
+      setIsNearBall(dist < 250);
+    }
   }, [isMobile, mouseX, mouseY]);
+
+  const handleCrystalClick = useCallback(() => {
+    setClickBurst((c) => c + 1);
+  }, []);
 
   const orbRadius = isMobile ? 140 : 240;
 
