@@ -157,7 +157,7 @@ async function streamTarotReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "שגיאה בחיבור");
+    onError(e instanceof Error ? e.message : errorMessages?.connection || "Connection error");
   }
 }
 
