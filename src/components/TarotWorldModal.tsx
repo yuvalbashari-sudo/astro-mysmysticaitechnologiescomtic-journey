@@ -783,7 +783,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       </div>
                       {drawnCards.map((card, i) => {
                         const isFreeLocked = !selectedSpread.isFree && i >= selectedSpread.freeRevealCount;
-                        const interp = getInterpretation(card, selectedSpread.key, selectedSpread.positionLabels[i]);
+                        const interp = getInterpretation(card, selectedSpread.key, posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]);
                         return (
                           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.3 }}>
                             <div className="flex items-center gap-4 mb-4">
