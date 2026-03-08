@@ -741,7 +741,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                           <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                          <span className="font-body text-xs text-gold/50">הקלפים מדברים...</span>
+                          <span className="font-body text-xs text-gold/50">{t.tarot_world_ai_loading}</span>
                         </motion.div>
                       )}
                     </motion.div>
