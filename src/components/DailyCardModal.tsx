@@ -646,7 +646,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: [0.4, 1, 0.4] }}
                         transition={{ duration: 2, repeat: Infinity }}
                       >
-                        מפענחים את המסר היומי שלכם...
+                        {t.daily_loading}
                       </motion.p>
                     </div>
                   ) : null}
