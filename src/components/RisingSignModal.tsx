@@ -30,23 +30,33 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const handleOnboardingComplete = () => {
     const [h, m] = birthTime.split(":").map(Number);
     const rising = getRisingSign(h, m);
-    setSignInfo({ name: rising.hebrewName, symbol: rising.symbol, element: rising.element });
+    const sunSign = getZodiacSign(new Date(birthDate));
+    setSignInfo({ name: rising.hebrewName, symbol: rising.symbol, element: rising.element, sunSign: sunSign.hebrewName, sunSymbol: sunSign.symbol, sunElement: sunSign.element });
     setIsLoading(false);
     setAiLoading(true);
     aiTextRef.current = "";
 
     streamMysticalReading(
       "rising",
-      { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime },
+      {
+        signName: rising.hebrewName,
+        signSymbol: rising.symbol,
+        element: rising.element,
+        birthTime,
+        birthDate,
+        sunSignName: sunSign.hebrewName,
+        sunSignSymbol: sunSign.symbol,
+        sunElement: sunSign.element,
+      },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
         readingsStorage.save({
           type: "rising",
           title: `מזל עולה — ${rising.hebrewName}`,
-          subtitle: `יסוד ${rising.element}`,
+          subtitle: `מזל שמש: ${sunSign.hebrewName} | יסוד ${rising.element}`,
           symbol: rising.symbol,
-          data: { signName: rising.hebrewName, birthTime, aiReading: aiTextRef.current },
+          data: { signName: rising.hebrewName, sunSign: sunSign.hebrewName, birthTime, birthDate, aiReading: aiTextRef.current },
         });
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
