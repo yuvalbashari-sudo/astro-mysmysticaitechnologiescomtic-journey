@@ -449,7 +449,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             animate={{ opacity: 1, y: 0, height: "auto" }}
             exit={{ opacity: 0, y: -5, height: 0 }}
           >
-            <p className="text-foreground/50 font-body text-[11px] leading-relaxed" dir="rtl">
+            <p className="text-foreground/50 font-body text-[11px] leading-relaxed" dir={dir}>
               {validationMsg}
             </p>
           </motion.div>
