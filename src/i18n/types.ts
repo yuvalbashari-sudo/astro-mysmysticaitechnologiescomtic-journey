@@ -278,7 +278,33 @@ export type TranslationKeys = {
   tarot_world_premium_desc: string;
   tarot_world_premium_cta: string;
   tarot_world_daily_note: string;
-
+  tarot_world_spread_daily_name: string;
+  tarot_world_spread_daily_desc: string;
+  tarot_world_spread_timeline_name: string;
+  tarot_world_spread_timeline_desc: string;
+  tarot_world_spread_love_name: string;
+  tarot_world_spread_love_desc: string;
+  tarot_world_spread_career_name: string;
+  tarot_world_spread_career_desc: string;
+  tarot_world_spread_decision_name: string;
+  tarot_world_spread_decision_desc: string;
+  tarot_world_spread_universe_name: string;
+  tarot_world_spread_universe_desc: string;
+  tarot_world_pos_today: string;
+  tarot_world_pos_past: string;
+  tarot_world_pos_present: string;
+  tarot_world_pos_future: string;
+  tarot_world_pos_heart: string;
+  tarot_world_pos_energy: string;
+  tarot_world_pos_direction: string;
+  tarot_world_pos_current: string;
+  tarot_world_pos_challenge: string;
+  tarot_world_pos_opportunity: string;
+  tarot_world_pos_dilemma: string;
+  tarot_world_pos_hidden: string;
+  tarot_world_pos_right_path: string;
+  tarot_world_pos_message: string;
+  tarot_world_locked: string;
   // Daily Card Modal
   daily_title: string;
   daily_desc: string;
