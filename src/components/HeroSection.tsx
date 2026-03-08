@@ -1333,8 +1333,7 @@ const HeroSection = () => {
   }, [isMobile]);
 
   const handleFortuneReveal = useCallback(() => {
-    const el = document.getElementById("free");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+    setTarotOpen(true);
   }, []);
 
   // Active energy color based on hovered item
