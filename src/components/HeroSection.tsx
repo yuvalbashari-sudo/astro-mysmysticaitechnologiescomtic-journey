@@ -1020,7 +1020,8 @@ const TarotCardReveal = ({
   if (!card) return null;
 
   const cardImage = tarotCardImages[card.name] || cardBack;
-  const message = TAROT_MESSAGES[card.name] || `${card.hebrewName} מופיע עבורך — סימן מיסטי מהיקום.`;
+  const t = useT();
+  const message = TAROT_MESSAGES[language]?.[card.name] || `${card.hebrewName} ${t.hero_tarot_fallback_message}`;
 
   return (
     <div
