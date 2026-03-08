@@ -1,53 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
-
-import AboutSection from "@/components/AboutSection";
-import LaunchBanner from "@/components/LaunchBanner";
-import FreePremiumSection from "@/components/FreePremiumSection";
-import LeadSection from "@/components/LeadSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import FAQSection from "@/components/FAQSection";
-import PricingSection from "@/components/PricingSection";
-import FooterCTA from "@/components/FooterCTA";
-import ReadingsHistory from "@/components/ReadingsHistory";
-import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
-import LeadFormModal from "@/components/LeadFormModal";
 import StarField from "@/components/StarField";
 import MysticalDashboard from "@/components/MysticalDashboard";
-import LanguageSelector from "@/components/LanguageSelector";
+import MysticalTopBar from "@/components/MysticalTopBar";
+import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import { useLanguage } from "@/i18n";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 const Index = () => {
-  const [leadModalOpen, setLeadModalOpen] = useState(false);
-  const [selectedInterest, setSelectedInterest] = useState("");
   const { dir } = useLanguage();
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [hasHistory, setHasHistory] = useState(false);
 
-  const handleOrderClick = (interest: string) => {
-    setSelectedInterest(interest);
-    setLeadModalOpen(true);
-  };
+  useEffect(() => {
+    setHasHistory(readingsStorage.getAll().length > 0);
+  }, [historyOpen]);
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden relative" dir={dir}>
-      <LanguageSelector />
+      <MysticalTopBar
+        onOpenHistory={() => setHistoryOpen(true)}
+        hasHistory={hasHistory}
+      />
       <StarField />
       <HeroSection />
-      
-      <ReadingsHistory />
-      <LaunchBanner />
-      <AboutSection />
-      <FreePremiumSection />
-      <LeadSection />
-      <TestimonialsSection />
-      <PricingSection onOrderClick={handleOrderClick} />
-      <FAQSection />
-      <FooterCTA />
-      <WhatsAppFloatingButton />
       <MysticalDashboard />
-      <LeadFormModal
-        isOpen={leadModalOpen}
-        onClose={() => setLeadModalOpen(false)}
-        preselectedInterest={selectedInterest}
+      <ReadingsHistoryModal
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
       />
     </div>
   );
