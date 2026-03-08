@@ -4,6 +4,7 @@ import { X, Sparkles, Hand, Crown, Share2, Copy, Check, Loader2, Camera, Upload,
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT } from "@/i18n/LanguageContext";
