@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Clock, ChevronDown } from "lucide-react";
 import { getDailyRitual, revealDailyRitual, msUntilReset, type DailyRitualData } from "@/lib/dailyRitual";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import { useT } from "@/i18n";
 
 const DailyRitualSection = () => {
+  const t = useT();
   const [ritual, setRitual] = useState<DailyRitualData & { isNew: boolean }>(getDailyRitual);
   const [revealed, setRevealed] = useState(ritual.revealed);
   const [cardFlipped, setCardFlipped] = useState(ritual.revealed);
@@ -29,7 +31,6 @@ const DailyRitualSection = () => {
     if (revealed) return;
     revealDailyRitual();
     setRevealed(true);
-    // Flip card after a brief moment
     setTimeout(() => setCardFlipped(true), 400);
   }, [revealed]);
 
@@ -49,14 +50,14 @@ const DailyRitualSection = () => {
       >
         <div className="flex items-center justify-center gap-2 mb-4">
           <Sparkles className="w-5 h-5 text-gold" />
-          <span className="text-sm font-body text-gold/70 tracking-widest uppercase">טקס יומי</span>
+          <span className="text-sm font-body text-gold/70 tracking-widest uppercase">{t.daily_ritual_label}</span>
           <Sparkles className="w-5 h-5 text-gold" />
         </div>
         <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-3">
-          הטקס המיסטי היומי שלך
+          {t.daily_ritual_title}
         </h2>
         <p className="text-muted-foreground font-body text-base md:text-lg max-w-md mx-auto leading-relaxed">
-          כל יום מחכה לכם קלף חדש, מסר מהיקום ותובנה אנרגטית ייחודית
+          {t.daily_ritual_desc}
         </p>
       </motion.div>
 
@@ -76,7 +77,7 @@ const DailyRitualSection = () => {
           >
             <span className="flex items-center gap-2 justify-center">
               <Sparkles className="w-5 h-5" />
-              חשפו את הטקס של היום
+              {t.daily_ritual_cta}
             </span>
           </motion.button>
           <motion.div
@@ -85,7 +86,7 @@ const DailyRitualSection = () => {
             transition={{ duration: 2, repeat: Infinity }}
           >
             <ChevronDown className="w-4 h-4" />
-            <span className="text-xs font-body">לחצו לחשיפה</span>
+            <span className="text-xs font-body">{t.daily_ritual_click_hint}</span>
           </motion.div>
         </motion.div>
       )}
@@ -107,7 +108,7 @@ const DailyRitualSection = () => {
                 transition={{ delay: 0.1 }}
                 className="mystical-card-elevated p-6 text-center"
               >
-                <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">🔮 קלף יומי</div>
+                <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_card_label}</div>
 
                 {/* Card flip */}
                 <div className="relative w-24 h-36 mx-auto mb-4" style={{ perspective: 800 }}>
@@ -118,7 +119,6 @@ const DailyRitualSection = () => {
                     transition={{ duration: 0.8, ease: "easeInOut" }}
                     style={{ transformStyle: "preserve-3d" }}
                   >
-                    {/* Back */}
                     <div
                       className="absolute inset-0 rounded-lg"
                       style={{
@@ -127,7 +127,6 @@ const DailyRitualSection = () => {
                         border: "1px solid hsl(var(--gold) / 0.3)",
                       }}
                     />
-                    {/* Front */}
                     <div
                       className="absolute inset-0 rounded-lg"
                       style={{
@@ -138,7 +137,6 @@ const DailyRitualSection = () => {
                       }}
                     />
                   </motion.div>
-                  {/* Glow */}
                   {cardFlipped && (
                     <motion.div
                       className="absolute -inset-2 rounded-xl pointer-events-none"
@@ -167,7 +165,7 @@ const DailyRitualSection = () => {
                 className="mystical-card-elevated p-6 text-center flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">✦ מסר מהיקום</div>
+                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_message_label}</div>
                   <div className="icon-glow w-14 h-14 mx-auto mb-5">
                     <span className="text-2xl">🌌</span>
                   </div>
@@ -176,7 +174,7 @@ const DailyRitualSection = () => {
                   </p>
                 </div>
                 <p className="text-xs text-gold/40 mt-4 font-body italic">
-                  "הקשיבו — היקום מדבר אליכם"
+                  "{t.daily_ritual_message_quote}"
                 </p>
               </motion.div>
 
@@ -188,7 +186,7 @@ const DailyRitualSection = () => {
                 className="mystical-card-elevated p-6 text-center flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">⚡ אנרגיית היום</div>
+                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_energy_label}</div>
                   <div className="icon-glow w-14 h-14 mx-auto mb-4">
                     <span className="text-2xl">{ritual.energy.icon}</span>
                   </div>
@@ -210,12 +208,12 @@ const DailyRitualSection = () => {
               <div className="mystical-card inline-flex items-center gap-3 px-6 py-3 mx-auto">
                 <Clock className="w-4 h-4 text-gold/60" />
                 <span className="text-sm text-muted-foreground font-body">
-                  הטקס של היום כבר נפתח. הטקס הבא בעוד
+                  {t.daily_ritual_done_text}
                 </span>
                 <span className="text-sm font-heading text-gold font-semibold tabular-nums">{countdown}</span>
               </div>
               <p className="text-xs text-muted-foreground/60 mt-3 font-body">
-                ✦ מחר תחכה לכם אנרגיה חדשה, קלף חדש ומסר ייחודי ✦
+                ✦ {t.daily_ritual_next_text} ✦
               </p>
             </motion.div>
           </motion.div>
