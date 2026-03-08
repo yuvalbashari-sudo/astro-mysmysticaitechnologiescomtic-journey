@@ -492,7 +492,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     whileTap={{ scale: 0.97 }}
                   >
                     <Sparkles className="w-4 h-4" />
-                    פתחו את הקלפים
+                    {t.tarot_open_cards_cta}
                   </motion.button>
                   <p className="text-[10px] text-muted-foreground/40 font-body mt-5">{t.tarot_note}</p>
                 </motion.div>
