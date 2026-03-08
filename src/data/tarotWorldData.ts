@@ -387,7 +387,12 @@ const majorArcana: TarotWorldCard[] = [
 ];
 
 export function drawCardsForSpread(spread: SpreadConfig): TarotWorldCard[] {
-  const shuffled = [...majorArcana].sort(() => Math.random() - 0.5);
+  // Fisher-Yates shuffle for true randomness
+  const shuffled = [...majorArcana];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
   return shuffled.slice(0, spread.cardCount);
 }
 
