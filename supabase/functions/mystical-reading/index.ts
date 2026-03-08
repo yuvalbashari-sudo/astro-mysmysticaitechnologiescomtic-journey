@@ -423,7 +423,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model,
         messages: [
-          { role: "system", content: system },
+          { role: "system", content: enrichedSystem },
           userMessage,
         ],
         stream: true,
