@@ -1765,7 +1765,8 @@ const HeroSection = () => {
                   key={i}
                   className="absolute z-30 cursor-pointer"
                   style={{
-                    left: isMobile ? `calc(50% - 65px)` : `calc(50% + ${x}px - 80px)`,
+                    left: isMobile ? `calc(50% - 100px)` : `calc(50% + ${x}px - 80px)`,
+                    width: isMobile ? "200px" : undefined,
                     top: `calc(50% + ${y}px - 20px)`,
                   }}
                   initial={{ opacity: 0, scale: 0 }}
