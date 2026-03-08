@@ -448,4 +448,26 @@ export type TranslationKeys = {
   common_free: string;
   common_close: string;
   common_loading: string;
+
+  // Tarot Flow UI (shuffle, table, errors)
+  tarot_shuffle_title_idle: string;
+  tarot_shuffle_title_shuffling: string;
+  tarot_shuffle_title_ready: string;
+  tarot_shuffle_desc_idle: string;
+  tarot_shuffle_desc_shuffling: string;
+  tarot_shuffle_desc_ready: string;
+  tarot_shuffle_cta: string;
+  tarot_shuffle_status: string;
+  tarot_shuffle_done: string;
+  tarot_step_label: string;
+  tarot_step1_desc: string;
+  tarot_step2_desc: string;
+  tarot_table_title: string;
+  tarot_table_hint: string;
+  tarot_table_all_revealed: string;
+  tarot_table_progress: string;
+  tarot_open_cards_cta: string;
+  tarot_error_unexpected: string;
+  tarot_error_service: string;
+  tarot_error_connection: string;
 };
