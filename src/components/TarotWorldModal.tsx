@@ -370,7 +370,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!drawnCards.length || !selectedSpread) return;
-    const text = `🔮 ${selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
+    const text = `🔮 ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
