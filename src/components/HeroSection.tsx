@@ -11,6 +11,18 @@ import PalmReadingModal from "./PalmReadingModal";
 import { useT } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import ariesIcon from "@/assets/zodiac-icons/aries.png";
+import taurusIcon from "@/assets/zodiac-icons/taurus.png";
+import geminiIcon from "@/assets/zodiac-icons/gemini.png";
+import cancerIcon from "@/assets/zodiac-icons/cancer.png";
+import leoIcon from "@/assets/zodiac-icons/leo.png";
+import virgoIcon from "@/assets/zodiac-icons/virgo.png";
+import libraIcon from "@/assets/zodiac-icons/libra.png";
+import scorpioIcon from "@/assets/zodiac-icons/scorpio.png";
+import sagittariusIcon from "@/assets/zodiac-icons/sagittarius.png";
+import capricornIcon from "@/assets/zodiac-icons/capricorn.png";
+import aquariusIcon from "@/assets/zodiac-icons/aquarius.png";
+import piscesIcon from "@/assets/zodiac-icons/pisces.png";
 
 const constellations = [
   { stars: [[12, 15], [18, 12], [22, 18], [28, 14], [25, 8]], opacity: 0.4 },
