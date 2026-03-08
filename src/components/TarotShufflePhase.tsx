@@ -245,7 +245,6 @@ const TarotShufflePhase = ({ onComplete }: Props) => {
             whileTap={{ scale: 0.97 }}
           >
             <Sparkles className="w-4 h-4" />
-            שקשקו את הקלפים
             {t.tarot_shuffle_cta}
           </motion.button>
         )}
