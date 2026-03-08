@@ -231,6 +231,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
     career: t.tarot_world_spread_career_name,
     decision: t.tarot_world_spread_decision_name,
     universe: t.tarot_world_spread_universe_name,
+    question: t.tarot_world_spread_question_name,
   };
   const descMap: Record<string, string> = {
     daily: t.tarot_world_spread_daily_desc,
@@ -239,6 +240,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
     career: t.tarot_world_spread_career_desc,
     decision: t.tarot_world_spread_decision_desc,
     universe: t.tarot_world_spread_universe_desc,
+    question: t.tarot_world_spread_question_desc,
   };
   const posMap: Record<string, string[]> = {
     daily: [t.tarot_world_pos_today],
@@ -247,6 +249,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
     career: [t.tarot_world_pos_current, t.tarot_world_pos_challenge, t.tarot_world_pos_opportunity],
     decision: [t.tarot_world_pos_dilemma, t.tarot_world_pos_hidden, t.tarot_world_pos_right_path],
     universe: [t.tarot_world_pos_message],
+    question: [t.tarot_world_pos_hidden_influence, t.tarot_world_pos_current_energy, t.tarot_world_pos_possible_direction],
   };
   return { nameMap, descMap, posMap };
 }
