@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
@@ -16,6 +16,26 @@ const constellations = [
   { stars: [[85, 25], [88, 20], [92, 28], [90, 15]], opacity: 0.3 },
   { stars: [[8, 60], [12, 55], [15, 62], [10, 68]], opacity: 0.25 },
   { stars: [[78, 55], [82, 50], [86, 58], [80, 62], [84, 65]], opacity: 0.3 },
+  { stars: [[35, 8], [40, 14], [44, 10], [38, 18]], opacity: 0.3 },
+  { stars: [[50, 70], [55, 65], [58, 72], [52, 78]], opacity: 0.2 },
+  { stars: [[15, 80], [20, 75], [25, 82], [18, 85]], opacity: 0.2 },
+];
+
+const FORTUNE_MESSAGES = [
+  "היקום מאותת לך לשים לב להזדמנות שמופיעה היום.",
+  "כוח נסתר מתעורר בתוכך — הקשיבו לאינטואיציה.",
+  "הכוכבים מיישרים קו לטובתכם... משהו משמעותי מתקרב.",
+  "אנרגיה חדשה נכנסת לחייכם — היו פתוחים לשינוי.",
+  "המסלול הקוסמי שלכם מתחיל להיחשף... גלו אותו.",
+];
+
+/* ── Energy colors per menu item ── */
+const ITEM_COLORS = [
+  { glow: "hsl(43, 80%, 55%)", bg: "hsl(43, 80%, 55%)", label: "gold" },        // Forecast - gold
+  { glow: "hsl(215, 70%, 65%)", bg: "hsl(215, 70%, 65%)", label: "silver-blue" }, // Rising - silver blue
+  { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
+  { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
+  { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
@@ -48,8 +68,9 @@ const AmbientParticle = ({ type, delay, x, y }: { type: "dust" | "spark" | "orb"
 const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: number }) => (
   <motion.svg
     className="absolute inset-0 w-full h-full pointer-events-none"
-    animate={{ opacity: [0, 0.4, 0.4, 0] }}
-    transition={{ duration: 8, repeat: Infinity, delay: baseDelay, ease: "easeInOut" }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: [0, 0.5, 0.5, 0] }}
+    transition={{ duration: 10, repeat: Infinity, delay: baseDelay, ease: "easeInOut" }}
   >
     {stars.slice(0, -1).map((star, j) => (
       <motion.line
@@ -58,10 +79,10 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
         x2={`${stars[j + 1][0]}%`} y2={`${stars[j + 1][1]}%`}
         stroke="hsl(43, 80%, 55%)"
         strokeWidth="0.5"
-        strokeOpacity="0.15"
+        strokeOpacity="0.2"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: [0, 1, 1, 0] }}
-        transition={{ duration: 8, repeat: Infinity, delay: baseDelay + j * 0.3, ease: "easeInOut" }}
+        transition={{ duration: 10, repeat: Infinity, delay: baseDelay + j * 0.4, ease: "easeInOut" }}
       />
     ))}
     {stars.map((star, j) => (
@@ -70,16 +91,17 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
         cx={`${star[0]}%`} cy={`${star[1]}%`}
         r="1.5"
         fill="hsl(43, 80%, 70%)"
-        animate={{ opacity: [0, 0.8, 0.8, 0], r: [1, 2, 2, 1] }}
-        transition={{ duration: 8, repeat: Infinity, delay: baseDelay + j * 0.2, ease: "easeInOut" }}
+        animate={{ opacity: [0, 0.9, 0.9, 0], r: [1, 2.5, 2.5, 1] }}
+        transition={{ duration: 10, repeat: Infinity, delay: baseDelay + j * 0.25, ease: "easeInOut" }}
       />
     ))}
   </motion.svg>
 );
 
 /* ── Energy Pulse ──────────────────────────────────── */
-const EnergyPulse = ({ isMobile }: { isMobile: boolean }) => {
+const EnergyPulse = ({ isMobile, activeColor }: { isMobile: boolean; activeColor?: string }) => {
   const baseSize = isMobile ? 180 : 280;
+  const pulseColor = activeColor || "hsl(var(--gold) / 0.15)";
   return (
     <>
       {[0, 1, 2].map((i) => (
@@ -89,7 +111,7 @@ const EnergyPulse = ({ isMobile }: { isMobile: boolean }) => {
           style={{
             width: baseSize,
             height: baseSize,
-            border: "1px solid hsl(var(--gold) / 0.15)",
+            border: `1px solid ${pulseColor}`,
           }}
           animate={{
             scale: [1, 2.2],
@@ -109,7 +131,8 @@ const EnergyPulse = ({ isMobile }: { isMobile: boolean }) => {
         return (
           <motion.div
             key={`bp-${i}`}
-            className="absolute w-1 h-1 rounded-full bg-gold/60 pointer-events-none z-10"
+            className="absolute w-1 h-1 rounded-full pointer-events-none z-10"
+            style={{ background: activeColor || "hsl(var(--gold) / 0.6)" }}
             animate={{
               x: [0, Math.cos(angle) * (isMobile ? 80 : 120)],
               y: [0, Math.sin(angle) * (isMobile ? 80 : 120)],
@@ -130,6 +153,207 @@ const EnergyPulse = ({ isMobile }: { isMobile: boolean }) => {
   );
 };
 
+/* ── Crystal Ball Internal Energy ──────────────────── */
+const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
+  const size = isMobile ? 140 : 220;
+  return (
+    <div className="absolute z-[21] pointer-events-none" style={{ width: size, height: size }}>
+      {/* Swirling internal energy */}
+      <motion.div
+        className="absolute inset-0 rounded-full overflow-hidden"
+        style={{ mixBlendMode: "screen" }}
+      >
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "60%", height: "60%", left: "20%", top: "20%",
+            background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 50%, transparent 70%)",
+          }}
+          animate={{
+            scale: [1, 1.4, 0.9, 1.2, 1],
+            x: [0, 10, -8, 5, 0],
+            y: [0, -8, 5, -3, 0],
+            opacity: [0.4, 0.7, 0.3, 0.6, 0.4],
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "40%", height: "40%", left: "30%", top: "35%",
+            background: "radial-gradient(circle, hsl(var(--crimson) / 0.1) 0%, transparent 70%)",
+          }}
+          animate={{
+            scale: [0.8, 1.3, 0.7, 1.1, 0.8],
+            x: [0, -12, 8, -5, 0],
+            y: [0, 6, -10, 4, 0],
+            opacity: [0.2, 0.5, 0.2, 0.4, 0.2],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "30%", height: "30%", left: "40%", top: "25%",
+            background: "radial-gradient(circle, hsl(var(--celestial) / 0.12) 0%, transparent 70%)",
+          }}
+          animate={{
+            scale: [1, 0.6, 1.5, 0.8, 1],
+            x: [0, 15, -10, 8, 0],
+            y: [0, -5, 12, -8, 0],
+          }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        />
+      </motion.div>
+
+      {/* Particle emission from crystal ball */}
+      {[...Array(12)].map((_, i) => {
+        const angle = (i / 12) * Math.PI * 2;
+        const radius = size * 0.35;
+        return (
+          <motion.div
+            key={`cb-particle-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: 2,
+              height: 2,
+              left: "50%",
+              top: "50%",
+              background: i % 3 === 0 ? "hsl(var(--gold))" : i % 3 === 1 ? "hsl(var(--celestial))" : "hsl(var(--crimson) / 0.8)",
+            }}
+            animate={{
+              x: [0, Math.cos(angle) * radius, Math.cos(angle) * radius * 1.5],
+              y: [0, Math.sin(angle) * radius, Math.sin(angle) * radius * 1.5 - 20],
+              opacity: [0, 0.8, 0],
+              scale: [0, 1.5, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: i * 0.5 + Math.random(),
+              ease: "easeOut",
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
+/* ── Energy Line connecting tab to crystal ball ───── */
+const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: number; color: string; isMobile: boolean }) => {
+  if (isMobile) return null;
+  const centerX = 0;
+  const centerY = 0;
+
+  return (
+    <motion.svg
+      className="absolute pointer-events-none z-25"
+      style={{
+        left: "50%",
+        top: "50%",
+        width: 1,
+        height: 1,
+        overflow: "visible",
+      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.line
+        x1={centerX}
+        y1={centerY}
+        x2={fromX}
+        y2={fromY}
+        stroke={color}
+        strokeWidth="1"
+        strokeOpacity="0.4"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      />
+      {/* Traveling energy dot */}
+      <motion.circle
+        r="3"
+        fill={color}
+        animate={{
+          cx: [fromX, centerX],
+          cy: [fromY, centerY],
+          opacity: [0.8, 0],
+          r: [3, 1],
+        }}
+        transition={{ duration: 1.2, repeat: Infinity, ease: "easeIn" }}
+      />
+      <motion.circle
+        r="2"
+        fill={color}
+        animate={{
+          cx: [fromX, centerX],
+          cy: [fromY, centerY],
+          opacity: [0.6, 0],
+        }}
+        transition={{ duration: 1.2, repeat: Infinity, ease: "easeIn", delay: 0.4 }}
+      />
+    </motion.svg>
+  );
+};
+
+/* ── Fortune Preview ──────────────────────────────── */
+const FortunePreview = ({ onReveal }: { onReveal: () => void }) => {
+  const t = useT();
+  const [message] = useState(() => FORTUNE_MESSAGES[Math.floor(Math.random() * FORTUNE_MESSAGES.length)]);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 3500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <motion.div
+      className="absolute z-30 text-center"
+      style={{ bottom: "-80px", left: "50%", transform: "translateX(-50%)", width: "280px" }}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: "easeOut" }}
+    >
+      <motion.div
+        className="rounded-xl px-4 py-3 backdrop-blur-md"
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.9), hsl(var(--deep-blue) / 0.95))",
+          border: "1px solid hsl(var(--gold) / 0.2)",
+          boxShadow: "0 0 30px hsl(var(--gold) / 0.08)",
+        }}
+        animate={{
+          boxShadow: [
+            "0 0 20px hsl(43 80% 55% / 0.05)",
+            "0 0 35px hsl(43 80% 55% / 0.12)",
+            "0 0 20px hsl(43 80% 55% / 0.05)",
+          ],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <p className="text-gold/80 font-body text-xs leading-relaxed mb-2" dir="rtl">
+          ✦ {message}
+        </p>
+        <motion.button
+          onClick={onReveal}
+          className="text-gold font-heading text-[11px] tracking-wide"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          animate={{ opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          {t.hero_cta_free} ✦
+        </motion.button>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 /* ── Main Hero ─────────────────────────────────────── */
 const HeroSection = () => {
   const t = useT();
@@ -140,6 +364,7 @@ const HeroSection = () => {
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
+  const [entranceComplete, setEntranceComplete] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   const menuItems = useMemo(() => [
@@ -174,6 +399,11 @@ const HeroSection = () => {
     return () => window.removeEventListener("resize", check);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setEntranceComplete(true), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (isMobile || !sectionRef.current) return;
     const rect = sectionRef.current.getBoundingClientRect();
@@ -193,19 +423,36 @@ const HeroSection = () => {
     }));
   }, [isMobile]);
 
+  const handleFortuneReveal = useCallback(() => {
+    const el = document.getElementById("free");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  // Active energy color based on hovered item
+  const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
+
   return (
     <section
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center"
     >
+      {/* ── Cinematic entrance overlay ── */}
+      <motion.div
+        className="absolute inset-0 z-[100] pointer-events-none"
+        style={{ background: "hsl(var(--deep-blue))" }}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: 0 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
+      />
+
       {/* ── Layer 1: Mystical figure as full background ── */}
       <motion.div
         className="absolute inset-0"
         style={isMobile ? {} : { x: bgX, y: bgY }}
-        initial={{ opacity: 0, scale: 1.05 }}
+        initial={{ opacity: 0, scale: 1.1 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 2.5, ease: "easeOut" }}
       >
         <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
@@ -223,7 +470,9 @@ const HeroSection = () => {
             width: isMobile ? "200px" : "350px",
             height: isMobile ? "150px" : "250px",
             transform: "translate(-50%, -50%)",
-            background: "radial-gradient(ellipse, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
+            background: activeColor
+              ? `radial-gradient(ellipse, ${activeColor}33 0%, ${activeColor}11 40%, transparent 70%)`
+              : "radial-gradient(ellipse, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
             filter: "blur(30px)",
           }}
           animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.15, 1] }}
@@ -269,12 +518,16 @@ const HeroSection = () => {
         ))}
       </div>
 
+      {/* ── Layer 2: Constellation map (enhanced) ── */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={isMobile ? {} : { x: constellationX, y: constellationY }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 3, delay: 0.8 }}
       >
         {constellations.map((c, i) => (
-          <Constellation key={i} stars={c.stars} baseDelay={i * 3} />
+          <Constellation key={i} stars={c.stars} baseDelay={i * 2.5} />
         ))}
       </motion.div>
 
@@ -332,9 +585,9 @@ const HeroSection = () => {
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-12 md:pt-16">
         {/* Brand name */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
+          initial={{ opacity: 0, y: -30, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
           className="text-center mb-4 md:mb-6"
         >
           <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl gold-gradient-text tracking-wider">
@@ -346,7 +599,7 @@ const HeroSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
+          transition={{ duration: 1, delay: 1 }}
           className="text-center mb-2 md:mb-4"
         >
           <h2 className="font-body text-xl md:text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
@@ -357,7 +610,7 @@ const HeroSection = () => {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
+          transition={{ duration: 1, delay: 1.3 }}
           className="text-center text-muted-foreground font-body text-sm md:text-base mb-8 md:mb-6 max-w-xl mx-auto"
         >
           {t.hero_subheadline}
@@ -377,31 +630,31 @@ const HeroSection = () => {
                 style={{
                   width: "120px", height: "120px",
                   x: glowShiftX, y: glowShiftY,
-                  background: "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
+                  background: activeColor
+                    ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
+                    : "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
                 }}
               />
             )}
 
+            {/* Main aura glow - reacts to hovered item color */}
             <motion.div
               className="absolute rounded-full"
               style={{
                 width: isMobile ? "220px" : "320px",
                 height: isMobile ? "220px" : "320px",
                 background: hoveredItem !== null
-                  ? hoveredItem === 2
-                    ? "radial-gradient(circle, hsl(var(--crimson) / 0.18) 0%, hsl(var(--gold) / 0.1) 40%, transparent 70%)"
-                    : hoveredItem === 3
-                    ? "radial-gradient(circle, hsl(var(--celestial) / 0.18) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)"
-                    : "radial-gradient(circle, hsl(var(--gold) / 0.2) 0%, hsl(var(--celestial) / 0.1) 40%, transparent 70%)"
+                  ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}15 40%, transparent 70%)`
                   : "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
               }}
               animate={{
-                scale: hoveredItem !== null ? [1, 1.2, 1] : [1, 1.15, 1],
+                scale: hoveredItem !== null ? [1, 1.25, 1] : [1, 1.15, 1],
                 opacity: hoveredItem !== null ? [0.6, 1, 0.6] : [0.5, 0.8, 0.5],
               }}
-              transition={{ duration: hoveredItem !== null ? 2.5 : 4, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
             />
 
+            {/* Rotating conic gradient */}
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
@@ -413,17 +666,21 @@ const HeroSection = () => {
               transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
             />
 
+            {/* Inner pulse */}
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
                 width: isMobile ? "100px" : "160px",
                 height: isMobile ? "100px" : "160px",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
+                background: activeColor
+                  ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
+                  : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
               }}
               animate={{ scale: [0.8, 1.3, 0.8], opacity: [0.3, 0.7, 0.3] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             />
 
+            {/* Outer rings */}
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
@@ -448,33 +705,66 @@ const HeroSection = () => {
               transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
             />
 
-            <EnergyPulse isMobile={isMobile} />
+            <EnergyPulse isMobile={isMobile} activeColor={activeColor} />
 
+            {/* Crystal Ball Internal Energy */}
+            <CrystalBallEnergy isMobile={isMobile} />
+
+            {/* Crystal ball image */}
             <motion.img
               src={crystalBall}
               alt="Crystal Ball"
               className="relative z-20"
               style={{ width: isMobile ? "180px" : "280px", height: isMobile ? "180px" : "280px", objectFit: "contain" }}
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.5 }}
               animate={{
                 opacity: 1,
-                scale: hoveredItem !== null ? [1, 1.03, 1] : 1,
+                scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
                 filter: hoveredItem !== null
-                  ? ["drop-shadow(0 0 40px hsl(43 80% 55% / 0.35))", "drop-shadow(0 0 65px hsl(43 80% 55% / 0.55))", "drop-shadow(0 0 40px hsl(43 80% 55% / 0.35))"]
-                  : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 50px hsl(43 80% 55% / 0.4))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
+                  ? [
+                      `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
+                      `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
+                      `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
+                    ]
+                  : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
               }}
               transition={{
-                opacity: { duration: 1, delay: 0.4 },
+                opacity: { duration: 1.5, delay: 1 },
                 scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-                filter: { duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" },
+                filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
               }}
             />
+
+            {/* Fortune Preview */}
+            {entranceComplete && (
+              <FortunePreview onReveal={handleFortuneReveal} />
+            )}
+
+            {/* ── Energy lines from hovered item to crystal ball ── */}
+            <AnimatePresence>
+              {hoveredItem !== null && !isMobile && (() => {
+                const item = menuItems[hoveredItem];
+                const angleRad = (item.angle * Math.PI) / 180;
+                const itemX = Math.sin(angleRad) * orbRadius;
+                const itemY = -Math.cos(angleRad) * orbRadius * 0.55;
+                return (
+                  <EnergyLine
+                    key={`energy-line-${hoveredItem}`}
+                    fromX={itemX}
+                    fromY={itemY}
+                    color={ITEM_COLORS[hoveredItem].glow}
+                    isMobile={isMobile}
+                  />
+                );
+              })()}
+            </AnimatePresence>
 
             {/* ── Floating menu items ── */}
             {menuItems.map((item, i) => {
               const angleRad = (item.angle * Math.PI) / 180;
               const x = Math.sin(angleRad) * orbRadius;
               const y = -Math.cos(angleRad) * orbRadius * 0.55;
+              const itemColor = ITEM_COLORS[i];
 
               return (
                 <motion.div
@@ -486,51 +776,71 @@ const HeroSection = () => {
                   }}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.8 + i * 0.15 }}
+                  transition={{ duration: 0.6, delay: 1.5 + i * 0.2 }}
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  whileHover={{ scale: 1.12, y: -6, zIndex: 50 }}
+                  whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 >
                   <motion.div
-                    className={`
-                      relative flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full
-                      backdrop-blur-md transition-all duration-300 whitespace-nowrap
-                      ${hoveredItem === i
-                        ? "bg-gold/20 shadow-[0_0_30px_hsl(var(--gold)/0.35)]"
-                        : "bg-muted/20 shadow-[0_0_10px_hsl(var(--gold)/0.1)]"
-                      }
-                    `}
+                    className="relative flex items-center gap-2 px-3 md:px-4 py-2 md:py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
                     style={{
                       borderWidth: "1px",
                       borderStyle: "solid",
-                      borderColor: hoveredItem === i ? "hsl(var(--gold) / 0.6)" : "hsl(var(--gold) / 0.15)",
+                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
+                      background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.2)",
+                      boxShadow: hoveredItem === i
+                        ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
+                        : "0 0 10px hsl(var(--gold) / 0.1)",
                     }}
                     animate={{ y: [0, -4 - i * 0.5, 0] }}
                     transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
                   >
                     <motion.div
                       animate={hoveredItem === i ? {
-                        filter: ["drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))", "drop-shadow(0 0 8px hsl(43 80% 55% / 0.8))", "drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"],
+                        filter: [`drop-shadow(0 0 4px ${itemColor.glow}88)`, `drop-shadow(0 0 10px ${itemColor.glow})`, `drop-shadow(0 0 4px ${itemColor.glow}88)`],
                       } : { filter: "none" }}
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
-                      <item.icon className={`w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0 transition-colors duration-300 ${hoveredItem === i ? "text-gold" : "text-gold/60"}`} />
+                      <item.icon
+                        className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0 transition-colors duration-300"
+                        style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.6)" }}
+                      />
                     </motion.div>
-                    <span className={`font-body text-[10px] md:text-xs transition-colors duration-300 ${hoveredItem === i ? "text-gold" : "text-foreground/70"}`}>
+                    <span
+                      className="font-body text-[10px] md:text-xs transition-colors duration-300"
+                      style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.7)" }}
+                    >
                       {item.label}
                     </span>
 
+                    {/* Hover glow aura */}
                     {hoveredItem === i && (
                       <motion.div
-                        className="absolute -inset-2 rounded-full pointer-events-none"
-                        style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)" }}
+                        className="absolute -inset-3 rounded-full pointer-events-none"
+                        style={{ background: `radial-gradient(circle, ${itemColor.glow}15, transparent 70%)` }}
                         initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: [0, 0.6, 0.3], scale: [0.8, 1.3, 1.1] }}
+                        animate={{ opacity: [0, 0.8, 0.4], scale: [0.8, 1.4, 1.2] }}
                         transition={{ duration: 1.5, repeat: Infinity }}
                       />
                     )}
+
+                    {/* Mystical icon that appears on hover */}
+                    <AnimatePresence>
+                      {hoveredItem === i && (
+                        <motion.span
+                          className="absolute -top-5 left-1/2 text-sm pointer-events-none"
+                          style={{ transform: "translateX(-50%)" }}
+                          initial={{ opacity: 0, y: 5, scale: 0.5 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -5, scale: 0.5 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          {["⭐", "🌙", "💫", "🔮", "✋"][i]}
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 </motion.div>
               );
@@ -542,7 +852,7 @@ const HeroSection = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: 0.8, delay: 2 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-6 md:mt-10 pb-8"
         >
           <a href="#free" className="btn-gold font-body flex items-center gap-2 text-sm md:text-base">
@@ -563,7 +873,7 @@ const HeroSection = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
+          transition={{ delay: 2.3 }}
           className="text-center pb-6"
         >
           <span className="text-xs text-gold/50 font-body tracking-wider">
