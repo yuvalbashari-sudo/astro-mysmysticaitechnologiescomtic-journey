@@ -1511,7 +1511,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1 }}
-          className="text-center mb-2 md:mb-4"
+          className="text-center mb-1 md:mb-4"
         >
           <h2 className="font-body text-xl md:text-2xl lg:text-3xl text-foreground/90 font-light leading-relaxed">
             {t.hero_headline}
