@@ -1723,7 +1723,7 @@ const HeroSection = () => {
               {/* Tarot Card Reveal inside crystal ball */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
-                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} />
+                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
                 )}
               </div>
             </motion.div>
