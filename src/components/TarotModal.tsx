@@ -156,7 +156,30 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleDraw = () => { setIsLoading(true); };
+  const needsQuestion = selectedSpreadKey !== "daily";
+
+  const handleDraw = () => {
+    if (needsQuestion) {
+      setIsQuestionPhase(true);
+    } else {
+      setIsLoading(true);
+    }
+  };
+
+  const handleQuestionSubmit = (question: string) => {
+    setUserQuestion(question);
+    setIsQuestionPhase(false);
+    if (question.trim()) {
+      setIsAnalysisPhase(true);
+    } else {
+      setIsLoading(true);
+    }
+  };
+
+  const handleAnalysisComplete = () => {
+    setIsAnalysisPhase(false);
+    setIsLoading(true);
+  };
 
   const handleOnboardingComplete = () => {
     setIsLoading(false);
