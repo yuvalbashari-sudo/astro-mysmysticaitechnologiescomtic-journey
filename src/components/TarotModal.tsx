@@ -11,6 +11,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT } from "@/i18n/LanguageContext";
+import TarotShufflePhase from "@/components/TarotShufflePhase";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
