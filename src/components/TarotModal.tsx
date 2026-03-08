@@ -24,6 +24,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [activeCard, setActiveCard] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [combinedReading, setCombinedReading] = useState("");
+  const [isCombinedLoading, setIsCombinedLoading] = useState(false);
+  const [showCombined, setShowCombined] = useState(false);
 
   const handleDraw = () => {
     setIsLoading(true);
