@@ -231,12 +231,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
-  // Auto-scroll during streaming
+  // Scroll to top when results appear
   useEffect(() => {
-    if (aiLoading && scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (cards && scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
     }
-  }, [aiText, aiLoading]);
+  }, [cards]);
 
   const handleClose = () => {
     onClose();
