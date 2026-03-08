@@ -489,8 +489,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </div>
 
                   <ShareResultSection
-                    text={resultText}
+                    symbol="🌌"
                     title={`מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`}
+                    subtitle={`☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`}
                   />
                 </motion.div>
               )}

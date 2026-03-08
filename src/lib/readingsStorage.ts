@@ -1,6 +1,6 @@
 export interface SavedReading {
   id: string;
-  type: "forecast" | "rising" | "compatibility" | "tarot" | "palm";
+  type: "forecast" | "rising" | "compatibility" | "tarot" | "palm" | "birth-chart";
   title: string;
   subtitle: string;
   symbol: string;
