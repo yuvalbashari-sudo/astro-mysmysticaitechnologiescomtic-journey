@@ -589,7 +589,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
                   {allRevealed && (
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-gold/60 font-body text-sm">
-                      <Sparkles className="w-4 h-4 inline-block ml-1" />כל הקלפים נחשפו — הדוח שלכם מתגלה...
+                      <Sparkles className="w-4 h-4 inline-block ml-1" />{t.tarot_world_all_revealed}
                     </motion.p>
                   )}
                 </motion.div>
