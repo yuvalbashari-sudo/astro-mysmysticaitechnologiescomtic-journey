@@ -1192,7 +1192,7 @@ const TarotCardReveal = ({
 };
 
 /* ── Fortune Preview ──────────────────────────────── */
-const FortunePreview = ({ onReveal }: { onReveal: () => void }) => {
+const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: boolean }) => {
   const t = useT();
   const [message] = useState(() => FORTUNE_MESSAGES[Math.floor(Math.random() * FORTUNE_MESSAGES.length)]);
   const [visible, setVisible] = useState(false);
@@ -1206,11 +1206,11 @@ const FortunePreview = ({ onReveal }: { onReveal: () => void }) => {
 
   return (
     <motion.div
-      className="absolute z-30 text-center"
-      style={{ top: "50%", right: "-320px", transform: "translateY(-50%)", width: "260px" }}
+      className="absolute z-30 text-center left-1/2"
+      style={{ top: "calc(50% + 130px)", transform: "translateX(-50%)", width: "260px" }}
       initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 1, ease: "easeOut" }}
+      animate={{ opacity: hidden ? 0 : 1, y: hidden ? 10 : 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <motion.div
         className="rounded-xl px-4 py-3 backdrop-blur-md"
