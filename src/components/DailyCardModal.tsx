@@ -671,16 +671,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         }}
                       >
                         <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                        <h4 className="font-heading text-base text-gold mb-2">רוצים קריאה מעמיקה יותר?</h4>
-                        <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">
-                          נסו קריאת טארוט מלאה עם מספר קלפים ופירוש אישי מפורט
-                        </p>
-                        <button
-                          onClick={handleClose}
-                          className="btn-gold font-body text-xs inline-flex items-center gap-2"
-                        >
-                          <Sparkles className="w-3.5 h-3.5" />
-                          חזרו לעולם הטארוט
+                        <h4 className="font-heading text-base text-gold mb-2">{t.daily_premium_title}</h4>
+                        <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.daily_premium_desc}</p>
+                        <button onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
+                          <Sparkles className="w-3.5 h-3.5" />{t.daily_premium_cta}
                         </button>
                       </motion.div>
                     </>
