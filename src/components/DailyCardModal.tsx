@@ -336,13 +336,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     <Sun className="w-9 h-9 text-gold" />
                   </motion.div>
 
-                  <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">הקלף היומי</h2>
-                  <p className="text-foreground/60 font-body text-sm md:text-base max-w-md mx-auto leading-relaxed mb-2">
-                    קלף אחד שנבחר עבורכם מהארקנה הגדולה — מסר מיסטי שמאיר את היום שלכם באור חדש
-                  </p>
-                  <p className="text-foreground/40 font-body text-xs mb-8">
-                    ✦ ניתן לפתוח קלף יומי אחד כל 24 שעות ✦
-                  </p>
+                  <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.daily_title}</h2>
+                  <p className="text-foreground/60 font-body text-sm md:text-base max-w-md mx-auto leading-relaxed mb-2">{t.daily_desc}</p>
+                  <p className="text-foreground/40 font-body text-xs mb-8">{t.daily_note}</p>
 
                   <div className="section-divider max-w-[100px] mx-auto mb-8" />
 
