@@ -1885,68 +1885,66 @@ const HeroSection = () => {
         }}
       />
 
-      {/* ── Subtle film grain overlay ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-[4] mix-blend-overlay"
-        style={{
-          opacity: 0.03,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: "128px 128px",
-        }}
-        animate={{ opacity: [0.02, 0.04, 0.02] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* ── Cinematic lens flare ── */}
-      <motion.div
-        className="absolute pointer-events-none z-[5]"
-        style={{
-          width: isMobile ? "200px" : "350px",
-          height: isMobile ? "200px" : "350px",
-          left: "55%",
-          top: "35%",
-          background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, hsl(var(--gold) / 0.02) 30%, transparent 60%)",
-          filter: "blur(20px)",
-        }}
-        animate={{
-          x: [-20, 30, -10, 20, -20],
-          y: [10, -15, 20, -10, 10],
-          opacity: [0.3, 0.7, 0.4, 0.6, 0.3],
-          scale: [1, 1.2, 0.9, 1.1, 1],
-        }}
-        transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* ── Anamorphic horizontal light streak ── */}
-      <motion.div
-        className="absolute pointer-events-none z-[5]"
-        style={{
-          width: isMobile ? "120%" : "100%",
-          height: "2px",
-          left: "-10%",
-          top: "48%",
-          background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.04) 20%, hsl(var(--gold) / 0.08) 50%, hsl(var(--gold) / 0.04) 80%, transparent 100%)",
-          filter: "blur(3px)",
-        }}
-        animate={{
-          opacity: [0, 0.6, 0.3, 0.7, 0],
-          scaleY: [1, 2, 1, 1.5, 1],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-      />
-
-      {/* ── Slow color grading shift ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-[2]"
-        animate={{
-          background: [
-            "linear-gradient(180deg, hsl(215 70% 40% / 0.03) 0%, transparent 50%, hsl(0 65% 45% / 0.02) 100%)",
-            "linear-gradient(180deg, hsl(43 80% 55% / 0.02) 0%, transparent 50%, hsl(215 70% 40% / 0.03) 100%)",
-            "linear-gradient(180deg, hsl(215 70% 40% / 0.03) 0%, transparent 50%, hsl(0 65% 45% / 0.02) 100%)",
-          ],
-        }}
-        transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-      />
+      {/* ── Film grain, lens flare, light streak, color grading — desktop only ── */}
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-[4] mix-blend-overlay"
+            style={{
+              opacity: 0.03,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+              backgroundSize: "128px 128px",
+            }}
+            animate={{ opacity: [0.02, 0.04, 0.02] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute pointer-events-none z-[5]"
+            style={{
+              width: "350px",
+              height: "350px",
+              left: "55%",
+              top: "35%",
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, hsl(var(--gold) / 0.02) 30%, transparent 60%)",
+              filter: "blur(20px)",
+            }}
+            animate={{
+              x: [-20, 30, -10, 20, -20],
+              y: [10, -15, 20, -10, 10],
+              opacity: [0.3, 0.7, 0.4, 0.6, 0.3],
+              scale: [1, 1.2, 0.9, 1.1, 1],
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute pointer-events-none z-[5]"
+            style={{
+              width: "100%",
+              height: "2px",
+              left: "-10%",
+              top: "48%",
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.04) 20%, hsl(var(--gold) / 0.08) 50%, hsl(var(--gold) / 0.04) 80%, transparent 100%)",
+              filter: "blur(3px)",
+            }}
+            animate={{
+              opacity: [0, 0.6, 0.3, 0.7, 0],
+              scaleY: [1, 2, 1, 1.5, 1],
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          />
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-[2]"
+            animate={{
+              background: [
+                "linear-gradient(180deg, hsl(215 70% 40% / 0.03) 0%, transparent 50%, hsl(0 65% 45% / 0.02) 100%)",
+                "linear-gradient(180deg, hsl(43 80% 55% / 0.02) 0%, transparent 50%, hsl(215 70% 40% / 0.03) 100%)",
+                "linear-gradient(180deg, hsl(215 70% 40% / 0.03) 0%, transparent 50%, hsl(0 65% 45% / 0.02) 100%)",
+              ],
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </>
+      )}
 
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
 
