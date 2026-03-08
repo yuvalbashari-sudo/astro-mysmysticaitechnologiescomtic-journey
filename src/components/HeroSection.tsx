@@ -1238,7 +1238,7 @@ const TarotCardReveal = ({
                 <p className="font-heading text-primary text-sm mb-1">
                   {card.symbol} {card.hebrewName}
                 </p>
-                <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir="rtl">
+                <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir={dir}>
                   {message}
                 </p>
                 <motion.button
