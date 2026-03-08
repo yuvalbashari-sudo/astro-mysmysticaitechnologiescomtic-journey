@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
-import { getSignFromDate, getSignHebrew, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler } from "@/data/compatibilityData";
+import { getSignFromDate, getSignHebrew, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
+import { Clock } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
@@ -13,6 +14,8 @@ interface Props { isOpen: boolean; onClose: () => void; }
 const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [date1, setDate1] = useState("");
   const [date2, setDate2] = useState("");
+  const [time1, setTime1] = useState("");
+  const [time2, setTime2] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [matchInfo, setMatchInfo] = useState<{ sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number } | null>(null);
@@ -30,6 +33,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const handleOnboardingComplete = () => {
     const s1 = getSignFromDate(new Date(date1));
     const s2 = getSignFromDate(new Date(date2));
+    const rising1 = getRisingSign(s1, time1);
+    const rising2 = getRisingSign(s2, time2);
     const compat = getCompatibility(s1, s2);
     const info = { sign1: s1, sign2: s2, sign1Name: getSignHebrew(s1), sign2Name: getSignHebrew(s2), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
@@ -42,8 +47,16 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
       {
         sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
         sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
+        sign1BirthTime: time1 || null,
+        sign1Rising: rising1 ? getSignHebrew(rising1) : null,
+        sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
+        sign1RisingElement: rising1 ? getSignElement(rising1) : null,
         sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
         sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
+        sign2BirthTime: time2 || null,
+        sign2Rising: rising2 ? getSignHebrew(rising2) : null,
+        sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
+        sign2RisingElement: rising2 ? getSignElement(rising2) : null,
         score: info.score,
       },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
@@ -64,7 +77,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      setMatchInfo(null); setDate1(""); setDate2(""); setIsLoading(false);
+      setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setIsLoading(false);
       setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
     }, 300);
   };
@@ -102,13 +115,27 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </motion.div>
                   <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">התאמה זוגית</h2>
                   <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">גלו את רמת ההתאמה הקוסמית ביניכם. הזינו את תאריכי הלידה של שניכם וקבלו ניתוח מעמיק על הקשר, הרגש, התשוקה והצמיחה המשותפת.</p>
-                  <div className="max-w-xs mx-auto mb-4">
+                  <div className="max-w-sm mx-auto mb-6">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">תאריך לידה — שלי</label>
-                    <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                    <div className="flex gap-2">
+                      <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                      <div className="relative">
+                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} placeholder="שעה" />
+                        <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                      </div>
+                    </div>
+                    {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">אופציונלי — לניתוח מזל עולה</p>}
                   </div>
-                  <div className="max-w-xs mx-auto mb-8">
+                  <div className="max-w-sm mx-auto mb-8">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">תאריך לידה — בן/בת הזוג</label>
-                    <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                    <div className="flex gap-2">
+                      <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                      <div className="relative">
+                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} placeholder="שעה" />
+                        <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                      </div>
+                    </div>
+                    {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">אופציונלי — לניתוח מזל עולה</p>}
                   </div>
                   <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />גלו את ההתאמה שלנו</motion.button>
                 </motion.div>
