@@ -73,8 +73,8 @@ async function streamTarotReading(
     });
 
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: "שגיאה לא צפויה" }));
-      onError(errData.error || "שגיאה בשירות");
+      const errData = await resp.json().catch(() => ({ error: errorMessages.unexpected }));
+      onError(errData.error || errorMessages.service);
       return;
     }
 
