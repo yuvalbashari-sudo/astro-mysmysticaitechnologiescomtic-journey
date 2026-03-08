@@ -568,7 +568,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    הקלפים מחכים לכם על השולחן
+                    {t.tarot_table_title}
                   </motion.h3>
                   <motion.p
                     className="relative z-10 text-foreground/40 font-body text-xs mb-8"
@@ -576,7 +576,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                   >
-                    לחצו על כל קלף כדי לחשוף אותו
+                    {t.tarot_table_hint}
                   </motion.p>
 
                   {/* Tarot table cards */}
