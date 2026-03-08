@@ -30,6 +30,7 @@ const Index = () => {
         isOpen={historyOpen}
         onClose={() => setHistoryOpen(false)}
       />
+      <FloatingOracleButton />
     </div>
   );
 };
