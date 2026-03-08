@@ -19,7 +19,7 @@ export interface TarotWorldCard {
   };
 }
 
-export type SpreadType = "daily" | "timeline" | "love" | "career" | "decision" | "universe";
+export type SpreadType = "daily" | "timeline" | "love" | "career" | "decision" | "universe" | "question";
 
 export interface SpreadConfig {
   key: SpreadType;
