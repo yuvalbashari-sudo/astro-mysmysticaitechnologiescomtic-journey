@@ -73,12 +73,16 @@ const SmokeEffect = () => (
 // Stream AI reading
 async function streamTarotReading(
   spreadType: string,
-  cards: { hebrewName: string; symbol: string; positionLabel: string }[],
+  cards: { hebrewName: string; symbol: string; positionLabel: string; name?: string }[],
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
+
+  // Build memory context for returning cards
+  const memoryContext = tarotMemory.buildMemoryContext(cards);
+
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -86,7 +90,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext } }),
     });
 
     if (!resp.ok) {
