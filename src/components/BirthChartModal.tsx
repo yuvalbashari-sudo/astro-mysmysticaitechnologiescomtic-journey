@@ -194,6 +194,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [birthCity, setBirthCity] = useState("");
   const [resultText, setResultText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const chartContentRef = useRef<HTMLDivElement>(null);
 
   // Chart data
   const [chartData, setChartData] = useState<{
