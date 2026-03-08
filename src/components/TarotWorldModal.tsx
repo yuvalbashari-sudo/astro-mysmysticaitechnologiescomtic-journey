@@ -276,7 +276,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => {
     if (allRevealed && selectedSpread && drawnCards.length > 0) {
-      const timer = setTimeout(() => setPhase("result"), 1200);
+      const timer = setTimeout(() => setPhase("showcase"), 1200);
       return () => clearTimeout(timer);
     }
   }, [allRevealed, selectedSpread, drawnCards]);
