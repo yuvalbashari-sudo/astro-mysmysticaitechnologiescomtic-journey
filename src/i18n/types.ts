@@ -305,6 +305,16 @@ export type TranslationKeys = {
   tarot_world_pos_right_path: string;
   tarot_world_pos_message: string;
   tarot_world_locked: string;
+  tarot_world_spread_question_name: string;
+  tarot_world_spread_question_desc: string;
+  tarot_world_pos_hidden_influence: string;
+  tarot_world_pos_current_energy: string;
+  tarot_world_pos_possible_direction: string;
+  tarot_question_title: string;
+  tarot_question_desc: string;
+  tarot_question_label: string;
+  tarot_question_placeholder: string;
+  tarot_question_cta: string;
   // Daily Card Modal
   daily_title: string;
   daily_desc: string;

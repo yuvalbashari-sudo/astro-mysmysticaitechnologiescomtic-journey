@@ -12,7 +12,7 @@ import { useT } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-type Phase = "select" | "shuffle" | "reveal" | "showcase" | "result";
+type Phase = "select" | "question" | "shuffle" | "reveal" | "showcase" | "result";
 
 // Roman numeral converter
 const toRoman = (n: number): string => {
@@ -77,6 +77,7 @@ async function streamTarotReading(
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  userQuestion?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
 
@@ -90,7 +91,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined } }),
     });
 
     if (!resp.ok) {
@@ -230,6 +231,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
     career: t.tarot_world_spread_career_name,
     decision: t.tarot_world_spread_decision_name,
     universe: t.tarot_world_spread_universe_name,
+    question: t.tarot_world_spread_question_name,
   };
   const descMap: Record<string, string> = {
     daily: t.tarot_world_spread_daily_desc,
@@ -238,6 +240,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
     career: t.tarot_world_spread_career_desc,
     decision: t.tarot_world_spread_decision_desc,
     universe: t.tarot_world_spread_universe_desc,
+    question: t.tarot_world_spread_question_desc,
   };
   const posMap: Record<string, string[]> = {
     daily: [t.tarot_world_pos_today],
@@ -246,6 +249,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
     career: [t.tarot_world_pos_current, t.tarot_world_pos_challenge, t.tarot_world_pos_opportunity],
     decision: [t.tarot_world_pos_dilemma, t.tarot_world_pos_hidden, t.tarot_world_pos_right_path],
     universe: [t.tarot_world_pos_message],
+    question: [t.tarot_world_pos_hidden_influence, t.tarot_world_pos_current_energy, t.tarot_world_pos_possible_direction],
   };
   return { nameMap, descMap, posMap };
 }
@@ -266,6 +270,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [userQuestion, setUserQuestion] = useState("");
 
   const handleClose = () => {
     onClose();
@@ -280,6 +285,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       setAiLoading(false);
       setAiError(null);
       aiTextRef.current = "";
+      setUserQuestion("");
     }, 300);
   };
 
@@ -290,7 +296,18 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
+    // Intercept question spread to show question input
+    if (spread.key === "question") {
+      setSelectedSpread(spread);
+      setPhase("question");
+      return;
+    }
+
     setSelectedSpread(spread);
+    startShuffle(spread);
+  };
+
+  const startShuffle = (spread: SpreadConfig) => {
     setPhase("shuffle");
     let step = 0;
     const interval = setInterval(() => {
@@ -303,6 +320,11 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         setTimeout(() => setPhase("reveal"), 500);
       }
     }, 300);
+  };
+
+  const handleQuestionSubmit = () => {
+    if (!userQuestion.trim() || !selectedSpread) return;
+    startShuffle(selectedSpread);
   };
 
   const handleRevealCard = useCallback((index: number) => {
@@ -364,7 +386,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
             title: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`,
             subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
             symbol: selectedSpread.icon,
-            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current },
+            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current, userQuestion: userQuestion || undefined },
           });
         },
         (err) => {
@@ -372,6 +394,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           setAiError(err);
           toast(err);
         },
+        userQuestion || undefined,
       );
     }
   }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);
@@ -487,6 +510,58 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   </div>
 
                   <p className="text-center text-[10px] text-muted-foreground font-body mt-8">{t.tarot_world_daily_note}</p>
+                </motion.div>
+              )}
+
+              {/* PHASE: Question Input */}
+              {phase === "question" && selectedSpread && (
+                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, x: -30 }} className="relative p-6 md:p-10">
+                  <div className="text-center mb-8">
+                    <motion.div
+                      className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center relative"
+                      style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), hsl(var(--gold) / 0.08), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
+                      animate={{ boxShadow: ["0 0 20px hsl(var(--gold) / 0.1)", "0 0 40px hsl(var(--gold) / 0.2)", "0 0 20px hsl(var(--gold) / 0.1)"] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      <span className="text-3xl">❓</span>
+                    </motion.div>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.tarot_question_title}</h2>
+                    <p className="text-foreground/60 font-body text-sm max-w-md mx-auto leading-relaxed">{t.tarot_question_desc}</p>
+                  </div>
+
+                  <div className="max-w-lg mx-auto">
+                    <label className="block text-gold/80 font-body text-sm mb-3 text-right">{t.tarot_question_label}</label>
+                    <textarea
+                      value={userQuestion}
+                      onChange={(e) => setUserQuestion(e.target.value)}
+                      placeholder={t.tarot_question_placeholder}
+                      maxLength={300}
+                      rows={3}
+                      className="w-full rounded-xl p-4 font-body text-sm text-foreground/90 placeholder:text-foreground/30 resize-none focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all text-right"
+                      style={{
+                        background: "hsl(var(--deep-blue-light) / 0.4)",
+                        border: "1px solid hsl(var(--gold) / 0.15)",
+                      }}
+                      dir="rtl"
+                    />
+                    <p className="text-foreground/30 font-body text-[10px] mt-1 text-left">{userQuestion.length}/300</p>
+
+                    <motion.button
+                      onClick={handleQuestionSubmit}
+                      disabled={!userQuestion.trim()}
+                      className="w-full mt-6 py-3.5 rounded-xl font-heading text-sm tracking-wide transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                      style={{
+                        background: userQuestion.trim() ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--crimson) / 0.15))" : "hsl(var(--muted) / 0.2)",
+                        border: "1px solid hsl(var(--gold) / 0.25)",
+                        color: "hsl(var(--gold))",
+                        boxShadow: userQuestion.trim() ? "0 0 20px hsl(var(--gold) / 0.1)" : "none",
+                      }}
+                      whileHover={userQuestion.trim() ? { scale: 1.02, boxShadow: "0 0 30px hsl(var(--gold) / 0.2)" } : {}}
+                      whileTap={userQuestion.trim() ? { scale: 0.98 } : {}}
+                    >
+                      {t.tarot_question_cta}
+                    </motion.button>
+                  </div>
                 </motion.div>
               )}
 

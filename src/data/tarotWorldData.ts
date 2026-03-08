@@ -19,7 +19,7 @@ export interface TarotWorldCard {
   };
 }
 
-export type SpreadType = "daily" | "timeline" | "love" | "career" | "decision" | "universe";
+export type SpreadType = "daily" | "timeline" | "love" | "career" | "decision" | "universe" | "question";
 
 export interface SpreadConfig {
   key: SpreadType;
@@ -92,6 +92,16 @@ export const spreads: SpreadConfig[] = [
     isFree: false,
     freeRevealCount: 1,
     positionLabels: ["המסר שלכם"],
+  },
+  {
+    key: "question",
+    hebrewName: "שאלה לקלפים",
+    description: "שאלו שאלה אישית וקבלו תשובה מהקלפים",
+    icon: "❓",
+    cardCount: 3,
+    isFree: true,
+    freeRevealCount: 3,
+    positionLabels: ["השפעה נסתרת", "אנרגיה נוכחית", "כיוון אפשרי"],
   },
 ];
 
