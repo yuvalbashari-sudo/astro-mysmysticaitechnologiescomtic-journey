@@ -470,7 +470,7 @@ const ZodiacWheel = ({
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {ZODIAC_WHEEL.map((sign, i) => {
+        {ZODIAC_WHEEL[language].map((sign, i) => {
           const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
           const x = Math.cos(angle) * radius + radius + 20;
           const y = Math.sin(angle) * radius + radius + 20;
