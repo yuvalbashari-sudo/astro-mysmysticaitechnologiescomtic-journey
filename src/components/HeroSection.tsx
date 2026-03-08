@@ -534,6 +534,192 @@ const ZodiacWheel = ({
   );
 };
 
+/* ── Arcane Portal Ring ────────────────────────────── */
+const ARCANE_SYMBOLS = ["☽", "☿", "♀", "⊕", "♂", "♃", "♄", "⛢", "♆", "♇", "☊", "☋", "⚷", "⚸", "✧", "⊛"];
+
+const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; activeColor?: string }) => {
+  const ringSize = isMobile ? 300 : 460;
+  const symbolRadius = ringSize / 2 - 12;
+  const glowColor = activeColor || "hsl(var(--gold) / 0.15)";
+
+  return (
+    <motion.div
+      className="absolute z-[14] pointer-events-none"
+      style={{ width: ringSize, height: ringSize }}
+      initial={{ opacity: 0, scale: 0.7 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 2.5, delay: 1.8 }}
+    >
+      {/* Outer arcane ring */}
+      <motion.div
+        className="absolute inset-0 rounded-full"
+        style={{
+          border: "1px solid hsl(var(--gold) / 0.08)",
+          boxShadow: `0 0 20px ${glowColor}, inset 0 0 15px hsl(var(--gold) / 0.03)`,
+        }}
+        animate={{
+          rotate: -360,
+          boxShadow: [
+            `0 0 15px hsl(43 80% 55% / 0.06), inset 0 0 10px hsl(43 80% 55% / 0.02)`,
+            `0 0 35px hsl(43 80% 55% / 0.14), inset 0 0 20px hsl(43 80% 55% / 0.05)`,
+            `0 0 15px hsl(43 80% 55% / 0.06), inset 0 0 10px hsl(43 80% 55% / 0.02)`,
+          ],
+        }}
+        transition={{
+          rotate: { duration: 90, repeat: Infinity, ease: "linear" },
+          boxShadow: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+        }}
+      >
+        {/* Arcane symbols around the ring */}
+        {ARCANE_SYMBOLS.map((sym, i) => {
+          const angle = (i / ARCANE_SYMBOLS.length) * Math.PI * 2 - Math.PI / 2;
+          const x = Math.cos(angle) * symbolRadius + ringSize / 2;
+          const y = Math.sin(angle) * symbolRadius + ringSize / 2;
+          return (
+            <motion.span
+              key={`arcane-${i}`}
+              className="absolute font-heading"
+              style={{
+                left: x - 6,
+                top: y - 7,
+                fontSize: isMobile ? "9px" : "12px",
+                color: "hsl(var(--gold) / 0.2)",
+                textShadow: "0 0 6px hsl(var(--gold) / 0.15)",
+              }}
+              animate={{
+                opacity: [0.15, 0.45, 0.15],
+                textShadow: [
+                  "0 0 4px hsl(43 80% 55% / 0.1)",
+                  "0 0 12px hsl(43 80% 55% / 0.35)",
+                  "0 0 4px hsl(43 80% 55% / 0.1)",
+                ],
+                // counter-rotate to stay upright
+                rotate: [360, 0],
+              }}
+              transition={{
+                opacity: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
+                textShadow: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
+                rotate: { duration: 90, repeat: Infinity, ease: "linear" },
+              }}
+            />
+          );
+          return (
+            <motion.span
+              key={`arcane-${i}`}
+              className="absolute font-heading select-none"
+              style={{
+                left: x - 6,
+                top: y - 7,
+                fontSize: isMobile ? "9px" : "12px",
+                color: "hsl(var(--gold) / 0.2)",
+              }}
+              animate={{
+                opacity: [0.15, 0.45, 0.15],
+                rotate: [360, 0],
+              }}
+              transition={{
+                opacity: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 },
+                rotate: { duration: 90, repeat: Infinity, ease: "linear" },
+              }}
+            >
+              {sym}
+            </motion.span>
+          );
+        })}
+      </motion.div>
+
+      {/* Inner ring */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          inset: isMobile ? 20 : 30,
+          border: "1px solid hsl(var(--gold) / 0.05)",
+        }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 70, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* Pulsing energy fill */}
+      <motion.div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `radial-gradient(circle, ${activeColor || "hsl(var(--gold))"}08 0%, transparent 60%)`,
+        }}
+        animate={{
+          scale: [1, 1.08, 1],
+          opacity: [0.3, 0.6, 0.3],
+        }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </motion.div>
+  );
+};
+
+/* ── Nebula Cloud Layer ────────────────────────────── */
+const NebulaLayer = ({ isMobile }: { isMobile: boolean }) => (
+  <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]">
+    {/* Large nebula cloud 1 */}
+    <motion.div
+      className="absolute"
+      style={{
+        width: isMobile ? "300px" : "600px",
+        height: isMobile ? "200px" : "400px",
+        left: "-5%",
+        top: "15%",
+        background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.05) 0%, hsl(var(--gold) / 0.02) 40%, transparent 70%)",
+        filter: "blur(60px)",
+        borderRadius: "50%",
+      }}
+      animate={{
+        x: [0, 40, -20, 0],
+        y: [0, -20, 10, 0],
+        scale: [1, 1.15, 0.95, 1],
+        opacity: [0.4, 0.7, 0.5, 0.4],
+      }}
+      transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+    />
+    {/* Large nebula cloud 2 */}
+    <motion.div
+      className="absolute"
+      style={{
+        width: isMobile ? "250px" : "500px",
+        height: isMobile ? "180px" : "350px",
+        right: "-8%",
+        top: "30%",
+        background: "radial-gradient(ellipse, hsl(var(--crimson) / 0.04) 0%, hsl(var(--celestial) / 0.02) 50%, transparent 70%)",
+        filter: "blur(70px)",
+        borderRadius: "50%",
+      }}
+      animate={{
+        x: [0, -30, 15, 0],
+        y: [0, 15, -25, 0],
+        scale: [1.1, 0.9, 1.05, 1.1],
+        opacity: [0.3, 0.55, 0.35, 0.3],
+      }}
+      transition={{ duration: 24, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+    />
+    {/* Top nebula wisp */}
+    <motion.div
+      className="absolute"
+      style={{
+        width: isMobile ? "200px" : "400px",
+        height: isMobile ? "100px" : "200px",
+        left: "30%",
+        top: "5%",
+        background: "radial-gradient(ellipse, hsl(var(--gold) / 0.03) 0%, transparent 70%)",
+        filter: "blur(50px)",
+        borderRadius: "50%",
+      }}
+      animate={{
+        x: [-20, 30, -20],
+        opacity: [0.2, 0.5, 0.2],
+        scale: [1, 1.2, 1],
+      }}
+      transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 8 }}
+    />
+  </div>
+);
+
 /* ── Energy Line connecting tab to crystal ball ───── */
 const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: number; color: string; isMobile: boolean }) => {
   if (isMobile) return null;
