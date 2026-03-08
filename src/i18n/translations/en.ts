@@ -380,6 +380,8 @@ export const en: TranslationKeys = {
   nav_birthchart_title: "Birth Chart",
   nav_birthchart_desc: "Discover the cosmic map written at the moment you were born — planets, houses and your personal message",
   nav_birthchart_cta: "Generate your chart",
+  birth_chart_save_image: "Save as Image",
+  birth_chart_save_pdf: "Download PDF",
 
   common_free: "✦ Free",
   common_close: "Close",

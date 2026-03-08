@@ -380,6 +380,8 @@ export const ar: TranslationKeys = {
   nav_birthchart_title: "خريطة الميلاد",
   nav_birthchart_desc: "اكتشفوا الخريطة الكونية المكتوبة لحظة ولادتكم — الكواكب والبيوت ورسالتكم الشخصية",
   nav_birthchart_cta: "أنشئوا خريطتكم",
+  birth_chart_save_image: "حفظ كصورة",
+  birth_chart_save_pdf: "تحميل PDF",
 
   common_free: "✦ مجاناً",
   common_close: "إغلاق",
