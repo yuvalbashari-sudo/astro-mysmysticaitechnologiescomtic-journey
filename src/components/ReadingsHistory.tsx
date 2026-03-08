@@ -2,14 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
 import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand } from "lucide-react";
-
-const typeLabels: Record<string, string> = {
-  forecast: "תחזית חודשית",
-  rising: "מזל עולה",
-  compatibility: "התאמה זוגית",
-  tarot: "פתיחת טארוט",
-  palm: "קריאת כף יד",
-};
+import { useT, useLanguage } from "@/i18n";
 
 const typeIcons: Record<string, typeof Star> = {
   forecast: Star,
@@ -20,8 +13,20 @@ const typeIcons: Record<string, typeof Star> = {
 };
 
 const ReadingsHistory = () => {
+  const t = useT();
+  const { language, dir } = useLanguage();
   const [readings, setReadings] = useState<SavedReading[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+
+  const typeLabels: Record<string, string> = {
+    forecast: t.readings_type_forecast,
+    rising: t.readings_type_rising,
+    compatibility: t.readings_type_compatibility,
+    tarot: t.readings_type_tarot,
+    palm: t.readings_type_palm,
+  };
+
+  const dateLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
 
   useEffect(() => {
     setReadings(readingsStorage.getAll());
@@ -35,7 +40,7 @@ const ReadingsHistory = () => {
   if (readings.length === 0) return null;
 
   return (
-    <section id="my-readings" className="py-16 md:py-24 relative" dir="rtl">
+    <section id="my-readings" className="py-16 md:py-24 relative" dir={dir}>
       <div className="max-w-4xl mx-auto px-4">
         <motion.div
           className="text-center mb-12"
@@ -45,10 +50,10 @@ const ReadingsHistory = () => {
         >
           <Clock className="w-8 h-8 text-gold mx-auto mb-4" />
           <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">
-            הקריאות שלי
+            {t.readings_title}
           </h2>
           <p className="text-foreground/60 font-body text-sm max-w-md mx-auto">
-            כל הקריאות המיסטיות שלכם שמורות כאן — חזרו אליהן בכל עת
+            {t.readings_subtitle}
           </p>
           <div className="section-divider max-w-[120px] mx-auto mt-4" />
         </motion.div>
@@ -58,7 +63,7 @@ const ReadingsHistory = () => {
             {readings.map((reading, i) => {
               const IconComp = typeIcons[reading.type] || Star;
               const isExpanded = expanded === reading.id;
-              const dateStr = new Date(reading.date).toLocaleDateString("he-IL", {
+              const dateStr = new Date(reading.date).toLocaleDateString(dateLocale, {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
@@ -117,7 +122,6 @@ const ReadingsHistory = () => {
                       >
                         <div className="px-4 md:px-5 pb-4 md:pb-5 border-t border-gold/5">
                           <p className="text-foreground/60 font-body text-xs mt-3 mb-3">{reading.subtitle}</p>
-                          {/* Show summary data */}
                           <div className="space-y-2">
                             {Object.entries(reading.data)
                               .filter(([key, val]) => typeof val === "string" && val.length > 20 && !["name", "birthDate", "birthTime", "date1", "date2", "dominantHand"].includes(key))
@@ -132,7 +136,7 @@ const ReadingsHistory = () => {
                               className="flex items-center gap-1.5 text-[11px] text-crimson-light/60 hover:text-crimson-light transition-colors font-body px-2 py-1 rounded"
                             >
                               <Trash2 className="w-3 h-3" />
-                              מחיקה
+                              {t.readings_delete}
                             </button>
                           </div>
                         </div>

@@ -3,8 +3,10 @@ import { Send, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useT } from "@/i18n";
 
 const LeadSection = () => {
+  const t = useT();
   const [formData, setFormData] = useState({ name: "", birthDate: "", email: "", phone: "", interest: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -13,7 +15,7 @@ const LeadSection = () => {
     e.preventDefault();
 
     if (!formData.name.trim() || !formData.email.trim()) {
-      toast.error("אנא מלאו שם ואימייל");
+      toast.error(t.lead_error_required);
       return;
     }
 
@@ -31,9 +33,9 @@ const LeadSection = () => {
       if (error) throw error;
 
       setIsSubmitted(true);
-      toast.success("הפרטים נשלחו בהצלחה! ✦");
+      toast.success("✦");
     } catch {
-      toast.error("שגיאה בשליחה, נסו שוב מאוחר יותר");
+      toast.error(t.lead_error_submit);
     } finally {
       setIsSubmitting(false);
     }
@@ -55,10 +57,10 @@ const LeadSection = () => {
           className="text-center mb-12"
         >
           <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-4">
-            התחילו את המסע שלכם
+            {t.lead_title}
           </h2>
           <p className="text-muted-foreground font-body text-lg">
-            השאירו פרטים ונתחיל לפענח את המפה הקוסמית שלכם
+            {t.lead_subtitle}
           </p>
         </motion.div>
 
@@ -69,9 +71,9 @@ const LeadSection = () => {
             className="mystical-card p-12 text-center"
           >
             <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
-            <h3 className="font-heading text-2xl text-gold mb-3">תודה רבה! ✦</h3>
+            <h3 className="font-heading text-2xl text-gold mb-3">{t.lead_success_title}</h3>
             <p className="text-foreground/70 font-body">
-              קיבלנו את הפרטים שלכם ונחזור אליכם בהקדם עם תובנות מיסטיות מותאמות אישית.
+              {t.lead_success_text}
             </p>
           </motion.div>
         ) : (
@@ -84,19 +86,19 @@ const LeadSection = () => {
             className="mystical-card-elevated p-8 md:p-10 space-y-5"
           >
             <div>
-              <label className="block text-sm text-gold/80 font-body mb-2">שם מלא</label>
+              <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_name}</label>
               <input
                 type="text"
                 required
                 maxLength={100}
                 className="mystical-input font-body"
-                placeholder="הכניסו את שמכם"
+                placeholder={t.lead_name_placeholder}
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm text-gold/80 font-body mb-2">תאריך לידה</label>
+              <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_birthdate}</label>
               <input
                 type="date"
                 className="mystical-input font-body"
@@ -105,52 +107,52 @@ const LeadSection = () => {
               />
             </div>
             <div>
-              <label className="block text-sm text-gold/80 font-body mb-2">טלפון</label>
+              <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
               <input
                 type="tel"
                 maxLength={20}
                 className="mystical-input font-body"
-                placeholder="050-0000000"
+                placeholder={t.lead_phone_placeholder}
                 dir="ltr"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm text-gold/80 font-body mb-2">אימייל</label>
+              <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_email}</label>
               <input
                 type="email"
                 required
                 maxLength={255}
                 className="mystical-input font-body"
-                placeholder="your@email.com"
+                placeholder={t.lead_email_placeholder}
                 dir="ltr"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
             <div>
-              <label className="block text-sm text-gold/80 font-body mb-2">מה מעניין אתכם?</label>
+              <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
               <select
                 className="mystical-input font-body"
                 value={formData.interest}
                 onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
               >
-                <option value="">בחרו נושא...</option>
-                <option value="astrology">מפת לידה אסטרולוגית</option>
-                <option value="compatibility">התאמה זוגית</option>
-                <option value="tarot">קריאה בטארוט</option>
-                <option value="palm">קריאת כף יד</option>
-                <option value="full">חבילה מלאה</option>
+                <option value="">{t.lead_interest_placeholder}</option>
+                <option value="astrology">{t.lead_interest_astrology}</option>
+                <option value="compatibility">{t.lead_interest_compatibility}</option>
+                <option value="tarot">{t.lead_interest_tarot}</option>
+                <option value="palm">{t.lead_interest_palm}</option>
+                <option value="full">{t.lead_interest_full}</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm text-gold/80 font-body mb-2">הודעה (אופציונלי)</label>
+              <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}</label>
               <textarea
                 maxLength={1000}
                 rows={3}
                 className="mystical-input font-body resize-none"
-                placeholder="ספרו לנו מה תרצו לדעת..."
+                placeholder={t.lead_message_placeholder}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               />
@@ -162,11 +164,11 @@ const LeadSection = () => {
               className="btn-gold font-body w-full flex items-center justify-center gap-2 disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
-              {isSubmitting ? "שולח..." : "שלחו פרטים"}
+              {isSubmitting ? t.lead_submitting : t.lead_submit}
             </button>
 
             <p className="text-center text-xs text-muted-foreground font-body mt-4">
-              ✦ הפרטים שלכם שמורים ומאובטחים ✦
+              {t.lead_secure}
             </p>
           </motion.form>
         )}
@@ -179,7 +181,7 @@ const LeadSection = () => {
           className="text-center mt-8"
         >
           <p className="text-muted-foreground font-body mb-3 text-sm">
-            מעדיפים לדבר ישירות?
+            {t.lead_prefer_direct}
           </p>
           <a
             href="https://wa.me/972500000000"
@@ -187,7 +189,7 @@ const LeadSection = () => {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 btn-outline-gold font-body"
           >
-            💬 דברו איתנו בוואטסאפ
+            {t.lead_whatsapp}
           </a>
         </motion.div>
       </div>
