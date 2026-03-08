@@ -188,6 +188,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           selectedSpread.key,
           cardsPayload
         );
+        // Record in mystical profile
+        mysticalProfile.recordTarotCards(
+          cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
+          selectedSpread.key
+        );
       },
       (err) => { setAiLoading(false); toast(err); },
     );
