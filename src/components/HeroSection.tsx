@@ -1259,6 +1259,7 @@ const HeroSection = () => {
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
+  const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const sectionRef = useRef<HTMLElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
