@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Check } from "lucide-react";
+import { X, Sparkles, Heart, Briefcase, Eye, Lightbulb, Crown, Share2, Copy, Check, Layers } from "lucide-react";
 import { drawTarotCards, TarotCard } from "@/data/tarotData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
+import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
