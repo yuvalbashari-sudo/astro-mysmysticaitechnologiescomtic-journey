@@ -160,26 +160,38 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleCardFlip = (index: number) => {
-    if (flippedIndices.has(index)) return;
-    const newFlipped = new Set(flippedIndices);
-    newFlipped.add(index);
-    setFlippedIndices(newFlipped);
-
-    // All cards flipped → transition to results
-    if (newFlipped.size === tableCards.length) {
+    if (flippedIndices.has(index) || activeRevealIndex !== null) return;
+    
+    // Phase 1: Focus/lift (0.6s)
+    setActiveRevealIndex(index);
+    
+    // Phase 2: Flip after lift
+    setTimeout(() => {
+      const newFlipped = new Set(flippedIndices);
+      newFlipped.add(index);
+      setFlippedIndices(newFlipped);
+      
+      // Phase 3: Reset active after reveal completes
       setTimeout(() => {
-        setCards(tableCards);
-        setIsTablePhase(false);
-        startAIReading(tableCards);
-        readingsStorage.save({
-          type: "tarot",
-          title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-          subtitle: tableCards.map(c => c.hebrewName).join(" • "),
-          symbol: "🔮",
-          data: { spread: selectedSpread.key, cards: tableCards },
-        });
-      }, 2000);
-    }
+        setActiveRevealIndex(null);
+        
+        // All cards flipped → transition to results
+        if (newFlipped.size === tableCards.length) {
+          setTimeout(() => {
+            setCards(tableCards);
+            setIsTablePhase(false);
+            startAIReading(tableCards);
+            readingsStorage.save({
+              type: "tarot",
+              title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
+              subtitle: tableCards.map(c => c.hebrewName).join(" • "),
+              symbol: "🔮",
+              data: { spread: selectedSpread.key, cards: tableCards },
+            });
+          }, 1800);
+        }
+      }, 1200);
+    }, 800);
   };
 
 
