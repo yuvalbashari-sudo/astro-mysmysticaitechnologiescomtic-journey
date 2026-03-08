@@ -5,6 +5,7 @@ import { drawTarotCards, TarotCard } from "@/data/tarotData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
+import { tarotMemory } from "@/lib/tarotMemory";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
