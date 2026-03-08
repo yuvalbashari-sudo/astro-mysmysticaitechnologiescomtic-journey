@@ -335,14 +335,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   {/* Mystical card selector */}
                   <div className="mb-8">
                     <p className="text-gold/50 font-body text-xs mb-4 tracking-wider">{t.tarot_spread_choose}</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
+                    <div className="grid grid-cols-2 gap-3 max-w-lg mx-auto">
                       {SPREAD_OPTIONS.map((spread, idx) => {
                         const isSelected = selectedSpread.key === spread.key;
+                        const descText = (t as any)[spread.descKey] || "";
                         return (
                           <motion.button
                             key={spread.key}
                             onClick={() => setSelectedSpreadKey(spread.key)}
-                            className="relative flex flex-col items-center gap-2 px-3 py-4 rounded-xl text-xs font-body transition-all overflow-hidden"
+                            className="relative flex flex-col items-center gap-2 px-4 py-5 rounded-xl text-xs font-body transition-all overflow-hidden"
                             style={{
                               background: isSelected
                                 ? "linear-gradient(145deg, hsl(var(--gold) / 0.12), hsl(var(--deep-blue-light) / 0.8))"
@@ -366,25 +367,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 transition={{ duration: 2, repeat: Infinity }}
                               />
                             )}
-                            <span className={`text-lg relative z-10 ${isSelected ? "text-gold" : "text-gold/50"}`}>
+                            <span className={`relative z-10 ${isSelected ? "text-gold" : "text-gold/50"}`}>
                               {spread.icon}
                             </span>
-                            <span className="relative z-10 font-semibold">{SPREAD_LABELS[spread.key]}</span>
-                            <span className="relative z-10 text-[9px] text-muted-foreground/50">
+                            <span className="relative z-10 font-semibold text-sm">{SPREAD_LABELS[spread.key]}</span>
+                            <span className="relative z-10 text-[10px] text-muted-foreground/60 leading-snug text-center line-clamp-2 max-w-[140px]">
+                              {descText}
+                            </span>
+                            <span className="relative z-10 text-[9px] text-muted-foreground/40 mt-0.5">
                               {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
                             </span>
                           </motion.button>
                         );
                       })}
                     </div>
-                    <motion.p
-                      className="text-[10px] text-muted-foreground/50 font-body mt-4"
-                      key={selectedSpread.key}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      {selectedSpread.positionLabels.join(" · ")}
-                    </motion.p>
                   </div>
 
                   {/* Tarot deck visual */}
