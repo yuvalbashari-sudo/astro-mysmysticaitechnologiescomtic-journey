@@ -472,4 +472,17 @@ export type TranslationKeys = {
   tarot_error_connection: string;
   hero_open_full_reading: string;
   hero_tarot_fallback_message: string;
+
+  // Daily Ritual
+  daily_ritual_label: string;
+  daily_ritual_title: string;
+  daily_ritual_desc: string;
+  daily_ritual_cta: string;
+  daily_ritual_click_hint: string;
+  daily_ritual_card_label: string;
+  daily_ritual_message_label: string;
+  daily_ritual_message_quote: string;
+  daily_ritual_energy_label: string;
+  daily_ritual_done_text: string;
+  daily_ritual_next_text: string;
 };
