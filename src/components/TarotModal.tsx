@@ -12,6 +12,8 @@ import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT } from "@/i18n/LanguageContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
+import TarotQuestionPhase from "@/components/TarotQuestionPhase";
+import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -55,6 +57,7 @@ async function streamTarotReading(
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  userQuestion?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
@@ -66,7 +69,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined } }),
     });
 
     if (!resp.ok) {
@@ -140,6 +143,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isTablePhase, setIsTablePhase] = useState(false);
   const [isShufflePhase, setIsShufflePhase] = useState(false);
+  const [isQuestionPhase, setIsQuestionPhase] = useState(false);
+  const [isAnalysisPhase, setIsAnalysisPhase] = useState(false);
+  const [userQuestion, setUserQuestion] = useState("");
   const [tableCards, setTableCards] = useState<TarotCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
@@ -151,7 +157,30 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const handleDraw = () => { setIsLoading(true); };
+  const needsQuestion = selectedSpreadKey !== "daily";
+
+  const handleDraw = () => {
+    if (needsQuestion) {
+      setIsQuestionPhase(true);
+    } else {
+      setIsLoading(true);
+    }
+  };
+
+  const handleQuestionSubmit = (question: string) => {
+    setUserQuestion(question);
+    setIsQuestionPhase(false);
+    if (question.trim()) {
+      setIsAnalysisPhase(true);
+    } else {
+      setIsLoading(true);
+    }
+  };
+
+  const handleAnalysisComplete = () => {
+    setIsAnalysisPhase(false);
+    setIsLoading(true);
+  };
 
   const handleOnboardingComplete = () => {
     setIsLoading(false);
@@ -223,18 +252,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        // Record cards in tarot memory
-        tarotMemory.recordReading(
-          selectedSpread.key,
-          cardsPayload
-        );
-        // Record in mystical profile
+        tarotMemory.recordReading(selectedSpread.key, cardsPayload);
         mysticalProfile.recordTarotCards(
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
       },
       (err) => { setAiLoading(false); toast(err); },
+      userQuestion,
     );
   };
 
@@ -252,6 +277,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setIsLoading(false);
       setIsTablePhase(false);
       setIsShufflePhase(false);
+      setIsQuestionPhase(false);
+      setIsAnalysisPhase(false);
+      setUserQuestion("");
       setTableCards([]);
       setFlippedIndices(new Set());
       setActiveRevealIndex(null);
@@ -291,7 +319,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             <div className="absolute top-4 right-4 z-20"><span className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))", border: "1px solid hsl(var(--gold) / 0.3)", color: "hsl(var(--gold))" }}>{t.common_free}</span></div>
 
             <AnimatePresence mode="wait">
-              {!cards && !isLoading && !isTablePhase && !isShufflePhase ? (
+              {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
                 <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-6 md:p-10 text-center relative overflow-hidden">
 
                   {/* Atmospheric background particles */}
@@ -466,6 +494,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.button>
                   <p className="text-[10px] text-muted-foreground/40 font-body mt-5">{t.tarot_note}</p>
                 </motion.div>
+              ) : isQuestionPhase ? (
+                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} /></motion.div>
+              ) : isAnalysisPhase ? (
+                <motion.div key="analysis" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotAnalysisRitual question={userQuestion} onComplete={handleAnalysisComplete} /></motion.div>
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isShufflePhase ? (
