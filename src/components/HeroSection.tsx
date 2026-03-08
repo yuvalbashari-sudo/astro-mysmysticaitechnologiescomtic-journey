@@ -426,6 +426,7 @@ const ZodiacWheel = ({
   isMobile: boolean;
   hoveredMenuItem: number | null;
 }) => {
+  const { language } = useLanguage();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
   const radius = isMobile ? 110 : 175;
   const iconSize = isMobile ? 28 : 44;
