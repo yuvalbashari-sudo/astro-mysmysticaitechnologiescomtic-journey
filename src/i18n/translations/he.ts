@@ -280,7 +280,7 @@ export const he: TranslationKeys = {
   tarot_world_pos_message: "המסר שלכם",
   tarot_world_locked: "פרימיום",
 
-
+  daily_title: "הקלף היומי",
   daily_desc: "קלף אחד שנבחר עבורכם מהארקנה הגדולה — מסר מיסטי שמאיר את היום שלכם באור חדש",
   daily_note: "✦ ניתן לפתוח קלף יומי אחד כל 24 שעות ✦",
   daily_cta: "חשפו את הקלף היומי",
