@@ -125,6 +125,8 @@ async function streamTarotReading(
 
 const TarotModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const SPREAD_OPTIONS = getSpreadOptions(t);
+  const SPREAD_LABELS = getSpreadLabels(t);
 
   const [selectedSpread, setSelectedSpread] = useState<SpreadOption>(SPREAD_OPTIONS[0]);
   const [cards, setCards] = useState<TarotCard[] | null>(null);
