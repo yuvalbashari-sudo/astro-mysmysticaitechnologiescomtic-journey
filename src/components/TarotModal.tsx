@@ -21,17 +21,18 @@ interface SpreadOption {
   icon: React.ReactNode;
   cardCount: number;
   positionLabels: string[];
+  descKey: string;
 }
 
 // These will be populated with translations inside the component
 function getSpreadOptions(t: ReturnType<typeof useT>): SpreadOption[] {
   return [
-    { key: "timeline", icon: <Compass className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future] },
-    { key: "love", icon: <Heart className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction] },
-    { key: "career", icon: <Briefcase className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity] },
-    { key: "decision", icon: <Eye className="w-4 h-4" />, cardCount: 3, positionLabels: [t.tarot_pos_dilemma, t.tarot_pos_hidden, t.tarot_pos_right_path] },
-    { key: "daily", icon: <Sun className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_daily_card] },
-    { key: "universe", icon: <Star className="w-4 h-4" />, cardCount: 1, positionLabels: [t.tarot_pos_universe_msg] },
+    { key: "timeline", icon: <Compass className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future], descKey: "tarot_spread_timeline_desc" },
+    { key: "love", icon: <Heart className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction], descKey: "tarot_spread_love_desc" },
+    { key: "career", icon: <Briefcase className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity], descKey: "tarot_spread_career_desc" },
+    { key: "decision", icon: <Eye className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_dilemma, t.tarot_pos_hidden, t.tarot_pos_right_path], descKey: "tarot_spread_decision_desc" },
+    { key: "daily", icon: <Sun className="w-7 h-7" />, cardCount: 1, positionLabels: [t.tarot_pos_daily_card], descKey: "tarot_spread_daily_desc" },
+    { key: "universe", icon: <Star className="w-7 h-7" />, cardCount: 1, positionLabels: [t.tarot_pos_universe_msg], descKey: "tarot_spread_universe_desc" },
   ];
 }
 
@@ -334,14 +335,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   {/* Mystical card selector */}
                   <div className="mb-8">
                     <p className="text-gold/50 font-body text-xs mb-4 tracking-wider">{t.tarot_spread_choose}</p>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg mx-auto">
+                    <div className="grid grid-cols-2 gap-3 max-w-lg mx-auto">
                       {SPREAD_OPTIONS.map((spread, idx) => {
                         const isSelected = selectedSpread.key === spread.key;
+                        const descText = (t as any)[spread.descKey] || "";
                         return (
                           <motion.button
                             key={spread.key}
                             onClick={() => setSelectedSpreadKey(spread.key)}
-                            className="relative flex flex-col items-center gap-2 px-3 py-4 rounded-xl text-xs font-body transition-all overflow-hidden"
+                            className="relative flex flex-col items-center gap-2 px-4 py-5 rounded-xl text-xs font-body transition-all overflow-hidden"
                             style={{
                               background: isSelected
                                 ? "linear-gradient(145deg, hsl(var(--gold) / 0.12), hsl(var(--deep-blue-light) / 0.8))"
@@ -365,25 +367,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 transition={{ duration: 2, repeat: Infinity }}
                               />
                             )}
-                            <span className={`text-lg relative z-10 ${isSelected ? "text-gold" : "text-gold/50"}`}>
+                            <span className={`relative z-10 ${isSelected ? "text-gold" : "text-gold/50"}`}>
                               {spread.icon}
                             </span>
-                            <span className="relative z-10 font-semibold">{SPREAD_LABELS[spread.key]}</span>
-                            <span className="relative z-10 text-[9px] text-muted-foreground/50">
+                            <span className="relative z-10 font-semibold text-sm">{SPREAD_LABELS[spread.key]}</span>
+                            <span className="relative z-10 text-[10px] text-muted-foreground/60 leading-snug text-center line-clamp-2 max-w-[140px]">
+                              {descText}
+                            </span>
+                            <span className="relative z-10 text-[9px] text-muted-foreground/40 mt-0.5">
                               {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
                             </span>
                           </motion.button>
                         );
                       })}
                     </div>
-                    <motion.p
-                      className="text-[10px] text-muted-foreground/50 font-body mt-4"
-                      key={selectedSpread.key}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      {selectedSpread.positionLabels.join(" · ")}
-                    </motion.p>
                   </div>
 
                   {/* Tarot deck visual */}

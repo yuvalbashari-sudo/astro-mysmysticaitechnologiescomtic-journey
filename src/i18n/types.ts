@@ -248,6 +248,12 @@ export type TranslationKeys = {
   tarot_spread_decision: string;
   tarot_spread_daily: string;
   tarot_spread_universe: string;
+  tarot_spread_timeline_desc: string;
+  tarot_spread_love_desc: string;
+  tarot_spread_career_desc: string;
+  tarot_spread_decision_desc: string;
+  tarot_spread_daily_desc: string;
+  tarot_spread_universe_desc: string;
   tarot_pos_past: string;
   tarot_pos_present: string;
   tarot_pos_future: string;
