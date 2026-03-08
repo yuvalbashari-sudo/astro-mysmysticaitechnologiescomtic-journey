@@ -2,6 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Sun, Heart, Layers, Hand } from "lucide-react";
 import TarotWorldModal from "@/components/TarotWorldModal";
+import MonthlyForecastModal from "@/components/MonthlyForecastModal";
+import CompatibilityModal from "@/components/CompatibilityModal";
+import PalmReadingModal from "@/components/PalmReadingModal";
 
 const categories = [
   {
@@ -9,14 +12,14 @@ const categories = [
     title: "אסטרולוגיה ומפת לידה",
     description: "גלו את המפה הקוסמית שלכם — כוכבי הלכת, הבתים האסטרולוגיים והמסר האישי שנכתב בכוכבים",
     cta: "גלו את המפה שלכם",
-    action: null as string | null,
+    action: "forecast",
   },
   {
     icon: Heart,
     title: "התאמה זוגית",
     description: "בדקו את הכימיה הרוחנית בינכם לבין בן/בת הזוג — ברמה הקוסמית העמוקה ביותר",
     cta: "בדקו התאמה",
-    action: null,
+    action: "compatibility",
   },
   {
     icon: Layers,
@@ -30,17 +33,21 @@ const categories = [
     title: "קריאת כף היד",
     description: "כף היד שלכם מספרת סיפור — קווי החיים, הלב והגורל מחכים להיחשף",
     cta: "חשפו את הסיפור",
-    action: null,
+    action: "palm",
   },
 ];
 
 const MysticalNav = () => {
   const [tarotWorldOpen, setTarotWorldOpen] = useState(false);
+  const [forecastOpen, setForecastOpen] = useState(false);
+  const [compatibilityOpen, setCompatibilityOpen] = useState(false);
+  const [palmOpen, setPalmOpen] = useState(false);
 
-  const handleClick = (action: string | null) => {
-    if (action === "tarot-world") {
-      setTarotWorldOpen(true);
-    }
+  const handleClick = (action: string) => {
+    if (action === "tarot-world") setTarotWorldOpen(true);
+    else if (action === "forecast") setForecastOpen(true);
+    else if (action === "compatibility") setCompatibilityOpen(true);
+    else if (action === "palm") setPalmOpen(true);
   };
 
   return (
@@ -90,6 +97,9 @@ const MysticalNav = () => {
       </section>
 
       <TarotWorldModal isOpen={tarotWorldOpen} onClose={() => setTarotWorldOpen(false)} />
+      <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
+      <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
+      <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
     </>
   );
 };
