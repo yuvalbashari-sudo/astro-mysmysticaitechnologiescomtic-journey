@@ -1522,7 +1522,7 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.3 }}
-          className="text-center text-muted-foreground font-body text-sm md:text-base mb-8 md:mb-6 max-w-xl mx-auto"
+          className="text-center text-muted-foreground font-body text-sm md:text-base mb-4 md:mb-6 max-w-xl mx-auto"
         >
           {t.hero_subheadline}
         </motion.p>
