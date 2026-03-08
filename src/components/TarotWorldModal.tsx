@@ -722,11 +722,11 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     
                     <div className="flex items-center justify-center gap-3 mt-4">
                       <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        <Share2 className="w-3.5 h-3.5" />שתפו
+                        <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
                       </motion.button>
                       <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(var(--gold) / 0.12)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
                         {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                        {copied ? "הועתק!" : "העתקה"}
+                        {copied ? t.share_copied : t.share_copy}
                       </motion.button>
                     </div>
                   </div>
