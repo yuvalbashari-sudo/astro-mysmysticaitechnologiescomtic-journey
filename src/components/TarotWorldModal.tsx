@@ -469,9 +469,9 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
                   <motion.p className="font-body text-gold/80 text-base mb-2" animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>
-                    הקלפים נערבבים...
+                    {t.tarot_world_shuffle}
                   </motion.p>
-                  <p className="font-body text-foreground/40 text-xs">התרכזו בשאלה שבליבכם</p>
+                  <p className="font-body text-foreground/40 text-xs">{t.tarot_world_shuffle_focus}</p>
                 </motion.div>
               )}
 
