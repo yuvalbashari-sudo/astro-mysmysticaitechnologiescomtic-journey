@@ -1271,8 +1271,8 @@ const TarotCardReveal = ({
 const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: boolean }) => {
   const t = useT();
   const { language, dir } = useLanguage();
-  const msgs = FORTUNE_MESSAGES[language];
-  const [message] = useState(() => msgs[Math.floor(Math.random() * msgs.length)]);
+  const [msgIndex] = useState(() => Math.floor(Math.random() * 5));
+  const message = FORTUNE_MESSAGES[language][msgIndex];
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
