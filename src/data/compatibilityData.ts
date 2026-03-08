@@ -20,6 +20,24 @@ const signSymbols: Record<string, string> = {
   sagittarius: "♐", capricorn: "♑", aquarius: "♒", pisces: "♓",
 };
 
+const signElements: Record<string, string> = {
+  aries: "אש", taurus: "אדמה", gemini: "אוויר", cancer: "מים",
+  leo: "אש", virgo: "אדמה", libra: "אוויר", scorpio: "מים",
+  sagittarius: "אש", capricorn: "אדמה", aquarius: "אוויר", pisces: "מים",
+};
+
+const signModalities: Record<string, string> = {
+  aries: "קרדינלי", taurus: "קבוע", gemini: "משתנה", cancer: "קרדינלי",
+  leo: "קבוע", virgo: "משתנה", libra: "קרדינלי", scorpio: "קבוע",
+  sagittarius: "משתנה", capricorn: "קרדינלי", aquarius: "קבוע", pisces: "משתנה",
+};
+
+const signRulers: Record<string, string> = {
+  aries: "מאדים", taurus: "נוגה", gemini: "כוכב חמה", cancer: "הירח",
+  leo: "השמש", virgo: "כוכב חמה", libra: "נוגה", scorpio: "פלוטו",
+  sagittarius: "צדק", capricorn: "שבתאי", aquarius: "אורנוס", pisces: "נפטון",
+};
+
 export function getSignFromDate(date: Date): string {
   const m = date.getMonth() + 1, d = date.getDate();
   if ((m === 3 && d >= 21) || (m === 4 && d <= 19)) return "aries";
@@ -38,6 +56,9 @@ export function getSignFromDate(date: Date): string {
 
 export function getSignHebrew(key: string) { return signNames[key] || key; }
 export function getSignSymbol(key: string) { return signSymbols[key] || "★"; }
+export function getSignElement(key: string) { return signElements[key] || "לא ידוע"; }
+export function getSignModality(key: string) { return signModalities[key] || "לא ידוע"; }
+export function getSignRuler(key: string) { return signRulers[key] || "לא ידוע"; }
 
 export function getCompatibility(sign1: string, sign2: string): CompatibilityResult {
   // Element-based compatibility logic
