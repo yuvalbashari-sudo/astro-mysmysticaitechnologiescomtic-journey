@@ -115,13 +115,27 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </motion.div>
                   <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">התאמה זוגית</h2>
                   <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">גלו את רמת ההתאמה הקוסמית ביניכם. הזינו את תאריכי הלידה של שניכם וקבלו ניתוח מעמיק על הקשר, הרגש, התשוקה והצמיחה המשותפת.</p>
-                  <div className="max-w-xs mx-auto mb-4">
+                  <div className="max-w-sm mx-auto mb-6">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">תאריך לידה — שלי</label>
-                    <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                    <div className="flex gap-2">
+                      <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                      <div className="relative">
+                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} placeholder="שעה" />
+                        <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                      </div>
+                    </div>
+                    {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">אופציונלי — לניתוח מזל עולה</p>}
                   </div>
-                  <div className="max-w-xs mx-auto mb-8">
+                  <div className="max-w-sm mx-auto mb-8">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">תאריך לידה — בן/בת הזוג</label>
-                    <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                    <div className="flex gap-2">
+                      <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                      <div className="relative">
+                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} placeholder="שעה" />
+                        <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                      </div>
+                    </div>
+                    {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">אופציונלי — לניתוח מזל עולה</p>}
                   </div>
                   <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />גלו את ההתאמה שלנו</motion.button>
                 </motion.div>

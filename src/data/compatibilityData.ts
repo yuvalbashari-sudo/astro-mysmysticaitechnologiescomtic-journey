@@ -60,6 +60,25 @@ export function getSignElement(key: string) { return signElements[key] || "לא 
 export function getSignModality(key: string) { return signModalities[key] || "לא ידוע"; }
 export function getSignRuler(key: string) { return signRulers[key] || "לא ידוע"; }
 
+// Approximate rising sign calculation based on birth time and sun sign
+// This is a simplified estimation — true rising sign requires exact location
+const signOrder = ["aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"];
+
+export function getRisingSign(sunSign: string, birthTime: string): string {
+  if (!birthTime) return "";
+  const [hours, minutes] = birthTime.split(":").map(Number);
+  const totalMinutes = hours * 60 + minutes;
+  // The ascendant roughly cycles through all 12 signs in 24 hours
+  // At sunrise (~6:00), the rising sign equals the sun sign
+  // Each 2 hours shifts the rising sign by one position
+  const sunIndex = signOrder.indexOf(sunSign);
+  if (sunIndex === -1) return "";
+  const offsetFromSunrise = ((totalMinutes - 360) + 1440) % 1440; // minutes since 6:00
+  const signOffset = Math.floor(offsetFromSunrise / 120); // each sign ~2 hours
+  const risingIndex = (sunIndex + signOffset) % 12;
+  return signOrder[risingIndex];
+}
+
 export function getCompatibility(sign1: string, sign2: string): CompatibilityResult {
   // Element-based compatibility logic
   const elements: Record<string, string> = {
