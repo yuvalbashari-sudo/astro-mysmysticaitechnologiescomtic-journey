@@ -272,7 +272,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div className="fixed inset-0 z-[100] flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={handleClose} />
+          <motion.div className="absolute inset-0 bg-background/80 backdrop-blur-md" />
           <motion.div
             ref={scrollRef}
             className="relative z-10 w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl mx-2 sm:mx-auto"
