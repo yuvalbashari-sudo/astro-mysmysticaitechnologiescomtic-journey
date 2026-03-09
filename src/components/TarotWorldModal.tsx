@@ -80,6 +80,7 @@ async function streamTarotReading(
   onError: (err: string) => void,
   userQuestion?: string,
   errorMessages?: { unexpected: string; service: string; connection: string },
+  language?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
 
@@ -94,7 +95,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext }, language: language || "he" }),
     });
 
     if (!resp.ok) {
