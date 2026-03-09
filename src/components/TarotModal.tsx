@@ -10,7 +10,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
@@ -59,6 +59,7 @@ async function streamTarotReading(
   onError: (err: string) => void,
   userQuestion?: string,
   errorMessages?: { unexpected: string; service: string; connection: string },
+  language?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
@@ -70,7 +71,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he" }),
     });
 
     if (!resp.ok) {
@@ -135,6 +136,7 @@ async function streamTarotReading(
 
 const TarotModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const SPREAD_OPTIONS = getSpreadOptions(t);
   const SPREAD_LABELS = getSpreadLabels(t);
 
@@ -262,6 +264,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
       { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
+      language,
     );
   };
 

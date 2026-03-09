@@ -9,7 +9,7 @@ import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -80,6 +80,7 @@ async function streamTarotReading(
   onError: (err: string) => void,
   userQuestion?: string,
   errorMessages?: { unexpected: string; service: string; connection: string },
+  language?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
 
@@ -94,7 +95,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext }, language: language || "he" }),
     });
 
     if (!resp.ok) {
@@ -259,6 +260,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
 
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const { nameMap, descMap, posMap } = useTranslatedSpread(t);
   const [phase, setPhase] = useState<Phase>("select");
   const [showDailyCard, setShowDailyCard] = useState(false);
@@ -404,6 +406,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         userQuestion || undefined,
         { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
+        language,
       );
     }
   }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);
