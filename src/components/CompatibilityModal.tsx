@@ -79,6 +79,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
         });
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
+      language,
     );
   };
 

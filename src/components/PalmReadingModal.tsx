@@ -52,6 +52,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => { setAiLoading(false); mysticalProfile.recordPalmReading(); readingsStorage.save({ type: "palm", title: `${t.readings_type_palm} — ${name}`, subtitle: t.palm_result_subtitle, symbol: "✋", data: { name, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
+      language,
     );
   };
 
