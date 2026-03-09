@@ -449,7 +449,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { type, data, profileContext } = await req.json();
+    const { type, data, profileContext, language } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -459,10 +459,21 @@ serve(async (req) => {
 
     const { system, user } = promptBuilder(data);
 
-    // Inject mystical profile context into system prompt
-    const enrichedSystem = profileContext 
-      ? `${system}\n\n${profileContext}`
-      : system;
+    // Build language instruction
+    const LANG_NAMES: Record<string, string> = { he: "Hebrew", en: "English", ru: "Russian", ar: "Arabic" };
+    const lang = language || "he";
+    const langName = LANG_NAMES[lang] || "Hebrew";
+    
+    let languageInstruction = "";
+    if (lang === "he") {
+      languageInstruction = "\n\nאתה כותב בעברית בלבד.";
+    } else {
+      languageInstruction = `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST write your ENTIRE response in ${langName}. Every single word, including all headers, section titles, descriptions, advice, and summaries MUST be in ${langName}. Do NOT use Hebrew or any other language. The emoji headers (like **⭐**, **❤️**, etc.) should remain, but ALL text MUST be in ${langName}.`;
+    }
+
+    // Inject language + profile context into system prompt
+    let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction;
+    if (profileContext) enrichedSystem += `\n\n${profileContext}`;
 
     // For palm with image, use a vision-capable model
     const isPalmWithImage = type === "palm" && !!data.palmImage;
