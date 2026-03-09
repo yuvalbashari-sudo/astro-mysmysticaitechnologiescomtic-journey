@@ -405,6 +405,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         userQuestion || undefined,
         { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
+        language,
       );
     }
   }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);
