@@ -225,6 +225,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setAiError(err);
         toast(err);
       },
+      language,
     );
   };
 

@@ -286,7 +286,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       (err) => {
         toast.error(err);
         setPhase("form");
-      }
+      },
+      language,
     );
   }, [birthDate, birthTime, birthCity, t]);
 
