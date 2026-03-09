@@ -7,6 +7,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 export async function streamMysticalReading(
   type: string,
   data: Record<string, unknown>,
+  language: string = "he",
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
