@@ -9,7 +9,7 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { toast } from "@/components/ui/sonner";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   isOpen: boolean;
@@ -188,6 +188,7 @@ type Phase = "form" | "loading" | "result";
 
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const [phase, setPhase] = useState<Phase>("form");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
@@ -285,9 +286,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       (err) => {
         toast.error(err);
         setPhase("form");
-      }
+      },
+      language,
     );
-  }, [birthDate, birthTime, birthCity, t]);
+  }, [birthDate, birthTime, birthCity, t, language]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(resultText);

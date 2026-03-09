@@ -7,12 +7,13 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const [name, setName] = useState("");
   const [rightPalmImage, setRightPalmImage] = useState<string | null>(null);
   const [leftPalmImage, setLeftPalmImage] = useState<string | null>(null);
@@ -51,6 +52,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => { setAiLoading(false); mysticalProfile.recordPalmReading(); readingsStorage.save({ type: "palm", title: `${t.readings_type_palm} — ${name}`, subtitle: t.palm_result_subtitle, symbol: "✋", data: { name, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
+      language,
     );
   };
 

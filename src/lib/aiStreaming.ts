@@ -10,6 +10,7 @@ export async function streamMysticalReading(
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  language: string = "he",
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mystical-reading`;
 
@@ -23,7 +24,7 @@ export async function streamMysticalReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ type, data, profileContext }),
+      body: JSON.stringify({ type, data, profileContext, language }),
     });
 
     if (!resp.ok) {

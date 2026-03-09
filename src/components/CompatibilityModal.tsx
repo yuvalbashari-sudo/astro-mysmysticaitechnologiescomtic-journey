@@ -9,12 +9,13 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const [date1, setDate1] = useState("");
   const [date2, setDate2] = useState("");
   const [time1, setTime1] = useState("");
@@ -78,6 +79,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
         });
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
+      language,
     );
   };
 

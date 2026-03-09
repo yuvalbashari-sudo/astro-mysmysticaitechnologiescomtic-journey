@@ -8,7 +8,7 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   isOpen: boolean;
@@ -84,6 +84,7 @@ type Phase = "ready" | "shuffle" | "reveal" | "result" | "locked";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const [phase, setPhase] = useState<Phase>("ready");
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [shuffleStep, setShuffleStep] = useState(0);
@@ -224,6 +225,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setAiError(err);
         toast(err);
       },
+      language,
     );
   };
 
