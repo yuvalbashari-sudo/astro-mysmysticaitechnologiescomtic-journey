@@ -13,7 +13,6 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
-  const { language } = useLanguage();
   const t = useT();
   const { language } = useLanguage();
   const [birthDate, setBirthDate] = useState("");
