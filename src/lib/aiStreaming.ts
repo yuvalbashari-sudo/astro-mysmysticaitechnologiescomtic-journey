@@ -7,10 +7,10 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 export async function streamMysticalReading(
   type: string,
   data: Record<string, unknown>,
-  language: string = "he",
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  language: string = "he",
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mystical-reading`;
 
