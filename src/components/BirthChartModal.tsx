@@ -289,7 +289,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       },
       language,
     );
-  }, [birthDate, birthTime, birthCity, t]);
+  }, [birthDate, birthTime, birthCity, t, language]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(resultText);
