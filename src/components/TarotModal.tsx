@@ -59,6 +59,7 @@ async function streamTarotReading(
   onError: (err: string) => void,
   userQuestion?: string,
   errorMessages?: { unexpected: string; service: string; connection: string },
+  language?: string,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
@@ -70,7 +71,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined } }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he" }),
     });
 
     if (!resp.ok) {
