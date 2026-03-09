@@ -9,7 +9,7 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { toast } from "@/components/ui/sonner";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   isOpen: boolean;

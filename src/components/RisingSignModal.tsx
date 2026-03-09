@@ -50,6 +50,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => { setAiLoading(false); readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sunSign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sunSign.hebrewName, birthTime, birthDate, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
+      language,
     );
   };
 
