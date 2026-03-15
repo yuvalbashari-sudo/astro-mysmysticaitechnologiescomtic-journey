@@ -23,6 +23,7 @@ interface SignInfoState {
 const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const [birthTime, setBirthTime] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
