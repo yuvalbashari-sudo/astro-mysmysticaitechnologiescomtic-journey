@@ -2114,7 +2114,7 @@ const HeroSection = () => {
                               exit={{ opacity: 0, y: -5, scale: 0.5 }}
                               transition={{ duration: 0.3 }}
                             >
-                              {["⭐", "🌙", "💫", "🔮", "✋"][i]}
+                              {["⭐", "🌙", "💫", "🔮", "✋", "☀️"][i]}
                             </motion.span>
                           )}
                         </AnimatePresence>
