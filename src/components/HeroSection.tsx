@@ -1672,19 +1672,17 @@ const HeroSection = () => {
               <motion.div
                 ref={crystalRef}
                 className="relative z-20 cursor-pointer"
-                style={{ width: "150px", height: "150px" }}
+                style={{ width: "180px", height: "180px" }}
                 onClick={handleCrystalClick}
               >
-                <motion.img
+                <img
                   src={crystalBall}
                   alt="Crystal Ball"
                   className="w-full h-full"
-                  style={{ objectFit: "contain" }}
-                  animate={{
-                    opacity: 1,
-                    filter: ["drop-shadow(0 0 25px hsl(43 80% 55% / 0.3))", "drop-shadow(0 0 45px hsl(43 80% 55% / 0.5))", "drop-shadow(0 0 25px hsl(43 80% 55% / 0.3))"],
+                  style={{
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 0 35px hsl(43 80% 55% / 0.4))",
                   }}
-                  transition={{ filter: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
 
                 {/* Tarot Card Reveal inside crystal ball */}
