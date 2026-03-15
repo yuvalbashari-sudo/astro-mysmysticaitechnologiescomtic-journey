@@ -1390,9 +1390,6 @@ const HeroSection = () => {
     }));
   }, [isMobile]);
 
-  const handleFortuneReveal = useCallback(() => {
-    setTarotOpen(true);
-  }, []);
 
   // Active energy color based on hovered item
   const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
