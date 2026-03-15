@@ -193,9 +193,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       setShuffleStep(step);
       if (step >= 10) {
         clearInterval(interval);
-        const dailySpread = spreads.find(s => s.key === "daily")!;
-        const drawn = drawCardsForSpread(dailySpread);
-        const selectedCard = drawn[0];
+        // Deterministic card selection based on user seed + date
+        const cardIndex = getDailyCardIndex(majorArcana.length);
+        const selectedCard = majorArcana[cardIndex];
         setCard(selectedCard);
         setTimeout(() => setPhase("reveal"), 600);
       }
