@@ -305,7 +305,7 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const s = isMobile ? 180 : 310;
+  const s = isMobile ? 180 : 320;
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
@@ -1835,7 +1835,7 @@ const HeroSection = () => {
               {/* Crystal ball center (parallax layer) */}
               <motion.div
                 className="relative flex items-center justify-center"
-                style={{ x: crystalX, y: crystalY, marginTop: "40px" }}
+                style={{ x: crystalX, y: crystalY, marginTop: "85px" }}
               >
                 <motion.div
                   className="absolute rounded-full z-15 pointer-events-none"
@@ -1931,7 +1931,7 @@ const HeroSection = () => {
                 <motion.div
                   ref={crystalRef}
                   className="relative z-20 cursor-pointer"
-                  style={{ width: "310px", height: "310px" }}
+                  style={{ width: "320px", height: "320px" }}
                   onClick={handleCrystalClick}
                 >
                   <img
