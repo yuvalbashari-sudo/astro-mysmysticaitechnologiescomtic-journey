@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Briefcase, Eye, Compass, Crown, Share2, Copy, Check, Layers, Star, Sun, MessageCircle } from "lucide-react";
 import { drawTarotCards, TarotCard } from "@/data/tarotData";
-import { tarotCardImages } from "@/data/tarotCardImages";
+import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { tarotMemory } from "@/lib/tarotMemory";
@@ -327,73 +327,72 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
             <AnimatePresence mode="wait">
               {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-6 md:p-10 text-center relative overflow-hidden">
+                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 pt-10 pb-6 md:px-8 md:pt-14 md:pb-8 text-center relative overflow-hidden">
 
-                  {/* Atmospheric background */}
-                  <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                    {[...Array(8)].map((_, i) => (
-                      <motion.div
-                        key={`p-${i}`}
-                        className="absolute rounded-full"
-                        style={{
-                          width: 2, height: 2,
-                          left: `${10 + Math.random() * 80}%`,
-                          top: `${10 + Math.random() * 80}%`,
-                          background: i % 2 === 0 ? "hsl(var(--gold) / 0.3)" : "hsl(var(--celestial) / 0.2)",
-                        }}
-                        animate={{ opacity: [0, 0.6, 0], y: [0, -20] }}
-                        transition={{ duration: 4 + Math.random() * 2, repeat: Infinity, delay: i * 0.6 }}
-                      />
-                    ))}
-                    {/* Table surface radial glow */}
-                    <div className="absolute inset-0" style={{
-                      background: "radial-gradient(ellipse at 50% 85%, hsl(var(--gold) / 0.04) 0%, transparent 60%)",
-                    }} />
+                  {/* Dark velvet table surface */}
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    background: `
+                      radial-gradient(ellipse at 50% 100%, hsl(var(--gold) / 0.05) 0%, transparent 50%),
+                      radial-gradient(ellipse at 50% 50%, hsl(222 35% 10%) 0%, hsl(222 47% 5%) 100%)
+                    `,
+                  }} />
+                  {/* Floating dust particles */}
+                  {[...Array(6)].map((_, i) => (
+                    <motion.div key={`dust-${i}`} className="absolute rounded-full pointer-events-none"
+                      style={{ width: 1.5, height: 1.5, left: `${15 + Math.random() * 70}%`, top: `${20 + Math.random() * 60}%`, background: "hsl(var(--gold) / 0.25)" }}
+                      animate={{ opacity: [0, 0.5, 0], y: [0, -15] }}
+                      transition={{ duration: 5 + Math.random() * 3, repeat: Infinity, delay: i * 1.2 }}
+                    />
+                  ))}
+
+                  {/* Title area */}
+                  <div className="relative z-10 mb-6 md:mb-10">
+                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2">{t.tarot_title}</h2>
+                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]">{t.tarot_spread_choose}</p>
                   </div>
 
-                  {/* Title */}
-                  <motion.div
-                    className="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center"
-                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
-                  >
-                    <Eye className="w-6 h-6 text-gold" />
-                  </motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-2">{t.tarot_title}</h2>
-                  <p className="text-foreground/60 font-body text-sm mb-3 max-w-md mx-auto leading-relaxed">{t.tarot_desc}</p>
-                  <p className="text-gold/40 font-body text-xs mb-8 tracking-wider">{t.tarot_spread_choose}</p>
-
-                  {/* ── Fan Spread of Tarot Cards ── */}
+                  {/* ── Authentic Tarot Fan Spread ── */}
                   {(() => {
                     const fanCards = SPREAD_OPTIONS;
                     const count = fanCards.length;
-                    const arcDeg = isMobileTarot ? 50 : 60; // total arc spread in degrees
-                    const cardW = isMobileTarot ? 72 : 100;
-                    const cardH = isMobileTarot ? 112 : 156;
-                    const liftRadius = isMobileTarot ? 160 : 240; // radius for arc positioning
+                    const isMob = isMobileTarot;
+                    const arcDeg = isMob ? 55 : 70;
+                    const cardW = isMob ? 58 : 90;
+                    const cardH = isMob ? 96 : 150;
+                    const pivotR = isMob ? 200 : 320;
+                    const containerH = isMob ? 200 : 310;
+
+                    // Symbols for each spread type (engraved on the card face)
+                    const spreadSymbols: Record<SpreadType, string> = {
+                      timeline: "⏳",
+                      love: "♡",
+                      career: "⚝",
+                      decision: "◈",
+                      daily: "☀",
+                      universe: "✧",
+                    };
 
                     return (
-                      <div className="relative mx-auto mb-8" style={{ height: isMobileTarot ? 220 : 300, maxWidth: 600 }}>
+                      <div className="relative mx-auto" style={{ height: containerH, maxWidth: isMob ? 340 : 620 }}>
                         {fanCards.map((spread, idx) => {
-                          const angleStep = arcDeg / (count - 1);
-                          const angle = -arcDeg / 2 + idx * angleStep;
+                          const step = arcDeg / (count - 1);
+                          const angle = -arcDeg / 2 + idx * step;
                           const rad = (angle * Math.PI) / 180;
-                          // Position cards along an arc from a center point below
-                          const translateX = Math.sin(rad) * liftRadius;
-                          const translateY = -Math.cos(rad) * liftRadius + liftRadius * 0.65;
+                          const tx = Math.sin(rad) * pivotR;
+                          const ty = -Math.cos(rad) * pivotR + pivotR * 0.72;
 
                           return (
                             <motion.button
                               key={spread.key}
                               onClick={() => {
                                 setSelectedSpreadKey(spread.key);
-                                // Directly trigger the draw
                                 setTimeout(() => {
                                   if (spread.key !== "daily") {
                                     setIsQuestionPhase(true);
                                   } else {
                                     setIsLoading(true);
                                   }
-                                }, 200);
+                                }, 250);
                               }}
                               className="absolute cursor-pointer group"
                               style={{
@@ -402,103 +401,96 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 left: "50%",
                                 bottom: 0,
                                 marginLeft: -cardW / 2,
-                                transformOrigin: "bottom center",
+                                transformOrigin: `50% ${pivotR + cardH / 2}px`,
                                 zIndex: 10 + idx,
+                                perspective: 600,
                               }}
-                              initial={{ opacity: 0, y: 60, rotate: 0 }}
+                              initial={{ opacity: 0, y: 80, rotate: 0, scale: 0.7 }}
                               animate={{
                                 opacity: 1,
                                 y: 0,
-                                x: translateX,
+                                x: tx,
                                 rotate: angle,
-                                translateY: translateY,
+                                scale: 1,
+                                translateY: ty,
                               }}
-                              transition={{ delay: 0.2 + idx * 0.1, type: "spring", stiffness: 120, damping: 18 }}
+                              transition={{ delay: 0.15 + idx * 0.08, type: "spring", stiffness: 100, damping: 16 }}
                               whileHover={{
-                                y: -20,
-                                scale: 1.08,
+                                translateY: ty - (isMob ? 18 : 30),
+                                scale: 1.06,
                                 zIndex: 50,
-                                transition: { duration: 0.25 },
+                                transition: { duration: 0.2 },
                               }}
-                              whileTap={{ scale: 0.96 }}
+                              whileTap={{ scale: 0.97 }}
                             >
-                              {/* Card body */}
-                              <div
-                                className="relative w-full h-full rounded-lg overflow-hidden"
-                                style={{
-                                  background: "linear-gradient(165deg, hsl(222 35% 14%), hsl(222 42% 8%))",
-                                  border: "1px solid hsl(var(--gold) / 0.25)",
-                                  boxShadow: "0 4px 20px rgba(0,0,0,0.5), 0 0 1px hsl(var(--gold) / 0.2)",
-                                }}
-                              >
-                                {/* Ornate border inner */}
-                                <div className="absolute inset-[3px] rounded-md" style={{
-                                  border: "1px solid hsl(var(--gold) / 0.12)",
+                              {/* The tarot card */}
+                              <div className="relative w-full h-full rounded-[4px] md:rounded-[6px] overflow-hidden" style={{
+                                boxShadow: "0 6px 25px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4), 0 0 1px hsl(var(--gold) / 0.15)",
+                              }}>
+                                {/* Card back image as base */}
+                                <img src={cardBack} alt="" className="absolute inset-0 w-full h-full object-cover" style={{
+                                  filter: "brightness(0.75) saturate(0.9)",
                                 }} />
 
-                                {/* Card face content */}
-                                <div className="relative z-10 flex flex-col items-center justify-center h-full px-2 py-3 gap-1">
-                                  {/* Top ornament */}
-                                  <div className="text-gold/20 text-[8px] font-heading tracking-[0.3em]">✦</div>
+                                {/* Dark overlay to darken the back */}
+                                <div className="absolute inset-0" style={{
+                                  background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.4) 100%)",
+                                }} />
 
-                                  {/* Icon */}
-                                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center mb-1"
-                                    style={{
-                                      background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)",
-                                      border: "1px solid hsl(var(--gold) / 0.15)",
-                                    }}
-                                  >
-                                    <span className="text-gold/80 group-hover:text-gold transition-colors [&>svg]:w-5 [&>svg]:h-5 md:[&>svg]:w-6 md:[&>svg]:h-6">
-                                      {spread.icon}
-                                    </span>
-                                  </div>
+                                {/* Gold thin border inset */}
+                                <div className="absolute inset-[2px] md:inset-[3px] rounded-[3px] md:rounded-[4px]" style={{
+                                  border: "1px solid hsl(var(--gold) / 0.2)",
+                                }} />
 
-                                  {/* Title */}
-                                  <span className="font-heading text-[9px] md:text-[11px] text-gold/80 group-hover:text-gold leading-tight text-center transition-colors">
-                                    {SPREAD_LABELS[spread.key]}
+                                {/* Center symbol */}
+                                <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 md:gap-2 z-10">
+                                  <span className="text-lg md:text-2xl opacity-60 group-hover:opacity-100 transition-opacity duration-300" style={{
+                                    filter: "drop-shadow(0 0 6px hsl(var(--gold) / 0.3))",
+                                    color: "hsl(var(--gold-light))",
+                                  }}>
+                                    {spreadSymbols[spread.key]}
                                   </span>
-
-                                  {/* Card count */}
-                                  <span className="text-[7px] md:text-[8px] text-muted-foreground/40 font-body mt-0.5">
-                                    {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
-                                  </span>
-
-                                  {/* Bottom ornament */}
-                                  <div className="text-gold/20 text-[8px] font-heading tracking-[0.3em] mt-auto">✦</div>
                                 </div>
 
-                                {/* Hover glow overlay */}
-                                <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                                {/* Card name — appears on hover */}
+                                <div className="absolute bottom-0 inset-x-0 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0"
                                   style={{
-                                    background: "radial-gradient(ellipse at 50% 30%, hsl(var(--gold) / 0.08), transparent 70%)",
-                                    boxShadow: "inset 0 0 20px hsl(var(--gold) / 0.05)",
+                                    background: "linear-gradient(transparent, rgba(0,0,0,0.85) 40%)",
+                                    padding: isMob ? "6px 4px 5px" : "10px 6px 8px",
+                                  }}
+                                >
+                                  <span className="font-heading text-[8px] md:text-[10px] text-gold/90 leading-tight block text-center">
+                                    {SPREAD_LABELS[spread.key]}
+                                  </span>
+                                  <span className="text-[6px] md:text-[7px] text-gold/40 font-body block text-center mt-0.5">
+                                    {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
+                                  </span>
+                                </div>
+
+                                {/* Hover golden edge glow */}
+                                <div className="absolute inset-0 rounded-[4px] md:rounded-[6px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                                  style={{
+                                    boxShadow: "inset 0 0 12px hsl(var(--gold) / 0.1), 0 0 20px hsl(var(--gold) / 0.15)",
                                   }}
                                 />
                               </div>
-
-                              {/* Card shadow/glow on hover */}
-                              <div className="absolute -inset-1 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                                style={{
-                                  background: "radial-gradient(ellipse, hsl(var(--gold) / 0.15), transparent 70%)",
-                                  filter: "blur(8px)",
-                                }}
-                              />
                             </motion.button>
                           );
                         })}
 
-                        {/* Center table glow beneath the fan */}
-                        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-8 rounded-full opacity-30"
-                          style={{
-                            background: "radial-gradient(ellipse, hsl(var(--gold) / 0.15), transparent)",
-                            filter: "blur(12px)",
-                          }}
-                        />
+                        {/* Soft table glow beneath fan pivot */}
+                        <div className="absolute left-1/2 -translate-x-1/2 rounded-full" style={{
+                          bottom: isMob ? -10 : -15,
+                          width: isMob ? 180 : 300,
+                          height: isMob ? 20 : 30,
+                          background: "radial-gradient(ellipse, hsl(var(--gold) / 0.08), transparent 70%)",
+                          filter: "blur(10px)",
+                        }} />
                       </div>
                     );
                   })()}
 
-                  <p className="text-[10px] text-muted-foreground/40 font-body mt-3">{t.tarot_note}</p>
+                  <p className="relative z-10 text-[9px] md:text-[10px] text-muted-foreground/30 font-body mt-6">{t.tarot_note}</p>
                 </motion.div>
               ) : isQuestionPhase ? (
                 <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} /></motion.div>
