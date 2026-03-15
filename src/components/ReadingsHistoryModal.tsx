@@ -72,8 +72,9 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
               onClick={onClose}
               className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors"
               style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}
+              aria-label={t.a11y_close_modal}
             >
-              <X className="w-4 h-4 text-gold/70" />
+              <X className="w-4 h-4 text-gold/70" aria-hidden="true" />
             </button>
 
             <div className="text-center mb-8">
