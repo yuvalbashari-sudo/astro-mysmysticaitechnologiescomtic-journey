@@ -8,11 +8,11 @@ const AccessibilityStatement = () => {
 
   const features = [
     t.a11y_statement_feature_keyboard,
-    t.a11y_statement_feature_screen_reader,
-    t.a11y_statement_feature_contrast,
     t.a11y_statement_feature_focus,
-    t.a11y_statement_feature_motion,
+    t.a11y_statement_feature_contrast,
+    t.a11y_statement_feature_screen_reader,
     t.a11y_statement_feature_rtl,
+    t.a11y_statement_feature_motion,
     t.a11y_statement_feature_multilingual,
   ];
 
@@ -32,8 +32,13 @@ const AccessibilityStatement = () => {
         </h1>
 
         <div className="space-y-8 font-body text-foreground/80 leading-relaxed">
-          <p>{t.a11y_statement_intro}</p>
-          <p className="text-gold/70 text-sm">{t.a11y_statement_standards}</p>
+          {t.a11y_statement_intro.split("\n").map((line, i) => (
+            <p key={i}>{line}</p>
+          ))}
+
+          {t.a11y_statement_standards && (
+            <p className="text-gold/70 text-sm">{t.a11y_statement_standards}</p>
+          )}
 
           <section>
             <h2 className="font-heading text-xl text-gold mb-4">
@@ -42,7 +47,7 @@ const AccessibilityStatement = () => {
             <ul className="space-y-3" role="list">
               {features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
-                  <span className="text-gold/60 mt-1">✦</span>
+                  <span className="text-gold/60 mt-1" aria-hidden="true">✦</span>
                   <span>{feature}</span>
                 </li>
               ))}
@@ -59,14 +64,17 @@ const AccessibilityStatement = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-4 text-sm text-gold hover:text-gold-light transition-colors"
+              aria-label={t.a11y_whatsapp_contact}
             >
               💬 WhatsApp
             </a>
           </section>
 
-          <p className="text-xs text-muted-foreground pt-6 border-t border-border">
-            {t.a11y_statement_last_updated}
-          </p>
+          {t.a11y_statement_last_updated && (
+            <p className="text-xs text-muted-foreground pt-6 border-t border-border">
+              {t.a11y_statement_last_updated}
+            </p>
+          )}
         </div>
       </main>
     </div>
