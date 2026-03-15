@@ -115,6 +115,8 @@ const MysticalDashboard = () => {
               exit={{ x: "-100%", opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed inset-y-0 left-0 z-[70] w-full max-w-md bg-card border-r border-border overflow-y-auto shadow-2xl"
+              role="dialog"
+              aria-label={t.dashboard_title}
             >
               {/* Header */}
               <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border p-5 flex items-center justify-between">
