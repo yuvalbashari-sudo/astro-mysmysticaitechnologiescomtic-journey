@@ -1835,7 +1835,7 @@ const HeroSection = () => {
               {/* Crystal ball center (parallax layer) */}
               <motion.div
                 className="relative flex items-center justify-center"
-                style={{ x: crystalX, y: crystalY, marginTop: "140px" }}
+                style={{ x: crystalX, y: crystalY, marginTop: "210px" }}
               >
                 <motion.div
                   className="absolute rounded-full z-15 pointer-events-none"
