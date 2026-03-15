@@ -314,7 +314,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   return (
     <div
       className="absolute z-[21] pointer-events-none rounded-full overflow-hidden"
-      style={{ width: ballSize, height: ballSize }}
+      style={{ width: ballSize, height: ballSize, aspectRatio: "1 / 1" }}
     >
       {/* Video layer — the living universe */}
       <video
@@ -326,6 +326,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         style={{
           width: videoSize,
           height: videoSize,
+          aspectRatio: "1 / 1",
           objectFit: "cover",
           position: "absolute",
           left: offset,
