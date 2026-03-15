@@ -10,6 +10,7 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
   isOpen: boolean;
