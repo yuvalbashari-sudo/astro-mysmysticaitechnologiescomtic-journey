@@ -54,7 +54,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     setSubmitted(true); setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
     streamMysticalReading("palm", { name: name.trim(), rightPalmImage, leftPalmImage },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-      () => { setAiLoading(false); mysticalProfile.recordPalmReading(); readingsStorage.save({ type: "palm", title: `${t.readings_type_palm} — ${name}`, subtitle: t.palm_result_subtitle, symbol: "✋", data: { name, aiReading: aiTextRef.current } }); },
+      () => { setAiLoading(false); setActiveReading({ type: "palm", label: `${t.readings_type_palm} — ${name}`, summary: aiTextRef.current }); mysticalProfile.recordPalmReading(); readingsStorage.save({ type: "palm", title: `${t.readings_type_palm} — ${name}`, subtitle: t.palm_result_subtitle, symbol: "✋", data: { name, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
       language,
     );
