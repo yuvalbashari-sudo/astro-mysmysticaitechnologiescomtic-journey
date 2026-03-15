@@ -8,6 +8,7 @@ import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import PalmReadingModal from "./PalmReadingModal";
+import DailyCardModal from "./DailyCardModal";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
