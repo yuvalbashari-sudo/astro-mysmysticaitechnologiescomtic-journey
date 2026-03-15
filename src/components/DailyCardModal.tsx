@@ -49,12 +49,12 @@ function getTodayDate(): string {
   return new Date().toISOString().split("T")[0];
 }
 
-function getSa,    DailyCard(): DailyCardData | null {
+function getSavedDailyCard(): DailyCardData | null {
   try {
     const raw = localStorage.getItem(DAILY_CARD_KEY);
     if (!raw) return null;
-    const data = JSON.parse(raw) as D    lyCardData;
-    if (data.date !==    getTodayDate()) {
+    const data = JSON.parse(raw) as DailyCardData;
+    if (data.date !== getTodayDate()) {
       localStorage.removeItem(DAILY_CARD_KEY);
       return null;
     }
