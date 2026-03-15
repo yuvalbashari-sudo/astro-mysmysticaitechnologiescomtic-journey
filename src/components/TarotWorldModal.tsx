@@ -317,6 +317,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         () => {
           setAiLoading(false);
+          setActiveReading({ type: "tarotWorld", label: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`, summary: aiTextRef.current });
           // Record cards in tarot memory
           tarotMemory.recordReading(
             selectedSpread.key,
