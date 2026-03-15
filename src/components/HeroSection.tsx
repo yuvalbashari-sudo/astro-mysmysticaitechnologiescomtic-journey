@@ -1316,6 +1316,7 @@ const HeroSection = () => {
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
+  const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
