@@ -131,6 +131,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [timeLeft, setTimeLeft] = useState("");
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   // Check for existing daily card on open
   useEffect(() => {

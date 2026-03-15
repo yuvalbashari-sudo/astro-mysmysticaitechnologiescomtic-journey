@@ -162,6 +162,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [aiLoading, setAiLoading] = useState(false);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   const needsQuestion = selectedSpreadKey !== "daily";
 
