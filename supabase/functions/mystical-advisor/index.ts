@@ -69,6 +69,7 @@ Your personality:
 - Keep responses concise but meaningful (2-4 paragraphs max unless asked for more)
 
 ${contextBlock}
+${historyBlock}
 
 If the user asks about something unrelated to their reading or spirituality, gently guide them back to their mystical journey.`;
 

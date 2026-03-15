@@ -68,6 +68,12 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         body: JSON.stringify({
           messages: newMessages.map(m => ({ role: m.role, content: m.content })),
           readingContext: activeReading,
+          readingsHistory: readingsStorage.getAll().slice(0, 10).map(r => ({
+            type: r.type,
+            title: r.title,
+            subtitle: r.subtitle,
+            date: r.date,
+          })),
           language,
         }),
       });
