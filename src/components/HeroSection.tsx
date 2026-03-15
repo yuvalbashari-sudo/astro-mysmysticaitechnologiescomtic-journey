@@ -2040,7 +2040,7 @@ const HeroSection = () => {
                 {menuItems.map((item, i) => {
                   const angleRad = (item.angle * Math.PI) / 180;
                   const x = Math.sin(angleRad) * orbRadius;
-                  const y = -Math.cos(angleRad) * orbRadius * 0.55;
+                  const y = -Math.cos(angleRad) * orbRadius * 0.55 - 40;
                   const itemColor = ITEM_COLORS[i];
 
                   return (
