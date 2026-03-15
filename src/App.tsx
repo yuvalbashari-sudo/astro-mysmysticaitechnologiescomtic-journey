@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import TarotCardPage from "./pages/TarotCardPage";
 import ZodiacSignPage from "./pages/ZodiacSignPage";
+import AccessibilityStatement from "./pages/AccessibilityStatement";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/tarot/:slug" element={<TarotCardPage />} />
             <Route path="/zodiac/:slug" element={<ZodiacSignPage />} />
+            <Route path="/accessibility" element={<AccessibilityStatement />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
