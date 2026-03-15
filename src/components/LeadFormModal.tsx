@@ -72,7 +72,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_message}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}</label>
                     <textarea maxLength={1000} rows={3} className="mystical-input font-body resize-none" placeholder={t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
                   <button type="submit" disabled={isSubmitting} className="btn-gold font-body w-full flex items-center justify-center gap-2 disabled:opacity-50 mt-6"><Send className="w-4 h-4" />{isSubmitting ? t.lead_submitting : t.lead_submit}</button>
