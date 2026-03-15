@@ -116,7 +116,7 @@ export function getCompatibility(sign1: string, sign2: string): CompatibilityRes
   else if (opposite) { base = oppositeResult; baseScore = 42 + (hash % 14); }       // 37–55
   else { base = neutralResult; baseScore = 50 + (hash % 16); }                      // 45–65
 
-  return { ...base, score: Math.min(92, Math.max(38, baseScore + variation)) };
+  return { ...base, score: Math.min(98, Math.max(38, baseScore + variation)) };
 }
 
 const sameSignResult: CompatibilityResult = {
