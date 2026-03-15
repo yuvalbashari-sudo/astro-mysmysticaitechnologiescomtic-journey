@@ -65,6 +65,8 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
             exit={{ opacity: 0, scale: 0.92, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             dir={dir}
+            role="dialog"
+            aria-label={t.readings_title}
           >
             <button
               onClick={onClose}
