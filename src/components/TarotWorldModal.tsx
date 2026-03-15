@@ -888,52 +888,52 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         const interp = getInterpretation(card, selectedSpread.key, posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]);
                         return (
                           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.3 }}>
-                            <div className="flex items-center gap-4 mb-4">
+                            <div className="flex items-center gap-4 mb-5">
                               <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 20px hsl(var(--gold) / 0.1)" }}>
                                 <span className="text-2xl">{card.symbol}</span>
                               </div>
                               <div className="text-right">
-                                <h3 className="font-heading text-lg text-gold">{card.hebrewName}</h3>
-                                <span className="font-body text-xs text-foreground/40">{interp.positionLabel}</span>
+                                <h3 className="font-heading text-xl text-gold">{card.hebrewName}</h3>
+                                <span className="font-body text-sm text-foreground/40">{interp.positionLabel}</span>
                               </div>
                             </div>
                             {isFreeLocked ? (
                               <div className="rounded-xl p-6 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                                <p className="text-foreground/40 font-body text-sm leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>{interp.spreadMeaning.substring(0, 80)}...</p>
+                                <p className="text-foreground/40 font-body text-base leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>{interp.spreadMeaning.substring(0, 80)}...</p>
                                 <Lock className="w-5 h-5 text-gold/30 mx-auto mb-2" />
-                                <p className="text-foreground/40 font-body text-xs">הקלף הזה מחכה לכם בקריאה המלאה ✦</p>
+                                <p className="text-foreground/40 font-body text-sm">הקלף הזה מחכה לכם בקריאה המלאה ✦</p>
                               </div>
                             ) : (
-                              <div className="space-y-3">
-                                <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                                  <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.mainMeaning}</p>
+                              <div className="space-y-4">
+                                <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
+                                  <p className="text-foreground/80 font-body text-base md:text-lg leading-[1.9]">{interp.mainMeaning}</p>
                                 </div>
-                                <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                                  <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.spreadMeaning}</p>
+                                <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                                  <p className="text-foreground/80 font-body text-base md:text-lg leading-[1.9]">{interp.spreadMeaning}</p>
                                 </div>
-                                <div className="rounded-xl p-4 text-center" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                                  <p className="text-gold/80 font-body text-sm leading-relaxed italic">״{interp.advice}״</p>
+                                <div className="rounded-xl p-5 md:p-6 text-center" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                                  <p className="text-gold/80 font-body text-base md:text-lg leading-relaxed italic">״{interp.advice}״</p>
                                 </div>
                               </div>
                             )}
-                            {i < drawnCards.length - 1 && <div className="section-divider max-w-[80px] mx-auto mt-8" />}
+                            {i < drawnCards.length - 1 && <div className="section-divider max-w-[100px] mx-auto mt-10" />}
                           </motion.div>
                         );
                       })}
                     </div>
                   ) : (
                     /* Loading state */
-                    <div className="flex flex-col items-center justify-center py-12">
+                    <div className="flex flex-col items-center justify-center py-16">
                       <motion.div
                         className="w-16 h-16 rounded-full mb-6"
                         style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
                         animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }}
                         transition={{ duration: 3, repeat: Infinity }}
                       />
-                      <motion.p className="font-body text-gold/70 text-sm mb-1" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                      <motion.p className="font-body text-gold/70 text-base mb-1" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                         הקלפים מגלים את המסר שלהם...
                       </motion.p>
-                      <p className="font-body text-foreground/30 text-xs">פירוש אישי נוצר עבורכם</p>
+                      <p className="font-body text-foreground/30 text-sm">פירוש אישי נוצר עבורכם</p>
                     </div>
                   )}
 
@@ -952,26 +952,26 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1 }}
-                      className="text-center rounded-xl p-6 mt-8"
+                      className="text-center rounded-xl p-8 mt-10"
                       style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}
                     >
-                      <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                      <h4 className="font-heading text-base text-gold mb-2">{t.tarot_world_premium_title}</h4>
-                      <p className="text-foreground/50 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">
+                      <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
+                      <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.tarot_world_premium_title}</h4>
+                      <p className="text-foreground/50 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">
                         {t.tarot_world_premium_desc}
                       </p>
-                      <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5" />{t.tarot_premium_cta}
+                      <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2">
+                        <Sparkles className="w-4 h-4" />{t.tarot_premium_cta}
                       </a>
                     </motion.div>
                   )}
 
                   {/* New reading */}
                   {!aiLoading && (
-                    <div className="text-center mt-6">
+                    <div className="text-center mt-8">
                       <motion.button
                         onClick={() => { setPhase("select"); setSelectedSpread(null); setDrawnCards([]); setRevealedIndices(new Set()); setShowPremium(false); setAiText(""); setAiError(null); aiTextRef.current = ""; }}
-                        className="font-body text-xs text-gold/50 hover:text-gold transition-colors"
+                        className="font-body text-sm text-gold/50 hover:text-gold transition-colors"
                         whileHover={{ scale: 1.05 }}
                       >
                         ← קריאה חדשה
