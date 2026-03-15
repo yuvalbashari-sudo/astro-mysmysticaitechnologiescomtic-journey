@@ -808,7 +808,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   {/* AI Generated Content */}
                   {aiText ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                      {renderMysticalText(aiText)}
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      {renderMysticalText(aiText, textSize)}
                       
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
