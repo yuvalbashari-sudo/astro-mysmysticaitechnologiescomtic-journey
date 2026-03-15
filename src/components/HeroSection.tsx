@@ -303,292 +303,125 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
   );
 };
 
-/* ── Crystal Ball Internal Energy — Nebula Galaxy ──────────────────── */
+/* ── Crystal Ball Internal Energy — Video Nebula ──────────────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const ballSize = isMobile ? 180 : 280;
-  const canvasSize = Math.round(ballSize * 1.35);
-  const offset = Math.round((canvasSize - ballSize) / -2);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animRef = useRef<number>(0);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = canvasSize * dpr;
-    canvas.height = canvasSize * dpr;
-    ctx.scale(dpr, dpr);
-
-    const cx = canvasSize / 2;
-    const cy = canvasSize / 2;
-    const maxR = canvasSize / 2 - 2;
-    let time = 0;
-
-    // Pre-create an offscreen nebula texture that we'll rotate
-    const createNebulaLayer = (
-      colors: [number, number, number][],
-      numBlobs: number,
-      seed: number
-    ): HTMLCanvasElement => {
-      const off = document.createElement("canvas");
-      off.width = canvasSize * dpr;
-      off.height = canvasSize * dpr;
-      const oc = off.getContext("2d")!;
-      oc.scale(dpr, dpr);
-
-      // Draw spiral arm clouds
-      const numArms = 3;
-      for (let arm = 0; arm < numArms; arm++) {
-        const armAngle = (arm / numArms) * Math.PI * 2;
-        const color = colors[arm % colors.length];
-        const steps = numBlobs;
-
-        for (let i = 0; i < steps; i++) {
-          const t = i / steps;
-          const radius = 0.06 + t * 0.42;
-          const angle = armAngle + radius * 7;
-          const x = cx + Math.cos(angle) * radius * maxR;
-          const y = cy + Math.sin(angle) * radius * maxR;
-
-          // Wide soft cloud blob
-          const blobR = (12 + t * 45) * (isMobile ? 0.65 : 1);
-          oc.globalAlpha = 0.12 + t * 0.08;
-
-          const g = oc.createRadialGradient(x, y, 0, x, y, blobR);
-          g.addColorStop(0, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.6)`);
-          g.addColorStop(0.3, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.3)`);
-          g.addColorStop(0.7, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.08)`);
-          g.addColorStop(1, "transparent");
-          oc.fillStyle = g;
-          oc.beginPath();
-          oc.arc(x, y, blobR, 0, Math.PI * 2);
-          oc.fill();
-
-          // Secondary wisps offset from arm
-          if (i % 3 === 0) {
-            const offsetAngle = angle + (seed > 0.5 ? 0.3 : -0.3);
-            const ox = cx + Math.cos(offsetAngle) * (radius + 0.04) * maxR;
-            const oy = cy + Math.sin(offsetAngle) * (radius + 0.04) * maxR;
-            const wispR = blobR * 0.6;
-            oc.globalAlpha = 0.06 + t * 0.05;
-            const wg = oc.createRadialGradient(ox, oy, 0, ox, oy, wispR);
-            wg.addColorStop(0, `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.4)`);
-            wg.addColorStop(1, "transparent");
-            oc.fillStyle = wg;
-            oc.beginPath();
-            oc.arc(ox, oy, wispR, 0, Math.PI * 2);
-            oc.fill();
-          }
-        }
-      }
-
-      // Add diffuse fog between arms
-      for (let i = 0; i < 8; i++) {
-        const a = (seed * 7 + i * 0.8) % (Math.PI * 2);
-        const r = 0.15 + (i / 8) * 0.25;
-        const fx = cx + Math.cos(a) * r * maxR;
-        const fy = cy + Math.sin(a) * r * maxR;
-        const fogR = 20 + i * 8;
-        oc.globalAlpha = 0.04;
-        const fg = oc.createRadialGradient(fx, fy, 0, fx, fy, fogR);
-        fg.addColorStop(0, `rgba(${colors[0][0]}, ${colors[0][1]}, ${colors[0][2]}, 0.3)`);
-        fg.addColorStop(1, "transparent");
-        oc.fillStyle = fg;
-        oc.beginPath();
-        oc.arc(fx, fy, fogR, 0, Math.PI * 2);
-        oc.fill();
-      }
-
-      return off;
-    };
-
-    // Create 3 nebula layers with different colors that rotate at different speeds
-    const layer1 = createNebulaLayer(
-      [[230, 190, 100], [140, 170, 240], [200, 120, 160]],
-      isMobile ? 25 : 45, 0.3
-    );
-    const layer2 = createNebulaLayer(
-      [[180, 140, 220], [100, 160, 210], [220, 160, 80]],
-      isMobile ? 20 : 35, 0.7
-    );
-    const layer3 = createNebulaLayer(
-      [[160, 80, 100], [80, 130, 190], [190, 170, 100]],
-      isMobile ? 15 : 28, 0.5
-    );
-
-    // A few tiny accent stars (very sparse, not dominant)
-    const fewStars: { x: number; y: number; size: number; speed: number }[] = [];
-    for (let i = 0; i < (isMobile ? 15 : 30); i++) {
-      const a = Math.random() * Math.PI * 2;
-      const r = 0.12 + Math.random() * 0.35;
-      fewStars.push({
-        x: 0.5 + Math.cos(a) * r,
-        y: 0.5 + Math.sin(a) * r,
-        size: 0.4 + Math.random() * 0.8,
-        speed: 1.5 + Math.random() * 3,
-      });
-    }
-
-    const draw = () => {
-      time += 0.003;
-      ctx.clearRect(0, 0, canvasSize, canvasSize);
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
-      ctx.clip();
-
-      // Deep space background
-      const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
-      bgGrad.addColorStop(0, "rgba(15, 10, 30, 1)");
-      bgGrad.addColorStop(0.3, "rgba(6, 6, 18, 1)");
-      bgGrad.addColorStop(1, "rgba(2, 3, 10, 1)");
-      ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-      // ── Rotate and composite nebula layers at different speeds ──
-      const drawRotatedLayer = (layer: HTMLCanvasElement, speed: number, alpha: number, blendMode: GlobalCompositeOperation) => {
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.globalCompositeOperation = blendMode;
-        ctx.translate(cx, cy);
-        ctx.rotate(time * speed);
-        ctx.translate(-cx, -cy);
-        ctx.drawImage(layer, 0, 0, canvasSize, canvasSize);
-        ctx.restore();
-      };
-
-      // Layer 1: Main spiral — slowest, most visible
-      drawRotatedLayer(layer1, 0.5, 0.85, "screen");
-      // Layer 2: Counter-rotating — creates depth
-      drawRotatedLayer(layer2, -0.35, 0.5, "screen");
-      // Layer 3: Fastest subtle layer — adds turbulence
-      drawRotatedLayer(layer3, 0.7, 0.35, "screen");
-
-      // ── Flowing fog wisps — additional animated nebula patches ──
-      const fogColors: [number, number, number][] = [
-        [220, 190, 110], [120, 150, 230], [200, 130, 170], [170, 140, 210],
-      ];
-      for (let i = 0; i < 6; i++) {
-        const baseAngle = (i / 6) * Math.PI * 2 + time * 0.4;
-        const r = 0.15 + 0.12 * Math.sin(time * 0.8 + i * 1.2);
-        const fx = cx + Math.cos(baseAngle) * r * maxR;
-        const fy = cy + Math.sin(baseAngle) * r * maxR;
-        const fogR = (isMobile ? 25 : 45) + 10 * Math.sin(time + i);
-        const pulse = 0.6 + 0.4 * Math.sin(time * 1.2 + i * 2);
-        const fc = fogColors[i % fogColors.length];
-
-        ctx.globalCompositeOperation = "screen";
-        ctx.globalAlpha = 0.08 * pulse;
-        const fg = ctx.createRadialGradient(fx, fy, 0, fx, fy, fogR);
-        fg.addColorStop(0, `rgba(${fc[0]}, ${fc[1]}, ${fc[2]}, 0.5)`);
-        fg.addColorStop(0.5, `rgba(${fc[0]}, ${fc[1]}, ${fc[2]}, 0.15)`);
-        fg.addColorStop(1, "transparent");
-        ctx.fillStyle = fg;
-        ctx.beginPath();
-        ctx.arc(fx, fy, fogR, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // ── Sparse tiny accent stars (very few, just sparkle) ──
-      ctx.globalCompositeOperation = "screen";
-      for (const s of fewStars) {
-        const twinkle = 0.3 + 0.7 * Math.sin(time * s.speed + s.x * 30);
-        if (twinkle < 0.5) continue; // only visible when bright
-        ctx.globalAlpha = twinkle * 0.6;
-        ctx.fillStyle = "rgba(255, 250, 235, 1)";
-        ctx.beginPath();
-        ctx.arc(s.x * canvasSize, s.y * canvasSize, s.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // ── Bright galactic core ──
-      ctx.globalCompositeOperation = "source-over";
-      ctx.globalAlpha = 1;
-      const coreR = isMobile ? 26 : 44;
-
-      // Wide warm halo
-      const wideGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 5);
-      wideGlow.addColorStop(0, `rgba(255, 225, 150, ${0.22 + 0.07 * Math.sin(time * 1.8)})`);
-      wideGlow.addColorStop(0.25, "rgba(230, 190, 110, 0.08)");
-      wideGlow.addColorStop(1, "transparent");
-      ctx.fillStyle = wideGlow;
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreR * 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Mid glow ring
-      const midGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 2.5);
-      midGlow.addColorStop(0, `rgba(255, 235, 175, ${0.6 + 0.12 * Math.sin(time * 2.2)})`);
-      midGlow.addColorStop(0.35, "rgba(255, 210, 130, 0.2)");
-      midGlow.addColorStop(1, "transparent");
-      ctx.fillStyle = midGlow;
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreR * 2.5, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Intense core
-      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
-      coreGrad.addColorStop(0, "rgba(255, 250, 225, 0.97)");
-      coreGrad.addColorStop(0.2, "rgba(255, 230, 160, 0.75)");
-      coreGrad.addColorStop(0.5, "rgba(230, 190, 120, 0.3)");
-      coreGrad.addColorStop(1, "transparent");
-      ctx.fillStyle = coreGrad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-
-      // ── Glass reflections ──
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
-      ctx.clip();
-
-      // Specular highlight top-left
-      const specular = ctx.createRadialGradient(cx * 0.55, cy * 0.45, 0, cx * 0.55, cy * 0.45, maxR * 0.38);
-      specular.addColorStop(0, "rgba(255, 253, 245, 0.18)");
-      specular.addColorStop(0.4, "rgba(255, 253, 245, 0.05)");
-      specular.addColorStop(1, "transparent");
-      ctx.fillStyle = specular;
-      ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-      // Rim light
-      ctx.strokeStyle = "rgba(210, 195, 160, 0.12)";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.arc(cx, cy, maxR - 1, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.restore();
-      animRef.current = requestAnimationFrame(draw);
-    };
-
-    animRef.current = requestAnimationFrame(draw);
-    return () => {
-      cancelAnimationFrame(animRef.current);
-    };
-  }, [canvasSize, isMobile]);
+  // Make video slightly larger to fill the sphere edge-to-edge
+  const videoScale = 1.35;
+  const videoSize = Math.round(ballSize * videoScale);
+  const offset = Math.round((videoSize - ballSize) / -2);
 
   return (
     <div
       className="absolute z-[21] pointer-events-none rounded-full overflow-hidden"
       style={{ width: ballSize, height: ballSize }}
     >
-      <canvas
-        ref={canvasRef}
+      {/* Video layer — the living universe */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        src="/videos/cosmic-ball.mp4"
         style={{
-          width: canvasSize,
-          height: canvasSize,
-          borderRadius: "50%",
+          width: videoSize,
+          height: videoSize,
+          objectFit: "cover",
           position: "absolute",
           left: offset,
           top: offset,
+          borderRadius: "50%",
+          filter: "saturate(1.3) brightness(1.1)",
         }}
+      />
+
+      {/* Spherical shading — darkens edges for 3D depth */}
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.7) 100%)`,
+          zIndex: 2,
+        }}
+      />
+
+      {/* Inner mist / fog overlay — animated */}
+      <motion.div
+        className="absolute inset-0 rounded-full"
+        style={{
+          background: `radial-gradient(circle at 45% 40%, rgba(200,180,130,0.08) 0%, transparent 50%),
+                       radial-gradient(circle at 60% 65%, rgba(100,140,220,0.06) 0%, transparent 45%)`,
+          zIndex: 3,
+        }}
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Glass specular highlight — top-left */}
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: "60%",
+          height: "50%",
+          top: "8%",
+          left: "12%",
+          background: `radial-gradient(ellipse at 50% 40%, rgba(255,253,245,0.22) 0%, rgba(255,253,245,0.06) 50%, transparent 100%)`,
+          zIndex: 4,
+        }}
+      />
+
+      {/* Highlight arc — crescent reflection */}
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: "80%",
+          height: "80%",
+          top: "5%",
+          left: "10%",
+          border: "1.5px solid rgba(255,250,240,0.1)",
+          borderBottom: "none",
+          borderRight: "none",
+          zIndex: 4,
+        }}
+      />
+
+      {/* Subtle secondary arc — bottom right */}
+      <div
+        className="absolute rounded-full"
+        style={{
+          width: "70%",
+          height: "70%",
+          bottom: "6%",
+          right: "8%",
+          borderBottom: "1px solid rgba(200,190,160,0.06)",
+          borderRight: "1px solid rgba(200,190,160,0.04)",
+          borderTop: "none",
+          borderLeft: "none",
+          zIndex: 4,
+        }}
+      />
+
+      {/* Edge glow ring */}
+      <div
+        className="absolute inset-0 rounded-full"
+        style={{
+          boxShadow: `inset 0 0 20px 4px rgba(180,160,120,0.08), inset 0 0 60px 10px rgba(0,0,0,0.3)`,
+          zIndex: 5,
+        }}
+      />
+
+      {/* Pulsating core glow */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: "30%",
+          height: "30%",
+          top: "35%",
+          left: "35%",
+          background: `radial-gradient(circle, rgba(255,240,180,0.15) 0%, rgba(255,220,130,0.05) 50%, transparent 100%)`,
+          zIndex: 3,
+        }}
+        animate={{ scale: [0.9, 1.15, 0.9], opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
   );
