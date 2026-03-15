@@ -201,6 +201,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const { nameMap, descMap, posMap } = useTranslatedSpread(t);
   const [phase, setPhase] = useState<Phase>("select");
   const [showDailyCard, setShowDailyCard] = useState(false);
