@@ -1978,27 +1978,16 @@ const HeroSection = () => {
                   style={{ width: "280px", height: "280px" }}
                   onClick={handleCrystalClick}
                 >
-                  <motion.img
+                  <img
                     src={crystalBall}
                     alt="Crystal Ball"
                     className="w-full h-full"
-                    style={{ objectFit: "contain" }}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{
-                      opacity: 1,
-                      scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
+                    style={{
+                      objectFit: "contain",
                       filter: hoveredItem !== null
-                        ? [
-                            `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                            `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
-                            `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                          ]
-                        : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
-                    }}
-                    transition={{
-                      opacity: { duration: 1.5, delay: 1 },
-                      scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-                      filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
+                        ? `drop-shadow(0 0 60px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`
+                        : "drop-shadow(0 0 45px hsl(43 80% 55% / 0.35))",
+                      transition: "filter 0.8s ease-in-out",
                     }}
                   />
 
