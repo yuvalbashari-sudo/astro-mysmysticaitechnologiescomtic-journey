@@ -2,6 +2,7 @@ import { toast } from "@/components/ui/sonner";
 import { Sparkles } from "lucide-react";
 import React from "react";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import { TEXT_SIZE_CLASSES, type TextSize } from "@/components/TextSizeControl";
 
 // Stream AI reading from edge function
 export async function streamMysticalReading(
@@ -92,14 +93,15 @@ export async function streamMysticalReading(
 }
 
 // Render mystical markdown text into styled React elements
-export function renderMysticalText(text: string): React.ReactNode {
+export function renderMysticalText(text: string, textSize: TextSize = "default"): React.ReactNode {
+  const s = TEXT_SIZE_CLASSES[textSize];
   const lines = text.split("\n");
   const elements: React.ReactNode[] = [];
 
   lines.forEach((line, i) => {
     const trimmed = line.trim();
     if (!trimmed) {
-      elements.push(React.createElement("div", { key: i, className: "h-4 md:h-5" }));
+      elements.push(React.createElement("div", { key: i, className: s.gap }));
       return;
     }
     if (trimmed === "---") {
@@ -114,7 +116,7 @@ export function renderMysticalText(text: string): React.ReactNode {
           style: { background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" },
         },
           React.createElement(Sparkles, { className: "w-6 h-6 text-gold mx-auto mb-3" }),
-          React.createElement("h3", { className: "font-heading text-base md:text-lg text-gold" }, trimmed.replace(/### [✨🌟]\s?/, ""))
+          React.createElement("h3", { className: `font-heading ${s.subheading} text-gold` }, trimmed.replace(/### [✨🌟]\s?/, ""))
         )
       );
       return;
@@ -126,7 +128,7 @@ export function renderMysticalText(text: string): React.ReactNode {
             className: "w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0",
             style: { background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" },
           }, React.createElement("span", { className: "text-xl" }, trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦")),
-          React.createElement("h3", { className: "font-heading text-lg md:text-xl text-gold" }, trimmed.replace("### ", ""))
+          React.createElement("h3", { className: `font-heading ${s.heading} text-gold` }, trimmed.replace("### ", ""))
         )
       );
       return;
@@ -139,7 +141,7 @@ export function renderMysticalText(text: string): React.ReactNode {
             className: "w-7 h-7 rounded-full flex items-center justify-center",
             style: { background: "hsl(var(--gold) / 0.1)" },
           }, React.createElement("span", { className: "text-sm" }, label.match(/[\p{Emoji}]/u)?.[0] || "✦")),
-          React.createElement("h4", { className: "font-heading text-sm md:text-base text-gold" }, label.replace(/[\p{Emoji}]\s?/u, "").trim())
+          React.createElement("h4", { className: `font-heading ${s.subheading} text-gold` }, label.replace(/[\p{Emoji}]\s?/u, "").trim())
         )
       );
       return;
@@ -150,14 +152,14 @@ export function renderMysticalText(text: string): React.ReactNode {
           key: i,
           className: "rounded-xl p-5 md:p-6 text-center mt-4 mb-4",
           style: { background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" },
-        }, React.createElement("p", { className: "text-gold/80 font-body text-base md:text-lg leading-relaxed italic" }, trimmed))
+        }, React.createElement("p", { className: `text-gold/80 font-body ${s.quote} leading-relaxed italic` }, trimmed))
       );
       return;
     }
     // Regular paragraph - strip bold markers
     const cleanText = trimmed.replace(/\*\*(.*?)\*\*/g, '$1');
     elements.push(
-      React.createElement("p", { key: i, className: "text-foreground/80 font-body text-base md:text-lg leading-[1.9] md:leading-[2]" }, cleanText)
+      React.createElement("p", { key: i, className: `text-foreground/80 font-body ${s.body}` }, cleanText)
     );
   });
 

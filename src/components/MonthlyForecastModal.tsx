@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
 import { getZodiacSign } from "@/data/zodiacData";
@@ -24,6 +25,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
@@ -135,7 +137,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
                   {aiText ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                      {renderMysticalText(aiText)}
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      {renderMysticalText(aiText, textSize)}
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                           <Loader2 className="w-5 h-5 text-gold/60 animate-spin" />

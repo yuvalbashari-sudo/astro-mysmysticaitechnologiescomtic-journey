@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Briefcase, Eye, Compass, Crown, Share2, Copy, Check, Layers, Star, Sun, MessageCircle } from "lucide-react";
@@ -161,6 +162,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [aiLoading, setAiLoading] = useState(false);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   const needsQuestion = selectedSpreadKey !== "daily";
 
@@ -863,7 +865,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                     {aiText && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} dir="rtl">
-                        {renderMysticalText(aiText)}
+                        <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                        {renderMysticalText(aiText, textSize)}
                       </motion.div>
                     )}
                   </motion.div>

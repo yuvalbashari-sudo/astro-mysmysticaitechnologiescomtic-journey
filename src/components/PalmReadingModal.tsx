@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Hand, Crown, Share2, Copy, Check, Loader2, Camera, Upload, ImageIcon } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
@@ -25,6 +26,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
   const rightFileRef = useRef<HTMLInputElement>(null);
   const leftFileRef = useRef<HTMLInputElement>(null);
   const rightCameraRef = useRef<HTMLInputElement>(null);
@@ -144,7 +146,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                   </div>
                   {aiText ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                      {renderMysticalText(aiText)}
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      {renderMysticalText(aiText, textSize)}
                       {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.palm_loading}</span></motion.div>)}
                     </motion.div>
                   ) : aiError ? (

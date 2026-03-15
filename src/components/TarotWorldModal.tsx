@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Crown, Share2, Copy, Check, Lock, ChevronRight, Loader2 } from "lucide-react";
 import { spreads, drawCardsForSpread, getInterpretation, type SpreadConfig, type TarotWorldCard } from "@/data/tarotWorldData";
@@ -9,6 +10,7 @@ import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
+import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
@@ -162,69 +164,6 @@ async function streamTarotReading(
   }
 }
 
-// Simple markdown-like renderer for Hebrew mystical text
-function renderMysticalText(text: string) {
-  const lines = text.split("\n");
-  const elements: React.ReactNode[] = [];
-  
-  lines.forEach((line, i) => {
-    const trimmed = line.trim();
-    if (!trimmed) {
-      elements.push(<div key={i} className="h-4 md:h-5" />);
-      return;
-    }
-    if (trimmed === "---") {
-      elements.push(<div key={i} className="section-divider max-w-[100px] mx-auto my-8 md:my-10" />);
-      return;
-    }
-    if (trimmed.startsWith("### ✨")) {
-      elements.push(
-        <div key={i} className="mt-8 md:mt-10 rounded-xl p-6 md:p-8 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-          <Sparkles className="w-6 h-6 text-gold mx-auto mb-3" />
-          <h3 className="font-heading text-base md:text-lg text-gold">{trimmed.replace("### ✨ ", "").replace("### ✨", "")}</h3>
-        </div>
-      );
-      return;
-    }
-    if (trimmed.startsWith("### ")) {
-      elements.push(
-        <div key={i} className="flex items-center gap-3 mt-8 md:mt-10 mb-4">
-          <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" }}>
-            <span className="text-xl">{trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
-          </div>
-          <h3 className="font-heading text-lg md:text-xl text-gold">{trimmed.replace("### ", "")}</h3>
-        </div>
-      );
-      return;
-    }
-    if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
-      const label = trimmed.slice(2, -2);
-      elements.push(
-        <div key={i} className="flex items-center gap-2.5 mt-6 mb-2">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
-            <span className="text-sm">{label.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
-          </div>
-          <h4 className="font-heading text-sm md:text-base text-gold">{label.replace(/[\p{Emoji}]\s?/u, "").trim()}</h4>
-        </div>
-      );
-      return;
-    }
-    if (trimmed.startsWith("״") || trimmed.startsWith('"')) {
-      elements.push(
-        <div key={i} className="rounded-xl p-5 md:p-6 text-center mt-4 mb-4" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-          <p className="text-gold/80 font-body text-base md:text-lg leading-relaxed italic">{trimmed}</p>
-        </div>
-      );
-      return;
-    }
-    // Regular paragraph
-    elements.push(
-      <p key={i} className="text-foreground/80 font-body text-base md:text-lg leading-[1.9] md:leading-[2]">{trimmed.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
-    );
-  });
-
-  return <div className="space-y-1">{elements}</div>;
-}
 
 // Helper to get translated spread info
 function useTranslatedSpread(t: ReturnType<typeof useT>) {
@@ -275,6 +214,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
   const [userQuestion, setUserQuestion] = useState("");
 
   const handleClose = () => {
@@ -868,7 +808,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   {/* AI Generated Content */}
                   {aiText ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                      {renderMysticalText(aiText)}
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      {renderMysticalText(aiText, textSize)}
                       
                       {aiLoading && (
                         <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
