@@ -2,6 +2,7 @@ import { toast } from "@/components/ui/sonner";
 import { Sparkles } from "lucide-react";
 import React from "react";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import { TEXT_SIZE_CLASSES, type TextSize } from "@/components/TextSizeControl";
 
 // Stream AI reading from edge function
 export async function streamMysticalReading(
