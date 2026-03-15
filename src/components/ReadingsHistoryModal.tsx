@@ -90,7 +90,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
 
             {readings.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground font-body text-sm">אין קריאות שמורות עדיין</p>
+                <p className="text-muted-foreground font-body text-sm">{t.a11y_no_readings}</p>
               </div>
             ) : (
               <div className="space-y-3">
