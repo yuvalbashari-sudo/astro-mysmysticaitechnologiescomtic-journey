@@ -865,7 +865,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                     {aiText && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} dir="rtl">
-                        {renderMysticalText(aiText)}
+                        <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                        {renderMysticalText(aiText, textSize)}
                       </motion.div>
                     )}
                   </motion.div>

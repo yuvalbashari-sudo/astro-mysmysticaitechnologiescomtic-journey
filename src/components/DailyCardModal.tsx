@@ -638,7 +638,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   {/* AI content */}
                   {aiText ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                      {renderMysticalText(aiText)}
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      {renderMysticalText(aiText, textSize)}
                       {aiLoading && (
                         <motion.div
                           className="flex items-center justify-center gap-2 mt-6"
