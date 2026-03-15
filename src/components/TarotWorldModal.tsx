@@ -170,29 +170,29 @@ function renderMysticalText(text: string) {
   lines.forEach((line, i) => {
     const trimmed = line.trim();
     if (!trimmed) {
-      elements.push(<div key={i} className="h-2" />);
+      elements.push(<div key={i} className="h-4 md:h-5" />);
       return;
     }
     if (trimmed === "---") {
-      elements.push(<div key={i} className="section-divider max-w-[80px] mx-auto my-6" />);
+      elements.push(<div key={i} className="section-divider max-w-[100px] mx-auto my-8 md:my-10" />);
       return;
     }
     if (trimmed.startsWith("### ✨")) {
       elements.push(
-        <div key={i} className="mt-6 rounded-xl p-5 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-          <Sparkles className="w-5 h-5 text-gold mx-auto mb-2" />
-          <h3 className="font-heading text-sm text-gold mb-2">{trimmed.replace("### ✨ ", "").replace("### ✨", "")}</h3>
+        <div key={i} className="mt-8 md:mt-10 rounded-xl p-6 md:p-8 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+          <Sparkles className="w-6 h-6 text-gold mx-auto mb-3" />
+          <h3 className="font-heading text-base md:text-lg text-gold">{trimmed.replace("### ✨ ", "").replace("### ✨", "")}</h3>
         </div>
       );
       return;
     }
     if (trimmed.startsWith("### ")) {
       elements.push(
-        <div key={i} className="flex items-center gap-3 mt-6 mb-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" }}>
-            <span className="text-lg">{trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
+        <div key={i} className="flex items-center gap-3 mt-8 md:mt-10 mb-4">
+          <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" }}>
+            <span className="text-xl">{trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
           </div>
-          <h3 className="font-heading text-base text-gold">{trimmed.replace("### ", "")}</h3>
+          <h3 className="font-heading text-lg md:text-xl text-gold">{trimmed.replace("### ", "")}</h3>
         </div>
       );
       return;
@@ -200,30 +200,30 @@ function renderMysticalText(text: string) {
     if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
       const label = trimmed.slice(2, -2);
       elements.push(
-        <div key={i} className="flex items-center gap-2 mt-4 mb-1">
-          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
-            <span className="text-xs">{label.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
+        <div key={i} className="flex items-center gap-2.5 mt-6 mb-2">
+          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
+            <span className="text-sm">{label.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
           </div>
-          <h4 className="font-heading text-xs text-gold">{label.replace(/[\p{Emoji}]\s?/u, "").trim()}</h4>
+          <h4 className="font-heading text-sm md:text-base text-gold">{label.replace(/[\p{Emoji}]\s?/u, "").trim()}</h4>
         </div>
       );
       return;
     }
     if (trimmed.startsWith("״") || trimmed.startsWith('"')) {
       elements.push(
-        <div key={i} className="rounded-xl p-4 text-center mt-2 mb-2" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-          <p className="text-gold/80 font-body text-sm leading-relaxed italic">{trimmed}</p>
+        <div key={i} className="rounded-xl p-5 md:p-6 text-center mt-4 mb-4" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+          <p className="text-gold/80 font-body text-base md:text-lg leading-relaxed italic">{trimmed}</p>
         </div>
       );
       return;
     }
     // Regular paragraph
     elements.push(
-      <p key={i} className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{trimmed.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
+      <p key={i} className="text-foreground/80 font-body text-base md:text-lg leading-[1.9] md:leading-[2]">{trimmed.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
     );
   });
 
-  return <div className="space-y-0">{elements}</div>;
+  return <div className="space-y-1">{elements}</div>;
 }
 
 // Helper to get translated spread info
