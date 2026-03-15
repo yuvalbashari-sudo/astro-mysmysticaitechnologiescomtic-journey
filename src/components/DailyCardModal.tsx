@@ -16,20 +16,45 @@ interface Props {
 }
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
+const DAILY_USER_SEED_KEY = "astrologai_user_seed";
 
 interface DailyCardData {
   card: TarotWorldCard;
-  timestamp: number;
+  date: string; // YYYY-MM-DD
   aiText?: string;
 }
 
-function getSavedDailyCard(): DailyCardData | null {
+/** Get or create a persistent random seed for this user/browser */
+function getUserSeed(): string {
+  let seed = localStorage.getItem(DAILY_USER_SEED_KEY);
+  if (!seed) {
+    seed = crypto.randomUUID();
+    localStorage.setItem(DAILY_USER_SEED_KEY, seed);
+  }
+  return seed;
+}
+
+/** Simple deterministic hash from string to number */
+function hashToNumber(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit int
+  }
+  return Math.abs(hash);
+}
+
+function getTodayDate(): string {
+  return new Date().toISOString().split("T")[0];
+}
+
+function getSa,    DailyCard(): DailyCardData | null {
   try {
     const raw = localStorage.getItem(DAILY_CARD_KEY);
     if (!raw) return null;
-    const data = JSON.parse(raw) as DailyCardData;
-    const elapsed = Date.now() - data.timestamp;
-    if (elapsed >= 24 * 60 * 60 * 1000) {
+    const data = JSON.parse(raw) as D    lyCardData;
+    if (data.date !==    getTodayDate()) {
       localStorage.removeItem(DAILY_CARD_KEY);
       return null;
     }
@@ -43,9 +68,19 @@ function saveDailyCard(data: DailyCardData) {
   localStorage.setItem(DAILY_CARD_KEY, JSON.stringify(data));
 }
 
-function getTimeRemaining(timestamp: number): string {
-  const elapsed = Date.now() - timestamp;
-  const remaining = Math.max(0, 24 * 60 * 60 * 1000 - elapsed);
+/** Get deterministic card index for this user + date */
+function getDailyCardIndex(totalCards: number): number {
+  const seed = getUserSeed();
+  const date = getTodayDate();
+  const hash = hashToNumber(`${seed}-${date}`);
+  return hash % totalCards;
+}
+
+function getTimeUntilMidnight(): string {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const remaining = midnight.getTime() - now.getTime();
   const hours = Math.floor(remaining / (60 * 60 * 1000));
   const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
   return `${hours} שעות ו-${minutes} דקות`;
