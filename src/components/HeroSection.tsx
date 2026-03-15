@@ -1382,7 +1382,7 @@ const HeroSection = () => {
     setClickBurst((c) => c + 1);
   }, []);
 
-  const orbRadius = isMobile ? 170 : 320;
+  const orbRadius = isMobile ? 190 : 360;
 
   const particles = useMemo(() => {
     const types: Array<"dust" | "spark" | "orb"> = ["dust", "spark", "orb"];
