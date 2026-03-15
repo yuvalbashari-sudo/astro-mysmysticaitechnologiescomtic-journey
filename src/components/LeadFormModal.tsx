@@ -61,7 +61,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
                     <input type="email" required maxLength={255} className="mystical-input font-body" placeholder={t.lead_email_placeholder} dir="ltr" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                   </div>
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_interest}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
                     <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
                       <option value="">{t.lead_interest_placeholder}</option>
                       <option value="astrology">{t.lead_modal_interest_personal}</option>
