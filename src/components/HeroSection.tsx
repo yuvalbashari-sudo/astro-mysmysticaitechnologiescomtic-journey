@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
@@ -8,6 +8,7 @@ import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import PalmReadingModal from "./PalmReadingModal";
+import DailyCardModal from "./DailyCardModal";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
@@ -74,6 +75,7 @@ const ITEM_COLORS = [
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
+  { glow: "hsl(280, 70%, 65%)", bg: "hsl(280, 70%, 65%)", label: "violet" },     // Daily Card - mystical violet
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
@@ -1314,6 +1316,7 @@ const HeroSection = () => {
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
+  const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
@@ -1322,11 +1325,12 @@ const HeroSection = () => {
   const crystalRef = useRef<HTMLDivElement>(null);
 
   const menuItems = useMemo(() => [
-    { icon: Star, label: t.hero_menu_forecast, angle: -72 },
-    { icon: Moon, label: t.hero_menu_rising, angle: -36 },
-    { icon: Sparkles, label: t.hero_menu_compatibility, angle: 0 },
-    { icon: Eye, label: t.hero_menu_tarot, angle: 36 },
-    { icon: Hand, label: t.hero_menu_palm, angle: 72 },
+    { icon: Star, label: t.hero_menu_forecast, angle: -75 },
+    { icon: Moon, label: t.hero_menu_rising, angle: -45 },
+    { icon: Sparkles, label: t.hero_menu_compatibility, angle: -15 },
+    { icon: Eye, label: t.hero_menu_tarot, angle: 15 },
+    { icon: Hand, label: t.hero_menu_palm, angle: 45 },
+    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", angle: 75 },
   ], [t]);
 
   // Mouse tracking
@@ -2054,7 +2058,7 @@ const HeroSection = () => {
                       onMouseLeave={() => setHoveredItem(null)}
                       whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); if (i === 5) setDailyCardOpen(true); }}
                     >
                       <motion.div
                         className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
@@ -2110,7 +2114,7 @@ const HeroSection = () => {
                               exit={{ opacity: 0, y: -5, scale: 0.5 }}
                               transition={{ duration: 0.3 }}
                             >
-                              {["⭐", "🌙", "💫", "🔮", "✋"][i]}
+                              {["⭐", "🌙", "💫", "🔮", "✋", "☀️"][i]}
                             </motion.span>
                           )}
                         </AnimatePresence>
@@ -2256,6 +2260,7 @@ const HeroSection = () => {
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
     </section>
   );
 };
