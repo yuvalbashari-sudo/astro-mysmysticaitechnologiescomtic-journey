@@ -206,7 +206,7 @@ const DailyRitualSection = () => {
               className="mt-10 text-center"
             >
               <div className="mystical-card inline-flex items-center gap-3 px-6 py-3 mx-auto">
-                <Clock className="w-4 h-4 text-gold/60" />
+                <Clock className="w-4 h-4 text-gold/60" aria-hidden="true" />
                 <span className="text-sm text-muted-foreground font-body">
                   {t.daily_ritual_done_text}
                 </span>
