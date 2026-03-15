@@ -2260,6 +2260,7 @@ const HeroSection = () => {
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
     </section>
   );
 };
