@@ -11,6 +11,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
