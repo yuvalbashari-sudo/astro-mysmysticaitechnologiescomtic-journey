@@ -629,7 +629,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                           whileHover={!isRevealed ? { y: -8, scale: 1.05 } : {}}
                           onClick={() => handleRevealCard(i)}
                         >
-                          <div className="relative w-28 h-40 md:w-36 md:h-52" style={{ perspective: "600px" }}>
+                          <div className="relative w-36 h-52 md:w-44 md:h-64" style={{ perspective: "600px" }}>
                             <motion.div
                               className="absolute inset-0 rounded-xl overflow-hidden"
                               animate={{ rotateY: isRevealed ? 180 : 0 }}
@@ -755,7 +755,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         transition={{ delay: 0.3 + i * 0.3, duration: 0.8, type: "spring", damping: 12 }}
                       >
                         <div
-                          className="relative w-44 h-64 md:w-56 md:h-80 rounded-xl overflow-hidden"
+                          className="relative w-52 h-72 md:w-64 md:h-[22rem] rounded-xl overflow-hidden"
                           style={{
                             border: "2px solid hsl(var(--gold) / 0.5)",
                             boxShadow: "0 0 40px hsl(var(--gold) / 0.25), 0 0 80px hsl(215 70% 50% / 0.15), 0 20px 60px hsl(0 0% 0% / 0.5)",
