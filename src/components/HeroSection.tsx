@@ -306,119 +306,210 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 /* ── Crystal Ball Internal Energy ──────────────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const size = isMobile ? 180 : 280;
+  const inset = isMobile ? 18 : 28; // keep effects inside the glass edge
+  const innerSize = size - inset * 2;
+
+  // Generate stardust particles
+  const particles = useMemo(() =>
+    Array.from({ length: 24 }, (_, i) => ({
+      id: i,
+      x: 20 + Math.random() * 60,
+      y: 20 + Math.random() * 60,
+      size: 1 + Math.random() * 2.5,
+      dur: 5 + Math.random() * 8,
+      delay: Math.random() * 5,
+      drift: 15 + Math.random() * 25,
+    })), []);
+
   return (
-    <div className="absolute z-[21] pointer-events-none rounded-full overflow-hidden" style={{ width: size, height: size }}>
-      {/* Layer 1: Primary swirling fog — slow orbit */}
-      <motion.div
-        className="absolute inset-0 rounded-full overflow-hidden"
-        style={{ mixBlendMode: "screen" }}
-      >
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "80%", height: "80%", left: "10%", top: "10%",
-            background: "radial-gradient(ellipse at 40% 40%, hsl(var(--gold) / 0.18) 0%, hsl(var(--celestial) / 0.06) 50%, transparent 75%)",
-            filter: "blur(8px)",
-          }}
-          animate={{
-            rotate: [0, 360],
-            x: [0, 15, -10, 8, 0],
-            y: [0, -10, 8, -5, 0],
-            opacity: [0.5, 0.8, 0.4, 0.7, 0.5],
-          }}
-          transition={{
-            rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-            x: { duration: 8, repeat: Infinity, ease: "easeInOut" },
-            y: { duration: 10, repeat: Infinity, ease: "easeInOut" },
-            opacity: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-          }}
-        />
-
-        {/* Layer 2: Counter-rotating mist */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "70%", height: "70%", left: "15%", top: "15%",
-            background: "radial-gradient(ellipse at 60% 55%, hsl(var(--celestial) / 0.14) 0%, hsl(var(--gold) / 0.05) 40%, transparent 70%)",
-            filter: "blur(10px)",
-          }}
-          animate={{
-            rotate: [360, 0],
-            x: [0, -12, 10, -6, 0],
-            y: [0, 8, -12, 5, 0],
-            opacity: [0.3, 0.6, 0.25, 0.55, 0.3],
-          }}
-          transition={{
-            rotate: { duration: 25, repeat: Infinity, ease: "linear" },
-            x: { duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 },
-            y: { duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1 },
-            opacity: { duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 },
-          }}
-        />
-
-        {/* Layer 3: Deep crimson wisp — slow drift */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "50%", height: "50%", left: "25%", top: "30%",
-            background: "radial-gradient(ellipse at 50% 50%, hsl(var(--crimson) / 0.12) 0%, transparent 65%)",
-            filter: "blur(12px)",
-          }}
-          animate={{
-            rotate: [0, -180, -360],
-            x: [0, 18, -14, 10, 0],
-            y: [0, -8, 14, -6, 0],
-            opacity: [0.2, 0.45, 0.15, 0.4, 0.2],
-          }}
-          transition={{
-            rotate: { duration: 30, repeat: Infinity, ease: "linear" },
-            x: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
-            y: { duration: 14, repeat: Infinity, ease: "easeInOut", delay: 2 },
-            opacity: { duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 },
-          }}
-        />
-
-        {/* Layer 4: Bright core energy — gentle pulse position only */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "35%", height: "35%", left: "32%", top: "32%",
-            background: "radial-gradient(circle, hsl(var(--gold) / 0.2) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
-            filter: "blur(6px)",
-          }}
-          animate={{
-            x: [0, 8, -6, 10, -4, 0],
-            y: [0, -6, 10, -4, 8, 0],
-            opacity: [0.4, 0.7, 0.35, 0.65, 0.4, 0.4],
-          }}
-          transition={{
-            duration: 10, repeat: Infinity, ease: "easeInOut",
-          }}
-        />
-
-        {/* Layer 5: Drifting fog tendril */}
-        <motion.div
-          className="absolute"
-          style={{
-            width: "90%", height: "40%", left: "5%", top: "30%",
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.08) 30%, hsl(var(--celestial) / 0.06) 70%, transparent 100%)",
-            filter: "blur(14px)",
-            borderRadius: "50%",
-          }}
-          animate={{
-            rotate: [0, 15, -10, 5, 0],
-            y: [-5, 10, -8, 5, -5],
-            opacity: [0.3, 0.5, 0.2, 0.45, 0.3],
-          }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        />
-      </motion.div>
-
-      {/* Subtle inner rim highlight */}
+    <div
+      className="absolute z-[21] pointer-events-none rounded-full overflow-hidden"
+      style={{ width: size, height: size }}
+    >
+      {/* Dark inner backdrop to ensure contrast */}
       <div
-        className="absolute inset-0 rounded-full pointer-events-none"
+        className="absolute rounded-full"
         style={{
-          background: "radial-gradient(circle at 35% 30%, hsl(var(--gold) / 0.06) 0%, transparent 50%)",
+          inset: inset - 2,
+          background: "radial-gradient(circle, hsl(222 50% 5% / 0.85) 30%, hsl(222 47% 8% / 0.7) 70%, transparent 100%)",
+        }}
+      />
+
+      {/* ═══ LAYER 1: Primary nebula vortex — visible, slow spiral ═══ */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: innerSize, height: innerSize, left: inset, top: inset,
+          background: `conic-gradient(
+            from 0deg,
+            hsl(var(--gold) / 0.35) 0deg,
+            hsl(var(--celestial) / 0.2) 60deg,
+            hsl(var(--crimson) / 0.15) 120deg,
+            hsl(var(--gold) / 0.3) 180deg,
+            hsl(var(--celestial) / 0.25) 240deg,
+            hsl(var(--crimson) / 0.1) 300deg,
+            hsl(var(--gold) / 0.35) 360deg
+          )`,
+          filter: `blur(${isMobile ? 10 : 16}px)`,
+          mixBlendMode: "screen",
+        }}
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* ═══ LAYER 2: Counter-rotating nebula cloud ═══ */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: innerSize * 0.85, height: innerSize * 0.85,
+          left: inset + innerSize * 0.075, top: inset + innerSize * 0.075,
+          background: `conic-gradient(
+            from 180deg,
+            hsl(var(--celestial) / 0.3) 0deg,
+            transparent 50deg,
+            hsl(var(--gold) / 0.25) 120deg,
+            transparent 170deg,
+            hsl(var(--crimson) / 0.2) 240deg,
+            transparent 290deg,
+            hsl(var(--celestial) / 0.3) 360deg
+          )`,
+          filter: `blur(${isMobile ? 8 : 12}px)`,
+          mixBlendMode: "screen",
+        }}
+        animate={{ rotate: [360, 0] }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* ═══ LAYER 3: Wandering fog wisps — slow figure-8 drift ═══ */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: innerSize * 0.6, height: innerSize * 0.4,
+          left: inset + innerSize * 0.2, top: inset + innerSize * 0.15,
+          background: "radial-gradient(ellipse, hsl(var(--gold) / 0.35) 0%, hsl(var(--celestial) / 0.15) 50%, transparent 80%)",
+          filter: `blur(${isMobile ? 6 : 10}px)`,
+          mixBlendMode: "screen",
+        }}
+        animate={{
+          x: [0, 20, -15, 25, -10, 0],
+          y: [0, -15, 20, -10, 18, 0],
+          rotate: [0, 45, -30, 60, -15, 0],
+          scale: [1, 1.15, 0.9, 1.2, 0.95, 1],
+        }}
+        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ═══ LAYER 4: Deep swirling fog — opposite drift ═══ */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: innerSize * 0.55, height: innerSize * 0.55,
+          left: inset + innerSize * 0.3, top: inset + innerSize * 0.3,
+          background: "radial-gradient(ellipse at 30% 60%, hsl(var(--crimson) / 0.25) 0%, hsl(var(--gold) / 0.1) 40%, transparent 75%)",
+          filter: `blur(${isMobile ? 7 : 11}px)`,
+          mixBlendMode: "screen",
+        }}
+        animate={{
+          x: [0, -18, 22, -12, 16, 0],
+          y: [0, 12, -18, 15, -8, 0],
+          rotate: [0, -60, 40, -80, 20, 0],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      />
+
+      {/* ═══ LAYER 5: Bright energy core — pulsing position ═══ */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: innerSize * 0.3, height: innerSize * 0.3,
+          left: inset + innerSize * 0.35, top: inset + innerSize * 0.35,
+          background: "radial-gradient(circle, hsl(var(--gold) / 0.5) 0%, hsl(var(--gold) / 0.2) 40%, transparent 70%)",
+          filter: `blur(${isMobile ? 4 : 6}px)`,
+          mixBlendMode: "screen",
+        }}
+        animate={{
+          x: [0, 10, -8, 12, -6, 0],
+          y: [0, -8, 12, -5, 10, 0],
+          opacity: [0.6, 1, 0.5, 0.9, 0.55, 0.6],
+          scale: [1, 1.1, 0.95, 1.15, 1, 1],
+        }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ═══ LAYER 6: Spiraling conic highlight — fast inner rotation ═══ */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: innerSize * 0.7, height: innerSize * 0.7,
+          left: inset + innerSize * 0.15, top: inset + innerSize * 0.15,
+          background: `conic-gradient(
+            from 90deg,
+            transparent 0deg,
+            hsl(var(--gold) / 0.2) 30deg,
+            transparent 60deg,
+            hsl(var(--gold) / 0.15) 150deg,
+            transparent 180deg,
+            hsl(var(--celestial) / 0.18) 270deg,
+            transparent 300deg
+          )`,
+          filter: `blur(${isMobile ? 5 : 8}px)`,
+          mixBlendMode: "screen",
+        }}
+        animate={{ rotate: [0, -360] }}
+        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* ═══ STARDUST PARTICLES — drifting celestial specks ═══ */}
+      {particles.map(p => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            width: p.size, height: p.size,
+            left: `${p.x}%`, top: `${p.y}%`,
+            background: p.id % 3 === 0
+              ? "hsl(var(--gold) / 0.9)"
+              : p.id % 3 === 1
+                ? "hsl(var(--celestial) / 0.8)"
+                : "hsl(var(--gold-light) / 0.7)",
+            boxShadow: `0 0 ${p.size * 2}px ${p.size}px ${
+              p.id % 3 === 0 ? "hsl(var(--gold) / 0.4)" : "hsl(var(--celestial) / 0.3)"
+            }`,
+          }}
+          animate={{
+            x: [0, p.drift, -p.drift * 0.6, p.drift * 0.8, 0],
+            y: [0, -p.drift * 0.7, p.drift * 0.5, -p.drift * 0.9, 0],
+            opacity: [0, 0.8, 0.3, 0.9, 0],
+            scale: [0.5, 1, 0.7, 1.2, 0.5],
+          }}
+          transition={{
+            duration: p.dur,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      {/* ═══ Glass reflection highlight ═══ */}
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          inset: 0,
+          background: `
+            radial-gradient(ellipse at 30% 25%, hsl(var(--gold-light) / 0.12) 0%, transparent 40%),
+            radial-gradient(ellipse at 70% 75%, hsl(var(--celestial) / 0.05) 0%, transparent 35%)
+          `,
+        }}
+      />
+
+      {/* ═══ Inner rim ring ═══ */}
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          inset: inset - 4,
+          border: "1px solid hsl(var(--gold) / 0.08)",
+          boxShadow: "inset 0 0 20px hsl(var(--gold) / 0.05)",
         }}
       />
     </div>
