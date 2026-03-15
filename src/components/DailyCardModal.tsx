@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Sun, Lock, Share2, Copy, Check, Loader2, Clock, Crown } from "lucide-react";
-import { drawCardsForSpread, spreads, type TarotWorldCard } from "@/data/tarotWorldData";
+import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
