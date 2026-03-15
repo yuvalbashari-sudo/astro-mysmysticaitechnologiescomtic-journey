@@ -122,6 +122,7 @@ type Phase = "ready" | "shuffle" | "reveal" | "result" | "locked";
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("ready");
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [shuffleStep, setShuffleStep] = useState(0);
