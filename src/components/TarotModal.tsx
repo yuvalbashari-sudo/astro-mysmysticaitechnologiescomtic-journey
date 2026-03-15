@@ -357,10 +357,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     const count = fanCards.length;
                     const isMob = isMobileTarot;
                     const arcDeg = isMob ? 36 : 48;
-                    const cardW = isMob ? 58 : 90;
-                    const cardH = isMob ? 96 : 150;
+                    const cardW = isMob ? 68 : 105;
+                    const cardH = isMob ? 112 : 174;
                     const pivotR = isMob ? 180 : 280;
-                    const containerH = isMob ? 200 : 310;
+                    const containerH = isMob ? 230 : 350;
 
                     // Symbols for each spread type (engraved on the card face)
                     const spreadSymbols: Record<SpreadType, string> = {
