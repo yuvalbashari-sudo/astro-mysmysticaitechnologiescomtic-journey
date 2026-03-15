@@ -219,7 +219,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     aiTextRef.current = "";
 
     // Save immediately with timestamp
-    saveDailyCard({ card: selectedCard, timestamp: Date.now() });
+    saveDailyCard({ card: selectedCard, date: getTodayDate() });
 
     streamMysticalReading(
       "dailyCard",
