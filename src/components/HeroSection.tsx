@@ -2023,7 +2023,7 @@ const HeroSection = () => {
                     const item = menuItems[hoveredItem];
                     const angleRad = (item.angle * Math.PI) / 180;
                     const itemX = Math.sin(angleRad) * orbRadius;
-                    const itemY = -Math.cos(angleRad) * orbRadius * 0.55;
+                    const itemY = -Math.cos(angleRad) * orbRadius * 0.55 - 40;
                     return (
                       <EnergyLine
                         key={`energy-line-${hoveredItem}`}
