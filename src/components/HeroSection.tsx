@@ -1931,7 +1931,7 @@ const HeroSection = () => {
                 <motion.div
                   ref={crystalRef}
                   className="relative z-20 cursor-pointer"
-                  style={{ width: "280px", height: "280px" }}
+                  style={{ width: "310px", height: "310px" }}
                   onClick={handleCrystalClick}
                 >
                   <img
