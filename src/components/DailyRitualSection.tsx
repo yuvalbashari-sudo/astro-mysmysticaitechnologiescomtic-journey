@@ -38,7 +38,7 @@ const DailyRitualSection = () => {
   const cardImage = tarotCardImages[cardKey] || cardBack;
 
   return (
-    <section className="py-16 md:py-24 px-4 relative cosmic-section-bg">
+    <section className="py-16 md:py-24 px-4 relative cosmic-section-bg" aria-label={t.a11y_daily_section}>
       <div className="section-divider max-w-xl mx-auto mb-16" />
 
       {/* Title */}
@@ -206,11 +206,11 @@ const DailyRitualSection = () => {
               className="mt-10 text-center"
             >
               <div className="mystical-card inline-flex items-center gap-3 px-6 py-3 mx-auto">
-                <Clock className="w-4 h-4 text-gold/60" />
+                <Clock className="w-4 h-4 text-gold/60" aria-hidden="true" />
                 <span className="text-sm text-muted-foreground font-body">
                   {t.daily_ritual_done_text}
                 </span>
-                <span className="text-sm font-heading text-gold font-semibold tabular-nums">{countdown}</span>
+                <span className="text-sm font-heading text-gold font-semibold tabular-nums" aria-label={t.a11y_countdown_label}>{countdown}</span>
               </div>
               <p className="text-xs text-muted-foreground/60 mt-3 font-body">
                 ✦ {t.daily_ritual_next_text} ✦

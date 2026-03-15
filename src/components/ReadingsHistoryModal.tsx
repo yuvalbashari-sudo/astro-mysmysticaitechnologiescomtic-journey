@@ -65,13 +65,16 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
             exit={{ opacity: 0, scale: 0.92, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             dir={dir}
+            role="dialog"
+            aria-label={t.readings_title}
           >
             <button
               onClick={onClose}
               className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors"
               style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}
+              aria-label={t.a11y_close_modal}
             >
-              <X className="w-4 h-4 text-gold/70" />
+              <X className="w-4 h-4 text-gold/70" aria-hidden="true" />
             </button>
 
             <div className="text-center mb-8">
@@ -87,7 +90,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
 
             {readings.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-muted-foreground font-body text-sm">אין קריאות שמורות עדיין</p>
+                <p className="text-muted-foreground font-body text-sm">{t.a11y_no_readings}</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -115,6 +118,8 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
                         <button
                           onClick={() => setExpanded(isExpanded ? null : reading.id)}
                           className="w-full flex items-center gap-4 p-4 text-right hover:bg-gold/5 transition-colors"
+                          aria-expanded={isExpanded}
+                          aria-label={`${isExpanded ? t.a11y_collapse_reading : t.a11y_expand_reading}: ${reading.title}`}
                         >
                           <div
                             className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
@@ -159,8 +164,9 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
                                   <button
                                     onClick={(e) => { e.stopPropagation(); handleDelete(reading.id); }}
                                     className="flex items-center gap-1.5 text-[11px] text-crimson-light/60 hover:text-crimson-light transition-colors font-body px-2 py-1 rounded"
+                                    aria-label={`${t.a11y_delete_reading}: ${reading.title}`}
                                   >
-                                    <Trash2 className="w-3 h-3" />
+                                    <Trash2 className="w-3 h-3" aria-hidden="true" />
                                     {t.readings_delete}
                                   </button>
                                 </div>

@@ -91,8 +91,9 @@ const MysticalDashboard = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         title={t.dashboard_title}
+        aria-label={t.a11y_open_dashboard}
       >
-        <Sparkles className="w-5 h-5 text-primary group-hover:text-primary transition-colors" />
+        <Sparkles className="w-5 h-5 text-primary group-hover:text-primary transition-colors" aria-hidden="true" />
       </motion.button>
 
       <AnimatePresence>
@@ -114,6 +115,8 @@ const MysticalDashboard = () => {
               exit={{ x: "-100%", opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
               className="fixed inset-y-0 left-0 z-[70] w-full max-w-md bg-card border-r border-border overflow-y-auto shadow-2xl"
+              role="dialog"
+              aria-label={t.dashboard_title}
             >
               {/* Header */}
               <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border p-5 flex items-center justify-between">
@@ -129,8 +132,9 @@ const MysticalDashboard = () => {
                 <button
                   onClick={() => setIsOpen(false)}
                   className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+                  aria-label={t.a11y_close_modal}
                 >
-                  <X className="w-4 h-4 text-muted-foreground" />
+                  <X className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
                 </button>
               </div>
 

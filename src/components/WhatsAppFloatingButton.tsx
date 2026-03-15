@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
+import { useT } from "@/i18n";
 
 const WhatsAppFloatingButton = () => {
+  const t = useT();
+
   return (
     <motion.a
       href="https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI"
@@ -17,13 +20,14 @@ const WhatsAppFloatingButton = () => {
       transition={{ delay: 2, type: "spring" }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      aria-label="צרו קשר בוואטסאפ"
+      aria-label={t.a11y_whatsapp_contact}
     >
-      <MessageCircle className="w-6 h-6 text-white" />
+      <MessageCircle className="w-6 h-6 text-white" aria-hidden="true" />
       <motion.div
         className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-gold"
         animate={{ scale: [1, 1.3, 1] }}
         transition={{ duration: 2, repeat: Infinity }}
+        aria-hidden="true"
       />
     </motion.a>
   );
