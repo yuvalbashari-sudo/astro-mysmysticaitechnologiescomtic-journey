@@ -303,214 +303,249 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
   );
 };
 
-/* ── Crystal Ball Internal Energy ──────────────────── */
+/* ── Crystal Ball Internal Energy — Canvas Galaxy ──────────────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const size = isMobile ? 180 : 280;
-  const inset = isMobile ? 18 : 28; // keep effects inside the glass edge
-  const innerSize = size - inset * 2;
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animRef = useRef<number>(0);
 
-  // Generate stardust particles
-  const particles = useMemo(() =>
-    Array.from({ length: 24 }, (_, i) => ({
-      id: i,
-      x: 20 + Math.random() * 60,
-      y: 20 + Math.random() * 60,
-      size: 1 + Math.random() * 2.5,
-      dur: 5 + Math.random() * 8,
-      delay: Math.random() * 5,
-      drift: 15 + Math.random() * 25,
-    })), []);
+  // Pre-generate stable star/particle data
+  const galaxyData = useMemo(() => {
+    const spiralStars: { angle: number; radius: number; size: number; speed: number; brightness: number; color: [number, number, number]; arm: number }[] = [];
+    const numArms = 3;
+    const starsPerArm = isMobile ? 60 : 120;
+    for (let arm = 0; arm < numArms; arm++) {
+      const armOffset = (arm / numArms) * Math.PI * 2;
+      for (let i = 0; i < starsPerArm; i++) {
+        const dist = 0.08 + (i / starsPerArm) * 0.42;
+        const spiralAngle = armOffset + dist * 6 + (Math.random() - 0.5) * 0.8;
+        const jitter = (Math.random() - 0.5) * 0.08;
+        const colors: [number, number, number][] = [
+          [255, 200, 100], // gold
+          [150, 180, 255], // blue
+          [255, 150, 120], // warm
+          [200, 160, 255], // purple
+          [255, 255, 220], // white
+        ];
+        spiralStars.push({
+          angle: spiralAngle,
+          radius: dist + jitter,
+          size: 0.5 + Math.random() * (isMobile ? 1.5 : 2),
+          speed: 0.15 + Math.random() * 0.3,
+          brightness: 0.4 + Math.random() * 0.6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          arm,
+        });
+      }
+    }
+
+    // Nebula clouds — elliptical blobs orbiting at different speeds
+    const nebulae: { angle: number; radius: number; w: number; h: number; speed: number; color: [number, number, number]; alpha: number }[] = [];
+    const nebulaCount = isMobile ? 6 : 10;
+    for (let i = 0; i < nebulaCount; i++) {
+      const nebulaColors: [number, number, number][] = [
+        [200, 160, 80],  // gold nebula
+        [80, 120, 200],  // blue nebula
+        [160, 60, 60],   // crimson nebula
+        [120, 80, 180],  // purple nebula
+      ];
+      nebulae.push({
+        angle: Math.random() * Math.PI * 2,
+        radius: 0.1 + Math.random() * 0.35,
+        w: 20 + Math.random() * 30,
+        h: 12 + Math.random() * 20,
+        speed: 0.08 + Math.random() * 0.15,
+        color: nebulaColors[i % nebulaColors.length],
+        alpha: 0.08 + Math.random() * 0.1,
+      });
+    }
+
+    // Dust ring particles
+    const dust: { angle: number; radius: number; size: number; speed: number; alpha: number }[] = [];
+    const dustCount = isMobile ? 40 : 80;
+    for (let i = 0; i < dustCount; i++) {
+      dust.push({
+        angle: Math.random() * Math.PI * 2,
+        radius: 0.15 + Math.random() * 0.35,
+        size: 0.3 + Math.random() * 0.8,
+        speed: 0.1 + Math.random() * 0.2,
+        alpha: 0.2 + Math.random() * 0.5,
+      });
+    }
+
+    return { spiralStars, nebulae, dust };
+  }, [isMobile]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    ctx.scale(dpr, dpr);
+
+    const cx = size / 2;
+    const cy = size / 2;
+    const maxR = size / 2 - (isMobile ? 16 : 24);
+    let time = 0;
+
+    const draw = () => {
+      time += 0.004;
+      ctx.clearRect(0, 0, size, size);
+
+      // Clip to circle
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Deep space background
+      const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
+      bgGrad.addColorStop(0, "rgba(20, 15, 40, 0.95)");
+      bgGrad.addColorStop(0.5, "rgba(8, 10, 25, 0.98)");
+      bgGrad.addColorStop(1, "rgba(3, 5, 15, 1)");
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, size, size);
+
+      // ── Nebula clouds (background layer) ──
+      for (const n of galaxyData.nebulae) {
+        const a = n.angle + time * n.speed;
+        const nx = cx + Math.cos(a) * n.radius * maxR;
+        const ny = cy + Math.sin(a) * n.radius * maxR;
+
+        ctx.save();
+        ctx.translate(nx, ny);
+        ctx.rotate(a * 0.5);
+        ctx.globalAlpha = n.alpha * (0.7 + 0.3 * Math.sin(time * 2 + n.angle));
+        const ng = ctx.createRadialGradient(0, 0, 0, 0, 0, n.w);
+        ng.addColorStop(0, `rgba(${n.color[0]}, ${n.color[1]}, ${n.color[2]}, 0.5)`);
+        ng.addColorStop(0.5, `rgba(${n.color[0]}, ${n.color[1]}, ${n.color[2]}, 0.15)`);
+        ng.addColorStop(1, "transparent");
+        ctx.fillStyle = ng;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, n.w, n.h, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // ── Dust ring ──
+      ctx.globalAlpha = 1;
+      for (const d of galaxyData.dust) {
+        const a = d.angle + time * d.speed;
+        const dx = cx + Math.cos(a) * d.radius * maxR;
+        const dy = cy + Math.sin(a) * d.radius * maxR;
+        const flicker = 0.5 + 0.5 * Math.sin(time * 3 + d.angle * 7);
+        ctx.globalAlpha = d.alpha * flicker;
+        ctx.fillStyle = `rgba(200, 180, 140, ${d.alpha * flicker})`;
+        ctx.beginPath();
+        ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // ── Spiral arm stars ──
+      for (const s of galaxyData.spiralStars) {
+        const a = s.angle + time * s.speed;
+        const sx = cx + Math.cos(a) * s.radius * maxR;
+        const sy = cy + Math.sin(a) * s.radius * maxR;
+        const twinkle = 0.5 + 0.5 * Math.sin(time * 4 + s.angle * 5);
+        const alpha = s.brightness * twinkle;
+
+        // Star glow
+        if (s.size > 1.2) {
+          const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, s.size * 3);
+          glow.addColorStop(0, `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${alpha * 0.4})`);
+          glow.addColorStop(1, "transparent");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(sx, sy, s.size * 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Star core
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, 1)`;
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // ── Bright galactic core ──
+      ctx.globalAlpha = 1;
+      const coreR = isMobile ? 18 : 28;
+      // Core outer glow
+      const outerGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 3);
+      outerGlow.addColorStop(0, `rgba(255, 210, 120, ${0.15 + 0.05 * Math.sin(time * 2)})`);
+      outerGlow.addColorStop(0.4, "rgba(200, 160, 100, 0.06)");
+      outerGlow.addColorStop(1, "transparent");
+      ctx.fillStyle = outerGlow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR * 3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core mid glow
+      const midGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 1.5);
+      midGlow.addColorStop(0, `rgba(255, 220, 150, ${0.5 + 0.15 * Math.sin(time * 3)})`);
+      midGlow.addColorStop(0.5, "rgba(255, 190, 100, 0.15)");
+      midGlow.addColorStop(1, "transparent");
+      ctx.fillStyle = midGlow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR * 1.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Core bright center
+      const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      coreGrad.addColorStop(0, "rgba(255, 240, 200, 0.9)");
+      coreGrad.addColorStop(0.3, "rgba(255, 200, 120, 0.5)");
+      coreGrad.addColorStop(0.7, "rgba(200, 160, 100, 0.15)");
+      coreGrad.addColorStop(1, "transparent");
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+
+      // ── Glass reflections on top ──
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+      ctx.clip();
+
+      // Top-left specular highlight
+      const specular = ctx.createRadialGradient(cx * 0.65, cy * 0.55, 0, cx * 0.65, cy * 0.55, maxR * 0.5);
+      specular.addColorStop(0, "rgba(255, 250, 230, 0.12)");
+      specular.addColorStop(0.5, "rgba(255, 250, 230, 0.03)");
+      specular.addColorStop(1, "transparent");
+      ctx.fillStyle = specular;
+      ctx.fillRect(0, 0, size, size);
+
+      // Subtle rim light
+      ctx.strokeStyle = "rgba(200, 180, 140, 0.08)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, maxR - 1, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.restore();
+
+      animRef.current = requestAnimationFrame(draw);
+    };
+
+    animRef.current = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(animRef.current);
+  }, [size, isMobile, galaxyData]);
 
   return (
     <div
       className="absolute z-[21] pointer-events-none rounded-full overflow-hidden"
       style={{ width: size, height: size }}
     >
-      {/* Dark inner backdrop to ensure contrast */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          inset: inset - 2,
-          background: "radial-gradient(circle, hsl(222 50% 5% / 0.85) 30%, hsl(222 47% 8% / 0.7) 70%, transparent 100%)",
-        }}
-      />
-
-      {/* ═══ LAYER 1: Primary nebula vortex — visible, slow spiral ═══ */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: innerSize, height: innerSize, left: inset, top: inset,
-          background: `conic-gradient(
-            from 0deg,
-            hsl(var(--gold) / 0.35) 0deg,
-            hsl(var(--celestial) / 0.2) 60deg,
-            hsl(var(--crimson) / 0.15) 120deg,
-            hsl(var(--gold) / 0.3) 180deg,
-            hsl(var(--celestial) / 0.25) 240deg,
-            hsl(var(--crimson) / 0.1) 300deg,
-            hsl(var(--gold) / 0.35) 360deg
-          )`,
-          filter: `blur(${isMobile ? 10 : 16}px)`,
-          mixBlendMode: "screen",
-        }}
-        animate={{ rotate: [0, 360] }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-      />
-
-      {/* ═══ LAYER 2: Counter-rotating nebula cloud ═══ */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: innerSize * 0.85, height: innerSize * 0.85,
-          left: inset + innerSize * 0.075, top: inset + innerSize * 0.075,
-          background: `conic-gradient(
-            from 180deg,
-            hsl(var(--celestial) / 0.3) 0deg,
-            transparent 50deg,
-            hsl(var(--gold) / 0.25) 120deg,
-            transparent 170deg,
-            hsl(var(--crimson) / 0.2) 240deg,
-            transparent 290deg,
-            hsl(var(--celestial) / 0.3) 360deg
-          )`,
-          filter: `blur(${isMobile ? 8 : 12}px)`,
-          mixBlendMode: "screen",
-        }}
-        animate={{ rotate: [360, 0] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-      />
-
-      {/* ═══ LAYER 3: Wandering fog wisps — slow figure-8 drift ═══ */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: innerSize * 0.6, height: innerSize * 0.4,
-          left: inset + innerSize * 0.2, top: inset + innerSize * 0.15,
-          background: "radial-gradient(ellipse, hsl(var(--gold) / 0.35) 0%, hsl(var(--celestial) / 0.15) 50%, transparent 80%)",
-          filter: `blur(${isMobile ? 6 : 10}px)`,
-          mixBlendMode: "screen",
-        }}
-        animate={{
-          x: [0, 20, -15, 25, -10, 0],
-          y: [0, -15, 20, -10, 18, 0],
-          rotate: [0, 45, -30, 60, -15, 0],
-          scale: [1, 1.15, 0.9, 1.2, 0.95, 1],
-        }}
-        transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* ═══ LAYER 4: Deep swirling fog — opposite drift ═══ */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: innerSize * 0.55, height: innerSize * 0.55,
-          left: inset + innerSize * 0.3, top: inset + innerSize * 0.3,
-          background: "radial-gradient(ellipse at 30% 60%, hsl(var(--crimson) / 0.25) 0%, hsl(var(--gold) / 0.1) 40%, transparent 75%)",
-          filter: `blur(${isMobile ? 7 : 11}px)`,
-          mixBlendMode: "screen",
-        }}
-        animate={{
-          x: [0, -18, 22, -12, 16, 0],
-          y: [0, 12, -18, 15, -8, 0],
-          rotate: [0, -60, 40, -80, 20, 0],
-        }}
-        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      />
-
-      {/* ═══ LAYER 5: Bright energy core — pulsing position ═══ */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: innerSize * 0.3, height: innerSize * 0.3,
-          left: inset + innerSize * 0.35, top: inset + innerSize * 0.35,
-          background: "radial-gradient(circle, hsl(var(--gold) / 0.5) 0%, hsl(var(--gold) / 0.2) 40%, transparent 70%)",
-          filter: `blur(${isMobile ? 4 : 6}px)`,
-          mixBlendMode: "screen",
-        }}
-        animate={{
-          x: [0, 10, -8, 12, -6, 0],
-          y: [0, -8, 12, -5, 10, 0],
-          opacity: [0.6, 1, 0.5, 0.9, 0.55, 0.6],
-          scale: [1, 1.1, 0.95, 1.15, 1, 1],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* ═══ LAYER 6: Spiraling conic highlight — fast inner rotation ═══ */}
-      <motion.div
-        className="absolute rounded-full"
-        style={{
-          width: innerSize * 0.7, height: innerSize * 0.7,
-          left: inset + innerSize * 0.15, top: inset + innerSize * 0.15,
-          background: `conic-gradient(
-            from 90deg,
-            transparent 0deg,
-            hsl(var(--gold) / 0.2) 30deg,
-            transparent 60deg,
-            hsl(var(--gold) / 0.15) 150deg,
-            transparent 180deg,
-            hsl(var(--celestial) / 0.18) 270deg,
-            transparent 300deg
-          )`,
-          filter: `blur(${isMobile ? 5 : 8}px)`,
-          mixBlendMode: "screen",
-        }}
-        animate={{ rotate: [0, -360] }}
-        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-      />
-
-      {/* ═══ STARDUST PARTICLES — drifting celestial specks ═══ */}
-      {particles.map(p => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full"
-          style={{
-            width: p.size, height: p.size,
-            left: `${p.x}%`, top: `${p.y}%`,
-            background: p.id % 3 === 0
-              ? "hsl(var(--gold) / 0.9)"
-              : p.id % 3 === 1
-                ? "hsl(var(--celestial) / 0.8)"
-                : "hsl(var(--gold-light) / 0.7)",
-            boxShadow: `0 0 ${p.size * 2}px ${p.size}px ${
-              p.id % 3 === 0 ? "hsl(var(--gold) / 0.4)" : "hsl(var(--celestial) / 0.3)"
-            }`,
-          }}
-          animate={{
-            x: [0, p.drift, -p.drift * 0.6, p.drift * 0.8, 0],
-            y: [0, -p.drift * 0.7, p.drift * 0.5, -p.drift * 0.9, 0],
-            opacity: [0, 0.8, 0.3, 0.9, 0],
-            scale: [0.5, 1, 0.7, 1.2, 0.5],
-          }}
-          transition={{
-            duration: p.dur,
-            repeat: Infinity,
-            delay: p.delay,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      {/* ═══ Glass reflection highlight ═══ */}
-      <div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          inset: 0,
-          background: `
-            radial-gradient(ellipse at 30% 25%, hsl(var(--gold-light) / 0.12) 0%, transparent 40%),
-            radial-gradient(ellipse at 70% 75%, hsl(var(--celestial) / 0.05) 0%, transparent 35%)
-          `,
-        }}
-      />
-
-      {/* ═══ Inner rim ring ═══ */}
-      <div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          inset: inset - 4,
-          border: "1px solid hsl(var(--gold) / 0.08)",
-          boxShadow: "inset 0 0 20px hsl(var(--gold) / 0.05)",
-        }}
+      <canvas
+        ref={canvasRef}
+        style={{ width: size, height: size, borderRadius: "50%" }}
       />
     </div>
   );
