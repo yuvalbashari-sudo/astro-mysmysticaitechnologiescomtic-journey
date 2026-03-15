@@ -170,29 +170,29 @@ function renderMysticalText(text: string) {
   lines.forEach((line, i) => {
     const trimmed = line.trim();
     if (!trimmed) {
-      elements.push(<div key={i} className="h-2" />);
+      elements.push(<div key={i} className="h-4 md:h-5" />);
       return;
     }
     if (trimmed === "---") {
-      elements.push(<div key={i} className="section-divider max-w-[80px] mx-auto my-6" />);
+      elements.push(<div key={i} className="section-divider max-w-[100px] mx-auto my-8 md:my-10" />);
       return;
     }
     if (trimmed.startsWith("### ✨")) {
       elements.push(
-        <div key={i} className="mt-6 rounded-xl p-5 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-          <Sparkles className="w-5 h-5 text-gold mx-auto mb-2" />
-          <h3 className="font-heading text-sm text-gold mb-2">{trimmed.replace("### ✨ ", "").replace("### ✨", "")}</h3>
+        <div key={i} className="mt-8 md:mt-10 rounded-xl p-6 md:p-8 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+          <Sparkles className="w-6 h-6 text-gold mx-auto mb-3" />
+          <h3 className="font-heading text-base md:text-lg text-gold">{trimmed.replace("### ✨ ", "").replace("### ✨", "")}</h3>
         </div>
       );
       return;
     }
     if (trimmed.startsWith("### ")) {
       elements.push(
-        <div key={i} className="flex items-center gap-3 mt-6 mb-3">
-          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" }}>
-            <span className="text-lg">{trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
+        <div key={i} className="flex items-center gap-3 mt-8 md:mt-10 mb-4">
+          <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" }}>
+            <span className="text-xl">{trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
           </div>
-          <h3 className="font-heading text-base text-gold">{trimmed.replace("### ", "")}</h3>
+          <h3 className="font-heading text-lg md:text-xl text-gold">{trimmed.replace("### ", "")}</h3>
         </div>
       );
       return;
@@ -200,30 +200,30 @@ function renderMysticalText(text: string) {
     if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
       const label = trimmed.slice(2, -2);
       elements.push(
-        <div key={i} className="flex items-center gap-2 mt-4 mb-1">
-          <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
-            <span className="text-xs">{label.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
+        <div key={i} className="flex items-center gap-2.5 mt-6 mb-2">
+          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.1)" }}>
+            <span className="text-sm">{label.match(/[\p{Emoji}]/u)?.[0] || "✦"}</span>
           </div>
-          <h4 className="font-heading text-xs text-gold">{label.replace(/[\p{Emoji}]\s?/u, "").trim()}</h4>
+          <h4 className="font-heading text-sm md:text-base text-gold">{label.replace(/[\p{Emoji}]\s?/u, "").trim()}</h4>
         </div>
       );
       return;
     }
     if (trimmed.startsWith("״") || trimmed.startsWith('"')) {
       elements.push(
-        <div key={i} className="rounded-xl p-4 text-center mt-2 mb-2" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-          <p className="text-gold/80 font-body text-sm leading-relaxed italic">{trimmed}</p>
+        <div key={i} className="rounded-xl p-5 md:p-6 text-center mt-4 mb-4" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+          <p className="text-gold/80 font-body text-base md:text-lg leading-relaxed italic">{trimmed}</p>
         </div>
       );
       return;
     }
     // Regular paragraph
     elements.push(
-      <p key={i} className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{trimmed.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
+      <p key={i} className="text-foreground/80 font-body text-base md:text-lg leading-[1.9] md:leading-[2]">{trimmed.replace(/\*\*(.*?)\*\*/g, '$1')}</p>
     );
   });
 
-  return <div className="space-y-0">{elements}</div>;
+  return <div className="space-y-1">{elements}</div>;
 }
 
 // Helper to get translated spread info
@@ -843,31 +843,31 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
               {/* PHASE 4: AI Results */}
               {phase === "result" && selectedSpread && drawnCards.length > 0 && (
-                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-10">
+                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-12 lg:p-14">
                   {/* Header */}
-                  <div className="text-center mb-6">
+                  <div className="text-center mb-10">
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}>
-                      <span className="text-3xl">{selectedSpread.icon}</span>
+                      <span className="text-4xl">{selectedSpread.icon}</span>
                     </motion.div>
-                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
-                    <p className="text-foreground/50 font-body text-sm">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
+                    <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mt-4 mb-3">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
+                    <p className="text-foreground/50 font-body text-sm md:text-base">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
                     
-                    <div className="flex items-center justify-center gap-3 mt-4">
-                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
+                    <div className="flex items-center justify-center gap-3 mt-6">
+                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        <Share2 className="w-4 h-4" />{t.forecast_share}
                       </motion.button>
-                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(var(--gold) / 0.12)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "hsl(var(--gold) / 0.12)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                         {copied ? t.share_copied : t.share_copy}
                       </motion.button>
                     </div>
                   </div>
 
-                  <div className="section-divider max-w-[120px] mx-auto mb-8" />
+                  <div className="section-divider max-w-[120px] mx-auto mb-10" />
 
                   {/* AI Generated Content */}
                   {aiText ? (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
                       {renderMysticalText(aiText)}
                       
                       {aiLoading && (
@@ -888,52 +888,52 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         const interp = getInterpretation(card, selectedSpread.key, posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]);
                         return (
                           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.3 }}>
-                            <div className="flex items-center gap-4 mb-4">
+                            <div className="flex items-center gap-4 mb-5">
                               <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 20px hsl(var(--gold) / 0.1)" }}>
                                 <span className="text-2xl">{card.symbol}</span>
                               </div>
                               <div className="text-right">
-                                <h3 className="font-heading text-lg text-gold">{card.hebrewName}</h3>
-                                <span className="font-body text-xs text-foreground/40">{interp.positionLabel}</span>
+                                <h3 className="font-heading text-xl text-gold">{card.hebrewName}</h3>
+                                <span className="font-body text-sm text-foreground/40">{interp.positionLabel}</span>
                               </div>
                             </div>
                             {isFreeLocked ? (
                               <div className="rounded-xl p-6 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                                <p className="text-foreground/40 font-body text-sm leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>{interp.spreadMeaning.substring(0, 80)}...</p>
+                                <p className="text-foreground/40 font-body text-base leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>{interp.spreadMeaning.substring(0, 80)}...</p>
                                 <Lock className="w-5 h-5 text-gold/30 mx-auto mb-2" />
-                                <p className="text-foreground/40 font-body text-xs">הקלף הזה מחכה לכם בקריאה המלאה ✦</p>
+                                <p className="text-foreground/40 font-body text-sm">הקלף הזה מחכה לכם בקריאה המלאה ✦</p>
                               </div>
                             ) : (
-                              <div className="space-y-3">
-                                <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                                  <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.mainMeaning}</p>
+                              <div className="space-y-4">
+                                <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
+                                  <p className="text-foreground/80 font-body text-base md:text-lg leading-[1.9]">{interp.mainMeaning}</p>
                                 </div>
-                                <div className="rounded-xl p-5" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                                  <p className="text-foreground/70 font-body text-sm leading-[1.85] text-right">{interp.spreadMeaning}</p>
+                                <div className="rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                                  <p className="text-foreground/80 font-body text-base md:text-lg leading-[1.9]">{interp.spreadMeaning}</p>
                                 </div>
-                                <div className="rounded-xl p-4 text-center" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                                  <p className="text-gold/80 font-body text-sm leading-relaxed italic">״{interp.advice}״</p>
+                                <div className="rounded-xl p-5 md:p-6 text-center" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                                  <p className="text-gold/80 font-body text-base md:text-lg leading-relaxed italic">״{interp.advice}״</p>
                                 </div>
                               </div>
                             )}
-                            {i < drawnCards.length - 1 && <div className="section-divider max-w-[80px] mx-auto mt-8" />}
+                            {i < drawnCards.length - 1 && <div className="section-divider max-w-[100px] mx-auto mt-10" />}
                           </motion.div>
                         );
                       })}
                     </div>
                   ) : (
                     /* Loading state */
-                    <div className="flex flex-col items-center justify-center py-12">
+                    <div className="flex flex-col items-center justify-center py-16">
                       <motion.div
                         className="w-16 h-16 rounded-full mb-6"
                         style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
                         animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }}
                         transition={{ duration: 3, repeat: Infinity }}
                       />
-                      <motion.p className="font-body text-gold/70 text-sm mb-1" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                      <motion.p className="font-body text-gold/70 text-base mb-1" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
                         הקלפים מגלים את המסר שלהם...
                       </motion.p>
-                      <p className="font-body text-foreground/30 text-xs">פירוש אישי נוצר עבורכם</p>
+                      <p className="font-body text-foreground/30 text-sm">פירוש אישי נוצר עבורכם</p>
                     </div>
                   )}
 
@@ -952,26 +952,26 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 1 }}
-                      className="text-center rounded-xl p-6 mt-8"
+                      className="text-center rounded-xl p-8 mt-10"
                       style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}
                     >
-                      <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                      <h4 className="font-heading text-base text-gold mb-2">{t.tarot_world_premium_title}</h4>
-                      <p className="text-foreground/50 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">
+                      <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
+                      <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.tarot_world_premium_title}</h4>
+                      <p className="text-foreground/50 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">
                         {t.tarot_world_premium_desc}
                       </p>
-                      <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5" />{t.tarot_premium_cta}
+                      <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2">
+                        <Sparkles className="w-4 h-4" />{t.tarot_premium_cta}
                       </a>
                     </motion.div>
                   )}
 
                   {/* New reading */}
                   {!aiLoading && (
-                    <div className="text-center mt-6">
+                    <div className="text-center mt-8">
                       <motion.button
                         onClick={() => { setPhase("select"); setSelectedSpread(null); setDrawnCards([]); setRevealedIndices(new Set()); setShowPremium(false); setAiText(""); setAiError(null); aiTextRef.current = ""; }}
-                        className="font-body text-xs text-gold/50 hover:text-gold transition-colors"
+                        className="font-body text-sm text-gold/50 hover:text-gold transition-colors"
                         whileHover={{ scale: 1.05 }}
                       >
                         ← קריאה חדשה
