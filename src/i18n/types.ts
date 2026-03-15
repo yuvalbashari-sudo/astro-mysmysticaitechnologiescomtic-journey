@@ -528,4 +528,18 @@ export type TranslationKeys = {
   a11y_statement_last_updated: string;
   a11y_link_label: string;
   a11y_no_readings: string;
+
+  // Advisor
+  advisor_title: string;
+  advisor_placeholder_context: string;
+  advisor_placeholder_general: string;
+  advisor_welcome_context: string;
+  advisor_welcome_general: string;
+  advisor_suggestion_1: string;
+  advisor_suggestion_2: string;
+  advisor_suggestion_3: string;
+  advisor_send: string;
+  advisor_error: string;
+  advisor_open: string;
+  advisor_close: string;
 };

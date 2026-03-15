@@ -10,6 +10,7 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
   isOpen: boolean;
@@ -121,6 +122,7 @@ type Phase = "ready" | "shuffle" | "reveal" | "result" | "locked";
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("ready");
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [shuffleStep, setShuffleStep] = useState(0);
@@ -241,6 +243,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
+        setActiveReading({ type: "dailyCard", label: `קלף יומי — ${selectedCard.hebrewName}`, summary: aiTextRef.current });
         // Update saved card with AI text
         const saved = getSavedDailyCard();
         if (saved) {

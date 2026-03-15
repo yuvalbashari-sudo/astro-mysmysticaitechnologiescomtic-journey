@@ -16,6 +16,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -139,6 +140,7 @@ async function streamTarotReading(
 const TarotModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const SPREAD_OPTIONS = getSpreadOptions(t);
   const SPREAD_LABELS = getSpreadLabels(t);
 
@@ -259,6 +261,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
+        setActiveReading({ type: "tarot", label: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`, summary: aiTextRef.current });
         tarotMemory.recordReading(selectedSpread.key, cardsPayload);
         mysticalProfile.recordTarotCards(
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),

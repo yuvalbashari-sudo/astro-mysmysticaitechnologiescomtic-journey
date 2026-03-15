@@ -12,6 +12,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -200,6 +201,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const { nameMap, descMap, posMap } = useTranslatedSpread(t);
   const [phase, setPhase] = useState<Phase>("select");
   const [showDailyCard, setShowDailyCard] = useState(false);
@@ -315,6 +317,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         () => {
           setAiLoading(false);
+          setActiveReading({ type: "tarotWorld", label: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`, summary: aiTextRef.current });
           // Record cards in tarot memory
           tarotMemory.recordReading(
             selectedSpread.key,

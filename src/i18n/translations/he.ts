@@ -490,4 +490,17 @@ export const he: TranslationKeys = {
   a11y_statement_last_updated: "",
   a11y_link_label: "הצהרת נגישות",
   a11y_no_readings: "אין קריאות שמורות עדיין",
+
+  advisor_title: "היועץ המיסטי",
+  advisor_placeholder_context: "שאלו על הקריאה שלכם...",
+  advisor_placeholder_general: "שאלו שאלה מיסטית...",
+  advisor_welcome_context: "אני כאן כדי להעמיק את הקריאה שלכם. שאלו אותי כל שאלה על התוצאה שקיבלתם ✨",
+  advisor_welcome_general: "אני היועץ המיסטי שלכם. פתחו קריאה כדי לקבל ייעוץ אישי ומעמיק ✨",
+  advisor_suggestion_1: "מה זה אומר עליי?",
+  advisor_suggestion_2: "ומה לגבי אהבה?",
+  advisor_suggestion_3: "תסביר בפשטות",
+  advisor_send: "שליחה",
+  advisor_error: "שגיאה בשירות, נסו שוב",
+  advisor_open: "פתיחת יועץ מיסטי",
+  advisor_close: "סגירת יועץ",
 };

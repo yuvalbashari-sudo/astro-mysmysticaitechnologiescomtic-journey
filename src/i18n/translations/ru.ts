@@ -490,4 +490,17 @@ export const ru: TranslationKeys = {
   a11y_statement_last_updated: "",
   a11y_link_label: "Заявление о доступности",
   a11y_no_readings: "Сохранённых чтений пока нет",
+
+  advisor_title: "Мистический советник",
+  advisor_placeholder_context: "Спросите о вашем чтении...",
+  advisor_placeholder_general: "Задайте мистический вопрос...",
+  advisor_welcome_context: "Я здесь, чтобы углубить ваше чтение. Спросите меня о полученном результате ✨",
+  advisor_welcome_general: "Я ваш мистический советник. Откройте чтение для персонального и глубокого руководства ✨",
+  advisor_suggestion_1: "Что это значит для меня?",
+  advisor_suggestion_2: "А что насчёт любви?",
+  advisor_suggestion_3: "Объясни проще",
+  advisor_send: "Отправить",
+  advisor_error: "Ошибка сервиса, попробуйте снова",
+  advisor_open: "Открыть мистического советника",
+  advisor_close: "Закрыть советника",
 };
