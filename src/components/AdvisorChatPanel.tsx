@@ -180,7 +180,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
 
           {/* Chat Panel */}
           <motion.div
-            className="fixed z-[71] flex flex-col overflow-hidden"
+            className="fixed z-[106] flex flex-col overflow-hidden"
             style={{
               bottom: "5.5rem",
               right: dir === "rtl" ? "auto" : "1.25rem",
