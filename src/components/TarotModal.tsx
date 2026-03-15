@@ -589,8 +589,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {tableCards.map((card, i) => {
                       const isFlipped = flippedIndices.has(i);
                       const isActive = activeRevealIndex === i;
-                      const cardW = tableCards.length === 1 ? 130 : 105;
-                      const cardH = tableCards.length === 1 ? 185 : 155;
+                      const cardW = tableCards.length === 1 ? 170 : 140;
+                      const cardH = tableCards.length === 1 ? 245 : 205;
                       return (
                         <motion.div
                           key={i}
