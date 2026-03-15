@@ -54,6 +54,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
+        setActiveReading({ type: "forecast", label: `${t.readings_type_forecast} — ${sign.hebrewName}`, summary: aiTextRef.current });
         readingsStorage.save({
           type: "forecast",
           title: `${t.readings_type_forecast} — ${sign.hebrewName}`,
