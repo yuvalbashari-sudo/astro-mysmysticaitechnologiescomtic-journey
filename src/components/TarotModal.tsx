@@ -841,13 +841,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       <h3 className="font-heading text-lg gold-gradient-text">{t.tarot_mystical_interp}</h3>
                     </div>
 
-                    <div className="flex items-center justify-center gap-3 mb-6">
+                     <div className="flex items-center justify-center gap-4 mb-6">
                       {cards.map((card, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1">
+                        <div key={i} className="flex flex-col items-center gap-1.5">
                           {tarotCardImages[card.name]
-                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-10 h-14 object-cover rounded" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
-                            : <span className="text-lg">{card.symbol}</span>}
-                          <span className="text-[10px] text-gold/60 font-body">{card.hebrewName}</span>
+                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-14 h-20 md:w-16 md:h-22 object-cover rounded-md" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                            : <span className="text-xl">{card.symbol}</span>}
+                          <span className="text-xs text-gold/60 font-body">{card.hebrewName}</span>
                         </div>
                       ))}
                     </div>

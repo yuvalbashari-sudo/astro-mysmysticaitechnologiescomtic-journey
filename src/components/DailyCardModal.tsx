@@ -552,7 +552,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   <div className="text-center mb-6">
                     <div className="flex items-center justify-center gap-5 mb-4">
                       <motion.div
-                        className="relative w-28 h-40 md:w-32 md:h-44 rounded-xl overflow-hidden flex-shrink-0"
+                        className="relative w-36 h-52 md:w-44 md:h-64 rounded-xl overflow-hidden flex-shrink-0"
                         style={{
                           border: "2px solid hsl(var(--gold) / 0.3)",
                           boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 8px 30px hsl(0 0% 0% / 0.3)",
