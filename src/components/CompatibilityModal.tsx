@@ -74,6 +74,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
+        setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
         readingsStorage.save({
           type: "compatibility",
           title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
