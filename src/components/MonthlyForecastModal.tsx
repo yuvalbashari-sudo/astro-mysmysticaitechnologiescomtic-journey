@@ -17,6 +17,7 @@ interface Props { isOpen: boolean; onClose: () => void; }
 const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const [birthDate, setBirthDate] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
