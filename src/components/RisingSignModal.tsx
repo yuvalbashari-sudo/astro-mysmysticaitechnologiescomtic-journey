@@ -32,6 +32,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   const handleSubmit = () => { if (!birthTime || !birthDate) return; setIsLoading(true); };
 

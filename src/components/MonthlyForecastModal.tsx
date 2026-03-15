@@ -25,6 +25,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });

@@ -29,6 +29,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [textSize, setTextSize] = useState<TextSize>("default");
 
   const handleSubmit = () => {
     if (!date1 || !date2) return;
