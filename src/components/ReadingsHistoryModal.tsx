@@ -164,8 +164,9 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
                                   <button
                                     onClick={(e) => { e.stopPropagation(); handleDelete(reading.id); }}
                                     className="flex items-center gap-1.5 text-[11px] text-crimson-light/60 hover:text-crimson-light transition-colors font-body px-2 py-1 rounded"
+                                    aria-label={`${t.a11y_delete_reading}: ${reading.title}`}
                                   >
-                                    <Trash2 className="w-3 h-3" />
+                                    <Trash2 className="w-3 h-3" aria-hidden="true" />
                                     {t.readings_delete}
                                   </button>
                                 </div>

@@ -89,7 +89,7 @@ const FloatingOracleButton = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        aria-label="שאלו את האורקל"
+        aria-label={isOpen ? t.a11y_close_oracle : t.a11y_open_oracle}
       >
         <AnimatePresence mode="wait">
           {isOpen ? (

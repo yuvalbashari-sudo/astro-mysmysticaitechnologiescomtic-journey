@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, MessageCircle, Clock } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
+import { useT } from "@/i18n/LanguageContext";
+import { Link } from "react-router-dom";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
 
@@ -12,6 +14,7 @@ interface Props {
 
 const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
   const { language, setLanguage } = useLanguage();
+  const t = useT();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +36,8 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
         background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.95) 0%, hsl(var(--deep-blue) / 0.7) 70%, transparent 100%)",
         backdropFilter: "blur(12px)",
       }}
+      role="banner"
+      aria-label={t.a11y_main_navigation}
     >
       {/* Right side: Logo */}
       <motion.div className="flex items-center gap-2">
@@ -42,7 +47,7 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
       </motion.div>
 
       {/* Left side: Actions */}
-      <div className="flex items-center gap-2">
+      <nav className="flex items-center gap-2" aria-label={t.a11y_main_navigation}>
         {/* Readings History */}
         {hasHistory && (
           <motion.button
@@ -55,8 +60,9 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
             }}
             whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
             whileTap={{ scale: 0.97 }}
+            aria-label={t.a11y_readings_history}
           >
-            <Clock className="w-3 h-3" />
+            <Clock className="w-3 h-3" aria-hidden="true" />
           </motion.button>
         )}
 
@@ -72,8 +78,11 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
             }}
             whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
             whileTap={{ scale: 0.97 }}
+            aria-label={t.a11y_language_selector}
+            aria-expanded={langOpen}
+            aria-haspopup="listbox"
           >
-            <Globe className="w-3 h-3" />
+            <Globe className="w-3 h-3" aria-hidden="true" />
             <span>{languageConfig[language].label}</span>
           </motion.button>
 
@@ -91,10 +100,14 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
                   boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
                   minWidth: "170px",
                 }}
+                role="listbox"
+                aria-label={t.a11y_language_selector}
               >
                 {languages.map((lang) => (
                   <button
                     key={lang}
+                    role="option"
+                    aria-selected={lang === language}
                     onPointerDown={(e) => {
                       e.stopPropagation();
                       setLanguage(lang);
@@ -105,16 +118,31 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
                         ? "text-gold bg-gold/10"
                         : "text-foreground/70 hover:text-gold hover:bg-gold/5"
                     }`}
+                    aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
                   >
-                    <span className="text-base">{languageConfig[lang].flag}</span>
+                    <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
                     <span>{languageConfig[lang].label}</span>
-                    {lang === language && <span className="mr-auto text-gold/50 text-[10px]">✦</span>}
+                    {lang === language && <span className="mr-auto text-gold/50 text-[10px]" aria-hidden="true">✦</span>}
                   </button>
                 ))}
               </motion.div>
             )}
           </AnimatePresence>
         </div>
+
+        {/* Accessibility link */}
+        <Link
+          to="/accessibility"
+          className="flex items-center justify-center w-8 h-8 rounded-full transition-all text-gold/50 hover:text-gold text-xs"
+          style={{
+            background: "hsl(var(--deep-blue-light) / 0.6)",
+            border: "1px solid hsl(var(--gold) / 0.15)",
+          }}
+          aria-label={t.a11y_link_label}
+          title={t.a11y_link_label}
+        >
+          ♿
+        </Link>
 
         {/* WhatsApp */}
         <motion.a
@@ -128,11 +156,11 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
           }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          aria-label="WhatsApp"
+          aria-label={t.a11y_whatsapp_contact}
         >
-          <MessageCircle className="w-3.5 h-3.5 text-white" />
+          <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
         </motion.a>
-      </div>
+      </nav>
     </motion.header>
   );
 };
