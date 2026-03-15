@@ -16,6 +16,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
