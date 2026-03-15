@@ -731,10 +731,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                               }}
                             >
                               {tarotCardImages[card.name]
-                                ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[78%] h-[62%] object-cover rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)" }} />
-                                : <span className="text-4xl mb-1">{card.symbol}</span>}
-                              <span className="font-heading text-[11px] text-gold text-center leading-tight mt-1">{card.hebrewName}</span>
-                              <span className="text-[9px] text-muted-foreground/60 font-body">{selectedSpread.positionLabels[i]}</span>
+                                ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[85%] h-[68%] object-cover rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
+                                : <span className="text-5xl mb-1">{card.symbol}</span>}
+                              <span className="font-heading text-xs md:text-sm text-gold text-center leading-tight mt-1.5">{card.hebrewName}</span>
+                              <span className="text-[10px] text-muted-foreground/60 font-body">{selectedSpread.positionLabels[i]}</span>
                             </div>
                           </motion.div>
 
