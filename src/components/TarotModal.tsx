@@ -357,10 +357,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     const count = fanCards.length;
                     const isMob = isMobileTarot;
                     const arcDeg = isMob ? 36 : 48;
-                    const cardW = isMob ? 58 : 90;
-                    const cardH = isMob ? 96 : 150;
+                    const cardW = isMob ? 68 : 105;
+                    const cardH = isMob ? 112 : 174;
                     const pivotR = isMob ? 180 : 280;
-                    const containerH = isMob ? 200 : 310;
+                    const containerH = isMob ? 230 : 350;
 
                     // Symbols for each spread type (engraved on the card face)
                     const spreadSymbols: Record<SpreadType, string> = {
@@ -436,6 +436,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 <div className="absolute inset-0" style={{
                                   background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.4) 100%)",
                                 }} />
+
+                                {/* Golden shimmer sweep */}
+                                <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                                  <div className="absolute inset-0" style={{
+                                    background: "linear-gradient(105deg, transparent 35%, hsl(var(--gold) / 0.12) 45%, hsl(var(--gold) / 0.22) 50%, hsl(var(--gold) / 0.12) 55%, transparent 65%)",
+                                    backgroundSize: "250% 100%",
+                                    animation: `shimmer-sweep ${3 + idx * 0.5}s ease-in-out infinite`,
+                                  }} />
+                                </div>
 
                                 {/* Gold thin border inset */}
                                 <div className="absolute inset-[2px] md:inset-[3px] rounded-[3px] md:rounded-[4px]" style={{
