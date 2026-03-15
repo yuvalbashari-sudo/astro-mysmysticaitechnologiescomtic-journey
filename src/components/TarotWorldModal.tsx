@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Crown, Share2, Copy, Check, Lock, ChevronRight, Loader2 } from "lucide-react";
 import { spreads, drawCardsForSpread, getInterpretation, type SpreadConfig, type TarotWorldCard } from "@/data/tarotWorldData";

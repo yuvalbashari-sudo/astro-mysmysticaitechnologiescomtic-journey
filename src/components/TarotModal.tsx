@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Briefcase, Eye, Compass, Crown, Share2, Copy, Check, Layers, Star, Sun, MessageCircle } from "lucide-react";

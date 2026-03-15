@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Sun, Lock, Share2, Copy, Check, Loader2, Clock, Crown } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";

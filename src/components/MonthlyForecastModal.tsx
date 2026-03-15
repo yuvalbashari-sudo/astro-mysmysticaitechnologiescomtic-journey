@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
 import { getZodiacSign } from "@/data/zodiacData";
