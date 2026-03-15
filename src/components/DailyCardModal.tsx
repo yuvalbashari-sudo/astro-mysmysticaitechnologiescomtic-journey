@@ -480,7 +480,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   />
 
                   {/* Card flip */}
-                  <div className="relative w-40 h-56 md:w-48 md:h-68 mb-6" style={{ perspective: "800px" }}>
+                  <div className="relative w-48 h-68 md:w-56 md:h-80 mb-6" style={{ perspective: "800px" }}>
                     <motion.div
                       className="absolute inset-0"
                       initial={{ rotateY: 0 }}
