@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
