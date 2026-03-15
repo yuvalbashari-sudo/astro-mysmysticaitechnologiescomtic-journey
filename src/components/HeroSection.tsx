@@ -305,49 +305,42 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Video Nebula ──────────────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const ballSize = isMobile ? 180 : 280;
-  // Make video slightly larger to fill the sphere edge-to-edge
-  const videoScale = 1.35;
-  const videoSize = Math.round(ballSize * videoScale);
-  const offset = Math.round((videoSize - ballSize) / -2);
+  const s = isMobile ? 180 : 280;
 
   return (
     <div
-      className="absolute z-[21] pointer-events-none rounded-full overflow-hidden"
-      style={{ width: ballSize, height: ballSize, aspectRatio: "1 / 1" }}
+      className="absolute z-[21] pointer-events-none"
+      style={{
+        width: s,
+        height: s,
+        borderRadius: "50%",
+        overflow: "hidden",
+        clipPath: "circle(50% at 50% 50%)",
+      }}
     >
-      {/* Video layer — the living universe */}
+      {/* Video — fills the circle, never distorts outer shape */}
       <video
         autoPlay
         loop
         muted
         playsInline
         src="/videos/cosmic-ball.mp4"
-        style={{
-          width: videoSize,
-          height: videoSize,
-          aspectRatio: "1 / 1",
-          objectFit: "cover",
-          position: "absolute",
-          left: offset,
-          top: offset,
-          borderRadius: "50%",
-          filter: "saturate(1.3) brightness(1.1)",
-        }}
+        className="absolute inset-0 w-full h-full"
+        style={{ objectFit: "cover", filter: "saturate(1.3) brightness(1.1)" }}
       />
 
       {/* Spherical shading — darkens edges for 3D depth */}
       <div
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.7) 100%)`,
+          background: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.7) 100%)",
           zIndex: 2,
         }}
       />
 
-      {/* Inner mist / fog overlay — animated */}
+      {/* Inner mist — animated */}
       <motion.div
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0"
         style={{
           background: `radial-gradient(circle at 45% 40%, rgba(200,180,130,0.08) 0%, transparent 50%),
                        radial-gradient(circle at 60% 65%, rgba(100,140,220,0.06) 0%, transparent 45%)`,
@@ -359,66 +352,44 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
       {/* Glass specular highlight — top-left */}
       <div
-        className="absolute rounded-full"
+        className="absolute"
         style={{
-          width: "60%",
-          height: "50%",
-          top: "8%",
-          left: "12%",
-          background: `radial-gradient(ellipse at 50% 40%, rgba(255,253,245,0.22) 0%, rgba(255,253,245,0.06) 50%, transparent 100%)`,
+          width: "60%", height: "50%", top: "8%", left: "12%",
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse at 50% 40%, rgba(255,253,245,0.22) 0%, rgba(255,253,245,0.06) 50%, transparent 100%)",
           zIndex: 4,
         }}
       />
 
-      {/* Highlight arc — crescent reflection */}
+      {/* Highlight arc */}
       <div
-        className="absolute rounded-full"
+        className="absolute"
         style={{
-          width: "80%",
-          height: "80%",
-          top: "5%",
-          left: "10%",
+          width: "80%", height: "80%", top: "5%", left: "10%",
+          borderRadius: "50%",
           border: "1.5px solid rgba(255,250,240,0.1)",
-          borderBottom: "none",
-          borderRight: "none",
-          zIndex: 4,
-        }}
-      />
-
-      {/* Subtle secondary arc — bottom right */}
-      <div
-        className="absolute rounded-full"
-        style={{
-          width: "70%",
-          height: "70%",
-          bottom: "6%",
-          right: "8%",
-          borderBottom: "1px solid rgba(200,190,160,0.06)",
-          borderRight: "1px solid rgba(200,190,160,0.04)",
-          borderTop: "none",
-          borderLeft: "none",
+          borderBottom: "none", borderRight: "none",
           zIndex: 4,
         }}
       />
 
       {/* Edge glow ring */}
       <div
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0"
         style={{
-          boxShadow: `inset 0 0 20px 4px rgba(180,160,120,0.08), inset 0 0 60px 10px rgba(0,0,0,0.3)`,
+          borderRadius: "50%",
+          boxShadow: "inset 0 0 20px 4px rgba(180,160,120,0.08), inset 0 0 60px 10px rgba(0,0,0,0.3)",
           zIndex: 5,
         }}
       />
 
       {/* Pulsating core glow */}
       <motion.div
-        className="absolute rounded-full"
+        className="absolute"
         style={{
-          width: "30%",
-          height: "30%",
-          top: "35%",
-          left: "35%",
-          background: `radial-gradient(circle, rgba(255,240,180,0.15) 0%, rgba(255,220,130,0.05) 50%, transparent 100%)`,
+          width: "30%", height: "30%", top: "35%", left: "35%",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,240,180,0.15) 0%, rgba(255,220,130,0.05) 50%, transparent 100%)",
           zIndex: 3,
         }}
         animate={{ scale: [0.9, 1.15, 0.9], opacity: [0.6, 1, 0.6] }}
