@@ -243,6 +243,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
+        setActiveReading({ type: "dailyCard", label: `קלף יומי — ${selectedCard.hebrewName}`, summary: aiTextRef.current });
         // Update saved card with AI text
         const saved = getSavedDailyCard();
         if (saved) {
