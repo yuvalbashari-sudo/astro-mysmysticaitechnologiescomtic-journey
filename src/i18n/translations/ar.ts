@@ -490,4 +490,17 @@ export const ar: TranslationKeys = {
   a11y_statement_last_updated: "",
   a11y_link_label: "بيان إمكانية الوصول",
   a11y_no_readings: "لا توجد قراءات محفوظة بعد",
+
+  advisor_title: "المستشار الروحي",
+  advisor_placeholder_context: "اسألوا عن قراءتكم...",
+  advisor_placeholder_general: "اطرحوا سؤالاً روحياً...",
+  advisor_welcome_context: "أنا هنا لتعميق قراءتكم. اسألوني أي شيء عن النتيجة التي حصلتم عليها ✨",
+  advisor_welcome_general: "أنا مستشاركم الروحي. افتحوا قراءة للحصول على إرشاد شخصي ومعمّق ✨",
+  advisor_suggestion_1: "ماذا يعني هذا لي؟",
+  advisor_suggestion_2: "ماذا عن الحب؟",
+  advisor_suggestion_3: "اشرح ببساطة",
+  advisor_send: "إرسال",
+  advisor_error: "خطأ في الخدمة، حاولوا مرة أخرى",
+  advisor_open: "فتح المستشار الروحي",
+  advisor_close: "إغلاق المستشار",
 };

@@ -490,4 +490,17 @@ export const en: TranslationKeys = {
   a11y_statement_last_updated: "",
   a11y_link_label: "Accessibility statement",
   a11y_no_readings: "No saved readings yet",
+
+  advisor_title: "Mystical Advisor",
+  advisor_placeholder_context: "Ask about your reading...",
+  advisor_placeholder_general: "Ask a mystical question...",
+  advisor_welcome_context: "I'm here to deepen your reading. Ask me anything about the result you received ✨",
+  advisor_welcome_general: "I'm your mystical advisor. Open a reading to get personal, in-depth guidance ✨",
+  advisor_suggestion_1: "What does this mean for me?",
+  advisor_suggestion_2: "What about love?",
+  advisor_suggestion_3: "Explain simply",
+  advisor_send: "Send",
+  advisor_error: "Service error, please try again",
+  advisor_open: "Open mystical advisor",
+  advisor_close: "Close advisor",
 };
