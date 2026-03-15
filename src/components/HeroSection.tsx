@@ -303,9 +303,61 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
   );
 };
 
-/* ── Crystal Ball Internal Energy — Video Nebula ──────────────────── */
+/* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const s = isMobile ? 180 : 280;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const video2Ref = useRef<HTMLVideoElement>(null);
+  const [showAlt, setShowAlt] = useState(false);
+
+  // Boomerang-style seamless loop: when video nears end, crossfade to second copy playing in reverse
+  useEffect(() => {
+    const v1 = videoRef.current;
+    const v2 = video2Ref.current;
+    if (!v1 || !v2) return;
+
+    // Slow playback for smoother feel
+    v1.playbackRate = 0.7;
+    v2.playbackRate = 0.7;
+
+    const handleTimeUpdate = () => {
+      if (!v1.duration) return;
+      const remaining = v1.duration - v1.currentTime;
+      // Start crossfade 0.8s before end
+      if (remaining < 0.8 && !showAlt) {
+        setShowAlt(true);
+        v2.currentTime = v1.duration - 0.1;
+        v2.playbackRate = -1; // reverse not supported natively, fallback below
+        // Since reverse playback isn't reliable, restart v2 from 0 with slight offset
+        v2.playbackRate = 0.7;
+        v2.currentTime = 0;
+        v2.play().catch(() => {});
+      }
+    };
+
+    const handleV2Time = () => {
+      if (!v2.duration) return;
+      const remaining = v2.duration - v2.currentTime;
+      if (remaining < 0.8 && showAlt) {
+        setShowAlt(false);
+        v1.currentTime = 0;
+        v1.play().catch(() => {});
+      }
+    };
+
+    v1.addEventListener("timeupdate", handleTimeUpdate);
+    v2.addEventListener("timeupdate", handleV2Time);
+    return () => {
+      v1.removeEventListener("timeupdate", handleTimeUpdate);
+      v2.removeEventListener("timeupdate", handleV2Time);
+    };
+  }, [showAlt]);
+
+  const videoStyle: React.CSSProperties = {
+    objectFit: "cover",
+    filter: "saturate(1.25) brightness(1.05) contrast(1.05)",
+    transition: "opacity 1.2s ease-in-out",
+  };
 
   return (
     <div
@@ -318,82 +370,135 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         clipPath: "circle(50% at 50% 50%)",
       }}
     >
-      {/* Video — fills the circle, never distorts outer shape */}
+      {/* Primary video */}
       <video
+        ref={videoRef}
         autoPlay
         loop
         muted
         playsInline
         src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full"
-        style={{ objectFit: "cover", filter: "saturate(1.3) brightness(1.1)" }}
+        style={{ ...videoStyle, opacity: showAlt ? 0 : 1 }}
+      />
+      {/* Secondary video for crossfade */}
+      <video
+        ref={video2Ref}
+        muted
+        playsInline
+        loop
+        src="/videos/cosmic-ball.mp4"
+        className="absolute inset-0 w-full h-full"
+        style={{ ...videoStyle, opacity: showAlt ? 1 : 0 }}
       />
 
-      {/* Spherical shading — darkens edges for 3D depth */}
+      {/* Deep spherical vignette — 3D depth */}
       <div
         className="absolute inset-0"
         style={{
-          background: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.35) 70%, rgba(0,0,0,0.7) 100%)",
+          background: `
+            radial-gradient(circle at 50% 50%, transparent 35%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.85) 100%)
+          `,
           zIndex: 2,
         }}
       />
 
-      {/* Inner mist — animated */}
+      {/* Inner chromatic fog — slowly drifting */}
       <motion.div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 45% 40%, rgba(200,180,130,0.08) 0%, transparent 50%),
-                       radial-gradient(circle at 60% 65%, rgba(100,140,220,0.06) 0%, transparent 45%)`,
+          background: `
+            radial-gradient(circle at 35% 30%, rgba(180,160,120,0.07) 0%, transparent 45%),
+            radial-gradient(circle at 65% 70%, rgba(80,120,200,0.05) 0%, transparent 40%),
+            radial-gradient(circle at 50% 50%, rgba(160,130,200,0.04) 0%, transparent 50%)
+          `,
           zIndex: 3,
         }}
-        animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
       />
 
-      {/* Glass specular highlight — top-left */}
+      {/* Glass specular — primary highlight top-left */}
       <div
         className="absolute"
         style={{
-          width: "60%", height: "50%", top: "8%", left: "12%",
+          width: "55%", height: "45%", top: "6%", left: "10%",
           borderRadius: "50%",
-          background: "radial-gradient(ellipse at 50% 40%, rgba(255,253,245,0.22) 0%, rgba(255,253,245,0.06) 50%, transparent 100%)",
-          zIndex: 4,
-        }}
-      />
-
-      {/* Highlight arc */}
-      <div
-        className="absolute"
-        style={{
-          width: "80%", height: "80%", top: "5%", left: "10%",
-          borderRadius: "50%",
-          border: "1.5px solid rgba(255,250,240,0.1)",
-          borderBottom: "none", borderRight: "none",
-          zIndex: 4,
-        }}
-      />
-
-      {/* Edge glow ring */}
-      <div
-        className="absolute inset-0"
-        style={{
-          borderRadius: "50%",
-          boxShadow: "inset 0 0 20px 4px rgba(180,160,120,0.08), inset 0 0 60px 10px rgba(0,0,0,0.3)",
+          background: "radial-gradient(ellipse at 45% 35%, rgba(255,253,245,0.2) 0%, rgba(255,253,245,0.04) 55%, transparent 100%)",
           zIndex: 5,
         }}
       />
 
-      {/* Pulsating core glow */}
+      {/* Secondary subtle specular — lower right */}
+      <div
+        className="absolute"
+        style={{
+          width: "25%", height: "20%", bottom: "12%", right: "14%",
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse at 50% 50%, rgba(255,250,240,0.06) 0%, transparent 100%)",
+          zIndex: 5,
+        }}
+      />
+
+      {/* Highlight arc — crescent reflection */}
+      <div
+        className="absolute"
+        style={{
+          width: "82%", height: "82%", top: "4%", left: "9%",
+          borderRadius: "50%",
+          border: "1.5px solid rgba(255,250,240,0.09)",
+          borderBottom: "none", borderRight: "none",
+          zIndex: 5,
+        }}
+      />
+
+      {/* Thin inner rim — refraction edge */}
+      <div
+        className="absolute inset-[3px]"
+        style={{
+          borderRadius: "50%",
+          border: "1px solid rgba(200,190,160,0.06)",
+          zIndex: 5,
+        }}
+      />
+
+      {/* Edge glow & inner shadow */}
+      <div
+        className="absolute inset-0"
+        style={{
+          borderRadius: "50%",
+          boxShadow: `
+            inset 0 0 15px 3px rgba(180,160,120,0.06),
+            inset 0 0 50px 8px rgba(0,0,0,0.35),
+            inset 0 -8px 20px 0 rgba(0,0,0,0.2)
+          `,
+          zIndex: 6,
+        }}
+      />
+
+      {/* Subtle sweeping light refraction */}
       <motion.div
         className="absolute"
         style={{
-          width: "30%", height: "30%", top: "35%", left: "35%",
+          width: "25%", height: "110%", top: "-5%",
+          background: "linear-gradient(90deg, transparent, rgba(255,250,240,0.06), rgba(255,250,240,0.1), rgba(255,250,240,0.06), transparent)",
+          filter: "blur(6px)",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,240,180,0.15) 0%, rgba(255,220,130,0.05) 50%, transparent 100%)",
+          zIndex: 7,
+        }}
+        animate={{ left: ["-30%", "130%"] }}
+        transition={{ duration: 6, repeat: Infinity, repeatDelay: 8, ease: "easeInOut" }}
+      />
+
+      {/* Core luminosity — soft warm center glow (no scale animation) */}
+      <div
+        className="absolute"
+        style={{
+          width: "35%", height: "35%", top: "32.5%", left: "32.5%",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,240,180,0.1) 0%, rgba(255,220,130,0.03) 50%, transparent 100%)",
           zIndex: 3,
         }}
-        animate={{ scale: [0.9, 1.15, 0.9], opacity: [0.6, 1, 0.6] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
     </div>
   );
