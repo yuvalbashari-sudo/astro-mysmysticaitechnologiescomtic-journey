@@ -305,71 +305,60 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Canvas Galaxy ──────────────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const size = isMobile ? 180 : 280;
+  const ballSize = isMobile ? 180 : 280;
+  // Canvas is rendered larger so the galaxy fills the entire visible glass area
+  const canvasSize = Math.round(ballSize * 1.3);
+  const offset = Math.round((canvasSize - ballSize) / -2);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
 
-  // Pre-generate stable star/particle data
   const galaxyData = useMemo(() => {
     const spiralStars: { angle: number; radius: number; size: number; speed: number; brightness: number; color: [number, number, number]; arm: number }[] = [];
-    const numArms = 3;
-    const starsPerArm = isMobile ? 60 : 120;
+    const numArms = 4;
+    const starsPerArm = isMobile ? 70 : 140;
     for (let arm = 0; arm < numArms; arm++) {
       const armOffset = (arm / numArms) * Math.PI * 2;
       for (let i = 0; i < starsPerArm; i++) {
-        const dist = 0.08 + (i / starsPerArm) * 0.42;
-        const spiralAngle = armOffset + dist * 6 + (Math.random() - 0.5) * 0.8;
-        const jitter = (Math.random() - 0.5) * 0.08;
+        const dist = 0.05 + (i / starsPerArm) * 0.48;
+        const spiralAngle = armOffset + dist * 5.5 + (Math.random() - 0.5) * 0.7;
+        const jitter = (Math.random() - 0.5) * 0.06;
         const colors: [number, number, number][] = [
-          [255, 200, 100], // gold
-          [150, 180, 255], // blue
-          [255, 150, 120], // warm
-          [200, 160, 255], // purple
-          [255, 255, 220], // white
+          [255, 210, 110], [160, 190, 255], [255, 160, 130], [210, 170, 255], [255, 255, 230],
         ];
         spiralStars.push({
-          angle: spiralAngle,
-          radius: dist + jitter,
-          size: 0.5 + Math.random() * (isMobile ? 1.5 : 2),
-          speed: 0.15 + Math.random() * 0.3,
-          brightness: 0.4 + Math.random() * 0.6,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          arm,
+          angle: spiralAngle, radius: dist + jitter,
+          size: 0.6 + Math.random() * (isMobile ? 1.8 : 2.5),
+          speed: 0.12 + Math.random() * 0.25,
+          brightness: 0.5 + Math.random() * 0.5,
+          color: colors[Math.floor(Math.random() * colors.length)], arm,
         });
       }
     }
 
-    // Nebula clouds — elliptical blobs orbiting at different speeds
     const nebulae: { angle: number; radius: number; w: number; h: number; speed: number; color: [number, number, number]; alpha: number }[] = [];
-    const nebulaCount = isMobile ? 6 : 10;
-    for (let i = 0; i < nebulaCount; i++) {
+    for (let i = 0; i < (isMobile ? 8 : 14); i++) {
       const nebulaColors: [number, number, number][] = [
-        [200, 160, 80],  // gold nebula
-        [80, 120, 200],  // blue nebula
-        [160, 60, 60],   // crimson nebula
-        [120, 80, 180],  // purple nebula
+        [220, 180, 90], [90, 130, 220], [180, 70, 70], [140, 90, 200],
       ];
       nebulae.push({
         angle: Math.random() * Math.PI * 2,
-        radius: 0.1 + Math.random() * 0.35,
-        w: 20 + Math.random() * 30,
-        h: 12 + Math.random() * 20,
-        speed: 0.08 + Math.random() * 0.15,
+        radius: 0.08 + Math.random() * 0.4,
+        w: 25 + Math.random() * 40,
+        h: 15 + Math.random() * 25,
+        speed: 0.06 + Math.random() * 0.12,
         color: nebulaColors[i % nebulaColors.length],
-        alpha: 0.08 + Math.random() * 0.1,
+        alpha: 0.12 + Math.random() * 0.14,
       });
     }
 
-    // Dust ring particles
     const dust: { angle: number; radius: number; size: number; speed: number; alpha: number }[] = [];
-    const dustCount = isMobile ? 40 : 80;
-    for (let i = 0; i < dustCount; i++) {
+    for (let i = 0; i < (isMobile ? 50 : 100); i++) {
       dust.push({
         angle: Math.random() * Math.PI * 2,
-        radius: 0.15 + Math.random() * 0.35,
-        size: 0.3 + Math.random() * 0.8,
-        speed: 0.1 + Math.random() * 0.2,
-        alpha: 0.2 + Math.random() * 0.5,
+        radius: 0.1 + Math.random() * 0.42,
+        size: 0.4 + Math.random() * 1,
+        speed: 0.08 + Math.random() * 0.18,
+        alpha: 0.3 + Math.random() * 0.5,
       });
     }
 
@@ -383,46 +372,44 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     if (!ctx) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
+    canvas.width = canvasSize * dpr;
+    canvas.height = canvasSize * dpr;
     ctx.scale(dpr, dpr);
 
-    const cx = size / 2;
-    const cy = size / 2;
-    const maxR = size / 2 - (isMobile ? 16 : 24);
+    const cx = canvasSize / 2;
+    const cy = canvasSize / 2;
+    const maxR = canvasSize / 2 - 4; // almost full canvas — clipping done by parent
     let time = 0;
 
     const draw = () => {
-      time += 0.004;
-      ctx.clearRect(0, 0, size, size);
+      time += 0.005;
+      ctx.clearRect(0, 0, canvasSize, canvasSize);
 
-      // Clip to circle
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
       ctx.clip();
 
-      // Deep space background
+      // Deep space bg
       const bgGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, maxR);
-      bgGrad.addColorStop(0, "rgba(20, 15, 40, 0.95)");
-      bgGrad.addColorStop(0.5, "rgba(8, 10, 25, 0.98)");
-      bgGrad.addColorStop(1, "rgba(3, 5, 15, 1)");
+      bgGrad.addColorStop(0, "rgba(25, 18, 50, 0.95)");
+      bgGrad.addColorStop(0.4, "rgba(10, 12, 30, 0.98)");
+      bgGrad.addColorStop(1, "rgba(4, 6, 18, 1)");
       ctx.fillStyle = bgGrad;
-      ctx.fillRect(0, 0, size, size);
+      ctx.fillRect(0, 0, canvasSize, canvasSize);
 
-      // ── Nebula clouds (background layer) ──
+      // Nebula clouds
       for (const n of galaxyData.nebulae) {
         const a = n.angle + time * n.speed;
         const nx = cx + Math.cos(a) * n.radius * maxR;
         const ny = cy + Math.sin(a) * n.radius * maxR;
-
         ctx.save();
         ctx.translate(nx, ny);
         ctx.rotate(a * 0.5);
         ctx.globalAlpha = n.alpha * (0.7 + 0.3 * Math.sin(time * 2 + n.angle));
         const ng = ctx.createRadialGradient(0, 0, 0, 0, 0, n.w);
-        ng.addColorStop(0, `rgba(${n.color[0]}, ${n.color[1]}, ${n.color[2]}, 0.5)`);
-        ng.addColorStop(0.5, `rgba(${n.color[0]}, ${n.color[1]}, ${n.color[2]}, 0.15)`);
+        ng.addColorStop(0, `rgba(${n.color[0]}, ${n.color[1]}, ${n.color[2]}, 0.6)`);
+        ng.addColorStop(0.5, `rgba(${n.color[0]}, ${n.color[1]}, ${n.color[2]}, 0.2)`);
         ng.addColorStop(1, "transparent");
         ctx.fillStyle = ng;
         ctx.beginPath();
@@ -431,7 +418,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         ctx.restore();
       }
 
-      // ── Dust ring ──
+      // Dust
       ctx.globalAlpha = 1;
       for (const d of galaxyData.dust) {
         const a = d.angle + time * d.speed;
@@ -439,13 +426,13 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         const dy = cy + Math.sin(a) * d.radius * maxR;
         const flicker = 0.5 + 0.5 * Math.sin(time * 3 + d.angle * 7);
         ctx.globalAlpha = d.alpha * flicker;
-        ctx.fillStyle = `rgba(200, 180, 140, ${d.alpha * flicker})`;
+        ctx.fillStyle = `rgba(210, 190, 150, ${d.alpha * flicker})`;
         ctx.beginPath();
         ctx.arc(dx, dy, d.size, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // ── Spiral arm stars ──
+      // Spiral stars
       for (const s of galaxyData.spiralStars) {
         const a = s.angle + time * s.speed;
         const sx = cx + Math.cos(a) * s.radius * maxR;
@@ -453,18 +440,16 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         const twinkle = 0.5 + 0.5 * Math.sin(time * 4 + s.angle * 5);
         const alpha = s.brightness * twinkle;
 
-        // Star glow
         if (s.size > 1.2) {
-          const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, s.size * 3);
-          glow.addColorStop(0, `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${alpha * 0.4})`);
+          const glow = ctx.createRadialGradient(sx, sy, 0, sx, sy, s.size * 4);
+          glow.addColorStop(0, `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${alpha * 0.5})`);
           glow.addColorStop(1, "transparent");
           ctx.fillStyle = glow;
           ctx.beginPath();
-          ctx.arc(sx, sy, s.size * 3, 0, Math.PI * 2);
+          ctx.arc(sx, sy, s.size * 4, 0, Math.PI * 2);
           ctx.fill();
         }
 
-        // Star core
         ctx.globalAlpha = alpha;
         ctx.fillStyle = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, 1)`;
         ctx.beginPath();
@@ -472,34 +457,32 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         ctx.fill();
       }
 
-      // ── Bright galactic core ──
+      // Bright galactic core
       ctx.globalAlpha = 1;
-      const coreR = isMobile ? 18 : 28;
-      // Core outer glow
-      const outerGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 3);
-      outerGlow.addColorStop(0, `rgba(255, 210, 120, ${0.15 + 0.05 * Math.sin(time * 2)})`);
-      outerGlow.addColorStop(0.4, "rgba(200, 160, 100, 0.06)");
+      const coreR = isMobile ? 22 : 35;
+
+      const outerGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 4);
+      outerGlow.addColorStop(0, `rgba(255, 215, 130, ${0.2 + 0.08 * Math.sin(time * 2)})`);
+      outerGlow.addColorStop(0.3, "rgba(200, 160, 100, 0.08)");
       outerGlow.addColorStop(1, "transparent");
       ctx.fillStyle = outerGlow;
       ctx.beginPath();
-      ctx.arc(cx, cy, coreR * 3, 0, Math.PI * 2);
+      ctx.arc(cx, cy, coreR * 4, 0, Math.PI * 2);
       ctx.fill();
 
-      // Core mid glow
-      const midGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 1.5);
-      midGlow.addColorStop(0, `rgba(255, 220, 150, ${0.5 + 0.15 * Math.sin(time * 3)})`);
-      midGlow.addColorStop(0.5, "rgba(255, 190, 100, 0.15)");
+      const midGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR * 2);
+      midGlow.addColorStop(0, `rgba(255, 225, 160, ${0.6 + 0.15 * Math.sin(time * 3)})`);
+      midGlow.addColorStop(0.5, "rgba(255, 195, 110, 0.2)");
       midGlow.addColorStop(1, "transparent");
       ctx.fillStyle = midGlow;
       ctx.beginPath();
-      ctx.arc(cx, cy, coreR * 1.5, 0, Math.PI * 2);
+      ctx.arc(cx, cy, coreR * 2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Core bright center
       const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
-      coreGrad.addColorStop(0, "rgba(255, 240, 200, 0.9)");
-      coreGrad.addColorStop(0.3, "rgba(255, 200, 120, 0.5)");
-      coreGrad.addColorStop(0.7, "rgba(200, 160, 100, 0.15)");
+      coreGrad.addColorStop(0, "rgba(255, 245, 210, 0.95)");
+      coreGrad.addColorStop(0.3, "rgba(255, 210, 130, 0.6)");
+      coreGrad.addColorStop(0.7, "rgba(200, 165, 110, 0.2)");
       coreGrad.addColorStop(1, "transparent");
       ctx.fillStyle = coreGrad;
       ctx.beginPath();
@@ -508,44 +491,48 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
       ctx.restore();
 
-      // ── Glass reflections on top ──
+      // Glass reflections
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
       ctx.clip();
 
-      // Top-left specular highlight
-      const specular = ctx.createRadialGradient(cx * 0.65, cy * 0.55, 0, cx * 0.65, cy * 0.55, maxR * 0.5);
-      specular.addColorStop(0, "rgba(255, 250, 230, 0.12)");
-      specular.addColorStop(0.5, "rgba(255, 250, 230, 0.03)");
+      const specular = ctx.createRadialGradient(cx * 0.6, cy * 0.5, 0, cx * 0.6, cy * 0.5, maxR * 0.45);
+      specular.addColorStop(0, "rgba(255, 250, 235, 0.14)");
+      specular.addColorStop(0.5, "rgba(255, 250, 235, 0.04)");
       specular.addColorStop(1, "transparent");
       ctx.fillStyle = specular;
-      ctx.fillRect(0, 0, size, size);
+      ctx.fillRect(0, 0, canvasSize, canvasSize);
 
-      // Subtle rim light
-      ctx.strokeStyle = "rgba(200, 180, 140, 0.08)";
+      ctx.strokeStyle = "rgba(200, 180, 140, 0.1)";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(cx, cy, maxR - 1, 0, Math.PI * 2);
       ctx.stroke();
 
       ctx.restore();
-
       animRef.current = requestAnimationFrame(draw);
     };
 
     animRef.current = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(animRef.current);
-  }, [size, isMobile, galaxyData]);
+  }, [canvasSize, isMobile, galaxyData]);
 
   return (
     <div
       className="absolute z-[21] pointer-events-none rounded-full overflow-hidden"
-      style={{ width: size, height: size }}
+      style={{ width: ballSize, height: ballSize }}
     >
       <canvas
         ref={canvasRef}
-        style={{ width: size, height: size, borderRadius: "50%" }}
+        style={{
+          width: canvasSize,
+          height: canvasSize,
+          borderRadius: "50%",
+          position: "absolute",
+          left: offset,
+          top: offset,
+        }}
       />
     </div>
   );
