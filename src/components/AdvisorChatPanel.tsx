@@ -171,7 +171,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-[70] bg-background/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:pointer-events-none"
+            className="fixed inset-0 z-[105] bg-background/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -180,7 +180,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
 
           {/* Chat Panel */}
           <motion.div
-            className="fixed z-[71] flex flex-col overflow-hidden"
+            className="fixed z-[106] flex flex-col overflow-hidden"
             style={{
               bottom: "5.5rem",
               right: dir === "rtl" ? "auto" : "1.25rem",
