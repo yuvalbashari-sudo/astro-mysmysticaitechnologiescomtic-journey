@@ -437,8 +437,6 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         background: "radial-gradient(circle, rgba(255,240,185,0.08) 0%, rgba(255,225,140,0.02) 50%, transparent 100%)",
         zIndex: 3,
       }} />
-        }}
-      />
     </div>
   );
 };
