@@ -2072,10 +2072,6 @@ const HeroSection = () => {
                   </div>
                 </motion.div>
 
-                {/* Fortune Preview */}
-                {entranceComplete && (
-                  <FortunePreview onReveal={handleFortuneReveal} hidden={cardPhase === "flipping" || cardPhase === "revealed"} />
-                )}
 
                 {/* ── Energy lines from hovered item to crystal ball ── */}
                 <AnimatePresence>
