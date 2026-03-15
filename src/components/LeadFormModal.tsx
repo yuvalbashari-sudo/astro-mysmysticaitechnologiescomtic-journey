@@ -49,19 +49,19 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_name} *</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_name} *</label>
                     <input type="text" required maxLength={100} className="mystical-input font-body" placeholder={t.lead_name_placeholder} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                   </div>
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_phone}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
                     <input type="tel" maxLength={20} className="mystical-input font-body" placeholder={t.lead_phone_placeholder} dir="ltr" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                   </div>
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_email} *</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_email} *</label>
                     <input type="email" required maxLength={255} className="mystical-input font-body" placeholder={t.lead_email_placeholder} dir="ltr" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                   </div>
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_interest}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
                     <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
                       <option value="">{t.lead_interest_placeholder}</option>
                       <option value="astrology">{t.lead_modal_interest_personal}</option>
@@ -72,7 +72,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2 text-right">{t.lead_message}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}</label>
                     <textarea maxLength={1000} rows={3} className="mystical-input font-body resize-none" placeholder={t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
                   <button type="submit" disabled={isSubmitting} className="btn-gold font-body w-full flex items-center justify-center gap-2 disabled:opacity-50 mt-6"><Send className="w-4 h-4" />{isSubmitting ? t.lead_submitting : t.lead_submit}</button>
