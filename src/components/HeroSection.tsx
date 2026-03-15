@@ -1304,63 +1304,6 @@ const TarotCardReveal = ({
   );
 };
 
-/* ── Fortune Preview ──────────────────────────────── */
-const FortunePreview = ({ onReveal, hidden }: { onReveal: () => void; hidden?: boolean }) => {
-  const t = useT();
-  const { language, dir } = useLanguage();
-  const [msgIndex] = useState(() => Math.floor(Math.random() * 5));
-  const message = FORTUNE_MESSAGES[language][msgIndex];
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 3500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (!visible) return null;
-
-  return (
-    <motion.div
-      className="absolute z-30 text-center left-1/2"
-      style={{ top: "calc(50% + 110px)", transform: "translateX(-50%)", width: "260px" }}
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: hidden ? 0 : 1, y: hidden ? 10 : 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      <motion.div
-        className="rounded-xl px-4 py-3 backdrop-blur-md"
-        style={{
-          background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.9), hsl(var(--deep-blue) / 0.95))",
-          border: "1px solid hsl(var(--gold) / 0.2)",
-          boxShadow: "0 0 30px hsl(var(--gold) / 0.08)",
-        }}
-        animate={{
-          boxShadow: [
-            "0 0 20px hsl(43 80% 55% / 0.05)",
-            "0 0 35px hsl(43 80% 55% / 0.12)",
-            "0 0 20px hsl(43 80% 55% / 0.05)",
-          ],
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <p className="text-gold/80 font-body text-xs leading-relaxed mb-2" dir={dir}>
-          ✦ {message}
-        </p>
-        <motion.button
-          onClick={onReveal}
-          className="text-gold font-heading text-[11px] tracking-wide"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          animate={{ opacity: [0.7, 1, 0.7] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          {t.hero_cta_free} ✦
-        </motion.button>
-      </motion.div>
-    </motion.div>
-  );
-};
-
 /* ── Main Hero ─────────────────────────────────────── */
 const HeroSection = () => {
   const t = useT();
@@ -1447,9 +1390,6 @@ const HeroSection = () => {
     }));
   }, [isMobile]);
 
-  const handleFortuneReveal = useCallback(() => {
-    setTarotOpen(true);
-  }, []);
 
   // Active energy color based on hovered item
   const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
@@ -2072,10 +2012,6 @@ const HeroSection = () => {
                   </div>
                 </motion.div>
 
-                {/* Fortune Preview */}
-                {entranceComplete && (
-                  <FortunePreview onReveal={handleFortuneReveal} hidden={cardPhase === "flipping" || cardPhase === "revealed"} />
-                )}
 
                 {/* ── Energy lines from hovered item to crystal ball ── */}
                 <AnimatePresence>
