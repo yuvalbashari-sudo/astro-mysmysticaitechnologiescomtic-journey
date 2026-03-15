@@ -261,6 +261,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
+        setActiveReading({ type: "tarot", label: `${t.hero_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`, summary: aiTextRef.current });
         tarotMemory.recordReading(selectedSpread.key, cardsPayload);
         mysticalProfile.recordTarotCards(
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
