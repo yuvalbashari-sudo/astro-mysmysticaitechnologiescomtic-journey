@@ -843,31 +843,31 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
               {/* PHASE 4: AI Results */}
               {phase === "result" && selectedSpread && drawnCards.length > 0 && (
-                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-10">
+                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-12 lg:p-14">
                   {/* Header */}
-                  <div className="text-center mb-6">
+                  <div className="text-center mb-10">
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}>
-                      <span className="text-3xl">{selectedSpread.icon}</span>
+                      <span className="text-4xl">{selectedSpread.icon}</span>
                     </motion.div>
-                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mt-3 mb-2">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
-                    <p className="text-foreground/50 font-body text-sm">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
+                    <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mt-4 mb-3">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
+                    <p className="text-foreground/50 font-body text-sm md:text-base">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
                     
-                    <div className="flex items-center justify-center gap-3 mt-4">
-                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
+                    <div className="flex items-center justify-center gap-3 mt-6">
+                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        <Share2 className="w-4 h-4" />{t.forecast_share}
                       </motion.button>
-                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "hsl(var(--gold) / 0.12)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "hsl(var(--gold) / 0.12)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                         {copied ? t.share_copied : t.share_copy}
                       </motion.button>
                     </div>
                   </div>
 
-                  <div className="section-divider max-w-[120px] mx-auto mb-8" />
+                  <div className="section-divider max-w-[120px] mx-auto mb-10" />
 
                   {/* AI Generated Content */}
                   {aiText ? (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
                       {renderMysticalText(aiText)}
                       
                       {aiLoading && (
