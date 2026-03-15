@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Sparkles, Loader2 } from "lucide-react";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { readingsStorage } from "@/lib/readingsStorage";
 
 interface Message {
   role: "user" | "assistant";
@@ -67,6 +68,12 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         body: JSON.stringify({
           messages: newMessages.map(m => ({ role: m.role, content: m.content })),
           readingContext: activeReading,
+          readingsHistory: readingsStorage.getAll().slice(0, 10).map(r => ({
+            type: r.type,
+            title: r.title,
+            subtitle: r.subtitle,
+            date: r.date,
+          })),
           language,
         }),
       });
