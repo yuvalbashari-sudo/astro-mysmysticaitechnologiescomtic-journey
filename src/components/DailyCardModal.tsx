@@ -157,11 +157,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const saved = getSavedDailyCard();
     if (!saved) return;
     const interval = setInterval(() => {
-      const remaining = getTimeRemaining(saved.timestamp);
+      const remaining = getTimeUntilMidnight();
       setTimeLeft(remaining);
-      // Check if expired
-      const elapsed = Date.now() - saved.timestamp;
-      if (elapsed >= 24 * 60 * 60 * 1000) {
+      // Check if date changed
+      if (saved.date !== getTodayDate()) {
         localStorage.removeItem(DAILY_CARD_KEY);
         setPhase("ready");
         setCard(null);
