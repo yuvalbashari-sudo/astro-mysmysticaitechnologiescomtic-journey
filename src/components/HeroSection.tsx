@@ -2058,7 +2058,7 @@ const HeroSection = () => {
                       onMouseLeave={() => setHoveredItem(null)}
                       whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); if (i === 5) setDailyCardOpen(true); }}
                     >
                       <motion.div
                         className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
