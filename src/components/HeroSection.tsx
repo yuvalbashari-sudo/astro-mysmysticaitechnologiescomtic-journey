@@ -305,10 +305,10 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy ──────────────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const size = isMobile ? 140 : 220;
+  const size = isMobile ? 180 : 280;
   return (
-    <div className="absolute z-[21] pointer-events-none" style={{ width: size, height: size }}>
-      {/* Swirling internal energy */}
+    <div className="absolute z-[21] pointer-events-none rounded-full overflow-hidden" style={{ width: size, height: size }}>
+      {/* Layer 1: Primary swirling fog — slow orbit */}
       <motion.div
         className="absolute inset-0 rounded-full overflow-hidden"
         style={{ mixBlendMode: "screen" }}
@@ -316,76 +316,111 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         <motion.div
           className="absolute rounded-full"
           style={{
-            width: "60%", height: "60%", left: "20%", top: "20%",
-            background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 50%, transparent 70%)",
+            width: "80%", height: "80%", left: "10%", top: "10%",
+            background: "radial-gradient(ellipse at 40% 40%, hsl(var(--gold) / 0.18) 0%, hsl(var(--celestial) / 0.06) 50%, transparent 75%)",
+            filter: "blur(8px)",
           }}
           animate={{
-            scale: [1, 1.4, 0.9, 1.2, 1],
-            x: [0, 10, -8, 5, 0],
-            y: [0, -8, 5, -3, 0],
-            opacity: [0.4, 0.7, 0.3, 0.6, 0.4],
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "40%", height: "40%", left: "30%", top: "35%",
-            background: "radial-gradient(circle, hsl(var(--crimson) / 0.1) 0%, transparent 70%)",
-          }}
-          animate={{
-            scale: [0.8, 1.3, 0.7, 1.1, 0.8],
-            x: [0, -12, 8, -5, 0],
-            y: [0, 6, -10, 4, 0],
-            opacity: [0.2, 0.5, 0.2, 0.4, 0.2],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            width: "30%", height: "30%", left: "40%", top: "25%",
-            background: "radial-gradient(circle, hsl(var(--celestial) / 0.12) 0%, transparent 70%)",
-          }}
-          animate={{
-            scale: [1, 0.6, 1.5, 0.8, 1],
+            rotate: [0, 360],
             x: [0, 15, -10, 8, 0],
-            y: [0, -5, 12, -8, 0],
+            y: [0, -10, 8, -5, 0],
+            opacity: [0.5, 0.8, 0.4, 0.7, 0.5],
           }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{
+            rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+            x: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 10, repeat: Infinity, ease: "easeInOut" },
+            opacity: { duration: 6, repeat: Infinity, ease: "easeInOut" },
+          }}
+        />
+
+        {/* Layer 2: Counter-rotating mist */}
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "70%", height: "70%", left: "15%", top: "15%",
+            background: "radial-gradient(ellipse at 60% 55%, hsl(var(--celestial) / 0.14) 0%, hsl(var(--gold) / 0.05) 40%, transparent 70%)",
+            filter: "blur(10px)",
+          }}
+          animate={{
+            rotate: [360, 0],
+            x: [0, -12, 10, -6, 0],
+            y: [0, 8, -12, 5, 0],
+            opacity: [0.3, 0.6, 0.25, 0.55, 0.3],
+          }}
+          transition={{
+            rotate: { duration: 25, repeat: Infinity, ease: "linear" },
+            x: { duration: 9, repeat: Infinity, ease: "easeInOut", delay: 1 },
+            y: { duration: 11, repeat: Infinity, ease: "easeInOut", delay: 1 },
+            opacity: { duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 },
+          }}
+        />
+
+        {/* Layer 3: Deep crimson wisp — slow drift */}
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "50%", height: "50%", left: "25%", top: "30%",
+            background: "radial-gradient(ellipse at 50% 50%, hsl(var(--crimson) / 0.12) 0%, transparent 65%)",
+            filter: "blur(12px)",
+          }}
+          animate={{
+            rotate: [0, -180, -360],
+            x: [0, 18, -14, 10, 0],
+            y: [0, -8, 14, -6, 0],
+            opacity: [0.2, 0.45, 0.15, 0.4, 0.2],
+          }}
+          transition={{
+            rotate: { duration: 30, repeat: Infinity, ease: "linear" },
+            x: { duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 },
+            y: { duration: 14, repeat: Infinity, ease: "easeInOut", delay: 2 },
+            opacity: { duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 },
+          }}
+        />
+
+        {/* Layer 4: Bright core energy — gentle pulse position only */}
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: "35%", height: "35%", left: "32%", top: "32%",
+            background: "radial-gradient(circle, hsl(var(--gold) / 0.2) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
+            filter: "blur(6px)",
+          }}
+          animate={{
+            x: [0, 8, -6, 10, -4, 0],
+            y: [0, -6, 10, -4, 8, 0],
+            opacity: [0.4, 0.7, 0.35, 0.65, 0.4, 0.4],
+          }}
+          transition={{
+            duration: 10, repeat: Infinity, ease: "easeInOut",
+          }}
+        />
+
+        {/* Layer 5: Drifting fog tendril */}
+        <motion.div
+          className="absolute"
+          style={{
+            width: "90%", height: "40%", left: "5%", top: "30%",
+            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.08) 30%, hsl(var(--celestial) / 0.06) 70%, transparent 100%)",
+            filter: "blur(14px)",
+            borderRadius: "50%",
+          }}
+          animate={{
+            rotate: [0, 15, -10, 5, 0],
+            y: [-5, 10, -8, 5, -5],
+            opacity: [0.3, 0.5, 0.2, 0.45, 0.3],
+          }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
         />
       </motion.div>
 
-      {/* Particle emission from crystal ball */}
-      {[...Array(12)].map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2;
-        const radius = size * 0.35;
-        return (
-          <motion.div
-            key={`cb-particle-${i}`}
-            className="absolute rounded-full"
-            style={{
-              width: 2,
-              height: 2,
-              left: "50%",
-              top: "50%",
-              background: i % 3 === 0 ? "hsl(var(--gold))" : i % 3 === 1 ? "hsl(var(--celestial))" : "hsl(var(--crimson) / 0.8)",
-            }}
-            animate={{
-              x: [0, Math.cos(angle) * radius, Math.cos(angle) * radius * 1.5],
-              y: [0, Math.sin(angle) * radius, Math.sin(angle) * radius * 1.5 - 20],
-              opacity: [0, 0.8, 0],
-              scale: [0, 1.5, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: i * 0.5 + Math.random(),
-              ease: "easeOut",
-            }}
-          />
-        );
-      })}
+      {/* Subtle inner rim highlight */}
+      <div
+        className="absolute inset-0 rounded-full pointer-events-none"
+        style={{
+          background: "radial-gradient(circle at 35% 30%, hsl(var(--gold) / 0.06) 0%, transparent 50%)",
+        }}
+      />
     </div>
   );
 };
@@ -1637,19 +1672,17 @@ const HeroSection = () => {
               <motion.div
                 ref={crystalRef}
                 className="relative z-20 cursor-pointer"
-                style={{ width: "150px", height: "150px" }}
+                style={{ width: "180px", height: "180px" }}
                 onClick={handleCrystalClick}
               >
-                <motion.img
+                <img
                   src={crystalBall}
                   alt="Crystal Ball"
                   className="w-full h-full"
-                  style={{ objectFit: "contain" }}
-                  animate={{
-                    opacity: 1,
-                    filter: ["drop-shadow(0 0 25px hsl(43 80% 55% / 0.3))", "drop-shadow(0 0 45px hsl(43 80% 55% / 0.5))", "drop-shadow(0 0 25px hsl(43 80% 55% / 0.3))"],
+                  style={{
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 0 35px hsl(43 80% 55% / 0.4))",
                   }}
-                  transition={{ filter: { duration: 4, repeat: Infinity, ease: "easeInOut" } }}
                 />
 
                 {/* Tarot Card Reveal inside crystal ball */}
@@ -1945,27 +1978,16 @@ const HeroSection = () => {
                   style={{ width: "280px", height: "280px" }}
                   onClick={handleCrystalClick}
                 >
-                  <motion.img
+                  <img
                     src={crystalBall}
                     alt="Crystal Ball"
                     className="w-full h-full"
-                    style={{ objectFit: "contain" }}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{
-                      opacity: 1,
-                      scale: hoveredItem !== null ? [1, 1.04, 1] : 1,
+                    style={{
+                      objectFit: "contain",
                       filter: hoveredItem !== null
-                        ? [
-                            `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                            `drop-shadow(0 0 70px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`,
-                            `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}55)`,
-                          ]
-                        : ["drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))", "drop-shadow(0 0 55px hsl(43 80% 55% / 0.45))", "drop-shadow(0 0 35px hsl(43 80% 55% / 0.25))"],
-                    }}
-                    transition={{
-                      opacity: { duration: 1.5, delay: 1 },
-                      scale: { duration: 2.5, repeat: Infinity, ease: "easeInOut" },
-                      filter: { duration: hoveredItem !== null ? 1.5 : 4, repeat: Infinity, ease: "easeInOut" },
+                        ? `drop-shadow(0 0 60px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`
+                        : "drop-shadow(0 0 45px hsl(43 80% 55% / 0.35))",
+                      transition: "filter 0.8s ease-in-out",
                     }}
                   />
 
