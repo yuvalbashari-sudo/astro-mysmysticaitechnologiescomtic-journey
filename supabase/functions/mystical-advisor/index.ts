@@ -37,6 +37,22 @@ ${readingContext.summary}
 The user is looking at this specific reading right now. EVERY answer you give MUST be anchored in this exact reading result. Reference specific details, cards, signs, lines, and insights from the reading above. Do NOT give generic spiritual advice.`;
     }
 
+    let historyBlock = "";
+    if (readingsHistory && readingsHistory.length > 0) {
+      const historyLines = readingsHistory.map((r: { type: string; title: string; subtitle: string; date: string }, i: number) => {
+        const d = new Date(r.date);
+        const ago = Math.round((Date.now() - d.getTime()) / 86400000);
+        const timeLabel = ago === 0 ? "today" : ago === 1 ? "yesterday" : `${ago} days ago`;
+        return `${i + 1}. [${r.type}] ${r.title} — ${r.subtitle} (${timeLabel})`;
+      }).join("\n");
+      historyBlock = `
+--- USER'S READING HISTORY (most recent first) ---
+${historyLines}
+--- END HISTORY ---
+
+You may reference the user's past readings when relevant. For example, if the user had a tarot reading 3 days ago and now asks about patterns, connect the dots between readings. But ALWAYS prioritize the current reading context above.`;
+    }
+
     const systemPrompt = `You are a wise, mystical astrology advisor — a personal spiritual guide with deep knowledge of tarot, astrology, palmistry, and cosmic wisdom.
 
 ${langInstruction}
