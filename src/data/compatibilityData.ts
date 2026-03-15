@@ -105,18 +105,18 @@ export function getCompatibility(sign1: string, sign2: string): CompatibilityRes
 
   // Base range per category, then add pair-specific variation
   const hash = pairHash(sign1, sign2);
-  const variation = (hash % 17) - 8; // -8 to +8
+  const variation = (hash % 11) - 5; // -5 to +5
 
   let base: CompatibilityResult;
   let baseScore: number;
 
-  if (same) { base = sameSignResult; baseScore = 75 + (hash % 11); }
-  else if (sameElement) { base = sameElementResult; baseScore = 80 + (hash % 13); }
-  else if (compatible) { base = compatibleResult; baseScore = 85 + (hash % 11); }
-  else if (opposite) { base = oppositeResult; baseScore = 55 + (hash % 16); }
-  else { base = neutralResult; baseScore = 62 + (hash % 18); }
+  if (same) { base = sameSignResult; baseScore = 62 + (hash % 12); }          // 57–73
+  else if (sameElement) { base = sameElementResult; baseScore = 68 + (hash % 10); } // 63–77
+  else if (compatible) { base = compatibleResult; baseScore = 72 + (hash % 12); }   // 67–83
+  else if (opposite) { base = oppositeResult; baseScore = 42 + (hash % 14); }       // 37–55
+  else { base = neutralResult; baseScore = 50 + (hash % 16); }                      // 45–65
 
-  return { ...base, score: Math.min(99, Math.max(45, baseScore + variation)) };
+  return { ...base, score: Math.min(92, Math.max(38, baseScore + variation)) };
 }
 
 const sameSignResult: CompatibilityResult = {
