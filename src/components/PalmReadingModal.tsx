@@ -16,6 +16,7 @@ interface Props { isOpen: boolean; onClose: () => void; }
 const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { setActiveReading } = useReadingContext();
   const [name, setName] = useState("");
   const [rightPalmImage, setRightPalmImage] = useState<string | null>(null);
   const [leftPalmImage, setLeftPalmImage] = useState<string | null>(null);
