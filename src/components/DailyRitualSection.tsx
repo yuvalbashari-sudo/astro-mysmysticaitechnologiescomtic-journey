@@ -210,7 +210,7 @@ const DailyRitualSection = () => {
                 <span className="text-sm text-muted-foreground font-body">
                   {t.daily_ritual_done_text}
                 </span>
-                <span className="text-sm font-heading text-gold font-semibold tabular-nums">{countdown}</span>
+                <span className="text-sm font-heading text-gold font-semibold tabular-nums" aria-label={t.a11y_countdown_label}>{countdown}</span>
               </div>
               <p className="text-xs text-muted-foreground/60 mt-3 font-body">
                 ✦ {t.daily_ritual_next_text} ✦
