@@ -16,7 +16,10 @@ const FloatingOracleButton = () => {
 
       {/* Main Floating Button */}
       <motion.button
-        className="fixed bottom-5 right-5 z-[110] w-14 h-14 rounded-full flex items-center justify-center"
+        className="fixed z-[110] w-14 h-14 rounded-full flex items-center justify-center"
+        style={{
+          bottom: "5px",
+          right: "5px",
         style={{
           background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
           boxShadow: "0 4px 20px hsl(var(--gold) / 0.4)",
