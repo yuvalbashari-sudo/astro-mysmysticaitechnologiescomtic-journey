@@ -20,7 +20,6 @@ const FloatingOracleButton = () => {
         style={{
           bottom: "5px",
           right: "5px",
-        style={{
           background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
           boxShadow: "0 4px 20px hsl(var(--gold) / 0.4)",
         }}
