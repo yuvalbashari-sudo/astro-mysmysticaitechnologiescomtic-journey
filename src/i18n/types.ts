@@ -535,9 +535,35 @@ export type TranslationKeys = {
   advisor_placeholder_general: string;
   advisor_welcome_context: string;
   advisor_welcome_general: string;
+  advisor_welcome_tarot: string;
+  advisor_welcome_astrology: string;
+  advisor_welcome_compatibility: string;
+  advisor_welcome_palm: string;
   advisor_suggestion_1: string;
   advisor_suggestion_2: string;
   advisor_suggestion_3: string;
+  // Tarot suggestions
+  advisor_tarot_s1: string;
+  advisor_tarot_s2: string;
+  advisor_tarot_s3: string;
+  advisor_tarot_s4: string;
+  // Astrology suggestions
+  advisor_astro_s1: string;
+  advisor_astro_s2: string;
+  advisor_astro_s3: string;
+  advisor_astro_s4: string;
+  // Compatibility suggestions
+  advisor_compat_s1: string;
+  advisor_compat_s2: string;
+  advisor_compat_s3: string;
+  advisor_compat_s4: string;
+  // Palm suggestions
+  advisor_palm_s1: string;
+  advisor_palm_s2: string;
+  advisor_palm_s3: string;
+  advisor_palm_s4: string;
+  advisor_limit_reached: string;
+  advisor_upgrade_cta: string;
   advisor_send: string;
   advisor_error: string;
   advisor_open: string;
