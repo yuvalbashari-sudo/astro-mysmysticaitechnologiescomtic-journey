@@ -163,7 +163,16 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     </div>
                     {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
-                  </div>
+                    <div className="mt-2">
+                      <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option>
+                        <option value="woman">{t.compat_gender_woman}</option>
+                        <option value="man">{t.compat_gender_man}</option>
+                        <option value="nonbinary">{t.compat_gender_nonbinary}</option>
+                        <option value="other">{t.compat_gender_other}</option>
+                        <option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                      </select>
+                    </div>
                   <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
                 </motion.div>
               ) : isLoading ? (
