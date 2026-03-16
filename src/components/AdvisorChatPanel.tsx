@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Sparkles, Loader2 } from "lucide-react";
 import { useReadingContext } from "@/contexts/ReadingContext";
