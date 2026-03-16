@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from "react";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, Loader2 } from "lucide-react";
+import { X, Send, Sparkles, Loader2, Lock } from "lucide-react";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -16,6 +16,8 @@ interface Props {
   onClose: () => void;
 }
 
+const FREE_MESSAGE_LIMIT = 5;
+
 const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
@@ -23,6 +25,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+  const [userMessageCount, setUserMessageCount] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const assistantTextRef = useRef("");
@@ -31,6 +34,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
   useEffect(() => {
     setMessages([]);
     setInput("");
+    setUserMessageCount(0);
   }, [activeReading?.type, activeReading?.summary]);
 
   // Auto-scroll to bottom
@@ -47,14 +51,57 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
     }
   }, [isOpen]);
 
+  // Determine reading category for dynamic suggestions
+  const readingCategory = useMemo(() => {
+    if (!activeReading) return null;
+    const type = activeReading.type;
+    if (type === "tarot" || type === "dailyCard" || type === "tarotWorld") return "tarot";
+    if (type === "forecast" || type === "rising" || type === "birthChart") return "astrology";
+    if (type === "compatibility") return "compatibility";
+    if (type === "palm") return "palm";
+    return null;
+  }, [activeReading]);
+
+  // Dynamic suggestion chips based on reading type
+  const suggestions = useMemo(() => {
+    if (!activeReading) return [];
+    switch (readingCategory) {
+      case "tarot":
+        return [t.advisor_tarot_s1, t.advisor_tarot_s2, t.advisor_tarot_s3, t.advisor_tarot_s4];
+      case "astrology":
+        return [t.advisor_astro_s1, t.advisor_astro_s2, t.advisor_astro_s3, t.advisor_astro_s4];
+      case "compatibility":
+        return [t.advisor_compat_s1, t.advisor_compat_s2, t.advisor_compat_s3, t.advisor_compat_s4];
+      case "palm":
+        return [t.advisor_palm_s1, t.advisor_palm_s2, t.advisor_palm_s3, t.advisor_palm_s4];
+      default:
+        return [t.advisor_suggestion_1, t.advisor_suggestion_2, t.advisor_suggestion_3];
+    }
+  }, [readingCategory, t]);
+
+  // Dynamic welcome message based on reading type
+  const welcomeMessage = useMemo(() => {
+    if (!activeReading) return t.advisor_welcome_general;
+    switch (readingCategory) {
+      case "tarot": return t.advisor_welcome_tarot;
+      case "astrology": return t.advisor_welcome_astrology;
+      case "compatibility": return t.advisor_welcome_compatibility;
+      case "palm": return t.advisor_welcome_palm;
+      default: return t.advisor_welcome_context;
+    }
+  }, [readingCategory, activeReading, t]);
+
+  const isLimitReached = userMessageCount >= FREE_MESSAGE_LIMIT;
+
   const sendMessage = async () => {
     const text = input.trim();
-    if (!text || isStreaming) return;
+    if (!text || isStreaming || isLimitReached) return;
 
     const userMsg: Message = { role: "user", content: text };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
+    setUserMessageCount(prev => prev + 1);
     setIsStreaming(true);
     assistantTextRef.current = "";
 
@@ -169,9 +216,10 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
       e.preventDefault();
       sendMessage();
     }
+    if (e.key === "Escape") {
+      onClose();
+    }
   };
-
-  const placeholderText = activeReading ? t.advisor_placeholder_context : t.advisor_placeholder_general;
 
   // Simple markdown renderer for assistant messages
   const renderMarkdown = (text: string) => {
@@ -184,8 +232,6 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         elements.push(<div key={i} className="h-2" />);
         return;
       }
-
-      // Headers
       if (trimmed.startsWith("### ")) {
         elements.push(
           <h4 key={i} className="font-heading text-sm text-gold mt-3 mb-1">
@@ -202,8 +248,6 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         );
         return;
       }
-
-      // List items
       if (/^[-•*]\s/.test(trimmed)) {
         elements.push(
           <div key={i} className="flex gap-2 items-start">
@@ -213,8 +257,6 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         );
         return;
       }
-
-      // Numbered list
       if (/^\d+[.)]\s/.test(trimmed)) {
         const num = trimmed.match(/^(\d+)[.)]\s/)?.[1];
         elements.push(
@@ -225,15 +267,12 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         );
         return;
       }
-
-      // Regular paragraph
       elements.push(<p key={i}>{renderInline(trimmed)}</p>);
     });
 
     return <div className="space-y-1">{elements}</div>;
   };
 
-  // Render inline markdown (bold, italic)
   const renderInline = (text: string): React.ReactNode => {
     const parts: React.ReactNode[] = [];
     const regex = /\*\*(.+?)\*\*|__(.+?)__|_(.+?)_|\*(.+?)\*/g;
@@ -254,6 +293,8 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
     if (lastIndex < text.length) parts.push(text.slice(lastIndex));
     return parts.length === 1 ? parts[0] : <>{parts}</>;
   };
+
+  const placeholderText = activeReading ? t.advisor_placeholder_context : t.advisor_placeholder_general;
 
   return (
     <AnimatePresence>
@@ -287,6 +328,9 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: "spring", stiffness: 350, damping: 30 }}
             dir={dir}
+            role="dialog"
+            aria-label={t.advisor_title}
+            aria-modal="true"
           >
             {/* Header */}
             <div
@@ -315,7 +359,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               </div>
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/5"
+                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/5 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:ring-offset-1 focus:ring-offset-transparent"
                 aria-label={t.a11y_close_modal}
               >
                 <X className="w-4 h-4 text-foreground/50" />
@@ -327,6 +371,8 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               ref={scrollRef}
               className="flex-1 overflow-y-auto px-4 py-4 space-y-4 min-h-0"
               style={{ scrollBehavior: "smooth" }}
+              role="log"
+              aria-live="polite"
             >
               {messages.length === 0 && (
                 <div className="text-center py-8 space-y-3">
@@ -340,15 +386,15 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                     <Sparkles className="w-6 h-6 text-gold/60" />
                   </div>
                   <p className="text-foreground/40 font-body text-sm leading-relaxed max-w-[260px] mx-auto">
-                    {activeReading ? t.advisor_welcome_context : t.advisor_welcome_general}
+                    {welcomeMessage}
                   </p>
-                  {activeReading && (
+                  {activeReading && suggestions.length > 0 && (
                     <div className="flex flex-wrap gap-2 justify-center mt-3">
-                      {[t.advisor_suggestion_1, t.advisor_suggestion_2, t.advisor_suggestion_3].map((suggestion, i) => (
+                      {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
                           onClick={() => { setInput(suggestion); inputRef.current?.focus(); }}
-                          className="text-xs px-3 py-1.5 rounded-full font-body transition-colors"
+                          className="text-xs px-3 py-1.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/40"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.12)",
@@ -395,6 +441,36 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   </div>
                 </div>
               ))}
+
+              {/* Limit reached banner */}
+              {isLimitReached && !isStreaming && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl p-4 text-center space-y-3"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--crimson) / 0.04))",
+                    border: "1px solid hsl(var(--gold) / 0.15)",
+                  }}
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    <Lock className="w-4 h-4 text-gold/60" />
+                    <p className="text-foreground/50 font-body text-xs leading-relaxed">
+                      {t.advisor_limit_reached}
+                    </p>
+                  </div>
+                  <button
+                    className="text-xs px-4 py-2 rounded-full font-heading transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/40"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
+                      color: "hsl(var(--primary-foreground))",
+                      boxShadow: "0 4px 15px hsl(var(--gold) / 0.2)",
+                    }}
+                  >
+                    {t.advisor_upgrade_cta}
+                  </button>
+                </motion.div>
+              )}
             </div>
 
             {/* Input */}
@@ -403,7 +479,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               style={{ borderTop: "1px solid hsl(var(--gold) / 0.08)" }}
             >
               <div
-                className="flex items-center gap-2 rounded-xl px-3 py-2"
+                className={`flex items-center gap-2 rounded-xl px-3 py-2 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
                 style={{
                   background: "hsl(var(--deep-blue-light) / 0.4)",
                   border: "1px solid hsl(var(--gold) / 0.1)",
@@ -415,14 +491,15 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
                   placeholder={placeholderText}
-                  disabled={isStreaming}
-                  className="flex-1 bg-transparent text-sm font-body text-foreground/80 placeholder:text-foreground/25 outline-none"
+                  disabled={isStreaming || isLimitReached}
+                  className="flex-1 bg-transparent text-sm font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
                   dir={dir}
+                  aria-label={placeholderText}
                 />
                 <button
                   onClick={sendMessage}
-                  disabled={!input.trim() || isStreaming}
-                  className="w-8 h-8 rounded-full flex items-center justify-center transition-all disabled:opacity-30"
+                  disabled={!input.trim() || isStreaming || isLimitReached}
+                  className="w-8 h-8 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/40"
                   style={{
                     background: input.trim() ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))" : "transparent",
                   }}
