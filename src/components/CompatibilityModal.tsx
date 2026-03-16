@@ -23,6 +23,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [date2, setDate2] = useState("");
   const [time1, setTime1] = useState("");
   const [time2, setTime2] = useState("");
+  const [gender1, setGender1] = useState("");
+  const [gender2, setGender2] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [matchInfo, setMatchInfo] = useState<{ sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number } | null>(null);
