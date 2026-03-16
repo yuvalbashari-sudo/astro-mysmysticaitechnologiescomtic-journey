@@ -207,6 +207,13 @@ export type TranslationKeys = {
   compat_date1_label: string;
   compat_date2_label: string;
   compat_time_optional: string;
+  compat_gender_label: string;
+  compat_gender_woman: string;
+  compat_gender_man: string;
+  compat_gender_nonbinary: string;
+  compat_gender_other: string;
+  compat_gender_prefer_not: string;
+  compat_gender_optional: string;
   compat_cta: string;
   compat_score_label: string;
   compat_loading: string;

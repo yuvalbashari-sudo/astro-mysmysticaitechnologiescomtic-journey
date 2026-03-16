@@ -23,6 +23,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [date2, setDate2] = useState("");
   const [time1, setTime1] = useState("");
   const [time2, setTime2] = useState("");
+  const [gender1, setGender1] = useState("");
+  const [gender2, setGender2] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [matchInfo, setMatchInfo] = useState<{ sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number } | null>(null);
@@ -63,12 +65,14 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
         sign1Rising: rising1 ? getSignHebrew(rising1) : null,
         sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
         sign1RisingElement: rising1 ? getSignElement(rising1) : null,
+        sign1Gender: gender1 || null,
         sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
         sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
         sign2BirthTime: time2 || null,
         sign2Rising: rising2 ? getSignHebrew(rising2) : null,
         sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
         sign2RisingElement: rising2 ? getSignElement(rising2) : null,
+        sign2Gender: gender2 || null,
         score: info.score,
       },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
@@ -91,7 +95,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setIsLoading(false);
+      setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setGender1(""); setGender2(""); setIsLoading(false);
       setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
     }, 300);
   };
@@ -139,8 +143,17 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     </div>
                     {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
+                    <div className="mt-2">
+                      <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option>
+                        <option value="woman">{t.compat_gender_woman}</option>
+                        <option value="man">{t.compat_gender_man}</option>
+                        <option value="nonbinary">{t.compat_gender_nonbinary}</option>
+                        <option value="other">{t.compat_gender_other}</option>
+                        <option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="max-w-sm mx-auto mb-8">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
@@ -150,7 +163,16 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     </div>
                     {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
-                  </div>
+                    <div className="mt-2">
+                      <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option>
+                        <option value="woman">{t.compat_gender_woman}</option>
+                        <option value="man">{t.compat_gender_man}</option>
+                        <option value="nonbinary">{t.compat_gender_nonbinary}</option>
+                        <option value="other">{t.compat_gender_other}</option>
+                        <option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                      </select>
+                    </div>
                   <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
                 </motion.div>
               ) : isLoading ? (

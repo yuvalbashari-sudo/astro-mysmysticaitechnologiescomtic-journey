@@ -107,6 +107,27 @@ const READING_PROMPTS: Record<string, (data: any) => { system: string; user: str
     const has1Rising = !!data.sign1Rising;
     const has2Rising = !!data.sign2Rising;
     const hasAnyRising = has1Rising || has2Rising;
+    const has1Gender = !!data.sign1Gender && data.sign1Gender !== 'prefer_not';
+    const has2Gender = !!data.sign2Gender && data.sign2Gender !== 'prefer_not';
+    const hasAnyGender = has1Gender || has2Gender;
+
+    const genderMap: Record<string, string> = { woman: 'אישה', man: 'גבר', nonbinary: 'נון-בינארי', other: 'זהות מגדרית אחרת' };
+    const g1Label = has1Gender ? genderMap[data.sign1Gender] || data.sign1Gender : null;
+    const g2Label = has2Gender ? genderMap[data.sign2Gender] || data.sign2Gender : null;
+
+    const genderGuide = hasAnyGender ? `
+הנחיות מגדר — חשוב מאוד:
+- השתמש/י בנוסח "אדם ראשון" / "אדם שני" או פנייה ניטרלית ומכבדת.
+- ${has1Gender ? `אדם ראשון מזדהה כ${g1Label}.` : 'אדם ראשון לא ציין/ה זהות מגדרית — השתמש/י בלשון ניטרלית.'}
+- ${has2Gender ? `אדם שני מזדהה כ${g2Label}.` : 'אדם שני לא ציין/ה זהות מגדרית — השתמש/י בלשון ניטרלית.'}
+- אל תניח מודל זוגיות מסורתי. הקשר יכול להיות בין כל שילוב מגדרי.
+- אל תשתמש בסטריאוטיפים מגדריים (כמו "הגבר בקשר" או "האישה בקשר").
+- אם ניתן מגדר — השתמש בו כדי להעמיק את הפירוש: סגנון הביטוי הרגשי, דינמיקת המשיכה, סגנון התקשורת, אינטימיות ותפקידים בקשר — הכל באופן מכבד, לא מגביל.
+- הפירוש צריך להישאר מבוסס על אסטרולוגיה. המגדר מוסיף שכבת עומק, לא מחליף את הניתוח האסטרולוגי.` : `
+הנחיות מגדר:
+- לא צוינה זהות מגדרית — כתוב בלשון ניטרלית ומכילה.
+- השתמש/י בנוסח "אדם ראשון" / "אדם שני".
+- אל תניח שום מודל זוגיות ספציפי.`;
 
     return {
     system: `אתה אסטרולוג מיסטי מומחה בסינסטריה (אסטרולוגיה זוגית). אתה כותב בעברית בלבד.
@@ -121,6 +142,7 @@ ${data.score >= 80 ? '- ציון גבוה! הדגש את החיבור העמוק
 - מנתח את הדינמיקה בין שני המזלות על סמך היסודות, האופנויות והכוכבים השולטים
 - כשיש חיכוך — אמור את זה. כשיש הרמוניה — חגוג את זה.
 ${hasAnyRising ? '- משלב ניתוח מזל עולה (אסנדנט) כדי לחשוף את הדינמיקה העמוקה יותר בין בני הזוג' : ''}
+${genderGuide}
 
 מבנה התשובה:
 
@@ -162,28 +184,31 @@ ${hasAnyRising ? `**🔮 שילוב המזלות העולים**
 משפט סיכום רומנטי ועמוק`,
     user: `כתוב ניתוח התאמה זוגית מיסטי, מקיף ואישי.
 
-מזל 1: ${data.sign1Name} (${data.sign1Symbol})
+אדם ראשון — מזל ${data.sign1Name} (${data.sign1Symbol})
 - יסוד: ${data.sign1Element}
 - אופנות: ${data.sign1Modality}
 - כוכב שולט: ${data.sign1Ruler}
 ${has1Rising ? `- שעת לידה: ${data.sign1BirthTime}\n- מזל עולה: ${data.sign1Rising} (${data.sign1RisingSymbol}) — יסוד ${data.sign1RisingElement}` : '- שעת לידה: לא צוינה'}
+${has1Gender ? `- זהות מגדרית: ${g1Label}` : '- זהות מגדרית: לא צוינה'}
 
-מזל 2: ${data.sign2Name} (${data.sign2Symbol})
+אדם שני — מזל ${data.sign2Name} (${data.sign2Symbol})
 - יסוד: ${data.sign2Element}
 - אופנות: ${data.sign2Modality}
 - כוכב שולט: ${data.sign2Ruler}
 ${has2Rising ? `- שעת לידה: ${data.sign2BirthTime}\n- מזל עולה: ${data.sign2Rising} (${data.sign2RisingSymbol}) — יסוד ${data.sign2RisingElement}` : '- שעת לידה: לא צוינה'}
+${has2Gender ? `- זהות מגדרית: ${g2Label}` : '- זהות מגדרית: לא צוינה'}
 
 ציון התאמה: ${data.score}%
 
 חשוב: 
-1. התחל בפרופיל קוסמי מפורט של כל מזל — מי הם ביחסים
+1. התחל בפרופיל קוסמי מפורט של כל אדם — מי הם ביחסים
 ${hasAnyRising ? '2. שלב ניתוח מזל עולה מפורט — איך הוא משפיע על הביטוי החיצוני, המשיכה והדינמיקה הזוגית\n3. נתח את האינטראקציה בין היסודות כולל המזלות העולים' : '2. נתח את האינטראקציה בין היסודות שלהם'}
 ${hasAnyRising ? '4' : '3'}. שלב את כל המידע לניתוח מעמיק ואישי
 ${hasAnyRising ? '5' : '4'}. הניתוח חייב להיות ייחודי לשילוב הספציפי הזה — אל תכתוב טקסט גנרי שמתאים לכל זוג
-${hasAnyRising ? '6' : '5'}. דבר ישירות אל הזוג
+${hasAnyRising ? '6' : '5'}. דבר ישירות אל שני האנשים
 ${hasAnyRising ? '7' : '6'}. הציון הוא ${data.score}% — ${data.score >= 80 ? 'חגוג את החיבור המיוחד הזה' : data.score >= 60 ? 'הצג תמונה מאוזנת עם חוזקות ואתגרים' : 'היה כנה לגבי הקשיים, אבל עם רגישות וכבוד'}
-${hasAnyRising ? '8' : '7'}. התייחס לשילוב הספציפי של היסודות (${data.sign1Element}+${data.sign2Element}), האופנויות (${data.sign1Modality}+${data.sign2Modality}) והכוכבים השולטים (${data.sign1Ruler}+${data.sign2Ruler}) — מה בדיוק יוצר את הכימיה או החיכוך`,
+${hasAnyRising ? '8' : '7'}. התייחס לשילוב הספציפי של היסודות (${data.sign1Element}+${data.sign2Element}), האופנויות (${data.sign1Modality}+${data.sign2Modality}) והכוכבים השולטים (${data.sign1Ruler}+${data.sign2Ruler}) — מה בדיוק יוצר את הכימיה או החיכוך
+${hasAnyGender ? `${hasAnyRising ? '9' : '8'}. השתמש בזהות המגדרית כדי להעמיק את הפירוש — סגנון ביטוי רגשי, דינמיקת משיכה, אינטימיות — אבל בלי סטריאוטיפים ובלי להניח מודל זוגיות מסורתי` : ''}`,
     };
   },
 
