@@ -80,19 +80,25 @@ serve(async (req) => {
       featureBlock = FEATURE_PROMPTS[category] || "";
 
       contextBlock = `
---- CURRENT READING CONTEXT ---
+--- CURRENT READING CONTEXT (THIS IS THE ACTUAL RESULT THE USER SEES ON SCREEN) ---
 Reading type: ${readingContext.type}
 Reading label: ${readingContext.label}
 
-Full reading result that the user received:
+EXACT reading result currently displayed to the user:
+"""
 ${readingContext.summary}
+"""
 --- END READING CONTEXT ---
 
-The user is looking at this specific reading right now. EVERY answer you give MUST be anchored in this exact reading result. Reference specific details, cards, signs, lines, and insights from the reading above. Do NOT give generic spiritual advice.
-
-When the user asks "what does this mean" — refer to the SPECIFIC content above.
-When the user asks about love, career, future — connect it to the SPECIFIC reading above.
-When the user asks to explain simply — rephrase the SPECIFIC content above in simpler terms.`;
+ABSOLUTE RULES FOR CONTEXT USAGE:
+1. You MUST treat the text above as the LIVE result the user is looking at RIGHT NOW.
+2. EVERY sentence you write must reference or be derived from the SPECIFIC content above.
+3. When the user asks "what does this mean" — quote or paraphrase SPECIFIC parts of the reading above.
+4. When the user asks about love, career, future — connect it DIRECTLY to specific phrases, cards, signs, or lines mentioned in the reading above.
+5. When the user asks to explain simply — rephrase SPECIFIC paragraphs from the reading above.
+6. NEVER give an answer that could apply to any random person. Your answer must ONLY make sense for someone who received THIS exact reading.
+7. Start your first response by referencing a specific detail from the reading (a card name, a zodiac sign, a palm line, a compatibility finding).
+8. If you cannot find relevant context in the reading above for a question, say so honestly and redirect to what the reading DOES reveal.`;
     }
 
     let historyBlock = "";
