@@ -173,6 +173,88 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
 
   const placeholderText = activeReading ? t.advisor_placeholder_context : t.advisor_placeholder_general;
 
+  // Simple markdown renderer for assistant messages
+  const renderMarkdown = (text: string) => {
+    const lines = text.split("\n");
+    const elements: React.ReactNode[] = [];
+
+    lines.forEach((line, i) => {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        elements.push(<div key={i} className="h-2" />);
+        return;
+      }
+
+      // Headers
+      if (trimmed.startsWith("### ")) {
+        elements.push(
+          <h4 key={i} className="font-heading text-sm text-gold mt-3 mb-1">
+            {renderInline(trimmed.slice(4))}
+          </h4>
+        );
+        return;
+      }
+      if (trimmed.startsWith("## ")) {
+        elements.push(
+          <h3 key={i} className="font-heading text-[15px] text-gold mt-3 mb-1">
+            {renderInline(trimmed.slice(3))}
+          </h3>
+        );
+        return;
+      }
+
+      // List items
+      if (/^[-•*]\s/.test(trimmed)) {
+        elements.push(
+          <div key={i} className="flex gap-2 items-start">
+            <span className="text-gold/50 mt-0.5 flex-shrink-0">•</span>
+            <span>{renderInline(trimmed.replace(/^[-•*]\s/, ""))}</span>
+          </div>
+        );
+        return;
+      }
+
+      // Numbered list
+      if (/^\d+[.)]\s/.test(trimmed)) {
+        const num = trimmed.match(/^(\d+)[.)]\s/)?.[1];
+        elements.push(
+          <div key={i} className="flex gap-2 items-start">
+            <span className="text-gold/50 mt-0.5 flex-shrink-0 text-xs min-w-[1rem] text-center">{num}.</span>
+            <span>{renderInline(trimmed.replace(/^\d+[.)]\s/, ""))}</span>
+          </div>
+        );
+        return;
+      }
+
+      // Regular paragraph
+      elements.push(<p key={i}>{renderInline(trimmed)}</p>);
+    });
+
+    return <div className="space-y-1">{elements}</div>;
+  };
+
+  // Render inline markdown (bold, italic)
+  const renderInline = (text: string): React.ReactNode => {
+    const parts: React.ReactNode[] = [];
+    const regex = /\*\*(.+?)\*\*|__(.+?)__|_(.+?)_|\*(.+?)\*/g;
+    let lastIndex = 0;
+    let match;
+
+    while ((match = regex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(text.slice(lastIndex, match.index));
+      }
+      if (match[1] || match[2]) {
+        parts.push(<strong key={match.index} className="text-gold/90 font-semibold">{match[1] || match[2]}</strong>);
+      } else if (match[3] || match[4]) {
+        parts.push(<em key={match.index}>{match[3] || match[4]}</em>);
+      }
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+    return parts.length === 1 ? parts[0] : <>{parts}</>;
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
