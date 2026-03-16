@@ -143,8 +143,17 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     </div>
                     {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
+                    <div className="mt-2">
+                      <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option>
+                        <option value="woman">{t.compat_gender_woman}</option>
+                        <option value="man">{t.compat_gender_man}</option>
+                        <option value="nonbinary">{t.compat_gender_nonbinary}</option>
+                        <option value="other">{t.compat_gender_other}</option>
+                        <option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="max-w-sm mx-auto mb-8">
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
