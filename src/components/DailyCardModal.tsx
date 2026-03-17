@@ -361,7 +361,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
             {/* Hidden video element — preloaded */}
             <video
               ref={videoRef}
-              src="/videos/cosmic-ball.mp4"
+              src="/videos/daily-tarot-ritual.mp4"
               className="hidden"
               playsInline
               muted
