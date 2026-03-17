@@ -19,14 +19,15 @@ interface Props {
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
 const DAILY_USER_SEED_KEY = "astrologai_user_seed";
+const VIDEO_DURATION_MS = 12000; // approximate video length — card reveals 3s before end
+const CARD_REVEAL_BEFORE_END_MS = 3500;
 
 interface DailyCardData {
   card: TarotWorldCard;
-  date: string; // YYYY-MM-DD
+  date: string;
   aiText?: string;
 }
 
-/** Get or create a persistent random seed for this user/browser */
 function getUserSeed(): string {
   let seed = localStorage.getItem(DAILY_USER_SEED_KEY);
   if (!seed) {
@@ -36,13 +37,12 @@ function getUserSeed(): string {
   return seed;
 }
 
-/** Simple deterministic hash from string to number */
 function hashToNumber(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
     hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit int
+    hash = hash & hash;
   }
   return Math.abs(hash);
 }
@@ -70,7 +70,6 @@ function saveDailyCard(data: DailyCardData) {
   localStorage.setItem(DAILY_CARD_KEY, JSON.stringify(data));
 }
 
-/** Get deterministic card index for this user + date */
 function getDailyCardIndex(totalCards: number): number {
   const seed = getUserSeed();
   const date = getTodayDate();
@@ -88,7 +87,6 @@ function getTimeUntilMidnight(): string {
   return `${hours} שעות ו-${minutes} דקות`;
 }
 
-// Floating particles
 const Particles = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {Array.from({ length: 25 }).map((_, i) => (
@@ -117,7 +115,7 @@ const Particles = () => (
   </div>
 );
 
-type Phase = "ready" | "shuffle" | "reveal" | "result" | "locked";
+type Phase = "ready" | "video" | "result" | "locked";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -125,7 +123,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("ready");
   const [card, setCard] = useState<TarotWorldCard | null>(null);
-  const [shuffleStep, setShuffleStep] = useState(0);
   const [copied, setCopied] = useState(false);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
@@ -133,7 +130,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [timeLeft, setTimeLeft] = useState("");
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
+  const [showCardOverlay, setShowCardOverlay] = useState(false);
 
   // Check for existing daily card on open
   useEffect(() => {
@@ -163,7 +162,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const interval = setInterval(() => {
       const remaining = getTimeUntilMidnight();
       setTimeLeft(remaining);
-      // Check if date changed
       if (saved.date !== getTodayDate()) {
         localStorage.removeItem(DAILY_CARD_KEY);
         setPhase("ready");
@@ -176,7 +174,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   }, [phase]);
 
   const handleDraw = useCallback(() => {
-    // Check again in case
     const saved = getSavedDailyCard();
     if (saved) {
       setCard(saved.card);
@@ -190,31 +187,62 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    setPhase("shuffle");
-    let step = 0;
-    const interval = setInterval(() => {
-      step++;
-      setShuffleStep(step);
-      if (step >= 10) {
-        clearInterval(interval);
-        // Deterministic card selection based on user seed + date
-        const cardIndex = getDailyCardIndex(majorArcana.length);
-        const selectedCard = majorArcana[cardIndex];
-        setCard(selectedCard);
-        setTimeout(() => setPhase("reveal"), 600);
-      }
-    }, 250);
-  }, []);
+    // Select card deterministically
+    const cardIndex = getDailyCardIndex(majorArcana.length);
+    const selectedCard = majorArcana[cardIndex];
+    setCard(selectedCard);
+    setShowCardOverlay(false);
+    setPhase("video");
+  }, [t.daily_already_drawn]);
 
-  // After reveal animation, move to result and start AI
+  // Video phase: reveal card near end, transition after video ends
   useEffect(() => {
-    if (phase === "reveal" && card) {
-      const timer = setTimeout(() => {
+    if (phase !== "video" || !card) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.currentTime = 0;
+    video.play().catch(() => {
+      // Video autoplay blocked — skip directly to result
+      setPhase("result");
+      startAiReading(card);
+    });
+
+    const handleTimeUpdate = () => {
+      if (!video) return;
+      const remaining = (video.duration - video.currentTime) * 1000;
+      if (remaining <= CARD_REVEAL_BEFORE_END_MS && !showCardOverlay) {
+        setShowCardOverlay(true);
+      }
+    };
+
+    const handleEnded = () => {
+      setTimeout(() => {
         setPhase("result");
         startAiReading(card);
-      }, 2500);
-      return () => clearTimeout(timer);
-    }
+      }, 800);
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("ended", handleEnded);
+
+    // Fallback timer in case video duration detection fails
+    const fallback = setTimeout(() => {
+      if (phase === "video") {
+        setShowCardOverlay(true);
+        setTimeout(() => {
+          setPhase("result");
+          startAiReading(card);
+        }, 2500);
+      }
+    }, VIDEO_DURATION_MS + 2000);
+
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("ended", handleEnded);
+      clearTimeout(fallback);
+    };
   }, [phase, card]);
 
   const startAiReading = (selectedCard: TarotWorldCard) => {
@@ -222,7 +250,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setAiError(null);
     aiTextRef.current = "";
 
-    // Save immediately with timestamp
     saveDailyCard({ card: selectedCard, date: getTodayDate() });
 
     streamMysticalReading(
@@ -244,12 +271,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       () => {
         setAiLoading(false);
         setActiveReading({ type: "dailyCard", label: `קלף יומי — ${selectedCard.hebrewName}`, summary: aiTextRef.current });
-        // Update saved card with AI text
         const saved = getSavedDailyCard();
         if (saved) {
           saveDailyCard({ ...saved, aiText: aiTextRef.current });
         }
-        // Record in mystical profile
         mysticalProfile.recordDailyCard(selectedCard.hebrewName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
@@ -270,8 +295,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleClose = () => {
     onClose();
+    // Pause video if playing
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
     setTimeout(() => {
-      // Don't reset card/aiText if locked — keep for re-open
       if (phase !== "locked" && phase !== "result") {
         setCard(null);
         setAiText("");
@@ -279,12 +307,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setAiLoading(false);
         setAiError(null);
       }
-      setShuffleStep(0);
+      setShowCardOverlay(false);
       setCopied(false);
     }, 300);
   };
 
-  // Auto-scroll during streaming
   useEffect(() => {
     if (aiLoading && scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -331,6 +358,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
           >
             <Particles />
 
+            {/* Hidden video element — preloaded */}
+            <video
+              ref={videoRef}
+              src="/videos/cosmic-ball.mp4"
+              className="hidden"
+              playsInline
+              muted
+              preload="auto"
+            />
+
             <button
               onClick={handleClose}
               className="absolute top-4 left-4 z-30 w-9 h-9 rounded-full flex items-center justify-center bg-muted/20 hover:bg-muted/40 transition-colors"
@@ -339,21 +376,23 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
               <X className="w-4 h-4 text-gold/70" />
             </button>
 
-            <div className="absolute top-4 right-4 z-20">
-              <span
-                className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider"
-                style={{
-                  background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))",
-                  border: "1px solid hsl(var(--gold) / 0.3)",
-                  color: "hsl(var(--gold))",
-                }}
-              >
-                ✦ חינם
-              </span>
-            </div>
+            {phase !== "video" && (
+              <div className="absolute top-4 right-4 z-20">
+                <span
+                  className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))",
+                    border: "1px solid hsl(var(--gold) / 0.3)",
+                    color: "hsl(var(--gold))",
+                  }}
+                >
+                  ✦ חינם
+                </span>
+              </div>
+            )}
 
             <AnimatePresence mode="wait">
-              {/* PHASE: Ready to draw */}
+              {/* PHASE: Ready */}
               {phase === "ready" && (
                 <motion.div
                   key="ready"
@@ -386,7 +425,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                   <div className="section-divider max-w-[100px] mx-auto mb-8" />
 
-                  {/* Preview card stack */}
                   <div className="relative w-28 h-40 mx-auto mb-8">
                     {[0, 1, 2].map(i => (
                       <motion.div
@@ -420,127 +458,149 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* PHASE: Shuffle */}
-              {phase === "shuffle" && (
+              {/* PHASE: Video ritual */}
+              {phase === "video" && card && (
                 <motion.div
-                  key="shuffle"
+                  key="video"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="relative p-12 md:p-16 text-center flex flex-col items-center justify-center min-h-[450px]"
+                  className="relative overflow-hidden rounded-2xl"
+                  style={{ minHeight: 450 }}
                 >
-                  <div className="relative w-32 h-44 mb-8">
-                    {[0, 1, 2, 3, 4].map(i => (
-                      <motion.div
-                        key={i}
-                        className="absolute inset-0 rounded-xl overflow-hidden"
-                        style={{
-                          border: "1px solid hsl(var(--gold) / 0.3)",
-                          boxShadow: "0 4px 20px hsl(0 0% 0% / 0.3)",
-                        }}
-                        animate={{
-                          x: [0, (i % 2 === 0 ? 1 : -1) * (15 + i * 10) * Math.sin(shuffleStep * 0.7), 0],
-                          y: [0, -8 - i * 4, 0],
-                          rotate: [(i - 2) * 4, (i - 2) * 8 * Math.cos(shuffleStep * 0.5), (i - 2) * 4],
-                        }}
-                        transition={{ duration: 0.25, ease: "easeInOut" }}
-                      >
-                        <img src={cardBack} alt="Card" className="w-full h-full object-cover" />
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  <motion.p
-                    className="font-body text-gold/80 text-lg mb-2"
-                    animate={{ opacity: [0.4, 1, 0.4] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
-                  {t.daily_shuffle}
-                  </motion.p>
-                  <p className="font-body text-foreground/40 text-xs">{t.daily_shuffle_focus}</p>
-                </motion.div>
-              )}
-
-              {/* PHASE: Reveal */}
-              {phase === "reveal" && card && (
-                <motion.div
-                  key="reveal"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="relative p-8 md:p-12 text-center flex flex-col items-center justify-center min-h-[500px]"
-                >
-                  {/* Glow behind card */}
-                  <motion.div
-                    className="absolute rounded-full"
-                    style={{
-                      width: 300,
-                      height: 300,
-                      background: "radial-gradient(circle, hsl(var(--gold) / 0.15), hsl(var(--crimson) / 0.05), transparent)",
-                      filter: "blur(40px)",
+                  {/* Video background — visible */}
+                  <video
+                    src="/videos/cosmic-ball.mp4"
+                    className="w-full h-full object-cover absolute inset-0"
+                    style={{ minHeight: 450 }}
+                    autoPlay
+                    playsInline
+                    muted
+                    ref={(el) => {
+                      if (el && videoRef.current !== el) {
+                        (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
+                      }
                     }}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1.5, opacity: 1 }}
-                    transition={{ duration: 1.5 }}
+                    onTimeUpdate={() => {
+                      const v = videoRef.current;
+                      if (v && v.duration) {
+                        const remaining = (v.duration - v.currentTime) * 1000;
+                        if (remaining <= CARD_REVEAL_BEFORE_END_MS) {
+                          setShowCardOverlay(true);
+                        }
+                      }
+                    }}
+                    onEnded={() => {
+                      setTimeout(() => {
+                        setPhase("result");
+                        if (card) startAiReading(card);
+                      }, 800);
+                    }}
+                    onError={() => {
+                      // Video failed — go straight to result
+                      setPhase("result");
+                      if (card) startAiReading(card);
+                    }}
                   />
 
-                  {/* Card flip */}
-                  <div className="relative w-48 h-68 md:w-56 md:h-80 mb-6" style={{ perspective: "800px" }}>
-                    <motion.div
-                      className="absolute inset-0"
-                      initial={{ rotateY: 0 }}
-                      animate={{ rotateY: 180 }}
-                      transition={{ duration: 1.2, delay: 0.5, type: "spring", damping: 15 }}
-                      style={{ transformStyle: "preserve-3d" }}
-                    >
-                      {/* Back */}
-                      <div
-                        className="absolute inset-0 rounded-xl overflow-hidden"
-                        style={{
-                          backfaceVisibility: "hidden",
-                          border: "2px solid hsl(var(--gold) / 0.3)",
-                          boxShadow: "0 0 30px hsl(var(--gold) / 0.15)",
-                        }}
-                      >
-                        <img src={cardBack} alt="Card back" className="w-full h-full object-cover" />
-                      </div>
-                      {/* Front */}
-                      <div
-                        className="absolute inset-0 rounded-xl overflow-hidden"
-                        style={{
-                          backfaceVisibility: "hidden",
-                          transform: "rotateY(180deg)",
-                          border: "2px solid hsl(var(--gold) / 0.4)",
-                          boxShadow: "0 0 40px hsl(var(--gold) / 0.2), 0 0 80px hsl(var(--crimson) / 0.1)",
-                        }}
-                      >
-                        {cardImage ? (
-                          <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
-                            <span className="text-5xl">{card.symbol}</span>
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-                  </div>
+                  {/* Dark gradient overlay for readability */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background: "linear-gradient(to bottom, transparent 30%, hsl(222 50% 3% / 0.7) 80%, hsl(222 50% 3% / 0.95) 100%)",
+                    }}
+                  />
 
-                  <motion.h2
-                    className="font-heading text-2xl md:text-3xl gold-gradient-text relative z-10"
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.8 }}
-                  >
-                    {card.hebrewName}
-                  </motion.h2>
-                  <motion.p
-                    className="text-foreground/50 font-body text-sm relative z-10 mt-1"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 2 }}
-                  >
-                    {t.daily_card_chosen}
-                  </motion.p>
+                  {/* Card reveal overlay — appears near video end */}
+                  <AnimatePresence>
+                    {showCardOverlay && (
+                      <motion.div
+                        className="absolute inset-0 z-10 flex flex-col items-center justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1.2, ease: "easeOut" }}
+                      >
+                        {/* Radial glow behind card */}
+                        <motion.div
+                          className="absolute rounded-full pointer-events-none"
+                          style={{
+                            width: 350,
+                            height: 350,
+                            background: "radial-gradient(circle, hsl(var(--gold) / 0.2), hsl(var(--crimson) / 0.08), transparent)",
+                            filter: "blur(50px)",
+                          }}
+                          initial={{ scale: 0.3, opacity: 0 }}
+                          animate={{ scale: 1.4, opacity: 1 }}
+                          transition={{ duration: 1.8, ease: "easeOut" }}
+                        />
+
+                        {/* The actual daily card */}
+                        <motion.div
+                          className="relative w-44 h-64 md:w-52 md:h-76 rounded-xl overflow-hidden"
+                          style={{
+                            border: "2px solid hsl(var(--gold) / 0.5)",
+                            boxShadow: "0 0 60px hsl(var(--gold) / 0.25), 0 0 120px hsl(var(--crimson) / 0.12), 0 20px 60px hsl(0 0% 0% / 0.5)",
+                          }}
+                          initial={{ scale: 0.4, opacity: 0, y: 60, rotateY: -90 }}
+                          animate={{ scale: 1, opacity: 1, y: 0, rotateY: 0 }}
+                          transition={{
+                            duration: 1.5,
+                            ease: [0.22, 1, 0.36, 1],
+                            opacity: { duration: 0.8 },
+                          }}
+                        >
+                          {cardImage ? (
+                            <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
+                              <span className="text-5xl">{card.symbol}</span>
+                            </div>
+                          )}
+
+                          {/* Shimmer sweep */}
+                          <motion.div
+                            className="absolute inset-0 pointer-events-none"
+                            style={{
+                              background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.2) 50%, transparent 70%)",
+                            }}
+                            initial={{ x: "-100%" }}
+                            animate={{ x: "200%" }}
+                            transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
+                          />
+                        </motion.div>
+
+                        {/* Card name */}
+                        <motion.h2
+                          className="font-heading text-2xl md:text-3xl gold-gradient-text mt-5 relative z-10"
+                          initial={{ opacity: 0, y: 15 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.8, duration: 0.8 }}
+                        >
+                          {card.hebrewName}
+                        </motion.h2>
+                        <motion.p
+                          className="text-foreground/50 font-body text-sm relative z-10 mt-1"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 1.2 }}
+                        >
+                          {t.daily_card_chosen}
+                        </motion.p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Loading text before card appears */}
+                  {!showCardOverlay && (
+                    <motion.div
+                      className="absolute bottom-8 left-0 right-0 z-10 text-center"
+                      animate={{ opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <p className="font-body text-gold/80 text-lg">{t.daily_shuffle}</p>
+                      <p className="font-body text-foreground/40 text-xs mt-1">{t.daily_shuffle_focus}</p>
+                    </motion.div>
+                  )}
                 </motion.div>
               )}
 
@@ -553,7 +613,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0 }}
                   className="relative p-6 md:p-10"
                 >
-                  {/* Card header */}
                   <div className="text-center mb-6">
                     <div className="flex items-center justify-center gap-5 mb-4">
                       <motion.div
@@ -573,7 +632,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                             <span className="text-4xl">{card.symbol}</span>
                           </div>
                         )}
-                        {/* Shimmer */}
                         <motion.div
                           className="absolute inset-0"
                           style={{
@@ -638,7 +696,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     </motion.div>
                   </div>
 
-                  {/* AI content */}
                   {aiText ? (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                       <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
@@ -685,7 +742,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   ) : null}
 
-                  {/* Footer CTA */}
                   {!aiLoading && (aiText || aiError) && (
                     <>
                       <ShareResultSection
