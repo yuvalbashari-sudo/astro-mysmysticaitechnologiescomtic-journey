@@ -117,7 +117,7 @@ const Particles = () => (
   </div>
 );
 
-type Phase = "ready" | "shuffle" | "reveal" | "result" | "locked";
+type Phase = "ready" | "video" | "result" | "locked";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
