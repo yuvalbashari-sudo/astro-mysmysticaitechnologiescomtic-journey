@@ -470,7 +470,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 >
                   {/* Video background — visible */}
                   <video
-                    src="/videos/cosmic-ball.mp4"
+                    src="/videos/daily-tarot-ritual.mp4"
                     className="w-full h-full object-cover absolute inset-0"
                     style={{ minHeight: 450 }}
                     autoPlay
