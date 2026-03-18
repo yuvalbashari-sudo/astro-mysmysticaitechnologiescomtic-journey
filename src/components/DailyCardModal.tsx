@@ -195,54 +195,17 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setPhase("video");
   }, [t.daily_already_drawn]);
 
-  // Video phase: reveal card near end, transition after video ends
+  // Fallback timer for video phase in case events don't fire
   useEffect(() => {
     if (phase !== "video" || !card) return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.currentTime = 0;
-    video.play().catch(() => {
-      // Video autoplay blocked — skip directly to result
-      setPhase("result");
-      startAiReading(card);
-    });
-
-    const handleTimeUpdate = () => {
-      if (!video) return;
-      const remaining = (video.duration - video.currentTime) * 1000;
-      if (remaining <= CARD_REVEAL_BEFORE_END_MS && !showCardOverlay) {
-        setShowCardOverlay(true);
-      }
-    };
-
-    const handleEnded = () => {
+    const fallback = setTimeout(() => {
+      setShowCardOverlay(true);
       setTimeout(() => {
         setPhase("result");
         startAiReading(card);
-      }, 800);
-    };
-
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("ended", handleEnded);
-
-    // Fallback timer in case video duration detection fails
-    const fallback = setTimeout(() => {
-      if (phase === "video") {
-        setShowCardOverlay(true);
-        setTimeout(() => {
-          setPhase("result");
-          startAiReading(card);
-        }, 2500);
-      }
+      }, 2500);
     }, VIDEO_DURATION_MS + 2000);
-
-    return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("ended", handleEnded);
-      clearTimeout(fallback);
-    };
+    return () => clearTimeout(fallback);
   }, [phase, card]);
 
   const startAiReading = (selectedCard: TarotWorldCard) => {
@@ -358,15 +321,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
           >
             <Particles />
 
-            {/* Hidden video element — preloaded */}
-            <video
-              ref={videoRef}
-              src="/videos/daily-tarot-ritual.mp4"
-              className="hidden"
-              playsInline
-              muted
-              preload="auto"
-            />
+            {/* Video preload removed — using inline video in video phase */}
 
             <button
               onClick={handleClose}
@@ -476,11 +431,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     autoPlay
                     playsInline
                     muted
-                    ref={(el) => {
-                      if (el && videoRef.current !== el) {
-                        (videoRef as React.MutableRefObject<HTMLVideoElement | null>).current = el;
-                      }
-                    }}
+                    ref={videoRef}
                     onTimeUpdate={() => {
                       const v = videoRef.current;
                       if (v && v.duration) {
