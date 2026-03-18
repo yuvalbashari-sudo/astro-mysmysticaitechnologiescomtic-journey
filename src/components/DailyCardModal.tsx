@@ -195,9 +195,35 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setPhase("video");
   }, [t.daily_already_drawn]);
 
-  // Fallback timer for video phase in case events don't fire
+  // Preload video asset when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "video";
+      link.href = "/videos/daily-tarot-ritual.mp4";
+      document.head.appendChild(link);
+      return () => { document.head.removeChild(link); };
+    }
+  }, [isOpen]);
+
+  // Explicitly play video when video phase starts + fallback timer
   useEffect(() => {
     if (phase !== "video" || !card) return;
+
+    // Small delay to let the video element mount
+    const playTimer = setTimeout(() => {
+      const v = videoRef.current;
+      if (v) {
+        v.currentTime = 0;
+        v.play().catch(() => {
+          // Autoplay truly blocked — skip to result
+          setPhase("result");
+          startAiReading(card);
+        });
+      }
+    }, 100);
+
     const fallback = setTimeout(() => {
       setShowCardOverlay(true);
       setTimeout(() => {
@@ -205,7 +231,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         startAiReading(card);
       }, 2500);
     }, VIDEO_DURATION_MS + 2000);
-    return () => clearTimeout(fallback);
+
+    return () => {
+      clearTimeout(playTimer);
+      clearTimeout(fallback);
+    };
   }, [phase, card]);
 
   const startAiReading = (selectedCard: TarotWorldCard) => {
