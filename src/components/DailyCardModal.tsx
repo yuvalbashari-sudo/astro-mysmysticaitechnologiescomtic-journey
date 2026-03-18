@@ -321,15 +321,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
           >
             <Particles />
 
-            {/* Hidden video element — preloaded */}
-            <video
-              ref={videoRef}
-              src="/videos/daily-tarot-ritual.mp4"
-              className="hidden"
-              playsInline
-              muted
-              preload="auto"
-            />
+            {/* Video preload removed — using inline video in video phase */}
 
             <button
               onClick={handleClose}
