@@ -461,6 +461,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     autoPlay
                     playsInline
                     muted
+                    preload="auto"
                     ref={videoRef}
                     onTimeUpdate={() => {
                       const v = videoRef.current;
