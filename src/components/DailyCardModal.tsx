@@ -334,7 +334,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <motion.div className="absolute inset-0 bg-background/85 backdrop-blur-xl" onClick={handleClose} />
+          <motion.div className={`absolute inset-0 bg-background/85 ${phase === "video" ? "backdrop-blur-sm" : "backdrop-blur-xl"}`} onClick={handleClose} />
 
           <motion.div
             ref={scrollRef}
