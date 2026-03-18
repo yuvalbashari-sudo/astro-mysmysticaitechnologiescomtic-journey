@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Sun, Lock, Share2, Copy, Check, Loader2, Clock, Crown } from "lucide-react";
@@ -87,9 +87,9 @@ function getTimeUntilMidnight(): string {
   return `${hours} שעות ו-${minutes} דקות`;
 }
 
-const Particles = () => (
+const Particles = React.memo(() => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {Array.from({ length: 25 }).map((_, i) => (
+    {Array.from({ length: 15 }).map((_, i) => (
       <motion.div
         key={i}
         className="absolute rounded-full"
@@ -113,7 +113,7 @@ const Particles = () => (
       />
     ))}
   </div>
-);
+));
 
 type Phase = "ready" | "video" | "result" | "locked";
 
@@ -195,9 +195,35 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setPhase("video");
   }, [t.daily_already_drawn]);
 
-  // Fallback timer for video phase in case events don't fire
+  // Preload video asset when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "video";
+      link.href = "/videos/daily-tarot-ritual.mp4";
+      document.head.appendChild(link);
+      return () => { document.head.removeChild(link); };
+    }
+  }, [isOpen]);
+
+  // Explicitly play video when video phase starts + fallback timer
   useEffect(() => {
     if (phase !== "video" || !card) return;
+
+    // Small delay to let the video element mount
+    const playTimer = setTimeout(() => {
+      const v = videoRef.current;
+      if (v) {
+        v.currentTime = 0;
+        v.play().catch(() => {
+          // Autoplay truly blocked — skip to result
+          setPhase("result");
+          startAiReading(card);
+        });
+      }
+    }, 100);
+
     const fallback = setTimeout(() => {
       setShowCardOverlay(true);
       setTimeout(() => {
@@ -205,7 +231,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         startAiReading(card);
       }, 2500);
     }, VIDEO_DURATION_MS + 2000);
-    return () => clearTimeout(fallback);
+
+    return () => {
+      clearTimeout(playTimer);
+      clearTimeout(fallback);
+    };
   }, [phase, card]);
 
   const startAiReading = (selectedCard: TarotWorldCard) => {
@@ -304,7 +334,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <motion.div className="absolute inset-0 bg-background/85 backdrop-blur-xl" onClick={handleClose} />
+          <motion.div className={`absolute inset-0 bg-background/85 ${phase === "video" ? "backdrop-blur-sm" : "backdrop-blur-xl"}`} onClick={handleClose} />
 
           <motion.div
             ref={scrollRef}
@@ -319,7 +349,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
             exit={{ opacity: 0, scale: 0.92, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
-            <Particles />
+            {phase !== "video" && <Particles />}
 
             {/* Video preload removed — using inline video in video phase */}
 
@@ -431,6 +461,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     autoPlay
                     playsInline
                     muted
+                    preload="auto"
                     ref={videoRef}
                     onTimeUpdate={() => {
                       const v = videoRef.current;
