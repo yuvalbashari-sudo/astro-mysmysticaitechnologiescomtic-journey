@@ -593,6 +593,42 @@ function getRulingSignIndex(): number {
   }
   return 9; // fallback Capricorn
 }
+// Planetary influence data type
+type PlanetaryInfluence = {
+  planet: string;
+  planet_symbol: string;
+  zodiac_sign_index: number;
+  zodiac_sign_en: string;
+  aspect: string;
+  influence_area: string;
+  title: Record<Language, string>;
+  description: Record<Language, string>;
+  life_area: Record<Language, string>;
+};
+
+const PLANET_COLORS: Record<string, string> = {
+  Sun: "43 80% 55%",
+  Moon: "220 20% 80%",
+  Mercury: "180 40% 55%",
+  Venus: "330 60% 65%",
+  Mars: "0 70% 55%",
+  Jupiter: "35 60% 55%",
+  Saturn: "220 15% 50%",
+  Uranus: "180 60% 50%",
+  Neptune: "230 60% 60%",
+  Pluto: "280 40% 45%",
+};
+
+const INFLUENCE_AREA_ICONS: Record<string, string> = {
+  love: "❤️",
+  energy: "⚡",
+  communication: "💬",
+  growth: "🌱",
+  discipline: "🏛️",
+  transformation: "🔮",
+  intuition: "👁️",
+  creativity: "🎨",
+};
 
 const ZodiacWheel = ({
   isMobile,
@@ -604,9 +640,43 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
+  const [planetaryInfluence, setPlanetaryInfluence] = useState<PlanetaryInfluence | null>(null);
   const radius = isMobile ? 242 : 385;
   const iconSize = isMobile ? 42 : 66;
   const rulingIndex = getRulingSignIndex();
+
+  // Fetch planetary influence from edge function
+  useEffect(() => {
+    const cacheKey = `planetary_influence_${new Date().toISOString().split("T")[0]}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try { setPlanetaryInfluence(JSON.parse(cached)); return; } catch {}
+    }
+
+    const fetchInfluence = async () => {
+      try {
+        const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/planetary-influence`;
+        const resp = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ language }),
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          setPlanetaryInfluence(data);
+          localStorage.setItem(cacheKey, JSON.stringify(data));
+        }
+      } catch (e) {
+        console.error("Failed to fetch planetary influence:", e);
+      }
+    };
+    fetchInfluence();
+  }, []);
+
+  const influencedIndex = planetaryInfluence?.zodiac_sign_index ?? rulingIndex;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
   const isCompatMode = hoveredMenuItem === 2;
