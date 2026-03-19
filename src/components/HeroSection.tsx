@@ -557,6 +557,7 @@ const ZodiacWheel = ({
           const y = Math.sin(angle) * radius + radius + 20;
           const isHighlighted = compatHighlight.includes(i);
           const isHovered = hoveredSign === i;
+          const meta = ZODIAC_META[language][i];
 
           return (
             <motion.div
@@ -570,58 +571,101 @@ const ZodiacWheel = ({
               }}
               onMouseEnter={() => setHoveredSign(i)}
               onMouseLeave={() => setHoveredSign(null)}
-              // Counter-rotate to keep symbols upright
+              // Counter-rotate to keep symbols upright — slow down when hovered
               animate={{ rotate: -360 }}
-              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
             >
               {/* Zodiac illustration */}
               <motion.div
                 className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
                 animate={isHighlighted ? {
                   scale: [1, 1.3, 1],
-                } : {}}
-                whileHover={{ scale: 1.35 }}
-                transition={{ duration: 1.5, repeat: isHighlighted ? Infinity : 0, ease: "easeInOut" }}
+                } : isHovered ? { scale: 1.45 } : { scale: 1 }}
+                transition={{ duration: isHighlighted ? 1.5 : 0.4, repeat: isHighlighted ? Infinity : 0, ease: "easeOut" }}
               >
                 <img
                   src={ZODIAC_ICONS[i]}
                   alt={sign.name}
-                  className="w-full h-full object-contain transition-all duration-300"
+                  className="w-full h-full object-contain transition-all duration-500"
                   style={{
                     opacity: isHovered || isHighlighted ? 1 : 0.75,
-                    filter: isHovered || isHighlighted
-                      ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
-                      : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
+                    filter: isHovered
+                      ? "drop-shadow(0 0 18px hsl(43 80% 55% / 0.9)) drop-shadow(0 0 8px hsl(43 80% 55% / 0.6)) drop-shadow(0 0 35px hsl(43 80% 55% / 0.3))"
+                      : isHighlighted
+                        ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
+                        : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
                   }}
                 />
               </motion.div>
 
-              {/* Tooltip on hover */}
+              {/* Glow ring on hover */}
+              <AnimatePresence>
+                {isHovered && (
+                  <motion.div
+                    className="absolute inset-[-6px] rounded-full pointer-events-none"
+                    style={{
+                      border: "1px solid hsl(var(--gold) / 0.3)",
+                      background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)",
+                      boxShadow: "0 0 25px hsl(var(--gold) / 0.15), inset 0 0 15px hsl(var(--gold) / 0.05)",
+                    }}
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.7 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+              </AnimatePresence>
+
+              {/* Premium floating label on hover */}
               <AnimatePresence>
                 {isHovered && (
                   <motion.div
                     className="absolute z-50 whitespace-nowrap"
                     style={{
                       left: "50%",
-                      bottom: "calc(100% + 6px)",
+                      bottom: "calc(100% + 14px)",
                       transform: "translateX(-50%)",
                     }}
-                    initial={{ opacity: 0, y: 5, scale: 0.8 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.85 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 5, scale: 0.8 }}
-                    transition={{ duration: 0.2 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.85 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
                   >
                     <div
-                      className="px-2 py-1 rounded-md text-[10px] font-heading backdrop-blur-md"
+                      className="px-4 py-2 rounded-lg font-heading backdrop-blur-xl text-center"
                       style={{
-                        background: "hsl(var(--deep-blue-light) / 0.9)",
-                        border: "1px solid hsl(var(--gold) / 0.25)",
-                        color: "hsl(var(--gold))",
-                        boxShadow: "0 0 15px hsl(var(--gold) / 0.1)",
+                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
+                        border: "1px solid hsl(var(--gold) / 0.3)",
+                        boxShadow: "0 0 25px hsl(var(--gold) / 0.12), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(var(--gold) / 0.1)",
                       }}
                     >
-                      {sign.name}
+                      <div
+                        className="text-[13px] font-semibold tracking-wide"
+                        style={{ color: "hsl(var(--gold))" }}
+                      >
+                        {sign.name}
+                      </div>
+                      <div
+                        className="flex items-center justify-center gap-2 mt-0.5 text-[10px] tracking-widest uppercase"
+                        style={{ color: "hsl(var(--gold) / 0.6)" }}
+                      >
+                        <span>{meta.element}</span>
+                        <span style={{ color: "hsl(var(--gold) / 0.3)" }}>·</span>
+                        <span>{meta.keyword}</span>
+                      </div>
                     </div>
+                    {/* Arrow pointing down */}
+                    <div
+                      className="mx-auto"
+                      style={{
+                        width: 0,
+                        height: 0,
+                        borderLeft: "5px solid transparent",
+                        borderRight: "5px solid transparent",
+                        borderTop: "5px solid hsl(var(--gold) / 0.3)",
+                        marginTop: -1,
+                      }}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
