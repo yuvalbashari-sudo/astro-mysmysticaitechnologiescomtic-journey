@@ -19,6 +19,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
+  const [name1, setName1] = useState("");
+  const [name2, setName2] = useState("");
+  const [relation1, setRelation1] = useState("me");
+  const [relation2, setRelation2] = useState("partner");
   const [date1, setDate1] = useState("");
   const [date2, setDate2] = useState("");
   const [time1, setTime1] = useState("");
