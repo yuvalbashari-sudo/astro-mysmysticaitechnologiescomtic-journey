@@ -1296,62 +1296,90 @@ const ZodiacWheel = ({
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Planetary influence label */}
+      {/* Planetary Influence Info Card */}
       <motion.div
         className="absolute pointer-events-none z-20"
         style={{
-          bottom: isMobile ? -28 : -36,
+          bottom: isMobile ? -100 : -130,
           left: "50%",
           transform: "translateX(-50%)",
+          width: isMobile ? 280 : 360,
         }}
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, delay: 3 }}
       >
         <div
-          className="flex items-center gap-2 px-4 py-1.5 rounded-full font-heading backdrop-blur-md whitespace-nowrap"
+          className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden text-center"
           style={{
-            background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.8), hsl(var(--deep-blue) / 0.9))",
-            border: `1px solid hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"} / 0.25)`,
-            boxShadow: `0 0 20px hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"} / 0.1), 0 4px 16px hsl(var(--deep-blue) / 0.5)`,
+            background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
+            border: `1px solid hsl(${pColor} / 0.3)`,
+            boxShadow: `0 0 35px hsl(${pColor} / 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${pColor} / 0.1)`,
           }}
         >
-          {planetaryInfluence && (
-            <motion.span
-              className="inline-block"
-              style={{ fontSize: isMobile ? 12 : 14 }}
-              animate={{ 
-                textShadow: [
-                  `0 0 5px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.3)`,
-                  `0 0 15px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.6)`,
-                  `0 0 5px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.3)`,
-                ],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          {/* Top accent */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.6), transparent 90%)` }}
+          />
+
+          <div className={`${isMobile ? "px-4 py-3.5 space-y-2" : "px-6 py-5 space-y-2.5"}`}>
+            {/* Subtitle */}
+            <div
+              className={`tracking-[0.2em] uppercase font-medium ${isMobile ? "text-[9px]" : "text-[10px]"}`}
+              style={{ color: "hsl(var(--foreground) / 0.45)" }}
             >
-              {planetaryInfluence.planet_symbol}
-            </motion.span>
-          )}
-          <span
-            className="font-semibold tracking-wide"
-            style={{ 
-              fontSize: isMobile ? 11 : 13, 
-              color: `hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"})`,
-            }}
-          >
-            {planetaryInfluence?.title[language] || ZODIAC_WHEEL[language][influencedIndex].name}
-          </span>
-          <motion.span
-            className="inline-block"
-            style={{ fontSize: isMobile ? 10 : 12, color: "hsl(var(--gold) / 0.5)" }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          >
-            ✦
-          </motion.span>
+              {t.zodiac_planetary_influence}
+            </div>
+
+            {/* Planet symbol + aspect title */}
+            <div className="flex items-center justify-center gap-2.5">
+              <motion.span
+                className={`${isMobile ? "text-xl" : "text-2xl"}`}
+                animate={{
+                  textShadow: [
+                    `0 0 8px hsl(${pColor} / 0.3)`,
+                    `0 0 20px hsl(${pColor} / 0.6)`,
+                    `0 0 8px hsl(${pColor} / 0.3)`,
+                  ],
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                {planetaryInfluence.planet_symbol}
+              </motion.span>
+              <span
+                className={`font-bold tracking-[0.1em] uppercase ${isMobile ? "text-sm" : "text-base"}`}
+                style={{ color: `hsl(${pColor})` }}
+              >
+                {planetaryInfluence.title[language]}
+              </span>
+            </div>
+
+            {/* Influence area badge */}
+            <div className="flex items-center justify-center">
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[9px]" : "text-[10px]"}`}
+                style={{
+                  background: `hsl(${pColor} / 0.08)`,
+                  border: `1px solid hsl(${pColor} / 0.2)`,
+                  color: `hsl(${pColor} / 0.85)`,
+                }}
+              >
+                <span>{INFLUENCE_AREA_ICONS[planetaryInfluence.influence_area] || "✦"}</span>
+                {planetaryInfluence.life_area[language]}
+              </span>
+            </div>
+
+            {/* Interpretation */}
+            <div
+              className={`leading-relaxed ${isMobile ? "text-[11px]" : "text-xs"}`}
+              style={{ color: "hsl(var(--foreground) / 0.6)" }}
+            >
+              {planetaryInfluence.description[language]}
+            </div>
+          </div>
         </div>
       </motion.div>
-    </motion.div>
   );
 };
 
