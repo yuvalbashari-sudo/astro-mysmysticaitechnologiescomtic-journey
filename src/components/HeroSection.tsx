@@ -1161,7 +1161,7 @@ const ZodiacWheel = ({
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Ruling sign label */}
+      {/* Planetary influence label */}
       <motion.div
         className="absolute pointer-events-none z-20"
         style={{
@@ -1177,29 +1177,34 @@ const ZodiacWheel = ({
           className="flex items-center gap-2 px-4 py-1.5 rounded-full font-heading backdrop-blur-md whitespace-nowrap"
           style={{
             background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.8), hsl(var(--deep-blue) / 0.9))",
-            border: "1px solid hsl(var(--gold) / 0.2)",
-            boxShadow: "0 0 20px hsl(var(--gold) / 0.08), 0 4px 16px hsl(var(--deep-blue) / 0.5)",
+            border: `1px solid hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"} / 0.25)`,
+            boxShadow: `0 0 20px hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"} / 0.1), 0 4px 16px hsl(var(--deep-blue) / 0.5)`,
           }}
         >
-          <motion.span
-            className="inline-block"
-            style={{ fontSize: isMobile ? 10 : 12, color: "hsl(var(--gold) / 0.5)" }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            ✦
-          </motion.span>
-          <span
-            className="tracking-wider uppercase"
-            style={{ fontSize: isMobile ? 10 : 12, color: "hsl(var(--gold) / 0.6)" }}
-          >
-            {t.zodiac_ruling_sign}
-          </span>
+          {planetaryInfluence && (
+            <motion.span
+              className="inline-block"
+              style={{ fontSize: isMobile ? 12 : 14 }}
+              animate={{ 
+                textShadow: [
+                  `0 0 5px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.3)`,
+                  `0 0 15px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.6)`,
+                  `0 0 5px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.3)`,
+                ],
+              }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              {planetaryInfluence.planet_symbol}
+            </motion.span>
+          )}
           <span
             className="font-semibold tracking-wide"
-            style={{ fontSize: isMobile ? 11 : 13, color: "hsl(var(--gold))" }}
+            style={{ 
+              fontSize: isMobile ? 11 : 13, 
+              color: `hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"})`,
+            }}
           >
-            {ZODIAC_WHEEL[language][rulingIndex].name}
+            {planetaryInfluence?.title[language] || ZODIAC_WHEEL[language][influencedIndex].name}
           </span>
           <motion.span
             className="inline-block"
@@ -1208,6 +1213,9 @@ const ZodiacWheel = ({
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
           >
             ✦
+          </motion.span>
+        </div>
+      </motion.div>
           </motion.span>
         </div>
       </motion.div>
