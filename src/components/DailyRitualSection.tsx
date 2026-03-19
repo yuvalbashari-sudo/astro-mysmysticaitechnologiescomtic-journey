@@ -38,7 +38,15 @@ const DailyRitualSection = () => {
   const cardImage = tarotCardImages[cardKey] || cardBack;
 
   return (
-    <section className="py-16 md:py-24 px-4 relative cosmic-section-bg" aria-label={t.a11y_daily_section}>
+    <section
+      className="py-16 md:py-24 px-4 relative"
+      aria-label={t.a11y_daily_section}
+      style={{
+        background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.7) 0%, hsl(var(--deep-blue) / 0.85) 50%, hsl(var(--deep-blue) / 0.7) 100%)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+      }}
+    >
       <div className="section-divider max-w-xl mx-auto mb-16" />
 
       {/* Title */}

@@ -2000,7 +2000,7 @@ const HeroSection = () => {
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
   const menuItems = useMemo(() => [
@@ -2078,10 +2078,12 @@ const HeroSection = () => {
   const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
 
   return (
-    <section
+    <>
+    {/* ── Fixed cinematic background ── */}
+    <div
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen overflow-x-hidden flex flex-col items-center justify-center"
+      className="fixed inset-0 z-0"
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
@@ -2230,6 +2232,43 @@ const HeroSection = () => {
         <AmbientParticle key={i} {...p} />
       ))}
 
+      {/* ── Cinematic vignette (in fixed bg) ── */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[3]"
+        style={{
+          background: "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, hsl(var(--deep-blue) / 0.6) 100%)",
+        }}
+      />
+
+      {/* ── Film grain, lens flare — desktop only (in fixed bg) ── */}
+      {!isMobile && (
+        <>
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-[4] mix-blend-overlay"
+            style={{
+              opacity: 0.03,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+              backgroundSize: "128px 128px",
+            }}
+            animate={{ opacity: [0.02, 0.04, 0.02] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute pointer-events-none z-[5]"
+            style={{
+              width: "350px", height: "350px", left: "55%", top: "35%",
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, hsl(var(--gold) / 0.02) 30%, transparent 60%)",
+              filter: "blur(20px)",
+            }}
+            animate={{ x: [-20, 30, -10, 20, -20], y: [10, -15, 20, -10, 10], opacity: [0.3, 0.7, 0.4, 0.6, 0.3], scale: [1, 1.2, 0.9, 1.1, 1] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </>
+      )}
+    </div>
+
+    {/* ── Scrollable content layer ── */}
+    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden">
       {/* Content container */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16">
 
@@ -2863,77 +2902,6 @@ const HeroSection = () => {
         )}
       </div>
 
-      {/* ── Cinematic vignette ── */}
-      <div
-        className="absolute inset-0 pointer-events-none z-[3]"
-        style={{
-          background: "radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, hsl(var(--deep-blue) / 0.6) 100%)",
-        }}
-      />
-
-      {/* ── Film grain, lens flare, light streak, color grading — desktop only ── */}
-      {!isMobile && (
-        <>
-          <motion.div
-            className="absolute inset-0 pointer-events-none z-[4] mix-blend-overlay"
-            style={{
-              opacity: 0.03,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-              backgroundSize: "128px 128px",
-            }}
-            animate={{ opacity: [0.02, 0.04, 0.02] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute pointer-events-none z-[5]"
-            style={{
-              width: "350px",
-              height: "350px",
-              left: "55%",
-              top: "35%",
-              background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, hsl(var(--gold) / 0.02) 30%, transparent 60%)",
-              filter: "blur(20px)",
-            }}
-            animate={{
-              x: [-20, 30, -10, 20, -20],
-              y: [10, -15, 20, -10, 10],
-              opacity: [0.3, 0.7, 0.4, 0.6, 0.3],
-              scale: [1, 1.2, 0.9, 1.1, 1],
-            }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute pointer-events-none z-[5]"
-            style={{
-              width: "100%",
-              height: "2px",
-              left: "-10%",
-              top: "48%",
-              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.04) 20%, hsl(var(--gold) / 0.08) 50%, hsl(var(--gold) / 0.04) 80%, transparent 100%)",
-              filter: "blur(3px)",
-            }}
-            animate={{
-              opacity: [0, 0.6, 0.3, 0.7, 0],
-              scaleY: [1, 2, 1, 1.5, 1],
-            }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-          />
-          <motion.div
-            className="absolute inset-0 pointer-events-none z-[2]"
-            animate={{
-              background: [
-                "linear-gradient(180deg, hsl(215 70% 40% / 0.03) 0%, transparent 50%, hsl(0 65% 45% / 0.02) 100%)",
-                "linear-gradient(180deg, hsl(43 80% 55% / 0.02) 0%, transparent 50%, hsl(215 70% 40% / 0.03) 100%)",
-                "linear-gradient(180deg, hsl(215 70% 40% / 0.03) 0%, transparent 50%, hsl(0 65% 45% / 0.02) 100%)",
-              ],
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </>
-      )}
-
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background/50 to-transparent pointer-events-none z-[1]" />
-
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
@@ -2941,6 +2909,7 @@ const HeroSection = () => {
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
     </section>
+    </>
   );
 };
 

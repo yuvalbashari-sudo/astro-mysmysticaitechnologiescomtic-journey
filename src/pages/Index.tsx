@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
-import StarField from "@/components/StarField";
 import MysticalDashboard from "@/components/MysticalDashboard";
 import DailyRitualSection from "@/components/DailyRitualSection";
 import MysticalTopBar from "@/components/MysticalTopBar";
@@ -20,7 +19,7 @@ const Index = () => {
   }, [historyOpen]);
 
   return (
-    <div className="min-h-screen bg-background overflow-x-hidden relative" dir={dir}>
+    <div className="min-h-screen relative" dir={dir}>
       {/* Skip to content link */}
       <a
         href="#main-content"
@@ -32,7 +31,7 @@ const Index = () => {
         onOpenHistory={() => setHistoryOpen(true)}
         hasHistory={hasHistory}
       />
-      <StarField />
+      {/* HeroSection renders both fixed bg + scrollable hero content */}
       <main id="main-content">
         <HeroSection />
         <DailyRitualSection />
