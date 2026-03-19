@@ -2615,75 +2615,8 @@ const HeroSection = () => {
               {t.hero_services_line}
             </motion.p>
 
-            {/* Crystal Ball Scene */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.2, delay: 1 }}
-              className="relative flex items-center justify-center"
-              style={{ height: "32vh", maxHeight: "280px", width: "100%" }}
-            >
-              {/* Aura glow */}
-              <motion.div
-                className="absolute rounded-full"
-                style={{
-                  width: "200px", height: "200px",
-                  background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
-                }}
-                animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              />
-
-              {/* Zodiac Wheel */}
-              {entranceComplete && (
-                <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
-              )}
-
-              {/* Crystal Ball Internal Energy */}
-              <CrystalBallEnergy isMobile={isMobile} />
-
-              {/* Crystal ball image */}
-              <motion.div
-                ref={crystalRef}
-                className="relative z-20 cursor-pointer"
-                style={{ width: "180px", height: "180px" }}
-                onClick={handleCrystalClick}
-              >
-                <img
-                  src={crystalBall}
-                  alt="Crystal Ball"
-                  className="w-full h-full"
-                  style={{
-                    objectFit: "contain",
-                    filter: "drop-shadow(0 0 35px hsl(43 80% 55% / 0.4))",
-                  }}
-                />
-
-                {/* Tarot Card Reveal inside crystal ball */}
-                <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
-                  {entranceComplete && (
-                    <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
-                  )}
-                </div>
-              </motion.div>
-
-              <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
-
-              {/* Crystal ball hint message */}
-              {entranceComplete && cardPhase === "idle" && (
-                <motion.div
-                  className="absolute z-30 text-center"
-                  style={{ bottom: "8px", width: "200px" }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.7, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, delay: 4 }}
-                >
-                  <span className="text-gold/50 font-body text-[10px]">
-                    {t.hero_crystal_hint}
-                  </span>
-                </motion.div>
-              )}
-            </motion.div>
+            {/* Spacer for crystal ball (now in fixed layer) */}
+            <div style={{ height: "32vh", maxHeight: "280px" }} />
 
             {/* Primary CTA */}
             <motion.button
