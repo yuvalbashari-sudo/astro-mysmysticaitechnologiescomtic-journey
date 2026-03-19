@@ -416,7 +416,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       animate={{ boxShadow: ["0 0 20px hsl(var(--gold) / 0.1)", "0 0 40px hsl(var(--gold) / 0.2)", "0 0 20px hsl(var(--gold) / 0.1)"] }}
                       transition={{ duration: 3, repeat: Infinity }}
                     >
-                      <span className="text-3xl">🔮</span>
+                      <span className="text-3xl">✦</span>
                     </motion.div>
                     <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.tarot_world_title}</h2>
                     <p className="text-foreground/60 font-body text-sm md:text-base max-w-lg mx-auto leading-relaxed">
