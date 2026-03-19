@@ -2564,7 +2564,7 @@ const HeroSection = () => {
     </div>
 
     {/* ── Scrollable content layer ── */}
-    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden">
+    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden" style={{ background: "transparent" }}>
       {/* Content container */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16 pointer-events-auto">
 

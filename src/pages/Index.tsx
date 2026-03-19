@@ -19,7 +19,7 @@ const Index = () => {
   }, [historyOpen]);
 
   return (
-    <div className="min-h-screen relative" dir={dir}>
+    <div className="min-h-screen relative" dir={dir} style={{ background: "transparent" }}>
       {/* Skip to content link */}
       <a
         href="#main-content"
