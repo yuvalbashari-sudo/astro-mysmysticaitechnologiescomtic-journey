@@ -781,7 +781,7 @@ const ZodiacWheel = ({
 
               {/* Premium floating label on hover */}
               <AnimatePresence>
-                {isHovered && (
+                {isHovered && !isRuling && (
                   <motion.div
                     className="absolute z-50 whitespace-nowrap"
                     style={{
@@ -817,15 +817,123 @@ const ZodiacWheel = ({
                         <span>{meta.keyword}</span>
                       </div>
                     </div>
-                    {/* Arrow pointing down */}
                     <div
                       className="mx-auto"
                       style={{
-                        width: 0,
-                        height: 0,
+                        width: 0, height: 0,
                         borderLeft: "5px solid transparent",
                         borderRight: "5px solid transparent",
                         borderTop: "5px solid hsl(var(--gold) / 0.3)",
+                        marginTop: -1,
+                      }}
+                    />
+                  </motion.div>
+                )}
+
+                {/* Ruling sign — large premium info panel */}
+                {isHovered && isRuling && (
+                  <motion.div
+                    className="absolute z-50"
+                    style={{
+                      left: "50%",
+                      bottom: "calc(100% + 20px)",
+                      transform: "translateX(-50%)",
+                      width: isMobile ? 220 : 280,
+                    }}
+                    initial={{ opacity: 0, y: 12, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 12, scale: 0.8 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                  >
+                    <div
+                      className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden"
+                      style={{
+                        background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.97), hsl(var(--deep-blue) / 0.99))",
+                        border: "1px solid hsl(var(--gold) / 0.4)",
+                        boxShadow: "0 0 40px hsl(var(--gold) / 0.15), 0 12px 48px hsl(var(--deep-blue) / 0.7), inset 0 1px 0 hsl(var(--gold) / 0.15)",
+                      }}
+                    >
+                      {/* Top accent line */}
+                      <div
+                        className="absolute top-0 left-0 right-0 h-[2px]"
+                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.6), transparent)" }}
+                      />
+
+                      <div className="px-5 py-4 text-center space-y-2.5">
+                        {/* Sign name */}
+                        <div
+                          className="text-base font-bold tracking-wider uppercase"
+                          style={{ color: "hsl(var(--gold))" }}
+                        >
+                          {sign.name}
+                        </div>
+
+                        {/* Ruling badge */}
+                        <div
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-widest uppercase font-semibold"
+                          style={{
+                            background: "hsl(var(--gold) / 0.1)",
+                            border: "1px solid hsl(var(--gold) / 0.25)",
+                            color: "hsl(var(--gold) / 0.9)",
+                          }}
+                        >
+                          <span style={{ fontSize: 8, lineHeight: 1 }}>✦</span>
+                          {RULING_LABEL[language]}
+                          <span style={{ fontSize: 8, lineHeight: 1 }}>✦</span>
+                        </div>
+
+                        {/* Element & keyword */}
+                        <div
+                          className="flex items-center justify-center gap-2 text-[11px] tracking-widest uppercase"
+                          style={{ color: "hsl(var(--gold) / 0.65)" }}
+                        >
+                          <span>{meta.element}</span>
+                          <span style={{ color: "hsl(var(--gold) / 0.3)" }}>·</span>
+                          <span>{meta.keyword}</span>
+                        </div>
+
+                        {/* Date range */}
+                        <div
+                          className="text-[11px] tracking-wide font-medium"
+                          style={{ color: "hsl(var(--foreground) / 0.8)" }}
+                        >
+                          {ZODIAC_DATE_RANGES[language][rulingIndex]}
+                        </div>
+
+                        {/* Divider */}
+                        <div
+                          className="mx-auto"
+                          style={{
+                            width: 40,
+                            height: 1,
+                            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)",
+                          }}
+                        />
+
+                        {/* Energy description */}
+                        <div
+                          className="text-[11px] leading-relaxed"
+                          style={{ color: "hsl(var(--foreground) / 0.7)" }}
+                        >
+                          {ZODIAC_RULING_ENERGY[language][rulingIndex]}
+                        </div>
+                      </div>
+
+                      {/* Bottom accent line */}
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-[1px]"
+                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }}
+                      />
+                    </div>
+
+                    {/* Arrow */}
+                    <div
+                      className="mx-auto"
+                      style={{
+                        width: 0, height: 0,
+                        borderLeft: "6px solid transparent",
+                        borderRight: "6px solid transparent",
+                        borderTop: "6px solid hsl(var(--gold) / 0.4)",
                         marginTop: -1,
                       }}
                     />
