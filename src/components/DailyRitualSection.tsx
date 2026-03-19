@@ -42,9 +42,9 @@ const DailyRitualSection = () => {
       className="py-16 md:py-24 px-4 relative"
       aria-label={t.a11y_daily_section}
       style={{
-        background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.7) 0%, hsl(var(--deep-blue) / 0.85) 50%, hsl(var(--deep-blue) / 0.7) 100%)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
+        background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.3) 0%, hsl(var(--deep-blue) / 0.45) 50%, hsl(var(--deep-blue) / 0.3) 100%)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
       }}
     >
       <div className="section-divider max-w-xl mx-auto mb-16" />

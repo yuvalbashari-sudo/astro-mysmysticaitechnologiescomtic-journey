@@ -2106,9 +2106,9 @@ const HeroSection = () => {
         transition={{ duration: 2.5, ease: "easeOut" }}
       >
         <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/50 via-transparent to-background/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30" />
       </motion.div>
 
       {/* ── Layer 1.5: Aura glow from hands area ── */}
@@ -2266,7 +2266,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (fixed in viewport center) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]" style={{ paddingTop: "5vh" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -2328,7 +2328,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "180px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "60px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
