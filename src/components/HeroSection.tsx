@@ -2051,7 +2051,7 @@ const HeroSection = () => {
     <section
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center"
+      className="relative min-h-screen overflow-x-hidden flex flex-col items-center justify-center"
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
@@ -2902,7 +2902,7 @@ const HeroSection = () => {
         </>
       )}
 
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background/50 to-transparent pointer-events-none z-[1]" />
 
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
