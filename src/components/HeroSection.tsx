@@ -830,39 +830,53 @@ const ZodiacWheel = ({
                   </motion.div>
                 )}
 
-                {/* Ruling sign — large premium info panel */}
+                {/* Ruling sign — large premium info card (fixed center of wheel) */}
                 {isHovered && isRuling && (
                   <motion.div
-                    className="absolute z-50"
+                    className="fixed z-[100] pointer-events-none"
                     style={{
                       left: "50%",
-                      bottom: "calc(100% + 20px)",
-                      transform: "translateX(-50%)",
-                      width: isMobile ? 220 : 280,
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: isMobile ? 280 : 380,
                     }}
-                    initial={{ opacity: 0, y: 12, scale: 0.8 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 12, scale: 0.8 }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    initial={{ opacity: 0, scale: 0.85, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.85, y: 20 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   >
+                    {/* Outer glow aura */}
+                    <motion.div
+                      className="absolute rounded-2xl pointer-events-none"
+                      style={{ inset: -8 }}
+                      animate={{
+                        boxShadow: [
+                          "0 0 30px hsl(43 80% 55% / 0.12), 0 0 60px hsl(43 80% 55% / 0.06)",
+                          "0 0 50px hsl(43 80% 55% / 0.2), 0 0 90px hsl(43 80% 55% / 0.1)",
+                          "0 0 30px hsl(43 80% 55% / 0.12), 0 0 60px hsl(43 80% 55% / 0.06)",
+                        ],
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    />
+
                     <div
-                      className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden"
+                      className="relative rounded-2xl font-heading backdrop-blur-3xl overflow-hidden"
                       style={{
-                        background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.97), hsl(var(--deep-blue) / 0.99))",
-                        border: "1px solid hsl(var(--gold) / 0.4)",
-                        boxShadow: "0 0 40px hsl(var(--gold) / 0.15), 0 12px 48px hsl(var(--deep-blue) / 0.7), inset 0 1px 0 hsl(var(--gold) / 0.15)",
+                        background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.96), hsl(var(--deep-blue) / 0.99))",
+                        border: "1px solid hsl(var(--gold) / 0.35)",
+                        boxShadow: "0 0 60px hsl(var(--gold) / 0.12), 0 20px 60px hsl(var(--deep-blue) / 0.8), inset 0 1px 0 hsl(var(--gold) / 0.12)",
                       }}
                     >
-                      {/* Top accent line */}
+                      {/* Top accent bar */}
                       <div
                         className="absolute top-0 left-0 right-0 h-[2px]"
-                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.6), transparent)" }}
+                        style={{ background: "linear-gradient(90deg, transparent 5%, hsl(var(--gold) / 0.7), transparent 95%)" }}
                       />
 
-                      <div className="px-5 py-4 text-center space-y-2.5">
-                        {/* Sign name */}
+                      <div className={`text-center ${isMobile ? "px-5 py-5 space-y-3" : "px-8 py-7 space-y-4"}`}>
+                        {/* Sign name — large */}
                         <div
-                          className="text-base font-bold tracking-wider uppercase"
+                          className={`font-bold tracking-[0.15em] uppercase ${isMobile ? "text-xl" : "text-2xl"}`}
                           style={{ color: "hsl(var(--gold))" }}
                         >
                           {sign.name}
@@ -870,73 +884,61 @@ const ZodiacWheel = ({
 
                         {/* Ruling badge */}
                         <div
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-widest uppercase font-semibold"
+                          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.2em] uppercase font-semibold ${isMobile ? "text-[11px]" : "text-xs"}`}
                           style={{
-                            background: "hsl(var(--gold) / 0.1)",
-                            border: "1px solid hsl(var(--gold) / 0.25)",
-                            color: "hsl(var(--gold) / 0.9)",
+                            background: "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))",
+                            border: "1px solid hsl(var(--gold) / 0.3)",
+                            color: "hsl(var(--gold) / 0.95)",
                           }}
                         >
-                          <span style={{ fontSize: 8, lineHeight: 1 }}>✦</span>
+                          <span style={{ fontSize: 10 }}>✦</span>
                           {RULING_LABEL[language]}
-                          <span style={{ fontSize: 8, lineHeight: 1 }}>✦</span>
+                          <span style={{ fontSize: 10 }}>✦</span>
                         </div>
 
                         {/* Element & keyword */}
                         <div
-                          className="flex items-center justify-center gap-2 text-[11px] tracking-widest uppercase"
-                          style={{ color: "hsl(var(--gold) / 0.65)" }}
+                          className={`flex items-center justify-center gap-3 tracking-[0.18em] uppercase ${isMobile ? "text-xs" : "text-sm"}`}
+                          style={{ color: "hsl(var(--gold) / 0.7)" }}
                         >
                           <span>{meta.element}</span>
                           <span style={{ color: "hsl(var(--gold) / 0.3)" }}>·</span>
                           <span>{meta.keyword}</span>
                         </div>
 
-                        {/* Date range */}
-                        <div
-                          className="text-[11px] tracking-wide font-medium"
-                          style={{ color: "hsl(var(--foreground) / 0.8)" }}
-                        >
-                          {ZODIAC_DATE_RANGES[language][rulingIndex]}
-                        </div>
-
                         {/* Divider */}
                         <div
                           className="mx-auto"
                           style={{
-                            width: 40,
+                            width: 60,
                             height: 1,
-                            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)",
+                            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)",
                           }}
                         />
 
+                        {/* Date range — prominent */}
+                        <div
+                          className={`tracking-wide font-medium ${isMobile ? "text-sm" : "text-base"}`}
+                          style={{ color: "hsl(var(--foreground) / 0.9)" }}
+                        >
+                          {ZODIAC_DATE_RANGES[language][rulingIndex]}
+                        </div>
+
                         {/* Energy description */}
                         <div
-                          className="text-[11px] leading-relaxed"
-                          style={{ color: "hsl(var(--foreground) / 0.7)" }}
+                          className={`leading-relaxed ${isMobile ? "text-xs" : "text-sm"}`}
+                          style={{ color: "hsl(var(--foreground) / 0.65)" }}
                         >
                           {ZODIAC_RULING_ENERGY[language][rulingIndex]}
                         </div>
                       </div>
 
-                      {/* Bottom accent line */}
+                      {/* Bottom accent */}
                       <div
                         className="absolute bottom-0 left-0 right-0 h-[1px]"
-                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }}
+                        style={{ background: "linear-gradient(90deg, transparent 5%, hsl(var(--gold) / 0.25), transparent 95%)" }}
                       />
                     </div>
-
-                    {/* Arrow */}
-                    <div
-                      className="mx-auto"
-                      style={{
-                        width: 0, height: 0,
-                        borderLeft: "6px solid transparent",
-                        borderRight: "6px solid transparent",
-                        borderTop: "6px solid hsl(var(--gold) / 0.4)",
-                        marginTop: -1,
-                      }}
-                    />
                   </motion.div>
                 )}
               </AnimatePresence>
