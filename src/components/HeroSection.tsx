@@ -957,9 +957,9 @@ const ZodiacWheel = ({
                   style={{
                     opacity: isHovered || isHighlighted || isRuling ? 1 : 0.75,
                     filter: isHovered
-                      ? "drop-shadow(0 0 18px hsl(43 80% 55% / 0.9)) drop-shadow(0 0 8px hsl(43 80% 55% / 0.6)) drop-shadow(0 0 35px hsl(43 80% 55% / 0.3))"
+                      ? `drop-shadow(0 0 18px hsl(${planetColor} / 0.9)) drop-shadow(0 0 8px hsl(${planetColor} / 0.6)) drop-shadow(0 0 35px hsl(${planetColor} / 0.3))`
                       : isRuling
-                        ? "drop-shadow(0 0 14px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 6px hsl(43 80% 55% / 0.4)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.2))"
+                        ? `drop-shadow(0 0 14px hsl(${planetColor} / 0.7)) drop-shadow(0 0 6px hsl(${planetColor} / 0.4)) drop-shadow(0 0 25px hsl(${planetColor} / 0.2))`
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
                           : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
@@ -973,9 +973,9 @@ const ZodiacWheel = ({
                   <motion.div
                     className="absolute inset-[-6px] rounded-full pointer-events-none"
                     style={{
-                      border: "1px solid hsl(var(--gold) / 0.3)",
-                      background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)",
-                      boxShadow: "0 0 25px hsl(var(--gold) / 0.15), inset 0 0 15px hsl(var(--gold) / 0.05)",
+                      border: `1px solid hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.3)`,
+                      background: `radial-gradient(circle, hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.08), transparent 70%)`,
+                      boxShadow: `0 0 25px hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.15), inset 0 0 15px hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.05)`,
                     }}
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
