@@ -2094,6 +2094,7 @@ const HeroSection = () => {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="fixed inset-0 z-0"
+      style={{ transform: `translateY(${-parallaxY}px)` }}
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
