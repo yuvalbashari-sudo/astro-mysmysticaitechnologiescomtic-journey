@@ -37,6 +37,7 @@ export const en: TranslationKeys = {
   nav_palm_title: "Palm Reading",
   nav_palm_desc: "Your palm tells a story — the lines of life, heart and destiny await to be revealed",
   nav_palm_cta: "Reveal the story",
+  zodiac_ruling_sign: "Current ruling sign:",
 
   about_discover: "✦ Discover your path ✦",
   about_title: "The ASTROLOGAI Mystical Experience",

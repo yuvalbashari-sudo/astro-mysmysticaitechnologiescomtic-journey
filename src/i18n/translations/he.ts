@@ -37,6 +37,7 @@ export const he: TranslationKeys = {
   nav_palm_title: "קריאת כף היד",
   nav_palm_desc: "כף היד שלכם מספרת סיפור — קווי החיים, הלב והגורל מחכים להיחשף",
   nav_palm_cta: "חשפו את הסיפור",
+  zodiac_ruling_sign: "המזל השולט כעת:",
 
   about_discover: "✦ גלו את הדרך שלכם ✦",
   about_title: "החוויה המיסטית של ASTROLOGAI",

@@ -37,6 +37,7 @@ export const ru: TranslationKeys = {
   nav_palm_title: "Хиромантия",
   nav_palm_desc: "Ваша ладонь рассказывает историю — линии жизни, сердца и судьбы ждут раскрытия",
   nav_palm_cta: "Раскройте историю",
+  zodiac_ruling_sign: "Текущий знак:",
 
   about_discover: "✦ Откройте свой путь ✦",
   about_title: "Мистический опыт ASTROLOGAI",
