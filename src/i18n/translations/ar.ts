@@ -38,6 +38,7 @@ export const ar: TranslationKeys = {
   nav_palm_desc: "كفكم يحكي قصة — خطوط الحياة والقلب والقدر تنتظر أن تُكشف",
   nav_palm_cta: "اكشفوا القصة",
   zodiac_ruling_sign: "البرج الحاكم الآن:",
+  zodiac_planetary_influence: "التأثير الكوكبي الحالي",
 
   about_discover: "✦ اكتشفوا طريقكم ✦",
   about_title: "تجربة ASTROLOGAI الروحية",
