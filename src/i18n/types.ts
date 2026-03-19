@@ -214,6 +214,14 @@ export type TranslationKeys = {
   compat_gender_other: string;
   compat_gender_prefer_not: string;
   compat_gender_optional: string;
+  compat_name_label: string;
+  compat_name_placeholder: string;
+  compat_relation_label: string;
+  compat_relation_me: string;
+  compat_relation_partner: string;
+  compat_relation_friend: string;
+  compat_relation_family: string;
+  compat_relation_other: string;
   compat_cta: string;
   compat_score_label: string;
   compat_loading: string;
