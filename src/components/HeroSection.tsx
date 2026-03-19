@@ -2266,7 +2266,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (fixed in viewport center) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]" style={{ paddingTop: "5vh" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
