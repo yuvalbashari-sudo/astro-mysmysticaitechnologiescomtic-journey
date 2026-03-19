@@ -901,7 +901,7 @@ const ZodiacWheel = ({
                   </motion.div>
                 )}
 
-                {/* Ruling sign — large premium info card (fixed center of wheel) */}
+                {/* Planetary influence — large premium info card */}
                 {isHovered && isRuling && (
                   <motion.div
                     className="fixed z-[100] pointer-events-none"
@@ -909,7 +909,7 @@ const ZodiacWheel = ({
                       left: "50%",
                       top: "50%",
                       transform: "translate(-50%, -50%)",
-                      width: isMobile ? 280 : 380,
+                      width: isMobile ? 290 : 400,
                     }}
                     initial={{ opacity: 0, scale: 0.85, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -922,9 +922,9 @@ const ZodiacWheel = ({
                       style={{ inset: -8 }}
                       animate={{
                         boxShadow: [
-                          "0 0 30px hsl(43 80% 55% / 0.12), 0 0 60px hsl(43 80% 55% / 0.06)",
-                          "0 0 50px hsl(43 80% 55% / 0.2), 0 0 90px hsl(43 80% 55% / 0.1)",
-                          "0 0 30px hsl(43 80% 55% / 0.12), 0 0 60px hsl(43 80% 55% / 0.06)",
+                          `0 0 30px hsl(${planetColor} / 0.12), 0 0 60px hsl(${planetColor} / 0.06)`,
+                          `0 0 50px hsl(${planetColor} / 0.2), 0 0 90px hsl(${planetColor} / 0.1)`,
+                          `0 0 30px hsl(${planetColor} / 0.12), 0 0 60px hsl(${planetColor} / 0.06)`,
                         ],
                       }}
                       transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -934,38 +934,58 @@ const ZodiacWheel = ({
                       className="relative rounded-2xl font-heading backdrop-blur-3xl overflow-hidden"
                       style={{
                         background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.96), hsl(var(--deep-blue) / 0.99))",
-                        border: "1px solid hsl(var(--gold) / 0.35)",
-                        boxShadow: "0 0 60px hsl(var(--gold) / 0.12), 0 20px 60px hsl(var(--deep-blue) / 0.8), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                        border: `1px solid hsl(${planetColor} / 0.35)`,
+                        boxShadow: `0 0 60px hsl(${planetColor} / 0.12), 0 20px 60px hsl(var(--deep-blue) / 0.8), inset 0 1px 0 hsl(${planetColor} / 0.12)`,
                       }}
                     >
                       {/* Top accent bar */}
                       <div
                         className="absolute top-0 left-0 right-0 h-[2px]"
-                        style={{ background: "linear-gradient(90deg, transparent 5%, hsl(var(--gold) / 0.7), transparent 95%)" }}
+                        style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${planetColor} / 0.7), transparent 95%)` }}
                       />
 
                       <div className={`text-center ${isMobile ? "px-5 py-5 space-y-3" : "px-8 py-7 space-y-4"}`}>
-                        {/* Sign name — large */}
+                        {/* Planet symbol + name */}
+                        {planetaryInfluence && (
+                          <div className="flex items-center justify-center gap-3">
+                            <motion.span
+                              className={`${isMobile ? "text-3xl" : "text-4xl"}`}
+                              animate={{ 
+                                textShadow: [
+                                  `0 0 10px hsl(${planetColor} / 0.4)`,
+                                  `0 0 25px hsl(${planetColor} / 0.7)`,
+                                  `0 0 10px hsl(${planetColor} / 0.4)`,
+                                ] 
+                              }}
+                              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              {planetaryInfluence.planet_symbol}
+                            </motion.span>
+                          </div>
+                        )}
+
+                        {/* Planetary aspect title */}
                         <div
-                          className={`font-bold tracking-[0.15em] uppercase ${isMobile ? "text-xl" : "text-2xl"}`}
-                          style={{ color: "hsl(var(--gold))" }}
+                          className={`font-bold tracking-[0.12em] uppercase ${isMobile ? "text-lg" : "text-xl"}`}
+                          style={{ color: `hsl(${planetColor})` }}
                         >
-                          {sign.name}
+                          {planetaryInfluence?.title[language] || `${sign.name}`}
                         </div>
 
-                        {/* Ruling badge */}
-                        <div
-                          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.2em] uppercase font-semibold ${isMobile ? "text-[11px]" : "text-xs"}`}
-                          style={{
-                            background: "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))",
-                            border: "1px solid hsl(var(--gold) / 0.3)",
-                            color: "hsl(var(--gold) / 0.95)",
-                          }}
-                        >
-                          <span style={{ fontSize: 10 }}>✦</span>
-                          {RULING_LABEL[language]}
-                          <span style={{ fontSize: 10 }}>✦</span>
-                        </div>
+                        {/* Influence area badge */}
+                        {planetaryInfluence && (
+                          <div
+                            className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.18em] uppercase font-semibold ${isMobile ? "text-[11px]" : "text-xs"}`}
+                            style={{
+                              background: `linear-gradient(135deg, hsl(${planetColor} / 0.12), hsl(${planetColor} / 0.06))`,
+                              border: `1px solid hsl(${planetColor} / 0.3)`,
+                              color: `hsl(${planetColor} / 0.95)`,
+                            }}
+                          >
+                            <span>{INFLUENCE_AREA_ICONS[planetaryInfluence.influence_area] || "✦"}</span>
+                            {planetaryInfluence.life_area[language]}
+                          </div>
+                        )}
 
                         {/* Element & keyword */}
                         <div
@@ -983,31 +1003,23 @@ const ZodiacWheel = ({
                           style={{
                             width: 60,
                             height: 1,
-                            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)",
+                            background: `linear-gradient(90deg, transparent, hsl(${planetColor} / 0.35), transparent)`,
                           }}
                         />
 
-                        {/* Date range — prominent */}
-                        <div
-                          className={`tracking-wide font-medium ${isMobile ? "text-sm" : "text-base"}`}
-                          style={{ color: "hsl(var(--foreground) / 0.9)" }}
-                        >
-                          {ZODIAC_DATE_RANGES[language][rulingIndex]}
-                        </div>
-
-                        {/* Energy description */}
+                        {/* Influence description */}
                         <div
                           className={`leading-relaxed ${isMobile ? "text-xs" : "text-sm"}`}
-                          style={{ color: "hsl(var(--foreground) / 0.65)" }}
+                          style={{ color: "hsl(var(--foreground) / 0.75)" }}
                         >
-                          {ZODIAC_RULING_ENERGY[language][rulingIndex]}
+                          {planetaryInfluence?.description[language] || ZODIAC_RULING_ENERGY[language][influencedIndex]}
                         </div>
                       </div>
 
                       {/* Bottom accent */}
                       <div
                         className="absolute bottom-0 left-0 right-0 h-[1px]"
-                        style={{ background: "linear-gradient(90deg, transparent 5%, hsl(var(--gold) / 0.25), transparent 95%)" }}
+                        style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${planetColor} / 0.25), transparent 95%)` }}
                       />
                     </div>
                   </motion.div>
