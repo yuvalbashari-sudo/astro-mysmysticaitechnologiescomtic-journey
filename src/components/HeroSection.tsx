@@ -2264,6 +2264,7 @@ const HeroSection = () => {
             transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
           />
         </>
+      )}
       {/* ── Crystal ball + zodiac scene (fixed in viewport center) ── */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]">
         {isMobile ? (
