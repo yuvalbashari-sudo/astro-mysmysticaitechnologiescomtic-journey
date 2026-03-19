@@ -1216,9 +1216,6 @@ const ZodiacWheel = ({
           </motion.span>
         </div>
       </motion.div>
-          </motion.span>
-        </div>
-      </motion.div>
     </motion.div>
   );
 };
