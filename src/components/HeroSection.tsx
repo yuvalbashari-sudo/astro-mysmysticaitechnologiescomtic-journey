@@ -2004,12 +2004,12 @@ const HeroSection = () => {
   const crystalRef = useRef<HTMLDivElement>(null);
 
   const menuItems = useMemo(() => [
-    { icon: Star, label: t.hero_menu_forecast, angle: -75 },
+    { icon: Sparkles, label: t.hero_menu_compatibility, angle: -75 },
     { icon: Moon, label: t.hero_menu_rising, angle: -45 },
-    { icon: Sparkles, label: t.hero_menu_compatibility, angle: -15 },
-    { icon: Eye, label: t.hero_menu_tarot, angle: 15 },
+    { icon: Star, label: t.hero_menu_forecast, angle: -15 },
+    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", angle: 15 },
     { icon: Hand, label: t.hero_menu_palm, angle: 45 },
-    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", angle: 75 },
+    { icon: Eye, label: t.hero_menu_tarot, angle: 75 },
   ], [t]);
 
   // Mouse tracking
@@ -2510,7 +2510,7 @@ const HeroSection = () => {
                   onMouseLeave={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setCompatibilityOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); if (i === 5) setDailyCardOpen(true); }}
+                  onClick={() => { if (i === 0) setCompatibilityOpen(true); if (i === 1) setRisingOpen(true); if (i === 2) setForecastOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setPalmOpen(true); if (i === 5) setTarotOpen(true); }}
                 >
                   <motion.div
                     className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
