@@ -141,8 +141,20 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </motion.div>
                   <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.compat_title}</h2>
                   <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.compat_desc}</p>
-                  <div className="max-w-sm mx-auto mb-6">
+
+                  {/* Person 1 */}
+                  <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--gold) / 0.03)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
+                    <div className="flex flex-col sm:flex-row gap-2 mb-2">
+                      <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
+                      <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <option value="me">{t.compat_relation_me}</option>
+                        <option value="partner">{t.compat_relation_partner}</option>
+                        <option value="friend">{t.compat_relation_friend}</option>
+                        <option value="family">{t.compat_relation_family}</option>
+                        <option value="other">{t.compat_relation_other}</option>
+                      </select>
+                    </div>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                       <div className="relative">
@@ -162,7 +174,20 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </select>
                     </div>
                   </div>
+
+                  {/* Person 2 */}
+                  <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.03)", border: "1px solid hsl(var(--crimson) / 0.1)" }}>
                     <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
+                    <div className="flex flex-col sm:flex-row gap-2 mb-2">
+                      <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
+                      <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <option value="me">{t.compat_relation_me}</option>
+                        <option value="partner">{t.compat_relation_partner}</option>
+                        <option value="friend">{t.compat_relation_friend}</option>
+                        <option value="family">{t.compat_relation_family}</option>
+                        <option value="other">{t.compat_relation_other}</option>
+                      </select>
+                    </div>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                       <div className="relative">
@@ -181,6 +206,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         <option value="prefer_not">{t.compat_gender_prefer_not}</option>
                       </select>
                     </div>
+                  </div>
+
                   <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
                 </motion.div>
               ) : isLoading ? (
