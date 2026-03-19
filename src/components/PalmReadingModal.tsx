@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Hand, Crown, Share2, Copy, Check, Loader2, Camera, Upload, ImageIcon } from "lucide-react";
