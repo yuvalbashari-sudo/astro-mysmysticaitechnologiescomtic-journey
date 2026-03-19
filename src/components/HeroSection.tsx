@@ -791,6 +791,7 @@ const ZodiacWheel = ({
   const isCompatMode = hoveredMenuItem === 2;
   const isRisingMode = hoveredMenuItem === 1;
   const compatHighlight = isCompatMode ? [0, 6] : []; // Aries & Libra as example pair
+  const pColor = PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%";
 
   return (
     <motion.div
