@@ -335,7 +335,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <motion.div className={`absolute inset-0 bg-background/85 ${phase === "video" ? "backdrop-blur-sm" : "backdrop-blur-xl"}`} onClick={handleClose} />
+          <motion.div className={`absolute inset-0 bg-background/90 ${phase === "video" ? "backdrop-blur-sm" : "backdrop-blur-lg"}`} onClick={handleClose} />
 
           <motion.div
             ref={scrollRef}
@@ -343,12 +343,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
             style={{
               background: "linear-gradient(160deg, hsl(0 30% 8% / 0.98), hsl(222 47% 6% / 0.99), hsl(0 20% 6% / 0.98))",
               border: "1px solid hsl(var(--gold) / 0.15)",
-              boxShadow: "0 0 80px hsl(var(--crimson) / 0.08), 0 0 40px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.1)",
+              boxShadow: "0 0 80px hsl(var(--crimson) / 0.1), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.1)",
             }}
             initial={{ opacity: 0, scale: 0.92, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          >
+            <MysticalReadingAtmosphere theme="dailyCard" active={phase !== "video"} />
           >
             {phase !== "video" && <Particles />}
 
