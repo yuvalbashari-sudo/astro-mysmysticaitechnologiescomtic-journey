@@ -592,15 +592,18 @@ const ZodiacWheel = ({
           const isHovered = hoveredSign === i;
           const meta = ZODIAC_META[language][i];
 
+          const isRuling = i === rulingIndex;
+          const rulingIconSize = isRuling ? (isMobile ? 52 : 80) : iconSize;
+
           return (
             <motion.div
               key={sign.en}
               className="absolute pointer-events-auto cursor-pointer"
               style={{
-                left: x - iconSize / 2,
-                top: y - iconSize / 2,
-                width: iconSize,
-                height: iconSize,
+                left: x - rulingIconSize / 2,
+                top: y - rulingIconSize / 2,
+                width: rulingIconSize,
+                height: rulingIconSize,
               }}
               onMouseEnter={() => setHoveredSign(i)}
               onMouseLeave={() => setHoveredSign(null)}
@@ -608,6 +611,68 @@ const ZodiacWheel = ({
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
             >
+              {/* Permanent ruling sign aura */}
+              {isRuling && (
+                <>
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      inset: -10,
+                      border: "1px solid hsl(var(--gold) / 0.25)",
+                      background: "radial-gradient(circle, hsl(var(--gold) / 0.06), transparent 70%)",
+                    }}
+                    animate={{
+                      boxShadow: [
+                        "0 0 15px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.04)",
+                        "0 0 30px hsl(43 80% 55% / 0.2), inset 0 0 20px hsl(43 80% 55% / 0.08)",
+                        "0 0 15px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.04)",
+                      ],
+                      scale: [1, 1.08, 1],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                  {/* Second outer ring pulse */}
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      inset: -18,
+                      border: "1px solid hsl(var(--gold) / 0.1)",
+                    }}
+                    animate={{
+                      opacity: [0.3, 0.7, 0.3],
+                      scale: [0.95, 1.05, 0.95],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                  />
+                  {/* Ruling sign particles */}
+                  {[0, 1, 2].map((pi) => (
+                    <motion.div
+                      key={pi}
+                      className="absolute rounded-full pointer-events-none"
+                      style={{
+                        width: 3,
+                        height: 3,
+                        left: "50%",
+                        top: "50%",
+                        background: "hsl(var(--gold))",
+                      }}
+                      animate={{
+                        y: [0, -20, -35],
+                        x: [0, (pi - 1) * 8, (pi - 1) * 12],
+                        opacity: [0, 0.8, 0],
+                        scale: [0, 1.2, 0],
+                      }}
+                      transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        delay: pi * 0.8,
+                        ease: "easeOut",
+                      }}
+                    />
+                  ))}
+                </>
+              )}
+
               {/* Zodiac illustration */}
               <motion.div
                 className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
@@ -621,12 +686,14 @@ const ZodiacWheel = ({
                   alt={sign.name}
                   className="w-full h-full object-contain transition-all duration-500"
                   style={{
-                    opacity: isHovered || isHighlighted ? 1 : 0.75,
+                    opacity: isHovered || isHighlighted || isRuling ? 1 : 0.75,
                     filter: isHovered
                       ? "drop-shadow(0 0 18px hsl(43 80% 55% / 0.9)) drop-shadow(0 0 8px hsl(43 80% 55% / 0.6)) drop-shadow(0 0 35px hsl(43 80% 55% / 0.3))"
-                      : isHighlighted
-                        ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
-                        : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
+                      : isRuling
+                        ? "drop-shadow(0 0 14px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 6px hsl(43 80% 55% / 0.4)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.2))"
+                        : isHighlighted
+                          ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
+                          : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
                   }}
                 />
               </motion.div>
