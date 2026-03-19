@@ -2564,9 +2564,9 @@ const HeroSection = () => {
     </div>
 
     {/* ── Scrollable content layer ── */}
-    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden pointer-events-none">
+    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden">
       {/* Content container */}
-      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16 pointer-events-auto">
 
         {/* ══════════════════════════════════════════════ */}
         {/* ── MOBILE LAYOUT ─────────────────────────── */}
