@@ -103,7 +103,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setGender1(""); setGender2(""); setIsLoading(false);
+      setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setGender1(""); setGender2(""); setName1(""); setName2(""); setRelation1("me"); setRelation2("partner"); setIsLoading(false);
       setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
     }, 300);
   };
