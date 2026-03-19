@@ -2284,7 +2284,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "60px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "110px" }}
           >
             {/* Aura glow */}
             <motion.div
@@ -2339,7 +2339,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "60px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "110px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
@@ -2590,6 +2590,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
               className="font-heading text-4xl gold-gradient-text tracking-wider text-center"
+              style={{ marginTop: "-30px" }}
             >
               ASTROLOGAI
             </motion.h1>
@@ -2753,7 +2754,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: -30, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-              className="text-center mb-6"
+              className="text-center mb-6" style={{ marginTop: "-30px" }}
             >
               <h1 className="font-heading text-7xl lg:text-8xl gold-gradient-text tracking-wider">
                 ASTROLOGAI
