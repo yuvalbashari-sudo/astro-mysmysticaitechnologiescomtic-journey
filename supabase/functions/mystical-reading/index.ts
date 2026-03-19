@@ -205,16 +205,18 @@ ${hasAnyRising ? `**🔮 שילוב המזלות העולים**
 
 ### ✨ מסר לשניכם
 משפט סיכום רומנטי ועמוק`,
-    user: `כתוב ניתוח התאמה זוגית מיסטי, מקיף ואישי.
+    user: `כתוב ניתוח התאמה מיסטי, מקיף ואישי.
 
-אדם ראשון — מזל ${data.sign1Name} (${data.sign1Symbol})
+${person1Label} — מזל ${data.sign1Name} (${data.sign1Symbol})
+- יחס למשתמש: ${r1Label || 'לא צוין'}
 - יסוד: ${data.sign1Element}
 - אופנות: ${data.sign1Modality}
 - כוכב שולט: ${data.sign1Ruler}
 ${has1Rising ? `- שעת לידה: ${data.sign1BirthTime}\n- מזל עולה: ${data.sign1Rising} (${data.sign1RisingSymbol}) — יסוד ${data.sign1RisingElement}` : '- שעת לידה: לא צוינה'}
 ${has1Gender ? `- זהות מגדרית: ${g1Label}` : '- זהות מגדרית: לא צוינה'}
 
-אדם שני — מזל ${data.sign2Name} (${data.sign2Symbol})
+${person2Label} — מזל ${data.sign2Name} (${data.sign2Symbol})
+- יחס למשתמש: ${r2Label || 'לא צוין'}
 - יסוד: ${data.sign2Element}
 - אופנות: ${data.sign2Modality}
 - כוכב שולט: ${data.sign2Ruler}
