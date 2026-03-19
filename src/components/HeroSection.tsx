@@ -791,6 +791,7 @@ const ZodiacWheel = ({
   const isCompatMode = hoveredMenuItem === 2;
   const isRisingMode = hoveredMenuItem === 1;
   const compatHighlight = isCompatMode ? [0, 6] : []; // Aries & Libra as example pair
+  const pColor = PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%";
 
   return (
     <motion.div
@@ -854,32 +855,32 @@ const ZodiacWheel = ({
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
             >
-              {/* Permanent ruling sign aura */}
+              {/* Permanent planetary influence aura */}
               {isRuling && (
                 <>
                   <motion.div
                     className="absolute rounded-full pointer-events-none"
                     style={{
                       inset: -10,
-                      border: "1px solid hsl(var(--gold) / 0.25)",
-                      background: "radial-gradient(circle, hsl(var(--gold) / 0.06), transparent 70%)",
+                      border: `1px solid hsl(${planetColor} / 0.3)`,
+                      background: `radial-gradient(circle, hsl(${planetColor} / 0.08), transparent 70%)`,
                     }}
                     animate={{
                       boxShadow: [
-                        "0 0 15px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.04)",
-                        "0 0 30px hsl(43 80% 55% / 0.2), inset 0 0 20px hsl(43 80% 55% / 0.08)",
-                        "0 0 15px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.04)",
+                        `0 0 15px hsl(${planetColor} / 0.12), inset 0 0 10px hsl(${planetColor} / 0.04)`,
+                        `0 0 30px hsl(${planetColor} / 0.25), inset 0 0 20px hsl(${planetColor} / 0.1)`,
+                        `0 0 15px hsl(${planetColor} / 0.12), inset 0 0 10px hsl(${planetColor} / 0.04)`,
                       ],
                       scale: [1, 1.08, 1],
                     }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   />
-                  {/* Second outer ring pulse */}
+                  {/* Outer ring pulse */}
                   <motion.div
                     className="absolute rounded-full pointer-events-none"
                     style={{
                       inset: -18,
-                      border: "1px solid hsl(var(--gold) / 0.1)",
+                      border: `1px solid hsl(${planetColor} / 0.12)`,
                     }}
                     animate={{
                       opacity: [0.3, 0.7, 0.3],
@@ -887,7 +888,33 @@ const ZodiacWheel = ({
                     }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                   />
-                  {/* Ruling sign particles */}
+                  {/* Planet symbol indicator */}
+                  <motion.div
+                    className="absolute pointer-events-none flex items-center justify-center"
+                    style={{
+                      width: isMobile ? 20 : 26,
+                      height: isMobile ? 20 : 26,
+                      right: isMobile ? -6 : -8,
+                      top: isMobile ? -6 : -8,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, hsl(${planetColor} / 0.25), hsl(${planetColor} / 0.1))`,
+                      border: `1px solid hsl(${planetColor} / 0.4)`,
+                      fontSize: isMobile ? 10 : 13,
+                      color: `hsl(${planetColor})`,
+                      zIndex: 10,
+                    }}
+                    animate={{
+                      boxShadow: [
+                        `0 0 6px hsl(${planetColor} / 0.2)`,
+                        `0 0 14px hsl(${planetColor} / 0.4)`,
+                        `0 0 6px hsl(${planetColor} / 0.2)`,
+                      ],
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {planetaryInfluence.planet_symbol}
+                  </motion.div>
+                  {/* Rising particles */}
                   {[0, 1, 2].map((pi) => (
                     <motion.div
                       key={pi}
@@ -897,7 +924,7 @@ const ZodiacWheel = ({
                         height: 3,
                         left: "50%",
                         top: "50%",
-                        background: "hsl(var(--gold))",
+                        background: `hsl(${planetColor})`,
                       }}
                       animate={{
                         y: [0, -20, -35],
@@ -931,9 +958,9 @@ const ZodiacWheel = ({
                   style={{
                     opacity: isHovered || isHighlighted || isRuling ? 1 : 0.75,
                     filter: isHovered
-                      ? "drop-shadow(0 0 18px hsl(43 80% 55% / 0.9)) drop-shadow(0 0 8px hsl(43 80% 55% / 0.6)) drop-shadow(0 0 35px hsl(43 80% 55% / 0.3))"
+                      ? `drop-shadow(0 0 18px hsl(${planetColor} / 0.9)) drop-shadow(0 0 8px hsl(${planetColor} / 0.6)) drop-shadow(0 0 35px hsl(${planetColor} / 0.3))`
                       : isRuling
-                        ? "drop-shadow(0 0 14px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 6px hsl(43 80% 55% / 0.4)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.2))"
+                        ? `drop-shadow(0 0 14px hsl(${planetColor} / 0.7)) drop-shadow(0 0 6px hsl(${planetColor} / 0.4)) drop-shadow(0 0 25px hsl(${planetColor} / 0.2))`
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
                           : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
@@ -947,9 +974,9 @@ const ZodiacWheel = ({
                   <motion.div
                     className="absolute inset-[-6px] rounded-full pointer-events-none"
                     style={{
-                      border: "1px solid hsl(var(--gold) / 0.3)",
-                      background: "radial-gradient(circle, hsl(var(--gold) / 0.08), transparent 70%)",
-                      boxShadow: "0 0 25px hsl(var(--gold) / 0.15), inset 0 0 15px hsl(var(--gold) / 0.05)",
+                      border: `1px solid hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.3)`,
+                      background: `radial-gradient(circle, hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.08), transparent 70%)`,
+                      boxShadow: `0 0 25px hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.15), inset 0 0 15px hsl(${isRuling ? planetColor : "43 80% 55%"} / 0.05)`,
                     }}
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -1270,59 +1297,88 @@ const ZodiacWheel = ({
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Planetary influence label */}
+      {/* Planetary Influence Info Card */}
       <motion.div
         className="absolute pointer-events-none z-20"
         style={{
-          bottom: isMobile ? -28 : -36,
+          bottom: isMobile ? -100 : -130,
           left: "50%",
           transform: "translateX(-50%)",
+          width: isMobile ? 280 : 360,
         }}
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.5, delay: 3 }}
       >
         <div
-          className="flex items-center gap-2 px-4 py-1.5 rounded-full font-heading backdrop-blur-md whitespace-nowrap"
+          className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden text-center"
           style={{
-            background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.8), hsl(var(--deep-blue) / 0.9))",
-            border: `1px solid hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"} / 0.25)`,
-            boxShadow: `0 0 20px hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"} / 0.1), 0 4px 16px hsl(var(--deep-blue) / 0.5)`,
+            background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
+            border: `1px solid hsl(${pColor} / 0.3)`,
+            boxShadow: `0 0 35px hsl(${pColor} / 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${pColor} / 0.1)`,
           }}
         >
-          {planetaryInfluence && (
-            <motion.span
-              className="inline-block"
-              style={{ fontSize: isMobile ? 12 : 14 }}
-              animate={{ 
-                textShadow: [
-                  `0 0 5px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.3)`,
-                  `0 0 15px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.6)`,
-                  `0 0 5px hsl(${PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%"} / 0.3)`,
-                ],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          {/* Top accent */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[2px]"
+            style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.6), transparent 90%)` }}
+          />
+
+          <div className={`${isMobile ? "px-4 py-3.5 space-y-2" : "px-6 py-5 space-y-2.5"}`}>
+            {/* Subtitle */}
+            <div
+              className={`tracking-[0.2em] uppercase font-medium ${isMobile ? "text-[9px]" : "text-[10px]"}`}
+              style={{ color: "hsl(var(--foreground) / 0.45)" }}
             >
-              {planetaryInfluence.planet_symbol}
-            </motion.span>
-          )}
-          <span
-            className="font-semibold tracking-wide"
-            style={{ 
-              fontSize: isMobile ? 11 : 13, 
-              color: `hsl(${planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%"})`,
-            }}
-          >
-            {planetaryInfluence?.title[language] || ZODIAC_WHEEL[language][influencedIndex].name}
-          </span>
-          <motion.span
-            className="inline-block"
-            style={{ fontSize: isMobile ? 10 : 12, color: "hsl(var(--gold) / 0.5)" }}
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          >
-            ✦
-          </motion.span>
+              {t.zodiac_planetary_influence}
+            </div>
+
+            {/* Planet symbol + aspect title */}
+            <div className="flex items-center justify-center gap-2.5">
+              <motion.span
+                className={`${isMobile ? "text-xl" : "text-2xl"}`}
+                animate={{
+                  textShadow: [
+                    `0 0 8px hsl(${pColor} / 0.3)`,
+                    `0 0 20px hsl(${pColor} / 0.6)`,
+                    `0 0 8px hsl(${pColor} / 0.3)`,
+                  ],
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                {planetaryInfluence.planet_symbol}
+              </motion.span>
+              <span
+                className={`font-bold tracking-[0.1em] uppercase ${isMobile ? "text-sm" : "text-base"}`}
+                style={{ color: `hsl(${pColor})` }}
+              >
+                {planetaryInfluence.title[language]}
+              </span>
+            </div>
+
+            {/* Influence area badge */}
+            <div className="flex items-center justify-center">
+              <span
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[9px]" : "text-[10px]"}`}
+                style={{
+                  background: `hsl(${pColor} / 0.08)`,
+                  border: `1px solid hsl(${pColor} / 0.2)`,
+                  color: `hsl(${pColor} / 0.85)`,
+                }}
+              >
+                <span>{INFLUENCE_AREA_ICONS[planetaryInfluence.influence_area] || "✦"}</span>
+                {planetaryInfluence.life_area[language]}
+              </span>
+            </div>
+
+            {/* Interpretation */}
+            <div
+              className={`leading-relaxed ${isMobile ? "text-[11px]" : "text-xs"}`}
+              style={{ color: "hsl(var(--foreground) / 0.6)" }}
+            >
+              {planetaryInfluence.description[language]}
+            </div>
+          </div>
         </div>
       </motion.div>
     </motion.div>
