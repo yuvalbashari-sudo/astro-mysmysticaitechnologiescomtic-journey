@@ -784,7 +784,27 @@ const ZodiacWheel = ({
   const iconSize = isMobile ? 42 : 66;
   const rulingIndex = getRulingSignIndex();
 
-  const planetaryInfluence = useMemo(() => getDailyInfluence(), []);
+  const [planetaryInfluence, setPlanetaryInfluence] = useState(() => getDailyInfluence());
+  const [influenceKey, setInfluenceKey] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  });
+
+  // Auto-refresh at midnight
+  useEffect(() => {
+    const checkMidnight = () => {
+      const now = new Date();
+      const currentKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      if (currentKey !== influenceKey) {
+        setInfluenceKey(currentKey);
+        setPlanetaryInfluence(getDailyInfluence());
+      }
+    };
+    // Check every 30 seconds near midnight
+    const id = setInterval(checkMidnight, 30_000);
+    return () => clearInterval(id);
+  }, [influenceKey]);
+
   const influencedIndex = planetaryInfluence.zodiac_sign_index;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
