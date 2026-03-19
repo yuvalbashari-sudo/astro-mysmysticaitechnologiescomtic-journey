@@ -500,6 +500,37 @@ const ZODIAC_WHEEL: Record<Language, { name: string; en: string }[]> = {
   ],
 };
 
+// Get current ruling zodiac sign index based on date
+function getRulingSignIndex(): number {
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  // Zodiac date ranges (index matches ZODIAC_WHEEL order)
+  const ranges: [number, number, number, number][] = [
+    [3, 21, 4, 19],   // 0 Aries
+    [4, 20, 5, 20],   // 1 Taurus
+    [5, 21, 6, 20],   // 2 Gemini
+    [6, 21, 7, 22],   // 3 Cancer
+    [7, 23, 8, 22],   // 4 Leo
+    [8, 23, 9, 22],   // 5 Virgo
+    [9, 23, 10, 22],  // 6 Libra
+    [10, 23, 11, 21], // 7 Scorpio
+    [11, 22, 12, 21], // 8 Sagittarius
+    [12, 22, 1, 19],  // 9 Capricorn
+    [1, 20, 2, 18],   // 10 Aquarius
+    [2, 19, 3, 20],   // 11 Pisces
+  ];
+  for (let i = 0; i < ranges.length; i++) {
+    const [sm, sd, em, ed] = ranges[i];
+    if (i === 9) { // Capricorn wraps year
+      if ((m === sm && d >= sd) || (m === 1 && d <= ed)) return i;
+    } else {
+      if ((m === sm && d >= sd) || (m === em && d <= ed)) return i;
+    }
+  }
+  return 9; // fallback Capricorn
+}
+
 const ZodiacWheel = ({
   isMobile,
   hoveredMenuItem,
@@ -508,9 +539,11 @@ const ZodiacWheel = ({
   hoveredMenuItem: number | null;
 }) => {
   const { language } = useLanguage();
+  const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
   const radius = isMobile ? 242 : 385;
   const iconSize = isMobile ? 42 : 66;
+  const rulingIndex = getRulingSignIndex();
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
   const isCompatMode = hoveredMenuItem === 2;
