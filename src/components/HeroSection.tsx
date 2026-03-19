@@ -2051,7 +2051,7 @@ const HeroSection = () => {
     <section
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen overflow-hidden flex flex-col items-center justify-center"
+      className="relative min-h-screen overflow-x-hidden flex flex-col items-center justify-center"
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
