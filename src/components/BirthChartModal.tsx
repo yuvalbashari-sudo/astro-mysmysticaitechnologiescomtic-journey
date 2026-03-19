@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Loader2, Share2, Copy, Check, Download, Image } from "lucide-react";
 import html2canvas from "html2canvas";
@@ -370,7 +371,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         {/* Backdrop */}
         <motion.div
           className="absolute inset-0"
-          style={{ background: "hsl(var(--deep-blue) / 0.92)", backdropFilter: "blur(12px)" }}
+          style={{ background: "hsl(var(--deep-blue) / 0.92)", backdropFilter: "blur(16px)" }}
           onClick={handleClose}
         />
 
@@ -380,12 +381,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           style={{
             background: "linear-gradient(145deg, hsl(var(--deep-blue-light)), hsl(var(--deep-blue)))",
             border: "1px solid hsl(var(--gold) / 0.2)",
-            boxShadow: "0 0 60px hsl(var(--gold) / 0.08)",
+            boxShadow: "0 0 80px hsl(215 50% 30% / 0.12), 0 0 40px hsl(var(--gold) / 0.08)",
           }}
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
         >
+          <MysticalReadingAtmosphere theme="birthChart" />
           {/* Close button */}
           <button
             onClick={handleClose}
