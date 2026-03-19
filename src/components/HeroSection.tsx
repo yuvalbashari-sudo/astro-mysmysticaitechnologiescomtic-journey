@@ -473,6 +473,69 @@ const ZODIAC_META: Record<Language, { element: string; keyword: string }[]> = {
   ],
 };
 
+// Ruling sign date ranges
+const ZODIAC_DATE_RANGES: Record<Language, string[]> = {
+  he: [
+    "21 במרץ – 19 באפריל", "20 באפריל – 20 במאי", "21 במאי – 20 ביוני",
+    "21 ביוני – 22 ביולי", "23 ביולי – 22 באוגוסט", "23 באוגוסט – 22 בספטמבר",
+    "23 בספטמבר – 22 באוקטובר", "23 באוקטובר – 21 בנובמבר", "22 בנובמבר – 21 בדצמבר",
+    "22 בדצמבר – 19 בינואר", "20 בינואר – 18 בפברואר", "19 בפברואר – 20 במרץ",
+  ],
+  en: [
+    "Mar 21 – Apr 19", "Apr 20 – May 20", "May 21 – Jun 20",
+    "Jun 21 – Jul 22", "Jul 23 – Aug 22", "Aug 23 – Sep 22",
+    "Sep 23 – Oct 22", "Oct 23 – Nov 21", "Nov 22 – Dec 21",
+    "Dec 22 – Jan 19", "Jan 20 – Feb 18", "Feb 19 – Mar 20",
+  ],
+  ru: [
+    "21 мар – 19 апр", "20 апр – 20 мая", "21 мая – 20 июн",
+    "21 июн – 22 июл", "23 июл – 22 авг", "23 авг – 22 сен",
+    "23 сен – 22 окт", "23 окт – 21 ноя", "22 ноя – 21 дек",
+    "22 дек – 19 янв", "20 янв – 18 фев", "19 фев – 20 мар",
+  ],
+  ar: [
+    "21 مارس – 19 أبريل", "20 أبريل – 20 مايو", "21 مايو – 20 يونيو",
+    "21 يونيو – 22 يوليو", "23 يوليو – 22 أغسطس", "23 أغسطس – 22 سبتمبر",
+    "23 سبتمبر – 22 أكتوبر", "23 أكتوبر – 21 نوفمبر", "22 نوفمبر – 21 ديسمبر",
+    "22 ديسمبر – 19 يناير", "20 يناير – 18 فبراير", "19 فبراير – 20 مارس",
+  ],
+};
+
+// Short energy description for the ruling sign hover
+const ZODIAC_RULING_ENERGY: Record<Language, string[]> = {
+  he: [
+    "אנרגיה של התחלות חדשות והובלה נועזת", "זמן לבנות יציבות ולהתחבר לחושים", "תקשורת זורמת וסקרנות אינטלקטואלית",
+    "עונה של רגש עמוק וחיבור משפחתי", "זמן ליצירתיות, ביטוי עצמי והקרנה", "תקופה של סדר, ניתוח ותשומת לב לפרטים",
+    "חיפוש אחר הרמוניה, שותפות ואיזון", "עוצמה פנימית, טרנספורמציה ועומק", "חופש, הרפתקאות וחיפוש אחר משמעות",
+    "שאיפה, משמעת ובניית מסד איתן", "חזון מקורי, חדשנות ורוח חופשית", "אינטואיציה עמוקה, חלומות והשראה רוחנית",
+  ],
+  en: [
+    "A time of bold new beginnings and fearless initiative", "Building stability and connecting with the senses", "Flowing communication and intellectual curiosity",
+    "Deep emotion, nurturing, and family connections", "Creativity, self-expression, and radiant confidence", "Order, analysis, and attention to detail",
+    "Seeking harmony, partnership, and balance", "Inner power, transformation, and depth", "Freedom, adventure, and the search for meaning",
+    "Ambition, discipline, and building strong foundations", "Original vision, innovation, and free spirit", "Deep intuition, dreams, and spiritual inspiration",
+  ],
+  ru: [
+    "Время смелых начинаний и бесстрашной инициативы", "Построение стабильности и связь с чувствами", "Свободное общение и интеллектуальное любопытство",
+    "Глубокие эмоции, забота и семейные связи", "Творчество, самовыражение и сияющая уверенность", "Порядок, анализ и внимание к деталям",
+    "Поиск гармонии, партнёрства и баланса", "Внутренняя сила, трансформация и глубина", "Свобода, приключения и поиск смысла",
+    "Амбиции, дисциплина и построение прочного фундамента", "Оригинальное видение, инновации и свободный дух", "Глубокая интуиция, сны и духовное вдохновение",
+  ],
+  ar: [
+    "وقت البدايات الجريئة والمبادرة الشجاعة", "بناء الاستقرار والتواصل مع الحواس", "تواصل متدفق وفضول فكري",
+    "عاطفة عميقة ورعاية وروابط عائلية", "إبداع وتعبير عن الذات وثقة مشعة", "نظام وتحليل واهتمام بالتفاصيل",
+    "البحث عن الانسجام والشراكة والتوازن", "قوة داخلية وتحول وعمق", "حرية ومغامرة والبحث عن المعنى",
+    "طموح وانضباط وبناء أسس متينة", "رؤية أصيلة وابتكار وروح حرة", "حدس عميق وأحلام وإلهام روحي",
+  ],
+};
+
+const RULING_LABEL: Record<Language, string> = {
+  he: "המזל השולט כעת",
+  en: "Current ruling sign",
+  ru: "Текущий правящий знак",
+  ar: "البرج الحاكم الحالي",
+};
+
 const ZODIAC_WHEEL: Record<Language, { name: string; en: string }[]> = {
   he: [
     { name: "טלה", en: "Aries" }, { name: "שור", en: "Taurus" }, { name: "תאומים", en: "Gemini" },
@@ -718,7 +781,7 @@ const ZodiacWheel = ({
 
               {/* Premium floating label on hover */}
               <AnimatePresence>
-                {isHovered && (
+                {isHovered && !isRuling && (
                   <motion.div
                     className="absolute z-50 whitespace-nowrap"
                     style={{
@@ -754,15 +817,123 @@ const ZodiacWheel = ({
                         <span>{meta.keyword}</span>
                       </div>
                     </div>
-                    {/* Arrow pointing down */}
                     <div
                       className="mx-auto"
                       style={{
-                        width: 0,
-                        height: 0,
+                        width: 0, height: 0,
                         borderLeft: "5px solid transparent",
                         borderRight: "5px solid transparent",
                         borderTop: "5px solid hsl(var(--gold) / 0.3)",
+                        marginTop: -1,
+                      }}
+                    />
+                  </motion.div>
+                )}
+
+                {/* Ruling sign — large premium info panel */}
+                {isHovered && isRuling && (
+                  <motion.div
+                    className="absolute z-50"
+                    style={{
+                      left: "50%",
+                      bottom: "calc(100% + 20px)",
+                      transform: "translateX(-50%)",
+                      width: isMobile ? 220 : 280,
+                    }}
+                    initial={{ opacity: 0, y: 12, scale: 0.8 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 12, scale: 0.8 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                  >
+                    <div
+                      className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden"
+                      style={{
+                        background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.97), hsl(var(--deep-blue) / 0.99))",
+                        border: "1px solid hsl(var(--gold) / 0.4)",
+                        boxShadow: "0 0 40px hsl(var(--gold) / 0.15), 0 12px 48px hsl(var(--deep-blue) / 0.7), inset 0 1px 0 hsl(var(--gold) / 0.15)",
+                      }}
+                    >
+                      {/* Top accent line */}
+                      <div
+                        className="absolute top-0 left-0 right-0 h-[2px]"
+                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.6), transparent)" }}
+                      />
+
+                      <div className="px-5 py-4 text-center space-y-2.5">
+                        {/* Sign name */}
+                        <div
+                          className="text-base font-bold tracking-wider uppercase"
+                          style={{ color: "hsl(var(--gold))" }}
+                        >
+                          {sign.name}
+                        </div>
+
+                        {/* Ruling badge */}
+                        <div
+                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-widest uppercase font-semibold"
+                          style={{
+                            background: "hsl(var(--gold) / 0.1)",
+                            border: "1px solid hsl(var(--gold) / 0.25)",
+                            color: "hsl(var(--gold) / 0.9)",
+                          }}
+                        >
+                          <span style={{ fontSize: 8, lineHeight: 1 }}>✦</span>
+                          {RULING_LABEL[language]}
+                          <span style={{ fontSize: 8, lineHeight: 1 }}>✦</span>
+                        </div>
+
+                        {/* Element & keyword */}
+                        <div
+                          className="flex items-center justify-center gap-2 text-[11px] tracking-widest uppercase"
+                          style={{ color: "hsl(var(--gold) / 0.65)" }}
+                        >
+                          <span>{meta.element}</span>
+                          <span style={{ color: "hsl(var(--gold) / 0.3)" }}>·</span>
+                          <span>{meta.keyword}</span>
+                        </div>
+
+                        {/* Date range */}
+                        <div
+                          className="text-[11px] tracking-wide font-medium"
+                          style={{ color: "hsl(var(--foreground) / 0.8)" }}
+                        >
+                          {ZODIAC_DATE_RANGES[language][rulingIndex]}
+                        </div>
+
+                        {/* Divider */}
+                        <div
+                          className="mx-auto"
+                          style={{
+                            width: 40,
+                            height: 1,
+                            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)",
+                          }}
+                        />
+
+                        {/* Energy description */}
+                        <div
+                          className="text-[11px] leading-relaxed"
+                          style={{ color: "hsl(var(--foreground) / 0.7)" }}
+                        >
+                          {ZODIAC_RULING_ENERGY[language][rulingIndex]}
+                        </div>
+                      </div>
+
+                      {/* Bottom accent line */}
+                      <div
+                        className="absolute bottom-0 left-0 right-0 h-[1px]"
+                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }}
+                      />
+                    </div>
+
+                    {/* Arrow */}
+                    <div
+                      className="mx-auto"
+                      style={{
+                        width: 0, height: 0,
+                        borderLeft: "6px solid transparent",
+                        borderRight: "6px solid transparent",
+                        borderTop: "6px solid hsl(var(--gold) / 0.4)",
                         marginTop: -1,
                       }}
                     />
