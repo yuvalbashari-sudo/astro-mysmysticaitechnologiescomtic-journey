@@ -111,22 +111,44 @@ const READING_PROMPTS: Record<string, (data: any) => { system: string; user: str
     const has2Gender = !!data.sign2Gender && data.sign2Gender !== 'prefer_not';
     const hasAnyGender = has1Gender || has2Gender;
 
+    // Identity context
+    const name1 = data.sign1PersonName || null;
+    const name2 = data.sign2PersonName || null;
+    const rel1 = data.sign1Relation || null;
+    const rel2 = data.sign2Relation || null;
+    const isSelfInvolved = rel1 === 'me' || rel2 === 'me';
+    const bothOthers = rel1 !== 'me' && rel2 !== 'me';
+
+    const relationMap: Record<string, string> = { me: 'המשתמש/ת עצמו/ה', partner: 'בן/בת זוג', friend: 'חבר/ה', family: 'בן/בת משפחה', other: 'אדם אחר' };
+    const r1Label = rel1 ? relationMap[rel1] || rel1 : null;
+    const r2Label = rel2 ? relationMap[rel2] || rel2 : null;
+
+    const person1Label = name1 || (rel1 === 'me' ? 'אתה/את' : 'אדם ראשון');
+    const person2Label = name2 || (rel2 === 'me' ? 'אתה/את' : 'אדם שני');
+
+    const identityGuide = `
+הנחיות זהות — חשוב מאוד:
+- אדם ראשון: ${person1Label}${r1Label ? ` (${r1Label})` : ''}
+- אדם שני: ${person2Label}${r2Label ? ` (${r2Label})` : ''}
+${isSelfInvolved ? `- אחד מהאנשים הוא המשתמש/ת עצמו/ה. דבר/י אליו/ה בגוף שני באופן אישי ומחבר. הפירוש צריך להרגיש ישיר ואינטימי.` : ''}
+${bothOthers ? `- הקריאה היא על שני אנשים אחרים (לא המשתמש/ת). כתוב/י בגוף שלישי. הציגו ניתוח חיצוני ונייטרלי על הקשר בין ${person1Label} ל${person2Label}.` : ''}
+${name1 ? `- השתמש/י בשם "${name1}" כשמתייחס/ת לאדם הראשון.` : ''}
+${name2 ? `- השתמש/י בשם "${name2}" כשמתייחס/ת לאדם השני.` : ''}`;
+
     const genderMap: Record<string, string> = { woman: 'אישה', man: 'גבר', nonbinary: 'נון-בינארי', other: 'זהות מגדרית אחרת' };
     const g1Label = has1Gender ? genderMap[data.sign1Gender] || data.sign1Gender : null;
     const g2Label = has2Gender ? genderMap[data.sign2Gender] || data.sign2Gender : null;
 
     const genderGuide = hasAnyGender ? `
 הנחיות מגדר — חשוב מאוד:
-- השתמש/י בנוסח "אדם ראשון" / "אדם שני" או פנייה ניטרלית ומכבדת.
-- ${has1Gender ? `אדם ראשון מזדהה כ${g1Label}.` : 'אדם ראשון לא ציין/ה זהות מגדרית — השתמש/י בלשון ניטרלית.'}
-- ${has2Gender ? `אדם שני מזדהה כ${g2Label}.` : 'אדם שני לא ציין/ה זהות מגדרית — השתמש/י בלשון ניטרלית.'}
+- ${has1Gender ? `${person1Label} מזדהה כ${g1Label}.` : `${person1Label} לא ציין/ה זהות מגדרית — השתמש/י בלשון ניטרלית.`}
+- ${has2Gender ? `${person2Label} מזדהה כ${g2Label}.` : `${person2Label} לא ציין/ה זהות מגדרית — השתמש/י בלשון ניטרלית.`}
 - אל תניח מודל זוגיות מסורתי. הקשר יכול להיות בין כל שילוב מגדרי.
-- אל תשתמש בסטריאוטיפים מגדריים (כמו "הגבר בקשר" או "האישה בקשר").
-- אם ניתן מגדר — השתמש בו כדי להעמיק את הפירוש: סגנון הביטוי הרגשי, דינמיקת המשיכה, סגנון התקשורת, אינטימיות ותפקידים בקשר — הכל באופן מכבד, לא מגביל.
-- הפירוש צריך להישאר מבוסס על אסטרולוגיה. המגדר מוסיף שכבת עומק, לא מחליף את הניתוח האסטרולוגי.` : `
+- אל תשתמש בסטריאוטיפים מגדריים.
+- אם ניתן מגדר — השתמש בו כדי להעמיק את הפירוש באופן מכבד.
+- הפירוש צריך להישאר מבוסס על אסטרולוגיה.` : `
 הנחיות מגדר:
 - לא צוינה זהות מגדרית — כתוב בלשון ניטרלית ומכילה.
-- השתמש/י בנוסח "אדם ראשון" / "אדם שני".
 - אל תניח שום מודל זוגיות ספציפי.`;
 
     return {
@@ -142,6 +164,7 @@ ${data.score >= 80 ? '- ציון גבוה! הדגש את החיבור העמוק
 - מנתח את הדינמיקה בין שני המזלות על סמך היסודות, האופנויות והכוכבים השולטים
 - כשיש חיכוך — אמור את זה. כשיש הרמוניה — חגוג את זה.
 ${hasAnyRising ? '- משלב ניתוח מזל עולה (אסנדנט) כדי לחשוף את הדינמיקה העמוקה יותר בין בני הזוג' : ''}
+${identityGuide}
 ${genderGuide}
 
 מבנה התשובה:
@@ -182,16 +205,18 @@ ${hasAnyRising ? `**🔮 שילוב המזלות העולים**
 
 ### ✨ מסר לשניכם
 משפט סיכום רומנטי ועמוק`,
-    user: `כתוב ניתוח התאמה זוגית מיסטי, מקיף ואישי.
+    user: `כתוב ניתוח התאמה מיסטי, מקיף ואישי.
 
-אדם ראשון — מזל ${data.sign1Name} (${data.sign1Symbol})
+${person1Label} — מזל ${data.sign1Name} (${data.sign1Symbol})
+- יחס למשתמש: ${r1Label || 'לא צוין'}
 - יסוד: ${data.sign1Element}
 - אופנות: ${data.sign1Modality}
 - כוכב שולט: ${data.sign1Ruler}
 ${has1Rising ? `- שעת לידה: ${data.sign1BirthTime}\n- מזל עולה: ${data.sign1Rising} (${data.sign1RisingSymbol}) — יסוד ${data.sign1RisingElement}` : '- שעת לידה: לא צוינה'}
 ${has1Gender ? `- זהות מגדרית: ${g1Label}` : '- זהות מגדרית: לא צוינה'}
 
-אדם שני — מזל ${data.sign2Name} (${data.sign2Symbol})
+${person2Label} — מזל ${data.sign2Name} (${data.sign2Symbol})
+- יחס למשתמש: ${r2Label || 'לא צוין'}
 - יסוד: ${data.sign2Element}
 - אופנות: ${data.sign2Modality}
 - כוכב שולט: ${data.sign2Ruler}
