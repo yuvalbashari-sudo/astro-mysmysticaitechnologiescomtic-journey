@@ -61,8 +61,13 @@
     @apply border-border;
   }
 
+  html {
+    background: hsl(222 47% 6%);
+  }
+
   body {
-    @apply bg-background text-foreground font-body;
+    @apply text-foreground font-body;
+    background: transparent;
     direction: rtl;
     line-height: 1.8;
     -webkit-font-smoothing: antialiased;

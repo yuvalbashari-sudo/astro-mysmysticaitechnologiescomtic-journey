@@ -2041,6 +2041,16 @@ const HeroSection = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Parallax: background shifts subtly on scroll for depth
+  const [parallaxY, setParallaxY] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      setParallaxY(window.scrollY * 0.08);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (isMobile || !sectionRef.current) return;
     const rect = sectionRef.current.getBoundingClientRect();
@@ -2084,6 +2094,7 @@ const HeroSection = () => {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="fixed inset-0 z-0"
+      style={{ transform: `translateY(${-parallaxY}px)` }}
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
@@ -2564,7 +2575,7 @@ const HeroSection = () => {
     </div>
 
     {/* ── Scrollable content layer ── */}
-    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden">
+    <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden" style={{ background: "transparent" }}>
       {/* Content container */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-4 pt-8 md:pt-16 pointer-events-auto">
 
