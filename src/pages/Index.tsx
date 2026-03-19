@@ -31,9 +31,9 @@ const Index = () => {
         onOpenHistory={() => setHistoryOpen(true)}
         hasHistory={hasHistory}
       />
-      {/* HeroSection renders both fixed bg + scrollable hero content */}
+      {/* Hero fixed background — outside main to prevent scroll containment */}
+      <HeroSection />
       <main id="main-content">
-        <HeroSection />
         <DailyRitualSection />
       </main>
       <MysticalDashboard />
