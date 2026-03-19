@@ -2078,10 +2078,12 @@ const HeroSection = () => {
   const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
 
   return (
-    <section
+    <>
+    {/* ── Fixed cinematic background ── */}
+    <div
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-screen overflow-x-hidden flex flex-col items-center justify-center"
+      className="fixed inset-0 z-0"
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
