@@ -598,8 +598,6 @@ type PlanetaryInfluence = {
   planet: string;
   planet_symbol: string;
   zodiac_sign_index: number;
-  zodiac_sign_en: string;
-  aspect: string;
   influence_area: string;
   title: Record<Language, string>;
   description: Record<Language, string>;
@@ -607,16 +605,10 @@ type PlanetaryInfluence = {
 };
 
 const PLANET_COLORS: Record<string, string> = {
-  Sun: "43 80% 55%",
-  Moon: "220 20% 80%",
-  Mercury: "180 40% 55%",
   Venus: "330 60% 65%",
   Mars: "0 70% 55%",
   Jupiter: "35 60% 55%",
   Saturn: "220 15% 50%",
-  Uranus: "180 60% 50%",
-  Neptune: "230 60% 60%",
-  Pluto: "280 40% 45%",
 };
 
 const INFLUENCE_AREA_ICONS: Record<string, string> = {
@@ -630,6 +622,154 @@ const INFLUENCE_AREA_ICONS: Record<string, string> = {
   creativity: "🎨",
 };
 
+// ── Daily Planetary Influence Data ─────────────────────
+const PLANETS = [
+  { name: "Venus", symbol: "♀", area: "love" },
+  { name: "Mars", symbol: "♂", area: "energy" },
+  { name: "Jupiter", symbol: "♃", area: "growth" },
+  { name: "Saturn", symbol: "♄", area: "discipline" },
+] as const;
+
+const SIGN_NAMES_EN = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+
+// Pre-written titles per planet×sign (4 planets × 12 signs = 48)
+const INFLUENCE_TITLES: Record<string, Record<Language, string>> = {
+  "Venus-0": { he: "ונוס בטלה", en: "Venus in Aries", ru: "Венера в Овне", ar: "الزهرة في الحمل" },
+  "Venus-1": { he: "ונוס בשור", en: "Venus in Taurus", ru: "Венера в Тельце", ar: "الزهرة في الثور" },
+  "Venus-2": { he: "ונוס בתאומים", en: "Venus in Gemini", ru: "Венера в Близнецах", ar: "الزهرة في الجوزاء" },
+  "Venus-3": { he: "ונוס בסרטן", en: "Venus in Cancer", ru: "Венера в Раке", ar: "الزهرة في السرطان" },
+  "Venus-4": { he: "ונוס באריה", en: "Venus in Leo", ru: "Венера во Льве", ar: "الزهرة في الأسد" },
+  "Venus-5": { he: "ונוס בבתולה", en: "Venus in Virgo", ru: "Венера в Деве", ar: "الزهرة في العذراء" },
+  "Venus-6": { he: "ונוס במאזניים", en: "Venus in Libra", ru: "Венера в Весах", ar: "الزهرة في الميزان" },
+  "Venus-7": { he: "ונוס בעקרב", en: "Venus in Scorpio", ru: "Венера в Скорпионе", ar: "الزهرة في العقرب" },
+  "Venus-8": { he: "ונוס בקשת", en: "Venus in Sagittarius", ru: "Венера в Стрельце", ar: "الزهرة في القوس" },
+  "Venus-9": { he: "ונוס בגדי", en: "Venus in Capricorn", ru: "Венера в Козероге", ar: "الزهرة في الجدي" },
+  "Venus-10": { he: "ונוס בדלי", en: "Venus in Aquarius", ru: "Венера в Водолее", ar: "الزهرة في الدلو" },
+  "Venus-11": { he: "ונוס בדגים", en: "Venus in Pisces", ru: "Венера в Рыбах", ar: "الزهرة في الحوت" },
+  "Mars-0": { he: "מאדים בטלה", en: "Mars in Aries", ru: "Марс в Овне", ar: "المريخ في الحمل" },
+  "Mars-1": { he: "מאדים בשור", en: "Mars in Taurus", ru: "Марс в Тельце", ar: "المريخ في الثور" },
+  "Mars-2": { he: "מאדים בתאומים", en: "Mars in Gemini", ru: "Марс в Близнецах", ar: "المريخ في الجوزاء" },
+  "Mars-3": { he: "מאדים בסרטן", en: "Mars in Cancer", ru: "Марс в Раке", ar: "المريخ في السرطان" },
+  "Mars-4": { he: "מאדים באריה", en: "Mars in Leo", ru: "Марс во Льве", ar: "المريخ في الأسد" },
+  "Mars-5": { he: "מאדים בבתולה", en: "Mars in Virgo", ru: "Марс в Деве", ar: "المريخ في العذراء" },
+  "Mars-6": { he: "מאדים במאזניים", en: "Mars in Libra", ru: "Марс в Весах", ar: "المريخ في الميزان" },
+  "Mars-7": { he: "מאדים בעקרב", en: "Mars in Scorpio", ru: "Марс в Скорпионе", ar: "المريخ في العقرب" },
+  "Mars-8": { he: "מאדים בקשת", en: "Mars in Sagittarius", ru: "Марс в Стрельце", ar: "المريخ في القوس" },
+  "Mars-9": { he: "מאדים בגדי", en: "Mars in Capricorn", ru: "Марс в Козероге", ar: "المريخ في الجدي" },
+  "Mars-10": { he: "מאדים בדלי", en: "Mars in Aquarius", ru: "Марс в Водолее", ar: "المريخ في الدلو" },
+  "Mars-11": { he: "מאדים בדגים", en: "Mars in Pisces", ru: "Марс в Рыбах", ar: "المريخ في الحوت" },
+  "Jupiter-0": { he: "צדק בטלה", en: "Jupiter in Aries", ru: "Юпитер в Овне", ar: "المشتري في الحمل" },
+  "Jupiter-1": { he: "צדק בשור", en: "Jupiter in Taurus", ru: "Юпитер в Тельце", ar: "المشتري في الثور" },
+  "Jupiter-2": { he: "צדק בתאומים", en: "Jupiter in Gemini", ru: "Юпитер в Близнецах", ar: "المشتري في الجوزاء" },
+  "Jupiter-3": { he: "צדק בסרטן", en: "Jupiter in Cancer", ru: "Юпитер в Раке", ar: "المشتري في السرطان" },
+  "Jupiter-4": { he: "צדק באריה", en: "Jupiter in Leo", ru: "Юпитер во Льве", ar: "المشتري في الأسد" },
+  "Jupiter-5": { he: "צדק בבתולה", en: "Jupiter in Virgo", ru: "Юпитер в Деве", ar: "المشتري في العذراء" },
+  "Jupiter-6": { he: "צדק במאזניים", en: "Jupiter in Libra", ru: "Юпитер в Весах", ar: "المشتري في الميزان" },
+  "Jupiter-7": { he: "צדק בעקרב", en: "Jupiter in Scorpio", ru: "Юпитер в Скорпионе", ar: "المشتري في العقرب" },
+  "Jupiter-8": { he: "צדק בקשת", en: "Jupiter in Sagittarius", ru: "Юпитер в Стрельце", ar: "المشتري في القوس" },
+  "Jupiter-9": { he: "צדק בגדי", en: "Jupiter in Capricorn", ru: "Юпитер в Козероге", ar: "المشتري في الجدي" },
+  "Jupiter-10": { he: "צדק בדלי", en: "Jupiter in Aquarius", ru: "Юпитер в Водолее", ar: "المشتري في الدلو" },
+  "Jupiter-11": { he: "צדק בדגים", en: "Jupiter in Pisces", ru: "Юпитер в Рыбах", ar: "المشتري في الحوت" },
+  "Saturn-0": { he: "שבתאי בטלה", en: "Saturn in Aries", ru: "Сатурн в Овне", ar: "زحل في الحمل" },
+  "Saturn-1": { he: "שבתאי בשור", en: "Saturn in Taurus", ru: "Сатурн в Тельце", ar: "زحل في الثور" },
+  "Saturn-2": { he: "שבתאי בתאומים", en: "Saturn in Gemini", ru: "Сатурн в Близнецах", ar: "زحل في الجوزاء" },
+  "Saturn-3": { he: "שבתאי בסרטן", en: "Saturn in Cancer", ru: "Сатурн в Раке", ar: "زحل في السرطان" },
+  "Saturn-4": { he: "שבתאי באריה", en: "Saturn in Leo", ru: "Сатурн во Льве", ar: "زحل في الأسد" },
+  "Saturn-5": { he: "שבתאי בבתולה", en: "Saturn in Virgo", ru: "Сатурн в Деве", ar: "زحل في العذراء" },
+  "Saturn-6": { he: "שבתאי במאזניים", en: "Saturn in Libra", ru: "Сатурн в Весах", ar: "زحل في الميزان" },
+  "Saturn-7": { he: "שבתאי בעקרב", en: "Saturn in Scorpio", ru: "Сатурн в Скорпионе", ar: "زحل في العقرب" },
+  "Saturn-8": { he: "שבתאי בקשת", en: "Saturn in Sagittarius", ru: "Сатурн в Стрельце", ar: "زحل في القوس" },
+  "Saturn-9": { he: "שבתאי בגדי", en: "Saturn in Capricorn", ru: "Сатурн в Козероге", ar: "زحل في الجدي" },
+  "Saturn-10": { he: "שבתאי בדלי", en: "Saturn in Aquarius", ru: "Сатурн в Водолее", ar: "زحل في الدلو" },
+  "Saturn-11": { he: "שבתאי בדגים", en: "Saturn in Pisces", ru: "Сатурн в Рыбах", ar: "زحل في الحوت" },
+};
+
+// Pre-written interpretations per planet×sign
+const INFLUENCE_DESCRIPTIONS: Record<string, Record<Language, string>> = {
+  "Venus-0": { he: "אהבה נועזת ותשוקה בוערת מנחים את הלב. זה הזמן ליוזמה רומנטית", en: "Bold love and burning passion guide the heart. Time for romantic initiative", ru: "Смелая любовь и горячая страсть ведут сердце. Время для романтической инициативы", ar: "الحب الجريء والعاطفة المشتعلة يقودان القلب. وقت المبادرة الرومانسية" },
+  "Venus-1": { he: "חיבור חושני ועמוק לאסתטיקה ונוחות. הנאות פשוטות מביאות אושר", en: "Deep sensual connection to beauty and comfort. Simple pleasures bring happiness", ru: "Глубокая чувственная связь с красотой и комфортом. Простые удовольствия приносят счастье", ar: "ارتباط حسي عميق بالجمال والراحة. المتع البسيطة تجلب السعادة" },
+  "Venus-2": { he: "תקשורת מקסימה וקלילות בזוגיות. שיחות עמוקות פותחות דלתות חדשות", en: "Charming communication and lightness in relationships. Deep conversations open new doors", ru: "Очаровательное общение и лёгкость в отношениях. Глубокие разговоры открывают новые двери", ar: "تواصل ساحر وخفة في العلاقات. المحادثات العميقة تفتح أبواباً جديدة" },
+  "Venus-3": { he: "רגשות עמוקים וצורך בביטחון רגשי. הבית הופך למקדש של אהבה", en: "Deep emotions and need for emotional security. Home becomes a sanctuary of love", ru: "Глубокие эмоции и потребность в эмоциональной безопасности. Дом становится святилищем любви", ar: "عواطف عميقة وحاجة للأمان العاطفي. المنزل يصبح ملاذاً للحب" },
+  "Venus-4": { he: "רומנטיקה דרמטית ונדיבות רגשית. הלב מבקש תשומת לב והערצה", en: "Dramatic romance and emotional generosity. The heart seeks attention and admiration", ru: "Драматическая романтика и эмоциональная щедрость. Сердце ищет внимания и восхищения", ar: "رومانسية درامية وكرم عاطفي. القلب يبحث عن الاهتمام والإعجاب" },
+  "Venus-5": { he: "אהבה מעשית ודקדקנית. תשומת לב לפרטים מחזקת את הקשר", en: "Practical and attentive love. Attention to detail strengthens the bond", ru: "Практичная и внимательная любовь. Внимание к деталям укрепляет связь", ar: "حب عملي ودقيق. الاهتمام بالتفاصيل يقوي الرابطة" },
+  "Venus-6": { he: "הרמוניה ואיזון בזוגיות. חיפוש אחר יופי ושלווה בכל מערכת יחסים", en: "Harmony and balance in partnerships. Seeking beauty and peace in every relationship", ru: "Гармония и баланс в партнёрстве. Поиск красоты и покоя в каждых отношениях", ar: "انسجام وتوازن في الشراكات. البحث عن الجمال والسلام في كل علاقة" },
+  "Venus-7": { he: "משיכה מגנטית ועוצמה רגשית. רגשות עמוקים ומורכבים שולטים", en: "Magnetic attraction and emotional intensity. Deep, complex feelings dominate", ru: "Магнетическое притяжение и эмоциональная интенсивность. Глубокие, сложные чувства доминируют", ar: "جاذبية مغناطيسية وحدة عاطفية. المشاعر العميقة والمعقدة تسيطر" },
+  "Venus-8": { he: "הרפתקה רומנטית וחופש רגשי. פתיחות לחוויות חדשות באהבה", en: "Romantic adventure and emotional freedom. Openness to new experiences in love", ru: "Романтическое приключение и эмоциональная свобода. Открытость к новому опыту в любви", ar: "مغامرة رومانسية وحرية عاطفية. انفتاح على تجارب جديدة في الحب" },
+  "Venus-9": { he: "אהבה מחויבת ורצינית. בניית יסודות חזקים לעתיד משותף", en: "Committed and serious love. Building strong foundations for a shared future", ru: "Преданная и серьёзная любовь. Строительство крепкого фундамента для совместного будущего", ar: "حب ملتزم وجاد. بناء أسس قوية لمستقبل مشترك" },
+  "Venus-10": { he: "אהבה לא שגרתית ומפתיעה. חיבורים ייחודיים שוברים את השגרה", en: "Unconventional and surprising love. Unique connections break the routine", ru: "Нетрадиционная и удивительная любовь. Уникальные связи разрушают рутину", ar: "حب غير تقليدي ومفاجئ. روابط فريدة تكسر الروتين" },
+  "Venus-11": { he: "אהבה חלומית ורוחנית. חיבור נשמתי עמוק מעבר למילים", en: "Dreamy, spiritual love. Deep soul connection beyond words", ru: "Мечтательная, духовная любовь. Глубокая связь душ за пределами слов", ar: "حب حالم وروحاني. ارتباط روحي عميق يتجاوز الكلمات" },
+  "Mars-0": { he: "אנרגיה בוערת ודחף לפעולה. הכוח הפנימי בשיאו", en: "Burning energy and drive to act. Inner power at its peak", ru: "Горящая энергия и стремление к действию. Внутренняя сила на пике", ar: "طاقة مشتعلة ودافع للعمل. القوة الداخلية في ذروتها" },
+  "Mars-1": { he: "נחישות יציבה והתמדה. כוח רצון שאינו נשבר", en: "Steady determination and persistence. Unbreakable willpower", ru: "Устойчивая решимость и настойчивость. Несокрушимая сила воли", ar: "عزيمة ثابتة ومثابرة. إرادة لا تنكسر" },
+  "Mars-2": { he: "מחשבה חדה ותגובות מהירות. אנרגיה מנטלית גבוהה", en: "Sharp thinking and quick reactions. High mental energy", ru: "Острое мышление и быстрые реакции. Высокая ментальная энергия", ar: "تفكير حاد وردود فعل سريعة. طاقة ذهنية عالية" },
+  "Mars-3": { he: "פעולה מונעת רגש ואינסטינקט. הגנה על הקרובים", en: "Emotion-driven action and instinct. Protecting loved ones", ru: "Действие, движимое эмоциями и инстинктом. Защита близких", ar: "عمل مدفوع بالعاطفة والغريزة. حماية الأحباء" },
+  "Mars-4": { he: "ביטחון עצמי גבוה ואומץ. אנרגיה יצירתית שולטת", en: "High confidence and courage. Creative energy dominates", ru: "Высокая уверенность и храбрость. Доминирует творческая энергия", ar: "ثقة عالية بالنفس وشجاعة. الطاقة الإبداعية تسيطر" },
+  "Mars-5": { he: "דיוק ויעילות בפעולה. אנרגיה מכוונת למטרה ברורה", en: "Precision and efficiency in action. Energy directed at a clear goal", ru: "Точность и эффективность в действиях. Энергия направлена на чёткую цель", ar: "دقة وكفاءة في العمل. طاقة موجهة نحو هدف واضح" },
+  "Mars-6": { he: "פעולה דיפלומטית ומאוזנת. כוח דרך שיתוף פעולה", en: "Diplomatic and balanced action. Strength through cooperation", ru: "Дипломатичное и сбалансированное действие. Сила через сотрудничество", ar: "عمل دبلوماسي ومتوازن. القوة من خلال التعاون" },
+  "Mars-7": { he: "עוצמה פנימית אדירה ונחישות. טרנספורמציה דרך פעולה", en: "Immense inner power and determination. Transformation through action", ru: "Огромная внутренняя мощь и решимость. Трансформация через действие", ar: "قوة داخلية هائلة وعزيمة. تحول من خلال العمل" },
+  "Mars-8": { he: "דחף להרפתקאות וגבולות חדשים. אנרגיה חופשית ומשחררת", en: "Drive for adventure and new frontiers. Free and liberating energy", ru: "Стремление к приключениям и новым горизонтам. Свободная и раскрепощающая энергия", ar: "دافع للمغامرة وحدود جديدة. طاقة حرة ومحررة" },
+  "Mars-9": { he: "משמעת ברזל ושאיפה גבוהה. עבודה קשה מניבה פירות", en: "Iron discipline and high ambition. Hard work bears fruit", ru: "Железная дисциплина и высокие амбиции. Тяжёлый труд приносит плоды", ar: "انضباط حديدي وطموح عالٍ. العمل الشاق يؤتي ثماره" },
+  "Mars-10": { he: "פעולה מהפכנית ולא צפויה. שבירת דפוסים ישנים", en: "Revolutionary and unexpected action. Breaking old patterns", ru: "Революционное и неожиданное действие. Разрушение старых шаблонов", ar: "عمل ثوري وغير متوقع. كسر الأنماط القديمة" },
+  "Mars-11": { he: "פעולה אינטואיטיבית ורוחנית. כוח שקט מכוון מבפנים", en: "Intuitive and spiritual action. Quiet strength directed from within", ru: "Интуитивное и духовное действие. Тихая сила, направленная изнутри", ar: "عمل حدسي وروحاني. قوة هادئة موجهة من الداخل" },
+  "Jupiter-0": { he: "הזדמנויות חדשות ואופטימיות בלתי ניתנת לעצירה", en: "New opportunities and unstoppable optimism", ru: "Новые возможности и неудержимый оптимизм", ar: "فرص جديدة وتفاؤل لا يمكن إيقافه" },
+  "Jupiter-1": { he: "שפע חומרי וצמיחה כלכלית. המזל מאיר בתחום הכספי", en: "Material abundance and financial growth. Fortune shines in finances", ru: "Материальное изобилие и финансовый рост. Удача сияет в финансовой сфере", ar: "وفرة مادية ونمو مالي. الحظ يشرق في المجال المالي" },
+  "Jupiter-2": { he: "למידה מואצת וסקרנות אינטלקטואלית. ידע חדש פותח שערים", en: "Accelerated learning and intellectual curiosity. New knowledge opens gates", ru: "Ускоренное обучение и интеллектуальное любопытство. Новые знания открывают двери", ar: "تعلم متسارع وفضول فكري. المعرفة الجديدة تفتح أبواباً" },
+  "Jupiter-3": { he: "ברכה על המשפחה והבית. הגנה קוסמית על היקרים לך", en: "Blessings on family and home. Cosmic protection over your loved ones", ru: "Благословение семьи и дома. Космическая защита близких", ar: "بركة على العائلة والمنزل. حماية كونية لأحبائك" },
+  "Jupiter-4": { he: "הצלחה מזהירה וביטחון עצמי גואה. זמן לזרוח", en: "Brilliant success and rising confidence. Time to shine", ru: "Блестящий успех и растущая уверенность. Время сиять", ar: "نجاح باهر وثقة متصاعدة. حان وقت التألق" },
+  "Jupiter-5": { he: "שיפור בריאותי וסדר מושלם. פרטים קטנים מביאים הצלחה גדולה", en: "Health improvement and perfect order. Small details bring great success", ru: "Улучшение здоровья и идеальный порядок. Мелкие детали приносят большой успех", ar: "تحسن صحي ونظام مثالي. التفاصيل الصغيرة تجلب نجاحاً كبيراً" },
+  "Jupiter-6": { he: "שותפויות מבורכות ושגשוג דרך אחרים. הרמוניה מושכת שפע", en: "Blessed partnerships and prosperity through others. Harmony attracts abundance", ru: "Благословенные партнёрства и процветание через других. Гармония привлекает изобилие", ar: "شراكات مباركة وازدهار من خلال الآخرين. الانسجام يجذب الوفرة" },
+  "Jupiter-7": { he: "טרנספורמציה מעצימה וצמיחה דרך שינוי עמוק", en: "Empowering transformation and growth through deep change", ru: "Преобразующая трансформация и рост через глубокие перемены", ar: "تحول تمكيني ونمو من خلال تغيير عميق" },
+  "Jupiter-8": { he: "הרחבת אופקים ומסעות רוחניים. חכמה עתיקה מתגלה", en: "Expanding horizons and spiritual journeys. Ancient wisdom reveals itself", ru: "Расширение горизонтов и духовные путешествия. Древняя мудрость раскрывается", ar: "توسيع الآفاق والرحلات الروحية. الحكمة القديمة تكشف عن نفسها" },
+  "Jupiter-9": { he: "קידום מקצועי ובניית מוניטין. השקעות ארוכות טווח משתלמות", en: "Career advancement and reputation building. Long-term investments pay off", ru: "Карьерный рост и построение репутации. Долгосрочные инвестиции окупаются", ar: "تقدم مهني وبناء سمعة. الاستثمارات طويلة الأجل تؤتي ثمارها" },
+  "Jupiter-10": { he: "חדשנות מבורכת וחזון עתידי. רעיונות מקוריים פורחים", en: "Blessed innovation and future vision. Original ideas flourish", ru: "Благословенные инновации и видение будущего. Оригинальные идеи расцветают", ar: "ابتكار مبارك ورؤية مستقبلية. الأفكار الأصيلة تزدهر" },
+  "Jupiter-11": { he: "חסד רוחני ואמונה עמוקה. חלומות הופכים למציאות", en: "Spiritual grace and deep faith. Dreams become reality", ru: "Духовная благодать и глубокая вера. Мечты становятся реальностью", ar: "نعمة روحية وإيمان عميق. الأحلام تصبح حقيقة" },
+  "Saturn-0": { he: "אתגר לחזק את הנחישות. מבחנים מעצבים אופי", en: "Challenge to strengthen resolve. Tests build character", ru: "Вызов для укрепления решимости. Испытания формируют характер", ar: "تحدٍّ لتعزيز العزيمة. الاختبارات تبني الشخصية" },
+  "Saturn-1": { he: "בניית יציבות כלכלית דרך סבלנות. משמעת מולידה שפע", en: "Building financial stability through patience. Discipline breeds abundance", ru: "Строительство финансовой стабильности через терпение. Дисциплина рождает изобилие", ar: "بناء الاستقرار المالي من خلال الصبر. الانضباط يولد الوفرة" },
+  "Saturn-2": { he: "מחשבה מעמיקה וריכוז מנטלי. זמן ללמוד ולהתמקצע", en: "Deep thinking and mental focus. Time to learn and specialize", ru: "Глубокое мышление и ментальная концентрация. Время учиться и специализироваться", ar: "تفكير عميق وتركيز ذهني. وقت التعلم والتخصص" },
+  "Saturn-3": { he: "אחריות משפחתית ובגרות רגשית. חיזוק היסודות", en: "Family responsibility and emotional maturity. Strengthening foundations", ru: "Семейная ответственность и эмоциональная зрелость. Укрепление основ", ar: "مسؤولية عائلية ونضج عاطفي. تعزيز الأسس" },
+  "Saturn-4": { he: "ענווה אמיתית וביטחון מושכל. הנהגה דרך דוגמה", en: "True humility and grounded confidence. Leading by example", ru: "Истинное смирение и обоснованная уверенность. Лидерство примером", ar: "تواضع حقيقي وثقة راسخة. القيادة بالقدوة" },
+  "Saturn-5": { he: "שיטתיות וסדר מושלם. בניית מערכות שעובדות לאורך זמן", en: "Systematic perfection and order. Building systems that last", ru: "Систематическое совершенство и порядок. Создание систем, которые работают долго", ar: "كمال منهجي ونظام. بناء أنظمة تدوم" },
+  "Saturn-6": { he: "צדק ומאזן כרמי. מערכות יחסים עוברות מבחן של אמת", en: "Justice and karmic balance. Relationships face tests of truth", ru: "Справедливость и кармический баланс. Отношения проходят испытание правдой", ar: "عدالة وتوازن كرمي. العلاقات تواجه اختبار الحقيقة" },
+  "Saturn-7": { he: "עומק פסיכולוגי ועימות עם צללים. כוח דרך אמת", en: "Psychological depth and shadow confrontation. Strength through truth", ru: "Психологическая глубина и противостояние с тенями. Сила через правду", ar: "عمق نفسي ومواجهة الظلال. القوة من خلال الحقيقة" },
+  "Saturn-8": { he: "חכמה מעשית וראייה ארוכת טווח. מסע פנימי של צמיחה", en: "Practical wisdom and long-term vision. An inner journey of growth", ru: "Практическая мудрость и долгосрочное видение. Внутреннее путешествие роста", ar: "حكمة عملية ورؤية طويلة الأمد. رحلة داخلية من النمو" },
+  "Saturn-9": { he: "שיא הקריירה דורש מחויבות מלאה. הישגים דרך עמל", en: "Career peak demands full commitment. Achievement through dedication", ru: "Пик карьеры требует полной отдачи. Достижения через труд", ar: "ذروة المهنة تتطلب التزاماً كاملاً. الإنجاز من خلال التفاني" },
+  "Saturn-10": { he: "מבנה חדש לרעיונות מהפכניים. חדשנות דרך משמעת", en: "New structure for revolutionary ideas. Innovation through discipline", ru: "Новая структура для революционных идей. Инновации через дисциплину", ar: "هيكل جديد للأفكار الثورية. الابتكار من خلال الانضباط" },
+  "Saturn-11": { he: "גבולות רוחניים בריאים. חיבור עמוק בין עולם החומר לרוח", en: "Healthy spiritual boundaries. Deep connection between material and spirit", ru: "Здоровые духовные границы. Глубокая связь между материей и духом", ar: "حدود روحية صحية. ارتباط عميق بين المادة والروح" },
+};
+
+const INFLUENCE_LIFE_AREAS: Record<string, Record<Language, string>> = {
+  Venus: { he: "אהבה, יופי ומערכות יחסים", en: "Love, beauty, and relationships", ru: "Любовь, красота и отношения", ar: "الحب والجمال والعلاقات" },
+  Mars: { he: "אנרגיה, פעולה ומוטיבציה", en: "Energy, action, and motivation", ru: "Энергия, действие и мотивация", ar: "الطاقة والعمل والتحفيز" },
+  Jupiter: { he: "צמיחה, שפע והזדמנויות", en: "Growth, abundance, and opportunities", ru: "Рост, изобилие и возможности", ar: "النمو والوفرة والفرص" },
+  Saturn: { he: "משמעת, מבנה ואחריות", en: "Discipline, structure, and responsibility", ru: "Дисциплина, структура и ответственность", ar: "الانضباط والهيكل والمسؤولية" },
+};
+
+// Deterministic daily seed — same result for all users on the same day
+function getDailyInfluence(): PlanetaryInfluence {
+  const now = new Date();
+  const dayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  // Simple hash from date string
+  let hash = 0;
+  for (let i = 0; i < dayStr.length; i++) {
+    hash = ((hash << 5) - hash + dayStr.charCodeAt(i)) | 0;
+  }
+  hash = Math.abs(hash);
+
+  const planetIdx = hash % 4;
+  const signIdx = (hash >> 4) % 12;
+  const planet = PLANETS[planetIdx];
+  const key = `${planet.name}-${signIdx}`;
+
+  return {
+    planet: planet.name,
+    planet_symbol: planet.symbol,
+    zodiac_sign_index: signIdx,
+    influence_area: planet.area,
+    title: INFLUENCE_TITLES[key],
+    description: INFLUENCE_DESCRIPTIONS[key],
+    life_area: INFLUENCE_LIFE_AREAS[planet.name],
+  };
+}
+
 const ZodiacWheel = ({
   isMobile,
   hoveredMenuItem,
@@ -640,43 +780,12 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const [planetaryInfluence, setPlanetaryInfluence] = useState<PlanetaryInfluence | null>(null);
   const radius = isMobile ? 242 : 385;
   const iconSize = isMobile ? 42 : 66;
   const rulingIndex = getRulingSignIndex();
 
-  // Fetch planetary influence from edge function
-  useEffect(() => {
-    const cacheKey = `planetary_influence_${new Date().toISOString().split("T")[0]}`;
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-      try { setPlanetaryInfluence(JSON.parse(cached)); return; } catch {}
-    }
-
-    const fetchInfluence = async () => {
-      try {
-        const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/planetary-influence`;
-        const resp = await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          },
-          body: JSON.stringify({ language }),
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          setPlanetaryInfluence(data);
-          localStorage.setItem(cacheKey, JSON.stringify(data));
-        }
-      } catch (e) {
-        console.error("Failed to fetch planetary influence:", e);
-      }
-    };
-    fetchInfluence();
-  }, []);
-
-  const influencedIndex = planetaryInfluence?.zodiac_sign_index ?? rulingIndex;
+  const planetaryInfluence = useMemo(() => getDailyInfluence(), []);
+  const influencedIndex = planetaryInfluence.zodiac_sign_index;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
   const isCompatMode = hoveredMenuItem === 2;
