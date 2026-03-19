@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Loader2, Share2, Copy, Check, Download, Image } from "lucide-react";
 import html2canvas from "html2canvas";
