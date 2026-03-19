@@ -2584,16 +2584,6 @@ const HeroSection = () => {
         {/* ══════════════════════════════════════════════ */}
         {isMobile ? (
           <div className="flex flex-col items-center gap-3">
-            {/* Brand */}
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="font-heading text-4xl gold-gradient-text tracking-wider text-center"
-              style={{ marginTop: "-30px" }}
-            >
-              ASTROLOGAI
-            </motion.h1>
 
             {/* Headline */}
             <motion.h2
@@ -2749,17 +2739,6 @@ const HeroSection = () => {
           /* ── DESKTOP LAYOUT (unchanged) ────────────── */
           /* ══════════════════════════════════════════════ */
           <>
-            {/* Brand name */}
-            <motion.div
-              initial={{ opacity: 0, y: -30, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-              className="text-center mb-6" style={{ marginTop: "-30px" }}
-            >
-              <h1 className="font-heading text-7xl lg:text-8xl gold-gradient-text tracking-wider">
-                ASTROLOGAI
-              </h1>
-            </motion.div>
 
             {/* Headline */}
             <motion.div
