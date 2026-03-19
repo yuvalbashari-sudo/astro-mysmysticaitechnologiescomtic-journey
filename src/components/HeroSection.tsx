@@ -725,8 +725,9 @@ const ZodiacWheel = ({
           const isHovered = hoveredSign === i;
           const meta = ZODIAC_META[language][i];
 
-          const isRuling = i === rulingIndex;
+          const isRuling = i === influencedIndex;
           const rulingIconSize = isRuling ? (isMobile ? 52 : 80) : iconSize;
+          const planetColor = planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%";
 
           return (
             <motion.div
