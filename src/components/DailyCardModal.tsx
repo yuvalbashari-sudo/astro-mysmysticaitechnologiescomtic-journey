@@ -351,7 +351,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             <MysticalReadingAtmosphere theme="dailyCard" active={phase !== "video"} />
-          >
             {phase !== "video" && <Particles />}
 
             {/* Video preload removed — using inline video in video phase */}
