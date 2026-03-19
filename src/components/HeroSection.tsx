@@ -1381,6 +1381,7 @@ const ZodiacWheel = ({
           </div>
         </div>
       </motion.div>
+    </motion.div>
   );
 };
 
