@@ -2590,6 +2590,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
               className="font-heading text-4xl gold-gradient-text tracking-wider text-center"
+              style={{ marginTop: "-30px" }}
             >
               ASTROLOGAI
             </motion.h1>
