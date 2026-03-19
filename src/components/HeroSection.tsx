@@ -854,32 +854,32 @@ const ZodiacWheel = ({
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
             >
-              {/* Permanent ruling sign aura */}
+              {/* Permanent planetary influence aura */}
               {isRuling && (
                 <>
                   <motion.div
                     className="absolute rounded-full pointer-events-none"
                     style={{
                       inset: -10,
-                      border: "1px solid hsl(var(--gold) / 0.25)",
-                      background: "radial-gradient(circle, hsl(var(--gold) / 0.06), transparent 70%)",
+                      border: `1px solid hsl(${planetColor} / 0.3)`,
+                      background: `radial-gradient(circle, hsl(${planetColor} / 0.08), transparent 70%)`,
                     }}
                     animate={{
                       boxShadow: [
-                        "0 0 15px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.04)",
-                        "0 0 30px hsl(43 80% 55% / 0.2), inset 0 0 20px hsl(43 80% 55% / 0.08)",
-                        "0 0 15px hsl(43 80% 55% / 0.1), inset 0 0 10px hsl(43 80% 55% / 0.04)",
+                        `0 0 15px hsl(${planetColor} / 0.12), inset 0 0 10px hsl(${planetColor} / 0.04)`,
+                        `0 0 30px hsl(${planetColor} / 0.25), inset 0 0 20px hsl(${planetColor} / 0.1)`,
+                        `0 0 15px hsl(${planetColor} / 0.12), inset 0 0 10px hsl(${planetColor} / 0.04)`,
                       ],
                       scale: [1, 1.08, 1],
                     }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   />
-                  {/* Second outer ring pulse */}
+                  {/* Outer ring pulse */}
                   <motion.div
                     className="absolute rounded-full pointer-events-none"
                     style={{
                       inset: -18,
-                      border: "1px solid hsl(var(--gold) / 0.1)",
+                      border: `1px solid hsl(${planetColor} / 0.12)`,
                     }}
                     animate={{
                       opacity: [0.3, 0.7, 0.3],
@@ -887,7 +887,33 @@ const ZodiacWheel = ({
                     }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                   />
-                  {/* Ruling sign particles */}
+                  {/* Planet symbol indicator */}
+                  <motion.div
+                    className="absolute pointer-events-none flex items-center justify-center"
+                    style={{
+                      width: isMobile ? 20 : 26,
+                      height: isMobile ? 20 : 26,
+                      right: isMobile ? -6 : -8,
+                      top: isMobile ? -6 : -8,
+                      borderRadius: "50%",
+                      background: `linear-gradient(135deg, hsl(${planetColor} / 0.25), hsl(${planetColor} / 0.1))`,
+                      border: `1px solid hsl(${planetColor} / 0.4)`,
+                      fontSize: isMobile ? 10 : 13,
+                      color: `hsl(${planetColor})`,
+                      zIndex: 10,
+                    }}
+                    animate={{
+                      boxShadow: [
+                        `0 0 6px hsl(${planetColor} / 0.2)`,
+                        `0 0 14px hsl(${planetColor} / 0.4)`,
+                        `0 0 6px hsl(${planetColor} / 0.2)`,
+                      ],
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {planetaryInfluence.planet_symbol}
+                  </motion.div>
+                  {/* Rising particles */}
                   {[0, 1, 2].map((pi) => (
                     <motion.div
                       key={pi}
@@ -897,7 +923,7 @@ const ZodiacWheel = ({
                         height: 3,
                         left: "50%",
                         top: "50%",
-                        background: "hsl(var(--gold))",
+                        background: `hsl(${planetColor})`,
                       }}
                       animate={{
                         y: [0, -20, -35],
