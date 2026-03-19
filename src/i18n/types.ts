@@ -50,6 +50,7 @@ export type TranslationKeys = {
   nav_palm_desc: string;
   nav_palm_cta: string;
   zodiac_ruling_sign: string;
+  zodiac_planetary_influence: string;
 
   // About
   about_discover: string;

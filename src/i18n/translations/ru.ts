@@ -38,6 +38,7 @@ export const ru: TranslationKeys = {
   nav_palm_desc: "Ваша ладонь рассказывает историю — линии жизни, сердца и судьбы ждут раскрытия",
   nav_palm_cta: "Раскройте историю",
   zodiac_ruling_sign: "Текущий знак:",
+  zodiac_planetary_influence: "Текущее планетарное влияние",
 
   about_discover: "✦ Откройте свой путь ✦",
   about_title: "Мистический опыт ASTROLOGAI",
