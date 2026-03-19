@@ -445,6 +445,34 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
 /* ── Zodiac Wheel ──────────────────────────────────── */
 const ZODIAC_ICONS = [ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon, libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon];
+
+const ZODIAC_META: Record<Language, { element: string; keyword: string }[]> = {
+  he: [
+    { element: "אש", keyword: "יוזמה" }, { element: "אדמה", keyword: "יציבות" }, { element: "אוויר", keyword: "תקשורת" },
+    { element: "מים", keyword: "רגש" }, { element: "אש", keyword: "יצירתיות" }, { element: "אדמה", keyword: "ניתוח" },
+    { element: "אוויר", keyword: "איזון" }, { element: "מים", keyword: "עוצמה" }, { element: "אש", keyword: "חופש" },
+    { element: "אדמה", keyword: "שאיפה" }, { element: "אוויר", keyword: "חזון" }, { element: "מים", keyword: "אינטואיציה" },
+  ],
+  en: [
+    { element: "Fire", keyword: "Initiative" }, { element: "Earth", keyword: "Stability" }, { element: "Air", keyword: "Communication" },
+    { element: "Water", keyword: "Emotion" }, { element: "Fire", keyword: "Creativity" }, { element: "Earth", keyword: "Analysis" },
+    { element: "Air", keyword: "Balance" }, { element: "Water", keyword: "Intensity" }, { element: "Fire", keyword: "Freedom" },
+    { element: "Earth", keyword: "Ambition" }, { element: "Air", keyword: "Vision" }, { element: "Water", keyword: "Intuition" },
+  ],
+  ru: [
+    { element: "Огонь", keyword: "Инициатива" }, { element: "Земля", keyword: "Стабильность" }, { element: "Воздух", keyword: "Общение" },
+    { element: "Вода", keyword: "Эмоция" }, { element: "Огонь", keyword: "Творчество" }, { element: "Земля", keyword: "Анализ" },
+    { element: "Воздух", keyword: "Баланс" }, { element: "Вода", keyword: "Мощь" }, { element: "Огонь", keyword: "Свобода" },
+    { element: "Земля", keyword: "Амбиция" }, { element: "Воздух", keyword: "Видение" }, { element: "Вода", keyword: "Интуиция" },
+  ],
+  ar: [
+    { element: "نار", keyword: "مبادرة" }, { element: "أرض", keyword: "ثبات" }, { element: "هواء", keyword: "تواصل" },
+    { element: "ماء", keyword: "عاطفة" }, { element: "نار", keyword: "إبداع" }, { element: "أرض", keyword: "تحليل" },
+    { element: "هواء", keyword: "توازن" }, { element: "ماء", keyword: "قوة" }, { element: "نار", keyword: "حرية" },
+    { element: "أرض", keyword: "طموح" }, { element: "هواء", keyword: "رؤية" }, { element: "ماء", keyword: "حدس" },
+  ],
+};
+
 const ZODIAC_WHEEL: Record<Language, { name: string; en: string }[]> = {
   he: [
     { name: "טלה", en: "Aries" }, { name: "שור", en: "Taurus" }, { name: "תאומים", en: "Gemini" },
