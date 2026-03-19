@@ -2004,12 +2004,12 @@ const HeroSection = () => {
   const crystalRef = useRef<HTMLDivElement>(null);
 
   const menuItems = useMemo(() => [
-    { icon: Star, label: t.hero_menu_forecast, angle: -75 },
+    { icon: Sparkles, label: t.hero_menu_compatibility, angle: -75 },
     { icon: Moon, label: t.hero_menu_rising, angle: -45 },
-    { icon: Sparkles, label: t.hero_menu_compatibility, angle: -15 },
-    { icon: Eye, label: t.hero_menu_tarot, angle: 15 },
+    { icon: Star, label: t.hero_menu_forecast, angle: -15 },
+    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", angle: 15 },
     { icon: Hand, label: t.hero_menu_palm, angle: 45 },
-    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", angle: 75 },
+    { icon: Eye, label: t.hero_menu_tarot, angle: 75 },
   ], [t]);
 
   // Mouse tracking
