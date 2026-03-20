@@ -2864,7 +2864,7 @@ const HeroSection = () => {
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      className="font-body transition-colors duration-300 text-[15px] font-semibold"
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
