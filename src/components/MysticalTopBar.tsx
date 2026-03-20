@@ -108,7 +108,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         <div ref={langRef} className="relative">
           <motion.button
             onClick={() => setLangOpen(!langOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md font-body text-xs transition-all"
+            className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
             style={{
               background: "hsl(var(--deep-blue-light) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.15)",
