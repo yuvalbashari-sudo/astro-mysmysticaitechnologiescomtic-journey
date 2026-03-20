@@ -2781,21 +2781,13 @@ const HeroSection = () => {
             {/* Spacer for crystal ball scene (now in fixed layer) — pointer-events-none to allow clicking tabs behind */}
             <div style={{ minHeight: "520px", marginTop: "20px", pointerEvents: "none" }} />
 
-            {/* Primary CTA + Social Proof */}
+            {/* CTA moved to fixed layer */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 2.2 }}
               className="text-center mt-2"
             >
-              <motion.button
-                onClick={() => setTarotOpen(true)}
-                className="btn-gold rounded-full font-heading text-base tracking-wider px-12 py-4"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                {t.hero_cta_personal}
-              </motion.button>
               <p className="text-muted-foreground/40 font-body text-xs mt-3">
                 ✦ {t.hero_social_proof} ✦
               </p>
