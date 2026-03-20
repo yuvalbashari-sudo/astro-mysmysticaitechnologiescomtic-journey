@@ -2327,7 +2327,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "315px", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "322px", marginLeft: "10px" }}
           >
             {/* Internal glow — contained inside ball */}
             <motion.div
@@ -2489,8 +2489,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 100px)",
-              maskImage: "radial-gradient(ellipse 300px 260px at 50% calc(50% + 160px), transparent 38%, rgba(0,0,0,0.4) 46%, black 54%, black 72%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 300px 260px at 50% calc(50% + 160px), transparent 38%, rgba(0,0,0,0.4) 46%, black 54%, black 72%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 300px 260px at 50% calc(50% + 167px), transparent 36%, rgba(0,0,0,0.45) 44%, black 52%, black 72%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 300px 260px at 50% calc(50% + 167px), transparent 36%, rgba(0,0,0,0.45) 44%, black 52%, black 72%, transparent 100%)",
             }}
           />
         </div>
