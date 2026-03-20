@@ -1,13 +1,7 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import CinematicModalShell from "@/components/CinematicModalShell";
+import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import { useReadingContext } from "@/contexts/ReadingContext";
 
@@ -32,27 +26,43 @@ const AstrologerIntroModal = ({ isOpen, onClose }: AstrologerIntroModalProps) =>
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <DialogContent dir="rtl" className="max-w-md border-gold/20 bg-background p-6 sm:p-7">
-          <DialogHeader className="space-y-3 text-right sm:text-right">
-            <DialogTitle className="font-heading text-2xl text-foreground">
-              שיחה עם האסטרולוגית
-            </DialogTitle>
-            <DialogDescription className="font-body text-base leading-relaxed text-muted-foreground">
-              קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית
-            </DialogDescription>
-          </DialogHeader>
+      <CinematicModalShell isOpen={isOpen} onClose={onClose}>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-8 md:p-12 text-center"
+          dir="rtl"
+        >
+          <motion.div
+            className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center"
+            style={{
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)",
+              border: "1px solid hsl(var(--gold) / 0.2)",
+            }}
+            animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            <Sparkles className="w-7 h-7 text-gold" />
+          </motion.div>
 
-          <DialogFooter className="mt-6 gap-3 sm:flex-row-reverse sm:justify-start sm:space-x-0">
-            <Button type="button" onClick={handleStart} className="w-full sm:w-auto">
-              התחילו עכשיו
-            </Button>
-            <Button type="button" variant="outline" onClick={onClose} className="w-full sm:w-auto">
-              סגירה
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">
+            שיחה עם האסטרולוגית
+          </h2>
+          <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">
+            קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית
+          </p>
+
+          <motion.button
+            onClick={handleStart}
+            className="btn-gold font-body flex items-center justify-center gap-2 mx-auto"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Sparkles className="w-4 h-4" />
+            התחילו עכשיו
+          </motion.button>
+        </motion.div>
+      </CinematicModalShell>
 
       <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
     </>

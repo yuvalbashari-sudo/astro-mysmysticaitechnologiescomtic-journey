@@ -151,10 +151,8 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
                 </AnimatePresence>
               </div>
             )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        </div>
+    </CinematicModalShell>
   );
 };
 

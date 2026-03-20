@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, CheckCircle, Sparkles } from "lucide-react";
+import CinematicModalShell from "@/components/CinematicModalShell";
+import { motion } from "framer-motion";
+import { Send, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { useT } from "@/i18n/LanguageContext";
