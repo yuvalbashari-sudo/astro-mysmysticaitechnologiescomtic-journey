@@ -123,12 +123,12 @@ const FloatingCard = ({
   totalCards: number;
   isMobile: boolean;
 }) => {
-  const cardW = isMobile ? 90 : 150;
+  const cardW = isMobile ? 70 : 120;
   const cardH = cardW * 1.55;
-  const spread = isMobile ? 52 : 88;
+  const spread = isMobile ? 42 : 72;
   const centerOffset = ((totalCards - 1) / 2) * spread;
   const x = index * spread - centerOffset;
-  const baseRotation = (index - (totalCards - 1) / 2) * 3.5;
+  const baseRotation = (index - (totalCards - 1) / 2) * 4;
 
   return (
     <motion.div
