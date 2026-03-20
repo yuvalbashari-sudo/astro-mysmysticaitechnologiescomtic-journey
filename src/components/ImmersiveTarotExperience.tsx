@@ -675,7 +675,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           </AnimatePresence>
 
           {/* ── Phase Content ── */}
-          <div className="absolute inset-0 z-[92] flex items-center justify-center pointer-events-none">
+          <div className={`absolute inset-0 z-[92] flex items-center justify-center pointer-events-none ${phase === "interpretation" ? "!block" : ""}`}>
             <AnimatePresence mode="wait">
               {/* ─── PHASE 1: Question Selection ─── */}
               {phase === "question" && (
