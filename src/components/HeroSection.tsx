@@ -1037,15 +1037,13 @@ const ZodiacWheel = ({
                         className="text-[13px] font-semibold tracking-wide"
                         style={{ color: "hsl(var(--gold))" }}
                       >
-                        {sign.name}
+                        {sign.name} – {meta.keyword} {ELEMENT_EMOJI[ELEMENT_TYPES[i]]}
                       </div>
                       <div
                         className="flex items-center justify-center gap-2 mt-0.5 text-[10px] tracking-widest uppercase"
                         style={{ color: "hsl(var(--gold) / 0.6)" }}
                       >
                         <span>{meta.element}</span>
-                        <span style={{ color: "hsl(var(--gold) / 0.3)" }}>·</span>
-                        <span>{meta.keyword}</span>
                       </div>
                     </div>
                     <div
