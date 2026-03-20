@@ -2800,15 +2800,15 @@ const HeroSection = () => {
             >
               <div className="text-center">
                 <div
-                  className="text-[14px] font-heading font-bold tracking-wide"
+                  className="text-[22px] font-heading font-bold tracking-wide leading-tight"
                   style={{
                     color: "#fff",
-                    textShadow: "0 0 6px rgba(220, 50, 50, 0.6), 0 0 12px rgba(220, 50, 50, 0.35), 0 0 24px rgba(220, 50, 50, 0.15)",
+                    textShadow: "0 0 8px rgba(220, 50, 50, 0.6), 0 0 16px rgba(220, 50, 50, 0.35), 0 0 32px rgba(220, 50, 50, 0.15)",
                   }}
                 >
                   {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
                 </div>
-                <div className="text-[10px] font-body mt-1" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                <div className="text-[13px] font-body mt-1.5" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
                   {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
                 </div>
                 <motion.div
