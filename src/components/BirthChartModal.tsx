@@ -524,7 +524,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       disabled={downloading}
                       className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
                     >
-                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Image className="w-4 h-4" />}
+                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
                       {t.birth_chart_save_image}
                     </button>
                     <button
