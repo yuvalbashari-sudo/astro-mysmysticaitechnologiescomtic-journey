@@ -641,7 +641,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Close button ── */}
           <motion.button
-            className="fixed top-5 left-5 z-[95] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer"
+            className="fixed top-5 left-5 z-[95] w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer"
             style={{
               background: "hsl(var(--deep-blue) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.2)",
@@ -650,7 +650,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            <X className="w-4 h-4 text-gold/70" />
+            <X className="w-6 h-6 text-gold/70" />
           </motion.button>
 
           {/* ── Back button ── */}
