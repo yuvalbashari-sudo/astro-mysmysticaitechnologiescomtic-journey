@@ -2828,7 +2828,9 @@ const HeroSection = () => {
               type="button"
               className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
               onClick={() => setTarotOpen(true)}
-              whileHover={{ scale: 1.07, x: -6 }}
+              onMouseEnter={() => { setHoveredTeaser("right"); setHoveredItem(4); }}
+              onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
