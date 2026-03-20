@@ -363,9 +363,9 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       }}
     >
       {/* Pure media only — dual videos for seamless crossfade */}
-      <video ref={videoARef} autoPlay loop muted playsInline src="/videos/cosmic-ball.mp4"
+      <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted loop playsInline src="/videos/cosmic-ball.mp4"
+      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
       {/* Soft curved glass highlight — upper left */}
