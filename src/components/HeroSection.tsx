@@ -2407,6 +2407,7 @@ const HeroSection = () => {
         >
           {menuItems.map((item, i) => {
             const itemColor = ITEM_COLORS[i];
+            const isHovered = hoveredItem === i;
             return (
               <motion.div
                 key={i}
@@ -2416,31 +2417,54 @@ const HeroSection = () => {
                 transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
                 onMouseEnter={() => setHoveredItem(i)}
                 onMouseLeave={() => setHoveredItem(null)}
-                whileHover={{ scale: 1.06, y: -2 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.08, y: -3 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
               >
                 <motion.div
-                  className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
+                  className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
                   style={{
                     borderWidth: "1px", borderStyle: "solid",
-                    borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
-                    background: hoveredItem === i ? `${itemColor.glow}18` : "hsl(var(--deep-blue) / 0.4)",
-                    boxShadow: hoveredItem === i
-                      ? `0 0 24px ${itemColor.glow}55, 0 0 48px ${itemColor.glow}18, inset 0 1px 0 hsl(var(--gold) / 0.08)`
-                      : "inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                    background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                    boxShadow: isHovered
+                      ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                      : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
                   }}
-                  animate={{ opacity: [0.92, 1, 0.95, 1, 0.92] }}
-                  transition={{ duration: 6 + i * 0.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                 >
                   <div>
-                    <item.icon className={`flex-shrink-0 transition-colors duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.7)" }} />
+                    <item.icon
+                      className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`}
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
                   </div>
-                  <span className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}>
+                  <span
+                    className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`}
+                    style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                  >
                     {item.label}
                   </span>
-                  {hoveredItem === i && (
-                    <motion.div className="absolute -inset-1.5 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${itemColor.glow}10, transparent 70%)` }} initial={{ opacity: 0 }} animate={{ opacity: [0, 0.6, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                  {/* Hover underline glow */}
+                  {isHovered && (
+                    <motion.div
+                      className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                      style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 0.8, scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                  {isHovered && (
+                    <motion.div
+                      className="absolute -inset-2 rounded-full pointer-events-none"
+                      style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 0.6, 0.3] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
                   )}
                 </motion.div>
               </motion.div>
