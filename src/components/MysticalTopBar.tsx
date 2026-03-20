@@ -120,7 +120,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             aria-expanded={langOpen}
             aria-haspopup="listbox"
           >
-            <Globe className="w-3 h-3" aria-hidden="true" />
+            <Globe className="w-6 h-6" aria-hidden="true" />
             <span>{languageConfig[language].label}</span>
           </motion.button>
 
