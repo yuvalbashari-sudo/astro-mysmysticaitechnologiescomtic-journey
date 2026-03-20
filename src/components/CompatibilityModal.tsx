@@ -133,86 +133,137 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   // Desktop 3-zone result
   const isDesktopResult = !isMobile && !!matchInfo;
+  const isDesktopInput = !isMobile && !matchInfo && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput}>
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
-                  <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
-                    <Heart className="w-7 h-7 text-crimson-light" />
+                isDesktopInput ? (
+                  /* ── Desktop: form on RIGHT side ── */
+                  <div className="absolute inset-0" key="input-desktop">
+                    <motion.div
+                      className="absolute pointer-events-auto overflow-y-auto scrollbar-hide"
+                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(400px, 28vw)", maxHeight: "80vh" }}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div className="text-center">
+                        <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
+                          <Heart className="w-6 h-6 text-crimson-light" />
+                        </motion.div>
+                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.compat_title}</h2>
+                        <p className="text-foreground/70 font-body text-sm mb-6 max-w-sm mx-auto leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.compat_desc}</p>
+
+                        {/* Person 1 */}
+                        <div className="mb-4 rounded-xl p-4" style={{ background: "hsl(var(--gold) / 0.03)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
+                          <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
+                          <div className="flex flex-col gap-2 mb-2">
+                            <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
+                            <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                              <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
+                            </select>
+                          </div>
+                          <div className="flex gap-2">
+                            <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                            <div className="relative">
+                              <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
+                              <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                            </div>
+                          </div>
+                          {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
+                          <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm mt-2" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                            <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                          </select>
+                        </div>
+
+                        {/* Person 2 */}
+                        <div className="mb-5 rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.03)", border: "1px solid hsl(var(--crimson) / 0.1)", backdropFilter: "blur(8px)" }}>
+                          <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
+                          <div className="flex flex-col gap-2 mb-2">
+                            <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
+                            <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                              <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
+                            </select>
+                          </div>
+                          <div className="flex gap-2">
+                            <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                            <div className="relative">
+                              <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
+                              <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                            </div>
+                          </div>
+                          {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
+                          <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm mt-2" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                            <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                          </select>
+                        </div>
+
+                        <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
+                      </div>
+                    </motion.div>
+                  </div>
+                ) : (
+                  /* ── Mobile: centered form ── */
+                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
+                    <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
+                      <Heart className="w-7 h-7 text-crimson-light" />
+                    </motion.div>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.compat_title}</h2>
+                    <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.compat_desc}</p>
+
+                    {/* Person 1 */}
+                    <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--gold) / 0.03)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                      <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
+                      <div className="flex flex-col sm:flex-row gap-2 mb-2">
+                        <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
+                        <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                          <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
+                        </select>
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                        <div className="relative">
+                          <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
+                          <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                        </div>
+                      </div>
+                      {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
+                      <div className="mt-2">
+                        <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                          <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Person 2 */}
+                    <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.03)", border: "1px solid hsl(var(--crimson) / 0.1)" }}>
+                      <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
+                      <div className="flex flex-col sm:flex-row gap-2 mb-2">
+                        <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
+                        <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                          <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
+                        </select>
+                      </div>
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
+                        <div className="relative">
+                          <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
+                          <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
+                        </div>
+                      </div>
+                      {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
+                      <div className="mt-2">
+                        <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                          <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
                   </motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.compat_title}</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.compat_desc}</p>
-
-                  {/* Person 1 */}
-                  <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--gold) / 0.03)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
-                    <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                      <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
-                      <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
-                        <option value="me">{t.compat_relation_me}</option>
-                        <option value="partner">{t.compat_relation_partner}</option>
-                        <option value="friend">{t.compat_relation_friend}</option>
-                        <option value="family">{t.compat_relation_family}</option>
-                        <option value="other">{t.compat_relation_other}</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
-                      <div className="relative">
-                        <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
-                        <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
-                      </div>
-                    </div>
-                    {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
-                    <div className="mt-2">
-                      <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
-                        <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option>
-                        <option value="woman">{t.compat_gender_woman}</option>
-                        <option value="man">{t.compat_gender_man}</option>
-                        <option value="nonbinary">{t.compat_gender_nonbinary}</option>
-                        <option value="other">{t.compat_gender_other}</option>
-                        <option value="prefer_not">{t.compat_gender_prefer_not}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Person 2 */}
-                  <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.03)", border: "1px solid hsl(var(--crimson) / 0.1)" }}>
-                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
-                    <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                      <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
-                      <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
-                        <option value="me">{t.compat_relation_me}</option>
-                        <option value="partner">{t.compat_relation_partner}</option>
-                        <option value="friend">{t.compat_relation_friend}</option>
-                        <option value="family">{t.compat_relation_family}</option>
-                        <option value="other">{t.compat_relation_other}</option>
-                      </select>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
-                      <div className="relative">
-                        <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
-                        <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
-                      </div>
-                    </div>
-                    {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
-                    <div className="mt-2">
-                      <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
-                        <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option>
-                        <option value="woman">{t.compat_gender_woman}</option>
-                        <option value="man">{t.compat_gender_man}</option>
-                        <option value="nonbinary">{t.compat_gender_nonbinary}</option>
-                        <option value="other">{t.compat_gender_other}</option>
-                        <option value="prefer_not">{t.compat_gender_prefer_not}</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
-                </motion.div>
+                )
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                   <MysticalOnboarding onComplete={handleOnboardingComplete} />

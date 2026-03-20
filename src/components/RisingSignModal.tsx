@@ -83,27 +83,59 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   };
 
   const isDesktopResult = !isMobile && !!signInfo;
+  const isDesktopInput = !isMobile && !signInfo && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput}>
             <AnimatePresence mode="wait">
               {!signInfo && !isLoading ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
-                  <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Clock className="w-7 h-7 text-gold" /></motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.rising_title}</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.rising_desc}</p>
-                  <div className="max-w-xs mx-auto space-y-5 mb-8">
-                    <div>
-                      <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
-                      <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}</label>
-                      <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
-                    </div>
+                isDesktopInput ? (
+                  /* ── Desktop: form on RIGHT side ── */
+                  <div className="absolute inset-0" key="input-desktop">
+                    <motion.div
+                      className="absolute pointer-events-auto"
+                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(340px, 24vw)" }}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div className="text-center">
+                        <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Clock className="w-6 h-6 text-gold" /></motion.div>
+                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.rising_title}</h2>
+                        <p className="text-foreground/70 font-body text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.rising_desc}</p>
+                        <div className="space-y-4 mb-6">
+                          <div>
+                            <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
+                            <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                          </div>
+                          <div>
+                            <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}</label>
+                            <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                          </div>
+                        </div>
+                        <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
+                      </div>
+                    </motion.div>
                   </div>
-                  <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
-                </motion.div>
+                ) : (
+                  /* ── Mobile: centered form ── */
+                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
+                    <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Clock className="w-7 h-7 text-gold" /></motion.div>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.rising_title}</h2>
+                    <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.rising_desc}</p>
+                    <div className="max-w-xs mx-auto space-y-5 mb-8">
+                      <div>
+                        <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
+                        <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                      </div>
+                      <div>
+                        <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}</label>
+                        <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                      </div>
+                    </div>
+                    <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
+                  </motion.div>
+                )
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : signInfo ? (
