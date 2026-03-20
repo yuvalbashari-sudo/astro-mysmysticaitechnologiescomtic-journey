@@ -39,9 +39,16 @@ const ELEMENT_ICONS: Record<string, typeof Flame> = {
   "Earth": Mountain,
 };
 
-const MysticalDashboard = () => {
+interface MysticalDashboardProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardProps = {}) => {
   const t = useT();
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = externalOpen ?? internalOpen;
+  const closePanel = () => { setInternalOpen(false); onClose?.(); };
   const [profile, setProfile] = useState<MysticalProfileData | null>(null);
 
   useEffect(() => {
