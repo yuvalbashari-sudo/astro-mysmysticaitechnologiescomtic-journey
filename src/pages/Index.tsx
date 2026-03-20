@@ -43,7 +43,7 @@ const Index = () => {
         <main id="main-content" className="relative z-10">
           <DailyRitualSection />
         </main>
-        <MysticalDashboard />
+        <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
       </div>
 
       <ReadingsHistoryModal
