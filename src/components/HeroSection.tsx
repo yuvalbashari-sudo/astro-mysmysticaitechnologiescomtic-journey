@@ -12,6 +12,7 @@ import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmReadingModal from "./PalmReadingModal";
 import DailyCardModal from "./DailyCardModal";
+import ZodiacSignModal from "./ZodiacSignModal";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
