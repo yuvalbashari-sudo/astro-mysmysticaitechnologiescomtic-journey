@@ -2017,10 +2017,10 @@ const HeroSection = () => {
   // Calculate tab positions: two arced columns on left/right sides
   const getTabPosition = useCallback((side: "left" | "right", idx: number, mobile: boolean) => {
     const sideSign = side === "left" ? -1 : 1;
-    const horizontalDist = mobile ? 165 : 300; // distance from center (increased for larger tabs)
-    const verticalSpacing = mobile ? 62 : 78; // spacing between tabs (~30% more)
-    const arcCurve = mobile ? 18 : 30; // how much the arc curves inward
-    const verticalOffset = mobile ? 30 : 20; // push tabs down from center to avoid face
+    const horizontalDist = mobile ? 185 : 340; // distance from center (~12% more breathing space)
+    const verticalSpacing = mobile ? 62 : 78;
+    const arcCurve = mobile ? 20 : 34;
+    const verticalOffset = mobile ? 30 : 20;
 
     // Soft arc: middle tab is closest to ball, top and bottom curve outward
     const arcOffset = Math.abs(idx - 1) * arcCurve;
@@ -2295,14 +2295,14 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 125px)" : "calc(5vh + 165px)" }}>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 150px)" : "calc(5vh + 190px)" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "175px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "200px" }}
           >
             {/* Aura glow */}
             <motion.div
@@ -2357,7 +2357,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "190px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "215px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
@@ -2567,8 +2567,8 @@ const HeroSection = () => {
         className="absolute inset-x-0 flex justify-center pointer-events-none z-[13] px-4"
         style={{
           top: isMobile
-            ? `min(calc(50% + 335px + 70px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
-            : `calc(50% + 370px + 70px)`,
+            ? `min(calc(50% + 335px + 55px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
+            : `calc(50% + 370px + 55px)`,
         }}
       >
         <motion.button
