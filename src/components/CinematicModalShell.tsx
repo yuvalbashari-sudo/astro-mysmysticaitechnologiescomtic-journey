@@ -10,6 +10,8 @@ interface Props {
   children: ReactNode;
   scrollRef?: React.RefObject<HTMLDivElement>;
   fullscreen?: boolean;
+  /** When true, content expands to ~92% width instead of narrow column */
+  wide?: boolean;
 }
 
 /**
