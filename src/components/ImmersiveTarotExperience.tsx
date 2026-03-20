@@ -231,10 +231,10 @@ const FloatingCard = ({
               alt={showFront ? card.hebrewName : ""}
               className="w-full h-full object-cover"
               style={{
-                imageRendering: "auto",
+                imageRendering: "-webkit-optimize-contrast" as any,
                 backfaceVisibility: "hidden",
                 transform: `translateZ(0)${showFront ? " scaleX(-1)" : ""}`,
-                filter: "contrast(1.08) saturate(1.05)",
+                filter: "contrast(1.08) saturate(1.05) drop-shadow(0 10px 25px rgba(0,0,0,0.5))",
                 willChange: "transform",
               }}
             />
