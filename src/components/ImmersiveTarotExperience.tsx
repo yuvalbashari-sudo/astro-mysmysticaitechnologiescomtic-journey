@@ -108,44 +108,30 @@ async function streamTarotReading(
 
 /* ── (removed: EnergyParticle and MysticalTable — clean scene) ── */
 
-/* ── Floating Card (cinematic, grounded) ──────────────── */
+/* ── Premium Floating Card ──────────────── */
 const FloatingCard = ({
-  card,
-  index,
-  isSelected,
-  isFlipped,
-  onClick,
-  totalCards,
-  isMobile,
-  showBurst,
+  card, index, isSelected, isFlipped, onClick, totalCards, isMobile, showBurst,
 }: {
-  card: TarotCard;
-  index: number;
-  isSelected: boolean;
-  isFlipped: boolean;
-  onClick: () => void;
-  totalCards: number;
-  isMobile: boolean;
-  showBurst: boolean;
+  card: TarotCard; index: number; isSelected: boolean; isFlipped: boolean;
+  onClick: () => void; totalCards: number; isMobile: boolean; showBurst: boolean;
 }) => {
   const mid = (totalCards - 1) / 2;
   const distFromCenter = Math.abs(index - mid);
   const depthScale = 1 - distFromCenter * 0.025;
-  const cardW = (isMobile ? 58 : 100) * depthScale;
-  const cardH = cardW * 1.55;
-  const spread = isMobile ? 36 : 58;
+  const cardW = (isMobile ? 62 : 110) * depthScale;
+  const cardH = cardW * 1.54;
+  const spread = isMobile ? 38 : 62;
   const centerOffset = mid * spread;
   const x = index * spread - centerOffset;
-  const arcY = distFromCenter * distFromCenter * (isMobile ? 4 : 6);
-  const baseRotation = (index - mid) * (isMobile ? 5 : 4);
+  const arcY = distFromCenter * distFromCenter * (isMobile ? 3.5 : 5);
+  const baseRotation = (index - mid) * (isMobile ? 4.5 : 3.5);
   const floatDelay = index * 0.4;
 
-  // Swap image at midpoint of flip for reliable reveal
   const [showFront, setShowFront] = useState(false);
 
   useEffect(() => {
     if (isFlipped && !showFront) {
-      const timer = setTimeout(() => setShowFront(true), 350);
+      const timer = setTimeout(() => setShowFront(true), 320);
       return () => clearTimeout(timer);
     }
   }, [isFlipped, showFront]);
@@ -162,17 +148,17 @@ const FloatingCard = ({
       }}
       initial={{ opacity: 0, y: 100, rotateZ: baseRotation * 2 }}
       animate={{
-        opacity: isFlipped && !isSelected ? 0.5 : 1,
+        opacity: isFlipped && !isSelected ? 0.45 : 1,
         x,
-        y: isSelected ? -(isMobile ? 60 : 90) : arcY,
+        y: isSelected ? -(isMobile ? 65 : 95) : arcY,
         rotateZ: isSelected ? 0 : baseRotation,
-        scale: isSelected ? (isMobile ? 1.3 : 1.35) : depthScale,
+        scale: isSelected ? (isMobile ? 1.35 : 1.4) : depthScale,
       }}
       transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       whileHover={!isSelected ? {
-        y: arcY - (isMobile ? 12 : 16),
-        scale: depthScale * 1.06,
-        transition: { duration: 0.25, ease: "easeOut" }
+        y: arcY - (isMobile ? 14 : 18),
+        scale: depthScale * 1.07,
+        transition: { duration: 0.25, ease: "easeOut" },
       } : {}}
       onClick={!isSelected ? onClick : undefined}
     >
@@ -185,48 +171,38 @@ const FloatingCard = ({
         <motion.div
           className="absolute pointer-events-none"
           style={{
-            width: "80%", height: 8, bottom: -6, left: "10%",
+            width: "85%", height: 10, bottom: -8, left: "7.5%",
             borderRadius: "50%",
-            background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.55) 0%, transparent 70%)",
-            filter: "blur(5px)",
+            background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.6) 0%, transparent 70%)",
+            filter: "blur(6px)",
           }}
           animate={{
-            opacity: isSelected ? 0.2 : 0.7,
-            scaleX: isSelected ? 1.4 : 1,
-            y: isSelected ? 20 : 0,
+            opacity: isSelected ? 0.15 : 0.75,
+            scaleX: isSelected ? 1.5 : 1,
+            y: isSelected ? 24 : 0,
           }}
           transition={{ duration: 0.4 }}
         />
 
-        {/* Bottom edge glow */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            width: "70%", height: 12, bottom: 0, left: "15%",
-            background: "radial-gradient(ellipse 100% 100% at 50% 100%, hsl(var(--gold) / 0.15) 0%, transparent 80%)",
-            filter: "blur(4px)", borderRadius: "0 0 8px 8px",
-          }}
-        />
-
         {/* Card body — rotates on Y, image swaps at midpoint */}
         <motion.div
-          className="w-full h-full rounded-xl overflow-hidden"
+          className="w-full h-full rounded-xl"
           animate={{
             rotateY: isFlipped ? 180 : 0,
-            scale: isFlipped ? [1, 1.05, 1] : 1,
+            scale: isFlipped ? [1, 1.06, 1] : 1,
           }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
           style={{ perspective: 900 }}
         >
           <div
-            className="w-full h-full rounded-xl overflow-hidden"
+            className="w-full h-full rounded-xl overflow-hidden relative"
             style={{
               boxShadow: showFront
-                ? "0 0 40px hsl(var(--gold) / 0.3), 0 16px 48px hsl(0 0% 0% / 0.5)"
-                : `0 ${isSelected ? 20 : 8}px ${isSelected ? 40 : 20}px hsl(0 0% 0% / ${isSelected ? 0.5 : 0.4})`,
-              border: showFront ? "1px solid hsl(var(--gold) / 0.3)" : "1px solid hsl(var(--gold) / 0.1)",
+                ? "0 0 45px hsl(var(--gold) / 0.35), 0 18px 50px hsl(0 0% 0% / 0.55), 0 0 2px hsl(var(--gold) / 0.4)"
+                : `0 ${isSelected ? 22 : 10}px ${isSelected ? 44 : 24}px hsl(0 0% 0% / ${isSelected ? 0.55 : 0.45}), 0 0 1px hsl(var(--gold) / 0.2)`,
             }}
           >
+            {/* Card image */}
             <img
               src={showFront ? frontImgSrc : cardBack}
               alt={showFront ? card.hebrewName : ""}
@@ -235,43 +211,86 @@ const FloatingCard = ({
                 imageRendering: "-webkit-optimize-contrast" as any,
                 backfaceVisibility: "hidden",
                 transform: `translateZ(0)${showFront ? " scaleX(-1)" : ""}`,
-                filter: "contrast(1.08) saturate(1.05) drop-shadow(0 10px 25px rgba(0,0,0,0.5))",
+                filter: showFront
+                  ? "contrast(1.1) saturate(1.08)"
+                  : "contrast(1.05) saturate(1.02)",
                 willChange: "transform",
               }}
             />
+            {/* Premium frame overlay */}
+            <img
+              src={cardFrameImg}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{
+                transform: showFront ? "scaleX(-1)" : "none",
+                opacity: 0.85,
+                mixBlendMode: "screen",
+              }}
+            />
+            {/* Specular highlight — glossy sheen */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "linear-gradient(135deg, hsl(0 0% 100% / 0.08) 0%, transparent 40%, transparent 60%, hsl(0 0% 100% / 0.03) 100%)",
+                borderRadius: "inherit",
+              }}
+            />
+            {/* Inner glow */}
             <div
               className="absolute inset-0 rounded-xl pointer-events-none"
               style={{
                 boxShadow: showFront
-                  ? "inset 0 0 8px 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.18)"
-                  : "inset 0 0 6px 1px hsl(var(--gold) / 0.1), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                  ? "inset 0 0 12px 2px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.2)"
+                  : "inset 0 0 8px 1px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.1)",
               }}
             />
           </div>
         </motion.div>
 
-        {/* Light burst on reveal */}
+        {/* Enhanced reveal burst — multi-layer */}
         <AnimatePresence>
           {showBurst && (
             <>
+              {/* Core flash */}
               <motion.div
                 className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.5) 0%, transparent 60%)" }}
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: [0, 1, 0], scale: [0.7, 1.4, 1.8] }}
+                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.6) 0%, hsl(var(--gold) / 0.15) 40%, transparent 70%)" }}
+                initial={{ opacity: 0, scale: 0.6 }}
+                animate={{ opacity: [0, 1, 0], scale: [0.6, 1.5, 2] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
+                transition={{ duration: 1, ease: "easeOut" }}
               />
-              {[...Array(6)].map((_, pi) => {
-                const a = (pi / 6) * Math.PI * 2;
+              {/* Soft outer halo */}
+              <motion.div
+                className="absolute -inset-6 rounded-2xl pointer-events-none"
+                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2) 0%, transparent 60%)" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 0.8, 0] }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+              />
+              {/* Radial particles — more of them, varied sizes */}
+              {[...Array(10)].map((_, pi) => {
+                const a = (pi / 10) * Math.PI * 2;
+                const dist = 35 + Math.random() * 30;
+                const size = 2 + Math.random() * 2;
                 return (
                   <motion.div
                     key={`bp-${pi}`}
                     className="absolute rounded-full pointer-events-none"
-                    style={{ width: 3, height: 3, left: "50%", top: "50%", background: "hsl(var(--gold) / 0.9)" }}
+                    style={{
+                      width: size, height: size,
+                      left: "50%", top: "50%",
+                      background: pi % 3 === 0 ? "hsl(var(--celestial) / 0.9)" : "hsl(var(--gold) / 0.9)",
+                    }}
                     initial={{ x: 0, y: 0, opacity: 0 }}
-                    animate={{ x: Math.cos(a) * 50, y: Math.sin(a) * 50, opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
-                    transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+                    animate={{
+                      x: Math.cos(a) * dist,
+                      y: Math.sin(a) * dist,
+                      opacity: [0, 1, 0],
+                      scale: [0, 1.8, 0],
+                    }}
+                    transition={{ duration: 0.8, delay: pi * 0.03, ease: "easeOut" }}
                   />
                 );
               })}
@@ -279,19 +298,39 @@ const FloatingCard = ({
           )}
         </AnimatePresence>
 
+        {/* Pulsing glow ring on selected card */}
+        {isSelected && showFront && (
+          <motion.div
+            className="absolute -inset-1.5 rounded-xl pointer-events-none"
+            style={{ border: "1px solid hsl(var(--gold) / 0.25)" }}
+            animate={{
+              boxShadow: [
+                "0 0 12px hsl(var(--gold) / 0.1)",
+                "0 0 28px hsl(var(--gold) / 0.25)",
+                "0 0 12px hsl(var(--gold) / 0.1)",
+              ],
+            }}
+            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        )}
+
         {/* Card name under revealed card */}
         <AnimatePresence>
           {showFront && isSelected && (
             <motion.div
               className="absolute left-0 right-0 text-center pointer-events-none"
-              style={{ top: cardH + 8 }}
+              style={{ top: cardH + 10 }}
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <span
-                className="font-heading text-gold/85"
-                style={{ fontSize: isMobile ? 9 : 12, textShadow: "0 0 10px hsl(var(--gold) / 0.3)" }}
+                className="font-heading text-gold"
+                style={{
+                  fontSize: isMobile ? 10 : 13,
+                  textShadow: "0 0 14px hsl(var(--gold) / 0.4), 0 1px 3px hsl(0 0% 0% / 0.6)",
+                  letterSpacing: "0.05em",
+                }}
               >
                 {card.hebrewName}
               </span>
