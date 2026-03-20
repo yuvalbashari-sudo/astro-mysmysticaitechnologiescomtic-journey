@@ -340,12 +340,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   ))}
 
                   {/* Title area */}
-                  <div className="relative z-10 mb-6 md:mb-10">
-                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.9)" }}>{t.tarot_title}</h2>
-                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]" style={{ textShadow: "0 1px 6px hsl(222 47% 5% / 0.8)" }}>{t.tarot_spread_choose}</p>
+                  {/* Title — floating above the cards */}
+                  <div className="absolute top-0 left-0 right-0 z-20 text-center pt-16 md:pt-20 pointer-events-none">
+                    <motion.h2
+                      className="font-heading text-xl md:text-3xl gold-gradient-text mb-2"
+                      style={{ textShadow: "0 2px 20px hsl(222 47% 3% / 0.95), 0 0 40px hsl(var(--gold) / 0.15)" }}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
+                    >{t.tarot_title}</motion.h2>
+                    <motion.p
+                      className="text-gold/40 font-body text-[11px] md:text-xs tracking-[0.2em]"
+                      style={{ textShadow: "0 1px 10px hsl(222 47% 3% / 0.9)" }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6, duration: 0.8 }}
+                    >{t.tarot_spread_choose}</motion.p>
                   </div>
 
-                  {/* ── Authentic Tarot Fan Spread ── */}
+                  {/* ── Cards emerging from oracle's hands ── */}
                   {(() => {
                     const fanCards = SPREAD_OPTIONS;
                     const count = fanCards.length;
@@ -353,8 +366,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     const arcDeg = isMob ? 36 : 48;
                     const cardW = isMob ? 68 : 105;
                     const cardH = isMob ? 112 : 174;
-                    const pivotR = isMob ? 180 : 280;
-                    const containerH = isMob ? 230 : 350;
+                    const pivotR = isMob ? 220 : 340;
+                    const containerH = isMob ? 320 : 440;
 
                     // Symbols for each spread type (engraved on the card face)
                     const spreadSymbols: Record<SpreadType, string> = {
