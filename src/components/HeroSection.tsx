@@ -2132,10 +2132,31 @@ const HeroSection = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 2.5, ease: "easeOut" }}
       >
-        <img src={heroFigure} alt="" className="w-full h-full object-cover object-top scale-110" />
+        <img
+          src={heroFigure}
+          alt=""
+          className="w-full h-full object-cover scale-110"
+          style={{ objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)" }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-transparent to-background/30" />
+      </motion.div>
+
+      {/* ── Site Title overlay — sits in cleared space above character ── */}
+      <motion.div
+        className="absolute top-0 inset-x-0 z-[6] flex justify-center pointer-events-none"
+        style={{ paddingTop: isMobile ? "18px" : "28px" }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
+      >
+        <h1
+          className="font-heading tracking-[0.25em] uppercase gold-gradient-text"
+          style={{ fontSize: isMobile ? "20px" : "28px", letterSpacing: "0.3em" }}
+        >
+          ASTROLOGAI
+        </h1>
       </motion.div>
 
       {/* ── Layer 1.5: Aura glow from hands area ── */}
