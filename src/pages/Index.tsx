@@ -19,30 +19,37 @@ const Index = () => {
   }, [historyOpen]);
 
   return (
-    <div className="min-h-screen relative" dir={dir} style={{ background: "transparent" }}>
-      {/* Skip to content link */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-1/2 focus:-translate-x-1/2 focus:z-[100] focus:px-6 focus:py-3 focus:rounded-lg focus:bg-gold focus:text-primary-foreground focus:font-body focus:text-sm focus:font-bold focus:shadow-lg"
-      >
-        {t.a11y_skip_to_content}
-      </a>
-      <MysticalTopBar
-        onOpenHistory={() => setHistoryOpen(true)}
-        hasHistory={hasHistory}
-      />
-      {/* Hero fixed background — outside main to prevent scroll containment */}
+    <>
+      {/* ── Layer 1: Fixed hero scene (portalled to document.body) ── */}
       <HeroSection />
-      <main id="main-content" className="relative z-10">
-        <DailyRitualSection />
-      </main>
-      <MysticalDashboard />
+
+      {/* ── Layer 2: Scrolling page content ── */}
+      <div className="relative z-10 min-h-screen" dir={dir} style={{ background: "transparent" }}>
+        {/* Skip to content link */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-1/2 focus:-translate-x-1/2 focus:z-[100] focus:px-6 focus:py-3 focus:rounded-lg focus:bg-gold focus:text-primary-foreground focus:font-body focus:text-sm focus:font-bold focus:shadow-lg"
+        >
+          {t.a11y_skip_to_content}
+        </a>
+        <MysticalTopBar
+          onOpenHistory={() => setHistoryOpen(true)}
+          hasHistory={hasHistory}
+        />
+        {/* Spacer to push content below the hero viewport */}
+        <div className="h-screen pointer-events-none" aria-hidden="true" />
+        <main id="main-content" className="relative z-10">
+          <DailyRitualSection />
+        </main>
+        <MysticalDashboard />
+      </div>
+
       <ReadingsHistoryModal
         isOpen={historyOpen}
         onClose={() => setHistoryOpen(false)}
       />
       <FloatingOracleButton />
-    </div>
+    </>
   );
 };
 
