@@ -2017,10 +2017,10 @@ const HeroSection = () => {
   // Calculate tab positions: two arced columns on left/right sides
   const getTabPosition = useCallback((side: "left" | "right", idx: number, mobile: boolean) => {
     const sideSign = side === "left" ? -1 : 1;
-    const horizontalDist = mobile ? 165 : 300; // distance from center (increased for larger tabs)
-    const verticalSpacing = mobile ? 62 : 78; // spacing between tabs (~30% more)
-    const arcCurve = mobile ? 18 : 30; // how much the arc curves inward
-    const verticalOffset = mobile ? 30 : 20; // push tabs down from center to avoid face
+    const horizontalDist = mobile ? 185 : 340; // distance from center (~12% more breathing space)
+    const verticalSpacing = mobile ? 62 : 78;
+    const arcCurve = mobile ? 20 : 34;
+    const verticalOffset = mobile ? 30 : 20;
 
     // Soft arc: middle tab is closest to ball, top and bottom curve outward
     const arcOffset = Math.abs(idx - 1) * arcCurve;
