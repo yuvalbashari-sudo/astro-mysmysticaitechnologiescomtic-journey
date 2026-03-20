@@ -1930,6 +1930,7 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
