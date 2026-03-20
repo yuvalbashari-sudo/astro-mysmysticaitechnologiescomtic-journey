@@ -2406,8 +2406,8 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 cursor-pointer"
-              style={{ width: "346px", height: "346px" }}
+              className="relative z-20 cursor-pointer overflow-hidden"
+              style={{ width: "346px", height: "346px", borderRadius: "50%" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
