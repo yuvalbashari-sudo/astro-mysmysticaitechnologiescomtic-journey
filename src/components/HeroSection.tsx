@@ -2316,7 +2316,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "223px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "198px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
