@@ -2755,11 +2755,20 @@ const HeroSection = () => {
                 className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
-                  border: "1px solid rgba(0, 150, 255, 0.25)",
-                  boxShadow: "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  border: hoveredTeaser === "left"
+                    ? "1px solid rgba(0, 150, 255, 0.5)"
+                    : "1px solid rgba(0, 150, 255, 0.25)",
+                  boxShadow: hoveredTeaser === "left"
+                    ? "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
+                    : "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  transition: "border-color 0.3s ease-out, box-shadow 0.3s ease-out",
                 }}
                 animate={{
-                  boxShadow: [
+                  boxShadow: hoveredTeaser === "left" ? [
+                    "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    "0 0 48px rgba(0, 150, 255, 0.3), 0 0 96px rgba(0, 150, 255, 0.15), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.12)",
+                    "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  ] : [
                     "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                     "0 0 32px rgba(0, 150, 255, 0.2), 0 0 64px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
                     "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2767,6 +2776,19 @@ const HeroSection = () => {
                 }}
                 transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
               >
+                {/* Active connection indicator */}
+                <AnimatePresence>
+                  {hoveredTeaser === "left" && (
+                    <motion.div
+                      className="absolute top-3 right-3 w-2 h-2 rounded-full"
+                      style={{ background: "rgba(0, 170, 255, 0.9)", boxShadow: "0 0 8px rgba(0, 150, 255, 0.6)" }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: [0.6, 1, 0.6], scale: [0.8, 1.2, 0.8] }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  )}
+                </AnimatePresence>
                 <div className="flex items-center justify-center gap-2.5">
                   <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
