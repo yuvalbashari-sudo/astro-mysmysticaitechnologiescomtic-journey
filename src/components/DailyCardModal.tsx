@@ -642,9 +642,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* ── RIGHT COLUMN (RTL: appears on left): Interpretation ── */}
                     <motion.div
-                      className="flex-1 mt-8 md:mt-0"
-                      style={{ maxWidth: 480 }}
-                      initial={{ opacity: 0, y: 20 }}
+                      className="flex-1 mt-8 md:mt-0 md:max-w-[480px]"
+                      initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
