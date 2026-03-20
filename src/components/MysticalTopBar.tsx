@@ -84,7 +84,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           whileTap={{ scale: 0.95 }}
           aria-label={t.dashboard_title || "Mystical Profile"}
         >
-          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+          <Sparkles className="w-7 h-7" aria-hidden="true" />
         </motion.button>
         {/* Readings History */}
         {hasHistory && (
