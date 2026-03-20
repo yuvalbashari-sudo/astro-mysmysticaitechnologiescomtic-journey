@@ -1985,6 +1985,7 @@ const HeroSection = () => {
   const [risingOpen, setRisingOpen] = useState(false);
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
+  const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [astrologerOpen, setAstrologerOpen] = useState(false);
