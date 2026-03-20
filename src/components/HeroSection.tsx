@@ -2463,11 +2463,31 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.6 }}
           onClick={() => setTarotOpen(true)}
-          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3" : "text-base px-12 py-4"}`}
-          whileHover={{ scale: 1.04 }}
+          className={`relative overflow-hidden rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3.5" : "text-base px-14 py-4.5"}`}
+          style={{
+            background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
+            color: "hsl(var(--deep-blue))",
+            fontWeight: 700,
+            boxShadow: "0 4px 30px hsl(var(--gold) / 0.35), 0 0 60px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold-light) / 0.5)",
+            minHeight: "52px",
+          }}
+          whileHover={{
+            scale: 1.06,
+            boxShadow: "0 6px 40px hsl(43 80% 55% / 0.5), 0 0 80px hsl(43 80% 55% / 0.25), inset 0 1px 0 hsl(var(--gold-light) / 0.6)",
+          }}
           whileTap={{ scale: 0.97 }}
         >
-          {t.hero_cta_personal}
+          {/* Shimmer sweep */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%)",
+              backgroundSize: "200% 100%",
+            }}
+            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+          />
+          <span className="relative z-10">✨ גלו את המסר האישי שלכם</span>
         </motion.button>
       </div>
     </div>
