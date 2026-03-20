@@ -2563,7 +2563,7 @@ const HeroSection = () => {
 
         {/* Subheadline */}
         <motion.p
-          className="font-body text-xs md:text-sm lg:text-base leading-relaxed mb-5 md:mb-7 mx-auto max-w-md"
+          className="font-body text-xs md:text-sm lg:text-base leading-relaxed mb-6 md:mb-8 mx-auto max-w-md"
           style={{
             color: "hsl(var(--foreground) / 0.65)",
             textShadow: "0 1px 16px hsl(var(--deep-blue))",
