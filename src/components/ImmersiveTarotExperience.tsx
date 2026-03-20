@@ -123,12 +123,12 @@ const FloatingCard = ({
   totalCards: number;
   isMobile: boolean;
 }) => {
-  const cardW = isMobile ? 70 : 110;
+  const cardW = isMobile ? 90 : 150;
   const cardH = cardW * 1.55;
-  const spread = isMobile ? 42 : 70;
+  const spread = isMobile ? 52 : 88;
   const centerOffset = ((totalCards - 1) / 2) * spread;
   const x = index * spread - centerOffset;
-  const baseRotation = (index - (totalCards - 1) / 2) * 4;
+  const baseRotation = (index - (totalCards - 1) / 2) * 3.5;
 
   return (
     <motion.div
@@ -136,54 +136,56 @@ const FloatingCard = ({
       style={{
         width: cardW,
         height: cardH,
-        perspective: "800px",
+        perspective: "1000px",
         zIndex: isSelected ? 20 : 10 - Math.abs(index - (totalCards - 1) / 2),
       }}
       initial={{ opacity: 0, y: 80, rotateZ: baseRotation }}
       animate={{
         opacity: 1,
         x,
-        y: isSelected ? -30 : Math.abs(index - (totalCards - 1) / 2) * 6,
+        y: isSelected ? -40 : Math.abs(index - (totalCards - 1) / 2) * 8,
         rotateZ: isSelected ? 0 : baseRotation,
-        scale: isSelected ? 1.15 : 1,
+        scale: isSelected ? 1.18 : 1,
       }}
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={!isSelected ? { y: -12, scale: 1.06 } : {}}
+      whileHover={!isSelected ? { y: -18, scale: 1.06, transition: { duration: 0.25, ease: "easeOut" } } : {}}
       onClick={onClick}
     >
       <motion.div
-        className="w-full h-full relative rounded-lg overflow-hidden"
+        className="w-full h-full relative rounded-xl overflow-hidden"
         style={{ transformStyle: "preserve-3d" }}
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
       >
         {/* Back */}
         <div
-          className="absolute inset-0 rounded-lg overflow-hidden"
+          className="absolute inset-0 rounded-xl overflow-hidden"
           style={{
             backfaceVisibility: "hidden",
             boxShadow: isSelected
-              ? "0 0 30px hsl(var(--gold) / 0.4), 0 8px 32px hsl(var(--deep-blue) / 0.6)"
-              : "0 4px 20px hsl(var(--deep-blue) / 0.5)",
+              ? "0 0 40px hsl(var(--gold) / 0.5), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
+              : "0 6px 24px hsl(var(--deep-blue) / 0.6), 0 0 12px hsl(270 50% 50% / 0.1)",
+            border: isSelected ? "1px solid hsl(var(--gold) / 0.4)" : "1px solid hsl(var(--gold) / 0.1)",
           }}
         >
           <img src={cardBack} alt="" className="w-full h-full object-cover" />
           {isSelected && (
             <motion.div
               className="absolute inset-0"
-              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent 70%)" }}
-              animate={{ opacity: [0.3, 0.7, 0.3] }}
+              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 70%)" }}
+              animate={{ opacity: [0.3, 0.8, 0.3] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             />
           )}
         </div>
         {/* Front */}
         <div
-          className="absolute inset-0 rounded-lg overflow-hidden"
+          className="absolute inset-0 rounded-xl overflow-hidden"
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            boxShadow: "0 0 40px hsl(var(--gold) / 0.3), 0 8px 32px hsl(var(--deep-blue) / 0.6)",
+            boxShadow: "0 0 50px hsl(var(--gold) / 0.35), 0 12px 40px hsl(var(--deep-blue) / 0.7)",
+            border: "1px solid hsl(var(--gold) / 0.3)",
           }}
         >
           <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" />
