@@ -2747,8 +2747,8 @@ const HeroSection = () => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 0.75 }}
-              transition={{ delay: 2.2, duration: 0.6 }}
+              animate={{ opacity: 0.75, y: [0, -3, 0] }}
+              transition={{ delay: 2.2, duration: 4, repeat: Infinity, ease: "easeInOut" }}
               style={{ transition: "opacity 0.3s ease" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
@@ -2855,8 +2855,8 @@ const HeroSection = () => {
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 0.75 }}
-              transition={{ delay: 2.2, duration: 0.6 }}
+              animate={{ opacity: 0.75, y: [0, -3, 0] }}
+              transition={{ delay: 2.5, duration: 4, repeat: Infinity, ease: "easeInOut" }}
               style={{ transition: "opacity 0.3s ease" }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
