@@ -28,7 +28,7 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
 
   return (
     <motion.header
-      className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-4 md:px-6 py-2"
+      className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-4 md:px-8 py-3 md:py-4"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.3 }}
@@ -38,14 +38,36 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
       role="banner"
       aria-label={t.a11y_main_navigation}
     >
-      {/* Right side: Logo */}
-      <motion.div className="flex items-center gap-2">
-        <span className="font-heading text-lg md:text-xl gold-gradient-text tracking-widest">
-          ASTROLOGAI
-        </span>
-      </motion.div>
+      {/* Right side: Empty spacer for balance */}
+      <div className="flex-1" />
+
+      {/* Center: Hero Title */}
+      <motion.h1
+        className="font-heading uppercase pointer-events-none select-none"
+        style={{
+          fontSize: "clamp(30px, 4vw, 52px)",
+          fontWeight: 600,
+          letterSpacing: "0.4em",
+          background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          filter: "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
+        }}
+        animate={{
+          filter: [
+            "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
+            "drop-shadow(0 0 18px hsl(43 80% 55% / 0.35)) drop-shadow(0 0 40px hsl(43 80% 55% / 0.15))",
+            "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
+          ],
+        }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        ASTROLOGAI
+      </motion.h1>
 
       {/* Left side: Actions */}
+      <div className="flex-1 flex justify-end">
       <nav className="flex items-center gap-2" aria-label={t.a11y_main_navigation}>
         {/* Readings History */}
         {hasHistory && (
@@ -160,6 +182,7 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
           <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
         </motion.a>
       </nav>
+      </div>
     </motion.header>
   );
 };
