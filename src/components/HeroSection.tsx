@@ -2467,8 +2467,54 @@ const HeroSection = () => {
                 ].join(", "),
               }}
             />
+            {/* Teaser-to-ball energy connection — visible link on teaser hover */}
+            <AnimatePresence>
+              {hoveredTeaser === "left" && (
+                <>
+                  <EnergyLine fromX={-500} fromY={-200} color="hsl(215, 60%, 55%)" isMobile={isMobile} />
+                  {/* Outer aura pulse matching left teaser */}
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none z-[11]"
+                    style={{ width: "540px", height: "540px" }}
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 0.4, 0],
+                      scale: [0.92, 1.02, 0.92],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <div className="absolute inset-0 rounded-full" style={{
+                      background: "radial-gradient(circle, hsl(215 60% 55% / 0.08) 40%, hsl(43 70% 55% / 0.04) 60%, transparent 75%)",
+                      boxShadow: "0 0 40px hsl(215 60% 55% / 0.1), 0 0 80px hsl(43 70% 55% / 0.05)",
+                    }} />
+                  </motion.div>
+                </>
+              )}
+              {hoveredTeaser === "right" && (
+                <>
+                  <EnergyLine fromX={500} fromY={-200} color="hsl(270, 55%, 55%)" isMobile={isMobile} />
+                  {/* Outer aura pulse matching right teaser */}
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none z-[11]"
+                    style={{ width: "540px", height: "540px" }}
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 0.4, 0],
+                      scale: [0.92, 1.02, 0.92],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <div className="absolute inset-0 rounded-full" style={{
+                      background: "radial-gradient(circle, hsl(270 50% 50% / 0.08) 40%, hsl(280 60% 50% / 0.04) 60%, transparent 75%)",
+                      boxShadow: "0 0 40px hsl(270 50% 50% / 0.1), 0 0 80px hsl(280 60% 50% / 0.05)",
+                    }} />
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
             {/* EnergyPulse removed from desktop to prevent outer rings */}
-            {/* ArcanePortalRing removed from desktop to prevent outer rings */}
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
             )}
@@ -2709,11 +2755,20 @@ const HeroSection = () => {
                 className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
-                  border: "1px solid rgba(0, 150, 255, 0.25)",
-                  boxShadow: "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  border: hoveredTeaser === "left"
+                    ? "1px solid rgba(0, 150, 255, 0.5)"
+                    : "1px solid rgba(0, 150, 255, 0.25)",
+                  boxShadow: hoveredTeaser === "left"
+                    ? "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
+                    : "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  transition: "border-color 0.3s ease-out, box-shadow 0.3s ease-out",
                 }}
                 animate={{
-                  boxShadow: [
+                  boxShadow: hoveredTeaser === "left" ? [
+                    "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    "0 0 48px rgba(0, 150, 255, 0.3), 0 0 96px rgba(0, 150, 255, 0.15), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.12)",
+                    "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  ] : [
                     "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                     "0 0 32px rgba(0, 150, 255, 0.2), 0 0 64px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
                     "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2721,6 +2776,19 @@ const HeroSection = () => {
                 }}
                 transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
               >
+                {/* Active connection indicator */}
+                <AnimatePresence>
+                  {hoveredTeaser === "left" && (
+                    <motion.div
+                      className="absolute top-3 right-3 w-2 h-2 rounded-full"
+                      style={{ background: "rgba(0, 170, 255, 0.9)", boxShadow: "0 0 8px rgba(0, 150, 255, 0.6)" }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: [0.6, 1, 0.6], scale: [0.8, 1.2, 0.8] }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  )}
+                </AnimatePresence>
                 <div className="flex items-center justify-center gap-2.5">
                   <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
@@ -2845,11 +2913,20 @@ const HeroSection = () => {
                 className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
-                  border: "1px solid rgba(220, 50, 50, 0.25)",
-                  boxShadow: "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  border: hoveredTeaser === "right"
+                    ? "1px solid rgba(220, 50, 50, 0.5)"
+                    : "1px solid rgba(220, 50, 50, 0.25)",
+                  boxShadow: hoveredTeaser === "right"
+                    ? "0 0 36px rgba(220, 50, 50, 0.22), 0 0 72px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
+                    : "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  transition: "border-color 0.3s ease-out, box-shadow 0.3s ease-out",
                 }}
                 animate={{
-                  boxShadow: [
+                  boxShadow: hoveredTeaser === "right" ? [
+                    "0 0 36px rgba(220, 50, 50, 0.22), 0 0 72px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                    "0 0 48px rgba(220, 50, 50, 0.3), 0 0 96px rgba(220, 50, 50, 0.15), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.12)",
+                    "0 0 36px rgba(220, 50, 50, 0.22), 0 0 72px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  ] : [
                     "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                     "0 0 32px rgba(220, 50, 50, 0.2), 0 0 64px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
                     "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
@@ -2857,6 +2934,19 @@ const HeroSection = () => {
                 }}
                 transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
               >
+                {/* Active connection indicator */}
+                <AnimatePresence>
+                  {hoveredTeaser === "right" && (
+                    <motion.div
+                      className="absolute top-3 left-3 w-2 h-2 rounded-full"
+                      style={{ background: "rgba(255, 80, 80, 0.9)", boxShadow: "0 0 8px rgba(220, 50, 50, 0.6)" }}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: [0.6, 1, 0.6], scale: [0.8, 1.2, 0.8] }}
+                      exit={{ opacity: 0, scale: 0 }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  )}
+                </AnimatePresence>
                 <div className="flex items-center justify-center gap-2.5">
                   <Eye className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
                   <div
