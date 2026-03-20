@@ -2522,82 +2522,167 @@ const HeroSection = () => {
       </motion.div>
     </motion.button>
 
-    {/* ── Top horizontal feature tabs — OUTSIDE isolate container for correct stacking ── */}
-    <div className="absolute z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "72px" : "96px" }}>
+    {/* ── Hero Conversion Content ── */}
+    <div className="absolute z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "80px" : "100px" }}>
       <motion.div
-        className={`flex justify-center mx-auto pointer-events-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
+        className="mx-auto max-w-2xl text-center pointer-events-auto"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 1.2 }}
       >
-        {menuItems.map((item, i) => {
-          const itemColor = ITEM_COLORS[i];
-          const isHovered = hoveredItem === i;
-          return (
-            <motion.button
-              key={i}
-              type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
-              onMouseEnter={() => setHoveredItem(i)}
-              onMouseLeave={() => setHoveredItem(null)}
-              onFocus={() => setHoveredItem(i)}
-              onBlur={() => setHoveredItem(null)}
-              whileHover={{ scale: 1.08, y: -3 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
-              aria-label={item.label}
-            >
-              <div
-                className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
-                style={{
-                  borderWidth: "1px", borderStyle: "solid",
-                  borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
-                  background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
-                  boxShadow: isHovered
-                    ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
-                    : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-                }}
-              >
-                <item.icon
-                  className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`}
-                  style={{
-                    color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
-                    filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
-                  }}
-                />
-                <span
-                  className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`}
-                  style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
-                >
-                  {item.label}
-                </span>
-                {isHovered && (
-                  <motion.div
-                    className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
-                    style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
-                    initial={{ opacity: 0, scaleX: 0 }}
-                    animate={{ opacity: 0.8, scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                )}
-                {isHovered && (
-                  <motion.div
-                    className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.6, 0.3] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                )}
-              </div>
-            </motion.button>
-          );
-        })}
+        {/* Micro label */}
+        <motion.span
+          className="inline-block font-body text-xs md:text-sm tracking-[0.25em] uppercase mb-4 md:mb-5"
+          style={{ color: "hsl(var(--gold) / 0.6)" }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.8 }}
+        >
+          תשובות מיסטיות מותאמות אישית
+        </motion.span>
+
+        {/* Headline */}
+        <motion.h1
+          className="font-heading text-2xl md:text-4xl lg:text-[2.75rem] font-bold leading-[1.15] mb-4 md:mb-5"
+          style={{
+            color: "hsl(var(--foreground))",
+            textShadow: "0 2px 20px hsl(var(--deep-blue) / 0.8)",
+            textWrap: "balance",
+          }}
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.6, duration: 1 }}
+        >
+          גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם
+        </motion.h1>
+
+        {/* Subheadline */}
+        <motion.p
+          className="font-body text-sm md:text-base lg:text-lg leading-relaxed mb-6 md:mb-8 mx-auto max-w-lg"
+          style={{
+            color: "hsl(var(--foreground) / 0.7)",
+            textShadow: "0 1px 12px hsl(var(--deep-blue) / 0.9)",
+            textWrap: "pretty",
+          }}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.9, duration: 0.9 }}
+        >
+          בדקו התאמה בין שני אנשים או פתחו קריאת טארוט אישית — וקבלו תובנות מדויקות, מסקרנות ודיסקרטיות תוך שניות.
+        </motion.p>
+
+        {/* CTA Buttons */}
+        <motion.div
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-5 md:mb-6"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.8 }}
+        >
+          {/* Primary — gold filled */}
+          <motion.button
+            type="button"
+            onClick={() => setCompatibilityOpen(true)}
+            className="relative overflow-hidden rounded-xl font-heading text-sm md:text-base tracking-wider px-8 md:px-10 py-3.5 md:py-4 font-bold transition-shadow duration-300"
+            style={{
+              background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
+              color: "hsl(var(--deep-blue))",
+              boxShadow: "0 4px 24px hsl(var(--gold) / 0.35), 0 0 40px hsl(var(--gold) / 0.12)",
+              minHeight: "52px",
+            }}
+            whileHover={{
+              scale: 1.04,
+              boxShadow: "0 6px 36px hsl(43 80% 55% / 0.5), 0 0 60px hsl(43 80% 55% / 0.2)",
+            }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <span className="relative z-10">בדוק התאמה זוגית</span>
+            {/* Shimmer */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+                backgroundSize: "250% 100%",
+              }}
+              animate={{ backgroundPosition: ["-100% 0%", "250% 0%"] }}
+              transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+            />
+          </motion.button>
+
+          {/* Secondary — outlined */}
+          <motion.button
+            type="button"
+            onClick={() => setTarotOpen(true)}
+            className="rounded-xl font-heading text-sm md:text-base tracking-wider px-8 md:px-10 py-3.5 md:py-4 font-bold transition-all duration-300 backdrop-blur-md"
+            style={{
+              background: "hsl(var(--deep-blue) / 0.4)",
+              border: "1.5px solid hsl(var(--gold) / 0.35)",
+              color: "hsl(var(--gold))",
+              minHeight: "52px",
+            }}
+            whileHover={{
+              scale: 1.04,
+              borderColor: "hsl(var(--gold) / 0.7)",
+              boxShadow: "0 0 30px hsl(43 80% 55% / 0.2), inset 0 0 15px hsl(43 80% 55% / 0.05)",
+            }}
+            whileTap={{ scale: 0.97 }}
+          >
+            פתח קריאת טארוט
+          </motion.button>
+        </motion.div>
+
+        {/* Trust line */}
+        <motion.p
+          className="font-body text-[11px] md:text-xs tracking-wide"
+          style={{ color: "hsl(var(--foreground) / 0.4)" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.6, duration: 0.7 }}
+        >
+          תוצאה תוך שניות · חוויה אישית · דיסקרטי לחלוטין
+        </motion.p>
       </motion.div>
     </div>
+
+    {/* ── Speech Bubble near oracle ── */}
+    <motion.div
+      className="absolute z-[64] pointer-events-none"
+      style={{
+        left: isMobile ? "8%" : "12%",
+        top: isMobile ? "55%" : "48%",
+        maxWidth: isMobile ? "180px" : "240px",
+      }}
+      initial={{ opacity: 0, x: 20, scale: 0.9 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      transition={{ delay: 3.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <motion.div
+        className="relative rounded-2xl px-4 py-3 backdrop-blur-xl"
+        style={{
+          background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.92))",
+          border: "1px solid hsl(var(--gold) / 0.18)",
+          boxShadow: "0 4px 24px hsl(var(--deep-blue) / 0.6), 0 0 20px hsl(var(--gold) / 0.06)",
+        }}
+        animate={{
+          y: [0, -4, 0],
+        }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <p className="font-body text-[11px] md:text-xs leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.75)" }}>
+          ✦ אני אחשוף עבורך את מה שמסתתר מתחת לפני השטח
+        </p>
+        {/* Arrow pointing right (toward oracle) */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2"
+          style={{
+            right: "-8px",
+            width: 0, height: 0,
+            borderTop: "6px solid transparent",
+            borderBottom: "6px solid transparent",
+            borderLeft: "8px solid hsl(var(--gold) / 0.18)",
+          }}
+        />
+      </motion.div>
+    </motion.div>
       </section>
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
