@@ -2144,37 +2144,7 @@ const HeroSection = () => {
       </motion.div>
 
       {/* ── Site Title overlay — sits in cleared space above character ── */}
-      <motion.div
-        className="absolute top-0 inset-x-0 z-[6] flex flex-col items-center pointer-events-none"
-        style={{ paddingTop: isMobile ? "20px" : "32px" }}
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.8, delay: 0.4, ease: "easeOut" }}
-      >
-        <motion.h1
-          className="font-heading uppercase"
-          style={{
-            fontSize: isMobile ? "28px" : "40px",
-            fontWeight: 600,
-            letterSpacing: isMobile ? "0.35em" : "0.45em",
-            background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            filter: "drop-shadow(0 0 12px hsl(var(--gold) / 0.25)) drop-shadow(0 0 30px hsl(var(--gold) / 0.1))",
-          }}
-          animate={{
-            filter: [
-              "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
-              "drop-shadow(0 0 18px hsl(43 80% 55% / 0.35)) drop-shadow(0 0 40px hsl(43 80% 55% / 0.15))",
-              "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
-            ],
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        >
-          ASTROLOGAI
-        </motion.h1>
-      </motion.div>
+      {/* Title moved to MysticalTopBar */}
 
       {/* ── Layer 1.5: Aura glow from hands area ── */}
       <div className="absolute inset-0 pointer-events-none z-[2]">
