@@ -2333,16 +2333,7 @@ const HeroSection = () => {
             className="relative flex items-center justify-center pointer-events-auto"
             style={{ x: crystalX, y: crystalY, marginTop: "242px", marginLeft: "10px" }}
           >
-            <motion.div
-              className="absolute rounded-full z-15 pointer-events-none"
-              style={{
-                width: "120px", height: "120px",
-                x: glowShiftX, y: glowShiftY,
-                background: activeColor
-                  ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
-                  : "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
-              }}
-            />
+            {/* Internal glow — contained inside ball */}
             <motion.div
               className="absolute rounded-full overflow-hidden"
               style={{
@@ -2407,18 +2398,16 @@ const HeroSection = () => {
                 ].join(", "),
               }}
             />
-            <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
-            {entranceComplete && (
-              <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
-            )}
+            {/* EnergyPulse removed from desktop to prevent outer rings */}
+            {/* ArcanePortalRing removed from desktop to prevent outer rings */}
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
             )}
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 cursor-pointer"
-              style={{ width: "346px", height: "346px" }}
+              className="relative z-20 cursor-pointer overflow-hidden"
+              style={{ width: "346px", height: "346px", borderRadius: "50%" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
