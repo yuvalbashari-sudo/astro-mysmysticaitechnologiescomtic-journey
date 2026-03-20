@@ -1096,7 +1096,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         style={{
                           top: "8vh",
                           left: "3vw",
-                          width: "min(480px, 30vw)",
+                          width: "min(520px, calc(100vw - 580px))",
+                          maxWidth: "520px",
                           maxHeight: "80vh",
                           background: "linear-gradient(165deg, hsl(222 45% 8% / 0.92), hsl(222 50% 5% / 0.95))",
                           border: "1px solid hsl(var(--gold) / 0.12)",
