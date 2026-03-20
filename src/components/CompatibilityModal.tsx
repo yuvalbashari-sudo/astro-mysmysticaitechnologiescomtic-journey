@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
+import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
