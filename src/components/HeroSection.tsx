@@ -2333,7 +2333,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full overflow-hidden"
               style={{
-                width: "398px", height: "398px",
+                width: "430px", height: "430px",
               }}
             >
               <motion.div
