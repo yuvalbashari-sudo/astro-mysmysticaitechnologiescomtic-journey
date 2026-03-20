@@ -1010,49 +1010,99 @@ const ZodiacWheel = ({
                 )}
               </AnimatePresence>
 
-              {/* Premium floating label on hover */}
+              {/* Premium mystical info card on hover */}
               <AnimatePresence>
                 {isHovered && !isRuling && (
                   <motion.div
-                    className="absolute z-50 whitespace-nowrap"
+                    className="absolute z-50"
                     style={{
                       left: "50%",
-                      bottom: "calc(100% + 14px)",
+                      bottom: "calc(100% + 20px)",
                       transform: "translateX(-50%)",
+                      width: 220,
                     }}
-                    initial={{ opacity: 0, y: 8, scale: 0.85 }}
+                    initial={{ opacity: 0, y: 12, scale: 0.8 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.85 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    exit={{ opacity: 0, y: 12, scale: 0.8 }}
+                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                   >
+                    {/* Outer glow aura */}
+                    <motion.div
+                      className="absolute rounded-2xl pointer-events-none"
+                      style={{ inset: -6 }}
+                      animate={{
+                        boxShadow: [
+                          `0 0 20px hsl(var(--gold) / 0.08), 0 0 40px hsl(var(--celestial) / 0.06)`,
+                          `0 0 35px hsl(var(--gold) / 0.14), 0 0 60px hsl(var(--celestial) / 0.1)`,
+                          `0 0 20px hsl(var(--gold) / 0.08), 0 0 40px hsl(var(--celestial) / 0.06)`,
+                        ],
+                      }}
+                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    />
                     <div
-                      className="px-4 py-2 rounded-lg font-heading backdrop-blur-xl text-center"
+                      className="relative rounded-2xl overflow-hidden backdrop-blur-2xl"
                       style={{
-                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
-                        border: "1px solid hsl(var(--gold) / 0.3)",
-                        boxShadow: "0 0 25px hsl(var(--gold) / 0.12), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(var(--gold) / 0.1)",
+                        background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.97), hsl(var(--deep-blue) / 0.99))",
+                        border: "1px solid hsl(var(--gold) / 0.25)",
+                        boxShadow: "0 0 30px hsl(var(--gold) / 0.1), 0 12px 40px hsl(var(--deep-blue) / 0.7), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                        padding: "16px 20px",
                       }}
                     >
+                      {/* Decorative shimmer line at top */}
                       <div
-                        className="text-[13px] font-semibold tracking-wide"
-                        style={{ color: "hsl(var(--gold))" }}
-                      >
-                        {sign.name} – {meta.keyword} {ELEMENT_EMOJI[ELEMENT_TYPES[i]]}
-                      </div>
+                        className="absolute top-0 left-[10%] right-[10%] h-px"
+                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }}
+                      />
+                      {/* Zodiac emoji accent */}
                       <div
-                        className="flex items-center justify-center gap-2 mt-0.5 text-[10px] tracking-widest uppercase"
-                        style={{ color: "hsl(var(--gold) / 0.6)" }}
+                        className="text-center text-2xl mb-1.5 leading-none"
+                        style={{ filter: "drop-shadow(0 0 8px hsl(var(--gold) / 0.3))" }}
                       >
-                        <span>{meta.element}</span>
+                        {ELEMENT_EMOJI[ELEMENT_TYPES[i]]}
                       </div>
+                      {/* Sign name — large & bold */}
+                      <div
+                        className="font-heading text-center font-bold tracking-wide leading-tight"
+                        style={{ color: "hsl(var(--gold))", fontSize: 20 }}
+                      >
+                        {sign.name}
+                      </div>
+                      {/* Keyword descriptor */}
+                      <div
+                        className="font-body text-center mt-1 tracking-wide leading-snug"
+                        style={{ color: "hsl(var(--gold-light))", fontSize: 14, opacity: 0.85 }}
+                      >
+                        {meta.keyword}
+                      </div>
+                      {/* Element tag */}
+                      <div
+                        className="flex items-center justify-center mt-2.5"
+                      >
+                        <span
+                          className="font-body text-[10px] tracking-[0.15em] uppercase rounded-full px-3 py-0.5"
+                          style={{
+                            color: "hsl(var(--gold) / 0.7)",
+                            background: "hsl(var(--gold) / 0.06)",
+                            border: "1px solid hsl(var(--gold) / 0.12)",
+                          }}
+                        >
+                          {meta.element}
+                        </span>
+                      </div>
+                      {/* Bottom shimmer */}
+                      <div
+                        className="absolute bottom-0 left-[15%] right-[15%] h-px"
+                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--celestial) / 0.25), transparent)" }}
+                      />
                     </div>
+                    {/* Arrow */}
                     <div
                       className="mx-auto"
                       style={{
                         width: 0, height: 0,
-                        borderLeft: "5px solid transparent",
-                        borderRight: "5px solid transparent",
-                        borderTop: "5px solid hsl(var(--gold) / 0.3)",
+                        borderLeft: "7px solid transparent",
+                        borderRight: "7px solid transparent",
+                        borderTop: "7px solid hsl(var(--gold) / 0.25)",
                         marginTop: -1,
                       }}
                     />
