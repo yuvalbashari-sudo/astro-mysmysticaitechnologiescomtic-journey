@@ -84,17 +84,6 @@ const MysticalDashboard = () => {
 
   return (
     <>
-      {/* Floating trigger button */}
-      <motion.button
-        onClick={() => setIsOpen(true)}
-        className="fixed top-4 left-4 z-50 w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center shadow-lg hover:shadow-primary/20 transition-shadow group"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        title={t.dashboard_title}
-        aria-label={t.a11y_open_dashboard}
-      >
-        <Sparkles className="w-5 h-5 text-primary group-hover:text-primary transition-colors" aria-hidden="true" />
-      </motion.button>
 
       <AnimatePresence>
         {isOpen && (
