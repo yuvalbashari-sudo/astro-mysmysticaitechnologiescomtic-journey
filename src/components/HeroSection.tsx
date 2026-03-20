@@ -6,12 +6,14 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import AstrologerIntroModal from "./AstrologerIntroModal";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import PalmReadingModal from "./PalmReadingModal";
 import DailyCardModal from "./DailyCardModal";
 import { useT, useLanguage } from "@/i18n";
+import { useReadingContext } from "@/contexts/ReadingContext";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
@@ -1922,6 +1924,7 @@ const TarotCardReveal = ({
 /* ── Main Hero ─────────────────────────────────────── */
 const HeroSection = () => {
   const t = useT();
+  const { setActiveReading } = useReadingContext();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
@@ -1931,12 +1934,27 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [astrologerIntroOpen, setAstrologerIntroOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
+
+  const handleAvatarClick = useCallback(() => {
+    setAstrologerIntroOpen(true);
+  }, []);
+
+  const handleStartAstrologerExperience = useCallback(() => {
+    setActiveReading({
+      type: "astrologer",
+      label: "שיחה עם האסטרולוגית",
+      summary: "קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית",
+    });
+    setAstrologerIntroOpen(false);
+    setAdvisorOpen(true);
+  }, [setActiveReading]);
 
   // Menu items split into left and right groups for symmetrical side layout
   const menuItems = useMemo(() => [
@@ -2521,9 +2539,9 @@ const HeroSection = () => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
-      onClick={() => setAdvisorOpen(true)}
+      onClick={handleAvatarClick}
       whileTap={{ scale: 0.95 }}
-      aria-label="גלו את המסר האישי שלכם"
+      aria-label="שיחה עם האסטרולוגית"
     >
       {/* Pulsing outer glow ring */}
       <motion.div
@@ -2560,7 +2578,7 @@ const HeroSection = () => {
       >
         <img
           src={mysticalAvatarCta}
-          alt="גלו את המסר האישי שלכם"
+          alt="שיחה עם האסטרולוגית"
           className="w-full h-full object-cover"
           draggable={false}
         />
@@ -2599,6 +2617,11 @@ const HeroSection = () => {
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
+      <AstrologerIntroModal
+        isOpen={astrologerIntroOpen}
+        onClose={() => setAstrologerIntroOpen(false)}
+        onStart={handleStartAstrologerExperience}
+      />
       <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
     </>
   );
