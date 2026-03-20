@@ -2665,8 +2665,8 @@ const HeroSection = () => {
         <>
           {/* Left column */}
           <motion.div
-            className="absolute pointer-events-auto flex flex-col gap-3"
-            style={{ left: 28, top: "50%", transform: "translateY(-50%)" }}
+            className="absolute pointer-events-auto flex flex-col gap-[14px]"
+            style={{ left: 28, top: "42%", transform: "translateY(-50%)" }}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2730,7 +2730,7 @@ const HeroSection = () => {
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-7 py-4"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -2741,14 +2741,14 @@ const HeroSection = () => {
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                      className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      className="font-body transition-colors duration-300 text-[15px] font-semibold"
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -2781,8 +2781,8 @@ const HeroSection = () => {
 
           {/* Right column */}
           <motion.div
-            className="absolute pointer-events-auto flex flex-col gap-3"
-            style={{ right: 28, top: "50%", transform: "translateY(-50%)" }}
+            className="absolute pointer-events-auto flex flex-col gap-[14px]"
+            style={{ right: 28, top: "42%", transform: "translateY(-50%)" }}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2846,7 +2846,7 @@ const HeroSection = () => {
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-7 py-4"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -2857,14 +2857,14 @@ const HeroSection = () => {
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                      className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      className="font-body transition-colors duration-300 text-[15px] font-semibold"
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
