@@ -2573,13 +2573,11 @@ const HeroSection = () => {
       </div>
       {/* ── Fixed CTA below crystal ball ── */}
       <div
-        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13]"
+        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13] px-4"
         style={{
-          top: `calc(50% + ${isMobile ? "145px" : "160px"} + ${isMobile ? "120px" : "210px"} + 70px)`,
-          maxHeight: `calc(100vh - ${isMobile ? "env(safe-area-inset-bottom, 20px)" : "0px"})`,
-          paddingBottom: isMobile ? "env(safe-area-inset-bottom, 20px)" : undefined,
-          // Clamp so it never goes below viewport
-          top: undefined,
+          top: isMobile
+            ? `min(calc(50% + 335px + 70px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
+            : `calc(50% + 370px + 70px)`,
         }}
       >
         <motion.button
