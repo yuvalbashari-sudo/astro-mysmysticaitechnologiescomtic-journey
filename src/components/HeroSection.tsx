@@ -2373,8 +2373,8 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: "390px", height: "390px",
-                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.03) 70%, transparent 90%)",
+                width: "470px", height: "470px",
+                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.025) 70%, transparent 90%)",
               }}
               animate={{ rotate: [0, 360], scale: [1, 1.06, 1] }}
               transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
