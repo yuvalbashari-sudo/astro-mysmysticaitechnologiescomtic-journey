@@ -2484,6 +2484,149 @@ const HeroSection = () => {
           </motion.div>
         )}
       </div>
+
+      {/* ── Side-positioned feature tabs (desktop: fixed sides, mobile: bottom row) ── */}
+      {!isMobile ? (
+        <>
+          {/* Left side tabs */}
+          <div className="absolute z-[14] pointer-events-auto" style={{ left: "32px", top: "50%", transform: "translateY(-50%)" }}>
+            <div className="flex flex-col gap-4">
+              {menuItems.filter(item => item.side === "left").map((item, idx) => {
+                const globalIdx = idx;
+                const itemColor = ITEM_COLORS[globalIdx];
+                return (
+                  <motion.div
+                    key={globalIdx}
+                    className="cursor-pointer"
+                    initial={{ opacity: 0, x: -40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 1.5 + idx * 0.15 }}
+                    onMouseEnter={() => setHoveredItem(globalIdx)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    whileHover={{ scale: 1.08, x: 6 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => { if (globalIdx === 0) setForecastOpen(true); if (globalIdx === 1) setCompatibilityOpen(true); if (globalIdx === 2) setRisingOpen(true); }}
+                  >
+                    <motion.div
+                      className="relative flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all duration-300 whitespace-nowrap"
+                      style={{
+                        borderWidth: "1px", borderStyle: "solid",
+                        borderColor: hoveredItem === globalIdx ? `${itemColor.glow}88` : "hsl(var(--gold) / 0.1)",
+                        background: hoveredItem === globalIdx ? `${itemColor.glow}15` : "hsl(var(--deep-blue) / 0.3)",
+                        backdropFilter: "blur(12px)",
+                        boxShadow: hoveredItem === globalIdx
+                          ? `0 0 24px ${itemColor.glow}44, 0 0 48px ${itemColor.glow}18`
+                          : "0 2px 12px hsl(0 0% 0% / 0.2)",
+                      }}
+                      animate={{ y: [0, -2, 0] }}
+                      transition={{ duration: 4 + idx * 0.3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.6 }}
+                    >
+                      <motion.div
+                        animate={hoveredItem === globalIdx ? {
+                          filter: [`drop-shadow(0 0 4px ${itemColor.glow}88)`, `drop-shadow(0 0 10px ${itemColor.glow})`, `drop-shadow(0 0 4px ${itemColor.glow}88)`],
+                        } : { filter: "none" }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <item.icon className="w-5 h-5 flex-shrink-0 transition-colors duration-300" style={{ color: hoveredItem === globalIdx ? itemColor.glow : "hsl(var(--gold) / 0.65)" }} />
+                      </motion.div>
+                      <span className="font-body text-sm font-medium transition-colors duration-300" style={{ color: hoveredItem === globalIdx ? itemColor.glow : "hsl(var(--foreground) / 0.8)" }}>
+                        {item.label}
+                      </span>
+                      {hoveredItem === globalIdx && (
+                        <motion.div className="absolute -inset-2 rounded-2xl pointer-events-none" style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }} initial={{ opacity: 0 }} animate={{ opacity: [0, 0.7, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                      )}
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Right side tabs */}
+          <div className="absolute z-[14] pointer-events-auto" style={{ right: "32px", top: "50%", transform: "translateY(-50%)" }}>
+            <div className="flex flex-col gap-4">
+              {menuItems.filter(item => item.side === "right").map((item, idx) => {
+                const globalIdx = idx + 3;
+                const itemColor = ITEM_COLORS[globalIdx];
+                return (
+                  <motion.div
+                    key={globalIdx}
+                    className="cursor-pointer"
+                    initial={{ opacity: 0, x: 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.6, delay: 1.5 + idx * 0.15 }}
+                    onMouseEnter={() => setHoveredItem(globalIdx)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                    whileHover={{ scale: 1.08, x: -6 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => { if (globalIdx === 3) setDailyCardOpen(true); if (globalIdx === 4) setTarotOpen(true); if (globalIdx === 5) setPalmOpen(true); }}
+                  >
+                    <motion.div
+                      className="relative flex items-center justify-end gap-3 px-5 py-3.5 rounded-2xl transition-all duration-300 whitespace-nowrap"
+                      style={{
+                        borderWidth: "1px", borderStyle: "solid",
+                        borderColor: hoveredItem === globalIdx ? `${itemColor.glow}88` : "hsl(var(--gold) / 0.1)",
+                        background: hoveredItem === globalIdx ? `${itemColor.glow}15` : "hsl(var(--deep-blue) / 0.3)",
+                        backdropFilter: "blur(12px)",
+                        boxShadow: hoveredItem === globalIdx
+                          ? `0 0 24px ${itemColor.glow}44, 0 0 48px ${itemColor.glow}18`
+                          : "0 2px 12px hsl(0 0% 0% / 0.2)",
+                      }}
+                      animate={{ y: [0, -2, 0] }}
+                      transition={{ duration: 4 + idx * 0.3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.6 }}
+                    >
+                      <span className="font-body text-sm font-medium transition-colors duration-300" style={{ color: hoveredItem === globalIdx ? itemColor.glow : "hsl(var(--foreground) / 0.8)" }}>
+                        {item.label}
+                      </span>
+                      <motion.div
+                        animate={hoveredItem === globalIdx ? {
+                          filter: [`drop-shadow(0 0 4px ${itemColor.glow}88)`, `drop-shadow(0 0 10px ${itemColor.glow})`, `drop-shadow(0 0 4px ${itemColor.glow}88)`],
+                        } : { filter: "none" }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <item.icon className="w-5 h-5 flex-shrink-0 transition-colors duration-300" style={{ color: hoveredItem === globalIdx ? itemColor.glow : "hsl(var(--gold) / 0.65)" }} />
+                      </motion.div>
+                      {hoveredItem === globalIdx && (
+                        <motion.div className="absolute -inset-2 rounded-2xl pointer-events-none" style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }} initial={{ opacity: 0 }} animate={{ opacity: [0, 0.7, 0.4] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                      )}
+                    </motion.div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      ) : (
+        /* Mobile: horizontal scroll row below crystal ball */
+        <div className="absolute z-[14] pointer-events-auto inset-x-0 px-4" style={{ top: `min(calc(50% + 300px), calc(100dvh - 140px - env(safe-area-inset-bottom, 16px)))` }}>
+          <motion.div
+            className="flex gap-2.5 justify-center flex-wrap"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.6 }}
+          >
+            {menuItems.map((item, i) => {
+              const itemColor = ITEM_COLORS[i];
+              return (
+                <motion.button
+                  key={i}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl whitespace-nowrap transition-all duration-300"
+                  style={{
+                    border: "1px solid hsl(var(--gold) / 0.12)",
+                    background: "hsl(var(--deep-blue) / 0.4)",
+                    backdropFilter: "blur(12px)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
+                >
+                  <item.icon className="w-4 h-4" style={{ color: itemColor.glow }} />
+                  <span className="font-body text-xs font-medium" style={{ color: "hsl(var(--foreground) / 0.8)" }}>{item.label}</span>
+                </motion.button>
+              );
+            })}
+          </motion.div>
+        </div>
+      )}
+
       {/* ── Fixed CTA below crystal ball ── */}
       <div
         className="absolute inset-x-0 flex justify-center pointer-events-none z-[13] px-4"
