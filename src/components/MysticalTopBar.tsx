@@ -47,9 +47,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         <motion.h1
           className="font-heading uppercase relative"
           style={{
-            fontSize: "clamp(40px, 6vw, 78px)",
+            fontSize: "clamp(22px, 5vw, 78px)",
             fontWeight: 700,
-            letterSpacing: "0.5em",
+            letterSpacing: "clamp(0.12em, 1.5vw, 0.5em)",
             lineHeight: 1,
             background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
             backgroundSize: "200% 200%",
