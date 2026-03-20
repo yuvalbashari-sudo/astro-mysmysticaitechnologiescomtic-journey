@@ -182,6 +182,7 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
           <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
         </motion.a>
       </nav>
+      </div>
     </motion.header>
   );
 };
