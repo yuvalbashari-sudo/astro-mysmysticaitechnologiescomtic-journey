@@ -547,181 +547,149 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0 }}
                   className="relative"
                 >
-                  {/* Desktop: strict two-column grid — card and text stay in separate columns */}
-                  <div className="grid grid-cols-1 gap-10 p-6 md:min-h-[72vh] md:w-full md:grid-cols-[minmax(360px,1fr)_minmax(420px,480px)] md:items-center md:gap-24 md:p-0 lg:grid-cols-[minmax(420px,1.1fr)_minmax(420px,500px)] lg:gap-28">
+                  {/* ── DESKTOP: Card pinned top-right via fixed, text scrolls independently ── */}
 
-                    {/* ── CARD COLUMN ── */}
+                  {/* Card cluster — fixed to viewport top-right on md+ */}
+                  <motion.div
+                    className="hidden md:flex flex-col items-center fixed top-[60px] right-[48px] z-[103]"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  >
                     <motion.div
-                      className="flex flex-col items-center justify-center md:col-start-1 md:row-start-1 md:min-h-[60vh] md:w-full md:justify-self-center"
-                      style={{ minWidth: 0 }}
-                      initial={{ opacity: 0, y: 24 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                      className="relative rounded-xl overflow-hidden"
+                      style={{
+                        width: "clamp(200px, 22vw, 320px)",
+                        aspectRatio: "2 / 3",
+                        border: "2px solid hsl(var(--gold) / 0.25)",
+                        boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
+                      }}
+                      initial={{ scale: 0.85, opacity: 0, rotateY: -15 }}
+                      animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                      transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      {/* Card — large and dominant */}
-                      <motion.div
-                        className="relative rounded-xl overflow-hidden"
-                        style={{
-                          width: "clamp(220px, 26vw, 360px)",
-                          aspectRatio: "2 / 3",
-                          border: "2px solid hsl(var(--gold) / 0.25)",
-                          boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
-                        }}
-                        initial={{ scale: 0.85, opacity: 0, rotateY: -15 }}
-                        animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                        transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        {cardImage ? (
-                          <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
-                            <span className="text-5xl">{card.symbol}</span>
-                          </div>
-                        )}
-                        {/* Shimmer */}
-                        <motion.div
-                          className="absolute inset-0 pointer-events-none"
-                          style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.12) 50%, transparent 70%)" }}
-                          animate={{ x: ["-100%", "200%"] }}
-                          transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
-                        />
-                      </motion.div>
-
-                      {/* Card name + meta beneath card */}
-                      <motion.h2
-                        className="font-heading text-2xl md:text-3xl gold-gradient-text mt-5 text-center"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.35 }}
-                      >
-                        {card.hebrewName}
-                      </motion.h2>
-                      <motion.p
-                        className="text-foreground/50 font-body text-sm text-center mt-1"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.45 }}
-                      >
-                        {t.daily_arcana_label} {card.number}
-                      </motion.p>
-
-                      {phase === "locked" && (
-                        <motion.div
-                          className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full"
-                          style={{
-                            background: "hsl(var(--gold) / 0.06)",
-                            border: "1px solid hsl(var(--gold) / 0.12)",
-                          }}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.5 }}
-                        >
-                          <Clock className="w-3.5 h-3.5 text-gold/60" />
-                          <span className="font-body text-xs text-gold/70">
-                            {t.daily_next_card} {timeLeft}
-                          </span>
-                        </motion.div>
+                      {cardImage ? (
+                        <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
+                          <span className="text-5xl">{card.symbol}</span>
+                        </div>
                       )}
-
-                      {/* Share actions — beneath card on desktop */}
                       <motion.div
-                        className="flex items-center gap-3 mt-5"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.6 }}
-                      >
-                        <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                          <Share2 className="w-3.5 h-3.5" />{t.forecast_share}
-                        </motion.button>
-                        <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                          {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                          {copied ? t.share_copied : t.share_copy}
-                        </motion.button>
-                      </motion.div>
+                        className="absolute inset-0 pointer-events-none"
+                        style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.12) 50%, transparent 70%)" }}
+                        animate={{ x: ["-100%", "200%"] }}
+                        transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
+                      />
                     </motion.div>
+                    <motion.h2 className="font-heading text-xl gold-gradient-text mt-4 text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+                      {card.hebrewName}
+                    </motion.h2>
+                    <motion.p className="text-foreground/50 font-body text-xs text-center mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
+                      {t.daily_arcana_label} {card.number}
+                    </motion.p>
+                    {phase === "locked" && (
+                      <motion.div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                        <Clock className="w-3 h-3 text-gold/60" />
+                        <span className="font-body text-[11px] text-gold/70">{t.daily_next_card} {timeLeft}</span>
+                      </motion.div>
+                    )}
+                    <motion.div className="flex items-center gap-2 mt-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        <Share2 className="w-3 h-3" />{t.forecast_share}
+                      </motion.button>
+                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {copied ? t.share_copied : t.share_copy}
+                      </motion.button>
+                    </motion.div>
+                  </motion.div>
 
-                    {/* ── TEXT COLUMN ── */}
+                  {/* Mobile-only card (in flow) */}
+                  <div className="md:hidden flex flex-col items-center p-6 pb-2">
                     <motion.div
-                      className="mt-8 md:col-start-2 md:row-start-1 md:mt-0 md:w-full md:max-w-[500px] md:justify-self-center"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                      className="relative rounded-xl overflow-hidden"
+                      style={{
+                        width: "clamp(180px, 55vw, 260px)",
+                        aspectRatio: "2 / 3",
+                        border: "2px solid hsl(var(--gold) / 0.25)",
+                        boxShadow: "0 0 40px hsl(var(--gold) / 0.12), 0 16px 48px hsl(0 0% 0% / 0.4)",
+                      }}
+                      initial={{ scale: 0.85, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ duration: 0.7 }}
                     >
-                      {aiText ? (
-                        <div>
-                          <div className="flex justify-end mb-4"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                          {renderMysticalText(aiText, textSize)}
-                          {aiLoading && (
-                            <motion.div
-                              className="flex items-center justify-center gap-2 mt-6"
-                              animate={{ opacity: [0.4, 1, 0.4] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                            >
-                              <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                              <span className="font-body text-xs text-gold/50">{t.daily_loading}</span>
-                            </motion.div>
-                          )}
+                      {cardImage ? (
+                        <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
+                          <span className="text-4xl">{card.symbol}</span>
                         </div>
-                      ) : aiError ? (
-                        <div
-                          className="text-center rounded-xl p-4"
-                          style={{
-                            background: "hsl(var(--crimson) / 0.08)",
-                            border: "1px solid hsl(var(--crimson) / 0.15)",
-                          }}
-                        >
-                          <p className="text-foreground/50 font-body text-xs">{aiError}</p>
-                        </div>
-                      ) : aiLoading ? (
-                        <div className="flex flex-col items-center justify-center py-12">
-                          <motion.div
-                            className="w-16 h-16 rounded-full mb-6"
-                            style={{
-                              background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)",
-                              border: "1px solid hsl(var(--gold) / 0.2)",
-                            }}
-                            animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }}
-                            transition={{ duration: 3, repeat: Infinity }}
-                          />
-                          <motion.p
-                            className="font-body text-gold/70 text-sm"
-                            animate={{ opacity: [0.4, 1, 0.4] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            {t.daily_loading}
-                          </motion.p>
-                        </div>
-                      ) : null}
-
-                      {!aiLoading && (aiText || aiError) && (
-                        <>
-                          <ShareResultSection
-                            symbol={card.symbol}
-                            title={`קלף יומי — ${card.hebrewName}`}
-                            subtitle="הקלף שנבחר עבורכם להיום"
-                          />
-                          <div className="section-divider max-w-[200px] mx-auto my-8" />
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1 }}
-                            className="text-center rounded-xl p-6"
-                            style={{
-                              background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))",
-                              border: "1px solid hsl(var(--gold) / 0.12)",
-                            }}
-                          >
-                            <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                            <h4 className="font-heading text-base text-gold mb-2">{t.daily_premium_title}</h4>
-                            <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.daily_premium_desc}</p>
-                            <button onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                              <Sparkles className="w-3.5 h-3.5" />{t.daily_premium_cta}
-                            </button>
-                          </motion.div>
-                        </>
                       )}
                     </motion.div>
+                    <h2 className="font-heading text-xl gold-gradient-text mt-4 text-center">{card.hebrewName}</h2>
+                    <p className="text-foreground/50 font-body text-xs text-center mt-1">{t.daily_arcana_label} {card.number}</p>
+                    {phase === "locked" && (
+                      <div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                        <Clock className="w-3 h-3 text-gold/60" />
+                        <span className="font-body text-[11px] text-gold/70">{t.daily_next_card} {timeLeft}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center gap-2 mt-3">
+                      <button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }}>
+                        <Share2 className="w-3 h-3" />{t.forecast_share}
+                      </button>
+                      <button onClick={handleCopy} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }}>
+                        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                        {copied ? t.share_copied : t.share_copy}
+                      </button>
+                    </div>
                   </div>
+
+                  {/* ── TEXT — scrolls normally, constrained to left half on desktop ── */}
+                  <motion.div
+                    className="p-6 md:max-w-[500px] md:pl-8 md:pr-4"
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {aiText ? (
+                      <div>
+                        <div className="flex justify-end mb-4"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                        {renderMysticalText(aiText, textSize)}
+                        {aiLoading && (
+                          <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                            <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
+                            <span className="font-body text-xs text-gold/50">{t.daily_loading}</span>
+                          </motion.div>
+                        )}
+                      </div>
+                    ) : aiError ? (
+                      <div className="text-center rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                        <p className="text-foreground/50 font-body text-xs">{aiError}</p>
+                      </div>
+                    ) : aiLoading ? (
+                      <div className="flex flex-col items-center justify-center py-12">
+                        <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
+                        <motion.p className="font-body text-gold/70 text-sm" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.daily_loading}</motion.p>
+                      </div>
+                    ) : null}
+
+                    {!aiLoading && (aiText || aiError) && (
+                      <>
+                        <ShareResultSection symbol={card.symbol} title={`קלף יומי — ${card.hebrewName}`} subtitle="הקלף שנבחר עבורכם להיום" />
+                        <div className="section-divider max-w-[200px] mx-auto my-8" />
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                          <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
+                          <h4 className="font-heading text-base text-gold mb-2">{t.daily_premium_title}</h4>
+                          <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.daily_premium_desc}</p>
+                          <button onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
+                            <Sparkles className="w-3.5 h-3.5" />{t.daily_premium_cta}
+                          </button>
+                        </motion.div>
+                      </>
+                    )}
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>
