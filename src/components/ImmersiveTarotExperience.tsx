@@ -1089,44 +1089,36 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   ) : (
                     /* ── Desktop: absolute 3-zone layout ── */
                     <div className="absolute inset-0">
-                      {/* LEFT: Living Sacred Message */}
+                      {/* LEFT: Transparent overlay — text floats over the oracle */}
                       <motion.div
                         ref={scrollRef}
                         className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
                         style={{
-                          top: "calc(8vh + 50px)",
+                          top: "calc(12vh + 50px)",
                           left: "3vw",
-                          width: "min(540px, calc(100vw - 580px))",
-                          maxWidth: "540px",
-                          maxHeight: "78vh",
-                          borderRadius: "2.5rem",
-                          background: "radial-gradient(ellipse 130% 90% at 50% 0%, hsl(222 38% 13% / 0.85), hsl(222 50% 4% / 0.92))",
-                          border: "none",
-                          boxShadow: "0 0 120px hsl(var(--gold) / 0.02), 0 30px 80px hsl(0 0% 0% / 0.4)",
-                          backdropFilter: "blur(30px)",
-                          maskImage: "linear-gradient(to bottom, black 90%, transparent 100%)",
-                          WebkitMaskImage: "linear-gradient(to bottom, black 90%, transparent 100%)",
+                          width: "min(480px, calc(100vw - 560px))",
+                          maxWidth: "480px",
+                          maxHeight: "80vh",
+                          /* No background, no box — pure transparent overlay */
                         }}
-                        initial={{ opacity: 0, y: 50 }}
+                        initial={{ opacity: 0, y: 40 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.6, duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {/* Ethereal border shimmer */}
-                        <motion.div
-                          className="absolute inset-0 rounded-[2.5rem] pointer-events-none"
+                        {/* Subtle radiance behind text for legibility — NOT a box */}
+                        <div
+                          className="absolute inset-0 pointer-events-none"
                           style={{
-                            border: "1px solid hsl(var(--gold) / 0.06)",
-                            boxShadow: "inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                            background: "radial-gradient(ellipse 90% 70% at 50% 30%, hsl(222 47% 6% / 0.45), transparent 80%)",
+                            filter: "blur(40px)",
                           }}
-                          animate={{ opacity: [0.4, 0.8, 0.4] }}
-                          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                         />
 
-                        <div className="relative px-10 py-12 lg:px-14 lg:py-16">
+                        <div className="relative" style={{ padding: "0 16px 60px" }}>
 
                           {/* ── Emotional opening whisper ── */}
                           <motion.div
-                            className="mb-10 text-center"
+                            className="mb-8 text-center"
                             initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.9, duration: 1 }}
@@ -1135,11 +1127,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               className="font-body italic"
                               style={{
                                 fontSize: "1.05rem",
-                                color: "hsl(var(--foreground) / 0.4)",
+                                color: "hsl(var(--foreground) / 0.5)",
                                 lineHeight: 1.8,
                                 letterSpacing: "0.03em",
+                                textShadow: "0 2px 20px hsl(222 47% 6% / 0.9), 0 0 40px hsl(222 47% 6% / 0.7)",
                               }}
-                              animate={{ opacity: [0.4, 0.6, 0.4] }}
+                              animate={{ opacity: [0.4, 0.65, 0.4] }}
                               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                             >
                               {language === "he"
@@ -1150,23 +1143,23 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
                           {/* Sacred ornament */}
                           <motion.div
-                            className="flex items-center justify-center gap-4 mb-8"
+                            className="flex items-center justify-center gap-4 mb-6"
                             initial={{ opacity: 0, scaleX: 0 }}
                             animate={{ opacity: 1, scaleX: 1 }}
                             transition={{ delay: 1.2, duration: 0.8 }}
                           >
-                            <div className="h-px flex-1 max-w-[40px]" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2))" }} />
-                            <span style={{ color: "hsl(var(--gold) / 0.25)", fontSize: "10px", letterSpacing: "0.4em" }}>✦ ✦ ✦</span>
-                            <div className="h-px flex-1 max-w-[40px]" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.2))" }} />
+                            <div className="h-px flex-1 max-w-[40px]" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.25))" }} />
+                            <span style={{ color: "hsl(var(--gold) / 0.35)", fontSize: "10px", letterSpacing: "0.4em", textShadow: "0 0 15px hsl(var(--gold) / 0.2)" }}>✦ ✦ ✦</span>
+                            <div className="h-px flex-1 max-w-[40px]" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.25))" }} />
                           </motion.div>
 
-                          {/* Title — ancient inscription feel */}
+                          {/* Title — glowing inscription */}
                           <motion.h3
                             className="font-heading text-center mb-2"
                             style={{
-                              fontSize: "1.6rem",
+                              fontSize: "1.5rem",
                               color: "hsl(var(--gold))",
-                              textShadow: "0 0 50px hsl(var(--gold) / 0.12)",
+                              textShadow: "0 0 40px hsl(var(--gold) / 0.25), 0 2px 20px hsl(222 47% 6% / 0.9)",
                               letterSpacing: "0.2em",
                             }}
                             initial={{ opacity: 0, y: 12 }}
@@ -1181,8 +1174,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             className="font-body text-center italic mb-10"
                             style={{
                               fontSize: "0.82rem",
-                              color: "hsl(var(--foreground) / 0.28)",
+                              color: "hsl(var(--foreground) / 0.35)",
                               letterSpacing: "0.1em",
+                              textShadow: "0 2px 15px hsl(222 47% 6% / 0.9)",
                             }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -1198,6 +1192,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               style={{
                                 maxWidth: "420px",
                                 margin: "0 auto",
+                                textShadow: "0 2px 20px hsl(222 47% 6% / 0.95), 0 0 40px hsl(222 47% 6% / 0.6)",
                               }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
@@ -1212,7 +1207,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               animate={{ opacity: 1 }}
                               transition={{ delay: 1.0, duration: 0.6 }}
                             >
-                              {/* Breathing oracle presence */}
                               <motion.div
                                 className="relative"
                                 animate={{ scale: [1, 1.06, 1] }}
@@ -1232,14 +1226,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                   animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0, 0.4] }}
                                   transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
                                 />
-                                <motion.div
-                                  className="absolute inset-0 rounded-full pointer-events-none"
-                                  style={{ border: "1px solid hsl(var(--gold) / 0.05)" }}
-                                  animate={{ scale: [1, 2, 1], opacity: [0.3, 0, 0.3] }}
-                                  transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
-                                />
                               </motion.div>
-                              <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic">
+                              <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic"
+                                style={{ textShadow: "0 2px 20px hsl(222 47% 6% / 0.9)" }}
+                              >
                                 {language === "he" ? "מפענחת את המסר הנסתר..." : "Deciphering the hidden message..."}
                               </p>
                             </motion.div>
@@ -1262,32 +1252,30 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.8, duration: 1 }}
                             >
-                              {/* Breathing pause */}
                               <div className="h-10" />
 
-                              {/* Closing sacred line */}
                               <div className="flex items-center justify-center gap-3 mb-6">
-                                <div className="h-px w-6" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.12))" }} />
+                                <div className="h-px w-6" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.15))" }} />
                                 <motion.span
-                                  style={{ color: "hsl(var(--gold) / 0.2)", fontSize: "7px" }}
+                                  style={{ color: "hsl(var(--gold) / 0.25)", fontSize: "7px", textShadow: "0 0 10px hsl(var(--gold) / 0.15)" }}
                                   animate={{ opacity: [0.3, 0.7, 0.3] }}
                                   transition={{ duration: 3, repeat: Infinity }}
                                 >
                                   ✦
                                 </motion.span>
-                                <div className="h-px w-6" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.12))" }} />
+                                <div className="h-px w-6" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.15))" }} />
                               </div>
 
-                              {/* Closing whisper */}
                               <motion.p
                                 className="text-center font-body italic mb-10"
                                 style={{
                                   fontSize: "0.82rem",
-                                  color: "hsl(var(--foreground) / 0.25)",
+                                  color: "hsl(var(--foreground) / 0.3)",
                                   letterSpacing: "0.06em",
                                   lineHeight: 1.8,
+                                  textShadow: "0 2px 15px hsl(222 47% 6% / 0.9)",
                                 }}
-                                animate={{ opacity: [0.25, 0.4, 0.25] }}
+                                animate={{ opacity: [0.3, 0.5, 0.3] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                               >
                                 {language === "he"
@@ -1301,16 +1289,17 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                   className="font-heading text-sm tracking-[0.2em] cursor-pointer px-8 py-3 rounded-full"
                                   style={{
                                     background: "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))",
-                                    border: "1px solid hsl(var(--gold) / 0.15)",
-                                    color: "hsl(var(--gold) / 0.8)",
-                                    boxShadow: "0 0 30px hsl(var(--gold) / 0.04)",
+                                    border: "1px solid hsl(var(--gold) / 0.2)",
+                                    color: "hsl(var(--gold) / 0.85)",
+                                    boxShadow: "0 0 30px hsl(var(--gold) / 0.06), 0 4px 20px hsl(0 0% 0% / 0.3)",
+                                    backdropFilter: "blur(12px)",
                                   }}
                                   onClick={handleClose}
                                   whileHover={{
                                     scale: 1.04,
                                     y: -2,
-                                    boxShadow: "0 0 40px hsl(var(--gold) / 0.1)",
-                                    borderColor: "hsl(var(--gold) / 0.25)",
+                                    boxShadow: "0 0 40px hsl(var(--gold) / 0.12)",
+                                    borderColor: "hsl(var(--gold) / 0.3)",
                                   }}
                                   whileTap={{ scale: 0.97 }}
                                 >
