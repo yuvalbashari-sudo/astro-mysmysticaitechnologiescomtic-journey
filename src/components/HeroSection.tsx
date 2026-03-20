@@ -2741,7 +2741,7 @@ const HeroSection = () => {
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                      className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
