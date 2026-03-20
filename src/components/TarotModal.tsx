@@ -504,11 +504,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isShufflePhase ? (
                 <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotShufflePhase onComplete={handleShuffleComplete} /></motion.div>
               ) : isTablePhase ? (
-                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-[480px] relative overflow-hidden">
-                  {/* Velvet table background */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(222 35% 12%), hsl(222 45% 6%))" }} />
-                  {/* Table edge glow */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, hsl(var(--gold) / 0.06), transparent 50%)" }} />
+                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
+                  {/* Subtle center vignette */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.45) 0%, transparent 70%)" }} />
 
                   {/* Darkening overlay when a card is being revealed */}
                   <AnimatePresence>
