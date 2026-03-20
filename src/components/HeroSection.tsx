@@ -2522,21 +2522,21 @@ const HeroSection = () => {
       </motion.div>
     </motion.button>
 
-    {/* ── Subtle dark gradient behind text for readability ── */}
+    {/* ── Very subtle readability veil — minimal, not blocking artwork ── */}
     <div
       className="absolute z-[62] pointer-events-none inset-x-0"
       style={{
-        top: isMobile ? "55%" : "48%",
+        top: isMobile ? "60%" : "55%",
         bottom: 0,
-        background: "linear-gradient(to bottom, transparent 0%, hsl(var(--deep-blue) / 0.4) 30%, hsl(var(--deep-blue) / 0.7) 70%, hsl(var(--deep-blue) / 0.85) 100%)",
+        background: "linear-gradient(to bottom, transparent 0%, hsl(var(--deep-blue) / 0.15) 40%, hsl(var(--deep-blue) / 0.35) 100%)",
       }}
     />
 
-    {/* ── Hero Conversion Content — positioned below face, above crystal ball ── */}
+    {/* ── Hero Conversion Content — upper chest area, above crystal ball ── */}
     <div
       className="absolute z-[65] pointer-events-none inset-x-0 bottom-0"
       style={{
-        top: isMobile ? "68%" : "58%",
+        top: isMobile ? "58%" : "50%",
         paddingLeft: isMobile ? "20px" : "32px",
         paddingRight: isMobile ? "20px" : "32px",
       }}
