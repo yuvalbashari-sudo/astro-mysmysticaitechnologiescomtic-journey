@@ -324,14 +324,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
             <AnimatePresence mode="wait">
               {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 pt-10 pb-6 md:px-8 md:pt-14 md:pb-8 text-center relative overflow-hidden">
+                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 pt-16 pb-6 md:px-8 md:pt-20 md:pb-8 text-center relative overflow-hidden min-h-screen flex flex-col items-center justify-center">
 
-                  {/* Dark velvet table surface */}
+                  {/* Subtle center vignette for readability — no box */}
                   <div className="absolute inset-0 pointer-events-none" style={{
-                    background: `
-                      radial-gradient(ellipse at 50% 100%, hsl(var(--gold) / 0.05) 0%, transparent 50%),
-                      radial-gradient(ellipse at 50% 50%, hsl(222 35% 10%) 0%, hsl(222 47% 5%) 100%)
-                    `,
+                    background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.5) 0%, transparent 70%)",
                   }} />
                   {/* Floating dust particles */}
                   {[...Array(6)].map((_, i) => (
