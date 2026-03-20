@@ -10,6 +10,8 @@ interface Props {
   children: ReactNode;
   scrollRef?: React.RefObject<HTMLDivElement>;
   fullscreen?: boolean;
+  /** When true, content expands to ~92% width instead of narrow column */
+  wide?: boolean;
 }
 
 /**
@@ -20,7 +22,7 @@ interface Props {
  * Children scroll naturally over a rising fog gradient that provides
  * text legibility without hiding the figure.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
@@ -174,12 +176,14 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 4. No container box — children float directly in the scene
               */}
 
-              {/* Spacer: oracle's face and upper body remain unobscured */}
-              <div
-                className="pointer-events-none"
-                style={{ height: isMobile ? "28vh" : "38vh" }}
-                aria-hidden="true"
-              />
+              {/* Spacer: oracle's face and upper body remain unobscured (skip in wide mode — content fills viewport) */}
+              {!wide && (
+                <div
+                  className="pointer-events-none"
+                  style={{ height: isMobile ? "28vh" : "38vh" }}
+                  aria-hidden="true"
+                />
+              )}
 
               {/* Rising fog — soft gradient that makes text readable
                   without a visible box. Positioned behind content via relative stacking. */}
@@ -198,9 +202,9 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 <motion.div
                   className="relative pointer-events-auto"
                   style={{
-                    maxWidth: isMobile ? "100%" : "560px",
+                    maxWidth: wide ? "92%" : (isMobile ? "100%" : "560px"),
                     margin: "0 auto",
-                    padding: isMobile ? "0 16px 40px" : "0 24px 60px",
+                    padding: isMobile ? "0 16px 40px" : wide ? "0 0 60px" : "0 24px 60px",
                   }}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}

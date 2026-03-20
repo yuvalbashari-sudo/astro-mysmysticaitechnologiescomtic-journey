@@ -327,7 +327,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const cardImage = card ? tarotCardImages[card.name] : null;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide>
             <AnimatePresence mode="wait">
               {/* PHASE: Ready */}
               {phase === "ready" && (
@@ -548,7 +548,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   className="relative"
                 >
                   {/* Desktop: side-by-side composition | Mobile: stacked */}
-                  <div className="flex flex-col md:flex-row md:items-start md:gap-10 lg:gap-14 p-6 md:p-8">
+                  <div className="flex flex-col md:flex-row md:items-center md:justify-center md:min-h-[70vh] md:gap-16 lg:gap-24 p-6 md:py-4 md:px-0">
 
                     {/* ── LEFT COLUMN (RTL: appears on right): The Card — dominant ── */}
                     <motion.div
@@ -562,7 +562,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <motion.div
                         className="relative rounded-xl overflow-hidden"
                         style={{
-                          width: "clamp(180px, 22vw, 280px)",
+                          width: "clamp(220px, 26vw, 360px)",
                           aspectRatio: "2 / 3",
                           border: "2px solid hsl(var(--gold) / 0.25)",
                           boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
@@ -642,11 +642,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* ── RIGHT COLUMN (RTL: appears on left): Interpretation ── */}
                     <motion.div
-                      className="flex-1 mt-8 md:mt-0"
-                      style={{ maxWidth: 480 }}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                      className="flex-1 mt-8 md:mt-0 md:max-w-[480px]"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                       {aiText ? (
                         <div>
