@@ -916,113 +916,185 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               {phase === "interpretation" && (
                 <motion.div
                   key="interpretation"
-                  className="pointer-events-auto w-full max-w-5xl px-4 md:px-8 overflow-hidden"
-                  style={{ marginTop: isMobile ? "6vh" : "5vh", maxHeight: isMobile ? "88vh" : "85vh" }}
-                  initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  className="pointer-events-auto w-full px-4 md:px-8 overflow-hidden"
+                  style={{ maxWidth: isMobile ? "100%" : "72rem", marginTop: isMobile ? "3vh" : "3vh", maxHeight: isMobile ? "92vh" : "90vh" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.6 }}
                 >
-                  <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 md:gap-12`}>
-                    {/* Left: Cards display */}
-                    <motion.div
-                      className={`flex ${isMobile ? "flex-row justify-center" : "flex-col items-center"} gap-4 ${isMobile ? "" : "w-56"} flex-shrink-0`}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3, duration: 0.6 }}
-                    >
-                      {chosenCards.map((card, i) => {
-                        const isCenter = i === 1;
-                        const w = isMobile ? (isCenter ? 82 : 70) : (isCenter ? 135 : 115);
-                        const h = w * 1.55;
-                        return (
-                          <motion.div
-                            key={card.name}
-                            className="relative"
-                            style={{ width: w, height: h }}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.4 + i * 0.15 }}
-                          >
+                  {/* Cards — primary visual focus */}
+                  <motion.div
+                    className="flex items-end justify-center gap-3 md:gap-6 mb-6 md:mb-8"
+                    initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {chosenCards.map((card, i) => {
+                      const isCenter = i === 1;
+                      const w = isMobile ? (isCenter ? 115 : 95) : (isCenter ? 200 : 170);
+                      const h = w * 1.55;
+                      return (
+                        <motion.div
+                          key={card.name}
+                          className="relative flex flex-col items-center"
+                          initial={{ opacity: 0, y: 30, scale: 0.85 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ delay: 0.2 + i * 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                          {/* Background blur/focus layer */}
+                          <div
+                            className="absolute -inset-4 rounded-2xl pointer-events-none"
+                            style={{
+                              background: isCenter
+                                ? "radial-gradient(ellipse, hsl(var(--gold) / 0.06) 0%, transparent 70%)"
+                                : "none",
+                              filter: "blur(12px)",
+                            }}
+                          />
+                          {/* Card shadow */}
+                          <div
+                            className="absolute pointer-events-none"
+                            style={{
+                              width: "80%",
+                              height: 12,
+                              bottom: 28,
+                              left: "10%",
+                              background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.6) 0%, transparent 70%)",
+                              filter: "blur(10px)",
+                            }}
+                          />
+                          <div className="relative" style={{ width: w, height: h }}>
                             <img
                               src={tarotCardImages[card.name] || cardBack}
                               alt={card.hebrewName}
-                              className="w-full h-full object-cover rounded-lg"
+                              className="w-full h-full object-cover rounded-xl"
                               style={{
                                 imageRendering: "auto",
                                 boxShadow: isCenter
-                                  ? "0 0 35px hsl(var(--gold) / 0.3), 0 10px 30px hsl(var(--deep-blue) / 0.6)"
-                                  : "0 0 20px hsl(var(--gold) / 0.15), 0 6px 20px hsl(var(--deep-blue) / 0.4)",
-                                filter: isCenter ? "none" : "brightness(0.8)",
+                                  ? "0 0 60px hsl(var(--gold) / 0.35), 0 16px 48px hsl(0 0% 0% / 0.6)"
+                                  : "0 0 30px hsl(var(--gold) / 0.18), 0 10px 32px hsl(0 0% 0% / 0.5)",
+                                filter: isCenter ? "contrast(1.05) saturate(1.05)" : "brightness(0.85) contrast(1.02)",
                               }}
                             />
+                            {/* Inner glow overlay */}
                             <div
-                              className="absolute inset-0 rounded-lg pointer-events-none"
+                              className="absolute inset-0 rounded-xl pointer-events-none"
                               style={{
-                                boxShadow: `inset 0 0 ${isCenter ? 10 : 6}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
+                                boxShadow: `inset 0 0 ${isCenter ? 14 : 8}px 2px hsl(var(--gold) / ${isCenter ? 0.2 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.2)`,
                               }}
                             />
-                            <div className="text-center mt-2">
-                              <span className={`font-heading ${isCenter ? "text-sm md:text-base text-gold/90" : "text-xs md:text-sm text-gold/60"}`}>
-                                {card.hebrewName}
-                              </span>
-                            </div>
-                          </motion.div>
-                        );
-                      })}
-                    </motion.div>
-
-                    {/* Right: Interpretation text */}
-                    <motion.div
-                      ref={scrollRef}
-                      className="flex-1 rounded-2xl overflow-y-auto"
-                      style={{
-                        maxHeight: isMobile ? "50vh" : "72vh",
-                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.7), hsl(var(--deep-blue) / 0.8))",
-                        border: "1px solid hsl(var(--gold) / 0.1)",
-                        boxShadow: "0 0 30px hsl(var(--deep-blue) / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.05)",
-                      }}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5, duration: 0.6 }}
-                    >
-                      <div className="p-6 md:p-10">
-                        {aiText ? (
-                          <div
-                            className="font-body text-foreground/90 text-base md:text-lg"
-                            style={{ lineHeight: 1.85 }}
-                          >
-                            {renderMysticalText(aiText)}
+                            {/* Pulsing outer glow for center card */}
+                            {isCenter && (
+                              <motion.div
+                                className="absolute -inset-1.5 rounded-xl pointer-events-none"
+                                style={{ border: "1px solid hsl(var(--gold) / 0.25)" }}
+                                animate={{
+                                  boxShadow: [
+                                    "0 0 15px hsl(var(--gold) / 0.1)",
+                                    "0 0 35px hsl(var(--gold) / 0.25)",
+                                    "0 0 15px hsl(var(--gold) / 0.1)",
+                                  ],
+                                }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                              />
+                            )}
                           </div>
-                        ) : aiLoading ? (
-                          <div className="flex flex-col items-center justify-center py-16 gap-4">
-                            <motion.div
-                              animate={{ rotate: 360 }}
-                              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                            >
-                              <Sparkles className="w-7 h-7 text-gold/50" />
-                            </motion.div>
-                            <p className="text-gold/50 font-body text-base">
-                              {language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}
-                            </p>
-                          </div>
-                        ) : null}
-
-                        {aiLoading && aiText && (
+                          {/* Card name */}
                           <motion.span
-                            className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle"
-                            animate={{ opacity: [1, 0, 1] }}
-                            transition={{ duration: 0.8, repeat: Infinity }}
-                          />
-                        )}
-                      </div>
-                    </motion.div>
-                  </div>
+                            className="font-heading mt-3 text-center"
+                            style={{
+                              fontSize: isCenter ? (isMobile ? 13 : 16) : (isMobile ? 11 : 14),
+                              color: isCenter ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.7)",
+                              textShadow: isCenter ? "0 0 12px hsl(var(--gold) / 0.3)" : "none",
+                              letterSpacing: "0.05em",
+                            }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.6 + i * 0.15 }}
+                          >
+                            {card.hebrewName}
+                          </motion.span>
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+
+                  {/* Interpretation text — delayed entry */}
+                  <motion.div
+                    ref={scrollRef}
+                    className="mx-auto rounded-2xl overflow-y-auto"
+                    style={{
+                      maxWidth: isMobile ? "100%" : "52rem",
+                      maxHeight: isMobile ? "42vh" : "48vh",
+                      background: "linear-gradient(165deg, hsl(222 45% 8% / 0.92), hsl(222 50% 5% / 0.95))",
+                      border: "1px solid hsl(var(--gold) / 0.12)",
+                      boxShadow: "0 0 40px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                    initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                    transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div className="p-6 md:p-10">
+                      {/* Section title */}
+                      <motion.h3
+                        className="font-heading text-center mb-6"
+                        style={{
+                          fontSize: isMobile ? "1.15rem" : "1.5rem",
+                          color: "hsl(var(--gold))",
+                          textShadow: "0 0 20px hsl(var(--gold) / 0.25)",
+                          letterSpacing: "0.08em",
+                        }}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7, duration: 0.5 }}
+                      >
+                        {language === "he" ? "✦ הפירוש שלך ✦" : "✦ Your Reading ✦"}
+                      </motion.h3>
+
+                      {aiText ? (
+                        <motion.div
+                          className="font-body text-foreground/90"
+                          style={{
+                            fontSize: isMobile ? "1.05rem" : "1.25rem",
+                            lineHeight: isMobile ? 1.7 : 1.8,
+                            maxWidth: "48rem",
+                            margin: "0 auto",
+                          }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ delay: 0.8, duration: 0.5 }}
+                        >
+                          {renderMysticalText(aiText)}
+                        </motion.div>
+                      ) : aiLoading ? (
+                        <div className="flex flex-col items-center justify-center py-12 gap-4">
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                          >
+                            <Sparkles className="w-8 h-8 text-gold/50" />
+                          </motion.div>
+                          <p className="text-gold/50 font-body text-lg">
+                            {language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}
+                          </p>
+                        </div>
+                      ) : null}
+
+                      {aiLoading && aiText && (
+                        <motion.span
+                          className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle"
+                          animate={{ opacity: [1, 0, 1] }}
+                          transition={{ duration: 0.8, repeat: Infinity }}
+                        />
+                      )}
+                    </div>
+                  </motion.div>
 
                   {/* Bottom CTA */}
                   {!aiLoading && aiText && (
                     <motion.div
-                      className="mt-8 text-center"
+                      className="mt-6 text-center"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
