@@ -12,6 +12,7 @@ import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmReadingModal from "./PalmReadingModal";
 import DailyCardModal from "./DailyCardModal";
+import ZodiacSignModal from "./ZodiacSignModal";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
@@ -724,10 +725,12 @@ const ZodiacWheel = ({
   isMobile,
   hoveredMenuItem,
   onHoveredElement,
+  onSignClick,
 }: {
   isMobile: boolean;
   hoveredMenuItem: number | null;
   onHoveredElement?: (color: string | null) => void;
+  onSignClick?: (index: number) => void;
 }) => {
   const { language } = useLanguage();
   const t = useT();
@@ -859,6 +862,7 @@ const ZodiacWheel = ({
               }}
               onMouseEnter={() => { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); }}
               onMouseLeave={() => { setHoveredSign(null); onHoveredElement?.(null); }}
+              onClick={() => onSignClick?.(i)}
               // Counter-rotate to keep symbols upright — slow down when hovered
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
@@ -2096,6 +2100,7 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [astrologerOpen, setAstrologerOpen] = useState(false);
+  const [zodiacSignIndex, setZodiacSignIndex] = useState<number | null>(null);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
@@ -2738,7 +2743,7 @@ const HeroSection = () => {
                 : { marginTop: "352px", marginLeft: "10px" }
               }
             >
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={(i) => setZodiacSignIndex(i)} />
             </div>
           </div>
         </div>
@@ -3192,6 +3197,7 @@ const HeroSection = () => {
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
+      <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
     </>
   );
 };
