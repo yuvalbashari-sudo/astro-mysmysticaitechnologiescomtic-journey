@@ -344,7 +344,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
-    transition: "opacity 1.5s ease-in-out",
+    transition: "opacity 1.8s ease-in-out",
     transform: "scale(1.22)",
     transformOrigin: "center center",
     filter: "brightness(1.06)",
