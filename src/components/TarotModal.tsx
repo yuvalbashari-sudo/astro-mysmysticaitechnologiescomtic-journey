@@ -867,7 +867,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6 backdrop-blur-sm relative z-10" style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)" }}>
                     <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
                     <h4 className="font-heading text-base text-gold mb-2">{t.tarot_premium_title}</h4>
                     <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
