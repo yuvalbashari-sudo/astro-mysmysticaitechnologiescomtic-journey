@@ -2365,7 +2365,7 @@ const HeroSection = () => {
               }}
             />
             {entranceComplete && (
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
             )}
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
