@@ -142,7 +142,7 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
 
 /* ── Energy Pulse ──────────────────────────────────── */
 const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobile: boolean; activeColor?: string; isNearBall?: boolean; clickBurst?: number }) => {
-  const baseSize = isMobile ? 290 : 398;
+  const baseSize = isMobile ? 314 : 430;
   const pulseColor = activeColor || "hsl(var(--gold) / 0.15)";
   const intensity = isNearBall ? 1.4 : 1;
 
@@ -308,7 +308,7 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const s = isMobile ? 290 : 398;
+  const s = isMobile ? 314 : 430;
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
@@ -2271,13 +2271,13 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "198px", marginLeft: "10px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
           >
             {/* Aura glow — tighter spread for realism */}
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "290px", height: "290px",
+                width: "314px", height: "314px",
                 background: "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 45%, transparent 60%)",
               }}
               animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
@@ -2287,7 +2287,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "296px", height: "296px",
+                width: "320px", height: "320px",
                 boxShadow: "inset 0 14px 35px hsl(var(--deep-blue) / 0.55), inset 0 -10px 30px hsl(var(--deep-blue) / 0.45), inset 14px 0 24px hsl(var(--deep-blue) / 0.3), inset -14px 0 24px hsl(var(--deep-blue) / 0.3)",
               }}
             />
@@ -2298,7 +2298,7 @@ const HeroSection = () => {
             <motion.div
               ref={crystalRef}
               className="relative z-20 cursor-pointer"
-              style={{ width: "290px", height: "290px" }}
+              style={{ width: "314px", height: "314px" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
@@ -2327,13 +2327,13 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "242px", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "250px", marginLeft: "10px" }}
           >
             {/* Internal glow — contained inside ball */}
             <motion.div
               className="absolute rounded-full overflow-hidden"
               style={{
-                width: "398px", height: "398px",
+                width: "430px", height: "430px",
               }}
             >
               <motion.div
@@ -2374,7 +2374,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "398px", height: "398px",
+                width: "430px", height: "430px",
                 boxShadow: "inset 0 10px 25px hsl(var(--deep-blue) / 0.18), inset 0 -8px 20px hsl(var(--deep-blue) / 0.12), inset 8px 0 16px hsl(var(--deep-blue) / 0.08), inset -8px 0 16px hsl(var(--deep-blue) / 0.08)",
               }}
             />
@@ -2382,7 +2382,7 @@ const HeroSection = () => {
             <div
               className="absolute pointer-events-none z-[24]"
               style={{
-                width: "398px", height: "398px",
+                width: "430px", height: "430px",
                 left: "50%", top: "50%",
                 transform: "translate(-50%, -50%)",
                 borderRadius: "50%",
@@ -2403,7 +2403,7 @@ const HeroSection = () => {
             <motion.div
               ref={crystalRef}
               className="relative z-20 cursor-pointer overflow-hidden"
-              style={{ width: "398px", height: "398px", borderRadius: "50%" }}
+              style={{ width: "430px", height: "430px", borderRadius: "50%" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
