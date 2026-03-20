@@ -293,6 +293,7 @@ const FloatingCard = ({
   onClick,
   totalCards,
   isMobile,
+  showBurst,
 }: {
   card: TarotCard;
   index: number;
@@ -301,6 +302,7 @@ const FloatingCard = ({
   onClick: () => void;
   totalCards: number;
   isMobile: boolean;
+  showBurst: boolean;
 }) => {
   const cardW = isMobile ? 62 : 105;
   const cardH = cardW * 1.55;
@@ -332,7 +334,7 @@ const FloatingCard = ({
         scale: 1.08,
         transition: { duration: 0.3, ease: "easeOut" }
       } : {}}
-      onClick={onClick}
+      onClick={!isSelected ? onClick : undefined}
     >
       {/* Card shadow on table */}
       <motion.div
@@ -355,8 +357,11 @@ const FloatingCard = ({
       <motion.div
         className="w-full h-full relative rounded-xl overflow-hidden"
         style={{ transformStyle: "preserve-3d" }}
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        animate={{
+          rotateY: isFlipped ? 180 : 0,
+          scale: isFlipped ? [1, 1.06, 1.02] : 1,
+        }}
+        transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
       >
         {/* Back */}
         <div
@@ -370,14 +375,6 @@ const FloatingCard = ({
           }}
         >
           <img src={cardBack} alt="" className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
-          {isSelected && (
-            <motion.div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 70%)" }}
-              animate={{ opacity: [0.3, 0.8, 0.3] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            />
-          )}
           <div
             className="absolute inset-0 rounded-xl pointer-events-none"
             style={{
@@ -404,6 +401,39 @@ const FloatingCard = ({
           />
         </div>
       </motion.div>
+
+      {/* Light burst on reveal */}
+      <AnimatePresence>
+        {showBurst && (
+          <motion.div
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.6) 0%, hsl(var(--gold) / 0.15) 40%, transparent 70%)",
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: [0, 1, 0], scale: [0.8, 1.3, 1.5] }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Card name under revealed card */}
+      <AnimatePresence>
+        {isFlipped && (
+          <motion.div
+            className="absolute left-0 right-0 text-center pointer-events-none"
+            style={{ top: cardH + 6 }}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+          >
+            <span className="font-heading text-gold/80" style={{ fontSize: isMobile ? 9 : 11 }}>
+              {card.hebrewName}
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
