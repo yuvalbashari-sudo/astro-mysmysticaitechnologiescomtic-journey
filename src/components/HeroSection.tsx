@@ -1978,6 +1978,7 @@ const HeroSection = () => {
   const t = useT();
   const { language } = useLanguage();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
   const [risingOpen, setRisingOpen] = useState(false);
@@ -2139,10 +2140,15 @@ const HeroSection = () => {
             width: isMobile ? "220px" : "400px",
             height: isMobile ? "170px" : "280px",
             transform: "translate(-50%, -50%)",
-            background: activeColor
-              ? `radial-gradient(ellipse, ${activeColor}44 0%, ${activeColor}18 40%, transparent 70%)`
-              : "radial-gradient(ellipse, hsl(var(--gold) / 0.22) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
+            background: hoveredTeaser === "right"
+              ? "radial-gradient(ellipse, hsl(270 55% 50% / 0.2) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 70%)"
+              : hoveredTeaser === "left"
+                ? "radial-gradient(ellipse, hsl(43 70% 55% / 0.18) 0%, hsl(215 60% 50% / 0.08) 40%, transparent 70%)"
+                : activeColor
+                  ? `radial-gradient(ellipse, ${activeColor}44 0%, ${activeColor}18 40%, transparent 70%)`
+                  : "radial-gradient(ellipse, hsl(var(--gold) / 0.22) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
             filter: "blur(25px)",
+            transition: "background 0.6s ease-out",
           }}
           animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.2, 1] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
@@ -2381,7 +2387,7 @@ const HeroSection = () => {
             className="relative flex items-center justify-center pointer-events-auto"
             style={{ x: crystalX, y: crystalY, marginTop: "352px", marginLeft: "10px" }}
           >
-            {/* Internal glow — contained inside ball */}
+            {/* Internal glow — contained inside ball, reacts to teaser hover */}
             <motion.div
               className="absolute rounded-full overflow-hidden"
               style={{
@@ -2391,21 +2397,31 @@ const HeroSection = () => {
               <motion.div
                 className="absolute inset-0 rounded-full"
                 style={{
-                  background: hoveredItem !== null
-                    ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}2a 0%, ${ITEM_COLORS[hoveredItem].glow}10 40%, transparent 60%)`
-                    : "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 40%, transparent 60%)",
+                  background: hoveredTeaser === "right"
+                    ? "radial-gradient(circle, hsl(270 60% 50% / 0.18) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 60%)"
+                    : hoveredTeaser === "left"
+                      ? "radial-gradient(circle, hsl(43 70% 55% / 0.16) 0%, hsl(215 60% 50% / 0.08) 40%, transparent 60%)"
+                      : hoveredItem !== null
+                        ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}2a 0%, ${ITEM_COLORS[hoveredItem].glow}10 40%, transparent 60%)`
+                        : "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 40%, transparent 60%)",
+                  transition: "background 0.6s ease-out",
                 }}
                 animate={{
-                  scale: hoveredItem !== null ? [1, 1.15, 1] : [1, 1.08, 1],
-                  opacity: hoveredItem !== null ? [0.5, 0.9, 0.5] : [0.4, 0.7, 0.4],
+                  scale: hoveredTeaser ? [1, 1.12, 1] : hoveredItem !== null ? [1, 1.15, 1] : [1, 1.08, 1],
+                  opacity: hoveredTeaser ? [0.6, 1, 0.6] : hoveredItem !== null ? [0.5, 0.9, 0.5] : [0.4, 0.7, 0.4],
                 }}
-                transition={{ duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: hoveredTeaser ? 2.2 : hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
               />
               <motion.div
                 className="absolute rounded-full pointer-events-none"
                 style={{
                   inset: "15%",
-                  background: "conic-gradient(from 0deg, transparent 0%, hsl(var(--gold) / 0.08) 15%, transparent 30%, hsl(var(--celestial) / 0.06) 50%, transparent 65%, hsl(var(--crimson) / 0.05) 80%, transparent 100%)",
+                  background: hoveredTeaser === "right"
+                    ? "conic-gradient(from 0deg, transparent 0%, hsl(270 50% 45% / 0.12) 15%, transparent 30%, hsl(280 60% 50% / 0.1) 50%, transparent 65%, hsl(260 40% 55% / 0.08) 80%, transparent 100%)"
+                    : hoveredTeaser === "left"
+                      ? "conic-gradient(from 0deg, transparent 0%, hsl(43 80% 55% / 0.1) 15%, transparent 30%, hsl(215 60% 55% / 0.08) 50%, transparent 65%, hsl(340 50% 55% / 0.06) 80%, transparent 100%)"
+                      : "conic-gradient(from 0deg, transparent 0%, hsl(var(--gold) / 0.08) 15%, transparent 30%, hsl(var(--celestial) / 0.06) 50%, transparent 65%, hsl(var(--crimson) / 0.05) 80%, transparent 100%)",
+                  transition: "background 0.6s ease-out",
                 }}
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
@@ -2414,9 +2430,14 @@ const HeroSection = () => {
                 className="absolute rounded-full pointer-events-none"
                 style={{
                   inset: "24%",
-                  background: activeColor
-                    ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
-                    : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
+                  background: hoveredTeaser === "right"
+                    ? "radial-gradient(circle, hsl(270 55% 50% / 0.14) 0%, transparent 70%)"
+                    : hoveredTeaser === "left"
+                      ? "radial-gradient(circle, hsl(43 70% 55% / 0.12) 0%, transparent 70%)"
+                      : activeColor
+                        ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
+                        : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
+                  transition: "background 0.6s ease-out",
                 }}
                 animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.3, 0.7, 0.3] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -2676,7 +2697,9 @@ const HeroSection = () => {
               type="button"
               className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
               onClick={() => setCompatibilityOpen(true)}
-              whileHover={{ scale: 1.07, x: 6 }}
+              onMouseEnter={() => { setHoveredTeaser("left"); setHoveredItem(1); }}
+              onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
@@ -2810,7 +2833,9 @@ const HeroSection = () => {
               type="button"
               className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
               onClick={() => setTarotOpen(true)}
-              whileHover={{ scale: 1.07, x: -6 }}
+              onMouseEnter={() => { setHoveredTeaser("right"); setHoveredItem(4); }}
+              onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
+              whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
