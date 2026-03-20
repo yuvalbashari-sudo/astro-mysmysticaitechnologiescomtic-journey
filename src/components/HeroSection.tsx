@@ -2339,14 +2339,14 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "370px", height: "370px",
+                width: "350px", height: "350px",
                 background: hoveredItem !== null
-                  ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}15 40%, transparent 70%)`
-                  : "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
+                  ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}12 40%, transparent 65%)`
+                  : "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, hsl(var(--celestial) / 0.06) 40%, transparent 65%)",
               }}
               animate={{
-                scale: hoveredItem !== null ? [1, 1.25, 1] : [1, 1.15, 1],
-                opacity: hoveredItem !== null ? [0.6, 1, 0.6] : [0.5, 0.8, 0.5],
+                scale: hoveredItem !== null ? [1, 1.2, 1] : [1, 1.1, 1],
+                opacity: hoveredItem !== null ? [0.5, 0.9, 0.5] : [0.4, 0.7, 0.4],
               }}
               transition={{ duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -2373,13 +2373,20 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: "410px", height: "410px",
-                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.04) 70%, transparent 90%)",
+                width: "390px", height: "390px",
+                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.03) 70%, transparent 90%)",
               }}
-              animate={{ rotate: [0, 360], scale: [1, 1.08, 1] }}
+              animate={{ rotate: [0, 360], scale: [1, 1.06, 1] }}
               transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
             />
-            {/* Removed mystical-border rings — they created visible container edges */}
+            {/* Contact shadow — depth where hands grip the ball */}
+            <div
+              className="absolute rounded-full pointer-events-none z-[23]"
+              style={{
+                width: "375px", height: "375px",
+                boxShadow: "inset 0 16px 40px hsl(var(--deep-blue) / 0.5), inset 0 -12px 35px hsl(var(--deep-blue) / 0.45), inset 16px 0 28px hsl(var(--deep-blue) / 0.3), inset -16px 0 28px hsl(var(--deep-blue) / 0.3)",
+              }}
+            />
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
             {entranceComplete && (
               <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
