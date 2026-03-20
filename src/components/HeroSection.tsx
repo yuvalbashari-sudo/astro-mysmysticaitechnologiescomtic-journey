@@ -2016,9 +2016,9 @@ const HeroSection = () => {
   // Calculate tab positions: two arced columns on left/right sides
   const getTabPosition = useCallback((side: "left" | "right", idx: number, mobile: boolean) => {
     const sideSign = side === "left" ? -1 : 1;
-    const horizontalDist = mobile ? 160 : 280; // distance from center
-    const verticalSpacing = mobile ? 52 : 62; // spacing between tabs
-    const arcCurve = mobile ? 15 : 25; // how much the arc curves inward
+    const horizontalDist = mobile ? 165 : 300; // distance from center (increased for larger tabs)
+    const verticalSpacing = mobile ? 62 : 78; // spacing between tabs (~30% more)
+    const arcCurve = mobile ? 18 : 30; // how much the arc curves inward
     const verticalOffset = mobile ? 30 : 20; // push tabs down from center to avoid face
 
     // Soft arc: middle tab is closest to ball, top and bottom curve outward
@@ -2512,28 +2512,28 @@ const HeroSection = () => {
                   key={i}
                   className="absolute z-30 cursor-pointer"
                   style={{
-                    left: `calc(50% + ${pos.x}px - 70px)`,
-                    top: `calc(50% + ${pos.y}px - 20px)`,
-                    width: 140,
+                    left: `calc(50% + ${pos.x}px - 90px)`,
+                    top: `calc(50% + ${pos.y}px - 24px)`,
+                    width: 180,
                   }}
                   initial={{ opacity: 0, scale: 0, x: item.side === "left" ? -30 : 30 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 1.5 + i * 0.12 }}
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  whileHover={{ scale: 1.12, zIndex: 50 }}
+                  whileHover={{ scale: 1.1, zIndex: 50 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
                 >
                   <motion.div
-                    className="relative flex items-center justify-center gap-2 px-4 py-2.5 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
+                    className="relative flex items-center justify-center gap-2.5 px-5 py-3 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
-                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
-                      background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.2)",
+                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.18)",
+                      background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.25)",
                       boxShadow: hoveredItem === i
                         ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
-                        : "0 0 10px hsl(var(--gold) / 0.1)",
+                        : "0 0 12px hsl(var(--gold) / 0.1)",
                     }}
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 3.5 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
@@ -2545,13 +2545,13 @@ const HeroSection = () => {
                       transition={{ duration: 1.5, repeat: Infinity }}
                     >
                       <item.icon
-                        className="w-4 h-4 flex-shrink-0 transition-colors duration-300"
-                        style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.6)" }}
+                        className="w-5 h-5 flex-shrink-0 transition-colors duration-300"
+                        style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.7)" }}
                       />
                     </motion.div>
                     <span
-                      className="font-body text-xs transition-colors duration-300"
-                      style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.7)" }}
+                      className="font-body text-sm font-medium transition-colors duration-300"
+                      style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.85)" }}
                     >
                       {item.label}
                     </span>
