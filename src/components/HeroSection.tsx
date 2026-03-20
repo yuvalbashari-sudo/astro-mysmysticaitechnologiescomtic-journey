@@ -2467,8 +2467,54 @@ const HeroSection = () => {
                 ].join(", "),
               }}
             />
+            {/* Teaser-to-ball energy connection — visible link on teaser hover */}
+            <AnimatePresence>
+              {hoveredTeaser === "left" && (
+                <>
+                  <EnergyLine fromX={-500} fromY={-200} color="hsl(215, 60%, 55%)" isMobile={isMobile} />
+                  {/* Outer aura pulse matching left teaser */}
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none z-[11]"
+                    style={{ width: "540px", height: "540px" }}
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 0.4, 0],
+                      scale: [0.92, 1.02, 0.92],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <div className="absolute inset-0 rounded-full" style={{
+                      background: "radial-gradient(circle, hsl(215 60% 55% / 0.08) 40%, hsl(43 70% 55% / 0.04) 60%, transparent 75%)",
+                      boxShadow: "0 0 40px hsl(215 60% 55% / 0.1), 0 0 80px hsl(43 70% 55% / 0.05)",
+                    }} />
+                  </motion.div>
+                </>
+              )}
+              {hoveredTeaser === "right" && (
+                <>
+                  <EnergyLine fromX={500} fromY={-200} color="hsl(270, 55%, 55%)" isMobile={isMobile} />
+                  {/* Outer aura pulse matching right teaser */}
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none z-[11]"
+                    style={{ width: "540px", height: "540px" }}
+                    initial={{ opacity: 0 }}
+                    animate={{
+                      opacity: [0, 0.4, 0],
+                      scale: [0.92, 1.02, 0.92],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <div className="absolute inset-0 rounded-full" style={{
+                      background: "radial-gradient(circle, hsl(270 50% 50% / 0.08) 40%, hsl(280 60% 50% / 0.04) 60%, transparent 75%)",
+                      boxShadow: "0 0 40px hsl(270 50% 50% / 0.1), 0 0 80px hsl(280 60% 50% / 0.05)",
+                    }} />
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
             {/* EnergyPulse removed from desktop to prevent outer rings */}
-            {/* ArcanePortalRing removed from desktop to prevent outer rings */}
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
             )}
