@@ -547,8 +547,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0 }}
                   className="relative"
                 >
-                  {/* Desktop: two-column grid | Mobile: stacked */}
-                  <div className="flex flex-col p-6 md:p-0 md:grid md:grid-cols-[1fr_minmax(0,480px)] md:gap-20 lg:gap-28 md:items-center md:min-h-[70vh]">
+                  {/* Desktop: two-column grid — card column first, text column second */}
+                  <div className="flex flex-col p-6 md:p-0 md:grid md:grid-cols-[minmax(280px,1fr)_minmax(0,480px)] md:gap-20 lg:gap-28 md:items-center md:min-h-[70vh]">
 
                     {/* ── LEFT COLUMN (RTL: appears on right): The Card — dominant ── */}
                     <motion.div
