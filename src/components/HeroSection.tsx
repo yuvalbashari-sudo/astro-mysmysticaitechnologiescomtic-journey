@@ -352,7 +352,6 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         borderRadius: "50%",
         overflow: "hidden",
-        clipPath: "circle(48% at 50% 50%)",
       }}
     >
       {/* Dual videos for seamless crossfade loop */}
@@ -361,13 +360,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       <video ref={videoBRef} muted loop playsInline src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
-      {/* 1. Soft spherical vignette — NO hard black edge */}
-      <div className="absolute inset-0" style={{
-        background: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(20,15,40,0.12) 60%, rgba(10,8,30,0.25) 80%, rgba(5,3,20,0.4) 100%)",
-        zIndex: 2,
-      }} />
-
-      {/* 2. Chromatic fog — very slow rotation */}
+      {/* Chromatic fog — very slow rotation */}
       <motion.div className="absolute inset-0" style={{
         background: `
           radial-gradient(circle at 30% 25%, rgba(200,175,120,0.08) 0%, transparent 40%),
@@ -377,7 +370,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         zIndex: 3,
       }} animate={{ rotate: [0, 360] }} transition={{ duration: 80, repeat: Infinity, ease: "linear" }} />
 
-      {/* 3. Primary specular highlight — top-left glass reflection */}
+      {/* Specular highlight — top-left glass reflection */}
       <div className="absolute" style={{
         width: "55%", height: "45%", top: "5%", left: "10%",
         borderRadius: "50%",
@@ -385,7 +378,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         zIndex: 6,
       }} />
 
-      {/* 4. Secondary specular — bottom right */}
+      {/* Secondary specular — bottom right */}
       <div className="absolute" style={{
         width: "20%", height: "16%", bottom: "12%", right: "14%",
         borderRadius: "50%",
@@ -393,49 +386,31 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         zIndex: 6,
       }} />
 
-      {/* 5. Crescent arc — thin glass edge reflection */}
+      {/* Crescent arc — thin glass edge reflection */}
       <div className="absolute" style={{
         width: "84%", height: "84%", top: "3%", left: "8%",
         borderRadius: "50%",
-        border: "1px solid rgba(255,252,245,0.12)",
+        border: "1px solid rgba(255,252,245,0.15)",
         borderBottom: "none", borderRight: "none",
         zIndex: 6,
       }} />
 
-      {/* 6. Warm inner glow instead of dark rim */}
-      <div className="absolute inset-0" style={{
-        borderRadius: "50%",
-        boxShadow: `
-          inset 0 0 20px 4px rgba(180,160,120,0.06),
-          inset 0 0 50px 8px rgba(100,120,200,0.04),
-          inset 0 6px 15px 0 rgba(255,250,235,0.05)
-        `,
-        zIndex: 7,
-      }} />
-
-      {/* 7. Sweeping light refraction — periodic */}
+      {/* Sweeping light refraction — periodic */}
       <motion.div className="absolute" style={{
         width: "22%", height: "110%", top: "-5%",
-        background: "linear-gradient(90deg, transparent, rgba(255,252,245,0.06), rgba(255,252,245,0.12), rgba(255,252,245,0.06), transparent)",
+        background: "linear-gradient(90deg, transparent, rgba(255,252,245,0.08), rgba(255,252,245,0.15), rgba(255,252,245,0.08), transparent)",
         filter: "blur(6px)",
         borderRadius: "50%",
         zIndex: 8,
       }} animate={{ left: ["-25%", "125%"] }}
          transition={{ duration: 5, repeat: Infinity, repeatDelay: 10, ease: "easeInOut" }} />
 
-      {/* 8. Soft center luminosity */}
+      {/* Soft center luminosity */}
       <div className="absolute" style={{
         width: "35%", height: "35%", top: "32%", left: "32%",
         borderRadius: "50%",
         background: "radial-gradient(circle, rgba(255,240,185,0.1) 0%, rgba(255,225,140,0.03) 50%, transparent 100%)",
         zIndex: 3,
-      }} />
-
-      {/* 9. Edge-softening fade — blends sphere into scene */}
-      <div className="absolute inset-0" style={{
-        borderRadius: "50%",
-        boxShadow: "inset 0 0 8px 4px rgba(20,15,40,0.15)",
-        zIndex: 9,
       }} />
     </div>
   );
