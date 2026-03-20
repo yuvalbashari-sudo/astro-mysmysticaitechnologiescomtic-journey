@@ -196,7 +196,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           whileTap={{ scale: 0.95 }}
           aria-label={t.a11y_whatsapp_contact}
         >
-          <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
+          <MessageCircle className="w-7 h-7 text-white" aria-hidden="true" />
         </motion.a>
       </nav>
       </div>
