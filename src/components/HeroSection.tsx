@@ -2567,8 +2567,8 @@ const HeroSection = () => {
         className="absolute inset-x-0 flex justify-center pointer-events-none z-[13] px-4"
         style={{
           top: isMobile
-            ? `min(calc(50% + 335px + 70px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
-            : `calc(50% + 370px + 70px)`,
+            ? `min(calc(50% + 335px + 55px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
+            : `calc(50% + 370px + 55px)`,
         }}
       >
         <motion.button
