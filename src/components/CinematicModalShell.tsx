@@ -10,6 +10,8 @@ interface Props {
   children: ReactNode;
   /** Optional: scroll ref forwarded to parent */
   scrollRef?: React.RefObject<HTMLDivElement>;
+  /** When true, renders children full-screen without the glass panel container */
+  fullscreen?: boolean;
 }
 
 /**
