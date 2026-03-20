@@ -327,7 +327,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const cardImage = card ? tarotCardImages[card.name] : null;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide>
             <AnimatePresence mode="wait">
               {/* PHASE: Ready */}
               {phase === "ready" && (
