@@ -101,7 +101,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
+              onClick={() => closePanel()}
             />
 
             {/* Panel */}
@@ -126,7 +126,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => closePanel()}
                   className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
                   aria-label={t.a11y_close_modal}
                 >
