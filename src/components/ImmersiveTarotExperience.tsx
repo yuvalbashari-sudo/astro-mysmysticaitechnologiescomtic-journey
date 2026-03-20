@@ -1005,20 +1005,26 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 boxShadow: isCenter
                                   ? "0 0 60px hsl(var(--gold) / 0.35), 0 16px 48px hsl(0 0% 0% / 0.6)"
                                   : "0 0 30px hsl(var(--gold) / 0.18), 0 10px 32px hsl(0 0% 0% / 0.5)",
-                                filter: isCenter
-                                  ? "contrast(1.08) saturate(1.05) drop-shadow(0 10px 25px rgba(0,0,0,0.5))"
-                                  : "brightness(0.85) contrast(1.06) drop-shadow(0 10px 25px rgba(0,0,0,0.5))",
+                                filter: isCenter ? "contrast(1.1) saturate(1.08)" : "brightness(0.85) contrast(1.06)",
                                 willChange: "transform",
                               }}
                             />
-                            {/* Inner glow overlay */}
+                            <img
+                              src={cardFrameImg}
+                              alt=""
+                              className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-xl"
+                              style={{ opacity: 0.85, mixBlendMode: "screen" }}
+                            />
+                            <div
+                              className="absolute inset-0 pointer-events-none rounded-xl"
+                              style={{ background: "linear-gradient(135deg, hsl(0 0% 100% / 0.06) 0%, transparent 40%)" }}
+                            />
                             <div
                               className="absolute inset-0 rounded-xl pointer-events-none"
                               style={{
                                 boxShadow: `inset 0 0 ${isCenter ? 14 : 8}px 2px hsl(var(--gold) / ${isCenter ? 0.2 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.2)`,
                               }}
                             />
-                            {/* Pulsing outer glow for center card */}
                             {isCenter && (
                               <motion.div
                                 className="absolute -inset-1.5 rounded-xl pointer-events-none"
