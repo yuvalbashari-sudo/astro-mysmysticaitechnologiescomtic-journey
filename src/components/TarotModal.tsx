@@ -341,8 +341,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Title area */}
                   <div className="relative z-10 mb-6 md:mb-10">
-                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2">{t.tarot_title}</h2>
-                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]">{t.tarot_spread_choose}</p>
+                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.9)" }}>{t.tarot_title}</h2>
+                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]" style={{ textShadow: "0 1px 6px hsl(222 47% 5% / 0.8)" }}>{t.tarot_spread_choose}</p>
                   </div>
 
                   {/* ── Authentic Tarot Fan Spread ── */}
