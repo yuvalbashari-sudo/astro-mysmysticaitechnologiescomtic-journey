@@ -319,7 +319,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
