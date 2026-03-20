@@ -2521,7 +2521,7 @@ const HeroSection = () => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
-      onClick={() => setTarotOpen(true)}
+      onClick={() => setAdvisorOpen(true)}
       whileTap={{ scale: 0.95 }}
       aria-label="גלו את המסר האישי שלכם"
     >
