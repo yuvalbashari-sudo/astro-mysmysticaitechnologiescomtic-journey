@@ -972,7 +972,7 @@ const ZodiacWheel = ({
                 className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
                 animate={isHighlighted ? {
                   scale: [1, 1.3, 1],
-                } : isHovered ? { scale: 1.45 } : { scale: 1 }}
+                } : isHovered ? { scale: 1.15 } : { scale: 1 }}
                 transition={{ duration: isHighlighted ? 1.5 : 0.4, repeat: isHighlighted ? Infinity : 0, ease: "easeOut" }}
               >
                 <img
