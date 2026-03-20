@@ -509,19 +509,17 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           );
                         })}
 
-                        {/* Soft table glow beneath fan pivot */}
-                        <div className="absolute left-1/2 -translate-x-1/2 rounded-full" style={{
-                          bottom: isMob ? -10 : -15,
-                          width: isMob ? 180 : 300,
-                          height: isMob ? 20 : 30,
-                          background: "radial-gradient(ellipse, hsl(var(--gold) / 0.08), transparent 70%)",
-                          filter: "blur(10px)",
+                        {/* Bottom fade — cards emerge from below screen edge */}
+                        <div className="absolute left-0 right-0 pointer-events-none" style={{
+                          bottom: isMob ? -40 : -50,
+                          height: isMob ? 80 : 100,
+                          background: "linear-gradient(to top, hsl(222 47% 4% / 0.9) 0%, transparent 100%)",
                         }} />
                       </div>
                     );
                   })()}
 
-                  <p className="relative z-10 text-[9px] md:text-[10px] text-muted-foreground/30 font-body mt-6">{t.tarot_note}</p>
+                  <p className="relative z-10 text-[9px] md:text-[10px] text-muted-foreground/30 font-body text-center w-full pb-6 md:pb-8" style={{ textShadow: "0 1px 6px hsl(222 47% 3% / 0.8)" }}>{t.tarot_note}</p>
                 </motion.div>
               ) : isQuestionPhase ? (
                 <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} /></motion.div>
