@@ -28,12 +28,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
   const handleClose = () => { onClose(); setTimeout(() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" }); }, 300); };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div className="fixed inset-0 z-[100] flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.div className="absolute inset-0 bg-background/80 backdrop-blur-md" onClick={handleClose} />
-          <motion.div className="relative z-10 w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: "linear-gradient(145deg, hsl(222 40% 8% / 0.97), hsl(222 47% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 60px hsl(var(--gold) / 0.1)" }} initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }} role="dialog" aria-label={t.lead_modal_title}>
-            <button onClick={handleClose} className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors" style={{ border: "1px solid hsl(var(--gold) / 0.15)" }} aria-label={t.a11y_close_modal}><X className="w-4 h-4 text-gold/70" aria-hidden="true" /></button>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose}>
             {isSubmitted ? (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 text-center">
                 <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
@@ -81,10 +76,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
                 </form>
               </div>
             )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    </CinematicModalShell>
   );
 };
 
