@@ -1371,6 +1371,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               </div>
                             </motion.div>
                           )}
+                          </div>{/* end zoom wrapper */}
                         </div>
                       </motion.div>
 
