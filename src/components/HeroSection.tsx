@@ -2734,8 +2734,8 @@ const HeroSection = () => {
         <>
           {/* Left column */}
           <motion.div
-            className="absolute pointer-events-auto flex flex-col gap-[12px]"
-            style={{ left: 24, top: 140 }}
+            className="absolute pointer-events-auto flex flex-col gap-[14px]"
+            style={{ left: 28, top: 130 }}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2754,7 +2754,7 @@ const HeroSection = () => {
               transition={{ delay: 2.2, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <motion.div
-                className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
+                className="relative rounded-2xl px-10 py-7 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "left"
@@ -2791,10 +2791,10 @@ const HeroSection = () => {
                     />
                   )}
                 </AnimatePresence>
-                <div className="flex items-center justify-center gap-2.5">
-                  <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
+                <div className="flex items-center justify-center gap-3">
+                  <Sparkles className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
-                    className="text-[26px] font-heading font-bold tracking-wide leading-tight"
+                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35), 0 0 40px rgba(0, 150, 255, 0.15)",
@@ -2803,7 +2803,7 @@ const HeroSection = () => {
                     {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
                   </div>
                 </div>
-                <div className="text-[14px] font-body mt-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
                 </div>
                 <motion.div
@@ -2841,7 +2841,7 @@ const HeroSection = () => {
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-7 py-4"
+                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -2852,14 +2852,14 @@ const HeroSection = () => {
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-6 h-6"
+                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[15px] font-semibold"
+                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -2892,8 +2892,8 @@ const HeroSection = () => {
 
           {/* Right column */}
           <motion.div
-            className="absolute pointer-events-auto flex flex-col gap-[12px]"
-            style={{ right: 24, top: 140 }}
+            className="absolute pointer-events-auto flex flex-col gap-[14px]"
+            style={{ right: 28, top: 130 }}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2912,7 +2912,7 @@ const HeroSection = () => {
               transition={{ delay: 2.5, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <motion.div
-                className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
+                className="relative rounded-2xl px-10 py-7 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "right"
@@ -2949,10 +2949,10 @@ const HeroSection = () => {
                     />
                   )}
                 </AnimatePresence>
-                <div className="flex items-center justify-center gap-2.5">
-                  <Eye className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
+                <div className="flex items-center justify-center gap-3">
+                  <Eye className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
                   <div
-                    className="text-[26px] font-heading font-bold tracking-wide leading-tight"
+                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(220, 50, 50, 0.65), 0 0 20px rgba(220, 50, 50, 0.35), 0 0 40px rgba(220, 50, 50, 0.15)",
@@ -2961,7 +2961,7 @@ const HeroSection = () => {
                     {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
                   </div>
                 </div>
-                <div className="text-[14px] font-body mt-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
                 </div>
                 <motion.div
@@ -2999,7 +2999,7 @@ const HeroSection = () => {
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-7 py-4"
+                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3010,14 +3010,14 @@ const HeroSection = () => {
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-6 h-6"
+                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[15px] font-semibold"
+                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
