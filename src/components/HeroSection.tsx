@@ -861,6 +861,7 @@ const ZodiacWheel = ({
               }}
               onMouseEnter={() => { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); }}
               onMouseLeave={() => { setHoveredSign(null); onHoveredElement?.(null); }}
+              onClick={() => onSignClick?.(i)}
               // Counter-rotate to keep symbols upright — slow down when hovered
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
