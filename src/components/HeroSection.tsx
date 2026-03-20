@@ -1243,7 +1243,7 @@ const ZodiacWheel = ({
         </AnimatePresence>
       </motion.div>
 
-      {/* Cosmic energy pulse on wheel */}
+      {/* Cosmic energy pulse on wheel — radius-locked, no scale drift */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{
@@ -1254,7 +1254,6 @@ const ZodiacWheel = ({
           border: "1px solid hsl(var(--gold) / 0.08)",
         }}
         animate={{
-          scale: [1, 1.05, 1],
           opacity: [0.3, 0.6, 0.3],
         }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
