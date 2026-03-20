@@ -13,7 +13,7 @@ interface Props {
   hasHistory?: boolean;
 }
 
-const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
+const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { language, setLanguage } = useLanguage();
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
