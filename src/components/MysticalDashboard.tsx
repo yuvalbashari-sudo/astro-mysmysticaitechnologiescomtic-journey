@@ -39,9 +39,16 @@ const ELEMENT_ICONS: Record<string, typeof Flame> = {
   "Earth": Mountain,
 };
 
-const MysticalDashboard = () => {
+interface MysticalDashboardProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardProps = {}) => {
   const t = useT();
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = externalOpen ?? internalOpen;
+  const closePanel = () => { setInternalOpen(false); onClose?.(); };
   const [profile, setProfile] = useState<MysticalProfileData | null>(null);
 
   useEffect(() => {
@@ -84,17 +91,6 @@ const MysticalDashboard = () => {
 
   return (
     <>
-      {/* Floating trigger button */}
-      <motion.button
-        onClick={() => setIsOpen(true)}
-        className="fixed top-4 left-4 z-50 w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center shadow-lg hover:shadow-primary/20 transition-shadow group"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        title={t.dashboard_title}
-        aria-label={t.a11y_open_dashboard}
-      >
-        <Sparkles className="w-5 h-5 text-primary group-hover:text-primary transition-colors" aria-hidden="true" />
-      </motion.button>
 
       <AnimatePresence>
         {isOpen && (
@@ -105,7 +101,7 @@ const MysticalDashboard = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
+              onClick={() => closePanel()}
             />
 
             {/* Panel */}
@@ -130,7 +126,7 @@ const MysticalDashboard = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => closePanel()}
                   className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
                   aria-label={t.a11y_close_modal}
                 >

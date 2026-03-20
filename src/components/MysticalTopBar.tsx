@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, MessageCircle, Clock } from "lucide-react";
+import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
 import { useT } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
@@ -9,10 +9,11 @@ const languages: Language[] = ["he", "ar", "ru", "en"];
 
 interface Props {
   onOpenHistory?: () => void;
+  onOpenDashboard?: () => void;
   hasHistory?: boolean;
 }
 
-const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
+const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { language, setLanguage } = useLanguage();
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
@@ -103,6 +104,21 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
       {/* Left side: Actions */}
       <div className="flex-1 flex justify-end">
       <nav className="flex items-center gap-2" aria-label={t.a11y_main_navigation}>
+        {/* Mystical Profile Dashboard */}
+        <motion.button
+          onClick={onOpenDashboard}
+          className="flex items-center justify-center w-8 h-8 rounded-full backdrop-blur-md transition-all"
+          style={{
+            background: "hsl(var(--deep-blue-light) / 0.6)",
+            border: "1px solid hsl(var(--gold) / 0.15)",
+            color: "hsl(var(--gold) / 0.7)",
+          }}
+          whileHover={{ scale: 1.08, borderColor: "hsl(var(--gold) / 0.3)" }}
+          whileTap={{ scale: 0.95 }}
+          aria-label={t.dashboard_title || "Mystical Profile"}
+        >
+          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+        </motion.button>
         {/* Readings History */}
         {hasHistory && (
           <motion.button

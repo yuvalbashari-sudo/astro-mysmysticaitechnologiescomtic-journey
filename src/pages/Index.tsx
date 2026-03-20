@@ -12,6 +12,7 @@ const Index = () => {
   const { dir } = useLanguage();
   const t = useT();
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
   const [hasHistory, setHasHistory] = useState(false);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ const Index = () => {
         </a>
         <MysticalTopBar
           onOpenHistory={() => setHistoryOpen(true)}
+          onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
         {/* Spacer to push content below the hero viewport */}
@@ -41,7 +43,7 @@ const Index = () => {
         <main id="main-content" className="relative z-10">
           <DailyRitualSection />
         </main>
-        <MysticalDashboard />
+        <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
       </div>
 
       <ReadingsHistoryModal
