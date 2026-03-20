@@ -45,17 +45,19 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
       {/* Center: Hero Title only */}
       <div className="flex flex-col items-center pointer-events-none select-none">
         <motion.h1
-          className="font-heading uppercase relative"
+          className="font-heading uppercase"
           style={{
             fontSize: "clamp(22px, 5vw, 78px)",
             fontWeight: 700,
             letterSpacing: "clamp(0.12em, 1.5vw, 0.5em)",
             lineHeight: 1,
+            color: "hsl(var(--gold))",
             background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
             backgroundSize: "200% 200%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
+            textShadow: "none",
           }}
           animate={{
             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -63,21 +65,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
           ASTROLOGAI
-          <motion.span
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.3) 45%, hsl(var(--gold-light) / 0.5) 50%, hsl(var(--gold-light) / 0.3) 55%, transparent 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              backgroundSize: "200% 100%",
-            }}
-            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-            transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "easeInOut" }}
-            aria-hidden="true"
-          >
-            ASTROLOGAI
-          </motion.span>
         </motion.h1>
       </div>
 
