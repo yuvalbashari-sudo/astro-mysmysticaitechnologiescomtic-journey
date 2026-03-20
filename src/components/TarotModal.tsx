@@ -827,8 +827,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
-                    className="rounded-2xl p-6 md:p-8 mt-6"
-                    style={{ background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.6), hsl(var(--deep-blue) / 0.4))", border: "1px solid hsl(var(--gold) / 0.15)", boxShadow: "0 0 40px hsl(var(--gold) / 0.05)" }}
+                    className="rounded-2xl p-6 md:p-8 mt-6 backdrop-blur-sm relative z-10"
+                    style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)", boxShadow: "0 0 40px hsl(var(--deep-blue) / 0.3)" }}
                   >
                     <div className="flex items-center justify-center gap-3 mb-6">
                       <Layers className="w-5 h-5 text-gold" />
