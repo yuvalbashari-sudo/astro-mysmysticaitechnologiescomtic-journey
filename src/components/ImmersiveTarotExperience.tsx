@@ -1109,8 +1109,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         <div
                           className="absolute inset-0 pointer-events-none"
                           style={{
-                            background: "radial-gradient(ellipse 90% 70% at 50% 30%, hsl(222 47% 6% / 0.45), transparent 80%)",
-                            filter: "blur(40px)",
+                            background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)",
+                            filter: "blur(50px)",
                           }}
                         />
 
@@ -1130,7 +1130,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 color: "hsl(var(--foreground) / 0.5)",
                                 lineHeight: 1.8,
                                 letterSpacing: "0.03em",
-                                textShadow: "0 2px 20px hsl(222 47% 6% / 0.9), 0 0 40px hsl(222 47% 6% / 0.7)",
+                                textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.9), 0 0 10px hsl(222 47% 6%)",
                               }}
                               animate={{ opacity: [0.4, 0.65, 0.4] }}
                               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -1159,7 +1159,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             style={{
                               fontSize: "1.5rem",
                               color: "hsl(var(--gold))",
-                              textShadow: "0 0 40px hsl(var(--gold) / 0.25), 0 2px 20px hsl(222 47% 6% / 0.9)",
+                              textShadow: "0 0 50px hsl(var(--gold) / 0.3), 0 2px 30px hsl(222 47% 6%), 0 0 10px hsl(222 47% 6%)",
                               letterSpacing: "0.2em",
                             }}
                             initial={{ opacity: 0, y: 12 }}
@@ -1176,7 +1176,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               fontSize: "0.82rem",
                               color: "hsl(var(--foreground) / 0.35)",
                               letterSpacing: "0.1em",
-                              textShadow: "0 2px 15px hsl(222 47% 6% / 0.9)",
+                              textShadow: "0 2px 25px hsl(222 47% 6%), 0 0 10px hsl(222 47% 6%)",
                             }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -1192,7 +1192,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               style={{
                                 maxWidth: "420px",
                                 margin: "0 auto",
-                                textShadow: "0 2px 20px hsl(222 47% 6% / 0.95), 0 0 40px hsl(222 47% 6% / 0.6)",
+                                textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)",
                               }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
@@ -1273,7 +1273,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                   color: "hsl(var(--foreground) / 0.3)",
                                   letterSpacing: "0.06em",
                                   lineHeight: 1.8,
-                                  textShadow: "0 2px 15px hsl(222 47% 6% / 0.9)",
+                                  textShadow: "0 2px 25px hsl(222 47% 6%), 0 0 10px hsl(222 47% 6%)",
                                 }}
                                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
