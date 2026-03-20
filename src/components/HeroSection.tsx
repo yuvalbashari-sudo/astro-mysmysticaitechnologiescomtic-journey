@@ -9,6 +9,7 @@ import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
+import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmReadingModal from "./PalmReadingModal";
 import DailyCardModal from "./DailyCardModal";
 import { useT, useLanguage } from "@/i18n";
@@ -1984,6 +1985,7 @@ const HeroSection = () => {
   const [risingOpen, setRisingOpen] = useState(false);
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
+  const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [astrologerOpen, setAstrologerOpen] = useState(false);
@@ -2900,7 +2902,7 @@ const HeroSection = () => {
             <motion.button
               type="button"
               className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
-              onClick={() => setTarotOpen(true)}
+              onClick={() => setImmersiveTarotOpen(true)}
               onMouseEnter={() => { setHoveredTeaser("right"); setHoveredItem(4); }}
               onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
               whileHover={{ scale: 1.03 }}
@@ -3064,6 +3066,7 @@ const HeroSection = () => {
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
+      <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
     </>
   );
 };
