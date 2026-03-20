@@ -360,42 +360,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        {/* Backdrop */}
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: "hsl(var(--deep-blue) / 0.92)", backdropFilter: "blur(16px)" }}
-          onClick={handleClose}
-        />
-
-        {/* Content */}
-        <motion.div
-          className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-8"
-          style={{
-            background: "linear-gradient(145deg, hsl(var(--deep-blue-light)), hsl(var(--deep-blue)))",
-            border: "1px solid hsl(var(--gold) / 0.2)",
-            boxShadow: "0 0 80px hsl(215 50% 30% / 0.12), 0 0 40px hsl(var(--gold) / 0.08)",
-          }}
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.9, opacity: 0 }}
-        >
-          <MysticalReadingAtmosphere theme="birthChart" />
-          {/* Close button */}
-          <button
-            onClick={handleClose}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors"
-            style={{ background: "hsl(var(--deep-blue-light) / 0.8)" }}
-          >
-            <X className="w-5 h-5 text-gold" />
-          </button>
-
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose}>
+        <div className="p-6 md:p-8">
           {/* Header */}
           <div className="text-center mb-6">
             <span className="text-3xl mb-2 block">🌌</span>
