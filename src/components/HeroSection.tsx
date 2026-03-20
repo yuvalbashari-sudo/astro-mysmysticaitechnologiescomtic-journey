@@ -2819,8 +2819,8 @@ const HeroSection = () => {
               </motion.div>
             </motion.button>
 
-            {menuItems.filter((_, i) => i < 3).map((item, idx) => {
-              const i = idx;
+            {[menuItems[0], menuItems[2]].map((item, idx) => {
+              const i = item === menuItems[0] ? 0 : 2;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
@@ -2837,7 +2837,7 @@ const HeroSection = () => {
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: 4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); }}
+                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 2) setRisingOpen(true); }}
                   aria-label={item.label}
                 >
                   <div
