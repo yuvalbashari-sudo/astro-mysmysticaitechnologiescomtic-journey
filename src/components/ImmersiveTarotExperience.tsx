@@ -232,8 +232,10 @@ const FloatingCard = ({
               className="w-full h-full object-cover"
               style={{
                 imageRendering: "auto",
-                /* Mirror the front image since parent is rotated 180deg */
-                transform: showFront ? "scaleX(-1)" : "none",
+                backfaceVisibility: "hidden",
+                transform: `translateZ(0)${showFront ? " scaleX(-1)" : ""}`,
+                filter: "contrast(1.08) saturate(1.05)",
+                willChange: "transform",
               }}
             />
             <div
