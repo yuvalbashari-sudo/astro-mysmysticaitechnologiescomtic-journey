@@ -5,6 +5,7 @@ import mysticalAvatarCta from "@/assets/mystical-avatar-cta.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
@@ -1929,6 +1930,7 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
@@ -2519,7 +2521,7 @@ const HeroSection = () => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
-      onClick={() => setTarotOpen(true)}
+      onClick={() => setAdvisorOpen(true)}
       whileTap={{ scale: 0.95 }}
       aria-label="גלו את המסר האישי שלכם"
     >
@@ -2597,6 +2599,7 @@ const HeroSection = () => {
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
+      <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
     </>
   );
 };
