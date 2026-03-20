@@ -43,41 +43,11 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
     setReadings(readingsStorage.getAll());
   };
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <motion.div className="absolute inset-0 bg-background/85 backdrop-blur-xl" onClick={onClose} />
-
-          <motion.div
-            className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl p-6 md:p-8"
-            style={{
-              background: "linear-gradient(160deg, hsl(0 30% 8% / 0.98), hsl(222 47% 6% / 0.99))",
-              border: "1px solid hsl(var(--gold) / 0.15)",
-              boxShadow: "0 0 60px hsl(var(--gold) / 0.06)",
-            }}
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 30 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            dir={dir}
-            role="dialog"
-            aria-label={t.readings_title}
-          >
-            <button
-              onClick={onClose}
-              className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors"
-              style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}
-              aria-label={t.a11y_close_modal}
-            >
-              <X className="w-4 h-4 text-gold/70" aria-hidden="true" />
-            </button>
-
+    <CinematicModalShell isOpen={isOpen} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
+        <div className="p-6 md:p-8" dir={dir}>
             <div className="text-center mb-8">
               <Clock className="w-8 h-8 text-gold mx-auto mb-4" />
               <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-2">
