@@ -2599,82 +2599,224 @@ const HeroSection = () => {
       </motion.div>
     </motion.button>
 
-    {/* ── Top horizontal feature tabs — OUTSIDE isolate container for correct stacking ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0 px-0 md:px-8" style={{ top: isMobile ? "88px" : "96px" }}>
-      <motion.div
-        className={`flex mx-auto pointer-events-auto ${isMobile ? "gap-2 px-4 overflow-x-auto scrollbar-hide max-w-full" : "justify-center gap-4 max-w-4xl"}`}
-        style={isMobile ? { WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none" } : undefined}
-        initial={{ opacity: 0, y: -15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
-      >
-        {menuItems.map((item, i) => {
-          const itemColor = ITEM_COLORS[i];
-          const isHovered = hoveredItem === i;
-          return (
-            <motion.button
-              key={i}
-              type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none flex-shrink-0"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
-              onMouseEnter={() => setHoveredItem(i)}
-              onMouseLeave={() => setHoveredItem(null)}
-              onFocus={() => setHoveredItem(i)}
-              onBlur={() => setHoveredItem(null)}
-              whileHover={{ scale: 1.08, y: -3 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
-              aria-label={item.label}
-            >
-              <div
-                className={`relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3 py-2 min-h-[40px]" : "px-5 py-3"}`}
-                style={{
-                  borderWidth: "1px", borderStyle: "solid",
-                  borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
-                  background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
-                  boxShadow: isHovered
-                    ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
-                    : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-                }}
+    {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
+    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
+      {isMobile ? (
+        /* ── Mobile: horizontal scrollable row ── */
+        <motion.div
+          className="flex pointer-events-auto gap-2 px-4 overflow-x-auto scrollbar-hide max-w-full mx-auto"
+          style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none" }}
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
+        >
+          {menuItems.map((item, i) => {
+            const itemColor = ITEM_COLORS[i];
+            const isHovered = hoveredItem === i;
+            return (
+              <motion.button
+                key={i}
+                type="button"
+                className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none flex-shrink-0"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
+                onMouseEnter={() => setHoveredItem(i)}
+                onMouseLeave={() => setHoveredItem(null)}
+                onFocus={() => setHoveredItem(i)}
+                onBlur={() => setHoveredItem(null)}
+                whileHover={{ scale: 1.08, y: -3 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
+                aria-label={item.label}
               >
-                <item.icon
-                  className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-4 h-4" : "w-5 h-5"}`}
+                <div
+                  className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-3 py-2 min-h-[40px]"
                   style={{
-                    color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
-                    filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                    borderWidth: "1px", borderStyle: "solid",
+                    borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                    background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                    boxShadow: isHovered
+                      ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                      : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
                   }}
-                />
-                <span
-                  className={`font-body transition-colors duration-300 ${isMobile ? "text-[11px] font-medium" : "text-[13px] font-semibold"}`}
-                  style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                 >
-                  {item.label}
-                </span>
-                {isHovered && (
-                  <motion.div
-                    className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
-                    style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
-                    initial={{ opacity: 0, scaleX: 0 }}
-                    animate={{ opacity: 0.8, scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
+                  <item.icon
+                    className="flex-shrink-0 transition-all duration-300 w-4 h-4"
+                    style={{
+                      color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                      filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                    }}
                   />
-                )}
-                {isHovered && (
-                  <motion.div
-                    className="absolute -inset-2 rounded-full pointer-events-none"
-                    style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.6, 0.3] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                )}
-              </div>
-            </motion.button>
-          );
-        })}
-      </motion.div>
+                  <span
+                    className="font-body transition-colors duration-300 text-[11px] font-medium"
+                    style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                  >
+                    {item.label}
+                  </span>
+                </div>
+              </motion.button>
+            );
+          })}
+        </motion.div>
+      ) : (
+        /* ── Desktop: two vertical columns on left and right edges ── */
+        <>
+          {/* Left column */}
+          <motion.div
+            className="absolute pointer-events-auto flex flex-col gap-3"
+            style={{ left: 28, top: "50%", transform: "translateY(-50%)" }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
+          >
+            {menuItems.filter((_, i) => i < 3).map((item, idx) => {
+              const i = idx;
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  key={i}
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.6 + idx * 0.12 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  onFocus={() => setHoveredItem(i)}
+                  onBlur={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: 4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); }}
+                  aria-label={item.label}
+                >
+                  <div
+                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <item.icon
+                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
+                    <span
+                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                    >
+                      {item.label}
+                    </span>
+                    {isHovered && (
+                      <motion.div
+                        className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                        style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 0.8, scaleX: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                    {isHovered && (
+                      <motion.div
+                        className="absolute -inset-2 rounded-full pointer-events-none"
+                        style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.6, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })}
+          </motion.div>
+
+          {/* Right column */}
+          <motion.div
+            className="absolute pointer-events-auto flex flex-col gap-3"
+            style={{ right: 28, top: "50%", transform: "translateY(-50%)" }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
+          >
+            {menuItems.filter((_, i) => i >= 3).map((item, idx) => {
+              const i = idx + 3;
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  key={i}
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.6 + idx * 0.12 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  onFocus={() => setHoveredItem(i)}
+                  onBlur={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => { if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
+                  aria-label={item.label}
+                >
+                  <div
+                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <item.icon
+                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
+                    <span
+                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                    >
+                      {item.label}
+                    </span>
+                    {isHovered && (
+                      <motion.div
+                        className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                        style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 0.8, scaleX: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                    {isHovered && (
+                      <motion.div
+                        className="absolute -inset-2 rounded-full pointer-events-none"
+                        style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.6, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })}
+          </motion.div>
+        </>
+      )}
     </div>
 
         </>,
