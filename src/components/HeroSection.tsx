@@ -2362,7 +2362,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
-                width: "187px", height: "187px",
+                width: "180px", height: "180px",
                 background: activeColor
                   ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
                   : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
