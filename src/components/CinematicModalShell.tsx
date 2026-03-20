@@ -19,7 +19,7 @@ interface Props {
  * ambient particles, depth layers, and consistent animation language.
  * Replaces flat generic panels across all reading experiences.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
