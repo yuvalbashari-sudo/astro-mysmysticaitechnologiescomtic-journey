@@ -2327,7 +2327,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "300px", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "315px", marginLeft: "10px" }}
           >
             {/* Internal glow — contained inside ball */}
             <motion.div
@@ -2454,11 +2454,9 @@ const HeroSection = () => {
         )}
       </div>
 
-      {/* ── Hands overlay — fingertips in front of the crystal ball (mobile only) ── */}
-      {isMobile && (
-        <div
-          className="absolute inset-0 pointer-events-none z-[14]"
-        >
+      {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
+      {isMobile ? (
+        <div className="absolute inset-0 pointer-events-none z-[14]">
           <img
             src={heroFigure}
             alt=""
@@ -2469,7 +2467,6 @@ const HeroSection = () => {
               WebkitMaskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
             }}
           />
-          {/* Contact shadow / ambient occlusion at fingertip-ball junction */}
           <div
             className="absolute"
             style={{
@@ -2481,6 +2478,19 @@ const HeroSection = () => {
               borderRadius: "50%",
               background: "radial-gradient(ellipse, transparent 50%, hsl(var(--deep-blue) / 0.25) 65%, hsl(var(--deep-blue) / 0.15) 80%, transparent 100%)",
               pointerEvents: "none",
+            }}
+          />
+        </div>
+      ) : (
+        <div className="absolute inset-0 pointer-events-none z-[14]">
+          <img
+            src={heroFigure}
+            alt=""
+            className="w-full h-full object-cover scale-110"
+            style={{
+              objectPosition: "center calc(0% + 100px)",
+              maskImage: "radial-gradient(ellipse 320px 280px at 50% calc(50% + 160px), transparent 42%, black 58%, black 75%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 320px 280px at 50% calc(50% + 160px), transparent 42%, black 58%, black 75%, transparent 100%)",
             }}
           />
         </div>
