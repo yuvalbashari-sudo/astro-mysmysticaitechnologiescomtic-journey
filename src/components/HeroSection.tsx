@@ -2398,7 +2398,7 @@ const HeroSection = () => {
                 ].join(", "),
               }}
             />
-            <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
+            {/* EnergyPulse removed from desktop to prevent outer rings */}
             {entranceComplete && (
               <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
             )}
