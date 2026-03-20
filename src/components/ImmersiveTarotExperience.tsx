@@ -894,6 +894,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         onClick={() => handleCardSelect(i)}
                         totalCards={drawnCards.length}
                         isMobile={isMobile}
+                        showBurst={burstIndices.has(i)}
                       />
                     ))}
                   </div>
