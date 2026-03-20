@@ -163,12 +163,12 @@ const FloatingCard = ({
           style={{
             backfaceVisibility: "hidden",
             boxShadow: isSelected
-              ? "0 0 40px hsl(var(--gold) / 0.5), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
-              : "0 6px 24px hsl(var(--deep-blue) / 0.6), 0 0 12px hsl(270 50% 50% / 0.1)",
+              ? "0 0 40px hsl(var(--gold) / 0.5), 0 12px 40px hsl(var(--deep-blue) / 0.7), inset 0 0 12px hsl(var(--gold) / 0.15)"
+              : "0 6px 24px hsl(var(--deep-blue) / 0.6), 0 0 12px hsl(270 50% 50% / 0.1), inset 0 0 8px hsl(var(--gold) / 0.06)",
             border: isSelected ? "1px solid hsl(var(--gold) / 0.4)" : "1px solid hsl(var(--gold) / 0.1)",
           }}
         >
-          <img src={cardBack} alt="" className="w-full h-full object-cover" />
+          <img src={cardBack} alt="" className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
           {isSelected && (
             <motion.div
               className="absolute inset-0"
@@ -177,6 +177,13 @@ const FloatingCard = ({
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             />
           )}
+          {/* Inner edge highlight */}
+          <div
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              boxShadow: "inset 0 0 6px 1px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--gold) / 0.15)",
+            }}
+          />
         </div>
         {/* Front */}
         <div
@@ -184,11 +191,18 @@ const FloatingCard = ({
           style={{
             backfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
-            boxShadow: "0 0 50px hsl(var(--gold) / 0.35), 0 12px 40px hsl(var(--deep-blue) / 0.7)",
+            boxShadow: "0 0 50px hsl(var(--gold) / 0.35), 0 12px 40px hsl(var(--deep-blue) / 0.7), inset 0 0 12px hsl(var(--gold) / 0.12)",
             border: "1px solid hsl(var(--gold) / 0.3)",
           }}
         >
-          <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" />
+          <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
+          {/* Inner edge highlight */}
+          <div
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              boxShadow: "inset 0 0 8px 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.2)",
+            }}
+          />
         </div>
       </motion.div>
     </motion.div>
@@ -732,6 +746,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               filter: isCenter ? "none" : "brightness(0.85)",
                             }}
                           />
+                          {/* Inner edge highlight */}
+                          <div
+                            className="absolute inset-0 rounded-lg pointer-events-none"
+                            style={{
+                              boxShadow: `inset 0 0 ${isCenter ? 10 : 6}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
+                            }}
+                          />
                           <motion.div
                             className="absolute -inset-2 rounded-xl pointer-events-none"
                             style={{ border: `1px solid hsl(var(--gold) / ${isCenter ? 0.35 : 0.15})` }}
@@ -835,6 +856,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                   ? "0 0 35px hsl(var(--gold) / 0.3), 0 10px 30px hsl(var(--deep-blue) / 0.6)"
                                   : "0 0 20px hsl(var(--gold) / 0.15), 0 6px 20px hsl(var(--deep-blue) / 0.4)",
                                 filter: isCenter ? "none" : "brightness(0.8)",
+                              }}
+                            />
+                            {/* Inner edge highlight */}
+                            <div
+                              className="absolute inset-0 rounded-lg pointer-events-none"
+                              style={{
+                                boxShadow: `inset 0 0 ${isCenter ? 10 : 6}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
                               }}
                             />
                             <div className="text-center mt-2">
