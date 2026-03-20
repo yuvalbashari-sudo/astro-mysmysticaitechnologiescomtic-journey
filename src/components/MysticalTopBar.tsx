@@ -70,7 +70,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
 
       {/* Left side: Actions */}
       <div className="flex-1 flex justify-end">
-      <nav className="flex items-center gap-2" aria-label={t.a11y_main_navigation}>
+      <nav className="flex items-center gap-3" aria-label={t.a11y_main_navigation}>
         {/* Mystical Profile Dashboard */}
         <motion.button
           onClick={onOpenDashboard}
