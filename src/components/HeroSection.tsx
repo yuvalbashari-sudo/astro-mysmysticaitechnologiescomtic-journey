@@ -2508,13 +2508,13 @@ const HeroSection = () => {
       </motion.div>
     </div>
 
-    {/* ── Fixed avatar CTA — bottom-right floating button ── */}
+    {/* ── Avatar CTA — inside hero, lower-right of artwork ── */}
     <motion.button
       type="button"
-      className="fixed pointer-events-auto cursor-pointer z-[66] flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
+      className="absolute pointer-events-auto cursor-pointer z-[15] flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
       style={{
-        bottom: isMobile ? 24 : 32,
-        right: isMobile ? 16 : 32,
+        bottom: isMobile ? "12%" : "10%",
+        right: isMobile ? "8%" : "12%",
       }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
