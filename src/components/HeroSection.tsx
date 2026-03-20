@@ -2524,9 +2524,11 @@ const HeroSection = () => {
 
     {/* ── Hero Conversion Content — positioned below face, around crystal ball ── */}
     <div
-      className="absolute z-[65] pointer-events-none inset-x-0 bottom-0 px-4 md:px-8"
+      className="absolute z-[65] pointer-events-none inset-x-0 bottom-0"
       style={{
-        top: isMobile ? "58%" : "53%",
+        top: isMobile ? "64%" : "53%",
+        paddingLeft: isMobile ? "20px" : "32px",
+        paddingRight: isMobile ? "20px" : "32px",
       }}
     >
       <motion.div
@@ -2537,8 +2539,12 @@ const HeroSection = () => {
       >
         {/* Micro label */}
         <motion.span
-          className="inline-block font-body text-[10px] md:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5"
-          style={{ color: "hsl(var(--gold) / 0.55)" }}
+          className="inline-block font-body tracking-[0.25em] uppercase"
+          style={{
+            color: "hsl(var(--gold) / 0.55)",
+            fontSize: isMobile ? "9px" : undefined,
+            marginBottom: isMobile ? "10px" : "20px",
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.8 }}
@@ -2548,26 +2554,32 @@ const HeroSection = () => {
 
         {/* Headline */}
         <motion.h1
-          className="font-heading text-xl md:text-3xl lg:text-4xl font-bold leading-[1.2] mb-4 md:mb-6"
+          className="font-heading font-bold leading-[1.2]"
           style={{
             color: "hsl(var(--foreground))",
             textShadow: "0 2px 24px hsl(var(--deep-blue)), 0 0 60px hsl(var(--deep-blue) / 0.8)",
             textWrap: "balance",
+            fontSize: isMobile ? "18px" : undefined,
+            marginBottom: isMobile ? "12px" : "24px",
           }}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 1 }}
         >
-          גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם
+          <span className="hidden md:inline text-3xl lg:text-4xl">גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם</span>
+          <span className="md:hidden">גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם</span>
         </motion.h1>
 
         {/* Subheadline */}
         <motion.p
-          className="font-body text-xs md:text-sm lg:text-base leading-relaxed mb-6 md:mb-8 mx-auto max-w-md"
+          className="font-body leading-relaxed mx-auto"
           style={{
             color: "hsl(var(--foreground) / 0.65)",
             textShadow: "0 1px 16px hsl(var(--deep-blue))",
             textWrap: "pretty",
+            fontSize: isMobile ? "12px" : undefined,
+            maxWidth: isMobile ? "300px" : "28rem",
+            marginBottom: isMobile ? "18px" : "32px",
           }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2578,7 +2590,11 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-row items-center justify-center gap-3 md:gap-4 mb-5 md:mb-6"
+          className="flex flex-row items-center justify-center"
+          style={{
+            gap: isMobile ? "10px" : "16px",
+            marginBottom: isMobile ? "14px" : "24px",
+          }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.8 }}
@@ -2587,12 +2603,17 @@ const HeroSection = () => {
           <motion.button
             type="button"
             onClick={() => setCompatibilityOpen(true)}
-            className="relative overflow-hidden rounded-xl font-heading text-xs md:text-sm tracking-wider px-6 md:px-9 py-3 md:py-3.5 font-bold transition-shadow duration-300"
+            className="relative overflow-hidden rounded-xl font-heading tracking-wider font-bold transition-shadow duration-300"
             style={{
               background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
               color: "hsl(var(--deep-blue))",
               boxShadow: "0 4px 24px hsl(var(--gold) / 0.3), 0 0 40px hsl(var(--gold) / 0.1)",
-              minHeight: "48px",
+              minHeight: isMobile ? "50px" : "48px",
+              fontSize: isMobile ? "12px" : undefined,
+              paddingLeft: isMobile ? "20px" : "36px",
+              paddingRight: isMobile ? "20px" : "36px",
+              paddingTop: isMobile ? "12px" : "14px",
+              paddingBottom: isMobile ? "12px" : "14px",
             }}
             whileHover={{
               scale: 1.04,
@@ -2616,12 +2637,17 @@ const HeroSection = () => {
           <motion.button
             type="button"
             onClick={() => setTarotOpen(true)}
-            className="rounded-xl font-heading text-xs md:text-sm tracking-wider px-6 md:px-9 py-3 md:py-3.5 font-bold transition-all duration-300 backdrop-blur-md"
+            className="rounded-xl font-heading tracking-wider font-bold transition-all duration-300 backdrop-blur-md"
             style={{
               background: "hsl(var(--deep-blue) / 0.35)",
               border: "1.5px solid hsl(var(--gold) / 0.3)",
               color: "hsl(var(--gold))",
-              minHeight: "48px",
+              minHeight: isMobile ? "50px" : "48px",
+              fontSize: isMobile ? "12px" : undefined,
+              paddingLeft: isMobile ? "20px" : "36px",
+              paddingRight: isMobile ? "20px" : "36px",
+              paddingTop: isMobile ? "12px" : "14px",
+              paddingBottom: isMobile ? "12px" : "14px",
             }}
             whileHover={{
               scale: 1.04,
@@ -2636,8 +2662,11 @@ const HeroSection = () => {
 
         {/* Trust line */}
         <motion.p
-          className="font-body text-[10px] md:text-[11px] tracking-wide"
-          style={{ color: "hsl(var(--foreground) / 0.35)" }}
+          className="font-body tracking-wide"
+          style={{
+            color: "hsl(var(--foreground) / 0.35)",
+            fontSize: isMobile ? "9px" : "11px",
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.6, duration: 0.7 }}
@@ -2647,13 +2676,13 @@ const HeroSection = () => {
       </motion.div>
     </div>
 
-    {/* ── Speech Bubble — side of character shoulders ── */}
+    {/* ── Speech Bubble — side of character, below face on mobile ── */}
     <motion.div
       className="absolute z-[64] pointer-events-none"
       style={{
-        right: isMobile ? "5%" : "8%",
-        top: isMobile ? "38%" : "35%",
-        maxWidth: isMobile ? "160px" : "220px",
+        right: isMobile ? "8%" : "8%",
+        top: isMobile ? "56%" : "35%",
+        maxWidth: isMobile ? "140px" : "220px",
       }}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -2669,7 +2698,7 @@ const HeroSection = () => {
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        <p className="font-body text-[10px] md:text-[11px] leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.65)" }}>
+        <p className="font-body leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.65)", fontSize: isMobile ? "9px" : "11px" }}>
           ✦ אני אחשוף עבורך את מה שמסתתר מתחת לפני השטח
         </p>
         {/* Arrow pointing left toward oracle */}
