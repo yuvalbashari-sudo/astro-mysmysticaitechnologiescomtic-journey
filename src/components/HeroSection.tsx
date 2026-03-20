@@ -2284,8 +2284,8 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "215px", height: "215px",
-                boxShadow: "inset 0 12px 30px hsl(var(--deep-blue) / 0.5), inset 0 -8px 25px hsl(var(--deep-blue) / 0.4), inset 12px 0 20px hsl(var(--deep-blue) / 0.25), inset -12px 0 20px hsl(var(--deep-blue) / 0.25)",
+                width: "258px", height: "258px",
+                boxShadow: "inset 0 14px 35px hsl(var(--deep-blue) / 0.55), inset 0 -10px 30px hsl(var(--deep-blue) / 0.45), inset 14px 0 24px hsl(var(--deep-blue) / 0.3), inset -14px 0 24px hsl(var(--deep-blue) / 0.3)",
               }}
             />
             {entranceComplete && (
