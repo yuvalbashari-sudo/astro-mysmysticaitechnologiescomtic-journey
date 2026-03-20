@@ -10,6 +10,8 @@ interface Props {
   children: ReactNode;
   /** Optional: scroll ref forwarded to parent */
   scrollRef?: React.RefObject<HTMLDivElement>;
+  /** When true, renders children full-screen without the glass panel container */
+  fullscreen?: boolean;
 }
 
 /**
@@ -17,7 +19,7 @@ interface Props {
  * ambient particles, depth layers, and consistent animation language.
  * Replaces flat generic panels across all reading experiences.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
@@ -151,25 +153,34 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef }: Props) =>
             </span>
           </div>
 
-          {/* ── Content area — scrollable glass panel ── */}
-          <div className="absolute inset-0 z-[102] flex items-center justify-center pointer-events-none">
-            <motion.div
+          {/* ── Content area ── */}
+          {fullscreen ? (
+            <div
               ref={activeScrollRef as React.RefObject<HTMLDivElement>}
-              className="pointer-events-auto w-full max-w-2xl max-h-[88vh] overflow-y-auto mx-4 rounded-2xl"
-              style={{
-                background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.92))",
-                border: "1px solid hsl(var(--gold) / 0.12)",
-                boxShadow: "0 0 80px hsl(var(--deep-blue) / 0.4), 0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-                backdropFilter: "blur(12px)",
-              }}
-              initial={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(6px)" }}
-              animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(6px)" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-0 z-[102] overflow-y-auto"
             >
               {children}
-            </motion.div>
-          </div>
+            </div>
+          ) : (
+            <div className="absolute inset-0 z-[102] flex items-center justify-center pointer-events-none">
+              <motion.div
+                ref={activeScrollRef as React.RefObject<HTMLDivElement>}
+                className="pointer-events-auto w-full max-w-2xl max-h-[88vh] overflow-y-auto mx-4 rounded-2xl"
+                style={{
+                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.92))",
+                  border: "1px solid hsl(var(--gold) / 0.12)",
+                  boxShadow: "0 0 80px hsl(var(--deep-blue) / 0.4), 0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                  backdropFilter: "blur(12px)",
+                }}
+                initial={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(6px)" }}
+                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(6px)" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {children}
+              </motion.div>
+            </div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

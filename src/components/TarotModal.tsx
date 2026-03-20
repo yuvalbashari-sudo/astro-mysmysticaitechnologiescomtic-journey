@@ -319,19 +319,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
               {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 pt-10 pb-6 md:px-8 md:pt-14 md:pb-8 text-center relative overflow-hidden">
+                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 pt-16 pb-6 md:px-8 md:pt-20 md:pb-8 text-center relative overflow-hidden min-h-screen flex flex-col items-center justify-center">
 
-                  {/* Dark velvet table surface */}
+                  {/* Subtle center vignette for readability — no box */}
                   <div className="absolute inset-0 pointer-events-none" style={{
-                    background: `
-                      radial-gradient(ellipse at 50% 100%, hsl(var(--gold) / 0.05) 0%, transparent 50%),
-                      radial-gradient(ellipse at 50% 50%, hsl(222 35% 10%) 0%, hsl(222 47% 5%) 100%)
-                    `,
+                    background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.5) 0%, transparent 70%)",
                   }} />
                   {/* Floating dust particles */}
                   {[...Array(6)].map((_, i) => (
@@ -344,8 +341,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Title area */}
                   <div className="relative z-10 mb-6 md:mb-10">
-                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2">{t.tarot_title}</h2>
-                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]">{t.tarot_spread_choose}</p>
+                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.9)" }}>{t.tarot_title}</h2>
+                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]" style={{ textShadow: "0 1px 6px hsl(222 47% 5% / 0.8)" }}>{t.tarot_spread_choose}</p>
                   </div>
 
                   {/* ── Authentic Tarot Fan Spread ── */}
@@ -507,11 +504,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isShufflePhase ? (
                 <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotShufflePhase onComplete={handleShuffleComplete} /></motion.div>
               ) : isTablePhase ? (
-                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-[480px] relative overflow-hidden">
-                  {/* Velvet table background */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(222 35% 12%), hsl(222 45% 6%))" }} />
-                  {/* Table edge glow */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 50% 100%, hsl(var(--gold) / 0.06), transparent 50%)" }} />
+                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
+                  {/* Subtle center vignette */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.45) 0%, transparent 70%)" }} />
 
                   {/* Darkening overlay when a card is being revealed */}
                   <AnimatePresence>
@@ -790,19 +785,21 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
                 </motion.div>
               ) : cards ? (
-                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10">
+                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 min-h-screen relative">
+                  {/* Subtle readability vignette */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 40%, hsl(222 47% 5% / 0.55) 0%, transparent 75%)" }} />
                   {/* Header */}
-                  <div className="text-center mb-6">
-                    <motion.p className="text-gold/50 font-body text-xs mb-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{SPREAD_LABELS[selectedSpread.key]}</motion.p>
-                    <motion.h2 className="font-heading text-2xl gold-gradient-text mb-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.tarot_cards_title}</motion.h2>
+                  <div className="text-center mb-6 relative z-10 pt-10">
+                    <motion.p className="text-gold/50 font-body text-xs mb-2" style={{ textShadow: "0 2px 8px hsl(222 47% 5% / 0.8)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{SPREAD_LABELS[selectedSpread.key]}</motion.p>
+                    <motion.h2 className="font-heading text-2xl gold-gradient-text mb-4" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.8)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.tarot_cards_title}</motion.h2>
 
                     {/* Card display */}
                      <div className="flex items-center justify-center gap-4 sm:gap-6 mb-8 flex-wrap">
                       {cards.map((card, i) => (
                         <motion.div
                           key={i}
-                          className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl"
-                          style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.15)" }}
+                          className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl backdrop-blur-sm"
+                          style={{ background: "hsl(var(--deep-blue) / 0.4)", border: "1px solid hsl(var(--gold) / 0.1)" }}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: 0.3 + i * 0.2 }}
@@ -830,8 +827,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
-                    className="rounded-2xl p-6 md:p-8 mt-6"
-                    style={{ background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.6), hsl(var(--deep-blue) / 0.4))", border: "1px solid hsl(var(--gold) / 0.15)", boxShadow: "0 0 40px hsl(var(--gold) / 0.05)" }}
+                    className="rounded-2xl p-6 md:p-8 mt-6 backdrop-blur-sm relative z-10"
+                    style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)", boxShadow: "0 0 40px hsl(var(--deep-blue) / 0.3)" }}
                   >
                     <div className="flex items-center justify-center gap-3 mb-6">
                       <Layers className="w-5 h-5 text-gold" />
@@ -870,7 +867,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6 backdrop-blur-sm relative z-10" style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)" }}>
                     <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
                     <h4 className="font-heading text-base text-gold mb-2">{t.tarot_premium_title}</h4>
                     <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
