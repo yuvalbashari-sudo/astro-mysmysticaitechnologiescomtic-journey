@@ -8,16 +8,17 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
-  /** Optional: scroll ref forwarded to parent */
   scrollRef?: React.RefObject<HTMLDivElement>;
-  /** When true, renders children full-screen without the glass panel container */
   fullscreen?: boolean;
 }
 
 /**
- * Shared cinematic full-screen modal with persistent oracle woman,
- * ambient particles, depth layers, and consistent animation language.
- * Content floats as a translucent layer — the oracle always remains visible.
+ * Cinematic scene shell — NOT a modal.
+ *
+ * The oracle is the scene. Content floats over her as translucent layers
+ * without any visible container boundary. No box, no border, no card.
+ * Children scroll naturally over a rising fog gradient that provides
+ * text legibility without hiding the figure.
  */
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -31,7 +32,6 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Lock body scroll
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -51,7 +51,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
-          {/* ── Oracle woman background — brighter, always present ── */}
+          {/* ── Layer 0: Oracle — the scene itself ── */}
           <motion.div
             className="absolute inset-0"
             initial={{ scale: 1 }}
@@ -64,31 +64,31 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               className="w-full h-full object-cover"
               style={{
                 objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                filter: "brightness(0.45) saturate(1.1)",
+                filter: "brightness(0.5) saturate(1.15)",
               }}
             />
           </motion.div>
 
-          {/* ── Subtle depth — light vignette, oracle stays visible ── */}
+          {/* ── Layer 1: Minimal vignette — edges only, center open ── */}
           <div className="absolute inset-0 pointer-events-none">
-            {/* Edges-only vignette — center stays clear */}
             <div
               className="absolute inset-0"
               style={{
-                background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, hsl(var(--deep-blue) / 0.7) 100%)",
+                background: "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
               }}
             />
-            {/* Very subtle top fade for close button readability */}
+            {/* Top whisper for close-button legibility */}
             <div
-              className="absolute inset-0"
+              className="absolute top-0 left-0 right-0"
               style={{
-                background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.5) 0%, transparent 12%)",
+                height: "8%",
+                background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.45), transparent)",
               }}
             />
           </div>
 
-          {/* ── Ambient particles ── */}
-          {[...Array(isMobile ? 8 : 16)].map((_, i) => (
+          {/* ── Layer 2: Floating particles — depth cue ── */}
+          {[...Array(isMobile ? 6 : 14)].map((_, i) => (
             <motion.div
               key={`cp-${i}`}
               className="absolute rounded-full pointer-events-none"
@@ -98,11 +98,11 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 left: `${8 + Math.random() * 84}%`,
                 top: `${10 + Math.random() * 75}%`,
                 background: i % 2 === 0
-                  ? "hsl(var(--gold) / 0.45)"
-                  : "hsl(var(--celestial) / 0.35)",
+                  ? "hsl(var(--gold) / 0.4)"
+                  : "hsl(var(--celestial) / 0.3)",
               }}
               animate={{
-                opacity: [0, 0.6, 0],
+                opacity: [0, 0.5, 0],
                 y: [0, -(18 + Math.random() * 25)],
               }}
               transition={{
@@ -114,25 +114,25 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             />
           ))}
 
-          {/* ── Subtle ambient glow ── */}
+          {/* ── Layer 3: Warm glow near oracle's hands ── */}
           <motion.div
             className="absolute pointer-events-none"
             style={{
-              left: "20%", right: "20%",
-              top: "40%", height: "25%",
-              background: "radial-gradient(ellipse 100% 100% at 50% 60%, hsl(var(--gold) / 0.04) 0%, transparent 70%)",
-              filter: "blur(25px)",
+              left: "25%", right: "25%",
+              top: "45%", height: "20%",
+              background: "radial-gradient(ellipse 100% 100% at 50% 50%, hsl(var(--gold) / 0.04) 0%, transparent 70%)",
+              filter: "blur(30px)",
             }}
-            animate={{ opacity: [0.3, 0.7, 0.3] }}
+            animate={{ opacity: [0.2, 0.6, 0.2] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* ── Close button ── */}
+          {/* ── Controls: close + badge ── */}
           <motion.button
             className="fixed top-5 left-5 z-[105] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer"
             style={{
-              background: "hsl(var(--deep-blue) / 0.6)",
-              border: "1px solid hsl(var(--gold) / 0.2)",
+              background: "hsl(var(--deep-blue) / 0.5)",
+              border: "1px solid hsl(var(--gold) / 0.15)",
             }}
             onClick={onClose}
             whileHover={{ scale: 1.08 }}
@@ -140,14 +140,12 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           >
             <X className="w-4 h-4 text-gold/70" />
           </motion.button>
-
-          {/* ── Free badge ── */}
           <div className="fixed top-5 right-5 z-[105]">
             <span
               className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider"
               style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))",
-                border: "1px solid hsl(var(--gold) / 0.3)",
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+                border: "1px solid hsl(var(--gold) / 0.2)",
                 color: "hsl(var(--gold))",
               }}
             >
@@ -155,7 +153,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             </span>
           </div>
 
-          {/* ── Content area — floating translucent layer ── */}
+          {/* ── Layer 4: Content — no box, just floating scene elements ── */}
           {fullscreen ? (
             <div
               ref={activeScrollRef as React.RefObject<HTMLDivElement>}
@@ -166,27 +164,48 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           ) : (
             <div
               ref={activeScrollRef as React.RefObject<HTMLDivElement>}
-              className="absolute inset-0 z-[102] overflow-y-auto"
+              className="absolute inset-0 z-[102] overflow-y-auto scrollbar-hide"
             >
-              {/* Scroll spacer — pushes content below oracle's face on desktop */}
-              {!isMobile && (
-                <div className="h-[18vh] pointer-events-none" aria-hidden="true" />
-              )}
-              <div className={`flex justify-center pointer-events-none ${isMobile ? "px-3 pt-16 pb-8" : "px-6 pb-12"}`}>
-                <motion.div
-                  className="pointer-events-auto w-full rounded-2xl"
+              {/*
+                Scene composition:
+                1. Oracle fills the viewport — always visible
+                2. Content starts below her face (spacer)
+                3. A rising fog gradient sits BEHIND the content for legibility
+                4. No container box — children float directly in the scene
+              */}
+
+              {/* Spacer: oracle's face and upper body remain unobscured */}
+              <div
+                className="pointer-events-none"
+                style={{ height: isMobile ? "28vh" : "38vh" }}
+                aria-hidden="true"
+              />
+
+              {/* Rising fog — soft gradient that makes text readable
+                  without a visible box. Positioned behind content via relative stacking. */}
+              <div className="relative">
+                <div
+                  className="absolute inset-x-0 -top-24 bottom-0 pointer-events-none"
                   style={{
-                    maxWidth: isMobile ? "100%" : "540px",
-                    background: "linear-gradient(170deg, hsl(var(--deep-blue-light) / 0.55), hsl(var(--deep-blue) / 0.65))",
-                    border: "1px solid hsl(var(--gold) / 0.1)",
-                    boxShadow: "0 8px 60px hsl(var(--deep-blue) / 0.5), 0 0 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-                    backdropFilter: "blur(20px)",
-                    WebkitBackdropFilter: "blur(20px)",
+                    background: `linear-gradient(to bottom, 
+                      transparent 0%, 
+                      hsl(var(--deep-blue) / 0.25) 60px, 
+                      hsl(var(--deep-blue) / 0.55) 180px, 
+                      hsl(var(--deep-blue) / 0.75) 100%)`,
                   }}
-                  initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: 40, filter: "blur(8px)" }}
-                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                />
+
+                <motion.div
+                  className="relative pointer-events-auto"
+                  style={{
+                    maxWidth: isMobile ? "100%" : "560px",
+                    margin: "0 auto",
+                    padding: isMobile ? "0 16px 40px" : "0 24px 60px",
+                  }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 30 }}
+                  transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 >
                   {children}
                 </motion.div>
