@@ -176,12 +176,14 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 4. No container box — children float directly in the scene
               */}
 
-              {/* Spacer: oracle's face and upper body remain unobscured */}
-              <div
-                className="pointer-events-none"
-                style={{ height: isMobile ? "28vh" : "38vh" }}
-                aria-hidden="true"
-              />
+              {/* Spacer: oracle's face and upper body remain unobscured (skip in wide mode — content fills viewport) */}
+              {!wide && (
+                <div
+                  className="pointer-events-none"
+                  style={{ height: isMobile ? "28vh" : "38vh" }}
+                  aria-hidden="true"
+                />
+              )}
 
               {/* Rising fog — soft gradient that makes text readable
                   without a visible box. Positioned behind content via relative stacking. */}
