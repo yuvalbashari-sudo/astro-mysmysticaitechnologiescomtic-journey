@@ -2629,7 +2629,26 @@ const HeroSection = () => {
       )}
     </div>
 
-    {/* ── Astrologer Avatar CTA — bottom-right of hero ── */}
+      {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
+      {entranceComplete && (
+        <div
+          className="absolute inset-0 pointer-events-none z-[18]"
+          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "calc(5vh + 202px)" }}
+        >
+          <div className="w-full h-full flex items-center justify-center">
+            <div
+              className="relative"
+              style={isMobile
+                ? { width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }
+                : { marginTop: "352px", marginLeft: "10px" }
+              }
+            >
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
+            </div>
+          </div>
+        </div>
+      )}
+
     <motion.button
       type="button"
       className="absolute z-[15] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
