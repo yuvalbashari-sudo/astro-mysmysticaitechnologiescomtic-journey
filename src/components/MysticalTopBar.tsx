@@ -171,7 +171,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         {/* Accessibility link */}
         <Link
           to="/accessibility"
-          className="flex items-center justify-center w-8 h-8 rounded-full transition-all text-gold/50 hover:text-gold text-xs"
+          className="flex items-center justify-center w-14 h-14 rounded-full transition-all text-gold/50 hover:text-gold text-lg"
           style={{
             background: "hsl(var(--deep-blue-light) / 0.6)",
             border: "1px solid hsl(var(--gold) / 0.15)",
