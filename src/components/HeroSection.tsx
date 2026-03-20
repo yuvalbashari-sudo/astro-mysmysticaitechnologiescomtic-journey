@@ -2383,37 +2383,28 @@ const HeroSection = () => {
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
             </motion.div>
-            {/* Subtle luminous rim — clean glow where hands meet ball */}
+            {/* Subtle inner shadow for depth */}
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "352px", height: "352px",
-                boxShadow: "inset 0 12px 30px hsl(var(--deep-blue) / 0.2), inset 0 -10px 25px hsl(var(--deep-blue) / 0.15), inset 10px 0 20px hsl(var(--deep-blue) / 0.1), inset -10px 0 20px hsl(var(--deep-blue) / 0.1)",
+                width: "346px", height: "346px",
+                boxShadow: "inset 0 10px 25px hsl(var(--deep-blue) / 0.18), inset 0 -8px 20px hsl(var(--deep-blue) / 0.12), inset 8px 0 16px hsl(var(--deep-blue) / 0.08), inset -8px 0 16px hsl(var(--deep-blue) / 0.08)",
               }}
             />
-            {/* Finger contact hints — very subtle */}
+            {/* Finger contact hints — contained within ball */}
             <div
               className="absolute pointer-events-none z-[24]"
               style={{
-                width: "375px", height: "375px",
+                width: "346px", height: "346px",
                 left: "50%", top: "50%",
                 transform: "translate(-50%, -50%)",
                 borderRadius: "50%",
+                overflow: "hidden",
                 background: [
-                  "radial-gradient(ellipse 50px 35px at 18% 55%, hsl(var(--deep-blue) / 0.15), transparent 70%)",
-                  "radial-gradient(ellipse 50px 35px at 82% 55%, hsl(var(--deep-blue) / 0.15), transparent 70%)",
-                  "radial-gradient(ellipse 70px 30px at 50% 92%, hsl(var(--deep-blue) / 0.12), transparent 70%)",
+                  "radial-gradient(ellipse 45px 30px at 18% 55%, hsl(var(--deep-blue) / 0.12), transparent 70%)",
+                  "radial-gradient(ellipse 45px 30px at 82% 55%, hsl(var(--deep-blue) / 0.12), transparent 70%)",
+                  "radial-gradient(ellipse 60px 25px at 50% 92%, hsl(var(--deep-blue) / 0.1), transparent 70%)",
                 ].join(", "),
-              }}
-            />
-            {/* Soft luminous edge glow */}
-            <div
-              className="absolute rounded-full pointer-events-none z-[22]"
-              style={{
-                width: "359px", height: "359px",
-                left: "50%", top: "50%",
-                transform: "translate(-50%, -50%)",
-                background: "radial-gradient(circle, transparent 75%, hsl(var(--celestial) / 0.06) 85%, hsl(var(--gold) / 0.04) 95%, transparent 100%)",
               }}
             />
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
