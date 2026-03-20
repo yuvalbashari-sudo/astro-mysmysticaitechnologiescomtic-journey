@@ -2298,7 +2298,7 @@ const HeroSection = () => {
             <motion.div
               ref={crystalRef}
               className="relative z-20 cursor-pointer"
-              style={{ width: "290px", height: "290px" }}
+              style={{ width: "314px", height: "314px" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
