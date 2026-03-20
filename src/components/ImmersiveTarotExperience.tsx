@@ -1159,7 +1159,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             style={{
                               fontSize: "1.5rem",
                               color: "hsl(var(--gold))",
-                              textShadow: "0 0 40px hsl(var(--gold) / 0.25), 0 2px 20px hsl(222 47% 6% / 0.9)",
+                              textShadow: "0 0 50px hsl(var(--gold) / 0.3), 0 2px 30px hsl(222 47% 6%), 0 0 10px hsl(222 47% 6%)",
                               letterSpacing: "0.2em",
                             }}
                             initial={{ opacity: 0, y: 12 }}
