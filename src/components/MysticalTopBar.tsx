@@ -62,11 +62,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        >
           ASTROLOGAI
           <motion.span
             className="absolute inset-0 pointer-events-none"
