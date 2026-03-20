@@ -2428,124 +2428,126 @@ const HeroSection = () => {
           </motion.div>
         )}
       </div>
+    </div>
 
-      {/* ── Top horizontal feature tabs ── */}
-      <div className="absolute z-[61] pointer-events-auto inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "64px" : "82px" }}>
-        <motion.div
-          className={`flex justify-center mx-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
-        >
-          {menuItems.map((item, i) => {
-            const itemColor = ITEM_COLORS[i];
-            const isHovered = hoveredItem === i;
-            return (
-              <motion.div
-                key={i}
-                className="cursor-pointer"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
-                onMouseEnter={() => setHoveredItem(i)}
-                onMouseLeave={() => setHoveredItem(null)}
-                whileHover={{ scale: 1.08, y: -3 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
-              >
-                <motion.div
-                  className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
-                  style={{
-                    borderWidth: "1px", borderStyle: "solid",
-                    borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
-                    background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
-                    boxShadow: isHovered
-                      ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
-                      : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-                  }}
-                >
-                  <div>
-                    <item.icon
-                      className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`}
-                      style={{
-                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
-                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
-                      }}
-                    />
-                  </div>
-                  <span
-                    className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`}
-                    style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
-                  >
-                    {item.label}
-                  </span>
-                  {/* Hover underline glow */}
-                  {isHovered && (
-                    <motion.div
-                      className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
-                      style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
-                      initial={{ opacity: 0, scaleX: 0 }}
-                      animate={{ opacity: 0.8, scaleX: 1 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  )}
-                  {isHovered && (
-                    <motion.div
-                      className="absolute -inset-2 rounded-full pointer-events-none"
-                      style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 0.6, 0.3] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    />
-                  )}
-                </motion.div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      </div>
-
-      {/* ── Fixed CTA below crystal ball ── */}
-      <div
-        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13] px-4"
-        style={{
-          top: isMobile
-            ? `min(calc(50% + 335px + 55px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
-            : `calc(50% + 370px + 55px)`,
-        }}
+    {/* ── Top horizontal feature tabs — OUTSIDE isolate container for correct stacking ── */}
+    <div className="fixed z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "64px" : "82px" }}>
+      <motion.div
+        className={`flex justify-center mx-auto pointer-events-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
       >
-        <motion.button
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.2, duration: 0.6 }}
-          onClick={() => setTarotOpen(true)}
-          className={`relative overflow-hidden rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3.5" : "text-base px-14 py-4.5"}`}
+        {menuItems.map((item, i) => {
+          const itemColor = ITEM_COLORS[i];
+          const isHovered = hoveredItem === i;
+          return (
+            <motion.button
+              key={i}
+              type="button"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
+              onMouseEnter={() => setHoveredItem(i)}
+              onMouseLeave={() => setHoveredItem(null)}
+              onFocus={() => setHoveredItem(i)}
+              onBlur={() => setHoveredItem(null)}
+              whileHover={{ scale: 1.08, y: -3 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
+              aria-label={item.label}
+            >
+              <div
+                className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
+                style={{
+                  borderWidth: "1px", borderStyle: "solid",
+                  borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                  background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                  boxShadow: isHovered
+                    ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                    : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                }}
+              >
+                <item.icon
+                  className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`}
+                  style={{
+                    color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                    filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                  }}
+                />
+                <span
+                  className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`}
+                  style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                >
+                  {item.label}
+                </span>
+                {isHovered && (
+                  <motion.div
+                    className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                    style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                    initial={{ opacity: 0, scaleX: 0 }}
+                    animate={{ opacity: 0.8, scaleX: 1 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                )}
+                {isHovered && (
+                  <motion.div
+                    className="absolute -inset-2 rounded-full pointer-events-none"
+                    style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.6, 0.3] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                )}
+              </div>
+            </motion.button>
+          );
+        })}
+      </motion.div>
+    </div>
+
+    {/* ── Fixed CTA below crystal ball — OUTSIDE isolate container ── */}
+    <div
+      className="fixed inset-x-0 flex justify-center pointer-events-none z-[65] px-4"
+      style={{
+        top: isMobile
+          ? `min(calc(50% + 335px + 55px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
+          : `calc(50% + 370px + 55px)`,
+      }}
+    >
+      <motion.button
+        type="button"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.2, duration: 0.6 }}
+        onClick={() => setTarotOpen(true)}
+        className={`relative overflow-hidden rounded-full font-heading tracking-wider pointer-events-auto cursor-pointer ${isMobile ? "text-sm px-8 py-3.5" : "text-base px-14 py-4.5"}`}
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
+          color: "hsl(var(--deep-blue))",
+          fontWeight: 700,
+          boxShadow: "0 4px 30px hsl(var(--gold) / 0.35), 0 0 60px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold-light) / 0.5)",
+          minHeight: "52px",
+        }}
+        whileHover={{
+          scale: 1.06,
+          boxShadow: "0 6px 40px hsl(43 80% 55% / 0.5), 0 0 80px hsl(43 80% 55% / 0.25), inset 0 1px 0 hsl(var(--gold-light) / 0.6)",
+        }}
+        whileTap={{ scale: 0.97 }}
+        aria-label="✨ גלו את המסר האישי שלכם"
+      >
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
-            color: "hsl(var(--deep-blue))",
-            fontWeight: 700,
-            boxShadow: "0 4px 30px hsl(var(--gold) / 0.35), 0 0 60px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold-light) / 0.5)",
-            minHeight: "52px",
+            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%)",
+            backgroundSize: "200% 100%",
           }}
-          whileHover={{
-            scale: 1.06,
-            boxShadow: "0 6px 40px hsl(43 80% 55% / 0.5), 0 0 80px hsl(43 80% 55% / 0.25), inset 0 1px 0 hsl(var(--gold-light) / 0.6)",
-          }}
-          whileTap={{ scale: 0.97 }}
-        >
-          {/* Shimmer sweep */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%)",
-              backgroundSize: "200% 100%",
-            }}
-            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
-          />
-          <span className="relative z-10">✨ גלו את המסר האישי שלכם</span>
-        </motion.button>
-      </div>
+          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+        />
+        <span className="relative z-10">✨ גלו את המסר האישי שלכם</span>
+      </motion.button>
     </div>
         </>,
         document.body
