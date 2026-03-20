@@ -2517,14 +2517,14 @@ const HeroSection = () => {
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
                 >
                   <motion.div
-                    className="relative flex items-center justify-center gap-2.5 px-5 py-3 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
+                    className="relative flex items-center justify-center gap-2.5 px-5 py-3 rounded-full transition-all duration-300 whitespace-nowrap"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
-                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.18)",
-                      background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.25)",
+                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.12)",
+                      background: hoveredItem === i ? `${itemColor.glow}18` : "transparent",
                       boxShadow: hoveredItem === i
                         ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
-                        : "0 0 12px hsl(var(--gold) / 0.1)",
+                        : "none",
                     }}
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 3.5 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
