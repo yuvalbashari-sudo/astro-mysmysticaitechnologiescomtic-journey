@@ -1051,7 +1051,33 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                         transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="p-6">
+                        <div className="p-6" style={{ fontSize: `${[1, 1.15, 1.3][textSizeLevel]}rem`, transition: "font-size 0.25s ease" }}>
+                          {/* Text size control — mobile */}
+                          <div className="flex items-center gap-1.5 mb-4" style={{ direction: "ltr" }}>
+                            {([0, 1, 2] as const).map((level) => {
+                              const labels = ["A", "A+", "A++"];
+                              const active = textSizeLevel === level;
+                              return (
+                                <button
+                                  key={level}
+                                  type="button"
+                                  onClick={() => setTextSizeLevel(level)}
+                                  className="font-heading cursor-pointer transition-all duration-200"
+                                  style={{
+                                    fontSize: `${0.6 + level * 0.07}rem`,
+                                    padding: "3px 8px",
+                                    borderRadius: "999px",
+                                    background: active ? "hsl(var(--gold) / 0.12)" : "transparent",
+                                    border: `1px solid ${active ? "hsl(var(--gold) / 0.3)" : "hsl(var(--gold) / 0.08)"}`,
+                                    color: active ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.4)",
+                                    boxShadow: active ? "0 0 10px hsl(var(--gold) / 0.08)" : "none",
+                                  }}
+                                >
+                                  {labels[level]}
+                                </button>
+                              );
+                            })}
+                          </div>
                           <motion.h3
                             className="font-heading text-center mb-6"
                             style={{ fontSize: "1.15rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
