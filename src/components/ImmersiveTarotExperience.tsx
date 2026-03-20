@@ -650,7 +650,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
           >
-            <X className="w-4 h-4 text-gold/70" />
+            <X className="w-6 h-6 text-gold/70" />
           </motion.button>
 
           {/* ── Back button ── */}
