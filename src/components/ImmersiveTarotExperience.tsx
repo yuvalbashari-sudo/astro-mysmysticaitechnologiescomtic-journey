@@ -101,11 +101,190 @@ async function streamTarotReading(
     }
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "Connection error");
+    onError(e instanceof Error ? e.message : "Network error");
   }
 }
 
-/* ── Floating Card ──────────────── */
+/* ── Energy Particle from hands to cards ── */
+const EnergyParticle = ({ index, phase, isMobile }: { index: number; phase: Phase; isMobile: boolean }) => {
+  const startX = (Math.random() - 0.5) * (isMobile ? 80 : 160);
+  const startY = isMobile ? -60 : -100;
+  const endY = isMobile ? 40 : 80;
+  const duration = 2 + Math.random() * 2;
+  const delay = Math.random() * 3;
+  const size = 1.5 + Math.random() * 2;
+
+  if (phase !== "drawing" && phase !== "reveal") return null;
+
+  return (
+    <motion.div
+      className="absolute rounded-full pointer-events-none"
+      style={{
+        width: size,
+        height: size,
+        left: "50%",
+        top: isMobile ? "38%" : "42%",
+        background: index % 3 === 0
+          ? "hsl(var(--gold) / 0.8)"
+          : index % 3 === 1
+            ? "hsl(270 60% 70% / 0.7)"
+            : "hsl(var(--celestial) / 0.6)",
+        filter: "blur(0.5px)",
+      }}
+      animate={{
+        x: [startX, startX * 0.3 + (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 40],
+        y: [startY, startY * 0.3, endY],
+        opacity: [0, 0.9, 0.6, 0],
+        scale: [0.5, 1.2, 0.8, 0],
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: "easeOut",
+      }}
+    />
+  );
+};
+
+/* ── Mystical Table Surface ── */
+const MysticalTable = ({ phase, isMobile }: { phase: Phase; isMobile: boolean }) => {
+  const showTable = phase === "drawing" || phase === "reveal";
+
+  return (
+    <AnimatePresence>
+      {showTable && (
+        <motion.div
+          className="absolute pointer-events-none"
+          style={{
+            left: "50%",
+            transform: "translateX(-50%)",
+            bottom: isMobile ? "8%" : "5%",
+            width: isMobile ? "95%" : "70%",
+            maxWidth: 900,
+            height: isMobile ? "30%" : "35%",
+            perspective: "800px",
+          }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 30 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Table surface with perspective */}
+          <div
+            className="absolute inset-0 rounded-t-[40%] overflow-hidden"
+            style={{
+              transform: "rotateX(25deg)",
+              transformOrigin: "bottom center",
+              background: `
+                radial-gradient(ellipse 80% 60% at 50% 40%,
+                  hsl(25 30% 12% / 0.9) 0%,
+                  hsl(20 25% 8% / 0.95) 40%,
+                  hsl(15 20% 5% / 0.98) 80%,
+                  transparent 100%
+                )
+              `,
+              boxShadow: "inset 0 2px 30px hsl(var(--gold) / 0.06), inset 0 -2px 20px hsl(0 0% 0% / 0.4)",
+            }}
+          >
+            {/* Wood grain texture overlay */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: `
+                  repeating-linear-gradient(
+                    87deg,
+                    transparent 0px,
+                    hsl(25 40% 20% / 0.04) 2px,
+                    transparent 4px,
+                    hsl(20 30% 15% / 0.03) 8px
+                  )
+                `,
+              }}
+            />
+
+            {/* Engraved mystical symbols - central circle */}
+            <motion.div
+              className="absolute rounded-full"
+              style={{
+                width: isMobile ? 120 : 220,
+                height: isMobile ? 120 : 220,
+                left: "50%",
+                top: "40%",
+                transform: "translate(-50%, -50%)",
+                border: "1px solid hsl(var(--gold) / 0.08)",
+                boxShadow: "0 0 20px hsl(var(--gold) / 0.04), inset 0 0 15px hsl(var(--gold) / 0.03)",
+              }}
+              animate={{
+                boxShadow: [
+                  "0 0 20px hsl(var(--gold) / 0.04), inset 0 0 15px hsl(var(--gold) / 0.03)",
+                  "0 0 30px hsl(var(--gold) / 0.08), inset 0 0 20px hsl(var(--gold) / 0.06)",
+                  "0 0 20px hsl(var(--gold) / 0.04), inset 0 0 15px hsl(var(--gold) / 0.03)",
+                ],
+              }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+
+            {/* Inner engraved circle */}
+            <div
+              className="absolute rounded-full"
+              style={{
+                width: isMobile ? 70 : 130,
+                height: isMobile ? 70 : 130,
+                left: "50%",
+                top: "40%",
+                transform: "translate(-50%, -50%)",
+                border: "1px solid hsl(var(--gold) / 0.05)",
+              }}
+            />
+
+            {/* Engraved lines radiating outward */}
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`eng-${i}`}
+                className="absolute"
+                style={{
+                  width: 1,
+                  height: isMobile ? 30 : 55,
+                  left: "50%",
+                  top: "40%",
+                  transformOrigin: "top center",
+                  transform: `translate(-50%, 0) rotate(${i * 45}deg) translateY(${isMobile ? 35 : 65}px)`,
+                  background: "hsl(var(--gold) / 0.06)",
+                }}
+              />
+            ))}
+
+            {/* Top light reflection on table */}
+            <motion.div
+              className="absolute inset-x-0 top-0"
+              style={{
+                height: "40%",
+                background: "linear-gradient(to bottom, hsl(var(--gold) / 0.06) 0%, transparent 100%)",
+              }}
+              animate={{
+                opacity: phase === "reveal" ? [0.5, 0.8, 0.5] : [0.3, 0.5, 0.3],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+
+          {/* Table edge / front lip */}
+          <div
+            className="absolute bottom-0 left-[5%] right-[5%] rounded-b-lg"
+            style={{
+              height: isMobile ? 6 : 10,
+              background: "linear-gradient(to bottom, hsl(25 25% 15% / 0.8), hsl(20 20% 8% / 0.9))",
+              boxShadow: "0 4px 15px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+            }}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+/* ── Floating Card (on table) ──────────────── */
 const FloatingCard = ({
   card,
   index,
@@ -143,14 +322,36 @@ const FloatingCard = ({
       animate={{
         opacity: 1,
         x,
-        y: isSelected ? -40 : Math.abs(index - (totalCards - 1) / 2) * 8,
+        y: isSelected ? -50 : Math.abs(index - (totalCards - 1) / 2) * 6,
         rotateZ: isSelected ? 0 : baseRotation,
         scale: isSelected ? 1.18 : 1,
       }}
       transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
-      whileHover={!isSelected ? { y: -18, scale: 1.06, transition: { duration: 0.25, ease: "easeOut" } } : {}}
+      whileHover={!isSelected ? {
+        y: -24,
+        scale: 1.08,
+        transition: { duration: 0.3, ease: "easeOut" }
+      } : {}}
       onClick={onClick}
     >
+      {/* Card shadow on table */}
+      <motion.div
+        className="absolute rounded-xl pointer-events-none"
+        style={{
+          width: "90%",
+          height: "12%",
+          bottom: -8,
+          left: "5%",
+          background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.5) 0%, transparent 70%)",
+          filter: "blur(6px)",
+        }}
+        animate={{
+          opacity: isSelected ? 0.3 : 0.6,
+          scaleX: isSelected ? 1.2 : 1,
+        }}
+        transition={{ duration: 0.3 }}
+      />
+
       <motion.div
         className="w-full h-full relative rounded-xl overflow-hidden"
         style={{ transformStyle: "preserve-3d" }}
@@ -177,7 +378,6 @@ const FloatingCard = ({
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
             />
           )}
-          {/* Inner edge highlight */}
           <div
             className="absolute inset-0 rounded-xl pointer-events-none"
             style={{
@@ -196,7 +396,6 @@ const FloatingCard = ({
           }}
         >
           <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
-          {/* Inner edge highlight */}
           <div
             className="absolute inset-0 rounded-xl pointer-events-none"
             style={{
@@ -234,7 +433,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Aura intensity animation synced to phase
   useEffect(() => {
     if (phase === "drawing") setAuraIntensity(0.6);
     else if (phase === "reveal") setAuraIntensity(0.9);
@@ -264,53 +462,40 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     {
       key: "general",
       icon: <Sparkles className="w-6 h-6" />,
-      label: language === "he" ? "מסר כללי" : language === "ar" ? "رسالة عامة" : language === "ru" ? "Общее" : "General",
-      color: "270 50% 55%",
+      label: language === "he" ? "כללי" : language === "ar" ? "عام" : language === "ru" ? "Общее" : "General",
+      color: "270 50% 60%",
     },
   ], [language]);
 
   const handleQuestionSelect = useCallback((key: string) => {
     setSelectedQuestion(key);
-    // Transition to drawing phase after brief confirmation
     setTimeout(() => {
-      const cards = drawTarotCards(7);
-      setDrawnCards(cards);
+      setDrawnCards(drawTarotCards(7));
       setPhase("drawing");
-    }, 800);
+    }, 600);
   }, []);
 
   const handleCardSelect = useCallback((index: number) => {
-    if (selectedCardIndices.has(index) || flippedIndices.has(index)) return;
-    if (selectedCardIndices.size >= 3) return;
-
-    const newSelected = new Set(selectedCardIndices);
-    newSelected.add(index);
-    setSelectedCardIndices(newSelected);
-
-    // Flip after selection animation
-    setTimeout(() => {
-      const newFlipped = new Set(flippedIndices);
-      newFlipped.add(index);
-      setFlippedIndices(newFlipped);
-
-      // If 3 cards selected, transition to reveal
-      if (newSelected.size >= 3) {
+    setSelectedCardIndices(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+        setFlippedIndices(fi => { const n = new Set(fi); n.delete(index); return n; });
+      } else if (next.size < 3) {
+        next.add(index);
         setTimeout(() => {
-          const chosen = Array.from(newSelected).map(i => drawnCards[i]);
-          setRevealedCard(chosen[0]);
-          setPhase("reveal");
-
-          // After reveal animation, start interpretation
-          setTimeout(() => {
-            setPhase("interpretation");
-            startAIReading(chosen);
-          }, 2500);
-        }, 1500);
+          setFlippedIndices(fi => new Set(fi).add(index));
+        }, 200);
+        if (next.size === 3) {
+          setTimeout(() => setPhase("reveal"), 1500);
+        }
       }
-    }, 600);
-  }, [selectedCardIndices, flippedIndices, drawnCards]);
+      return next;
+    });
+  }, []);
 
-  const startAIReading = useCallback((cards: TarotCard[]) => {
+  const handleRevealComplete = useCallback(() => {
+    setPhase("interpretation");
     setAiLoading(true);
     aiTextRef.current = "";
     setAiText("");
@@ -321,6 +506,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       language === "he" ? "עתיד" : "Future",
     ];
 
+    const cards = Array.from(selectedCardIndices).map(i => drawnCards[i]);
     const cardsPayload = cards.map((c, i) => ({
       hebrewName: c.hebrewName,
       symbol: c.symbol,
@@ -361,7 +547,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       selectedQuestion || undefined,
       language,
     );
-  }, [selectedQuestion, language, t, setActiveReading]);
+  }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards]);
+
+  useEffect(() => {
+    if (phase === "reveal") {
+      const timer = setTimeout(handleRevealComplete, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [phase, handleRevealComplete]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -420,7 +613,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               className="w-full h-full object-cover"
               style={{
                 objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                filter: `brightness(${phase === "reveal" ? 0.5 : 0.4})`,
+                filter: `brightness(${phase === "reveal" ? 0.55 : phase === "drawing" ? 0.45 : 0.4})`,
                 transition: "filter 1s ease-out",
               }}
             />
@@ -428,69 +621,60 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Mystical overlay gradients ── */}
           <div className="absolute inset-0 pointer-events-none">
-            {/* Vignette */}
             <div
               className="absolute inset-0"
               style={{
                 background: "radial-gradient(ellipse 65% 55% at 50% 50%, transparent 30%, hsl(var(--deep-blue) / 0.85) 100%)",
               }}
             />
-            {/* Top fade */}
             <div
               className="absolute inset-0"
               style={{ background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.6) 0%, transparent 30%)" }}
             />
+            {/* Bottom gradient for table blending */}
+            <AnimatePresence>
+              {(phase === "drawing" || phase === "reveal") && (
+                <motion.div
+                  className="absolute inset-0"
+                  style={{
+                    background: "linear-gradient(to top, hsl(20 15% 5% / 0.7) 0%, transparent 40%)",
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 1.2 }}
+                />
+              )}
+            </AnimatePresence>
           </div>
 
-          {/* ── Crystal ball aura — reacts to phase ── */}
-          <motion.div
-            className="absolute pointer-events-none"
-            style={{
-              left: "50%",
-              top: isMobile ? "52%" : "55%",
-              transform: "translate(-50%, -50%)",
-              width: isMobile ? 250 : 420,
-              height: isMobile ? 250 : 420,
-            }}
-          >
-            <motion.div
-              className="absolute inset-0 rounded-full"
-              animate={{
-                boxShadow: phase === "reveal"
-                  ? [
-                      "0 0 60px hsl(var(--gold) / 0.25), 0 0 120px hsl(var(--gold) / 0.12)",
-                      "0 0 100px hsl(var(--gold) / 0.4), 0 0 200px hsl(var(--gold) / 0.2)",
-                      "0 0 60px hsl(var(--gold) / 0.25), 0 0 120px hsl(var(--gold) / 0.12)",
-                    ]
-                  : phase === "drawing"
-                    ? [
-                        "0 0 40px hsl(270 50% 50% / 0.15), 0 0 80px hsl(270 50% 50% / 0.06)",
-                        "0 0 60px hsl(270 50% 50% / 0.25), 0 0 120px hsl(270 50% 50% / 0.12)",
-                        "0 0 40px hsl(270 50% 50% / 0.15), 0 0 80px hsl(270 50% 50% / 0.06)",
-                      ]
-                    : [
-                        "0 0 30px hsl(var(--gold) / 0.1), 0 0 60px hsl(var(--gold) / 0.04)",
-                        "0 0 50px hsl(var(--gold) / 0.18), 0 0 100px hsl(var(--gold) / 0.08)",
-                        "0 0 30px hsl(var(--gold) / 0.1), 0 0 60px hsl(var(--gold) / 0.04)",
-                      ],
-                opacity: auraIntensity,
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute inset-[15%] rounded-full"
-              style={{
-                background: phase === "reveal"
-                  ? "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)"
-                  : phase === "drawing"
-                    ? "radial-gradient(circle, hsl(270 50% 50% / 0.08) 0%, transparent 70%)"
-                    : "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
-                transition: "background 0.8s ease-out",
-              }}
-              animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.4, 0.8, 0.4] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </motion.div>
+          {/* ── Mystical Table ── */}
+          <MysticalTable phase={phase} isMobile={isMobile} />
+
+          {/* ── Soft upward light on oracle during card phases ── */}
+          <AnimatePresence>
+            {(phase === "drawing" || phase === "reveal") && (
+              <motion.div
+                className="absolute pointer-events-none"
+                style={{
+                  left: "30%",
+                  right: "30%",
+                  bottom: isMobile ? "30%" : "35%",
+                  height: "30%",
+                  background: "radial-gradient(ellipse 100% 80% at 50% 100%, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5 }}
+              />
+            )}
+          </AnimatePresence>
+
+          {/* ── Energy particles from oracle hands toward cards ── */}
+          {[...Array(isMobile ? 12 : 24)].map((_, i) => (
+            <EnergyParticle key={`ep-${i}`} index={i} phase={phase} isMobile={isMobile} />
+          ))}
 
           {/* ── Ambient particles ── */}
           {[...Array(isMobile ? 10 : 20)].map((_, i) => (
@@ -531,7 +715,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
             <X className="w-4 h-4 text-gold/70" />
           </motion.button>
 
-          {/* ── Back button (when not on question phase) ── */}
+          {/* ── Back button ── */}
           <AnimatePresence>
             {phase !== "question" && phase !== "interpretation" && (
               <motion.button
@@ -622,7 +806,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             {opt.label}
                           </span>
                         </div>
-                        {/* Hover glow */}
                         <motion.div
                           className="absolute inset-0 rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                           style={{
@@ -666,7 +849,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {language === "he" ? "הקשיבו לאינטואיציה ובחרו" : "Listen to your intuition and choose"}
                   </motion.div>
 
-                  {/* Card fan — aligned with oracle's hands */}
+                  {/* Card fan — on the mystical table */}
                   <div className="relative flex items-center justify-center" style={{ height: isMobile ? 160 : 240 }}>
                     {drawnCards.map((card, i) => (
                       <FloatingCard
@@ -719,7 +902,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  {/* Cards revealed in a row */}
                   <div className="flex items-end justify-center gap-5 md:gap-8">
                     {chosenCards.map((card, i) => {
                       const isCenter = i === 1;
@@ -734,6 +916,18 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           animate={{ opacity: 1, y: 0, rotateY: 0 }}
                           transition={{ delay: i * 0.4 + 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                         >
+                          {/* Shadow on table */}
+                          <div
+                            className="absolute pointer-events-none"
+                            style={{
+                              width: "85%",
+                              height: "10%",
+                              bottom: -10,
+                              left: "7.5%",
+                              background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.5) 0%, transparent 70%)",
+                              filter: "blur(8px)",
+                            }}
+                          />
                           <img
                             src={tarotCardImages[card.name] || cardBack}
                             alt={card.hebrewName}
@@ -746,7 +940,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               filter: isCenter ? "none" : "brightness(0.85)",
                             }}
                           />
-                          {/* Inner edge highlight */}
                           <div
                             className="absolute inset-0 rounded-lg pointer-events-none"
                             style={{
@@ -858,7 +1051,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 filter: isCenter ? "none" : "brightness(0.8)",
                               }}
                             />
-                            {/* Inner edge highlight */}
                             <div
                               className="absolute inset-0 rounded-lg pointer-events-none"
                               style={{
@@ -911,7 +1103,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           </div>
                         ) : null}
 
-                        {/* Loading cursor */}
                         {aiLoading && aiText && (
                           <motion.span
                             className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle"
