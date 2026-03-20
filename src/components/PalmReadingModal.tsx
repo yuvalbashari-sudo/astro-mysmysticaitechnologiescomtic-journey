@@ -110,32 +110,69 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   };
 
   const isDesktopResult = !isMobile && submitted;
+  const isDesktopInput = !isMobile && !submitted && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput}>
             <AnimatePresence mode="wait">
               {!submitted && !isLoading ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
-                  <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-7 h-7 text-gold" /></motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.palm_title}</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-4 max-w-md mx-auto leading-relaxed">{t.palm_desc}</p>
-                  <div className="max-w-xs mx-auto mb-6">
-                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
+                isDesktopInput ? (
+                  /* ── Desktop: form on RIGHT side ── */
+                  <div className="absolute inset-0" key="input-desktop">
+                    <motion.div
+                      className="absolute pointer-events-auto overflow-y-auto scrollbar-hide"
+                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(380px, 26vw)", maxHeight: "80vh" }}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div className="text-center">
+                        <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-6 h-6 text-gold" /></motion.div>
+                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.palm_title}</h2>
+                        <p className="text-foreground/70 font-body text-sm mb-4 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.palm_desc}</p>
+                        <div className="mb-4">
+                          <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
+                          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
+                        </div>
+                        <div className="mb-4 flex flex-col gap-4" dir="rtl">
+                          {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
+                          {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
+                        </div>
+                        <div className="mb-5 rounded-xl p-3 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
+                          <p className="text-gold/60 font-body text-[11px] font-semibold mb-1">{t.palm_tips_title}</p>
+                          <ul className="text-foreground/50 font-body text-[10px] space-y-0.5 leading-relaxed">
+                            <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
+                          </ul>
+                        </div>
+                        <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />{t.palm_cta}</motion.button>
+                        <p className="text-[11px] text-muted-foreground font-body mt-4" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
+                      </div>
+                    </motion.div>
                   </div>
-                  <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4" dir="rtl">
-                    {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
-                    {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
-                  </div>
-                  <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                    <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">{t.palm_tips_title}</p>
-                    <ul className="text-foreground/50 font-body text-[11px] space-y-1 leading-relaxed">
-                      <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
-                    </ul>
-                  </div>
-                  <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />{t.palm_cta}</motion.button>
-                  <p className="text-[11px] text-muted-foreground font-body mt-6">{t.palm_note}</p>
-                </motion.div>
+                ) : (
+                  /* ── Mobile: centered form ── */
+                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
+                    <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-7 h-7 text-gold" /></motion.div>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.palm_title}</h2>
+                    <p className="text-foreground/70 font-body text-sm md:text-base mb-4 max-w-md mx-auto leading-relaxed">{t.palm_desc}</p>
+                    <div className="max-w-xs mx-auto mb-6">
+                      <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
+                      <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
+                    </div>
+                    <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4" dir="rtl">
+                      {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
+                      {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
+                    </div>
+                    <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                      <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">{t.palm_tips_title}</p>
+                      <ul className="text-foreground/50 font-body text-[11px] space-y-1 leading-relaxed">
+                        <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
+                      </ul>
+                    </div>
+                    <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />{t.palm_cta}</motion.button>
+                    <p className="text-[11px] text-muted-foreground font-body mt-6">{t.palm_note}</p>
+                  </motion.div>
+                )
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : submitted ? (

@@ -81,24 +81,53 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   };
 
   const isDesktopResult = !isMobile && !!signInfo;
+  const isDesktopInput = !isMobile && !signInfo && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput}>
             <AnimatePresence mode="wait">
               {!signInfo && !isLoading ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
-                  <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>
-                    <Calendar className="w-7 h-7 text-gold" />
-                  </motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.forecast_title}</h2>
-                  <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.forecast_desc}</p>
-                  <div className="max-w-xs mx-auto mb-8">
-                    <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.forecast_birthdate_label}</label>
-                    <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                isDesktopInput ? (
+                  /* ── Desktop: form on RIGHT side ── */
+                  <div className="absolute inset-0" key="input-desktop">
+                    <motion.div
+                      className="absolute pointer-events-auto"
+                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(340px, 24vw)" }}
+                      initial={{ opacity: 0, x: 40 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div className="text-center">
+                        <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>
+                          <Calendar className="w-6 h-6 text-gold" />
+                        </motion.div>
+                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.forecast_title}</h2>
+                        <p className="text-foreground/70 font-body text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
+                        <div className="mb-6">
+                          <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.forecast_birthdate_label}</label>
+                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                        </div>
+                        <motion.button onClick={handleSubmit} disabled={!birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.forecast_cta}</motion.button>
+                        <p className="text-[11px] text-muted-foreground font-body mt-5" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
+                      </div>
+                    </motion.div>
                   </div>
-                  <motion.button onClick={handleSubmit} disabled={!birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.forecast_cta}</motion.button>
-                  <p className="text-[11px] text-muted-foreground font-body mt-6">{t.forecast_note}</p>
-                </motion.div>
+                ) : (
+                  /* ── Mobile: centered form ── */
+                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
+                    <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>
+                      <Calendar className="w-7 h-7 text-gold" />
+                    </motion.div>
+                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.forecast_title}</h2>
+                    <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.forecast_desc}</p>
+                    <div className="max-w-xs mx-auto mb-8">
+                      <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.forecast_birthdate_label}</label>
+                      <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                    </div>
+                    <motion.button onClick={handleSubmit} disabled={!birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.forecast_cta}</motion.button>
+                    <p className="text-[11px] text-muted-foreground font-body mt-6">{t.forecast_note}</p>
+                  </motion.div>
+                )
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : signInfo ? (
