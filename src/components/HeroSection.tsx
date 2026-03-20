@@ -770,7 +770,7 @@ const ZodiacWheel = ({
         animate={{ rotate: 360 }}
         transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
       >
-        {/* Faint circle track */}
+        {/* Faint circle track with integrated glow */}
         <motion.div
           className="absolute rounded-full"
           style={{
@@ -778,17 +778,44 @@ const ZodiacWheel = ({
             height: radius * 2,
             left: 20,
             top: 20,
-            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : 0.06})`,
+            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : 0.08})`,
+            boxShadow: `0 0 12px hsl(43 80% 55% / 0.04), inset 0 0 12px hsl(43 80% 55% / 0.03)`,
           }}
           animate={isRisingMode ? {
             boxShadow: [
-              "0 0 10px hsl(43 80% 55% / 0.05)",
-              "0 0 30px hsl(43 80% 55% / 0.15)",
-              "0 0 10px hsl(43 80% 55% / 0.05)",
+              "0 0 10px hsl(43 80% 55% / 0.05), inset 0 0 10px hsl(43 80% 55% / 0.03)",
+              "0 0 30px hsl(43 80% 55% / 0.15), inset 0 0 20px hsl(43 80% 55% / 0.06)",
+              "0 0 10px hsl(43 80% 55% / 0.05), inset 0 0 10px hsl(43 80% 55% / 0.03)",
             ],
           } : {}}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
+
+        {/* Radial connection lines — faint structural hints from center to each icon */}
+        <svg
+          className="absolute pointer-events-none"
+          style={{ width: radius * 2 + 40, height: radius * 2 + 40 }}
+        >
+          {Array.from({ length: 12 }).map((_, i) => {
+            const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
+            const cx = radius + 20;
+            const cy = radius + 20;
+            const innerR = radius * 0.92;
+            const outerR = radius * 1.0;
+            return (
+              <line
+                key={`radial-${i}`}
+                x1={Math.cos(angle) * innerR + cx}
+                y1={Math.sin(angle) * innerR + cy}
+                x2={Math.cos(angle) * outerR + cx}
+                y2={Math.sin(angle) * outerR + cy}
+                stroke="hsl(43, 80%, 55%)"
+                strokeWidth="0.5"
+                strokeOpacity="0.12"
+              />
+            );
+          })}
+        </svg>
 
         {ZODIAC_WHEEL[language].map((sign, i) => {
           const angle = (i / 12) * Math.PI * 2 - Math.PI / 2;
