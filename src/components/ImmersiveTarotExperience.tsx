@@ -947,13 +947,15 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               alt={card.hebrewName}
                               className="w-full h-full object-cover rounded-xl"
                               style={{
-                                imageRendering: "auto",
+                                imageRendering: "-webkit-optimize-contrast" as any,
                                 backfaceVisibility: "hidden",
                                 transform: "translateZ(0)",
                                 boxShadow: isCenter
                                   ? "0 0 60px hsl(var(--gold) / 0.35), 0 16px 48px hsl(0 0% 0% / 0.6)"
                                   : "0 0 30px hsl(var(--gold) / 0.18), 0 10px 32px hsl(0 0% 0% / 0.5)",
-                                filter: isCenter ? "contrast(1.08) saturate(1.05)" : "brightness(0.85) contrast(1.06)",
+                                filter: isCenter
+                                  ? "contrast(1.08) saturate(1.05) drop-shadow(0 10px 25px rgba(0,0,0,0.5))"
+                                  : "brightness(0.85) contrast(1.06) drop-shadow(0 10px 25px rgba(0,0,0,0.5))",
                                 willChange: "transform",
                               }}
                             />
