@@ -505,20 +505,23 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     }, 600);
   }, []);
 
+  const [burstIndices, setBurstIndices] = useState<Set<number>>(new Set());
+
   const handleCardSelect = useCallback((index: number) => {
     setSelectedCardIndices(prev => {
+      if (prev.has(index)) return prev; // no deselection
+      if (prev.size >= 3) return prev;
       const next = new Set(prev);
-      if (next.has(index)) {
-        next.delete(index);
-        setFlippedIndices(fi => { const n = new Set(fi); n.delete(index); return n; });
-      } else if (next.size < 3) {
-        next.add(index);
-        setTimeout(() => {
-          setFlippedIndices(fi => new Set(fi).add(index));
-        }, 200);
-        if (next.size === 3) {
-          setTimeout(() => setPhase("reveal"), 1500);
-        }
+      next.add(index);
+
+      // Flip immediately
+      setFlippedIndices(fi => new Set(fi).add(index));
+      // Light burst
+      setBurstIndices(bi => new Set(bi).add(index));
+      setTimeout(() => setBurstIndices(bi => { const n = new Set(bi); n.delete(index); return n; }), 900);
+
+      if (next.size === 3) {
+        setTimeout(() => setPhase("reveal"), 2000);
       }
       return next;
     });
