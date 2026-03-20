@@ -2296,20 +2296,13 @@ const HeroSection = () => {
               style={{ width: "180px", height: "180px" }}
               onClick={handleCrystalClick}
             >
-              <div className="absolute inset-[-8%] rounded-full overflow-hidden" style={{ WebkitMaskImage: "radial-gradient(circle, white 62%, transparent 72%)", maskImage: "radial-gradient(circle, white 62%, transparent 72%)" }}>
-                <img
-                  src={crystalBall}
-                  alt="Crystal Ball"
-                  className="w-full h-full"
-                  style={{
-                    objectFit: "contain",
-                    filter: "drop-shadow(0 0 25px hsl(215 60% 60% / 0.3)) brightness(1.1)",
-                    mixBlendMode: "screen",
-                  }}
-                />
-              </div>
+              <div className="absolute pointer-events-none z-30 rounded-full" style={{
+                width: "45%", height: "35%", top: "8%", left: "12%",
+                background: "radial-gradient(ellipse at 40% 35%, rgba(255,254,250,0.18) 0%, rgba(255,254,250,0.05) 45%, transparent 100%)",
+                filter: "blur(2px)",
+              }} />
               <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
-                background: "radial-gradient(circle, transparent 55%, hsl(215 60% 60% / 0.08) 65%, hsl(43 80% 55% / 0.06) 75%, transparent 85%)",
+                background: "radial-gradient(circle, transparent 58%, hsl(215 60% 60% / 0.06) 70%, hsl(43 80% 55% / 0.04) 80%, transparent 88%)",
               }} />
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
