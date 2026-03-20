@@ -352,7 +352,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         borderRadius: "50%",
         overflow: "hidden",
-        clipPath: "circle(50% at 50% 50%)",
+        clipPath: "circle(48% at 50% 50%)",
       }}
     >
       {/* Dual videos for seamless crossfade loop */}
@@ -361,37 +361,35 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       <video ref={videoBRef} muted loop playsInline src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
-      {/* ── Glass layers (all static size, no scale animations) ── */}
-
-      {/* 1. Deep spherical vignette */}
+      {/* 1. Soft spherical vignette — NO hard black edge */}
       <div className="absolute inset-0" style={{
-        background: "radial-gradient(circle at 50% 50%, transparent 30%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 72%, rgba(0,0,0,0.82) 100%)",
+        background: "radial-gradient(circle at 50% 50%, transparent 40%, rgba(20,15,40,0.12) 60%, rgba(10,8,30,0.25) 80%, rgba(5,3,20,0.4) 100%)",
         zIndex: 2,
       }} />
 
       {/* 2. Chromatic fog — very slow rotation */}
       <motion.div className="absolute inset-0" style={{
         background: `
-          radial-gradient(circle at 30% 25%, rgba(200,175,120,0.06) 0%, transparent 40%),
-          radial-gradient(circle at 70% 75%, rgba(90,130,210,0.05) 0%, transparent 38%),
-          radial-gradient(circle at 55% 45%, rgba(160,120,200,0.04) 0%, transparent 45%)
+          radial-gradient(circle at 30% 25%, rgba(200,175,120,0.08) 0%, transparent 40%),
+          radial-gradient(circle at 70% 75%, rgba(90,130,210,0.07) 0%, transparent 38%),
+          radial-gradient(circle at 55% 45%, rgba(160,120,200,0.05) 0%, transparent 45%)
         `,
         zIndex: 3,
       }} animate={{ rotate: [0, 360] }} transition={{ duration: 80, repeat: Infinity, ease: "linear" }} />
 
       {/* 3. Primary specular highlight — top-left glass reflection */}
       <div className="absolute" style={{
-        width: "50%", height: "40%", top: "7%", left: "12%",
+        width: "55%", height: "45%", top: "5%", left: "10%",
         borderRadius: "50%",
-        background: "radial-gradient(ellipse at 40% 30%, rgba(255,254,248,0.25) 0%, rgba(255,254,248,0.06) 45%, transparent 100%)",
+        background: "radial-gradient(ellipse at 40% 30%, rgba(255,254,248,0.3) 0%, rgba(255,254,248,0.08) 40%, transparent 100%)",
         zIndex: 6,
       }} />
 
-      {/* 4. Small secondary specular — bottom right */}
+      {/* 4. Secondary specular — bottom right */}
       <div className="absolute" style={{
-        width: "18%", height: "14%", bottom: "14%", right: "16%",
+        width: "20%", height: "16%", bottom: "12%", right: "14%",
         borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(255,252,245,0.08) 0%, transparent 100%)",
+        background: "radial-gradient(ellipse, rgba(255,252,245,0.12) 0%, transparent 100%)",
         zIndex: 6,
       }} />
 
@@ -399,46 +397,45 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       <div className="absolute" style={{
         width: "84%", height: "84%", top: "3%", left: "8%",
         borderRadius: "50%",
-        border: "1px solid rgba(255,252,245,0.1)",
+        border: "1px solid rgba(255,252,245,0.12)",
         borderBottom: "none", borderRight: "none",
         zIndex: 6,
       }} />
 
-      {/* 6. Inner rim — refraction ring */}
-      <div className="absolute inset-[2px]" style={{
-        borderRadius: "50%",
-        border: "1px solid rgba(210,200,170,0.05)",
-        zIndex: 6,
-      }} />
-
-      {/* 7. Composite inner shadow & warm rim */}
+      {/* 6. Warm inner glow instead of dark rim */}
       <div className="absolute inset-0" style={{
         borderRadius: "50%",
         boxShadow: `
-          inset 0 0 12px 2px rgba(200,175,130,0.05),
-          inset 0 0 40px 6px rgba(0,0,0,0.3),
-          inset 0 -6px 18px 0 rgba(0,0,0,0.18),
-          inset 0 6px 12px 0 rgba(255,250,235,0.03)
+          inset 0 0 20px 4px rgba(180,160,120,0.06),
+          inset 0 0 50px 8px rgba(100,120,200,0.04),
+          inset 0 6px 15px 0 rgba(255,250,235,0.05)
         `,
         zIndex: 7,
       }} />
 
-      {/* 8. Sweeping light refraction — periodic */}
+      {/* 7. Sweeping light refraction — periodic */}
       <motion.div className="absolute" style={{
-        width: "20%", height: "110%", top: "-5%",
-        background: "linear-gradient(90deg, transparent, rgba(255,252,245,0.04), rgba(255,252,245,0.09), rgba(255,252,245,0.04), transparent)",
-        filter: "blur(5px)",
+        width: "22%", height: "110%", top: "-5%",
+        background: "linear-gradient(90deg, transparent, rgba(255,252,245,0.06), rgba(255,252,245,0.12), rgba(255,252,245,0.06), transparent)",
+        filter: "blur(6px)",
         borderRadius: "50%",
         zIndex: 8,
       }} animate={{ left: ["-25%", "125%"] }}
          transition={{ duration: 5, repeat: Infinity, repeatDelay: 10, ease: "easeInOut" }} />
 
-      {/* 9. Soft center luminosity */}
+      {/* 8. Soft center luminosity */}
       <div className="absolute" style={{
-        width: "30%", height: "30%", top: "35%", left: "35%",
+        width: "35%", height: "35%", top: "32%", left: "32%",
         borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,240,185,0.08) 0%, rgba(255,225,140,0.02) 50%, transparent 100%)",
+        background: "radial-gradient(circle, rgba(255,240,185,0.1) 0%, rgba(255,225,140,0.03) 50%, transparent 100%)",
         zIndex: 3,
+      }} />
+
+      {/* 9. Edge-softening fade — blends sphere into scene */}
+      <div className="absolute inset-0" style={{
+        borderRadius: "50%",
+        boxShadow: "inset 0 0 8px 4px rgba(20,15,40,0.15)",
+        zIndex: 9,
       }} />
     </div>
   );
@@ -2330,7 +2327,8 @@ const HeroSection = () => {
                 className="w-full h-full"
                 style={{
                   objectFit: "contain",
-                  filter: "drop-shadow(0 0 35px hsl(43 80% 55% / 0.4))",
+                  filter: "drop-shadow(0 0 25px hsl(215 60% 60% / 0.3)) drop-shadow(0 0 50px hsl(43 80% 55% / 0.15)) brightness(1.02)",
+                  mixBlendMode: "screen",
                 }}
               />
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
@@ -2434,9 +2432,10 @@ const HeroSection = () => {
                 style={{
                   objectFit: "contain",
                   filter: hoveredItem !== null
-                    ? `drop-shadow(0 0 60px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`
-                    : "drop-shadow(0 0 45px hsl(43 80% 55% / 0.35))",
+                    ? `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}66) drop-shadow(0 0 80px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}22) brightness(1.05)`
+                    : "drop-shadow(0 0 30px hsl(215 60% 60% / 0.3)) drop-shadow(0 0 60px hsl(43 80% 55% / 0.15)) brightness(1.02)",
                   transition: "filter 0.8s ease-in-out",
+                  mixBlendMode: "screen",
                 }}
               />
               <AnimatePresence>
