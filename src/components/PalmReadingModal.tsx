@@ -104,8 +104,6 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   return (
     <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
             <AnimatePresence mode="wait">
-
-            <AnimatePresence mode="wait">
               {!submitted && !isLoading ? (
                 <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
                   <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-7 h-7 text-gold" /></motion.div>
