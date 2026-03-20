@@ -1094,7 +1094,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         ref={scrollRef}
                         className="absolute rounded-2xl overflow-y-auto pointer-events-auto"
                         style={{
-                          top: "8vh",
+                          top: "calc(8vh + 50px)",
                           left: "3vw",
                           width: "min(520px, calc(100vw - 580px))",
                           maxWidth: "520px",
