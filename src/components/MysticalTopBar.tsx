@@ -74,7 +74,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         {/* Mystical Profile Dashboard */}
         <motion.button
           onClick={onOpenDashboard}
-          className="flex items-center justify-center w-8 h-8 rounded-full backdrop-blur-md transition-all"
+          className="flex items-center justify-center w-14 h-14 rounded-full backdrop-blur-md transition-all"
           style={{
             background: "hsl(var(--deep-blue-light) / 0.6)",
             border: "1px solid hsl(var(--gold) / 0.15)",
