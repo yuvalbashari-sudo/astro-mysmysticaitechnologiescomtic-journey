@@ -17,7 +17,7 @@ interface Props {
 /**
  * Shared cinematic full-screen modal with persistent oracle woman,
  * ambient particles, depth layers, and consistent animation language.
- * Replaces flat generic panels across all reading experiences.
+ * Content floats as a translucent layer — the oracle always remains visible.
  */
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -51,7 +51,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
-          {/* ── Oracle woman background ── */}
+          {/* ── Oracle woman background — brighter, always present ── */}
           <motion.div
             className="absolute inset-0"
             initial={{ scale: 1 }}
@@ -64,23 +64,25 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               className="w-full h-full object-cover"
               style={{
                 objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                filter: "brightness(0.35)",
+                filter: "brightness(0.45) saturate(1.1)",
               }}
             />
           </motion.div>
 
-          {/* ── Depth gradients ── */}
+          {/* ── Subtle depth — light vignette, oracle stays visible ── */}
           <div className="absolute inset-0 pointer-events-none">
+            {/* Edges-only vignette — center stays clear */}
             <div
               className="absolute inset-0"
               style={{
-                background: "radial-gradient(ellipse 65% 55% at 50% 50%, transparent 30%, hsl(var(--deep-blue) / 0.88) 100%)",
+                background: "radial-gradient(ellipse 80% 70% at 50% 45%, transparent 40%, hsl(var(--deep-blue) / 0.7) 100%)",
               }}
             />
+            {/* Very subtle top fade for close button readability */}
             <div
               className="absolute inset-0"
               style={{
-                background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.65) 0%, transparent 25%)",
+                background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.5) 0%, transparent 12%)",
               }}
             />
           </div>
@@ -153,7 +155,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             </span>
           </div>
 
-          {/* ── Content area ── */}
+          {/* ── Content area — floating translucent layer ── */}
           {fullscreen ? (
             <div
               ref={activeScrollRef as React.RefObject<HTMLDivElement>}
@@ -162,23 +164,33 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               {children}
             </div>
           ) : (
-            <div className="absolute inset-0 z-[102] flex items-center justify-center pointer-events-none">
-              <motion.div
-                ref={activeScrollRef as React.RefObject<HTMLDivElement>}
-                className="pointer-events-auto w-full max-w-2xl max-h-[88vh] overflow-y-auto mx-4 rounded-2xl"
-                style={{
-                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.92))",
-                  border: "1px solid hsl(var(--gold) / 0.12)",
-                  boxShadow: "0 0 80px hsl(var(--deep-blue) / 0.4), 0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-                  backdropFilter: "blur(12px)",
-                }}
-                initial={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(6px)" }}
-                animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, scale: 0.92, y: 30, filter: "blur(6px)" }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {children}
-              </motion.div>
+            <div
+              ref={activeScrollRef as React.RefObject<HTMLDivElement>}
+              className="absolute inset-0 z-[102] overflow-y-auto"
+            >
+              {/* Scroll spacer — pushes content below oracle's face on desktop */}
+              {!isMobile && (
+                <div className="h-[18vh] pointer-events-none" aria-hidden="true" />
+              )}
+              <div className={`flex justify-center pointer-events-none ${isMobile ? "px-3 pt-16 pb-8" : "px-6 pb-12"}`}>
+                <motion.div
+                  className="pointer-events-auto w-full rounded-2xl"
+                  style={{
+                    maxWidth: isMobile ? "100%" : "540px",
+                    background: "linear-gradient(170deg, hsl(var(--deep-blue-light) / 0.55), hsl(var(--deep-blue) / 0.65))",
+                    border: "1px solid hsl(var(--gold) / 0.1)",
+                    boxShadow: "0 8px 60px hsl(var(--deep-blue) / 0.5), 0 0 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                  }}
+                  initial={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: 40, filter: "blur(8px)" }}
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {children}
+                </motion.div>
+              </div>
             </div>
           )}
         </motion.div>
