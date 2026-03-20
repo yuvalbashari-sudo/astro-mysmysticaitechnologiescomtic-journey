@@ -2790,7 +2790,7 @@ const HeroSection = () => {
             {/* Right CTA teaser — ABOVE tabs */}
             <motion.button
               type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-1"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-3"
               onClick={() => setTarotOpen(true)}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
