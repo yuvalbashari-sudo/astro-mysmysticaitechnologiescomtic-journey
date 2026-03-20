@@ -717,8 +717,8 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 242 : 385;
-  const iconSize = isMobile ? 42 : 66;
+  const radius = isMobile ? 275 : 440;
+  const iconSize = isMobile ? 48 : 76;
   const rulingIndex = getRulingSignIndex();
 
   const [planetaryInfluence, setPlanetaryInfluence] = useState(() => getDailyInfluence());
