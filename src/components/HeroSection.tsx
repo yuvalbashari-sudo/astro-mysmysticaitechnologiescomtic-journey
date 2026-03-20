@@ -2526,7 +2526,7 @@ const HeroSection = () => {
     <div
       className="absolute z-[65] pointer-events-none inset-x-0 bottom-0 px-4 md:px-8"
       style={{
-        top: isMobile ? "52%" : "48%",
+        top: isMobile ? "58%" : "53%",
       }}
     >
       <motion.div
@@ -2537,7 +2537,7 @@ const HeroSection = () => {
       >
         {/* Micro label */}
         <motion.span
-          className="inline-block font-body text-[10px] md:text-xs tracking-[0.25em] uppercase mb-3"
+          className="inline-block font-body text-[10px] md:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5"
           style={{ color: "hsl(var(--gold) / 0.55)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
