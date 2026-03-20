@@ -2261,7 +2261,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 150px)" : "calc(5vh + 190px)" }}>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 180px)" : "calc(5vh + 190px)" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -2440,8 +2440,8 @@ const HeroSection = () => {
       type="button"
       className="absolute z-[15] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
       style={{
-        bottom: isMobile ? 24 : 32,
-        right: isMobile ? 24 : 40,
+        bottom: isMobile ? 28 : 32,
+        right: isMobile ? 20 : 40,
       }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -2528,9 +2528,10 @@ const HeroSection = () => {
     </motion.button>
 
     {/* ── Top horizontal feature tabs — OUTSIDE isolate container for correct stacking ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "72px" : "96px" }}>
+    <div className="fixed z-[65] pointer-events-none inset-x-0 px-0 md:px-8" style={{ top: isMobile ? "88px" : "96px" }}>
       <motion.div
-        className={`flex justify-center mx-auto pointer-events-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
+        className={`flex mx-auto pointer-events-auto ${isMobile ? "gap-2 px-4 overflow-x-auto scrollbar-hide max-w-full" : "justify-center gap-4 max-w-4xl"}`}
+        style={isMobile ? { WebkitOverflowScrolling: "touch", scrollbarWidth: "none", msOverflowStyle: "none" } : undefined}
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2542,7 +2543,7 @@ const HeroSection = () => {
             <motion.button
               key={i}
               type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none flex-shrink-0"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
@@ -2556,7 +2557,7 @@ const HeroSection = () => {
               aria-label={item.label}
             >
               <div
-                className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
+                className={`relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3 py-2 min-h-[40px]" : "px-5 py-3"}`}
                 style={{
                   borderWidth: "1px", borderStyle: "solid",
                   borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -2567,14 +2568,14 @@ const HeroSection = () => {
                 }}
               >
                 <item.icon
-                  className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`}
+                  className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-4 h-4" : "w-5 h-5"}`}
                   style={{
                     color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                     filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                   }}
                 />
                 <span
-                  className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`}
+                  className={`font-body transition-colors duration-300 ${isMobile ? "text-[11px] font-medium" : "text-[13px] font-semibold"}`}
                   style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                 >
                   {item.label}
