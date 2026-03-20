@@ -994,7 +994,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       >
                         {chosenCards.map((card, i) => {
                           const isCenter = i === 1;
-                          const w = isCenter ? 115 : 95;
+                          const w = isCenter ? 138 : 114;
                           const h = w * 1.55;
                           return (
                             <motion.div
@@ -1313,11 +1313,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
                       {/* RIGHT: Tarot cards — anchored right */}
                       <motion.div
-                        className="absolute flex flex-col items-center gap-5 pointer-events-none"
+                        className="absolute flex flex-col items-center gap-6 pointer-events-none"
                         style={{
                           top: "calc(8vh + 50px)",
                           right: "3vw",
-                          width: "min(320px, 22vw)",
+                          width: "min(384px, 26vw)",
                         }}
                         initial={{ opacity: 0, x: 40, filter: "blur(6px)" }}
                         animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
@@ -1325,7 +1325,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       >
                         {chosenCards.map((card, i) => {
                           const isCenter = i === 1;
-                          const w = isCenter ? 170 : 140;
+                          const w = isCenter ? 204 : 168;
                           const h = w * 1.55;
                           return (
                             <motion.div
