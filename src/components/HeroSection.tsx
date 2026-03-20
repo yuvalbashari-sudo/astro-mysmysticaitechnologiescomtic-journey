@@ -207,7 +207,6 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
             height: "120%",
             top: "-10%",
             background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08), transparent)",
-            filter: "blur(8px)",
             borderRadius: "50%",
           }}
           animate={{
