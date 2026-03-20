@@ -68,8 +68,6 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
 
       {/* Left side: Actions */}
       <div className="flex-1 flex justify-end">
-
-      {/* Left side: Actions */}
       <nav className="flex items-center gap-2" aria-label={t.a11y_main_navigation}>
         {/* Readings History */}
         {hasHistory && (
