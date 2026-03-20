@@ -811,10 +811,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             className="w-full h-full object-cover rounded-lg"
                             style={{
                               imageRendering: "auto",
+                              backfaceVisibility: "hidden",
+                              transform: "translateZ(0)",
                               boxShadow: isCenter
                                 ? "0 0 50px hsl(var(--gold) / 0.4), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
                                 : "0 0 30px hsl(var(--gold) / 0.2), 0 8px 28px hsl(var(--deep-blue) / 0.5)",
-                              filter: isCenter ? "none" : "brightness(0.85)",
+                              filter: isCenter ? "contrast(1.08) saturate(1.05)" : "brightness(0.85) contrast(1.06)",
+                              willChange: "transform",
                             }}
                           />
                           <div
