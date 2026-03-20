@@ -2382,7 +2382,7 @@ const HeroSection = () => {
             <div
               className="absolute pointer-events-none z-[24]"
               style={{
-                width: "430px", height: "430px",
+                width: "516px", height: "516px",
                 left: "50%", top: "50%",
                 transform: "translate(-50%, -50%)",
                 borderRadius: "50%",
