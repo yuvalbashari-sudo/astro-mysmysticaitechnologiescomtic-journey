@@ -284,7 +284,7 @@ const MysticalTable = ({ phase, isMobile }: { phase: Phase; isMobile: boolean })
   );
 };
 
-/* ── Floating Card (on table) ──────────────── */
+/* ── Floating Card (cinematic, grounded) ──────────────── */
 const FloatingCard = ({
   card,
   index,
@@ -304,12 +304,21 @@ const FloatingCard = ({
   isMobile: boolean;
   showBurst: boolean;
 }) => {
-  const cardW = isMobile ? 62 : 105;
+  const mid = (totalCards - 1) / 2;
+  const distFromCenter = Math.abs(index - mid);
+  // Cards closer to center are slightly larger (depth illusion)
+  const depthScale = 1 - distFromCenter * 0.025;
+  const cardW = (isMobile ? 58 : 100) * depthScale;
   const cardH = cardW * 1.55;
-  const spread = isMobile ? 38 : 62;
-  const centerOffset = ((totalCards - 1) / 2) * spread;
+  const spread = isMobile ? 36 : 58;
+  const centerOffset = mid * spread;
   const x = index * spread - centerOffset;
-  const baseRotation = (index - (totalCards - 1) / 2) * 4.5;
+  // Arc: center cards higher, edges lower
+  const arcY = distFromCenter * distFromCenter * (isMobile ? 4 : 6);
+  // Fan rotation
+  const baseRotation = (index - mid) * (isMobile ? 5 : 4);
+  // Subtle floating offset per card
+  const floatDelay = index * 0.4;
 
   return (
     <motion.div
@@ -317,123 +326,183 @@ const FloatingCard = ({
       style={{
         width: cardW,
         height: cardH,
-        perspective: "1000px",
-        zIndex: isSelected ? 20 : 10 - Math.abs(index - (totalCards - 1) / 2),
+        perspective: "900px",
+        zIndex: isSelected ? 30 : Math.round(10 + (totalCards - distFromCenter)),
       }}
-      initial={{ opacity: 0, y: 80, rotateZ: baseRotation }}
+      initial={{ opacity: 0, y: 100, rotateZ: baseRotation * 2 }}
       animate={{
-        opacity: 1,
+        opacity: isFlipped && !isSelected ? 0.5 : 1,
         x,
-        y: isSelected ? -50 : Math.abs(index - (totalCards - 1) / 2) * 6,
+        y: isSelected ? -(isMobile ? 60 : 90) : arcY,
         rotateZ: isSelected ? 0 : baseRotation,
-        scale: isSelected ? 1.18 : 1,
+        scale: isSelected ? (isMobile ? 1.3 : 1.35) : depthScale,
       }}
-      transition={{ duration: 0.6, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
       whileHover={!isSelected ? {
-        y: -24,
-        scale: 1.08,
-        transition: { duration: 0.3, ease: "easeOut" }
+        y: arcY - (isMobile ? 12 : 16),
+        scale: depthScale * 1.06,
+        transition: { duration: 0.25, ease: "easeOut" }
       } : {}}
       onClick={!isSelected ? onClick : undefined}
     >
-      {/* Card shadow on table */}
+      {/* Subtle floating animation */}
       <motion.div
-        className="absolute rounded-xl pointer-events-none"
-        style={{
-          width: "90%",
-          height: "12%",
-          bottom: -8,
-          left: "5%",
-          background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.5) 0%, transparent 70%)",
-          filter: "blur(6px)",
-        }}
-        animate={{
-          opacity: isSelected ? 0.3 : 0.6,
-          scaleX: isSelected ? 1.2 : 1,
-        }}
-        transition={{ duration: 0.3 }}
-      />
-
-      <motion.div
-        className="w-full h-full relative rounded-xl overflow-hidden"
-        style={{ transformStyle: "preserve-3d" }}
-        animate={{
-          rotateY: isFlipped ? 180 : 0,
-          scale: isFlipped ? [1, 1.06, 1.02] : 1,
-        }}
-        transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+        className="w-full h-full relative"
+        animate={{ y: [0, -2.5, 0, 2, 0] }}
+        transition={{ duration: 5, delay: floatDelay, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* Back */}
-        <div
-          className="absolute inset-0 rounded-xl overflow-hidden"
+        {/* Drop shadow beneath card */}
+        <motion.div
+          className="absolute pointer-events-none"
           style={{
-            backfaceVisibility: "hidden",
-            boxShadow: isSelected
-              ? "0 0 40px hsl(var(--gold) / 0.5), 0 12px 40px hsl(var(--deep-blue) / 0.7), inset 0 0 12px hsl(var(--gold) / 0.15)"
-              : "0 6px 24px hsl(var(--deep-blue) / 0.6), 0 0 12px hsl(270 50% 50% / 0.1), inset 0 0 8px hsl(var(--gold) / 0.06)",
-            border: isSelected ? "1px solid hsl(var(--gold) / 0.4)" : "1px solid hsl(var(--gold) / 0.1)",
+            width: "80%",
+            height: 8,
+            bottom: -6,
+            left: "10%",
+            borderRadius: "50%",
+            background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.55) 0%, transparent 70%)",
+            filter: "blur(5px)",
           }}
-        >
-          <img src={cardBack} alt="" className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
-          <div
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              boxShadow: "inset 0 0 6px 1px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--gold) / 0.15)",
-            }}
-          />
-        </div>
-        {/* Front */}
+          animate={{
+            opacity: isSelected ? 0.2 : 0.7,
+            scaleX: isSelected ? 1.4 : 1,
+            y: isSelected ? 20 : 0,
+          }}
+          transition={{ duration: 0.4 }}
+        />
+
+        {/* Bottom edge glow (energy from below) */}
         <div
-          className="absolute inset-0 rounded-xl overflow-hidden"
+          className="absolute pointer-events-none"
           style={{
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-            boxShadow: "0 0 50px hsl(var(--gold) / 0.35), 0 12px 40px hsl(var(--deep-blue) / 0.7), inset 0 0 12px hsl(var(--gold) / 0.12)",
-            border: "1px solid hsl(var(--gold) / 0.3)",
+            width: "70%",
+            height: 12,
+            bottom: 0,
+            left: "15%",
+            background: "radial-gradient(ellipse 100% 100% at 50% 100%, hsl(var(--gold) / 0.15) 0%, transparent 80%)",
+            filter: "blur(4px)",
+            borderRadius: "0 0 8px 8px",
           }}
+        />
+
+        <motion.div
+          className="w-full h-full relative rounded-xl overflow-hidden"
+          style={{ transformStyle: "preserve-3d" }}
+          animate={{
+            rotateY: isFlipped ? 180 : 0,
+            scale: isFlipped ? [1, 1.05, 1] : 1,
+          }}
+          transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
         >
-          <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
+          {/* Back */}
           <div
-            className="absolute inset-0 rounded-xl pointer-events-none"
+            className="absolute inset-0 rounded-xl overflow-hidden"
             style={{
-              boxShadow: "inset 0 0 8px 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.2)",
+              backfaceVisibility: "hidden",
+              boxShadow: `
+                0 ${isSelected ? 20 : 8}px ${isSelected ? 40 : 20}px hsl(0 0% 0% / ${isSelected ? 0.5 : 0.4}),
+                0 0 ${isSelected ? 30 : 10}px hsl(270 40% 40% / ${isSelected ? 0.15 : 0.06}),
+                inset 0 -1px 3px hsl(var(--gold) / 0.08)
+              `,
+              border: "1px solid hsl(var(--gold) / 0.1)",
             }}
-          />
-        </div>
-      </motion.div>
-
-      {/* Light burst on reveal */}
-      <AnimatePresence>
-        {showBurst && (
-          <motion.div
-            className="absolute inset-0 rounded-xl pointer-events-none"
-            style={{
-              background: "radial-gradient(circle, hsl(var(--gold) / 0.6) 0%, hsl(var(--gold) / 0.15) 40%, transparent 70%)",
-            }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: [0, 1, 0], scale: [0.8, 1.3, 1.5] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Card name under revealed card */}
-      <AnimatePresence>
-        {isFlipped && (
-          <motion.div
-            className="absolute left-0 right-0 text-center pointer-events-none"
-            style={{ top: cardH + 6 }}
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
           >
-            <span className="font-heading text-gold/80" style={{ fontSize: isMobile ? 9 : 11 }}>
-              {card.hebrewName}
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <img src={cardBack} alt="" className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
+            <div
+              className="absolute inset-0 rounded-xl pointer-events-none"
+              style={{
+                boxShadow: "inset 0 0 6px 1px hsl(var(--gold) / 0.1), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+              }}
+            />
+          </div>
+          {/* Front */}
+          <div
+            className="absolute inset-0 rounded-xl overflow-hidden"
+            style={{
+              backfaceVisibility: "hidden",
+              transform: "rotateY(180deg)",
+              boxShadow: `
+                0 0 40px hsl(var(--gold) / 0.3),
+                0 16px 48px hsl(0 0% 0% / 0.5),
+                inset 0 0 10px hsl(var(--gold) / 0.1)
+              `,
+              border: "1px solid hsl(var(--gold) / 0.3)",
+            }}
+          >
+            <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
+            <div
+              className="absolute inset-0 rounded-xl pointer-events-none"
+              style={{
+                boxShadow: "inset 0 0 8px 1px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--gold) / 0.18)",
+              }}
+            />
+          </div>
+        </motion.div>
+
+        {/* Light burst on reveal */}
+        <AnimatePresence>
+          {showBurst && (
+            <>
+              <motion.div
+                className="absolute inset-0 rounded-xl pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle, hsl(var(--gold) / 0.5) 0%, transparent 60%)",
+                }}
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: [0, 1, 0], scale: [0.7, 1.4, 1.8] }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.9, ease: "easeOut" }}
+              />
+              {/* Radial particles */}
+              {[...Array(6)].map((_, pi) => {
+                const a = (pi / 6) * Math.PI * 2;
+                return (
+                  <motion.div
+                    key={`bp-${pi}`}
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      width: 3, height: 3,
+                      left: "50%", top: "50%",
+                      background: "hsl(var(--gold) / 0.9)",
+                    }}
+                    initial={{ x: 0, y: 0, opacity: 0 }}
+                    animate={{
+                      x: Math.cos(a) * 50,
+                      y: Math.sin(a) * 50,
+                      opacity: [0, 1, 0],
+                      scale: [0, 1.5, 0],
+                    }}
+                    transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+                  />
+                );
+              })}
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* Card name under revealed card */}
+        <AnimatePresence>
+          {isFlipped && isSelected && (
+            <motion.div
+              className="absolute left-0 right-0 text-center pointer-events-none"
+              style={{ top: cardH + 8 }}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              <span
+                className="font-heading text-gold/85"
+                style={{
+                  fontSize: isMobile ? 9 : 12,
+                  textShadow: "0 0 10px hsl(var(--gold) / 0.3)",
+                }}
+              >
+                {card.hebrewName}
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
     </motion.div>
   );
 };
@@ -857,34 +926,42 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                 <motion.div
                   key="drawing"
                   className="pointer-events-auto text-center w-full px-4"
-                  style={{ marginTop: isMobile ? "38vh" : "36vh" }}
+                  style={{ marginTop: isMobile ? "32vh" : "28vh" }}
                   initial={{ opacity: 0, filter: "blur(8px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(8px)" }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <motion.div
-                    className="text-gold/60 font-heading text-lg md:text-xl mb-2"
-                    style={{ textShadow: "0 0 15px hsl(var(--gold) / 0.25)" }}
+                    className="text-gold/50 font-heading text-base md:text-lg mb-1"
+                    style={{ textShadow: "0 0 20px hsl(var(--gold) / 0.2)" }}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    {language === "he"
-                      ? `בחרו ${3 - selectedCardIndices.size} קלפים`
-                      : `Choose ${3 - selectedCardIndices.size} cards`}
+                    {selectedCardIndices.size < 3
+                      ? (language === "he"
+                        ? `בחרו ${3 - selectedCardIndices.size} קלפים`
+                        : `Choose ${3 - selectedCardIndices.size} cards`)
+                      : (language === "he" ? "הקלפים נבחרו ✦" : "Cards chosen ✦")}
                   </motion.div>
                   <motion.div
-                    className="text-foreground/40 font-body text-xs mb-8"
+                    className="text-foreground/30 font-body text-xs mb-6"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
+                    animate={{ opacity: selectedCardIndices.size < 3 ? 0.7 : 0 }}
+                    transition={{ delay: 0.5, duration: 0.3 }}
                   >
-                    {language === "he" ? "הקשיבו לאינטואיציה ובחרו" : "Listen to your intuition and choose"}
+                    {language === "he" ? "הקשיבו לאינטואיציה" : "Listen to your intuition"}
                   </motion.div>
 
-                  {/* Card fan — on the mystical table */}
-                  <div className="relative flex items-center justify-center" style={{ height: isMobile ? 160 : 240 }}>
+                  {/* Card fan — cinematic arc */}
+                  <div
+                    className="relative flex items-center justify-center mx-auto"
+                    style={{
+                      height: isMobile ? 180 : 280,
+                      maxWidth: isMobile ? 340 : 520,
+                    }}
+                  >
                     {drawnCards.map((card, i) => (
                       <FloatingCard
                         key={`card-${i}`}
@@ -900,11 +977,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
 
-                  {/* Selected count indicator */}
+                  {/* Minimal progress dots */}
                   <motion.div
-                    className="mt-8 flex items-center justify-center gap-2"
+                    className="mt-6 flex items-center justify-center gap-2.5"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: 0.8 }}
                     transition={{ delay: 1 }}
                   >
                     {[0, 1, 2].map(i => (
