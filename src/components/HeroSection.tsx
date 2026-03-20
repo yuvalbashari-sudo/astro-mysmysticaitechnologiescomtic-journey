@@ -359,10 +359,10 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         overflow: "hidden",
         background: "transparent",
         maskImage: isMobile
-          ? "radial-gradient(circle, white 55%, rgba(255,255,255,0.85) 70%, rgba(255,255,255,0.5) 85%, transparent 100%)"
+          ? "radial-gradient(circle, white 44%, white 44.5%, transparent 45%)"
           : "radial-gradient(circle, white 44%, white 44.5%, transparent 45%)",
         WebkitMaskImage: isMobile
-          ? "radial-gradient(circle, white 55%, rgba(255,255,255,0.85) 70%, rgba(255,255,255,0.5) 85%, transparent 100%)"
+          ? "radial-gradient(circle, white 44%, white 44.5%, transparent 45%)"
           : "radial-gradient(circle, white 44%, white 44.5%, transparent 45%)",
       }}
     >
