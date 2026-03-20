@@ -92,76 +92,193 @@ export async function streamMysticalReading(
   }
 }
 
-// Render mystical markdown text into styled React elements
+// Render mystical markdown text into styled React elements with sacred breathing rhythm
 export function renderMysticalText(text: string, textSize: TextSize = "default"): React.ReactNode {
   const s = TEXT_SIZE_CLASSES[textSize];
   const lines = text.split("\n");
-  const elements: React.ReactNode[] = [];
+  const sections: React.ReactNode[][] = [[]];
+  let sectionIndex = 0;
 
   lines.forEach((line, i) => {
     const trimmed = line.trim();
+
     if (!trimmed) {
-      elements.push(React.createElement("div", { key: i, className: s.gap }));
+      sections[sectionIndex].push(React.createElement("div", { key: `sp-${i}`, className: "h-3" }));
       return;
     }
+
+    // Section dividers → create new section
     if (trimmed === "---") {
-      elements.push(React.createElement("div", { key: i, className: "section-divider max-w-[100px] mx-auto my-8 md:my-10" }));
+      sectionIndex++;
+      sections[sectionIndex] = [];
       return;
     }
+
+    // Highlighted card/theme headings
     if (trimmed.startsWith("### ✨") || trimmed.startsWith("### 🌟")) {
-      elements.push(
+      sectionIndex++;
+      sections[sectionIndex] = [];
+      sections[sectionIndex].push(
         React.createElement("div", {
-          key: i,
-          className: "mt-8 md:mt-10 rounded-xl p-6 md:p-8 text-center",
-          style: { background: "linear-gradient(135deg, hsl(var(--crimson) / 0.06), hsl(var(--gold) / 0.04))", border: "1px solid hsl(var(--gold) / 0.12)" },
+          key: `h-${i}`,
+          className: "text-center py-2",
         },
-          React.createElement(Sparkles, { className: "w-6 h-6 text-gold mx-auto mb-3" }),
-          React.createElement("h3", { className: `font-heading ${s.subheading} text-gold` }, trimmed.replace(/### [✨🌟]\s?/, ""))
+          React.createElement("h3", {
+            className: `font-heading ${s.subheading}`,
+            style: {
+              color: "hsl(var(--gold))",
+              textShadow: "0 0 25px hsl(var(--gold) / 0.15)",
+              letterSpacing: "0.1em",
+            },
+          }, trimmed.replace(/### [✨🌟]\s?/, ""))
         )
       );
       return;
     }
+
+    // Section headings → start new section with sacred header
     if (trimmed.startsWith("### ")) {
-      elements.push(
-        React.createElement("div", { key: i, className: "flex items-center gap-3 mt-8 md:mt-10 mb-4" },
+      sectionIndex++;
+      sections[sectionIndex] = [];
+      const emoji = trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦";
+      const title = trimmed.replace("### ", "");
+      sections[sectionIndex].push(
+        React.createElement("div", { key: `sh-${i}`, className: "flex items-center gap-3 mb-4" },
           React.createElement("div", {
-            className: "w-11 h-11 md:w-12 md:h-12 rounded-xl flex items-center justify-center flex-shrink-0",
-            style: { background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 15px hsl(var(--gold) / 0.08)" },
-          }, React.createElement("span", { className: "text-xl" }, trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦")),
-          React.createElement("h3", { className: `font-heading ${s.heading} text-gold` }, trimmed.replace("### ", ""))
+            className: "w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0",
+            style: {
+              background: "linear-gradient(135deg, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.03))",
+              border: "1px solid hsl(var(--gold) / 0.12)",
+            },
+          }, React.createElement("span", { className: "text-lg" }, emoji)),
+          React.createElement("h3", {
+            className: `font-heading ${s.heading}`,
+            style: { color: "hsl(var(--gold) / 0.85)", letterSpacing: "0.06em" },
+          }, title)
         )
       );
       return;
     }
+
+    // Bold labels → subtle card labels
     if (trimmed.startsWith("**") && trimmed.endsWith("**")) {
       const label = trimmed.slice(2, -2);
-      elements.push(
-        React.createElement("div", { key: i, className: "flex items-center gap-2.5 mt-6 mb-2" },
-          React.createElement("div", {
-            className: "w-7 h-7 rounded-full flex items-center justify-center",
-            style: { background: "hsl(var(--gold) / 0.1)" },
-          }, React.createElement("span", { className: "text-sm" }, label.match(/[\p{Emoji}]/u)?.[0] || "✦")),
-          React.createElement("h4", { className: `font-heading ${s.subheading} text-gold` }, label.replace(/[\p{Emoji}]\s?/u, "").trim())
+      sections[sectionIndex].push(
+        React.createElement("div", { key: `bl-${i}`, className: "flex items-center gap-2 mt-5 mb-2" },
+          React.createElement("span", {
+            className: "text-xs",
+            style: { color: "hsl(var(--gold) / 0.4)" },
+          }, "✦"),
+          React.createElement("h4", {
+            className: `font-heading ${s.subheading}`,
+            style: { color: "hsl(var(--gold) / 0.7)", letterSpacing: "0.08em" },
+          }, label.replace(/[\p{Emoji}]\s?/u, "").trim())
         )
       );
       return;
     }
+
+    // Quoted text → sacred whisper
     if (trimmed.startsWith("״") || trimmed.startsWith('"') || trimmed.startsWith("\"")) {
-      elements.push(
+      sections[sectionIndex].push(
         React.createElement("div", {
-          key: i,
-          className: "rounded-xl p-5 md:p-6 text-center mt-4 mb-4",
-          style: { background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" },
-        }, React.createElement("p", { className: `text-gold/80 font-body ${s.quote} leading-relaxed italic` }, trimmed))
+          key: `q-${i}`,
+          className: "py-4 px-6 my-4 text-center rounded-2xl",
+          style: {
+            background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.04) 0%, transparent 80%)",
+            borderTop: "1px solid hsl(var(--gold) / 0.06)",
+            borderBottom: "1px solid hsl(var(--gold) / 0.06)",
+          },
+        },
+          React.createElement("p", {
+            className: `font-body ${s.quote} leading-relaxed italic`,
+            style: {
+              color: "hsl(var(--gold) / 0.7)",
+              textShadow: "0 0 20px hsl(var(--gold) / 0.08)",
+            },
+          }, trimmed)
+        )
       );
       return;
     }
-    // Regular paragraph - strip bold markers
-    const cleanText = trimmed.replace(/\*\*(.*?)\*\*/g, '$1');
-    elements.push(
-      React.createElement("p", { key: i, className: `text-foreground/80 font-body ${s.body}` }, cleanText)
+
+    // Regular paragraph — check for inline bold as "key truths"
+    const parts: React.ReactNode[] = [];
+    const boldRegex = /\*\*(.*?)\*\*/g;
+    let lastIdx = 0;
+    let match: RegExpExecArray | null;
+    let hasHighlight = false;
+
+    while ((match = boldRegex.exec(trimmed)) !== null) {
+      hasHighlight = true;
+      if (match.index > lastIdx) {
+        parts.push(trimmed.slice(lastIdx, match.index));
+      }
+      parts.push(
+        React.createElement("span", {
+          key: `b-${i}-${match.index}`,
+          style: {
+            color: "hsl(var(--foreground) / 0.95)",
+            fontWeight: 500,
+          },
+        }, match[1])
+      );
+      lastIdx = match.index + match[0].length;
+    }
+    if (lastIdx < trimmed.length) {
+      parts.push(trimmed.slice(lastIdx));
+    }
+
+    const content = parts.length > 0 ? parts : trimmed;
+
+    sections[sectionIndex].push(
+      React.createElement("p", {
+        key: `p-${i}`,
+        className: `font-body ${s.body}`,
+        style: {
+          color: hasHighlight ? "hsl(var(--foreground) / 0.85)" : "hsl(var(--foreground) / 0.72)",
+          lineHeight: "2.15",
+        },
+      }, content)
     );
   });
 
-  return React.createElement("div", { className: "space-y-1" }, ...elements);
+  // Build final output with sacred separators between sections
+  const finalElements: React.ReactNode[] = [];
+
+  sections.forEach((section, si) => {
+    if (section.length === 0) return;
+
+    // Add sacred separator between sections (not before first)
+    if (si > 0 && finalElements.length > 0) {
+      finalElements.push(
+        React.createElement("div", {
+          key: `sep-${si}`,
+          className: "flex items-center justify-center gap-3 py-6",
+        },
+          React.createElement("div", {
+            className: "h-px w-8",
+            style: { background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.15))" },
+          }),
+          React.createElement("span", {
+            style: { color: "hsl(var(--gold) / 0.2)", fontSize: "8px" },
+          }, "✦"),
+          React.createElement("div", {
+            className: "h-px w-8",
+            style: { background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.15))" },
+          })
+        )
+      );
+    }
+
+    // Wrap section content
+    finalElements.push(
+      React.createElement("div", {
+        key: `sec-${si}`,
+        className: "space-y-1",
+      }, ...section)
+    );
+  });
+
+  return React.createElement("div", { className: "space-y-0" }, ...finalElements);
 }
