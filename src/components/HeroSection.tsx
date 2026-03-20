@@ -2431,9 +2431,10 @@ const HeroSection = () => {
                 style={{
                   objectFit: "contain",
                   filter: hoveredItem !== null
-                    ? `drop-shadow(0 0 60px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}88)`
-                    : "drop-shadow(0 0 45px hsl(43 80% 55% / 0.35))",
+                    ? `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}66) drop-shadow(0 0 80px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}22) brightness(1.05)`
+                    : "drop-shadow(0 0 30px hsl(215 60% 60% / 0.3)) drop-shadow(0 0 60px hsl(43 80% 55% / 0.15)) brightness(1.02)",
                   transition: "filter 0.8s ease-in-out",
+                  mixBlendMode: "screen",
                 }}
               />
               <AnimatePresence>
