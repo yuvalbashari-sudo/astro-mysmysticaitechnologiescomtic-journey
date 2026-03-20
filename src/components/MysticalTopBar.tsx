@@ -82,6 +82,23 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             ASTROLOGAI
           </motion.span>
         </motion.h1>
+
+        {/* Hebrew subheadline */}
+        <motion.p
+          className="font-body text-center mt-1"
+          style={{
+            fontSize: "clamp(11px, 1.4vw, 15px)",
+            color: "hsl(var(--foreground) / 0.55)",
+            letterSpacing: "0.04em",
+            lineHeight: 1.5,
+          }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          dir="rtl"
+        >
+          גלו את העתיד שלכם באמצעות בינה מלאכותית ואסטרולוגיה
+        </motion.p>
       </div>
 
       {/* Left side: Actions */}
