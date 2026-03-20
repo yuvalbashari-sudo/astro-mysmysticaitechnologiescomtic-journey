@@ -548,63 +548,69 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0 }}
                   className="relative"
                 >
-                  {/* ── DESKTOP: Card pinned top-right via fixed, text scrolls independently ── */}
-
-                  {/* Card cluster — fixed to viewport top-right on md+ */}
-                  <motion.div
-                    className="hidden md:flex flex-col items-center fixed top-[60px] right-[48px] z-[103]"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <motion.div
-                      className="relative rounded-xl overflow-hidden"
-                      style={{
-                        width: "clamp(200px, 22vw, 320px)",
-                        aspectRatio: "2 / 3",
-                        border: "2px solid hsl(var(--gold) / 0.25)",
-                        boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
-                      }}
-                      initial={{ scale: 0.85, opacity: 0, rotateY: -15 }}
-                      animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                      transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      {cardImage ? (
-                        <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
-                          <span className="text-5xl">{card.symbol}</span>
-                        </div>
+                  {/* ── DESKTOP: Card portaled to body so fixed positioning isn't broken by parent transforms ── */}
+                  {typeof window !== "undefined" && createPortal(
+                    <AnimatePresence>
+                      {isOpen && (phase === "result" || phase === "locked") && card && (
+                        <motion.div
+                          className="hidden md:flex flex-col items-center fixed top-[60px] right-[48px] z-[110]"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 20 }}
+                          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                          <motion.div
+                            className="relative rounded-xl overflow-hidden"
+                            style={{
+                              width: "clamp(200px, 22vw, 320px)",
+                              aspectRatio: "2 / 3",
+                              border: "2px solid hsl(var(--gold) / 0.25)",
+                              boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
+                            }}
+                            initial={{ scale: 0.85, opacity: 0, rotateY: -15 }}
+                            animate={{ scale: 1, opacity: 1, rotateY: 0 }}
+                            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                          >
+                            {cardImage ? (
+                              <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
+                                <span className="text-5xl">{card.symbol}</span>
+                              </div>
+                            )}
+                            <motion.div
+                              className="absolute inset-0 pointer-events-none"
+                              style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.12) 50%, transparent 70%)" }}
+                              animate={{ x: ["-100%", "200%"] }}
+                              transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
+                            />
+                          </motion.div>
+                          <motion.h2 className="font-heading text-xl gold-gradient-text mt-4 text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+                            {card.hebrewName}
+                          </motion.h2>
+                          <motion.p className="text-foreground/50 font-body text-xs text-center mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
+                            {t.daily_arcana_label} {card.number}
+                          </motion.p>
+                          {phase === "locked" && (
+                            <motion.div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                              <Clock className="w-3 h-3 text-gold/60" />
+                              <span className="font-body text-[11px] text-gold/70">{t.daily_next_card} {timeLeft}</span>
+                            </motion.div>
+                          )}
+                          <motion.div className="flex items-center gap-2 mt-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+                            <motion.button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                              <Share2 className="w-3 h-3" />{t.forecast_share}
+                            </motion.button>
+                            <motion.button onClick={handleCopy} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                              {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              {copied ? t.share_copied : t.share_copy}
+                            </motion.button>
+                          </motion.div>
+                        </motion.div>
                       )}
-                      <motion.div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.12) 50%, transparent 70%)" }}
-                        animate={{ x: ["-100%", "200%"] }}
-                        transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
-                      />
-                    </motion.div>
-                    <motion.h2 className="font-heading text-xl gold-gradient-text mt-4 text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                      {card.hebrewName}
-                    </motion.h2>
-                    <motion.p className="text-foreground/50 font-body text-xs text-center mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
-                      {t.daily_arcana_label} {card.number}
-                    </motion.p>
-                    {phase === "locked" && (
-                      <motion.div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                        <Clock className="w-3 h-3 text-gold/60" />
-                        <span className="font-body text-[11px] text-gold/70">{t.daily_next_card} {timeLeft}</span>
-                      </motion.div>
-                    )}
-                    <motion.div className="flex items-center gap-2 mt-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        <Share2 className="w-3 h-3" />{t.forecast_share}
-                      </motion.button>
-                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {copied ? t.share_copied : t.share_copy}
-                      </motion.button>
-                    </motion.div>
-                  </motion.div>
+                    </AnimatePresence>,
+                    document.body
+                  )}
 
                   {/* Mobile-only card (in flow) */}
                   <div className="md:hidden flex flex-col items-center p-6 pb-2">
