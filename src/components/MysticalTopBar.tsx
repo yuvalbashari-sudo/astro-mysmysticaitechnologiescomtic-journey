@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Globe, MessageCircle, Clock } from "lucide-react";
+import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
 import { useT } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
