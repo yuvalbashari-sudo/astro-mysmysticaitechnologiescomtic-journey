@@ -562,7 +562,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <motion.div
                         className="relative rounded-xl overflow-hidden"
                         style={{
-                          width: "clamp(180px, 22vw, 280px)",
+                          width: "clamp(220px, 26vw, 360px)",
                           aspectRatio: "2 / 3",
                           border: "2px solid hsl(var(--gold) / 0.25)",
                           boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
