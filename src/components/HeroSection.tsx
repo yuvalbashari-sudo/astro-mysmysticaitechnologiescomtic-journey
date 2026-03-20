@@ -2522,11 +2522,21 @@ const HeroSection = () => {
       </motion.div>
     </motion.button>
 
-    {/* ── Hero Conversion Content — positioned below face, around crystal ball ── */}
+    {/* ── Subtle dark gradient behind text for readability ── */}
+    <div
+      className="absolute z-[62] pointer-events-none inset-x-0"
+      style={{
+        top: isMobile ? "55%" : "48%",
+        bottom: 0,
+        background: "linear-gradient(to bottom, transparent 0%, hsl(var(--deep-blue) / 0.4) 30%, hsl(var(--deep-blue) / 0.7) 70%, hsl(var(--deep-blue) / 0.85) 100%)",
+      }}
+    />
+
+    {/* ── Hero Conversion Content — positioned below face, above crystal ball ── */}
     <div
       className="absolute z-[65] pointer-events-none inset-x-0 bottom-0"
       style={{
-        top: isMobile ? "64%" : "53%",
+        top: isMobile ? "68%" : "58%",
         paddingLeft: isMobile ? "20px" : "32px",
         paddingRight: isMobile ? "20px" : "32px",
       }}
@@ -2542,8 +2552,8 @@ const HeroSection = () => {
           className="inline-block font-body tracking-[0.25em] uppercase"
           style={{
             color: "hsl(var(--gold) / 0.55)",
-            fontSize: isMobile ? "9px" : undefined,
-            marginBottom: isMobile ? "10px" : "20px",
+            fontSize: isMobile ? "9px" : "12px",
+            marginBottom: isMobile ? "8px" : "16px",
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -2554,20 +2564,20 @@ const HeroSection = () => {
 
         {/* Headline */}
         <motion.h1
-          className="font-heading font-bold leading-[1.2]"
+          className="font-heading font-bold"
           style={{
             color: "hsl(var(--foreground))",
             textShadow: "0 2px 24px hsl(var(--deep-blue)), 0 0 60px hsl(var(--deep-blue) / 0.8)",
             textWrap: "balance",
-            fontSize: isMobile ? "18px" : undefined,
-            marginBottom: isMobile ? "12px" : "24px",
+            fontSize: isMobile ? "17px" : "clamp(24px, 2.8vw, 36px)",
+            lineHeight: 1.25,
+            marginBottom: isMobile ? "10px" : "20px",
           }}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 1 }}
         >
-          <span className="hidden md:inline text-3xl lg:text-4xl">גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם</span>
-          <span className="md:hidden">גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם</span>
+          גלו מה באמת קורה באהבה, בזוגיות ובעתיד שלכם
         </motion.h1>
 
         {/* Subheadline */}
@@ -2577,9 +2587,9 @@ const HeroSection = () => {
             color: "hsl(var(--foreground) / 0.65)",
             textShadow: "0 1px 16px hsl(var(--deep-blue))",
             textWrap: "pretty",
-            fontSize: isMobile ? "12px" : undefined,
+            fontSize: isMobile ? "12px" : "15px",
             maxWidth: isMobile ? "300px" : "28rem",
-            marginBottom: isMobile ? "18px" : "32px",
+            marginBottom: isMobile ? "16px" : "28px",
           }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2593,7 +2603,7 @@ const HeroSection = () => {
           className="flex flex-row items-center justify-center"
           style={{
             gap: isMobile ? "10px" : "16px",
-            marginBottom: isMobile ? "14px" : "24px",
+            marginBottom: isMobile ? "12px" : "20px",
           }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2609,7 +2619,7 @@ const HeroSection = () => {
               color: "hsl(var(--deep-blue))",
               boxShadow: "0 4px 24px hsl(var(--gold) / 0.3), 0 0 40px hsl(var(--gold) / 0.1)",
               minHeight: isMobile ? "50px" : "48px",
-              fontSize: isMobile ? "12px" : undefined,
+              fontSize: isMobile ? "12px" : "14px",
               paddingLeft: isMobile ? "20px" : "36px",
               paddingRight: isMobile ? "20px" : "36px",
               paddingTop: isMobile ? "12px" : "14px",
@@ -2643,7 +2653,7 @@ const HeroSection = () => {
               border: "1.5px solid hsl(var(--gold) / 0.3)",
               color: "hsl(var(--gold))",
               minHeight: isMobile ? "50px" : "48px",
-              fontSize: isMobile ? "12px" : undefined,
+              fontSize: isMobile ? "12px" : "14px",
               paddingLeft: isMobile ? "20px" : "36px",
               paddingRight: isMobile ? "20px" : "36px",
               paddingTop: isMobile ? "12px" : "14px",
