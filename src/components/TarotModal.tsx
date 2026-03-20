@@ -324,11 +324,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
             <AnimatePresence mode="wait">
               {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
-                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 pt-16 pb-6 md:px-8 md:pt-20 md:pb-8 text-center relative overflow-hidden min-h-screen flex flex-col items-center justify-center">
+                <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative overflow-hidden min-h-screen flex flex-col items-end justify-end">
 
-                  {/* Subtle center vignette for readability — no box */}
+                  {/* Subtle readability vignette — no box */}
                   <div className="absolute inset-0 pointer-events-none" style={{
-                    background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.5) 0%, transparent 70%)",
+                    background: "radial-gradient(ellipse 70% 50% at 50% 75%, hsl(222 47% 5% / 0.55) 0%, transparent 70%)",
                   }} />
                   {/* Floating dust particles */}
                   {[...Array(6)].map((_, i) => (
@@ -340,12 +340,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   ))}
 
                   {/* Title area */}
-                  <div className="relative z-10 mb-6 md:mb-10">
-                    <h2 className="font-heading text-xl md:text-3xl gold-gradient-text mb-2" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.9)" }}>{t.tarot_title}</h2>
-                    <p className="text-gold/35 font-body text-[11px] md:text-xs tracking-[0.15em]" style={{ textShadow: "0 1px 6px hsl(222 47% 5% / 0.8)" }}>{t.tarot_spread_choose}</p>
+                  {/* Title — floating above the cards */}
+                  <div className="absolute top-0 left-0 right-0 z-20 text-center pt-16 md:pt-20 pointer-events-none">
+                    <motion.h2
+                      className="font-heading text-xl md:text-3xl gold-gradient-text mb-2"
+                      style={{ textShadow: "0 2px 20px hsl(222 47% 3% / 0.95), 0 0 40px hsl(var(--gold) / 0.15)" }}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
+                    >{t.tarot_title}</motion.h2>
+                    <motion.p
+                      className="text-gold/40 font-body text-[11px] md:text-xs tracking-[0.2em]"
+                      style={{ textShadow: "0 1px 10px hsl(222 47% 3% / 0.9)" }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6, duration: 0.8 }}
+                    >{t.tarot_spread_choose}</motion.p>
                   </div>
 
-                  {/* ── Authentic Tarot Fan Spread ── */}
+                  {/* ── Cards emerging from oracle's hands ── */}
                   {(() => {
                     const fanCards = SPREAD_OPTIONS;
                     const count = fanCards.length;
@@ -353,8 +366,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     const arcDeg = isMob ? 36 : 48;
                     const cardW = isMob ? 68 : 105;
                     const cardH = isMob ? 112 : 174;
-                    const pivotR = isMob ? 180 : 280;
-                    const containerH = isMob ? 230 : 350;
+                    const pivotR = isMob ? 220 : 340;
+                    const containerH = isMob ? 320 : 440;
 
                     // Symbols for each spread type (engraved on the card face)
                     const spreadSymbols: Record<SpreadType, string> = {
@@ -367,7 +380,22 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     };
 
                     return (
-                      <div className="relative mx-auto" style={{ height: containerH, maxWidth: isMob ? 340 : 620 }}>
+                      <div className="relative mx-auto mb-4" style={{ height: containerH, maxWidth: isMob ? 340 : 620 }}>
+                        {/* Mystical energy at the emergence point */}
+                        <motion.div
+                          className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+                          style={{
+                            bottom: isMob ? -30 : -40,
+                            width: isMob ? 250 : 420,
+                            height: isMob ? 80 : 120,
+                            background: "radial-gradient(ellipse, hsl(var(--gold) / 0.12) 0%, hsl(var(--gold) / 0.04) 40%, transparent 70%)",
+                            filter: "blur(15px)",
+                          }}
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: [0.4, 0.8, 0.4], scale: 1 }}
+                          transition={{ opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" }, scale: { duration: 1, ease: "easeOut" } }}
+                        />
+
                         {fanCards.map((spread, idx) => {
                           const step = arcDeg / (count - 1);
                           const angle = -arcDeg / 2 + idx * step;
@@ -399,7 +427,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 zIndex: 10 + idx,
                                 perspective: 600,
                               }}
-                              initial={{ opacity: 0, y: 80, rotate: 0, scale: 0.7 }}
+                              initial={{ opacity: 0, y: 180, rotate: 0, scale: 0.5 }}
                               animate={{
                                 opacity: 1,
                                 y: 0,
@@ -408,12 +436,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 scale: 1,
                                 translateY: ty,
                               }}
-                              transition={{ delay: 0.15 + idx * 0.08, type: "spring", stiffness: 100, damping: 16 }}
+                              transition={{ delay: 0.4 + idx * 0.12, type: "spring", stiffness: 70, damping: 14 }}
                               whileHover={{
-                                translateY: ty - (isMob ? 18 : 30),
-                                scale: 1.06,
+                                translateY: ty - (isMob ? 22 : 38),
+                                scale: 1.08,
                                 zIndex: 50,
-                                transition: { duration: 0.2 },
+                                transition: { duration: 0.25, ease: "easeOut" },
                               }}
                               whileTap={{ scale: 0.97 }}
                             >
@@ -481,19 +509,17 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           );
                         })}
 
-                        {/* Soft table glow beneath fan pivot */}
-                        <div className="absolute left-1/2 -translate-x-1/2 rounded-full" style={{
-                          bottom: isMob ? -10 : -15,
-                          width: isMob ? 180 : 300,
-                          height: isMob ? 20 : 30,
-                          background: "radial-gradient(ellipse, hsl(var(--gold) / 0.08), transparent 70%)",
-                          filter: "blur(10px)",
+                        {/* Bottom fade — cards emerge from below screen edge */}
+                        <div className="absolute left-0 right-0 pointer-events-none" style={{
+                          bottom: isMob ? -40 : -50,
+                          height: isMob ? 80 : 100,
+                          background: "linear-gradient(to top, hsl(222 47% 4% / 0.9) 0%, transparent 100%)",
                         }} />
                       </div>
                     );
                   })()}
 
-                  <p className="relative z-10 text-[9px] md:text-[10px] text-muted-foreground/30 font-body mt-6">{t.tarot_note}</p>
+                  <p className="relative z-10 text-[9px] md:text-[10px] text-muted-foreground/30 font-body text-center w-full pb-6 md:pb-8" style={{ textShadow: "0 1px 6px hsl(222 47% 3% / 0.8)" }}>{t.tarot_note}</p>
                 </motion.div>
               ) : isQuestionPhase ? (
                 <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} /></motion.div>
