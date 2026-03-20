@@ -879,10 +879,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               ) : null}
             </AnimatePresence>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    </CinematicModalShell>
   );
 };
 
