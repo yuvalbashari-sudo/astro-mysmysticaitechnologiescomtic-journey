@@ -758,7 +758,7 @@ const ZodiacWheel = ({
         height: radius * 2 + 40,
         left: "50%",
         top: "50%",
-        transform: `translate(-50%, -50%) translateY(${isMobile ? 0 : -200}px)`,
+        transform: `translate(-50%, -50%) translateY(${isMobile ? 0 : -170}px)`,
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
