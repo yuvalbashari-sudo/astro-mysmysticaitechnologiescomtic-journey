@@ -2531,7 +2531,7 @@ const HeroSection = () => {
             </AnimatePresence>
             {/* EnergyPulse removed from desktop to prevent outer rings */}
             {entranceComplete && (
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
             )}
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
