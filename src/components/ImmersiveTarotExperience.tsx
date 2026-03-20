@@ -1051,7 +1051,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                         transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="p-6" style={{ fontSize: `${[1, 1.15, 1.3][textSizeLevel]}rem`, transition: "font-size 0.25s ease" }}>
+                        <div className="p-6">
                           {/* Text size control — mobile */}
                           <div className="flex items-center gap-1.5 mb-4" style={{ direction: "ltr" }}>
                             {([0, 1, 2] as const).map((level) => {
