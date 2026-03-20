@@ -994,7 +994,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       >
                         {chosenCards.map((card, i) => {
                           const isCenter = i === 1;
-                          const w = isCenter ? 138 : 114;
+                          const w = isCenter ? 166 : 137;
                           const h = w * 1.55;
                           return (
                             <motion.div
