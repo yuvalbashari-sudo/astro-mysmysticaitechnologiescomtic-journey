@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef } from "react";
-import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
+import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Loader2, Share2, Copy, Check, Download, Image } from "lucide-react";
 import html2canvas from "html2canvas";
 import { getZodiacSign } from "@/data/zodiacData";
 import { getRisingSign } from "@/data/risingSignData";
