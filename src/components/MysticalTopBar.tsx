@@ -70,11 +70,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
 
       {/* Left side: Actions */}
       <div className="flex-1 flex justify-end">
-      <nav className="flex items-center gap-2" aria-label={t.a11y_main_navigation}>
+      <nav className="flex items-center gap-3" aria-label={t.a11y_main_navigation}>
         {/* Mystical Profile Dashboard */}
         <motion.button
           onClick={onOpenDashboard}
-          className="flex items-center justify-center w-8 h-8 rounded-full backdrop-blur-md transition-all"
+          className="flex items-center justify-center w-14 h-14 rounded-full backdrop-blur-md transition-all"
           style={{
             background: "hsl(var(--deep-blue-light) / 0.6)",
             border: "1px solid hsl(var(--gold) / 0.15)",
@@ -84,13 +84,13 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           whileTap={{ scale: 0.95 }}
           aria-label={t.dashboard_title || "Mystical Profile"}
         >
-          <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+          <Sparkles className="w-7 h-7" aria-hidden="true" />
         </motion.button>
         {/* Readings History */}
         {hasHistory && (
           <motion.button
             onClick={onOpenHistory}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md font-body text-xs transition-all"
+            className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
             style={{
               background: "hsl(var(--deep-blue-light) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.15)",
@@ -100,7 +100,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             whileTap={{ scale: 0.97 }}
             aria-label={t.a11y_readings_history}
           >
-            <Clock className="w-3 h-3" aria-hidden="true" />
+            <Clock className="w-6 h-6" aria-hidden="true" />
           </motion.button>
         )}
 
@@ -108,7 +108,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         <div ref={langRef} className="relative">
           <motion.button
             onClick={() => setLangOpen(!langOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-md font-body text-xs transition-all"
+            className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
             style={{
               background: "hsl(var(--deep-blue-light) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.15)",
@@ -120,7 +120,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             aria-expanded={langOpen}
             aria-haspopup="listbox"
           >
-            <Globe className="w-3 h-3" aria-hidden="true" />
+            <Globe className="w-6 h-6" aria-hidden="true" />
             <span>{languageConfig[language].label}</span>
           </motion.button>
 
@@ -171,7 +171,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         {/* Accessibility link */}
         <Link
           to="/accessibility"
-          className="flex items-center justify-center w-8 h-8 rounded-full transition-all text-gold/50 hover:text-gold text-xs"
+          className="flex items-center justify-center w-14 h-14 rounded-full transition-all text-gold/50 hover:text-gold text-lg"
           style={{
             background: "hsl(var(--deep-blue-light) / 0.6)",
             border: "1px solid hsl(var(--gold) / 0.15)",
@@ -187,7 +187,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           href="https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center w-8 h-8 rounded-full transition-all"
+          className="flex items-center justify-center w-14 h-14 rounded-full transition-all"
           style={{
             background: "linear-gradient(135deg, hsl(142 70% 40% / 0.8), hsl(142 70% 32% / 0.8))",
             boxShadow: "0 2px 10px hsl(142 70% 35% / 0.3)",
@@ -196,7 +196,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           whileTap={{ scale: 0.95 }}
           aria-label={t.a11y_whatsapp_contact}
         >
-          <MessageCircle className="w-3.5 h-3.5 text-white" aria-hidden="true" />
+          <MessageCircle className="w-7 h-7 text-white" aria-hidden="true" />
         </motion.a>
       </nav>
       </div>
