@@ -2638,18 +2638,7 @@ const HeroSection = () => {
             {/* Spacer for crystal ball (now in fixed layer) */}
             <div style={{ height: "32vh", maxHeight: "280px" }} />
 
-            {/* Primary CTA */}
-            <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.6 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setTarotOpen(true)}
-              className="btn-gold rounded-full font-heading text-sm tracking-wider px-10 py-3.5"
-            >
-              {t.hero_cta_personal}
-            </motion.button>
+            {/* CTA moved to fixed layer */}
 
             {/* Social proof */}
             <motion.p
