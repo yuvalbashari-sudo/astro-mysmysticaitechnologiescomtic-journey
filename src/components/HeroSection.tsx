@@ -2949,10 +2949,10 @@ const HeroSection = () => {
                     />
                   )}
                 </AnimatePresence>
-                <div className="flex items-center justify-center gap-2.5">
-                  <Eye className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
+                <div className="flex items-center justify-center gap-3">
+                  <Eye className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
                   <div
-                    className="text-[26px] font-heading font-bold tracking-wide leading-tight"
+                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(220, 50, 50, 0.65), 0 0 20px rgba(220, 50, 50, 0.35), 0 0 40px rgba(220, 50, 50, 0.15)",
@@ -2961,7 +2961,7 @@ const HeroSection = () => {
                     {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
                   </div>
                 </div>
-                <div className="text-[14px] font-body mt-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
                 </div>
                 <motion.div
