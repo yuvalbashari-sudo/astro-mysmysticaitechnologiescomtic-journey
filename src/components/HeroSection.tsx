@@ -2578,7 +2578,7 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-row items-center justify-center gap-3 md:gap-4 mb-4"
+          className="flex flex-row items-center justify-center gap-3 md:gap-4 mb-5 md:mb-6"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.8 }}
