@@ -43,27 +43,46 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
 
       {/* Center: Hero Title */}
       <motion.h1
-        className="font-heading uppercase pointer-events-none select-none"
+        className="font-heading uppercase pointer-events-none select-none relative"
         style={{
-          fontSize: "clamp(30px, 4vw, 52px)",
+          fontSize: "clamp(26px, 3.5vw, 45px)",
           fontWeight: 600,
-          letterSpacing: "0.4em",
+          letterSpacing: "0.55em",
           background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
+          backgroundSize: "200% 200%",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          filter: "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
+          filter: "drop-shadow(0 0 10px hsl(43 80% 55% / 0.18)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.07))",
+          marginTop: "-8px",
         }}
         animate={{
           filter: [
-            "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
-            "drop-shadow(0 0 18px hsl(43 80% 55% / 0.35)) drop-shadow(0 0 40px hsl(43 80% 55% / 0.15))",
-            "drop-shadow(0 0 12px hsl(43 80% 55% / 0.2)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.08))",
+            "drop-shadow(0 0 10px hsl(43 80% 55% / 0.18)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.07))",
+            "drop-shadow(0 0 16px hsl(43 80% 55% / 0.3)) drop-shadow(0 0 35px hsl(43 80% 55% / 0.12))",
+            "drop-shadow(0 0 10px hsl(43 80% 55% / 0.18)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.07))",
           ],
+          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
         }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
       >
         ASTROLOGAI
+        {/* Cinematic light sweep */}
+        <motion.span
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.25) 45%, hsl(var(--gold-light) / 0.4) 50%, hsl(var(--gold-light) / 0.25) 55%, transparent 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            backgroundSize: "200% 100%",
+          }}
+          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "easeInOut" }}
+          aria-hidden="true"
+        >
+          ASTROLOGAI
+        </motion.span>
       </motion.h1>
 
       {/* Left side: Actions */}
