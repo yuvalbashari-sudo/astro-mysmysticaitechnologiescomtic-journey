@@ -105,184 +105,7 @@ async function streamTarotReading(
   }
 }
 
-/* ── Energy Particle from hands to cards ── */
-const EnergyParticle = ({ index, phase, isMobile }: { index: number; phase: Phase; isMobile: boolean }) => {
-  const startX = (Math.random() - 0.5) * (isMobile ? 80 : 160);
-  const startY = isMobile ? -60 : -100;
-  const endY = isMobile ? 40 : 80;
-  const duration = 2 + Math.random() * 2;
-  const delay = Math.random() * 3;
-  const size = 1.5 + Math.random() * 2;
-
-  if (phase !== "drawing" && phase !== "reveal") return null;
-
-  return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none"
-      style={{
-        width: size,
-        height: size,
-        left: "50%",
-        top: isMobile ? "38%" : "42%",
-        background: index % 3 === 0
-          ? "hsl(var(--gold) / 0.8)"
-          : index % 3 === 1
-            ? "hsl(270 60% 70% / 0.7)"
-            : "hsl(var(--celestial) / 0.6)",
-        filter: "blur(0.5px)",
-      }}
-      animate={{
-        x: [startX, startX * 0.3 + (Math.random() - 0.5) * 20, (Math.random() - 0.5) * 40],
-        y: [startY, startY * 0.3, endY],
-        opacity: [0, 0.9, 0.6, 0],
-        scale: [0.5, 1.2, 0.8, 0],
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        ease: "easeOut",
-      }}
-    />
-  );
-};
-
-/* ── Mystical Table Surface ── */
-const MysticalTable = ({ phase, isMobile }: { phase: Phase; isMobile: boolean }) => {
-  const showTable = phase === "drawing" || phase === "reveal";
-
-  return (
-    <AnimatePresence>
-      {showTable && (
-        <motion.div
-          className="absolute pointer-events-none"
-          style={{
-            left: "50%",
-            transform: "translateX(-50%)",
-            bottom: isMobile ? "8%" : "5%",
-            width: isMobile ? "95%" : "70%",
-            maxWidth: 900,
-            height: isMobile ? "30%" : "35%",
-            perspective: "800px",
-          }}
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 30 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {/* Table surface with perspective */}
-          <div
-            className="absolute inset-0 rounded-t-[40%] overflow-hidden"
-            style={{
-              transform: "rotateX(25deg)",
-              transformOrigin: "bottom center",
-              background: `
-                radial-gradient(ellipse 80% 60% at 50% 40%,
-                  hsl(25 30% 12% / 0.9) 0%,
-                  hsl(20 25% 8% / 0.95) 40%,
-                  hsl(15 20% 5% / 0.98) 80%,
-                  transparent 100%
-                )
-              `,
-              boxShadow: "inset 0 2px 30px hsl(var(--gold) / 0.06), inset 0 -2px 20px hsl(0 0% 0% / 0.4)",
-            }}
-          >
-            {/* Wood grain texture overlay */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: `
-                  repeating-linear-gradient(
-                    87deg,
-                    transparent 0px,
-                    hsl(25 40% 20% / 0.04) 2px,
-                    transparent 4px,
-                    hsl(20 30% 15% / 0.03) 8px
-                  )
-                `,
-              }}
-            />
-
-            {/* Engraved mystical symbols - central circle */}
-            <motion.div
-              className="absolute rounded-full"
-              style={{
-                width: isMobile ? 120 : 220,
-                height: isMobile ? 120 : 220,
-                left: "50%",
-                top: "40%",
-                transform: "translate(-50%, -50%)",
-                border: "1px solid hsl(var(--gold) / 0.08)",
-                boxShadow: "0 0 20px hsl(var(--gold) / 0.04), inset 0 0 15px hsl(var(--gold) / 0.03)",
-              }}
-              animate={{
-                boxShadow: [
-                  "0 0 20px hsl(var(--gold) / 0.04), inset 0 0 15px hsl(var(--gold) / 0.03)",
-                  "0 0 30px hsl(var(--gold) / 0.08), inset 0 0 20px hsl(var(--gold) / 0.06)",
-                  "0 0 20px hsl(var(--gold) / 0.04), inset 0 0 15px hsl(var(--gold) / 0.03)",
-                ],
-              }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            />
-
-            {/* Inner engraved circle */}
-            <div
-              className="absolute rounded-full"
-              style={{
-                width: isMobile ? 70 : 130,
-                height: isMobile ? 70 : 130,
-                left: "50%",
-                top: "40%",
-                transform: "translate(-50%, -50%)",
-                border: "1px solid hsl(var(--gold) / 0.05)",
-              }}
-            />
-
-            {/* Engraved lines radiating outward */}
-            {[...Array(8)].map((_, i) => (
-              <div
-                key={`eng-${i}`}
-                className="absolute"
-                style={{
-                  width: 1,
-                  height: isMobile ? 30 : 55,
-                  left: "50%",
-                  top: "40%",
-                  transformOrigin: "top center",
-                  transform: `translate(-50%, 0) rotate(${i * 45}deg) translateY(${isMobile ? 35 : 65}px)`,
-                  background: "hsl(var(--gold) / 0.06)",
-                }}
-              />
-            ))}
-
-            {/* Top light reflection on table */}
-            <motion.div
-              className="absolute inset-x-0 top-0"
-              style={{
-                height: "40%",
-                background: "linear-gradient(to bottom, hsl(var(--gold) / 0.06) 0%, transparent 100%)",
-              }}
-              animate={{
-                opacity: phase === "reveal" ? [0.5, 0.8, 0.5] : [0.3, 0.5, 0.3],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            />
-          </div>
-
-          {/* Table edge / front lip */}
-          <div
-            className="absolute bottom-0 left-[5%] right-[5%] rounded-b-lg"
-            style={{
-              height: isMobile ? 6 : 10,
-              background: "linear-gradient(to bottom, hsl(25 25% 15% / 0.8), hsl(20 20% 8% / 0.9))",
-              boxShadow: "0 4px 15px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-            }}
-          />
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
+/* ── (removed: EnergyParticle and MysticalTable — clean scene) ── */
 
 /* ── Floating Card (cinematic, grounded) ──────────────── */
 const FloatingCard = ({
@@ -523,7 +346,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [auraIntensity, setAuraIntensity] = useState(0);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -531,13 +353,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
-
-  useEffect(() => {
-    if (phase === "drawing") setAuraIntensity(0.6);
-    else if (phase === "reveal") setAuraIntensity(0.9);
-    else if (phase === "interpretation") setAuraIntensity(0.5);
-    else setAuraIntensity(0.3);
-  }, [phase]);
 
   const questionOptions = useMemo((): QuestionOption[] => [
     {
@@ -734,50 +549,28 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               className="absolute inset-0"
               style={{ background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.6) 0%, transparent 30%)" }}
             />
-            {/* Bottom gradient for table blending */}
-            <AnimatePresence>
-              {(phase === "drawing" || phase === "reveal") && (
-                <motion.div
-                  className="absolute inset-0"
-                  style={{
-                    background: "linear-gradient(to top, hsl(20 15% 5% / 0.7) 0%, transparent 40%)",
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.2 }}
-                />
-              )}
-            </AnimatePresence>
           </div>
 
-          {/* ── Mystical Table ── */}
-          <MysticalTable phase={phase} isMobile={isMobile} />
-
-          {/* ── Soft upward light on oracle during card phases ── */}
+          {/* ── Subtle ambient glow from hands area ── */}
           <AnimatePresence>
             {(phase === "drawing" || phase === "reveal") && (
               <motion.div
                 className="absolute pointer-events-none"
                 style={{
-                  left: "30%",
-                  right: "30%",
-                  bottom: isMobile ? "30%" : "35%",
-                  height: "30%",
-                  background: "radial-gradient(ellipse 100% 80% at 50% 100%, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
+                  left: "25%",
+                  right: "25%",
+                  bottom: isMobile ? "35%" : "38%",
+                  height: "20%",
+                  background: "radial-gradient(ellipse 100% 100% at 50% 80%, hsl(var(--gold) / 0.05) 0%, transparent 70%)",
+                  filter: "blur(20px)",
                 }}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: [0.4, 0.8, 0.4] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.5 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
             )}
           </AnimatePresence>
-
-          {/* ── Energy particles from oracle hands toward cards ── */}
-          {[...Array(isMobile ? 12 : 24)].map((_, i) => (
-            <EnergyParticle key={`ep-${i}`} index={i} phase={phase} isMobile={isMobile} />
-          ))}
 
           {/* ── Ambient particles ── */}
           {[...Array(isMobile ? 10 : 20)].map((_, i) => (
