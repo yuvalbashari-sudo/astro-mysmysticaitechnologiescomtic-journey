@@ -845,29 +845,41 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               filter: "blur(8px)",
                             }}
                           />
-                          <img
-                            src={tarotCardImages[card.name] || cardBack}
-                            alt={card.hebrewName}
-                            className="w-full h-full object-cover rounded-lg"
-                            style={{
-                              imageRendering: "-webkit-optimize-contrast" as any,
-                              backfaceVisibility: "hidden",
-                              transform: "translateZ(0)",
-                              boxShadow: isCenter
-                                ? "0 0 50px hsl(var(--gold) / 0.4), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
-                                : "0 0 30px hsl(var(--gold) / 0.2), 0 8px 28px hsl(var(--deep-blue) / 0.5)",
-                              filter: isCenter
-                                ? "contrast(1.08) saturate(1.05) drop-shadow(0 10px 25px rgba(0,0,0,0.5))"
-                                : "brightness(0.85) contrast(1.06) drop-shadow(0 10px 25px rgba(0,0,0,0.5))",
-                              willChange: "transform",
-                            }}
-                          />
-                          <div
-                            className="absolute inset-0 rounded-lg pointer-events-none"
-                            style={{
-                              boxShadow: `inset 0 0 ${isCenter ? 10 : 6}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
-                            }}
-                          />
+                          <div className="relative w-full h-full">
+                            <img
+                              src={tarotCardImages[card.name] || cardBack}
+                              alt={card.hebrewName}
+                              className="w-full h-full object-cover rounded-lg"
+                              style={{
+                                imageRendering: "-webkit-optimize-contrast" as any,
+                                backfaceVisibility: "hidden",
+                                transform: "translateZ(0)",
+                                boxShadow: isCenter
+                                  ? "0 0 50px hsl(var(--gold) / 0.4), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
+                                  : "0 0 30px hsl(var(--gold) / 0.2), 0 8px 28px hsl(var(--deep-blue) / 0.5)",
+                                filter: isCenter
+                                  ? "contrast(1.1) saturate(1.08)"
+                                  : "brightness(0.85) contrast(1.06)",
+                                willChange: "transform",
+                              }}
+                            />
+                            <img
+                              src={cardFrameImg}
+                              alt=""
+                              className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-lg"
+                              style={{ opacity: 0.85, mixBlendMode: "screen" }}
+                            />
+                            <div
+                              className="absolute inset-0 pointer-events-none rounded-lg"
+                              style={{ background: "linear-gradient(135deg, hsl(0 0% 100% / 0.06) 0%, transparent 40%)" }}
+                            />
+                            <div
+                              className="absolute inset-0 rounded-lg pointer-events-none"
+                              style={{
+                                boxShadow: `inset 0 0 ${isCenter ? 12 : 7}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
+                              }}
+                            />
+                          </div>
                           <motion.div
                             className="absolute -inset-2 rounded-xl pointer-events-none"
                             style={{ border: `1px solid hsl(var(--gold) / ${isCenter ? 0.35 : 0.15})` }}
