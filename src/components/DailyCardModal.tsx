@@ -644,8 +644,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     <motion.div
                       className="flex-1 mt-8 md:mt-0 md:max-w-[480px]"
                       initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                     >
                       {aiText ? (
                         <div>
