@@ -545,9 +545,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               )}
             </motion.div>
           )}
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
+        </div>
+    </CinematicModalShell>
   );
 };
 
