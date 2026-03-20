@@ -2087,7 +2087,7 @@ const HeroSection = () => {
     setClickBurst((c) => c + 1);
   }, []);
 
-  const orbRadius = isMobile ? 190 : 360;
+  const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
   const particles = useMemo(() => {
     const types: Array<"dust" | "spark" | "orb"> = ["dust", "spark", "orb"];
