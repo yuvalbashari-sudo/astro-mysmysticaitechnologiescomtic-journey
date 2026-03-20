@@ -12,6 +12,7 @@ const Index = () => {
   const { dir } = useLanguage();
   const t = useT();
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
   const [hasHistory, setHasHistory] = useState(false);
 
   useEffect(() => {
