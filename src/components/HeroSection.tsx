@@ -2431,7 +2431,7 @@ const HeroSection = () => {
     </div>
 
     {/* ── Top horizontal feature tabs — OUTSIDE isolate container for correct stacking ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "64px" : "82px" }}>
+    <div className="fixed z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "72px" : "96px" }}>
       <motion.div
         className={`flex justify-center mx-auto pointer-events-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
         initial={{ opacity: 0, y: -15 }}
