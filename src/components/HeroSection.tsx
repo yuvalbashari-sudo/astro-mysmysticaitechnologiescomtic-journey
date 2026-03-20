@@ -724,10 +724,12 @@ const ZodiacWheel = ({
   isMobile,
   hoveredMenuItem,
   onHoveredElement,
+  onSignClick,
 }: {
   isMobile: boolean;
   hoveredMenuItem: number | null;
   onHoveredElement?: (color: string | null) => void;
+  onSignClick?: (index: number) => void;
 }) => {
   const { language } = useLanguage();
   const t = useT();
