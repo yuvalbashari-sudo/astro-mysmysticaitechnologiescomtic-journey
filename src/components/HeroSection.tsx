@@ -2078,35 +2078,67 @@ const HeroSection = () => {
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "200px" : "350px",
-            height: isMobile ? "150px" : "250px",
+            width: isMobile ? "220px" : "400px",
+            height: isMobile ? "170px" : "280px",
             transform: "translate(-50%, -50%)",
             background: activeColor
-              ? `radial-gradient(ellipse, ${activeColor}33 0%, ${activeColor}11 40%, transparent 70%)`
-              : "radial-gradient(ellipse, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
-            filter: "blur(30px)",
+              ? `radial-gradient(ellipse, ${activeColor}44 0%, ${activeColor}18 40%, transparent 70%)`
+              : "radial-gradient(ellipse, hsl(var(--gold) / 0.22) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
+            filter: "blur(25px)",
           }}
-          animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.15, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.2, 1] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute"
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "280px" : "480px",
-            height: isMobile ? "200px" : "320px",
+            width: isMobile ? "300px" : "520px",
+            height: isMobile ? "220px" : "360px",
             transform: "translate(-50%, -50%)",
-            background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.08) 0%, hsl(var(--gold) / 0.04) 50%, transparent 70%)",
-            filter: "blur(50px)",
+            background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.1) 0%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
+            filter: "blur(45px)",
           }}
-          animate={{ opacity: [0.3, 0.6, 0.3], scale: [1.05, 0.95, 1.05] }}
+          animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
-        {[...Array(6)].map((_, i) => (
+        {/* Dynamic light streaks radiating from sphere */}
+        {[...Array(4)].map((_, i) => {
+          const angle = (i / 4) * Math.PI * 2 + Math.PI / 8;
+          const dx = Math.cos(angle);
+          const dy = Math.sin(angle);
+          return (
+            <motion.div
+              key={`streak-${i}`}
+              className="absolute"
+              style={{
+                left: "50%",
+                top: "55%",
+                width: isMobile ? "120px" : "200px",
+                height: "2px",
+                transform: `translate(-50%, -50%) rotate(${angle * (180 / Math.PI)}deg)`,
+                background: `linear-gradient(90deg, hsl(var(--gold) / 0.15), transparent)`,
+                filter: "blur(2px)",
+                transformOrigin: "left center",
+              }}
+              animate={{
+                opacity: [0, 0.4, 0],
+                scaleX: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 1.5,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={`hand-spark-${i}`}
-            className="absolute rounded-full bg-gold/50"
+            className="absolute rounded-full bg-gold/60"
             style={{
               left: `${48 + (Math.random() - 0.5) * 8}%`,
               top: `${53 + (Math.random() - 0.5) * 6}%`,
@@ -2115,14 +2147,14 @@ const HeroSection = () => {
             }}
             animate={{
               opacity: [0, 0.9, 0],
-              y: [0, -(15 + Math.random() * 30)],
-              x: [(Math.random() - 0.5) * 20],
-              scale: [0, 1.5, 0],
+              y: [0, -(15 + Math.random() * 40)],
+              x: [(Math.random() - 0.5) * 25],
+              scale: [0, 1.8, 0],
             }}
             transition={{
               duration: 2.5 + Math.random() * 1.5,
               repeat: Infinity,
-              delay: i * 0.7,
+              delay: i * 0.6,
               ease: "easeOut",
             }}
           />
