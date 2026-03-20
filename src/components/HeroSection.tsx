@@ -340,7 +340,6 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
-    filter: "saturate(1.3) brightness(1.08) contrast(1.05)",
     transition: "opacity 1.5s ease-in-out",
   };
 
@@ -351,65 +350,21 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         borderRadius: "50%",
         overflow: "hidden",
+        background: "transparent",
       }}
     >
-      {/* Dual videos for seamless crossfade loop */}
+      {/* Pure media only — dual videos for seamless crossfade */}
       <video ref={videoARef} autoPlay loop muted playsInline src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
       <video ref={videoBRef} muted loop playsInline src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
-      {/* Chromatic fog — very slow rotation */}
-      <motion.div className="absolute inset-0" style={{
-        background: `
-          radial-gradient(circle at 30% 25%, rgba(200,175,120,0.08) 0%, transparent 40%),
-          radial-gradient(circle at 70% 75%, rgba(90,130,210,0.07) 0%, transparent 38%),
-          radial-gradient(circle at 55% 45%, rgba(160,120,200,0.05) 0%, transparent 45%)
-        `,
-        zIndex: 3,
-      }} animate={{ rotate: [0, 360] }} transition={{ duration: 80, repeat: Infinity, ease: "linear" }} />
-
-      {/* Specular highlight — top-left glass reflection */}
-      <div className="absolute" style={{
-        width: "55%", height: "45%", top: "5%", left: "10%",
+      {/* Subtle glass highlight — light only, no darkness */}
+      <div className="absolute pointer-events-none" style={{
+        width: "50%", height: "40%", top: "6%", left: "10%",
         borderRadius: "50%",
-        background: "radial-gradient(ellipse at 40% 30%, rgba(255,254,248,0.3) 0%, rgba(255,254,248,0.08) 40%, transparent 100%)",
+        background: "radial-gradient(ellipse at 40% 30%, rgba(255,254,248,0.2) 0%, rgba(255,254,248,0.05) 50%, transparent 100%)",
         zIndex: 6,
-      }} />
-
-      {/* Secondary specular — bottom right */}
-      <div className="absolute" style={{
-        width: "20%", height: "16%", bottom: "12%", right: "14%",
-        borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(255,252,245,0.12) 0%, transparent 100%)",
-        zIndex: 6,
-      }} />
-
-      {/* Crescent arc — thin glass edge reflection */}
-      <div className="absolute" style={{
-        width: "84%", height: "84%", top: "3%", left: "8%",
-        borderRadius: "50%",
-        border: "1px solid rgba(255,252,245,0.15)",
-        borderBottom: "none", borderRight: "none",
-        zIndex: 6,
-      }} />
-
-      {/* Sweeping light refraction — periodic */}
-      <motion.div className="absolute" style={{
-        width: "22%", height: "110%", top: "-5%",
-        background: "linear-gradient(90deg, transparent, rgba(255,252,245,0.08), rgba(255,252,245,0.15), rgba(255,252,245,0.08), transparent)",
-        filter: "blur(6px)",
-        borderRadius: "50%",
-        zIndex: 8,
-      }} animate={{ left: ["-25%", "125%"] }}
-         transition={{ duration: 5, repeat: Infinity, repeatDelay: 10, ease: "easeInOut" }} />
-
-      {/* Soft center luminosity */}
-      <div className="absolute" style={{
-        width: "35%", height: "35%", top: "32%", left: "32%",
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,240,185,0.1) 0%, rgba(255,225,140,0.03) 50%, transparent 100%)",
-        zIndex: 3,
       }} />
     </div>
   );
@@ -2295,14 +2250,7 @@ const HeroSection = () => {
               style={{ width: "180px", height: "180px" }}
               onClick={handleCrystalClick}
             >
-              <div className="absolute pointer-events-none z-30 rounded-full" style={{
-                width: "45%", height: "35%", top: "8%", left: "12%",
-                background: "radial-gradient(ellipse at 40% 35%, rgba(255,254,250,0.18) 0%, rgba(255,254,250,0.05) 45%, transparent 100%)",
-                filter: "blur(2px)",
-              }} />
-              <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
-                background: "radial-gradient(circle, transparent 58%, hsl(215 60% 60% / 0.06) 70%, hsl(43 80% 55% / 0.04) 80%, transparent 88%)",
-              }} />
+              {/* No overlays — pure media only */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
                   <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
@@ -2397,16 +2345,7 @@ const HeroSection = () => {
               style={{ width: "320px", height: "320px" }}
               onClick={handleCrystalClick}
             >
-              {/* Glass reflection — top-left specular highlight */}
-              <div className="absolute pointer-events-none z-30 rounded-full" style={{
-                width: "45%", height: "35%", top: "8%", left: "12%",
-                background: "radial-gradient(ellipse at 40% 35%, rgba(255,254,250,0.18) 0%, rgba(255,254,250,0.05) 45%, transparent 100%)",
-                filter: "blur(2px)",
-              }} />
-              {/* Soft outer aura glow replacing the dark rim */}
-              <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
-                background: "radial-gradient(circle, transparent 58%, hsl(215 60% 60% / 0.06) 70%, hsl(43 80% 55% / 0.04) 80%, transparent 88%)",
-              }} />
+              {/* No overlays — pure media only */}
               <AnimatePresence>
                 {isNearBall && (
                   <>
