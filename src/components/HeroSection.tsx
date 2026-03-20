@@ -2464,10 +2464,10 @@ const HeroSection = () => {
           style={{
             objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
             maskImage: isMobile
-              ? "radial-gradient(ellipse 160px 140px at 52% calc(50% + 232px), transparent 55%, black 72%, black 85%, transparent 100%)"
+              ? "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)"
               : "radial-gradient(ellipse 280px 250px at 51% calc(50% + 255px), transparent 55%, black 72%, black 85%, transparent 100%)",
             WebkitMaskImage: isMobile
-              ? "radial-gradient(ellipse 160px 140px at 52% calc(50% + 232px), transparent 55%, black 72%, black 85%, transparent 100%)"
+              ? "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)"
               : "radial-gradient(ellipse 280px 250px at 51% calc(50% + 255px), transparent 55%, black 72%, black 85%, transparent 100%)",
           }}
         />
