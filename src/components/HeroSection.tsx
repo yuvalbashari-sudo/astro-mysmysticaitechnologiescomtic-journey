@@ -2518,8 +2518,8 @@ const HeroSection = () => {
                           ? `0 0 24px ${itemColor.glow}44, 0 0 48px ${itemColor.glow}18`
                           : "0 2px 12px hsl(0 0% 0% / 0.2)",
                       }}
-                      animate={{ y: [0, -2, 0] }}
-                      transition={{ duration: 4 + idx * 0.3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.6 }}
+                      animate={{ y: [0, -5, 1, -3, 0], x: [0, 2, 0, -1, 0], opacity: [0.85, 1, 0.9, 1, 0.85] }}
+                      transition={{ duration: 6 + idx * 1.2, repeat: Infinity, ease: "easeInOut", delay: idx * 0.8 }}
                     >
                       <motion.div
                         animate={hoveredItem === globalIdx ? {
@@ -2571,8 +2571,8 @@ const HeroSection = () => {
                           ? `0 0 24px ${itemColor.glow}44, 0 0 48px ${itemColor.glow}18`
                           : "0 2px 12px hsl(0 0% 0% / 0.2)",
                       }}
-                      animate={{ y: [0, -2, 0] }}
-                      transition={{ duration: 4 + idx * 0.3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.6 }}
+                      animate={{ y: [0, -5, 1, -3, 0], x: [0, -2, 0, 1, 0], opacity: [0.85, 1, 0.9, 1, 0.85] }}
+                      transition={{ duration: 6 + idx * 1.2, repeat: Infinity, ease: "easeInOut", delay: idx * 0.8 + 0.4 }}
                     >
                       <span className="font-body text-sm font-medium transition-colors duration-300" style={{ color: hoveredItem === globalIdx ? itemColor.glow : "hsl(var(--foreground) / 0.8)" }}>
                         {item.label}
