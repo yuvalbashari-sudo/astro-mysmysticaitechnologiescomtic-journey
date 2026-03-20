@@ -2421,6 +2421,12 @@ const HeroSection = () => {
                   }}
                 />
               </div>
+              {/* Glass reflection — top-left specular highlight */}
+              <div className="absolute pointer-events-none z-30 rounded-full" style={{
+                width: "45%", height: "35%", top: "8%", left: "12%",
+                background: "radial-gradient(ellipse at 40% 35%, rgba(255,254,250,0.18) 0%, rgba(255,254,250,0.05) 45%, transparent 100%)",
+                filter: "blur(2px)",
+              }} />
               {/* Soft outer aura glow replacing the dark rim */}
               <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
                 background: "radial-gradient(circle, transparent 55%, hsl(215 60% 60% / 0.08) 65%, hsl(43 80% 55% / 0.06) 75%, transparent 85%)",
