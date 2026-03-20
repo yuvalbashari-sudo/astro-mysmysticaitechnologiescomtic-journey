@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -318,19 +319,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div className="fixed inset-0 z-[100] flex items-center justify-center p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-          <motion.div className="absolute inset-0 bg-background/90 backdrop-blur-lg" />
-          <motion.div
-            ref={scrollRef}
-            className="relative z-10 w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl mx-2 sm:mx-auto"
-            style={{ background: "linear-gradient(145deg, hsl(222 40% 8% / 0.97), hsl(222 47% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 80px hsl(0 50% 30% / 0.12), 0 0 40px hsl(var(--gold) / 0.08)" }}
-            initial={{ opacity: 0, scale: 0.9, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          >
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
             <MysticalReadingAtmosphere theme="tarot" />
-            <button onClick={handleClose} className="absolute top-4 left-4 z-20 w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 hover:bg-muted/50 transition-colors" style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}><X className="w-4 h-4 text-gold/70" /></button>
-            <div className="absolute top-4 right-4 z-20"><span className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))", border: "1px solid hsl(var(--gold) / 0.3)", color: "hsl(var(--gold))" }}>{t.common_free}</span></div>
 
             <AnimatePresence mode="wait">
               {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
@@ -889,10 +879,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               ) : null}
             </AnimatePresence>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    </CinematicModalShell>
   );
 };
 
