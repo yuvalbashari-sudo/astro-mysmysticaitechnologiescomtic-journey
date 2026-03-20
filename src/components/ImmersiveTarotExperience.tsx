@@ -858,6 +858,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 filter: isCenter ? "none" : "brightness(0.8)",
                               }}
                             />
+                            {/* Inner edge highlight */}
+                            <div
+                              className="absolute inset-0 rounded-lg pointer-events-none"
+                              style={{
+                                boxShadow: `inset 0 0 ${isCenter ? 10 : 6}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
+                              }}
+                            />
                             <div className="text-center mt-2">
                               <span className={`font-heading ${isCenter ? "text-sm md:text-base text-gold/90" : "text-xs md:text-sm text-gold/60"}`}>
                                 {card.hebrewName}
