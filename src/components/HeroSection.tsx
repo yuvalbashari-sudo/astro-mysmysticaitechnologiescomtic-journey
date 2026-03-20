@@ -2573,9 +2573,11 @@ const HeroSection = () => {
       </div>
       {/* ── Fixed CTA below crystal ball ── */}
       <div
-        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13]"
+        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13] px-4"
         style={{
-          top: `calc(50% + ${isMobile ? "145px" : "160px"} + ${isMobile ? "120px" : "210px"} + 70px)`,
+          top: isMobile
+            ? `min(calc(50% + 335px + 70px), calc(100dvh - 80px - env(safe-area-inset-bottom, 16px)))`
+            : `calc(50% + 370px + 70px)`,
         }}
       >
         <motion.button
@@ -2583,7 +2585,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.6 }}
           onClick={() => setTarotOpen(true)}
-          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-10 py-3.5" : "text-base px-12 py-4"}`}
+          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3" : "text-base px-12 py-4"}`}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
         >
