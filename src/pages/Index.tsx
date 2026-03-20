@@ -40,7 +40,7 @@ const Index = () => {
         />
         {/* Spacer to push content below the hero viewport */}
         <div className="h-screen pointer-events-none" aria-hidden="true" />
-        <main id="main-content" className="relative z-10">
+        <main id="main-content" className="relative z-10" style={{ background: "hsl(var(--background))" }}>
           <DailyRitualSection />
         </main>
         <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
