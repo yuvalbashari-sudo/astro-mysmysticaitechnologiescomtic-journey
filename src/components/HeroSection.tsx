@@ -1,19 +1,15 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import mysticalAvatarCta from "@/assets/mystical-avatar-cta.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
-import AdvisorChatPanel from "./AdvisorChatPanel";
-import AstrologerIntroModal from "./AstrologerIntroModal";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import PalmReadingModal from "./PalmReadingModal";
 import DailyCardModal from "./DailyCardModal";
 import { useT, useLanguage } from "@/i18n";
-import { useReadingContext } from "@/contexts/ReadingContext";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
@@ -1924,7 +1920,6 @@ const TarotCardReveal = ({
 /* ── Main Hero ─────────────────────────────────────── */
 const HeroSection = () => {
   const t = useT();
-  const { setActiveReading } = useReadingContext();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
@@ -1933,28 +1928,12 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
-  const [advisorOpen, setAdvisorOpen] = useState(false);
-  const [astrologerIntroOpen, setAstrologerIntroOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
-
-  const handleAvatarClick = useCallback(() => {
-    setAstrologerIntroOpen(true);
-  }, []);
-
-  const handleStartAstrologerExperience = useCallback(() => {
-    setActiveReading({
-      type: "astrologer",
-      label: "שיחה עם האסטרולוגית",
-      summary: "קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית",
-    });
-    setAstrologerIntroOpen(false);
-    setAdvisorOpen(true);
-  }, [setActiveReading]);
 
   // Menu items split into left and right groups for symmetrical side layout
   const menuItems = useMemo(() => [
@@ -2528,81 +2507,6 @@ const HeroSection = () => {
       </motion.div>
     </div>
 
-    {/* ── Avatar CTA — inside hero, lower-right of artwork ── */}
-    <motion.button
-      type="button"
-      className="absolute pointer-events-auto cursor-pointer z-[15] flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
-      style={{
-        bottom: isMobile ? "12%" : "10%",
-        right: isMobile ? "8%" : "12%",
-      }}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
-      onClick={handleAvatarClick}
-      whileTap={{ scale: 0.95 }}
-      aria-label="שיחה עם האסטרולוגית"
-    >
-      {/* Pulsing outer glow ring */}
-      <motion.div
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          width: isMobile ? 88 : 108,
-          height: isMobile ? 88 : 108,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          marginTop: isMobile ? -10 : -12,
-          border: "1.5px solid hsl(var(--gold) / 0.25)",
-        }}
-        animate={{
-          boxShadow: [
-            "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
-            "0 0 32px hsl(43 80% 55% / 0.3), 0 0 56px hsl(43 80% 55% / 0.12)",
-            "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
-          ],
-        }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Avatar image */}
-      <motion.div
-        className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.08]"
-        style={{
-          width: isMobile ? 72 : 92,
-          height: isMobile ? 72 : 92,
-          boxShadow: "0 4px 24px hsl(var(--gold) / 0.25), 0 0 48px hsl(215 70% 40% / 0.12)",
-        }}
-        animate={{ y: [0, -4, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <img
-          src={mysticalAvatarCta}
-          alt="שיחה עם האסטרולוגית"
-          className="w-full h-full object-cover"
-          draggable={false}
-        />
-        <motion.div
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
-            backgroundSize: "200% 100%",
-          }}
-          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-        />
-      </motion.div>
-
-      {/* Label */}
-      <motion.span
-        className={`font-heading gold-gradient-text tracking-wide text-center whitespace-nowrap ${isMobile ? "text-[10px]" : "text-xs"}`}
-        style={{ textShadow: "0 0 12px hsl(var(--gold) / 0.3)" }}
-        animate={{ opacity: [0.7, 1, 0.7] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      >
-        ✨ גלו את המסר שלכם
-      </motion.span>
-    </motion.button>
         </>,
         document.body
       )
@@ -2617,12 +2521,6 @@ const HeroSection = () => {
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
-      <AstrologerIntroModal
-        isOpen={astrologerIntroOpen}
-        onClose={() => setAstrologerIntroOpen(false)}
-        onStart={handleStartAstrologerExperience}
-      />
-      <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
     </>
   );
 };
