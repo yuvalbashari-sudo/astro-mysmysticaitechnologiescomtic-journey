@@ -1089,166 +1089,159 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   ) : (
                     /* ── Desktop: absolute 3-zone layout ── */
                     <div className="absolute inset-0">
-                      {/* LEFT: Sacred Reading Scroll */}
+                      {/* LEFT: Living Sacred Message */}
                       <motion.div
                         ref={scrollRef}
-                        className="absolute overflow-y-auto pointer-events-auto"
+                        className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
                         style={{
                           top: "calc(8vh + 50px)",
                           left: "3vw",
                           width: "min(540px, calc(100vw - 580px))",
                           maxWidth: "540px",
                           maxHeight: "78vh",
-                          borderRadius: "2rem",
-                          background: "radial-gradient(ellipse 120% 80% at 50% 0%, hsl(222 40% 14% / 0.92), hsl(222 50% 5% / 0.96))",
-                          border: "1px solid hsl(var(--gold) / 0.08)",
-                          boxShadow: "0 0 100px hsl(var(--gold) / 0.03), 0 24px 60px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.1), inset 0 -1px 0 hsl(var(--gold) / 0.04)",
-                          backdropFilter: "blur(24px)",
+                          borderRadius: "2.5rem",
+                          background: "radial-gradient(ellipse 130% 90% at 50% 0%, hsl(222 38% 13% / 0.85), hsl(222 50% 4% / 0.92))",
+                          border: "none",
+                          boxShadow: "0 0 120px hsl(var(--gold) / 0.02), 0 30px 80px hsl(0 0% 0% / 0.4)",
+                          backdropFilter: "blur(30px)",
+                          maskImage: "linear-gradient(to bottom, black 90%, transparent 100%)",
+                          WebkitMaskImage: "linear-gradient(to bottom, black 90%, transparent 100%)",
                         }}
-                        initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{ delay: 0.6, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6, duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {/* Living border glow */}
+                        {/* Ethereal border shimmer */}
                         <motion.div
-                          className="absolute inset-0 rounded-[2rem] pointer-events-none"
+                          className="absolute inset-0 rounded-[2.5rem] pointer-events-none"
                           style={{
-                            border: "1px solid transparent",
-                            background: "linear-gradient(hsl(222 40% 10% / 0), hsl(222 40% 10% / 0)) padding-box, linear-gradient(135deg, hsl(var(--gold) / 0.15), transparent 40%, transparent 60%, hsl(var(--gold) / 0.1)) border-box",
+                            border: "1px solid hsl(var(--gold) / 0.06)",
+                            boxShadow: "inset 0 1px 0 hsl(var(--gold) / 0.08)",
                           }}
-                          animate={{
-                            opacity: [0.5, 1, 0.5],
-                          }}
-                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                          animate={{ opacity: [0.4, 0.8, 0.4] }}
+                          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                         />
 
-                        {/* Top radiance */}
-                        <div
-                          className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
-                          style={{
-                            width: "70%",
-                            height: "120px",
-                            background: "radial-gradient(ellipse at center top, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
-                            filter: "blur(20px)",
-                          }}
-                        />
+                        <div className="relative px-10 py-12 lg:px-14 lg:py-16">
 
-                        <div className="relative p-10 lg:p-14">
-                          {/* Sacred ornament */}
+                          {/* ── Emotional opening whisper ── */}
                           <motion.div
-                            className="flex items-center justify-center gap-4 mb-6"
-                            initial={{ opacity: 0, y: -5 }}
+                            className="mb-10 text-center"
+                            initial={{ opacity: 0, y: 15 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.9, duration: 0.6 }}
+                            transition={{ delay: 0.9, duration: 1 }}
                           >
-                            <div className="h-px flex-1 max-w-[50px]    " style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.25))" }} />
-                            <span className="text-gold/30 text-lg tracking-[0.5em]">✦ ✦ ✦</span>
-                            <div className="h-px flex-1 max-w-[50px]" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.25))" }} />
+                            <motion.p
+                              className="font-body italic"
+                              style={{
+                                fontSize: "1.05rem",
+                                color: "hsl(var(--foreground) / 0.4)",
+                                lineHeight: 1.8,
+                                letterSpacing: "0.03em",
+                              }}
+                              animate={{ opacity: [0.4, 0.6, 0.4] }}
+                              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              {language === "he"
+                                ? "המסר הזה הגיע אליך בדיוק ברגע הנכון..."
+                                : "This message reached you at exactly the right moment..."}
+                            </motion.p>
                           </motion.div>
 
-                          {/* Title — like an ancient inscription */}
+                          {/* Sacred ornament */}
+                          <motion.div
+                            className="flex items-center justify-center gap-4 mb-8"
+                            initial={{ opacity: 0, scaleX: 0 }}
+                            animate={{ opacity: 1, scaleX: 1 }}
+                            transition={{ delay: 1.2, duration: 0.8 }}
+                          >
+                            <div className="h-px flex-1 max-w-[40px]" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2))" }} />
+                            <span style={{ color: "hsl(var(--gold) / 0.25)", fontSize: "10px", letterSpacing: "0.4em" }}>✦ ✦ ✦</span>
+                            <div className="h-px flex-1 max-w-[40px]" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.2))" }} />
+                          </motion.div>
+
+                          {/* Title — ancient inscription feel */}
                           <motion.h3
-                            className="font-heading text-center mb-3"
+                            className="font-heading text-center mb-2"
                             style={{
-                              fontSize: "1.7rem",
+                              fontSize: "1.6rem",
                               color: "hsl(var(--gold))",
-                              textShadow: "0 0 40px hsl(var(--gold) / 0.15), 0 2px 8px hsl(0 0% 0% / 0.3)",
-                              letterSpacing: "0.18em",
+                              textShadow: "0 0 50px hsl(var(--gold) / 0.12)",
+                              letterSpacing: "0.2em",
                             }}
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 1.0, duration: 0.7 }}
+                            transition={{ delay: 1.4, duration: 0.8 }}
                           >
                             {language === "he" ? "המסר שנחשף לך" : "The Message Revealed"}
                           </motion.h3>
 
                           {/* Whispered subtitle */}
                           <motion.p
-                            className="font-body text-center mb-3 italic"
+                            className="font-body text-center italic mb-10"
                             style={{
-                              fontSize: "0.9rem",
-                              color: "hsl(var(--foreground) / 0.35)",
-                              letterSpacing: "0.06em",
+                              fontSize: "0.82rem",
+                              color: "hsl(var(--foreground) / 0.28)",
+                              letterSpacing: "0.1em",
                             }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            transition={{ delay: 1.15 }}
+                            transition={{ delay: 1.6 }}
                           >
-                            {language === "he" ? "הקלפים בחרו לדבר אליך..." : "The cards have chosen to speak to you..."}
+                            {language === "he" ? "הקלפים בחרו לדבר אליך" : "The cards have chosen to speak to you"}
                           </motion.p>
 
-                          {/* Ornamental divider */}
-                          <motion.div
-                            className="mx-auto mb-10 flex items-center justify-center gap-2"
-                            initial={{ opacity: 0, scaleX: 0 }}
-                            animate={{ opacity: 1, scaleX: 1 }}
-                            transition={{ delay: 1.3, duration: 0.6 }}
-                          >
-                            <div className="h-px w-12" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2))" }} />
-                            <div className="w-1.5 h-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.25)" }} />
-                            <div className="h-px w-12" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.2))" }} />
-                          </motion.div>
-
-                          {/* The sacred text */}
+                          {/* ── The living text ── */}
                           {aiText ? (
                             <motion.div
                               className="font-body"
                               style={{
-                                fontSize: "1.18rem",
-                                lineHeight: 2.1,
                                 maxWidth: "420px",
                                 margin: "0 auto",
-                                color: "hsl(var(--foreground) / 0.82)",
                               }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              transition={{ delay: 1.4, duration: 0.8 }}
+                              transition={{ delay: 1.8, duration: 1 }}
                             >
                               {renderMysticalText(aiText)}
                             </motion.div>
                           ) : aiLoading ? (
                             <motion.div
-                              className="flex flex-col items-center justify-center py-20 gap-6"
+                              className="flex flex-col items-center justify-center py-20 gap-7"
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              transition={{ delay: 1.0 }}
+                              transition={{ delay: 1.0, duration: 0.6 }}
                             >
-                              {/* Pulsing oracle eye */}
+                              {/* Breathing oracle presence */}
                               <motion.div
                                 className="relative"
-                                animate={{ scale: [1, 1.08, 1] }}
-                                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                                animate={{ scale: [1, 1.06, 1] }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                               >
                                 <div
-                                  className="w-14 h-14 rounded-full flex items-center justify-center"
+                                  className="w-16 h-16 rounded-full flex items-center justify-center"
                                   style={{
-                                    background: "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, transparent 70%)",
-                                    boxShadow: "0 0 30px hsl(var(--gold) / 0.08)",
+                                    background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
                                   }}
                                 >
-                                  <Sparkles className="w-6 h-6 text-gold/35" />
+                                  <Sparkles className="w-5 h-5 text-gold/30" />
                                 </div>
                                 <motion.div
                                   className="absolute inset-0 rounded-full pointer-events-none"
-                                  style={{ border: "1px solid hsl(var(--gold) / 0.1)" }}
-                                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-                                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                                  style={{ border: "1px solid hsl(var(--gold) / 0.08)" }}
+                                  animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0, 0.4] }}
+                                  transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+                                />
+                                <motion.div
+                                  className="absolute inset-0 rounded-full pointer-events-none"
+                                  style={{ border: "1px solid hsl(var(--gold) / 0.05)" }}
+                                  animate={{ scale: [1, 2, 1], opacity: [0.3, 0, 0.3] }}
+                                  transition={{ duration: 3, repeat: Infinity, ease: "easeOut", delay: 0.5 }}
                                 />
                               </motion.div>
-                              <p className="text-gold/35 font-body text-sm tracking-[0.2em]">
+                              <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic">
                                 {language === "he" ? "מפענחת את המסר הנסתר..." : "Deciphering the hidden message..."}
                               </p>
-                              <div className="flex gap-2 mt-1">
-                                {[0, 1, 2].map(i => (
-                                  <motion.div
-                                    key={i}
-                                    className="w-1 h-1 rounded-full"
-                                    style={{ background: "hsl(var(--gold) / 0.3)" }}
-                                    animate={{ opacity: [0.2, 0.8, 0.2], scale: [1, 1.5, 1] }}
-                                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }}
-                                  />
-                                ))}
-                              </div>
                             </motion.div>
                           ) : null}
 
@@ -1256,40 +1249,69 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           {aiLoading && aiText && (
                             <motion.span
                               className="inline-block w-0.5 h-5 rounded-full ml-1 align-middle"
-                              style={{ background: "hsl(var(--gold) / 0.4)" }}
+                              style={{ background: "hsl(var(--gold) / 0.35)" }}
                               animate={{ opacity: [1, 0, 1] }}
                               transition={{ duration: 0.8, repeat: Infinity }}
                             />
                           )}
 
-                          {/* Closing ritual + CTA */}
+                          {/* ── Closing ritual ── */}
                           {!aiLoading && aiText && (
                             <motion.div
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              transition={{ delay: 0.5, duration: 0.6 }}
+                              transition={{ delay: 0.8, duration: 1 }}
                             >
-                              {/* Closing ornament */}
-                              <div className="flex items-center justify-center gap-2 mt-12 mb-8">
-                                <div className="h-px w-10" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.15))" }} />
-                                <span className="text-gold/20 text-xs">✦</span>
-                                <div className="h-px w-10" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.15))" }} />
+                              {/* Breathing pause */}
+                              <div className="h-10" />
+
+                              {/* Closing sacred line */}
+                              <div className="flex items-center justify-center gap-3 mb-6">
+                                <div className="h-px w-6" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.12))" }} />
+                                <motion.span
+                                  style={{ color: "hsl(var(--gold) / 0.2)", fontSize: "7px" }}
+                                  animate={{ opacity: [0.3, 0.7, 0.3] }}
+                                  transition={{ duration: 3, repeat: Infinity }}
+                                >
+                                  ✦
+                                </motion.span>
+                                <div className="h-px w-6" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.12))" }} />
                               </div>
 
                               {/* Closing whisper */}
-                              <p
-                                className="text-center font-body italic mb-8"
-                                style={{ fontSize: "0.8rem", color: "hsl(var(--foreground) / 0.3)", letterSpacing: "0.08em" }}
+                              <motion.p
+                                className="text-center font-body italic mb-10"
+                                style={{
+                                  fontSize: "0.82rem",
+                                  color: "hsl(var(--foreground) / 0.25)",
+                                  letterSpacing: "0.06em",
+                                  lineHeight: 1.8,
+                                }}
+                                animate={{ opacity: [0.25, 0.4, 0.25] }}
+                                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                               >
-                                {language === "he" ? "שמרו על המסר הזה בליבכם" : "Keep this message close to your heart"}
-                              </p>
+                                {language === "he"
+                                  ? "קח רגע לנשום את המסר הזה… הוא שלך."
+                                  : "Take a moment to breathe this message in… it's yours."}
+                              </motion.p>
 
                               <div className="text-center">
                                 <motion.button
                                   type="button"
-                                  className="btn-gold font-heading text-sm tracking-[0.15em] cursor-pointer"
+                                  className="font-heading text-sm tracking-[0.2em] cursor-pointer px-8 py-3 rounded-full"
+                                  style={{
+                                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))",
+                                    border: "1px solid hsl(var(--gold) / 0.15)",
+                                    color: "hsl(var(--gold) / 0.8)",
+                                    boxShadow: "0 0 30px hsl(var(--gold) / 0.04)",
+                                  }}
                                   onClick={handleClose}
-                                  whileHover={{ scale: 1.04, y: -2 }}
+                                  whileHover={{
+                                    scale: 1.04,
+                                    y: -2,
+                                    boxShadow: "0 0 40px hsl(var(--gold) / 0.1)",
+                                    borderColor: "hsl(var(--gold) / 0.25)",
+                                  }}
                                   whileTap={{ scale: 0.97 }}
                                 >
                                   {language === "he" ? "סיום ✦" : "Finish ✦"}
