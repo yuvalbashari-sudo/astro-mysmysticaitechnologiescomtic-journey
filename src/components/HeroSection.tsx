@@ -2296,16 +2296,21 @@ const HeroSection = () => {
               style={{ width: "180px", height: "180px" }}
               onClick={handleCrystalClick}
             >
-              <img
-                src={crystalBall}
-                alt="Crystal Ball"
-                className="w-full h-full"
-                style={{
-                  objectFit: "contain",
-                  filter: "drop-shadow(0 0 25px hsl(215 60% 60% / 0.3)) drop-shadow(0 0 50px hsl(43 80% 55% / 0.15)) brightness(1.02)",
-                  mixBlendMode: "screen",
-                }}
-              />
+              <div className="absolute inset-[-8%] rounded-full overflow-hidden" style={{ WebkitMaskImage: "radial-gradient(circle, white 62%, transparent 72%)", maskImage: "radial-gradient(circle, white 62%, transparent 72%)" }}>
+                <img
+                  src={crystalBall}
+                  alt="Crystal Ball"
+                  className="w-full h-full"
+                  style={{
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 0 25px hsl(215 60% 60% / 0.3)) brightness(1.1)",
+                    mixBlendMode: "screen",
+                  }}
+                />
+              </div>
+              <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
+                background: "radial-gradient(circle, transparent 55%, hsl(215 60% 60% / 0.08) 65%, hsl(43 80% 55% / 0.06) 75%, transparent 85%)",
+              }} />
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
                   <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
@@ -2400,19 +2405,26 @@ const HeroSection = () => {
               style={{ width: "320px", height: "320px" }}
               onClick={handleCrystalClick}
             >
-              <img
-                src={crystalBall}
-                alt="Crystal Ball"
-                className="w-full h-full"
-                style={{
-                  objectFit: "contain",
-                  filter: hoveredItem !== null
-                    ? `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}66) drop-shadow(0 0 80px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}22) brightness(1.05)`
-                    : "drop-shadow(0 0 30px hsl(215 60% 60% / 0.3)) drop-shadow(0 0 60px hsl(43 80% 55% / 0.15)) brightness(1.02)",
-                  transition: "filter 0.8s ease-in-out",
-                  mixBlendMode: "screen",
-                }}
-              />
+              {/* Crystal ball PNG — scaled up slightly to push dark rim outside clip */}
+              <div className="absolute inset-[-8%] rounded-full overflow-hidden" style={{ WebkitMaskImage: "radial-gradient(circle, white 62%, transparent 72%)", maskImage: "radial-gradient(circle, white 62%, transparent 72%)" }}>
+                <img
+                  src={crystalBall}
+                  alt="Crystal Ball"
+                  className="w-full h-full"
+                  style={{
+                    objectFit: "contain",
+                    filter: hoveredItem !== null
+                      ? `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}66) brightness(1.15)`
+                      : "drop-shadow(0 0 30px hsl(215 60% 60% / 0.3)) brightness(1.1)",
+                    transition: "filter 0.8s ease-in-out",
+                    mixBlendMode: "screen",
+                  }}
+                />
+              </div>
+              {/* Soft outer aura glow replacing the dark rim */}
+              <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
+                background: "radial-gradient(circle, transparent 55%, hsl(215 60% 60% / 0.08) 65%, hsl(43 80% 55% / 0.06) 75%, transparent 85%)",
+              }} />
               <AnimatePresence>
                 {isNearBall && (
                   <>
