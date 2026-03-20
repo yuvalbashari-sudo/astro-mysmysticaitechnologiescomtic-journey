@@ -1010,104 +1010,149 @@ const ZodiacWheel = ({
                 )}
               </AnimatePresence>
 
-              {/* Premium mystical info card on hover */}
+              {/* Mystical reveal card on hover */}
               <AnimatePresence>
-                {isHovered && !isRuling && (
+                {isHovered && !isRuling && (() => {
+                  const elType = ELEMENT_TYPES[i];
+                  const elColor = ELEMENT_GLOW_COLORS[elType];
+                  // Extract hue for CSS usage
+                  const elHue = elType === "fire" ? "20 80% 55%" : elType === "water" ? "210 70% 55%" : elType === "air" ? "270 60% 60%" : "85 50% 45%";
+                  return (
                   <motion.div
                     className="absolute z-50"
                     style={{
                       left: "50%",
-                      bottom: "calc(100% + 20px)",
+                      bottom: "calc(100% + 22px)",
                       transform: "translateX(-50%)",
-                      width: 220,
+                      width: 200,
                     }}
-                    initial={{ opacity: 0, y: 12, scale: 0.8 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 12, scale: 0.8 }}
-                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, y: 16, scale: 0.7, rotateX: 25 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.85, rotateX: 15 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    {/* Outer glow aura */}
+                    {/* Living aura — element-colored */}
                     <motion.div
                       className="absolute rounded-2xl pointer-events-none"
-                      style={{ inset: -6 }}
+                      style={{ inset: -8 }}
                       animate={{
                         boxShadow: [
-                          `0 0 20px hsl(var(--gold) / 0.08), 0 0 40px hsl(var(--celestial) / 0.06)`,
-                          `0 0 35px hsl(var(--gold) / 0.14), 0 0 60px hsl(var(--celestial) / 0.1)`,
-                          `0 0 20px hsl(var(--gold) / 0.08), 0 0 40px hsl(var(--celestial) / 0.06)`,
+                          `0 0 24px hsl(${elHue} / 0.1), 0 0 48px hsl(${elHue} / 0.05)`,
+                          `0 0 40px hsl(${elHue} / 0.2), 0 0 80px hsl(${elHue} / 0.08)`,
+                          `0 0 24px hsl(${elHue} / 0.1), 0 0 48px hsl(${elHue} / 0.05)`,
                         ],
                       }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                     />
+
+                    {/* Card body */}
                     <div
                       className="relative rounded-2xl overflow-hidden backdrop-blur-2xl"
                       style={{
-                        background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.97), hsl(var(--deep-blue) / 0.99))",
-                        border: "1px solid hsl(var(--gold) / 0.25)",
-                        boxShadow: "0 0 30px hsl(var(--gold) / 0.1), 0 12px 40px hsl(var(--deep-blue) / 0.7), inset 0 1px 0 hsl(var(--gold) / 0.12)",
-                        padding: "16px 20px",
+                        background: `linear-gradient(170deg, hsl(${elHue} / 0.06) 0%, hsl(var(--deep-blue-light) / 0.97) 30%, hsl(var(--deep-blue) / 0.99) 100%)`,
+                        border: `1px solid hsl(${elHue} / 0.2)`,
+                        boxShadow: `0 0 1px hsl(${elHue} / 0.3), 0 16px 48px hsl(var(--deep-blue) / 0.8), inset 0 1px 0 hsl(var(--gold) / 0.1)`,
+                        padding: "20px 16px 16px",
                       }}
                     >
-                      {/* Decorative shimmer line at top */}
-                      <div
-                        className="absolute top-0 left-[10%] right-[10%] h-px"
-                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }}
+                      {/* Top ornamental line — element colored */}
+                      <motion.div
+                        className="absolute top-0 left-[8%] right-[8%] h-[2px]"
+                        style={{ background: `linear-gradient(90deg, transparent, hsl(${elHue} / 0.5), hsl(var(--gold) / 0.4), hsl(${elHue} / 0.5), transparent)` }}
+                        animate={{ opacity: [0.6, 1, 0.6] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
-                      {/* Zodiac emoji accent */}
-                      <div
-                        className="text-center text-2xl mb-1.5 leading-none"
-                        style={{ filter: "drop-shadow(0 0 8px hsl(var(--gold) / 0.3))" }}
+
+                      {/* Corner ornaments */}
+                      <div className="absolute top-1.5 left-2 text-[8px] opacity-30" style={{ color: `hsl(${elHue})` }}>✦</div>
+                      <div className="absolute top-1.5 right-2 text-[8px] opacity-30" style={{ color: `hsl(${elHue})` }}>✦</div>
+
+                      {/* Element symbol — large, glowing */}
+                      <motion.div
+                        className="text-center text-3xl mb-2 leading-none"
+                        style={{ filter: `drop-shadow(0 0 12px hsl(${elHue} / 0.5))` }}
+                        animate={{ scale: [1, 1.08, 1] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                       >
-                        {ELEMENT_EMOJI[ELEMENT_TYPES[i]]}
-                      </div>
-                      {/* Sign name — large & bold */}
+                        {ELEMENT_EMOJI[elType]}
+                      </motion.div>
+
+                      {/* Thin separator */}
                       <div
-                        className="font-heading text-center font-bold tracking-wide leading-tight"
-                        style={{ color: "hsl(var(--gold))", fontSize: 20 }}
+                        className="mx-auto mb-2.5"
+                        style={{
+                          width: 40,
+                          height: 1,
+                          background: `linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)`,
+                        }}
+                      />
+
+                      {/* Sign name — cinematic reveal */}
+                      <motion.div
+                        className="font-heading text-center font-bold tracking-wider leading-none"
+                        style={{ color: "hsl(var(--gold))", fontSize: 22, textShadow: `0 0 20px hsl(var(--gold) / 0.25)` }}
+                        initial={{ opacity: 0, letterSpacing: "0.3em" }}
+                        animate={{ opacity: 1, letterSpacing: "0.08em" }}
+                        transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
                       >
                         {sign.name}
-                      </div>
-                      {/* Keyword descriptor */}
-                      <div
-                        className="font-body text-center mt-1 tracking-wide leading-snug"
-                        style={{ color: "hsl(var(--gold-light))", fontSize: 14, opacity: 0.85 }}
+                      </motion.div>
+
+                      {/* Keyword — fades in after name */}
+                      <motion.div
+                        className="font-body text-center mt-2 tracking-wide leading-snug"
+                        style={{ color: "hsl(var(--gold-light))", fontSize: 14 }}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 0.9, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
                       >
                         {meta.keyword}
-                      </div>
-                      {/* Element tag */}
-                      <div
-                        className="flex items-center justify-center mt-2.5"
+                      </motion.div>
+
+                      {/* Element pill */}
+                      <motion.div
+                        className="flex items-center justify-center mt-3"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
                       >
                         <span
-                          className="font-body text-[10px] tracking-[0.15em] uppercase rounded-full px-3 py-0.5"
+                          className="font-body text-[9px] tracking-[0.18em] uppercase rounded-full px-3 py-0.5"
                           style={{
-                            color: "hsl(var(--gold) / 0.7)",
-                            background: "hsl(var(--gold) / 0.06)",
-                            border: "1px solid hsl(var(--gold) / 0.12)",
+                            color: `hsl(${elHue})`,
+                            background: `hsl(${elHue} / 0.08)`,
+                            border: `1px solid hsl(${elHue} / 0.18)`,
+                            textShadow: `0 0 8px hsl(${elHue} / 0.3)`,
                           }}
                         >
                           {meta.element}
                         </span>
-                      </div>
-                      {/* Bottom shimmer */}
+                      </motion.div>
+
+                      {/* Bottom ornamental line */}
                       <div
-                        className="absolute bottom-0 left-[15%] right-[15%] h-px"
-                        style={{ background: "linear-gradient(90deg, transparent, hsl(var(--celestial) / 0.25), transparent)" }}
+                        className="absolute bottom-0 left-[12%] right-[12%] h-px"
+                        style={{ background: `linear-gradient(90deg, transparent, hsl(${elHue} / 0.2), transparent)` }}
+                      />
+                      <div className="absolute bottom-1.5 left-2 text-[8px] opacity-20" style={{ color: `hsl(${elHue})` }}>✧</div>
+                      <div className="absolute bottom-1.5 right-2 text-[8px] opacity-20" style={{ color: `hsl(${elHue})` }}>✧</div>
+                    </div>
+
+                    {/* Tapered connection line instead of arrow */}
+                    <div className="flex justify-center">
+                      <motion.div
+                        style={{
+                          width: 1,
+                          height: 10,
+                          background: `linear-gradient(to bottom, hsl(${elHue} / 0.3), transparent)`,
+                        }}
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       />
                     </div>
-                    {/* Arrow */}
-                    <div
-                      className="mx-auto"
-                      style={{
-                        width: 0, height: 0,
-                        borderLeft: "7px solid transparent",
-                        borderRight: "7px solid transparent",
-                        borderTop: "7px solid hsl(var(--gold) / 0.25)",
-                        marginTop: -1,
-                      }}
-                    />
                   </motion.div>
-                )}
+                  );
+                })()}
 
                 {/* Planetary influence — large premium info card */}
                 {isHovered && isRuling && (
