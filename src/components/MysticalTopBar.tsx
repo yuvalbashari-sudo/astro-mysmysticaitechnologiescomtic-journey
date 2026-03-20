@@ -9,6 +9,7 @@ const languages: Language[] = ["he", "ar", "ru", "en"];
 
 interface Props {
   onOpenHistory?: () => void;
+  onOpenDashboard?: () => void;
   hasHistory?: boolean;
 }
 
