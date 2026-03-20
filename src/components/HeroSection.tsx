@@ -2430,7 +2430,7 @@ const HeroSection = () => {
       </div>
 
       {/* ── Top horizontal feature tabs ── */}
-      <div className="absolute z-[14] pointer-events-auto inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "64px" : "82px" }}>
+      <div className="absolute z-[61] pointer-events-auto inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "64px" : "82px" }}>
         <motion.div
           className={`flex justify-center mx-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
           initial={{ opacity: 0, y: -15 }}
