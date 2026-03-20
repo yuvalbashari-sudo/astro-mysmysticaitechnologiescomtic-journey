@@ -675,7 +675,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           </AnimatePresence>
 
           {/* ── Phase Content ── */}
-          <div className="absolute inset-0 z-[92] flex items-center justify-center pointer-events-none">
+          <div className={`absolute inset-0 z-[92] pointer-events-none ${phase === "interpretation" ? "" : "flex items-center justify-center"}`}>
             <AnimatePresence mode="wait">
               {/* ─── PHASE 1: Question Selection ─── */}
               {phase === "question" && (
@@ -1087,37 +1087,29 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       )}
                     </div>
                   ) : (
-                    /* ── Desktop: 3-column grid ── */
-                    <div
-                      className="w-full h-full px-8"
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "minmax(360px, 520px) minmax(420px, 1fr) minmax(260px, 360px)",
-                        gap: "80px",
-                        alignItems: "start",
-                        maxWidth: "1600px",
-                        margin: "0 auto",
-                        paddingTop: "6vh",
-                      }}
-                    >
-                      {/* LEFT COLUMN: Interpretation text */}
+                    /* ── Desktop: absolute 3-zone layout ── */
+                    <div className="absolute inset-0">
+                      {/* LEFT: Interpretation text — anchored left */}
                       <motion.div
                         ref={scrollRef}
-                        className="rounded-2xl overflow-y-auto"
+                        className="absolute rounded-2xl overflow-y-auto pointer-events-auto"
                         style={{
-                          maxHeight: "78vh",
+                          top: "8vh",
+                          left: "3vw",
+                          width: "min(480px, 30vw)",
+                          maxHeight: "80vh",
                           background: "linear-gradient(165deg, hsl(222 45% 8% / 0.92), hsl(222 50% 5% / 0.95))",
                           border: "1px solid hsl(var(--gold) / 0.12)",
                           boxShadow: "0 0 40px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.06)",
                         }}
-                        initial={{ opacity: 0, x: -30, filter: "blur(6px)" }}
+                        initial={{ opacity: 0, x: -40, filter: "blur(6px)" }}
                         animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                         transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="p-8 lg:p-10">
+                        <div className="p-8">
                           <motion.h3
                             className="font-heading text-center mb-6"
-                            style={{ fontSize: "1.5rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
+                            style={{ fontSize: "1.4rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.7, duration: 0.5 }}
@@ -1127,7 +1119,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           {aiText ? (
                             <motion.div
                               className="font-body text-foreground/90"
-                              style={{ fontSize: "1.2rem", lineHeight: 1.85, maxWidth: "480px", margin: "0 auto" }}
+                              style={{ fontSize: "1.15rem", lineHeight: 1.85 }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               transition={{ delay: 0.8, duration: 0.5 }}
@@ -1145,7 +1137,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           {aiLoading && aiText && (
                             <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
                           )}
-
                           {!aiLoading && aiText && (
                             <motion.div className="mt-8 text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
                               <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
@@ -1156,46 +1147,21 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         </div>
                       </motion.div>
 
-                      {/* CENTER COLUMN: Oracle woman */}
+                      {/* RIGHT: Tarot cards — anchored right */}
                       <motion.div
-                        className="flex items-center justify-center"
-                        initial={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
-                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                        transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        <div className="relative">
-                          <img
-                            src={heroFigure}
-                            alt="Oracle"
-                            className="max-h-[70vh] w-auto object-contain"
-                            style={{
-                              filter: "brightness(1.05) contrast(1.05)",
-                              maskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
-                              WebkitMaskImage: "linear-gradient(to bottom, black 70%, transparent 100%)",
-                            }}
-                          />
-                          {/* Glow behind oracle */}
-                          <div
-                            className="absolute inset-0 -z-10 pointer-events-none"
-                            style={{
-                              background: "radial-gradient(ellipse at center 40%, hsl(var(--gold) / 0.08) 0%, transparent 60%)",
-                              filter: "blur(40px)",
-                              transform: "scale(1.3)",
-                            }}
-                          />
-                        </div>
-                      </motion.div>
-
-                      {/* RIGHT COLUMN: Tarot cards */}
-                      <motion.div
-                        className="flex flex-col items-center gap-4 pt-4"
-                        initial={{ opacity: 0, x: 30, filter: "blur(6px)" }}
+                        className="absolute flex flex-col items-center gap-5 pointer-events-none"
+                        style={{
+                          top: "8vh",
+                          right: "3vw",
+                          width: "min(320px, 22vw)",
+                        }}
+                        initial={{ opacity: 0, x: 40, filter: "blur(6px)" }}
                         animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {chosenCards.map((card, i) => {
                           const isCenter = i === 1;
-                          const w = isCenter ? 180 : 150;
+                          const w = isCenter ? 170 : 140;
                           const h = w * 1.55;
                           return (
                             <motion.div
@@ -1242,7 +1208,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               </div>
                               <motion.span
                                 className="font-heading mt-3 text-center"
-                                style={{ fontSize: isCenter ? 16 : 14, color: isCenter ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.7)", textShadow: isCenter ? "0 0 12px hsl(var(--gold) / 0.3)" : "none", letterSpacing: "0.05em" }}
+                                style={{ fontSize: isCenter ? 15 : 13, color: isCenter ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.7)", textShadow: isCenter ? "0 0 12px hsl(var(--gold) / 0.3)" : "none", letterSpacing: "0.05em" }}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 + i * 0.15 }}
