@@ -2492,14 +2492,12 @@ const HeroSection = () => {
             <AnimatePresence>
               {hoveredItem !== null && (() => {
                 const item = menuItems[hoveredItem];
-                const angleRad = (item.angle * Math.PI) / 180;
-                const itemX = Math.sin(angleRad) * orbRadius;
-                const itemY = -Math.cos(angleRad) * orbRadius * 0.55 - 40;
+                const pos = getTabPosition(item.side, item.index, isMobile);
                 return (
                   <EnergyLine
                     key={`energy-line-${hoveredItem}`}
-                    fromX={itemX}
-                    fromY={itemY}
+                    fromX={pos.x}
+                    fromY={pos.y}
                     color={ITEM_COLORS[hoveredItem].glow}
                     isMobile={isMobile}
                   />
@@ -2507,24 +2505,23 @@ const HeroSection = () => {
               })()}
             </AnimatePresence>
             {menuItems.map((item, i) => {
-              const angleRad = (item.angle * Math.PI) / 180;
-              const x = Math.sin(angleRad) * orbRadius;
-              const y = -Math.cos(angleRad) * orbRadius * 0.55 - 40;
+              const pos = getTabPosition(item.side, item.index, isMobile);
               const itemColor = ITEM_COLORS[i];
               return (
                 <motion.div
                   key={i}
                   className="absolute z-30 cursor-pointer"
                   style={{
-                    left: `calc(50% + ${x}px - 80px)`,
-                    top: `calc(50% + ${y}px - 20px)`,
+                    left: `calc(50% + ${pos.x}px - 70px)`,
+                    top: `calc(50% + ${pos.y}px - 20px)`,
+                    width: 140,
                   }}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 1.5 + i * 0.2 }}
+                  initial={{ opacity: 0, scale: 0, x: item.side === "left" ? -30 : 30 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 1.5 + i * 0.12 }}
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  whileHover={{ scale: 1.15, y: -10, zIndex: 50 }}
+                  whileHover={{ scale: 1.12, zIndex: 50 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
                 >
@@ -2538,8 +2535,8 @@ const HeroSection = () => {
                         ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
                         : "0 0 10px hsl(var(--gold) / 0.1)",
                     }}
-                    animate={{ y: [0, -4 - i * 0.5, 0] }}
-                    transition={{ duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 3.5 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                   >
                     <motion.div
                       animate={hoveredItem === i ? {
@@ -2567,20 +2564,6 @@ const HeroSection = () => {
                         transition={{ duration: 1.5, repeat: Infinity }}
                       />
                     )}
-                    <AnimatePresence>
-                      {hoveredItem === i && (
-                        <motion.span
-                          className="absolute -top-5 left-1/2 text-sm pointer-events-none"
-                          style={{ transform: "translateX(-50%)" }}
-                          initial={{ opacity: 0, y: 5, scale: 0.5 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          exit={{ opacity: 0, y: -5, scale: 0.5 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {["⭐", "🌙", "💫", "🔮", "✋", "☀️"][i]}
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
                   </motion.div>
                 </motion.div>
               );
