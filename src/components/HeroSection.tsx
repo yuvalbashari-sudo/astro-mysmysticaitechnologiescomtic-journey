@@ -2057,15 +2057,7 @@ const HeroSection = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Parallax: background shifts subtly on scroll for depth
-  const [parallaxY, setParallaxY] = useState(0);
-  useEffect(() => {
-    const onScroll = () => {
-      setParallaxY(window.scrollY * 0.08);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Hero stays perfectly fixed — no parallax shift
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (isMobile || !sectionRef.current) return;
