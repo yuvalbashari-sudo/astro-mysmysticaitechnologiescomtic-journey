@@ -2846,7 +2846,7 @@ const HeroSection = () => {
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-7 py-4"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
