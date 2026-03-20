@@ -2408,7 +2408,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[22]"
               style={{
-                width: "374px", height: "374px",
+                width: "359px", height: "359px",
                 left: "50%", top: "50%",
                 transform: "translate(-50%, -50%)",
                 background: "radial-gradient(circle, transparent 72%, hsl(var(--deep-blue) / 0.2) 85%, hsl(var(--deep-blue) / 0.35) 95%, transparent 100%)",
