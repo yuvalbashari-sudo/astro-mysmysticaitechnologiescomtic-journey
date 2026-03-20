@@ -2374,7 +2374,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "516px", height: "516px",
+                width: "490px", height: "490px",
                 boxShadow: "inset 0 10px 25px hsl(var(--deep-blue) / 0.18), inset 0 -8px 20px hsl(var(--deep-blue) / 0.12), inset 8px 0 16px hsl(var(--deep-blue) / 0.08), inset -8px 0 16px hsl(var(--deep-blue) / 0.08)",
               }}
             />
