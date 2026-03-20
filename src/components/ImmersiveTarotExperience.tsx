@@ -1103,6 +1103,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           {aiLoading && aiText && (
                             <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
                           )}
+                          </div>{/* end mobile zoom wrapper */}
                         </div>
                       </motion.div>
 
