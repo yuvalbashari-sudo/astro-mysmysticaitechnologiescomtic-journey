@@ -352,6 +352,8 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         borderRadius: "50%",
         overflow: "hidden",
         background: "transparent",
+        maskImage: "radial-gradient(circle, white 55%, rgba(255,255,255,0.85) 70%, rgba(255,255,255,0.5) 85%, transparent 100%)",
+        WebkitMaskImage: "radial-gradient(circle, white 55%, rgba(255,255,255,0.85) 70%, rgba(255,255,255,0.5) 85%, transparent 100%)",
       }}
     >
       {/* Pure media only — dual videos for seamless crossfade */}
