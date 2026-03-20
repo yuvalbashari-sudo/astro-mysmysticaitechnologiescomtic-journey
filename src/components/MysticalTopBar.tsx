@@ -100,7 +100,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             whileTap={{ scale: 0.97 }}
             aria-label={t.a11y_readings_history}
           >
-            <Clock className="w-3 h-3" aria-hidden="true" />
+            <Clock className="w-6 h-6" aria-hidden="true" />
           </motion.button>
         )}
 
