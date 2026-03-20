@@ -2327,7 +2327,8 @@ const HeroSection = () => {
                 className="w-full h-full"
                 style={{
                   objectFit: "contain",
-                  filter: "drop-shadow(0 0 35px hsl(43 80% 55% / 0.4))",
+                  filter: "drop-shadow(0 0 25px hsl(215 60% 60% / 0.3)) drop-shadow(0 0 50px hsl(43 80% 55% / 0.15)) brightness(1.02)",
+                  mixBlendMode: "screen",
                 }}
               />
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
