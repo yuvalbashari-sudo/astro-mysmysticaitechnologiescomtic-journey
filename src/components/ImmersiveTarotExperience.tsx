@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import cardFrameImg from "@/assets/tarot/card-frame.png";
 import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
