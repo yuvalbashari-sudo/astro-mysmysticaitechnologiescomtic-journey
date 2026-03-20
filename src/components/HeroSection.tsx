@@ -1978,6 +1978,7 @@ const HeroSection = () => {
   const t = useT();
   const { language } = useLanguage();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
   const [risingOpen, setRisingOpen] = useState(false);
