@@ -1078,6 +1078,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               );
                             })}
                           </div>
+                          <div style={{ zoom: [1, 1.15, 1.3][textSizeLevel], transition: "zoom 0.25s ease" }}>
                           <motion.h3
                             className="font-heading text-center mb-6"
                             style={{ fontSize: "1.15rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
