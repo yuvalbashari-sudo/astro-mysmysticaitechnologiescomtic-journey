@@ -708,12 +708,26 @@ function getDailyInfluence(): PlanetaryInfluence {
   };
 }
 
+/* Element glow colors and emoji by zodiac index */
+const ELEMENT_TYPES = ["fire", "earth", "air", "water", "fire", "earth", "air", "water", "fire", "earth", "air", "water"] as const;
+const ELEMENT_GLOW_COLORS: Record<string, string> = {
+  fire: "hsl(20, 80%, 55%)",
+  water: "hsl(210, 70%, 55%)",
+  air: "hsl(270, 50%, 65%)",
+  earth: "hsl(85, 50%, 45%)",
+};
+const ELEMENT_EMOJI: Record<string, string> = {
+  fire: "🔥", earth: "🌿", air: "💨", water: "🌊",
+};
+
 const ZodiacWheel = ({
   isMobile,
   hoveredMenuItem,
+  onHoveredElement,
 }: {
   isMobile: boolean;
   hoveredMenuItem: number | null;
+  onHoveredElement?: (color: string | null) => void;
 }) => {
   const { language } = useLanguage();
   const t = useT();
