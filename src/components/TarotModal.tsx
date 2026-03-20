@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import { useIsMobile } from "@/hooks/use-mobile";

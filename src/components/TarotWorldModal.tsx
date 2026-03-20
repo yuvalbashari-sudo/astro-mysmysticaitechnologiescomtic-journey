@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import CinematicModalShell from "@/components/CinematicModalShell";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
