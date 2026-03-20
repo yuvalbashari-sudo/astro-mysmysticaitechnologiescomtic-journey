@@ -2526,7 +2526,7 @@ const HeroSection = () => {
     <div
       className="absolute z-[65] pointer-events-none inset-x-0 bottom-0 px-4 md:px-8"
       style={{
-        top: isMobile ? "52%" : "48%",
+        top: isMobile ? "58%" : "53%",
       }}
     >
       <motion.div
@@ -2537,7 +2537,7 @@ const HeroSection = () => {
       >
         {/* Micro label */}
         <motion.span
-          className="inline-block font-body text-[10px] md:text-xs tracking-[0.25em] uppercase mb-3"
+          className="inline-block font-body text-[10px] md:text-xs tracking-[0.25em] uppercase mb-4 md:mb-5"
           style={{ color: "hsl(var(--gold) / 0.55)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -2548,7 +2548,7 @@ const HeroSection = () => {
 
         {/* Headline */}
         <motion.h1
-          className="font-heading text-xl md:text-3xl lg:text-4xl font-bold leading-[1.2] mb-3 md:mb-4"
+          className="font-heading text-xl md:text-3xl lg:text-4xl font-bold leading-[1.2] mb-4 md:mb-6"
           style={{
             color: "hsl(var(--foreground))",
             textShadow: "0 2px 24px hsl(var(--deep-blue)), 0 0 60px hsl(var(--deep-blue) / 0.8)",
@@ -2563,7 +2563,7 @@ const HeroSection = () => {
 
         {/* Subheadline */}
         <motion.p
-          className="font-body text-xs md:text-sm lg:text-base leading-relaxed mb-5 md:mb-7 mx-auto max-w-md"
+          className="font-body text-xs md:text-sm lg:text-base leading-relaxed mb-6 md:mb-8 mx-auto max-w-md"
           style={{
             color: "hsl(var(--foreground) / 0.65)",
             textShadow: "0 1px 16px hsl(var(--deep-blue))",
@@ -2578,7 +2578,7 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-row items-center justify-center gap-3 md:gap-4 mb-4"
+          className="flex flex-row items-center justify-center gap-3 md:gap-4 mb-5 md:mb-6"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.8 }}
