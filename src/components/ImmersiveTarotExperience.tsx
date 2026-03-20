@@ -1089,61 +1089,173 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   ) : (
                     /* ── Desktop: absolute 3-zone layout ── */
                     <div className="absolute inset-0">
-                      {/* LEFT: Interpretation text — anchored left */}
+                      {/* LEFT: Premium Interpretation Panel */}
                       <motion.div
                         ref={scrollRef}
-                        className="absolute rounded-2xl overflow-y-auto pointer-events-auto"
+                        className="absolute rounded-3xl overflow-y-auto pointer-events-auto"
                         style={{
                           top: "calc(8vh + 50px)",
                           left: "3vw",
-                          width: "min(520px, calc(100vw - 580px))",
-                          maxWidth: "520px",
-                          maxHeight: "80vh",
-                          background: "linear-gradient(165deg, hsl(222 45% 8% / 0.92), hsl(222 50% 5% / 0.95))",
-                          border: "1px solid hsl(var(--gold) / 0.12)",
-                          boxShadow: "0 0 40px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                          width: "min(540px, calc(100vw - 580px))",
+                          maxWidth: "540px",
+                          maxHeight: "78vh",
+                          background: "linear-gradient(165deg, hsl(222 42% 10% / 0.88), hsl(222 48% 6% / 0.94))",
+                          border: "1px solid hsl(var(--gold) / 0.1)",
+                          boxShadow: "0 0 80px hsl(var(--gold) / 0.04), 0 0 40px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                          backdropFilter: "blur(20px)",
                         }}
-                        initial={{ opacity: 0, x: -40, filter: "blur(6px)" }}
-                        animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-                        transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        transition={{ delay: 0.6, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="p-8">
-                          <motion.h3
-                            className="font-heading text-center mb-6"
-                            style={{ fontSize: "1.4rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.7, duration: 0.5 }}
+                        {/* Ambient outer glow */}
+                        <div
+                          className="absolute -inset-6 pointer-events-none -z-10 rounded-[2rem]"
+                          style={{
+                            background: "radial-gradient(ellipse at center, hsl(var(--gold) / 0.03) 0%, transparent 70%)",
+                            filter: "blur(30px)",
+                          }}
+                        />
+
+                        <div className="p-10 lg:p-12">
+                          {/* Decorative top accent */}
+                          <motion.div
+                            className="flex items-center justify-center gap-3 mb-4"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.8 }}
                           >
-                            {language === "he" ? "✦ הפירוש שלך ✦" : "✦ Your Reading ✦"}
+                            <div className="h-px flex-1 max-w-[60px]" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.3))" }} />
+                            <Sparkles className="w-4 h-4 text-gold/40" />
+                            <div className="h-px flex-1 max-w-[60px]" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.3))" }} />
+                          </motion.div>
+
+                          {/* Title */}
+                          <motion.h3
+                            className="font-heading text-center mb-2"
+                            style={{
+                              fontSize: "1.6rem",
+                              color: "hsl(var(--gold))",
+                              textShadow: "0 0 30px hsl(var(--gold) / 0.2)",
+                              letterSpacing: "0.12em",
+                            }}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.9, duration: 0.6 }}
+                          >
+                            {language === "he" ? "הפירוש שלך" : "Your Reading"}
                           </motion.h3>
+
+                          {/* Subtitle */}
+                          <motion.p
+                            className="font-body text-center mb-8"
+                            style={{
+                              fontSize: "0.85rem",
+                              color: "hsl(var(--gold) / 0.45)",
+                              letterSpacing: "0.15em",
+                            }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1.0 }}
+                          >
+                            {language === "he" ? "מסר אישי שנבחר עבורך" : "A personal message chosen for you"}
+                          </motion.p>
+
+                          {/* Decorative separator */}
+                          <motion.div
+                            className="mx-auto mb-8"
+                            style={{
+                              width: "80px",
+                              height: "1px",
+                              background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.25), transparent)",
+                            }}
+                            initial={{ opacity: 0, scaleX: 0 }}
+                            animate={{ opacity: 1, scaleX: 1 }}
+                            transition={{ delay: 1.1, duration: 0.5 }}
+                          />
+
+                          {/* Interpretation body */}
                           {aiText ? (
                             <motion.div
-                              className="font-body text-foreground/90"
-                              style={{ fontSize: "1.15rem", lineHeight: 1.85 }}
+                              className="font-body text-foreground/85"
+                              style={{
+                                fontSize: "1.15rem",
+                                lineHeight: 2,
+                                maxWidth: "440px",
+                                margin: "0 auto",
+                              }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
-                              transition={{ delay: 0.8, duration: 0.5 }}
+                              transition={{ delay: 1.2, duration: 0.6 }}
                             >
                               {renderMysticalText(aiText)}
                             </motion.div>
                           ) : aiLoading ? (
-                            <div className="flex flex-col items-center justify-center py-12 gap-4">
-                              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-                                <Sparkles className="w-8 h-8 text-gold/50" />
+                            <div className="flex flex-col items-center justify-center py-16 gap-5">
+                              <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                              >
+                                <Sparkles className="w-7 h-7 text-gold/40" />
                               </motion.div>
-                              <p className="text-gold/50 font-body text-lg">{language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}</p>
+                              <p className="text-gold/40 font-body text-base tracking-wider">
+                                {language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}
+                              </p>
+                              <div className="flex gap-1.5 mt-2">
+                                {[0, 1, 2].map(i => (
+                                  <motion.div
+                                    key={i}
+                                    className="w-1.5 h-1.5 rounded-full"
+                                    style={{ background: "hsl(var(--gold) / 0.3)" }}
+                                    animate={{ opacity: [0.3, 1, 0.3] }}
+                                    transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
+                                  />
+                                ))}
+                              </div>
                             </div>
                           ) : null}
+
+                          {/* Streaming cursor */}
                           {aiLoading && aiText && (
-                            <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
+                            <motion.span
+                              className="inline-block w-0.5 h-5 rounded-full ml-1 align-middle"
+                              style={{ background: "hsl(var(--gold) / 0.5)" }}
+                              animate={{ opacity: [1, 0, 1] }}
+                              transition={{ duration: 0.8, repeat: Infinity }}
+                            />
                           )}
+
+                          {/* Bottom separator + CTA */}
                           {!aiLoading && aiText && (
-                            <motion.div className="mt-8 text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                              <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
-                                {language === "he" ? "סיום ✦" : "Finish ✦"}
-                              </motion.button>
-                            </motion.div>
+                            <>
+                              <motion.div
+                                className="mx-auto mt-10 mb-8"
+                                style={{
+                                  width: "60px",
+                                  height: "1px",
+                                  background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2), transparent)",
+                                }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.3 }}
+                              />
+                              <motion.div
+                                className="text-center"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                              >
+                                <motion.button
+                                  type="button"
+                                  className="btn-gold font-heading text-sm tracking-wider cursor-pointer"
+                                  onClick={handleClose}
+                                  whileHover={{ scale: 1.04, y: -2 }}
+                                  whileTap={{ scale: 0.97 }}
+                                >
+                                  {language === "he" ? "סיום ✦" : "Finish ✦"}
+                                </motion.button>
+                              </motion.div>
+                            </>
                           )}
                         </div>
                       </motion.div>
