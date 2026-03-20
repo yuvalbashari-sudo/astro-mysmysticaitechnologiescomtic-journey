@@ -2680,7 +2680,7 @@ const HeroSection = () => {
                   type="button"
                   className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
                   initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
                   transition={{ duration: 0.5, delay: 1.6 + idx * 0.12 }}
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
