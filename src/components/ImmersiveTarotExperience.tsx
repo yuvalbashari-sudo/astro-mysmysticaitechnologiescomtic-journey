@@ -926,34 +926,42 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                 <motion.div
                   key="drawing"
                   className="pointer-events-auto text-center w-full px-4"
-                  style={{ marginTop: isMobile ? "38vh" : "36vh" }}
+                  style={{ marginTop: isMobile ? "32vh" : "28vh" }}
                   initial={{ opacity: 0, filter: "blur(8px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(8px)" }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <motion.div
-                    className="text-gold/60 font-heading text-lg md:text-xl mb-2"
-                    style={{ textShadow: "0 0 15px hsl(var(--gold) / 0.25)" }}
+                    className="text-gold/50 font-heading text-base md:text-lg mb-1"
+                    style={{ textShadow: "0 0 20px hsl(var(--gold) / 0.2)" }}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    {language === "he"
-                      ? `בחרו ${3 - selectedCardIndices.size} קלפים`
-                      : `Choose ${3 - selectedCardIndices.size} cards`}
+                    {selectedCardIndices.size < 3
+                      ? (language === "he"
+                        ? `בחרו ${3 - selectedCardIndices.size} קלפים`
+                        : `Choose ${3 - selectedCardIndices.size} cards`)
+                      : (language === "he" ? "הקלפים נבחרו ✦" : "Cards chosen ✦")}
                   </motion.div>
                   <motion.div
-                    className="text-foreground/40 font-body text-xs mb-8"
+                    className="text-foreground/30 font-body text-xs mb-6"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
+                    animate={{ opacity: selectedCardIndices.size < 3 ? 0.7 : 0 }}
+                    transition={{ delay: 0.5, duration: 0.3 }}
                   >
-                    {language === "he" ? "הקשיבו לאינטואיציה ובחרו" : "Listen to your intuition and choose"}
+                    {language === "he" ? "הקשיבו לאינטואיציה" : "Listen to your intuition"}
                   </motion.div>
 
-                  {/* Card fan — on the mystical table */}
-                  <div className="relative flex items-center justify-center" style={{ height: isMobile ? 160 : 240 }}>
+                  {/* Card fan — cinematic arc */}
+                  <div
+                    className="relative flex items-center justify-center mx-auto"
+                    style={{
+                      height: isMobile ? 180 : 280,
+                      maxWidth: isMobile ? 340 : 520,
+                    }}
+                  >
                     {drawnCards.map((card, i) => (
                       <FloatingCard
                         key={`card-${i}`}
@@ -969,11 +977,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
 
-                  {/* Selected count indicator */}
+                  {/* Minimal progress dots */}
                   <motion.div
-                    className="mt-8 flex items-center justify-center gap-2"
+                    className="mt-6 flex items-center justify-center gap-2.5"
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: 0.8 }}
                     transition={{ delay: 1 }}
                   >
                     {[0, 1, 2].map(i => (
