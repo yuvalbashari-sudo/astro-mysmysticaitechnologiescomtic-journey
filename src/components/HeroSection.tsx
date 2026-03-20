@@ -2454,9 +2454,9 @@ const HeroSection = () => {
       </div>
 
       {/* ── Top horizontal feature tabs ── */}
-      <div className="absolute z-[14] pointer-events-auto inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "60px" : "72px" }}>
+      <div className="absolute z-[14] pointer-events-auto inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "64px" : "82px" }}>
         <motion.div
-          className={`flex justify-center mx-auto ${isMobile ? "flex-wrap gap-2 max-w-sm" : "gap-3 max-w-4xl"}`}
+          className={`flex justify-center mx-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2477,17 +2477,17 @@ const HeroSection = () => {
                 onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
               >
                 <motion.div
-                  className={`relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap ${isMobile ? "px-3 py-2" : "px-4 py-2.5"}`}
+                  className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
                   style={{
                     borderWidth: "1px", borderStyle: "solid",
-                    borderColor: hoveredItem === i ? `${itemColor.glow}88` : "hsl(var(--gold) / 0.1)",
-                    background: hoveredItem === i ? `${itemColor.glow}15` : "hsl(var(--deep-blue) / 0.3)",
-                    backdropFilter: "blur(12px)",
+                    borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
+                    background: hoveredItem === i ? `${itemColor.glow}18` : "hsl(var(--deep-blue) / 0.4)",
+                    backdropFilter: "blur(14px)",
                     boxShadow: hoveredItem === i
-                      ? `0 0 20px ${itemColor.glow}44, 0 0 40px ${itemColor.glow}15`
-                      : "none",
+                      ? `0 0 24px ${itemColor.glow}55, 0 0 48px ${itemColor.glow}18, inset 0 1px 0 hsl(var(--gold) / 0.08)`
+                      : "inset 0 1px 0 hsl(var(--gold) / 0.06)",
                   }}
-                  animate={{ opacity: [0.88, 1, 0.92, 1, 0.88] }}
+                  animate={{ opacity: [0.92, 1, 0.95, 1, 0.92] }}
                   transition={{ duration: 6 + i * 0.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                 >
                   <motion.div
@@ -2496,9 +2496,9 @@ const HeroSection = () => {
                     } : { filter: "none" }}
                     transition={{ duration: 1.5, repeat: Infinity }}
                   >
-                    <item.icon className={`flex-shrink-0 transition-colors duration-300 ${isMobile ? "w-4 h-4" : "w-[18px] h-[18px]"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.65)" }} />
+                    <item.icon className={`flex-shrink-0 transition-colors duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.7)" }} />
                   </motion.div>
-                  <span className={`font-body font-medium transition-colors duration-300 ${isMobile ? "text-[11px]" : "text-xs"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.8)" }}>
+                  <span className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}>
                     {item.label}
                   </span>
                   {hoveredItem === i && (
