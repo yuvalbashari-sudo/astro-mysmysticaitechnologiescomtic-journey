@@ -2571,6 +2571,25 @@ const HeroSection = () => {
           </motion.div>
         )}
       </div>
+      {/* ── Fixed CTA below crystal ball ── */}
+      <div
+        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13]"
+        style={{
+          top: `calc(50% + ${isMobile ? "145px" : "160px"} + ${isMobile ? "120px" : "210px"} + 70px)`,
+        }}
+      >
+        <motion.button
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.6 }}
+          onClick={() => setTarotOpen(true)}
+          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-10 py-3.5" : "text-base px-12 py-4"}`}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          {t.hero_cta_personal}
+        </motion.button>
+      </div>
     </div>
 
     {/* ── Scrollable content layer ── */}
