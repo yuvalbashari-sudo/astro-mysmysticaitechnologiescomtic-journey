@@ -35,6 +35,7 @@ const Index = () => {
         </a>
         <MysticalTopBar
           onOpenHistory={() => setHistoryOpen(true)}
+          onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
         {/* Spacer to push content below the hero viewport */}
