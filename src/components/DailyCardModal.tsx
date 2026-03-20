@@ -547,12 +547,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0 }}
                   className="relative"
                 >
-                  {/* Desktop: two-column grid — card column first, text column second */}
-                  <div className="flex flex-col p-6 md:p-0 md:grid md:grid-cols-[minmax(280px,1fr)_minmax(0,480px)] md:gap-20 lg:gap-28 md:items-center md:min-h-[70vh]">
+                  {/* Desktop: strict two-column grid — card and text stay in separate columns */}
+                  <div className="grid grid-cols-1 gap-10 p-6 md:min-h-[72vh] md:w-full md:grid-cols-[minmax(360px,1fr)_minmax(420px,480px)] md:items-center md:gap-24 md:p-0 lg:grid-cols-[minmax(420px,1.1fr)_minmax(420px,500px)] lg:gap-28">
 
-                    {/* ── LEFT COLUMN (RTL: appears on right): The Card — dominant ── */}
+                    {/* ── CARD COLUMN ── */}
                     <motion.div
-                      className="flex flex-col items-center md:flex-shrink-0"
+                      className="flex flex-col items-center justify-center md:col-start-1 md:row-start-1 md:min-h-[60vh] md:w-full md:justify-self-center"
                       style={{ minWidth: 0 }}
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -640,9 +640,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       </motion.div>
                     </motion.div>
 
-                    {/* ── RIGHT COLUMN (RTL: appears on left): Interpretation ── */}
+                    {/* ── TEXT COLUMN ── */}
                     <motion.div
-                      className="flex-1 mt-8 md:mt-0 md:max-w-[480px]"
+                      className="mt-8 md:col-start-2 md:row-start-1 md:mt-0 md:w-full md:max-w-[500px] md:justify-self-center"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
