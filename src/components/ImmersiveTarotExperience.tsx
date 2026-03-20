@@ -946,10 +946,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               className="w-full h-full object-cover rounded-xl"
                               style={{
                                 imageRendering: "auto",
+                                backfaceVisibility: "hidden",
+                                transform: "translateZ(0)",
                                 boxShadow: isCenter
                                   ? "0 0 60px hsl(var(--gold) / 0.35), 0 16px 48px hsl(0 0% 0% / 0.6)"
                                   : "0 0 30px hsl(var(--gold) / 0.18), 0 10px 32px hsl(0 0% 0% / 0.5)",
-                                filter: isCenter ? "contrast(1.05) saturate(1.05)" : "brightness(0.85) contrast(1.02)",
+                                filter: isCenter ? "contrast(1.08) saturate(1.05)" : "brightness(0.85) contrast(1.06)",
+                                willChange: "transform",
                               }}
                             />
                             {/* Inner glow overlay */}
