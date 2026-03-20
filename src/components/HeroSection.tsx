@@ -2742,7 +2742,7 @@ const HeroSection = () => {
                 : { marginTop: "352px", marginLeft: "10px" }
               }
             >
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={(i) => setZodiacSignIndex(i)} />
             </div>
           </div>
         </div>
