@@ -597,6 +597,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       setDrawnCards([]);
       setSelectedCardIndices(new Set());
       setFlippedIndices(new Set());
+      setBurstIndices(new Set());
       setRevealedCard(null);
       setAiText("");
       setAiLoading(false);
