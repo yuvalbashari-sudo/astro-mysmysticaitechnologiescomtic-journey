@@ -1178,6 +1178,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             })}
                           </motion.div>
 
+                          <div style={{ zoom: [1, 1.15, 1.3][textSizeLevel], transition: "zoom 0.25s ease" }}>
                           {/* ── Emotional opening whisper ── */}
                           <motion.div
                             className="mb-8 text-center"
