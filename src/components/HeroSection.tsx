@@ -2776,36 +2776,7 @@ const HeroSection = () => {
               );
             })}
 
-            {/* Left CTA teaser */}
-            <motion.button
-              type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mt-2"
-              onClick={() => setCompatibilityOpen(true)}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 0.75, y: [0, -3, 0] }}
-              transition={{ delay: 2.2, duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              style={{ transition: "opacity 0.3s ease" }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.75"; }}
-            >
-              <div
-                className="rounded-xl px-4 py-2.5 backdrop-blur-xl text-center"
-                style={{
-                  background: "hsl(var(--deep-blue) / 0.45)",
-                  border: "1px solid hsl(var(--gold) / 0.15)",
-                  boxShadow: "0 0 16px hsl(var(--gold) / 0.06), 0 4px 20px hsl(var(--deep-blue) / 0.4)",
-                }}
-              >
-                <div className="text-[12px] font-heading font-semibold tracking-wide" style={{ color: "hsl(var(--gold) / 0.9)" }}>
-                  {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
-                </div>
-                <div className="text-[10px] font-body mt-0.5" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                  {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
-                </div>
-              </div>
-            </motion.button>
+
           </motion.div>
 
           {/* Right column */}
