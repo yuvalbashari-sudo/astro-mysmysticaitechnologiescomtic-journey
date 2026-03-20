@@ -142,7 +142,7 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
 
 /* ── Energy Pulse ──────────────────────────────────── */
 const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobile: boolean; activeColor?: string; isNearBall?: boolean; clickBurst?: number }) => {
-  const baseSize = isMobile ? 252 : 372;
+  const baseSize = isMobile ? 252 : 357;
   const pulseColor = activeColor || "hsl(var(--gold) / 0.15)";
   const intensity = isNearBall ? 1.4 : 1;
 
@@ -308,7 +308,7 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const s = isMobile ? 252 : 360;
+  const s = isMobile ? 252 : 346;
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
@@ -2324,7 +2324,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "220px", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "228px", marginLeft: "10px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
@@ -2339,7 +2339,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "342px", height: "342px",
+                width: "329px", height: "329px",
                 background: hoveredItem !== null
                   ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}2a 0%, ${ITEM_COLORS[hoveredItem].glow}10 40%, transparent 60%)`
                   : "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 40%, transparent 60%)",
@@ -2353,7 +2353,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
-                width: "252px", height: "252px",
+                width: "242px", height: "242px",
                 background: "conic-gradient(from 0deg, transparent 0%, hsl(var(--gold) / 0.08) 15%, transparent 30%, hsl(var(--celestial) / 0.06) 50%, transparent 65%, hsl(var(--crimson) / 0.05) 80%, transparent 100%)",
               }}
               animate={{ rotate: [0, 360] }}
@@ -2362,7 +2362,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none z-15"
               style={{
-                width: "187px", height: "187px",
+                width: "180px", height: "180px",
                 background: activeColor
                   ? `radial-gradient(circle, ${activeColor}22 0%, transparent 70%)`
                   : "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
@@ -2373,7 +2373,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: "382px", height: "382px",
+                width: "367px", height: "367px",
                 background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.025) 70%, transparent 90%)",
               }}
               animate={{ rotate: [0, 360], scale: [1, 1.06, 1] }}
@@ -2383,7 +2383,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "366px", height: "366px",
+                width: "352px", height: "352px",
                 boxShadow: "inset 0 25px 60px hsl(var(--deep-blue) / 0.65), inset 0 -20px 50px hsl(var(--deep-blue) / 0.6), inset 22px 0 45px hsl(var(--deep-blue) / 0.45), inset -22px 0 45px hsl(var(--deep-blue) / 0.45)",
               }}
             />
@@ -2391,7 +2391,7 @@ const HeroSection = () => {
             <div
               className="absolute pointer-events-none z-[24]"
               style={{
-                width: "390px", height: "390px",
+                width: "375px", height: "375px",
                 left: "50%", top: "50%",
                 transform: "translate(-50%, -50%)",
                 borderRadius: "50%",
@@ -2408,7 +2408,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[22]"
               style={{
-                width: "374px", height: "374px",
+                width: "359px", height: "359px",
                 left: "50%", top: "50%",
                 transform: "translate(-50%, -50%)",
                 background: "radial-gradient(circle, transparent 72%, hsl(var(--deep-blue) / 0.2) 85%, hsl(var(--deep-blue) / 0.35) 95%, transparent 100%)",
@@ -2425,7 +2425,7 @@ const HeroSection = () => {
             <motion.div
               ref={crystalRef}
               className="relative z-20 cursor-pointer"
-              style={{ width: "360px", height: "360px" }}
+              style={{ width: "346px", height: "346px" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
