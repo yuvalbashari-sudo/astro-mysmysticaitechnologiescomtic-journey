@@ -2383,8 +2383,8 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "375px", height: "375px",
-                boxShadow: "inset 0 16px 40px hsl(var(--deep-blue) / 0.5), inset 0 -12px 35px hsl(var(--deep-blue) / 0.45), inset 16px 0 28px hsl(var(--deep-blue) / 0.3), inset -16px 0 28px hsl(var(--deep-blue) / 0.3)",
+                width: "450px", height: "450px",
+                boxShadow: "inset 0 20px 50px hsl(var(--deep-blue) / 0.55), inset 0 -15px 40px hsl(var(--deep-blue) / 0.5), inset 18px 0 35px hsl(var(--deep-blue) / 0.35), inset -18px 0 35px hsl(var(--deep-blue) / 0.35)",
               }}
             />
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
