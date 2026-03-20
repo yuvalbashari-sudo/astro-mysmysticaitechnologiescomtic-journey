@@ -793,7 +793,7 @@ const ZodiacWheel = ({
           const meta = ZODIAC_META[language][i];
 
           const isRuling = i === influencedIndex;
-          const rulingIconSize = isRuling ? (isMobile ? 52 : 80) : iconSize;
+          const rulingIconSize = isRuling ? (isMobile ? 60 : 92) : iconSize;
           const planetColor = planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%";
 
           return (
