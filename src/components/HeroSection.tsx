@@ -2449,43 +2449,37 @@ const HeroSection = () => {
         )}
       </div>
 
-      {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-[14]"
-        style={isMobile ? {} : { x: bgX, y: bgY }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2.5, ease: "easeOut" }}
-      >
-        <img
-          src={heroFigure}
-          alt=""
-          className="w-full h-full object-cover scale-110"
-          style={{
-            objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-            maskImage: isMobile
-              ? "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)"
-              : "radial-gradient(ellipse 280px 250px at 51% calc(50% + 255px), transparent 55%, black 72%, black 85%, transparent 100%)",
-            WebkitMaskImage: isMobile
-              ? "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)"
-              : "radial-gradient(ellipse 280px 250px at 51% calc(50% + 255px), transparent 55%, black 72%, black 85%, transparent 100%)",
-          }}
-        />
-        {/* Contact shadow / ambient occlusion at fingertip-ball junction */}
+      {/* ── Hands overlay — fingertips in front of the crystal ball (mobile only) ── */}
+      {isMobile && (
         <div
-          className="absolute"
-          style={{
-            left: "50%",
-            top: isMobile ? "calc(50% + 232px)" : "calc(50% + 255px)",
-            transform: "translate(-50%, -50%)",
-            width: isMobile ? 270 : 480,
-            height: isMobile ? 240 : 420,
-            borderRadius: "50%",
-            background: "radial-gradient(ellipse, transparent 50%, hsl(var(--deep-blue) / 0.25) 65%, hsl(var(--deep-blue) / 0.15) 80%, transparent 100%)",
-            pointerEvents: "none",
-          }}
-        />
-      </motion.div>
+          className="absolute inset-0 pointer-events-none z-[14]"
+        >
+          <img
+            src={heroFigure}
+            alt=""
+            className="w-full h-full object-cover scale-110"
+            style={{
+              objectPosition: "center calc(0% + 70px)",
+              maskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
+            }}
+          />
+          {/* Contact shadow / ambient occlusion at fingertip-ball junction */}
+          <div
+            className="absolute"
+            style={{
+              left: "50%",
+              top: "calc(50% + 232px)",
+              transform: "translate(-50%, -50%)",
+              width: 270,
+              height: 240,
+              borderRadius: "50%",
+              background: "radial-gradient(ellipse, transparent 50%, hsl(var(--deep-blue) / 0.25) 65%, hsl(var(--deep-blue) / 0.15) 80%, transparent 100%)",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+      )}
     </div>
 
     {/* ── Astrologer Avatar CTA — bottom-right of hero ── */}
