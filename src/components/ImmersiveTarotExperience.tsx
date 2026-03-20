@@ -385,6 +385,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [revealedCard, setRevealedCard] = useState<TarotCard | null>(null);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
