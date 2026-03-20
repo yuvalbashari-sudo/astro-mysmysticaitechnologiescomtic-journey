@@ -2399,9 +2399,7 @@ const HeroSection = () => {
               }}
             />
             {/* EnergyPulse removed from desktop to prevent outer rings */}
-            {entranceComplete && (
-              <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
-            )}
+            {/* ArcanePortalRing removed from desktop to prevent outer rings */}
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
             )}
