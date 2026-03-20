@@ -2451,40 +2451,74 @@ const HeroSection = () => {
       whileTap={{ scale: 0.95 }}
       aria-label="שיחה עם האסטרולוגית"
     >
+      {/* Outer mystical glow ring */}
       <motion.div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: isMobile ? 72 : 100,
-          height: isMobile ? 72 : 100,
+          width: isMobile ? 82 : 110,
+          height: isMobile ? 82 : 110,
           top: "50%", left: "50%",
           transform: "translate(-50%, -50%)",
           marginTop: isMobile ? -8 : -10,
-          border: "1.5px solid hsl(var(--gold) / 0.25)",
+          background: "conic-gradient(from 0deg, hsl(270 70% 60% / 0.3), hsl(200 80% 55% / 0.3), hsl(280 60% 55% / 0.3), hsl(200 80% 55% / 0.3), hsl(270 70% 60% / 0.3))",
+          filter: "blur(6px)",
+        }}
+        animate={{
+          opacity: [0.5, 0.85, 0.5],
+          rotate: [0, 360],
+        }}
+        transition={{
+          opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+          rotate: { duration: 12, repeat: Infinity, ease: "linear" },
+        }}
+      />
+
+      {/* Border ring */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: isMobile ? 74 : 100,
+          height: isMobile ? 74 : 100,
+          top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          marginTop: isMobile ? -8 : -10,
+          border: "1.5px solid hsl(var(--gold) / 0.2)",
         }}
         animate={{
           boxShadow: [
-            "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
-            "0 0 32px hsl(43 80% 55% / 0.3), 0 0 56px hsl(43 80% 55% / 0.12)",
-            "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
+            "0 0 16px hsl(270 60% 55% / 0.12), 0 0 32px hsl(200 70% 55% / 0.08)",
+            "0 0 28px hsl(270 60% 55% / 0.25), 0 0 48px hsl(200 70% 55% / 0.15)",
+            "0 0 16px hsl(270 60% 55% / 0.12), 0 0 32px hsl(200 70% 55% / 0.08)",
           ],
         }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
       />
+
+      {/* Avatar image with breathing animation */}
       <motion.div
         className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.06]"
         style={{
-          width: isMobile ? 56 : 80,
-          height: isMobile ? 56 : 80,
-          boxShadow: "0 4px 24px hsl(var(--gold) / 0.25), 0 0 48px hsl(215 70% 40% / 0.12)",
+          width: isMobile ? 60 : 84,
+          height: isMobile ? 60 : 84,
+          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 40px hsl(200 70% 50% / 0.15), 0 0 8px hsl(var(--gold) / 0.2)",
         }}
-        animate={{ y: [0, -4, 0] }}
+        animate={{
+          y: [0, -3, 0],
+          scale: [1, 1.02, 1],
+        }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
-        <img src={astrologerAvatarCta} alt="שיחה עם האסטרולוגית" className="w-full h-full object-cover" draggable={false} />
+        <img
+          src={astrologerAvatarCta}
+          alt="שיחה עם האסטרולוגית"
+          className="w-full h-full object-cover"
+          draggable={false}
+        />
+        {/* Hover shimmer */}
         <motion.div
           className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{
-            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%)",
+            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
             backgroundSize: "200% 100%",
           }}
           animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
