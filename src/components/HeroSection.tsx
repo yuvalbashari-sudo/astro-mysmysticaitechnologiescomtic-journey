@@ -2364,9 +2364,7 @@ const HeroSection = () => {
                 boxShadow: "inset 0 14px 35px hsl(var(--deep-blue) / 0.55), inset 0 -10px 30px hsl(var(--deep-blue) / 0.45), inset 14px 0 24px hsl(var(--deep-blue) / 0.3), inset -14px 0 24px hsl(var(--deep-blue) / 0.3)",
               }}
             />
-            {entranceComplete && (
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
-            )}
+            {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
