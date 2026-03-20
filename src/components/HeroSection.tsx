@@ -2508,85 +2508,81 @@ const HeroSection = () => {
       </motion.div>
     </div>
 
-    {/* ── Fixed circular avatar CTA below crystal ball ── */}
-    <div
-      className="fixed inset-x-0 flex justify-center pointer-events-none z-[65] px-4"
+    {/* ── Fixed avatar CTA — bottom-right floating button ── */}
+    <motion.button
+      type="button"
+      className="fixed pointer-events-auto cursor-pointer z-[66] flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
       style={{
-        bottom: isMobile ? "24px" : "32px",
+        bottom: isMobile ? 24 : 32,
+        right: isMobile ? 16 : 32,
       }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
+      onClick={() => setTarotOpen(true)}
+      whileTap={{ scale: 0.95 }}
+      aria-label="גלו את המסר האישי שלכם"
     >
-      <motion.button
-        type="button"
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
-        onClick={() => setTarotOpen(true)}
-        className="relative pointer-events-auto cursor-pointer flex flex-col items-center gap-3 bg-transparent border-0 outline-none appearance-none group"
-        whileTap={{ scale: 0.95 }}
-        aria-label="גלו את המסר האישי שלכם"
+      {/* Pulsing outer glow ring */}
+      <motion.div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: isMobile ? 88 : 108,
+          height: isMobile ? 88 : 108,
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          marginTop: isMobile ? -10 : -12,
+          border: "1.5px solid hsl(var(--gold) / 0.25)",
+        }}
+        animate={{
+          boxShadow: [
+            "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
+            "0 0 32px hsl(43 80% 55% / 0.3), 0 0 56px hsl(43 80% 55% / 0.12)",
+            "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
+          ],
+        }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Avatar image */}
+      <motion.div
+        className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.08]"
+        style={{
+          width: isMobile ? 72 : 92,
+          height: isMobile ? 72 : 92,
+          boxShadow: "0 4px 24px hsl(var(--gold) / 0.25), 0 0 48px hsl(215 70% 40% / 0.12)",
+        }}
+        animate={{ y: [0, -4, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* Pulsing outer glow ring */}
-        <motion.div
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            width: isMobile ? 108 : 140,
-            height: isMobile ? 108 : 140,
-            top: isMobile ? -6 : -8,
-            left: "50%",
-            transform: "translateX(-50%)",
-            border: "1.5px solid hsl(var(--gold) / 0.25)",
-            boxShadow: "0 0 24px hsl(var(--gold) / 0.15), 0 0 48px hsl(var(--gold) / 0.06)",
-          }}
-          animate={{
-            boxShadow: [
-              "0 0 24px hsl(43 80% 55% / 0.15), 0 0 48px hsl(43 80% 55% / 0.06)",
-              "0 0 36px hsl(43 80% 55% / 0.3), 0 0 64px hsl(43 80% 55% / 0.12)",
-              "0 0 24px hsl(43 80% 55% / 0.15), 0 0 48px hsl(43 80% 55% / 0.06)",
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        <img
+          src={mysticalAvatarCta}
+          alt="גלו את המסר האישי שלכם"
+          className="w-full h-full object-cover"
+          draggable={false}
         />
-
-        {/* Floating avatar image */}
         <motion.div
-          className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.08]"
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           style={{
-            width: isMobile ? 96 : 124,
-            height: isMobile ? 96 : 124,
-            boxShadow: "0 4px 30px hsl(var(--gold) / 0.25), 0 0 60px hsl(215 70% 40% / 0.15)",
+            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+            backgroundSize: "200% 100%",
           }}
-          animate={{ y: [0, -6, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <img
-            src={mysticalAvatarCta}
-            alt="גלו את המסר האישי שלכם"
-            className="w-full h-full object-cover"
-            draggable={false}
-          />
-          {/* Hover shimmer overlay */}
-          <motion.div
-            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-            style={{
-              background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
-              backgroundSize: "200% 100%",
-            }}
-            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-          />
-        </motion.div>
+          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+        />
+      </motion.div>
 
-        {/* CTA text below */}
-        <motion.span
-          className={`font-heading gold-gradient-text tracking-wide text-center ${isMobile ? "text-xs" : "text-sm"}`}
-          style={{ textShadow: "0 0 16px hsl(var(--gold) / 0.3)" }}
-          animate={{ opacity: [0.8, 1, 0.8] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        >
-          ✨ גלו את המסר האישי שלכם
-        </motion.span>
-      </motion.button>
-    </div>
+      {/* Label */}
+      <motion.span
+        className={`font-heading gold-gradient-text tracking-wide text-center whitespace-nowrap ${isMobile ? "text-[10px]" : "text-xs"}`}
+        style={{ textShadow: "0 0 12px hsl(var(--gold) / 0.3)" }}
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        ✨ גלו את המסר שלכם
+      </motion.span>
+    </motion.button>
         </>,
         document.body
       )
