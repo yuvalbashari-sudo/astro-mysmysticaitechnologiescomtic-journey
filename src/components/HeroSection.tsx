@@ -2429,7 +2429,6 @@ const HeroSection = () => {
           </motion.div>
         )}
       </div>
-    </div>
 
     {/* ── Astrologer Avatar CTA — bottom-right of hero ── */}
     <motion.button
@@ -2598,6 +2597,7 @@ const HeroSection = () => {
           );
         })}
       </motion.div>
+    </div>
       </section>
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
