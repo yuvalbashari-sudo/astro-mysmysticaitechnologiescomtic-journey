@@ -708,12 +708,26 @@ function getDailyInfluence(): PlanetaryInfluence {
   };
 }
 
+/* Element glow colors and emoji by zodiac index */
+const ELEMENT_TYPES = ["fire", "earth", "air", "water", "fire", "earth", "air", "water", "fire", "earth", "air", "water"] as const;
+const ELEMENT_GLOW_COLORS: Record<string, string> = {
+  fire: "hsl(20, 80%, 55%)",
+  water: "hsl(210, 70%, 55%)",
+  air: "hsl(270, 50%, 65%)",
+  earth: "hsl(85, 50%, 45%)",
+};
+const ELEMENT_EMOJI: Record<string, string> = {
+  fire: "🔥", earth: "🌿", air: "💨", water: "🌊",
+};
+
 const ZodiacWheel = ({
   isMobile,
   hoveredMenuItem,
+  onHoveredElement,
 }: {
   isMobile: boolean;
   hoveredMenuItem: number | null;
+  onHoveredElement?: (color: string | null) => void;
 }) => {
   const { language } = useLanguage();
   const t = useT();
@@ -843,8 +857,8 @@ const ZodiacWheel = ({
                 width: rulingIconSize,
                 height: rulingIconSize,
               }}
-              onMouseEnter={() => setHoveredSign(i)}
-              onMouseLeave={() => setHoveredSign(null)}
+              onMouseEnter={() => { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); }}
+              onMouseLeave={() => { setHoveredSign(null); onHoveredElement?.(null); }}
               // Counter-rotate to keep symbols upright — slow down when hovered
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
@@ -958,7 +972,7 @@ const ZodiacWheel = ({
                 className="w-full h-full flex items-center justify-center rounded-full overflow-hidden"
                 animate={isHighlighted ? {
                   scale: [1, 1.3, 1],
-                } : isHovered ? { scale: 1.45 } : { scale: 1 }}
+                } : isHovered ? { scale: 1.15 } : { scale: 1 }}
                 transition={{ duration: isHighlighted ? 1.5 : 0.4, repeat: isHighlighted ? Infinity : 0, ease: "easeOut" }}
               >
                 <img
@@ -1023,15 +1037,13 @@ const ZodiacWheel = ({
                         className="text-[13px] font-semibold tracking-wide"
                         style={{ color: "hsl(var(--gold))" }}
                       >
-                        {sign.name}
+                        {sign.name} – {meta.keyword} {ELEMENT_EMOJI[ELEMENT_TYPES[i]]}
                       </div>
                       <div
                         className="flex items-center justify-center gap-2 mt-0.5 text-[10px] tracking-widest uppercase"
                         style={{ color: "hsl(var(--gold) / 0.6)" }}
                       >
                         <span>{meta.element}</span>
-                        <span style={{ color: "hsl(var(--gold) / 0.3)" }}>·</span>
-                        <span>{meta.keyword}</span>
                       </div>
                     </div>
                     <div
@@ -1993,6 +2005,7 @@ const HeroSection = () => {
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const [hoveredZodiacColor, setHoveredZodiacColor] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
@@ -2352,7 +2365,7 @@ const HeroSection = () => {
               }}
             />
             {entranceComplete && (
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
             )}
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
@@ -2399,17 +2412,19 @@ const HeroSection = () => {
               <motion.div
                 className="absolute inset-0 rounded-full"
                 style={{
-                  background: hoveredTeaser === "right"
+                  background: hoveredZodiacColor
+                    ? `radial-gradient(circle, ${hoveredZodiacColor.replace(')', ' / 0.18)')} 0%, ${hoveredZodiacColor.replace(')', ' / 0.08)')} 40%, transparent 60%)`
+                    : hoveredTeaser === "right"
                     ? "radial-gradient(circle, hsl(270 60% 50% / 0.18) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 60%)"
                     : hoveredTeaser === "left"
                       ? "radial-gradient(circle, hsl(43 70% 55% / 0.16) 0%, hsl(215 60% 50% / 0.08) 40%, transparent 60%)"
                       : hoveredItem !== null
                         ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}2a 0%, ${ITEM_COLORS[hoveredItem].glow}10 40%, transparent 60%)`
                         : "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 40%, transparent 60%)",
-                  transition: "background 0.6s ease-out",
+                  transition: "background 0.4s ease-out",
                 }}
                 animate={{
-                  scale: hoveredTeaser ? [1, 1.12, 1] : hoveredItem !== null ? [1, 1.15, 1] : [1, 1.08, 1],
+                  scale: hoveredZodiacColor ? [1, 1.1, 1] : hoveredTeaser ? [1, 1.12, 1] : hoveredItem !== null ? [1, 1.15, 1] : [1, 1.08, 1],
                   opacity: hoveredTeaser ? [0.6, 1, 0.6] : hoveredItem !== null ? [0.5, 0.9, 0.5] : [0.4, 0.7, 0.4],
                 }}
                 transition={{ duration: hoveredTeaser ? 2.2 : hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
@@ -2518,7 +2533,7 @@ const HeroSection = () => {
             </AnimatePresence>
             {/* EnergyPulse removed from desktop to prevent outer rings */}
             {entranceComplete && (
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} />
             )}
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
