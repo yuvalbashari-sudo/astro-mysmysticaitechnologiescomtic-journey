@@ -4,6 +4,8 @@ import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
+import AstrologerIntroModal from "./AstrologerIntroModal";
+import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
@@ -1928,6 +1930,7 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
+  const [astrologerOpen, setAstrologerOpen] = useState(false);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
@@ -2308,6 +2311,50 @@ const HeroSection = () => {
                 </span>
               </motion.div>
             )}
+
+            {/* ── Astrologer Avatar CTA — below crystal ball ── */}
+            <motion.button
+              type="button"
+              className="absolute z-30 pointer-events-auto cursor-pointer flex flex-col items-center gap-1.5 bg-transparent border-0 outline-none appearance-none group"
+              style={{ bottom: "-60px", left: "50%", transform: "translateX(-50%)" }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 2.5, duration: 0.7, ease: "easeOut" }}
+              onClick={() => setAstrologerOpen(true)}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="שיחה עם האסטרולוגית"
+            >
+              <motion.div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: 72, height: 72,
+                  top: "50%", left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  marginTop: -8,
+                  border: "1.5px solid hsl(var(--gold) / 0.25)",
+                }}
+                animate={{
+                  boxShadow: [
+                    "0 0 16px hsl(43 80% 55% / 0.15), 0 0 32px hsl(43 80% 55% / 0.06)",
+                    "0 0 28px hsl(43 80% 55% / 0.3), 0 0 48px hsl(43 80% 55% / 0.12)",
+                    "0 0 16px hsl(43 80% 55% / 0.15), 0 0 32px hsl(43 80% 55% / 0.06)",
+                  ],
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.div
+                className="relative rounded-full overflow-hidden"
+                style={{
+                  width: 56, height: 56,
+                  boxShadow: "0 4px 20px hsl(var(--gold) / 0.25)",
+                }}
+                animate={{ y: [0, -3, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <img src={astrologerAvatarCta} alt="שיחה עם האסטרולוגית" className="w-full h-full object-cover" draggable={false} />
+              </motion.div>
+            </motion.button>
           </motion.div>
         ) : (
           <motion.div
@@ -2425,6 +2472,59 @@ const HeroSection = () => {
               </div>
             </motion.div>
             {/* Tabs moved to fixed side panels outside the ball container */}
+
+            {/* ── Astrologer Avatar CTA — below crystal ball ── */}
+            <motion.button
+              type="button"
+              className="absolute z-30 pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
+              style={{ bottom: "-80px", left: "50%", transform: "translateX(-50%)" }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 2.5, duration: 0.7, ease: "easeOut" }}
+              onClick={() => setAstrologerOpen(true)}
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label="שיחה עם האסטרולוגית"
+            >
+              <motion.div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: 100, height: 100,
+                  top: "50%", left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  marginTop: -10,
+                  border: "1.5px solid hsl(var(--gold) / 0.25)",
+                }}
+                animate={{
+                  boxShadow: [
+                    "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
+                    "0 0 32px hsl(43 80% 55% / 0.3), 0 0 56px hsl(43 80% 55% / 0.12)",
+                    "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.06)",
+                  ],
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              />
+              <motion.div
+                className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.06]"
+                style={{
+                  width: 80, height: 80,
+                  boxShadow: "0 4px 24px hsl(var(--gold) / 0.25), 0 0 48px hsl(215 70% 40% / 0.12)",
+                }}
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <img src={astrologerAvatarCta} alt="שיחה עם האסטרולוגית" className="w-full h-full object-cover" draggable={false} />
+                <motion.div
+                  className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%)",
+                    backgroundSize: "200% 100%",
+                  }}
+                  animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+                  transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+                />
+              </motion.div>
+            </motion.button>
           </motion.div>
         )}
       </div>
@@ -2521,6 +2621,7 @@ const HeroSection = () => {
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
+      <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
     </>
   );
 };
