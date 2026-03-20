@@ -2814,7 +2814,7 @@ const HeroSection = () => {
                 <motion.div
                   className="mx-auto mt-1.5 rounded-full"
                   style={{
-                    width: "60%", height: 1.5,
+                    width: "70%", height: 2,
                     background: "linear-gradient(90deg, transparent, rgba(220, 50, 50, 0.5), transparent)",
                     boxShadow: "0 0 6px rgba(220, 50, 50, 0.3)",
                   }}
