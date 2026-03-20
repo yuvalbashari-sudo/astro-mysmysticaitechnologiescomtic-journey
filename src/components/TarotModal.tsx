@@ -380,7 +380,22 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     };
 
                     return (
-                      <div className="relative mx-auto" style={{ height: containerH, maxWidth: isMob ? 340 : 620 }}>
+                      <div className="relative mx-auto mb-4" style={{ height: containerH, maxWidth: isMob ? 340 : 620 }}>
+                        {/* Mystical energy at the emergence point */}
+                        <motion.div
+                          className="absolute left-1/2 -translate-x-1/2 pointer-events-none"
+                          style={{
+                            bottom: isMob ? -30 : -40,
+                            width: isMob ? 250 : 420,
+                            height: isMob ? 80 : 120,
+                            background: "radial-gradient(ellipse, hsl(var(--gold) / 0.12) 0%, hsl(var(--gold) / 0.04) 40%, transparent 70%)",
+                            filter: "blur(15px)",
+                          }}
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: [0.4, 0.8, 0.4], scale: 1 }}
+                          transition={{ opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" }, scale: { duration: 1, ease: "easeOut" } }}
+                        />
+
                         {fanCards.map((spread, idx) => {
                           const step = arcDeg / (count - 1);
                           const angle = -arcDeg / 2 + idx * step;
@@ -412,7 +427,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 zIndex: 10 + idx,
                                 perspective: 600,
                               }}
-                              initial={{ opacity: 0, y: 80, rotate: 0, scale: 0.7 }}
+                              initial={{ opacity: 0, y: 180, rotate: 0, scale: 0.5 }}
                               animate={{
                                 opacity: 1,
                                 y: 0,
@@ -421,12 +436,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 scale: 1,
                                 translateY: ty,
                               }}
-                              transition={{ delay: 0.15 + idx * 0.08, type: "spring", stiffness: 100, damping: 16 }}
+                              transition={{ delay: 0.4 + idx * 0.12, type: "spring", stiffness: 70, damping: 14 }}
                               whileHover={{
-                                translateY: ty - (isMob ? 18 : 30),
-                                scale: 1.06,
+                                translateY: ty - (isMob ? 22 : 38),
+                                scale: 1.08,
                                 zIndex: 50,
-                                transition: { duration: 0.2 },
+                                transition: { duration: 0.25, ease: "easeOut" },
                               }}
                               whileTap={{ scale: 0.97 }}
                             >
