@@ -9,6 +9,7 @@ import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
+import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmReadingModal from "./PalmReadingModal";
 import DailyCardModal from "./DailyCardModal";
 import { useT, useLanguage } from "@/i18n";
