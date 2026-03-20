@@ -2754,7 +2754,7 @@ const HeroSection = () => {
               transition={{ delay: 2.2, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <motion.div
-                className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
+                className="relative rounded-2xl px-10 py-7 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "left"
