@@ -41,43 +41,64 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
       {/* Right side: Empty spacer for balance */}
       <div className="flex-1" />
 
-      {/* Center: Hero Title */}
-      <motion.h1
-        className="font-heading uppercase pointer-events-none select-none relative"
-        style={{
-          fontSize: "clamp(30px, 4vw, 52px)",
-          fontWeight: 700,
-          letterSpacing: "0.6em",
-          background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
-          backgroundSize: "200% 200%",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          marginTop: "-6px",
-        }}
-        animate={{
-          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-        }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      >
-        ASTROLOGAI
-        {/* Cinematic light sweep */}
-        <motion.span
-          className="absolute inset-0 pointer-events-none"
+      {/* Center: Hero Title + Subheadline */}
+      <div className="flex flex-col items-center pointer-events-none select-none">
+        <motion.h1
+          className="font-heading uppercase relative"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.3) 45%, hsl(var(--gold-light) / 0.5) 50%, hsl(var(--gold-light) / 0.3) 55%, transparent 100%)",
+            fontSize: "clamp(28px, 4vw, 52px)",
+            fontWeight: 700,
+            letterSpacing: "0.55em",
+            background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
+            backgroundSize: "200% 200%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            backgroundSize: "200% 100%",
+            marginTop: "-6px",
+            textShadow: "none",
+            filter: "drop-shadow(0 0 12px hsl(var(--gold) / 0.2))",
           }}
-          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-          transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "easeInOut" }}
-          aria-hidden="true"
+          animate={{
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+          }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
           ASTROLOGAI
-        </motion.span>
-      </motion.h1>
+          {/* Cinematic light sweep */}
+          <motion.span
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.3) 45%, hsl(var(--gold-light) / 0.5) 50%, hsl(var(--gold-light) / 0.3) 55%, transparent 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              backgroundSize: "200% 100%",
+            }}
+            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "easeInOut" }}
+            aria-hidden="true"
+          >
+            ASTROLOGAI
+          </motion.span>
+        </motion.h1>
+
+        {/* Hebrew subheadline */}
+        <motion.p
+          className="font-body text-center mt-1"
+          style={{
+            fontSize: "clamp(11px, 1.4vw, 15px)",
+            color: "hsl(var(--foreground) / 0.55)",
+            letterSpacing: "0.04em",
+            lineHeight: 1.5,
+          }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          dir="rtl"
+        >
+          גלו את העתיד שלכם באמצעות בינה מלאכותית ואסטרולוגיה
+        </motion.p>
+      </div>
 
       {/* Left side: Actions */}
       <div className="flex-1 flex justify-end">

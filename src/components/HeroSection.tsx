@@ -2078,35 +2078,67 @@ const HeroSection = () => {
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "200px" : "350px",
-            height: isMobile ? "150px" : "250px",
+            width: isMobile ? "220px" : "400px",
+            height: isMobile ? "170px" : "280px",
             transform: "translate(-50%, -50%)",
             background: activeColor
-              ? `radial-gradient(ellipse, ${activeColor}33 0%, ${activeColor}11 40%, transparent 70%)`
-              : "radial-gradient(ellipse, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
-            filter: "blur(30px)",
+              ? `radial-gradient(ellipse, ${activeColor}44 0%, ${activeColor}18 40%, transparent 70%)`
+              : "radial-gradient(ellipse, hsl(var(--gold) / 0.22) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
+            filter: "blur(25px)",
           }}
-          animate={{ opacity: [0.4, 0.8, 0.4], scale: [1, 1.15, 1] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.2, 1] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute"
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "280px" : "480px",
-            height: isMobile ? "200px" : "320px",
+            width: isMobile ? "300px" : "520px",
+            height: isMobile ? "220px" : "360px",
             transform: "translate(-50%, -50%)",
-            background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.08) 0%, hsl(var(--gold) / 0.04) 50%, transparent 70%)",
-            filter: "blur(50px)",
+            background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.1) 0%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
+            filter: "blur(45px)",
           }}
-          animate={{ opacity: [0.3, 0.6, 0.3], scale: [1.05, 0.95, 1.05] }}
+          animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
-        {[...Array(6)].map((_, i) => (
+        {/* Dynamic light streaks radiating from sphere */}
+        {[...Array(4)].map((_, i) => {
+          const angle = (i / 4) * Math.PI * 2 + Math.PI / 8;
+          const dx = Math.cos(angle);
+          const dy = Math.sin(angle);
+          return (
+            <motion.div
+              key={`streak-${i}`}
+              className="absolute"
+              style={{
+                left: "50%",
+                top: "55%",
+                width: isMobile ? "120px" : "200px",
+                height: "2px",
+                transform: `translate(-50%, -50%) rotate(${angle * (180 / Math.PI)}deg)`,
+                background: `linear-gradient(90deg, hsl(var(--gold) / 0.15), transparent)`,
+                filter: "blur(2px)",
+                transformOrigin: "left center",
+              }}
+              animate={{
+                opacity: [0, 0.4, 0],
+                scaleX: [0.3, 1, 0.3],
+              }}
+              transition={{
+                duration: 4 + i * 0.5,
+                repeat: Infinity,
+                delay: i * 1.5,
+                ease: "easeInOut",
+              }}
+            />
+          );
+        })}
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={`hand-spark-${i}`}
-            className="absolute rounded-full bg-gold/50"
+            className="absolute rounded-full bg-gold/60"
             style={{
               left: `${48 + (Math.random() - 0.5) * 8}%`,
               top: `${53 + (Math.random() - 0.5) * 6}%`,
@@ -2115,14 +2147,14 @@ const HeroSection = () => {
             }}
             animate={{
               opacity: [0, 0.9, 0],
-              y: [0, -(15 + Math.random() * 30)],
-              x: [(Math.random() - 0.5) * 20],
-              scale: [0, 1.5, 0],
+              y: [0, -(15 + Math.random() * 40)],
+              x: [(Math.random() - 0.5) * 25],
+              scale: [0, 1.8, 0],
             }}
             transition={{
               duration: 2.5 + Math.random() * 1.5,
               repeat: Infinity,
-              delay: i * 0.7,
+              delay: i * 0.6,
               ease: "easeOut",
             }}
           />
@@ -2407,6 +2439,7 @@ const HeroSection = () => {
         >
           {menuItems.map((item, i) => {
             const itemColor = ITEM_COLORS[i];
+            const isHovered = hoveredItem === i;
             return (
               <motion.div
                 key={i}
@@ -2416,31 +2449,54 @@ const HeroSection = () => {
                 transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
                 onMouseEnter={() => setHoveredItem(i)}
                 onMouseLeave={() => setHoveredItem(null)}
-                whileHover={{ scale: 1.06, y: -2 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.08, y: -3 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
               >
                 <motion.div
-                  className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
+                  className={`relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isMobile ? "px-3.5 py-2.5" : "px-5 py-3"}`}
                   style={{
                     borderWidth: "1px", borderStyle: "solid",
-                    borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
-                    background: hoveredItem === i ? `${itemColor.glow}18` : "hsl(var(--deep-blue) / 0.4)",
-                    boxShadow: hoveredItem === i
-                      ? `0 0 24px ${itemColor.glow}55, 0 0 48px ${itemColor.glow}18, inset 0 1px 0 hsl(var(--gold) / 0.08)`
-                      : "inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                    background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                    boxShadow: isHovered
+                      ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                      : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
                   }}
-                  animate={{ opacity: [0.92, 1, 0.95, 1, 0.92] }}
-                  transition={{ duration: 6 + i * 0.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                 >
                   <div>
-                    <item.icon className={`flex-shrink-0 transition-colors duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.7)" }} />
+                    <item.icon
+                      className={`flex-shrink-0 transition-all duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`}
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
                   </div>
-                  <span className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}>
+                  <span
+                    className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`}
+                    style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                  >
                     {item.label}
                   </span>
-                  {hoveredItem === i && (
-                    <motion.div className="absolute -inset-1.5 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, ${itemColor.glow}10, transparent 70%)` }} initial={{ opacity: 0 }} animate={{ opacity: [0, 0.6, 0.3] }} transition={{ duration: 1.5, repeat: Infinity }} />
+                  {/* Hover underline glow */}
+                  {isHovered && (
+                    <motion.div
+                      className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                      style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 0.8, scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                  {isHovered && (
+                    <motion.div
+                      className="absolute -inset-2 rounded-full pointer-events-none"
+                      style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 0.6, 0.3] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    />
                   )}
                 </motion.div>
               </motion.div>
@@ -2463,11 +2519,31 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.6 }}
           onClick={() => setTarotOpen(true)}
-          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3" : "text-base px-12 py-4"}`}
-          whileHover={{ scale: 1.04 }}
+          className={`relative overflow-hidden rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3.5" : "text-base px-14 py-4.5"}`}
+          style={{
+            background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
+            color: "hsl(var(--deep-blue))",
+            fontWeight: 700,
+            boxShadow: "0 4px 30px hsl(var(--gold) / 0.35), 0 0 60px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold-light) / 0.5)",
+            minHeight: "52px",
+          }}
+          whileHover={{
+            scale: 1.06,
+            boxShadow: "0 6px 40px hsl(43 80% 55% / 0.5), 0 0 80px hsl(43 80% 55% / 0.25), inset 0 1px 0 hsl(var(--gold-light) / 0.6)",
+          }}
           whileTap={{ scale: 0.97 }}
         >
-          {t.hero_cta_personal}
+          {/* Shimmer sweep */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.35) 50%, transparent 60%)",
+              backgroundSize: "200% 100%",
+            }}
+            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+          />
+          <span className="relative z-10">✨ גלו את המסר האישי שלכם</span>
         </motion.button>
       </div>
     </div>
