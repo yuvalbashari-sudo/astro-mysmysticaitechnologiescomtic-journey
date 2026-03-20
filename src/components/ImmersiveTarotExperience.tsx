@@ -346,7 +346,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [auraIntensity, setAuraIntensity] = useState(0);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -354,13 +353,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
-
-  useEffect(() => {
-    if (phase === "drawing") setAuraIntensity(0.6);
-    else if (phase === "reveal") setAuraIntensity(0.9);
-    else if (phase === "interpretation") setAuraIntensity(0.5);
-    else setAuraIntensity(0.3);
-  }, [phase]);
 
   const questionOptions = useMemo((): QuestionOption[] => [
     {
