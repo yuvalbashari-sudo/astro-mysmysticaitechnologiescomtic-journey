@@ -552,7 +552,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* ── LEFT COLUMN (RTL: appears on right): The Card — dominant ── */}
                     <motion.div
-                      className="flex flex-col items-center md:sticky md:top-8 md:self-start md:flex-shrink-0"
+                      className="flex flex-col items-center md:flex-shrink-0"
                       style={{ minWidth: 0 }}
                       initial={{ opacity: 0, y: 24 }}
                       animate={{ opacity: 1, y: 0 }}
