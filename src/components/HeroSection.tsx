@@ -2271,7 +2271,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "198px", marginLeft: "10px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
           >
             {/* Aura glow — tighter spread for realism */}
             <motion.div
