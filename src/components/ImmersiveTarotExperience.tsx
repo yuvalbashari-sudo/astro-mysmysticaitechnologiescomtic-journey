@@ -1141,7 +1141,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           }}
                         />
 
-                        <div className="relative" style={{ padding: "0 16px 60px", fontSize: `${[1, 1.15, 1.3][textSizeLevel]}rem`, transition: "font-size 0.25s ease" }}>
+                        <div className="relative" style={{ padding: "0 16px 60px" }}>
 
                           {/* ── Text size control ── */}
                           <motion.div
