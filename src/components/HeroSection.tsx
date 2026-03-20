@@ -2440,8 +2440,8 @@ const HeroSection = () => {
       type="button"
       className="absolute z-[15] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
       style={{
-        bottom: isMobile ? 24 : 32,
-        right: isMobile ? 24 : 40,
+        bottom: isMobile ? 28 : 32,
+        right: isMobile ? 20 : 40,
       }}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
