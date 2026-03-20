@@ -2005,6 +2005,7 @@ const HeroSection = () => {
   const [isNearBall, setIsNearBall] = useState(false);
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
+  const [hoveredZodiacColor, setHoveredZodiacColor] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
