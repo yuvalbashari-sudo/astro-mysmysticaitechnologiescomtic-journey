@@ -965,14 +965,14 @@ const ZodiacWheel = ({
                   alt={sign.name}
                   className="w-full h-full object-contain transition-all duration-500"
                   style={{
-                    opacity: isHovered || isHighlighted || isRuling ? 1 : 0.75,
+                    opacity: isHovered || isHighlighted || isRuling ? 1 : 0.8,
                     filter: isHovered
                       ? `drop-shadow(0 0 18px hsl(${planetColor} / 0.9)) drop-shadow(0 0 8px hsl(${planetColor} / 0.6)) drop-shadow(0 0 35px hsl(${planetColor} / 0.3))`
                       : isRuling
                         ? `drop-shadow(0 0 14px hsl(${planetColor} / 0.7)) drop-shadow(0 0 6px hsl(${planetColor} / 0.4)) drop-shadow(0 0 25px hsl(${planetColor} / 0.2))`
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
-                          : "drop-shadow(0 0 5px hsl(43 80% 55% / 0.35))",
+                          : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
                   }}
                 />
               </motion.div>
