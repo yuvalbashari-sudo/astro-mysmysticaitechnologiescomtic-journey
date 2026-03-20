@@ -2327,7 +2327,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "300px", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "315px", marginLeft: "10px" }}
           >
             {/* Internal glow — contained inside ball */}
             <motion.div
