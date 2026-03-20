@@ -557,50 +557,28 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               className="absolute inset-0"
               style={{ background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.6) 0%, transparent 30%)" }}
             />
-            {/* Bottom gradient for table blending */}
-            <AnimatePresence>
-              {(phase === "drawing" || phase === "reveal") && (
-                <motion.div
-                  className="absolute inset-0"
-                  style={{
-                    background: "linear-gradient(to top, hsl(20 15% 5% / 0.7) 0%, transparent 40%)",
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.2 }}
-                />
-              )}
-            </AnimatePresence>
           </div>
 
-          {/* ── Mystical Table ── */}
-          <MysticalTable phase={phase} isMobile={isMobile} />
-
-          {/* ── Soft upward light on oracle during card phases ── */}
+          {/* ── Subtle ambient glow from hands area ── */}
           <AnimatePresence>
             {(phase === "drawing" || phase === "reveal") && (
               <motion.div
                 className="absolute pointer-events-none"
                 style={{
-                  left: "30%",
-                  right: "30%",
-                  bottom: isMobile ? "30%" : "35%",
-                  height: "30%",
-                  background: "radial-gradient(ellipse 100% 80% at 50% 100%, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
+                  left: "25%",
+                  right: "25%",
+                  bottom: isMobile ? "35%" : "38%",
+                  height: "20%",
+                  background: "radial-gradient(ellipse 100% 100% at 50% 80%, hsl(var(--gold) / 0.05) 0%, transparent 70%)",
+                  filter: "blur(20px)",
                 }}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: [0.4, 0.8, 0.4] }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 1.5 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
             )}
           </AnimatePresence>
-
-          {/* ── Energy particles from oracle hands toward cards ── */}
-          {[...Array(isMobile ? 12 : 24)].map((_, i) => (
-            <EnergyParticle key={`ep-${i}`} index={i} phase={phase} isMobile={isMobile} />
-          ))}
 
           {/* ── Ambient particles ── */}
           {[...Array(isMobile ? 10 : 20)].map((_, i) => (
