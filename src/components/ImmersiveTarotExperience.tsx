@@ -746,6 +746,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               filter: isCenter ? "none" : "brightness(0.85)",
                             }}
                           />
+                          {/* Inner edge highlight */}
+                          <div
+                            className="absolute inset-0 rounded-lg pointer-events-none"
+                            style={{
+                              boxShadow: `inset 0 0 ${isCenter ? 10 : 6}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
+                            }}
+                          />
                           <motion.div
                             className="absolute -inset-2 rounded-xl pointer-events-none"
                             style={{ border: `1px solid hsl(var(--gold) / ${isCenter ? 0.35 : 0.15})` }}
