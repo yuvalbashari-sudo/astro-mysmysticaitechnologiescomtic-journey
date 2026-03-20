@@ -2791,10 +2791,10 @@ const HeroSection = () => {
                     />
                   )}
                 </AnimatePresence>
-                <div className="flex items-center justify-center gap-2.5">
-                  <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
+                <div className="flex items-center justify-center gap-3">
+                  <Sparkles className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
-                    className="text-[26px] font-heading font-bold tracking-wide leading-tight"
+                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35), 0 0 40px rgba(0, 150, 255, 0.15)",
@@ -2803,7 +2803,7 @@ const HeroSection = () => {
                     {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
                   </div>
                 </div>
-                <div className="text-[14px] font-body mt-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
                 </div>
                 <motion.div
