@@ -2576,6 +2576,10 @@ const HeroSection = () => {
         className="absolute inset-x-0 flex justify-center pointer-events-none z-[13]"
         style={{
           top: `calc(50% + ${isMobile ? "145px" : "160px"} + ${isMobile ? "120px" : "210px"} + 70px)`,
+          maxHeight: `calc(100vh - ${isMobile ? "env(safe-area-inset-bottom, 20px)" : "0px"})`,
+          paddingBottom: isMobile ? "env(safe-area-inset-bottom, 20px)" : undefined,
+          // Clamp so it never goes below viewport
+          top: undefined,
         }}
       >
         <motion.button
@@ -2583,7 +2587,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.6 }}
           onClick={() => setTarotOpen(true)}
-          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-10 py-3.5" : "text-base px-12 py-4"}`}
+          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-8 py-3" : "text-base px-12 py-4"}`}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
         >
