@@ -142,7 +142,7 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
 
 /* ── Energy Pulse ──────────────────────────────────── */
 const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobile: boolean; activeColor?: string; isNearBall?: boolean; clickBurst?: number }) => {
-  const baseSize = isMobile ? 314 : 430;
+  const baseSize = isMobile ? 320 : 430;
   const pulseColor = activeColor || "hsl(var(--gold) / 0.15)";
   const intensity = isNearBall ? 1.4 : 1;
 
@@ -308,7 +308,7 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const s = isMobile ? 314 : 430;
+  const s = isMobile ? 320 : 430;
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
@@ -2277,7 +2277,7 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "314px", height: "314px",
+                width: "320px", height: "320px",
                 background: "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 45%, transparent 60%)",
               }}
               animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
@@ -2287,7 +2287,7 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none z-[23]"
               style={{
-                width: "320px", height: "320px",
+                width: "326px", height: "326px",
                 boxShadow: "inset 0 14px 35px hsl(var(--deep-blue) / 0.55), inset 0 -10px 30px hsl(var(--deep-blue) / 0.45), inset 14px 0 24px hsl(var(--deep-blue) / 0.3), inset -14px 0 24px hsl(var(--deep-blue) / 0.3)",
               }}
             />
@@ -2298,7 +2298,7 @@ const HeroSection = () => {
             <motion.div
               ref={crystalRef}
               className="relative z-20 cursor-pointer"
-              style={{ width: "314px", height: "314px" }}
+              style={{ width: "320px", height: "320px" }}
               onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
