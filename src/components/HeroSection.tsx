@@ -2293,7 +2293,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (fixed in viewport center) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[8]" style={{ paddingTop: "5vh" }}>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: "5vh" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -2770,8 +2770,8 @@ const HeroSection = () => {
               {t.hero_services_line}
             </motion.p>
 
-            {/* Spacer for crystal ball scene (now in fixed layer) */}
-            <div style={{ minHeight: "520px", marginTop: "20px" }} />
+            {/* Spacer for crystal ball scene (now in fixed layer) — pointer-events-none to allow clicking tabs behind */}
+            <div style={{ minHeight: "520px", marginTop: "20px", pointerEvents: "none" }} />
 
             {/* Primary CTA + Social Proof */}
             <motion.div
