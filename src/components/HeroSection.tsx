@@ -3,7 +3,6 @@ import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";

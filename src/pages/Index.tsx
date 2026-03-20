@@ -33,7 +33,7 @@ const Index = () => {
       />
       {/* Hero fixed background — outside main to prevent scroll containment */}
       <HeroSection />
-      <main id="main-content">
+      <main id="main-content" className="relative z-10">
         <DailyRitualSection />
       </main>
       <MysticalDashboard />
