@@ -1192,7 +1192,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               style={{
                                 maxWidth: "420px",
                                 margin: "0 auto",
-                                textShadow: "0 2px 20px hsl(222 47% 6% / 0.95), 0 0 40px hsl(222 47% 6% / 0.6)",
+                                textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)",
                               }}
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
