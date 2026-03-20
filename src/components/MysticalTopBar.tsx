@@ -45,22 +45,22 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
       <motion.h1
         className="font-heading uppercase pointer-events-none select-none relative"
         style={{
-          fontSize: "clamp(26px, 3.5vw, 45px)",
-          fontWeight: 600,
-          letterSpacing: "0.55em",
+          fontSize: "clamp(30px, 4vw, 52px)",
+          fontWeight: 700,
+          letterSpacing: "0.6em",
           background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
           backgroundSize: "200% 200%",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          filter: "drop-shadow(0 0 10px hsl(43 80% 55% / 0.18)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.07))",
-          marginTop: "-8px",
+          filter: "drop-shadow(0 0 14px hsl(43 80% 55% / 0.25)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.1))",
+          marginTop: "-6px",
         }}
         animate={{
           filter: [
-            "drop-shadow(0 0 10px hsl(43 80% 55% / 0.18)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.07))",
-            "drop-shadow(0 0 16px hsl(43 80% 55% / 0.3)) drop-shadow(0 0 35px hsl(43 80% 55% / 0.12))",
-            "drop-shadow(0 0 10px hsl(43 80% 55% / 0.18)) drop-shadow(0 0 25px hsl(43 80% 55% / 0.07))",
+            "drop-shadow(0 0 14px hsl(43 80% 55% / 0.25)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.1))",
+            "drop-shadow(0 0 22px hsl(43 80% 55% / 0.4)) drop-shadow(0 0 45px hsl(43 80% 55% / 0.15))",
+            "drop-shadow(0 0 14px hsl(43 80% 55% / 0.25)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.1))",
           ],
           backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
         }}
@@ -71,7 +71,7 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
         <motion.span
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.25) 45%, hsl(var(--gold-light) / 0.4) 50%, hsl(var(--gold-light) / 0.25) 55%, transparent 100%)",
+            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.3) 45%, hsl(var(--gold-light) / 0.5) 50%, hsl(var(--gold-light) / 0.3) 55%, transparent 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
