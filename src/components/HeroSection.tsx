@@ -2567,7 +2567,8 @@ const HeroSection = () => {
         <img
           src={astrologerAvatarCta}
           alt="שיחה עם האסטרולוגית"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-105"
+          style={{ objectPosition: "center 15%" }}
           draggable={false}
         />
         {/* Hover shimmer */}
