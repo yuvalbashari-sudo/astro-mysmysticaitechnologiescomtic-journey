@@ -706,51 +706,63 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 >
                   {/* Cards revealed in a row */}
-                  <div className="flex items-center justify-center gap-4 md:gap-6">
-                    {chosenCards.map((card, i) => (
-                      <motion.div
-                        key={card.name}
-                        className="relative"
-                        style={{
-                          width: isMobile ? 80 : 130,
-                          height: isMobile ? 124 : 200,
-                        }}
-                        initial={{ opacity: 0, y: 40, rotateY: 180 }}
-                        animate={{ opacity: 1, y: 0, rotateY: 0 }}
-                        transition={{ delay: i * 0.4 + 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        <img
-                          src={tarotCardImages[card.name] || cardBack}
-                          alt={card.hebrewName}
-                          className="w-full h-full object-cover rounded-lg"
-                          style={{
-                            boxShadow: "0 0 40px hsl(var(--gold) / 0.3), 0 8px 32px hsl(var(--deep-blue) / 0.6)",
-                          }}
-                        />
+                  <div className="flex items-end justify-center gap-5 md:gap-8">
+                    {chosenCards.map((card, i) => {
+                      const isCenter = i === 1;
+                      const w = isMobile ? (isCenter ? 105 : 90) : (isCenter ? 170 : 150);
+                      const h = w * 1.55;
+                      return (
                         <motion.div
-                          className="absolute -inset-2 rounded-xl pointer-events-none"
-                          style={{ border: "1px solid hsl(var(--gold) / 0.2)" }}
-                          animate={{
-                            boxShadow: [
-                              "0 0 15px hsl(var(--gold) / 0.1)",
-                              "0 0 30px hsl(var(--gold) / 0.25)",
-                              "0 0 15px hsl(var(--gold) / 0.1)",
-                            ],
-                          }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
-                        />
-                        <motion.div
-                          className="absolute -bottom-6 left-0 right-0 text-center"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: i * 0.4 + 1 }}
+                          key={card.name}
+                          className="relative"
+                          style={{ width: w, height: h }}
+                          initial={{ opacity: 0, y: 40, rotateY: 180 }}
+                          animate={{ opacity: 1, y: 0, rotateY: 0 }}
+                          transition={{ delay: i * 0.4 + 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                         >
-                          <span className="font-heading text-xs md:text-sm text-gold/80">
-                            {card.hebrewName}
-                          </span>
+                          <img
+                            src={tarotCardImages[card.name] || cardBack}
+                            alt={card.hebrewName}
+                            className="w-full h-full object-cover rounded-lg"
+                            style={{
+                              imageRendering: "auto",
+                              boxShadow: isCenter
+                                ? "0 0 50px hsl(var(--gold) / 0.4), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
+                                : "0 0 30px hsl(var(--gold) / 0.2), 0 8px 28px hsl(var(--deep-blue) / 0.5)",
+                              filter: isCenter ? "none" : "brightness(0.85)",
+                            }}
+                          />
+                          <motion.div
+                            className="absolute -inset-2 rounded-xl pointer-events-none"
+                            style={{ border: `1px solid hsl(var(--gold) / ${isCenter ? 0.35 : 0.15})` }}
+                            animate={{
+                              boxShadow: isCenter
+                                ? [
+                                    "0 0 20px hsl(var(--gold) / 0.15)",
+                                    "0 0 40px hsl(var(--gold) / 0.35)",
+                                    "0 0 20px hsl(var(--gold) / 0.15)",
+                                  ]
+                                : [
+                                    "0 0 10px hsl(var(--gold) / 0.06)",
+                                    "0 0 20px hsl(var(--gold) / 0.12)",
+                                    "0 0 10px hsl(var(--gold) / 0.06)",
+                                  ],
+                            }}
+                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                          />
+                          <motion.div
+                            className="absolute -bottom-7 left-0 right-0 text-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: i * 0.4 + 1 }}
+                          >
+                            <span className="font-heading text-sm md:text-base text-gold/85">
+                              {card.hebrewName}
+                            </span>
+                          </motion.div>
                         </motion.div>
-                      </motion.div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* Burst particles */}
@@ -785,48 +797,54 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               {phase === "interpretation" && (
                 <motion.div
                   key="interpretation"
-                  className="pointer-events-auto w-full max-w-4xl px-4 md:px-8 overflow-hidden"
-                  style={{ marginTop: isMobile ? "10vh" : "8vh", maxHeight: isMobile ? "85vh" : "80vh" }}
+                  className="pointer-events-auto w-full max-w-5xl px-4 md:px-8 overflow-hidden"
+                  style={{ marginTop: isMobile ? "6vh" : "5vh", maxHeight: isMobile ? "88vh" : "85vh" }}
                   initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-6 md:gap-8`}>
+                  <div className={`flex ${isMobile ? "flex-col" : "flex-row"} gap-8 md:gap-12`}>
                     {/* Left: Cards display */}
                     <motion.div
-                      className={`flex ${isMobile ? "flex-row justify-center" : "flex-col items-center"} gap-3 ${isMobile ? "" : "w-48"} flex-shrink-0`}
+                      className={`flex ${isMobile ? "flex-row justify-center" : "flex-col items-center"} gap-4 ${isMobile ? "" : "w-56"} flex-shrink-0`}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.6 }}
                     >
-                      {chosenCards.map((card, i) => (
-                        <motion.div
-                          key={card.name}
-                          className="relative"
-                          style={{
-                            width: isMobile ? 65 : 100,
-                            height: isMobile ? 100 : 155,
-                          }}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.4 + i * 0.15 }}
-                        >
-                          <img
-                            src={tarotCardImages[card.name] || cardBack}
-                            alt={card.hebrewName}
-                            className="w-full h-full object-cover rounded-lg"
-                            style={{
-                              boxShadow: "0 0 25px hsl(var(--gold) / 0.2), 0 8px 24px hsl(var(--deep-blue) / 0.5)",
-                            }}
-                          />
-                          <div className="text-center mt-1.5">
-                            <span className="font-heading text-[10px] md:text-xs text-gold/70">
-                              {card.hebrewName}
-                            </span>
-                          </div>
-                        </motion.div>
-                      ))}
+                      {chosenCards.map((card, i) => {
+                        const isCenter = i === 1;
+                        const w = isMobile ? (isCenter ? 82 : 70) : (isCenter ? 135 : 115);
+                        const h = w * 1.55;
+                        return (
+                          <motion.div
+                            key={card.name}
+                            className="relative"
+                            style={{ width: w, height: h }}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.4 + i * 0.15 }}
+                          >
+                            <img
+                              src={tarotCardImages[card.name] || cardBack}
+                              alt={card.hebrewName}
+                              className="w-full h-full object-cover rounded-lg"
+                              style={{
+                                imageRendering: "auto",
+                                boxShadow: isCenter
+                                  ? "0 0 35px hsl(var(--gold) / 0.3), 0 10px 30px hsl(var(--deep-blue) / 0.6)"
+                                  : "0 0 20px hsl(var(--gold) / 0.15), 0 6px 20px hsl(var(--deep-blue) / 0.4)",
+                                filter: isCenter ? "none" : "brightness(0.8)",
+                              }}
+                            />
+                            <div className="text-center mt-2">
+                              <span className={`font-heading ${isCenter ? "text-sm md:text-base text-gold/90" : "text-xs md:text-sm text-gold/60"}`}>
+                                {card.hebrewName}
+                              </span>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
                     </motion.div>
 
                     {/* Right: Interpretation text */}
@@ -834,29 +852,32 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       ref={scrollRef}
                       className="flex-1 rounded-2xl overflow-y-auto"
                       style={{
-                        maxHeight: isMobile ? "50vh" : "68vh",
-                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.9))",
-                        border: "1px solid hsl(var(--gold) / 0.12)",
-                        boxShadow: "0 0 40px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                        maxHeight: isMobile ? "50vh" : "72vh",
+                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.7), hsl(var(--deep-blue) / 0.8))",
+                        border: "1px solid hsl(var(--gold) / 0.1)",
+                        boxShadow: "0 0 30px hsl(var(--deep-blue) / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.05)",
                       }}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.5, duration: 0.6 }}
                     >
-                      <div className="p-5 md:p-8">
+                      <div className="p-6 md:p-10">
                         {aiText ? (
-                          <div className="font-body text-foreground/85 leading-relaxed">
+                          <div
+                            className="font-body text-foreground/90 text-base md:text-lg"
+                            style={{ lineHeight: 1.85 }}
+                          >
                             {renderMysticalText(aiText)}
                           </div>
                         ) : aiLoading ? (
-                          <div className="flex flex-col items-center justify-center py-12 gap-4">
+                          <div className="flex flex-col items-center justify-center py-16 gap-4">
                             <motion.div
                               animate={{ rotate: 360 }}
                               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                             >
-                              <Sparkles className="w-6 h-6 text-gold/50" />
+                              <Sparkles className="w-7 h-7 text-gold/50" />
                             </motion.div>
-                            <p className="text-gold/40 font-body text-sm">
+                            <p className="text-gold/50 font-body text-base">
                               {language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}
                             </p>
                           </div>
@@ -865,7 +886,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         {/* Loading cursor */}
                         {aiLoading && aiText && (
                           <motion.span
-                            className="inline-block w-1.5 h-4 bg-gold/50 rounded-full ml-1 align-middle"
+                            className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle"
                             animate={{ opacity: [1, 0, 1] }}
                             transition={{ duration: 0.8, repeat: Infinity }}
                           />
@@ -877,7 +898,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   {/* Bottom CTA */}
                   {!aiLoading && aiText && (
                     <motion.div
-                      className="mt-6 text-center"
+                      className="mt-8 text-center"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 }}
