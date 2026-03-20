@@ -142,7 +142,7 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
 
 /* ── Energy Pulse ──────────────────────────────────── */
 const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobile: boolean; activeColor?: string; isNearBall?: boolean; clickBurst?: number }) => {
-  const baseSize = isMobile ? 180 : 280;
+  const baseSize = isMobile ? 210 : 330;
   const pulseColor = activeColor || "hsl(var(--gold) / 0.15)";
   const intensity = isNearBall ? 1.4 : 1;
 
