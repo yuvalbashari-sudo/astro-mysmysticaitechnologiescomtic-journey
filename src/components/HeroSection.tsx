@@ -2261,24 +2261,32 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 180px)" : "calc(5vh + 190px)" }}>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 172px)" : "calc(5vh + 182px)" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "188px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "178px" }}
           >
-            {/* Aura glow */}
+            {/* Aura glow — tighter spread for realism */}
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "230px", height: "230px",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
+                width: "210px", height: "210px",
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, hsl(var(--celestial) / 0.06) 45%, transparent 65%)",
               }}
-              animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+              animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Contact shadow — where hands meet ball edges */}
+            <div
+              className="absolute rounded-full pointer-events-none z-[23]"
+              style={{
+                width: "215px", height: "215px",
+                boxShadow: "inset 0 12px 30px hsl(var(--deep-blue) / 0.5), inset 0 -8px 25px hsl(var(--deep-blue) / 0.4), inset 12px 0 20px hsl(var(--deep-blue) / 0.25), inset -12px 0 20px hsl(var(--deep-blue) / 0.25)",
+              }}
             />
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
@@ -2316,7 +2324,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "198px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "188px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
@@ -2331,14 +2339,14 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "370px", height: "370px",
+                width: "350px", height: "350px",
                 background: hoveredItem !== null
-                  ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}15 40%, transparent 70%)`
-                  : "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
+                  ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}33 0%, ${ITEM_COLORS[hoveredItem].glow}12 40%, transparent 65%)`
+                  : "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, hsl(var(--celestial) / 0.06) 40%, transparent 65%)",
               }}
               animate={{
-                scale: hoveredItem !== null ? [1, 1.25, 1] : [1, 1.15, 1],
-                opacity: hoveredItem !== null ? [0.6, 1, 0.6] : [0.5, 0.8, 0.5],
+                scale: hoveredItem !== null ? [1, 1.2, 1] : [1, 1.1, 1],
+                opacity: hoveredItem !== null ? [0.5, 0.9, 0.5] : [0.4, 0.7, 0.4],
               }}
               transition={{ duration: hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -2365,13 +2373,20 @@ const HeroSection = () => {
             <motion.div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: "410px", height: "410px",
-                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.04) 70%, transparent 90%)",
+                width: "390px", height: "390px",
+                background: "radial-gradient(circle, transparent 50%, hsl(var(--gold) / 0.03) 70%, transparent 90%)",
               }}
-              animate={{ rotate: [0, 360], scale: [1, 1.08, 1] }}
+              animate={{ rotate: [0, 360], scale: [1, 1.06, 1] }}
               transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
             />
-            {/* Removed mystical-border rings — they created visible container edges */}
+            {/* Contact shadow — depth where hands grip the ball */}
+            <div
+              className="absolute rounded-full pointer-events-none z-[23]"
+              style={{
+                width: "375px", height: "375px",
+                boxShadow: "inset 0 16px 40px hsl(var(--deep-blue) / 0.5), inset 0 -12px 35px hsl(var(--deep-blue) / 0.45), inset 16px 0 28px hsl(var(--deep-blue) / 0.3), inset -16px 0 28px hsl(var(--deep-blue) / 0.3)",
+              }}
+            />
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
             {entranceComplete && (
               <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
