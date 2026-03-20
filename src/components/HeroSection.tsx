@@ -2270,15 +2270,23 @@ const HeroSection = () => {
             className="relative flex items-center justify-center pointer-events-auto"
             style={{ width: "100%", maxWidth: "400px", marginTop: "178px" }}
           >
-            {/* Aura glow */}
+            {/* Aura glow — tighter spread for realism */}
             <motion.div
               className="absolute rounded-full"
               style={{
-                width: "230px", height: "230px",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, hsl(var(--celestial) / 0.08) 40%, transparent 70%)",
+                width: "210px", height: "210px",
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, hsl(var(--celestial) / 0.06) 45%, transparent 65%)",
               }}
-              animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.8, 0.5] }}
+              animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Contact shadow — where hands meet ball edges */}
+            <div
+              className="absolute rounded-full pointer-events-none z-[23]"
+              style={{
+                width: "215px", height: "215px",
+                boxShadow: "inset 0 12px 30px hsl(var(--deep-blue) / 0.5), inset 0 -8px 25px hsl(var(--deep-blue) / 0.4), inset 12px 0 20px hsl(var(--deep-blue) / 0.25), inset -12px 0 20px hsl(var(--deep-blue) / 0.25)",
+              }}
             />
             {entranceComplete && (
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} />
