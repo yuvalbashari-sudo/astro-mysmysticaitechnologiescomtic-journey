@@ -2,7 +2,6 @@ import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from
 import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
-import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import AstrologerIntroModal from "./AstrologerIntroModal";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
@@ -994,7 +993,7 @@ const ZodiacWheel = ({
                 {/* Planetary influence — large premium info card */}
                 {isHovered && isRuling && (
                   <motion.div
-                    className="fixed z-[100] pointer-events-none"
+                    className="absolute z-[100] pointer-events-none"
                     style={{
                       left: "50%",
                       top: "50%",
@@ -2030,16 +2029,13 @@ const HeroSection = () => {
   // Active energy color based on hovered item
   const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
 
-  const heroLayer = typeof document !== "undefined"
-    ? createPortal(
-        <>
-    {/* ── Fixed cinematic background ── */}
-    <div
-      ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      className="fixed inset-0 z-0 isolate"
-      style={{}}
-    >
+  return (
+    <>
+      <section
+        ref={sectionRef}
+        onMouseMove={handleMouseMove}
+        className="relative isolate min-h-screen overflow-hidden"
+      >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
         className="absolute inset-0 z-[100] pointer-events-none"
@@ -2528,7 +2524,7 @@ const HeroSection = () => {
     </motion.button>
 
     {/* ── Top horizontal feature tabs — OUTSIDE isolate container for correct stacking ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "72px" : "96px" }}>
+    <div className="absolute z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "72px" : "96px" }}>
       <motion.div
         className={`flex justify-center mx-auto pointer-events-auto ${isMobile ? "flex-wrap gap-2.5 max-w-sm" : "gap-4 max-w-4xl"}`}
         initial={{ opacity: 0, y: -15 }}
@@ -2602,16 +2598,7 @@ const HeroSection = () => {
           );
         })}
       </motion.div>
-    </div>
-
-        </>,
-        document.body
-      )
-    : null;
-
-  return (
-    <>
-      {heroLayer}
+      </section>
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
