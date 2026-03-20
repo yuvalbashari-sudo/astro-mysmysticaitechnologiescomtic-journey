@@ -5,6 +5,7 @@ import mysticalAvatarCta from "@/assets/mystical-avatar-cta.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
