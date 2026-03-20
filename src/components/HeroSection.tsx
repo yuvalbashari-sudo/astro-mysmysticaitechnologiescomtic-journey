@@ -2412,17 +2412,19 @@ const HeroSection = () => {
               <motion.div
                 className="absolute inset-0 rounded-full"
                 style={{
-                  background: hoveredTeaser === "right"
+                  background: hoveredZodiacColor
+                    ? `radial-gradient(circle, ${hoveredZodiacColor.replace(')', ' / 0.18)')} 0%, ${hoveredZodiacColor.replace(')', ' / 0.08)')} 40%, transparent 60%)`
+                    : hoveredTeaser === "right"
                     ? "radial-gradient(circle, hsl(270 60% 50% / 0.18) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 60%)"
                     : hoveredTeaser === "left"
                       ? "radial-gradient(circle, hsl(43 70% 55% / 0.16) 0%, hsl(215 60% 50% / 0.08) 40%, transparent 60%)"
                       : hoveredItem !== null
                         ? `radial-gradient(circle, ${ITEM_COLORS[hoveredItem].glow}2a 0%, ${ITEM_COLORS[hoveredItem].glow}10 40%, transparent 60%)`
                         : "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 40%, transparent 60%)",
-                  transition: "background 0.6s ease-out",
+                  transition: "background 0.4s ease-out",
                 }}
                 animate={{
-                  scale: hoveredTeaser ? [1, 1.12, 1] : hoveredItem !== null ? [1, 1.15, 1] : [1, 1.08, 1],
+                  scale: hoveredZodiacColor ? [1, 1.1, 1] : hoveredTeaser ? [1, 1.12, 1] : hoveredItem !== null ? [1, 1.15, 1] : [1, 1.08, 1],
                   opacity: hoveredTeaser ? [0.6, 1, 0.6] : hoveredItem !== null ? [0.5, 0.9, 0.5] : [0.4, 0.7, 0.4],
                 }}
                 transition={{ duration: hoveredTeaser ? 2.2 : hoveredItem !== null ? 2 : 4, repeat: Infinity, ease: "easeInOut" }}
