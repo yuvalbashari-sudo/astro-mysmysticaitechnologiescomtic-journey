@@ -2770,8 +2770,8 @@ const HeroSection = () => {
               {t.hero_services_line}
             </motion.p>
 
-            {/* Spacer for crystal ball scene (now in fixed layer) */}
-            <div style={{ minHeight: "520px", marginTop: "20px" }} />
+            {/* Spacer for crystal ball scene (now in fixed layer) — pointer-events-none to allow clicking tabs behind */}
+            <div style={{ minHeight: "520px", marginTop: "20px", pointerEvents: "none" }} />
 
             {/* Primary CTA + Social Proof */}
             <motion.div
