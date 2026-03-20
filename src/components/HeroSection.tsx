@@ -207,7 +207,6 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
             height: "120%",
             top: "-10%",
             background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08), transparent)",
-            filter: "blur(8px)",
             borderRadius: "50%",
           }}
           animate={{
@@ -2421,7 +2420,6 @@ const HeroSection = () => {
                     borderWidth: "1px", borderStyle: "solid",
                     borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.15)",
                     background: hoveredItem === i ? `${itemColor.glow}18` : "hsl(var(--deep-blue) / 0.4)",
-                    backdropFilter: "blur(14px)",
                     boxShadow: hoveredItem === i
                       ? `0 0 24px ${itemColor.glow}55, 0 0 48px ${itemColor.glow}18, inset 0 1px 0 hsl(var(--gold) / 0.08)`
                       : "inset 0 1px 0 hsl(var(--gold) / 0.06)",
@@ -2429,14 +2427,9 @@ const HeroSection = () => {
                   animate={{ opacity: [0.92, 1, 0.95, 1, 0.92] }}
                   transition={{ duration: 6 + i * 0.8, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
                 >
-                  <motion.div
-                    animate={hoveredItem === i ? {
-                      filter: [`drop-shadow(0 0 4px ${itemColor.glow}88)`, `drop-shadow(0 0 10px ${itemColor.glow})`, `drop-shadow(0 0 4px ${itemColor.glow}88)`],
-                    } : { filter: "none" }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  >
+                  <div>
                     <item.icon className={`flex-shrink-0 transition-colors duration-300 ${isMobile ? "w-[18px] h-[18px]" : "w-5 h-5"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--gold) / 0.7)" }} />
-                  </motion.div>
+                  </div>
                   <span className={`font-body transition-colors duration-300 ${isMobile ? "text-xs font-medium" : "text-[13px] font-semibold"}`} style={{ color: hoveredItem === i ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}>
                     {item.label}
                   </span>

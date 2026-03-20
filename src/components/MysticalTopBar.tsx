@@ -53,15 +53,9 @@ const MysticalTopBar = ({ onOpenHistory, hasHistory }: Props) => {
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
-          filter: "drop-shadow(0 0 14px hsl(43 80% 55% / 0.25)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.1))",
           marginTop: "-6px",
         }}
         animate={{
-          filter: [
-            "drop-shadow(0 0 14px hsl(43 80% 55% / 0.25)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.1))",
-            "drop-shadow(0 0 22px hsl(43 80% 55% / 0.4)) drop-shadow(0 0 45px hsl(43 80% 55% / 0.15))",
-            "drop-shadow(0 0 14px hsl(43 80% 55% / 0.25)) drop-shadow(0 0 30px hsl(43 80% 55% / 0.1))",
-          ],
           backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
         }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
