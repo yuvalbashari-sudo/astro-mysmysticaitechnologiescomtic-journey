@@ -2526,7 +2526,7 @@ const HeroSection = () => {
           src={astrologerAvatarCta}
           alt="שיחה עם האסטרולוגית"
           className="w-full h-full object-cover scale-105"
-          style={{ objectPosition: "center 20%" }}
+          style={{ objectPosition: "center 42%" }}
           draggable={false}
         />
         {/* Hover shimmer */}
