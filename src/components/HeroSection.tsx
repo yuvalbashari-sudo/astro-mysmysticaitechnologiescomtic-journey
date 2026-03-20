@@ -3,6 +3,7 @@ import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import crystalBall from "@/assets/crystal-ball.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import RisingSignModal from "./RisingSignModal";
 import CompatibilityModal from "./CompatibilityModal";
@@ -2095,13 +2096,14 @@ const HeroSection = () => {
   // Active energy color based on hovered item
   const activeColor = hoveredItem !== null ? ITEM_COLORS[hoveredItem]?.glow : undefined;
 
-  return (
-    <>
+  const heroLayer = typeof document !== "undefined"
+    ? createPortal(
+        <>
     {/* ── Fixed cinematic background ── */}
     <div
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="fixed inset-0 z-0"
+      className="fixed inset-0 z-0 isolate"
       style={{}}
     >
       {/* ── Cinematic entrance overlay ── */}
@@ -2593,6 +2595,15 @@ const HeroSection = () => {
         </motion.button>
       </div>
     </div>
+        </>,
+        document.body
+      )
+    : null;
+
+  return (
+    <>
+      {heroLayer}
+
 
     {/* ── Scrollable content layer ── */}
     <section className="relative z-10 min-h-screen flex flex-col items-center justify-center overflow-x-hidden" style={{ background: "transparent" }}>
