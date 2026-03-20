@@ -753,7 +753,7 @@ const ZodiacWheel = ({
   return (
     <motion.div
       className="absolute pointer-events-none z-[16]"
-      style={{ width: radius * 2 + 40, height: radius * 2 + 40, marginTop: isMobile ? 0 : -100 }}
+      style={{ width: radius * 2 + 40, height: radius * 2 + 40, marginTop: isMobile ? 0 : -200 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2, delay: 1.5 }}
