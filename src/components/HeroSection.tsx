@@ -717,7 +717,7 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 390 : 680;
+  const radius = isMobile ? 390 : 666;
   const iconSize = isMobile ? 56 : 90;
   const rulingIndex = getRulingSignIndex();
 
@@ -758,7 +758,7 @@ const ZodiacWheel = ({
         height: radius * 2 + 40,
         left: "50%",
         top: "50%",
-        transform: `translate(-50%, -50%) translateY(${isMobile ? 0 : -200}px)`,
+        transform: `translate(-50%, -50%) translateY(${isMobile ? 0 : -170}px)`,
       }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
