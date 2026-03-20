@@ -360,13 +360,6 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       <video ref={videoBRef} muted loop playsInline src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
-      {/* Subtle glass highlight — light only, no darkness */}
-      <div className="absolute pointer-events-none" style={{
-        width: "50%", height: "40%", top: "6%", left: "10%",
-        borderRadius: "50%",
-        background: "radial-gradient(ellipse at 40% 30%, rgba(255,254,248,0.2) 0%, rgba(255,254,248,0.05) 50%, transparent 100%)",
-        zIndex: 6,
-      }} />
     </div>
   );
 };
