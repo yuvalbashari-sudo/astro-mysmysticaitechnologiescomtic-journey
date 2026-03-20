@@ -1109,8 +1109,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         <div
                           className="absolute inset-0 pointer-events-none"
                           style={{
-                            background: "radial-gradient(ellipse 90% 70% at 50% 30%, hsl(222 47% 6% / 0.45), transparent 80%)",
-                            filter: "blur(40px)",
+                            background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)",
+                            filter: "blur(50px)",
                           }}
                         />
 
