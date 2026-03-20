@@ -2674,38 +2674,56 @@ const HeroSection = () => {
             {/* Left CTA teaser — ABOVE tabs */}
             <motion.button
               type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-3"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
               onClick={() => setCompatibilityOpen(true)}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: [0.9, 1, 0.9], y: [0, -3, 0] }}
-              transition={{ delay: 2.2, duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              whileHover={{ scale: 1.07, x: 6 }}
+              whileTap={{ scale: 0.96 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
+              transition={{ delay: 2.2, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
-              <div className="text-center">
-                <div
-                  className="text-[22px] font-heading font-bold tracking-wide leading-tight"
-                  style={{
-                    color: "#fff",
-                    textShadow: "0 0 8px rgba(0, 150, 255, 0.6), 0 0 16px rgba(0, 150, 255, 0.35), 0 0 32px rgba(0, 150, 255, 0.15)",
-                  }}
-                >
-                  {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
+              <motion.div
+                className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
+                  border: "1px solid rgba(0, 150, 255, 0.25)",
+                  boxShadow: "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                }}
+                animate={{
+                  boxShadow: [
+                    "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    "0 0 32px rgba(0, 150, 255, 0.2), 0 0 64px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
+                    "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  ],
+                }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="flex items-center justify-center gap-2.5">
+                  <Sparkles className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
+                  <div
+                    className="text-[26px] font-heading font-bold tracking-wide leading-tight"
+                    style={{
+                      color: "#fff",
+                      textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35), 0 0 40px rgba(0, 150, 255, 0.15)",
+                    }}
+                  >
+                    {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
+                  </div>
                 </div>
-                <div className="text-[13px] font-body mt-1.5" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                <div className="text-[14px] font-body mt-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
                 </div>
                 <motion.div
-                  className="mx-auto mt-1.5 rounded-full"
+                  className="mx-auto mt-3 rounded-full"
                   style={{
-                    width: "70%", height: 2,
-                    background: "linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.5), transparent)",
-                    boxShadow: "0 0 6px rgba(0, 150, 255, 0.3)",
+                    width: "75%", height: 2,
+                    background: "linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.55), transparent)",
+                    boxShadow: "0 0 8px rgba(0, 150, 255, 0.35)",
                   }}
-                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  animate={{ opacity: [0.4, 0.9, 0.4] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 />
-              </div>
+              </motion.div>
             </motion.button>
 
             {menuItems.filter((_, i) => i < 3).map((item, idx) => {
@@ -2790,38 +2808,56 @@ const HeroSection = () => {
             {/* Right CTA teaser — ABOVE tabs */}
             <motion.button
               type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-3"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
               onClick={() => setTarotOpen(true)}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: [0.9, 1, 0.9], y: [0, -3, 0] }}
-              transition={{ delay: 2.5, duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              whileHover={{ scale: 1.07, x: -6 }}
+              whileTap={{ scale: 0.96 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
+              transition={{ delay: 2.5, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
-              <div className="text-center">
-                <div
-                  className="text-[22px] font-heading font-bold tracking-wide leading-tight"
-                  style={{
-                    color: "#fff",
-                    textShadow: "0 0 8px rgba(220, 50, 50, 0.6), 0 0 16px rgba(220, 50, 50, 0.35), 0 0 32px rgba(220, 50, 50, 0.15)",
-                  }}
-                >
-                  {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
+              <motion.div
+                className="relative rounded-2xl px-7 py-5 backdrop-blur-xl text-center overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
+                  border: "1px solid rgba(220, 50, 50, 0.25)",
+                  boxShadow: "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                }}
+                animate={{
+                  boxShadow: [
+                    "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                    "0 0 32px rgba(220, 50, 50, 0.2), 0 0 64px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.08)",
+                    "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  ],
+                }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="flex items-center justify-center gap-2.5">
+                  <Eye className="w-6 h-6 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
+                  <div
+                    className="text-[26px] font-heading font-bold tracking-wide leading-tight"
+                    style={{
+                      color: "#fff",
+                      textShadow: "0 0 10px rgba(220, 50, 50, 0.65), 0 0 20px rgba(220, 50, 50, 0.35), 0 0 40px rgba(220, 50, 50, 0.15)",
+                    }}
+                  >
+                    {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
+                  </div>
                 </div>
-                <div className="text-[13px] font-body mt-1.5" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                <div className="text-[14px] font-body mt-2" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
                 </div>
                 <motion.div
-                  className="mx-auto mt-1.5 rounded-full"
+                  className="mx-auto mt-3 rounded-full"
                   style={{
-                    width: "70%", height: 2,
-                    background: "linear-gradient(90deg, transparent, rgba(220, 50, 50, 0.5), transparent)",
-                    boxShadow: "0 0 6px rgba(220, 50, 50, 0.3)",
+                    width: "75%", height: 2,
+                    background: "linear-gradient(90deg, transparent, rgba(220, 50, 50, 0.55), transparent)",
+                    boxShadow: "0 0 8px rgba(220, 50, 50, 0.35)",
                   }}
-                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  animate={{ opacity: [0.4, 0.9, 0.4] }}
                   transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 />
-              </div>
+              </motion.div>
             </motion.button>
 
             {menuItems.filter((_, i) => i >= 3).map((item, idx) => {
