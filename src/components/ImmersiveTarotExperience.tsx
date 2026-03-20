@@ -129,19 +129,27 @@ const FloatingCard = ({
 }) => {
   const mid = (totalCards - 1) / 2;
   const distFromCenter = Math.abs(index - mid);
-  // Cards closer to center are slightly larger (depth illusion)
   const depthScale = 1 - distFromCenter * 0.025;
   const cardW = (isMobile ? 58 : 100) * depthScale;
   const cardH = cardW * 1.55;
   const spread = isMobile ? 36 : 58;
   const centerOffset = mid * spread;
   const x = index * spread - centerOffset;
-  // Arc: center cards higher, edges lower
   const arcY = distFromCenter * distFromCenter * (isMobile ? 4 : 6);
-  // Fan rotation
   const baseRotation = (index - mid) * (isMobile ? 5 : 4);
-  // Subtle floating offset per card
   const floatDelay = index * 0.4;
+
+  // Swap image at midpoint of flip for reliable reveal
+  const [showFront, setShowFront] = useState(false);
+
+  useEffect(() => {
+    if (isFlipped && !showFront) {
+      const timer = setTimeout(() => setShowFront(true), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [isFlipped, showFront]);
+
+  const frontImgSrc = tarotCardImages[card.name] || cardBack;
 
   return (
     <motion.div
@@ -149,7 +157,6 @@ const FloatingCard = ({
       style={{
         width: cardW,
         height: cardH,
-        perspective: "900px",
         zIndex: isSelected ? 30 : Math.round(10 + (totalCards - distFromCenter)),
       }}
       initial={{ opacity: 0, y: 100, rotateZ: baseRotation * 2 }}
@@ -168,20 +175,16 @@ const FloatingCard = ({
       } : {}}
       onClick={!isSelected ? onClick : undefined}
     >
-      {/* Subtle floating animation */}
       <motion.div
         className="w-full h-full relative"
         animate={{ y: [0, -2.5, 0, 2, 0] }}
         transition={{ duration: 5, delay: floatDelay, repeat: Infinity, ease: "easeInOut" }}
       >
-        {/* Drop shadow beneath card */}
+        {/* Drop shadow */}
         <motion.div
           className="absolute pointer-events-none"
           style={{
-            width: "80%",
-            height: 8,
-            bottom: -6,
-            left: "10%",
+            width: "80%", height: 8, bottom: -6, left: "10%",
             borderRadius: "50%",
             background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.55) 0%, transparent 70%)",
             filter: "blur(5px)",
@@ -194,69 +197,51 @@ const FloatingCard = ({
           transition={{ duration: 0.4 }}
         />
 
-        {/* Bottom edge glow (energy from below) */}
+        {/* Bottom edge glow */}
         <div
           className="absolute pointer-events-none"
           style={{
-            width: "70%",
-            height: 12,
-            bottom: 0,
-            left: "15%",
+            width: "70%", height: 12, bottom: 0, left: "15%",
             background: "radial-gradient(ellipse 100% 100% at 50% 100%, hsl(var(--gold) / 0.15) 0%, transparent 80%)",
-            filter: "blur(4px)",
-            borderRadius: "0 0 8px 8px",
+            filter: "blur(4px)", borderRadius: "0 0 8px 8px",
           }}
         />
 
+        {/* Card body — rotates on Y, image swaps at midpoint */}
         <motion.div
-          className="w-full h-full relative rounded-xl overflow-hidden"
-          style={{ transformStyle: "preserve-3d" }}
+          className="w-full h-full rounded-xl overflow-hidden"
           animate={{
             rotateY: isFlipped ? 180 : 0,
             scale: isFlipped ? [1, 1.05, 1] : 1,
           }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+          style={{ perspective: 900 }}
         >
-          {/* Back */}
           <div
-            className="absolute inset-0 rounded-xl overflow-hidden"
+            className="w-full h-full rounded-xl overflow-hidden"
             style={{
-              backfaceVisibility: "hidden",
-              boxShadow: `
-                0 ${isSelected ? 20 : 8}px ${isSelected ? 40 : 20}px hsl(0 0% 0% / ${isSelected ? 0.5 : 0.4}),
-                0 0 ${isSelected ? 30 : 10}px hsl(270 40% 40% / ${isSelected ? 0.15 : 0.06}),
-                inset 0 -1px 3px hsl(var(--gold) / 0.08)
-              `,
-              border: "1px solid hsl(var(--gold) / 0.1)",
+              boxShadow: showFront
+                ? "0 0 40px hsl(var(--gold) / 0.3), 0 16px 48px hsl(0 0% 0% / 0.5)"
+                : `0 ${isSelected ? 20 : 8}px ${isSelected ? 40 : 20}px hsl(0 0% 0% / ${isSelected ? 0.5 : 0.4})`,
+              border: showFront ? "1px solid hsl(var(--gold) / 0.3)" : "1px solid hsl(var(--gold) / 0.1)",
             }}
           >
-            <img src={cardBack} alt="" className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
-            <div
-              className="absolute inset-0 rounded-xl pointer-events-none"
+            <img
+              src={showFront ? frontImgSrc : cardBack}
+              alt={showFront ? card.hebrewName : ""}
+              className="w-full h-full object-cover"
               style={{
-                boxShadow: "inset 0 0 6px 1px hsl(var(--gold) / 0.1), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                imageRendering: "auto",
+                /* Mirror the front image since parent is rotated 180deg */
+                transform: showFront ? "scaleX(-1)" : "none",
               }}
             />
-          </div>
-          {/* Front */}
-          <div
-            className="absolute inset-0 rounded-xl overflow-hidden"
-            style={{
-              backfaceVisibility: "hidden",
-              transform: "rotateY(180deg)",
-              boxShadow: `
-                0 0 40px hsl(var(--gold) / 0.3),
-                0 16px 48px hsl(0 0% 0% / 0.5),
-                inset 0 0 10px hsl(var(--gold) / 0.1)
-              `,
-              border: "1px solid hsl(var(--gold) / 0.3)",
-            }}
-          >
-            <img src={tarotCardImages[card.name] || cardBack} alt={card.hebrewName} className="w-full h-full object-cover" style={{ imageRendering: "auto" }} />
             <div
               className="absolute inset-0 rounded-xl pointer-events-none"
               style={{
-                boxShadow: "inset 0 0 8px 1px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--gold) / 0.18)",
+                boxShadow: showFront
+                  ? "inset 0 0 8px 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.18)"
+                  : "inset 0 0 6px 1px hsl(var(--gold) / 0.1), inset 0 1px 0 hsl(var(--gold) / 0.12)",
               }}
             />
           </div>
@@ -268,33 +253,21 @@ const FloatingCard = ({
             <>
               <motion.div
                 className="absolute inset-0 rounded-xl pointer-events-none"
-                style={{
-                  background: "radial-gradient(circle, hsl(var(--gold) / 0.5) 0%, transparent 60%)",
-                }}
+                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.5) 0%, transparent 60%)" }}
                 initial={{ opacity: 0, scale: 0.7 }}
                 animate={{ opacity: [0, 1, 0], scale: [0.7, 1.4, 1.8] }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.9, ease: "easeOut" }}
               />
-              {/* Radial particles */}
               {[...Array(6)].map((_, pi) => {
                 const a = (pi / 6) * Math.PI * 2;
                 return (
                   <motion.div
                     key={`bp-${pi}`}
                     className="absolute rounded-full pointer-events-none"
-                    style={{
-                      width: 3, height: 3,
-                      left: "50%", top: "50%",
-                      background: "hsl(var(--gold) / 0.9)",
-                    }}
+                    style={{ width: 3, height: 3, left: "50%", top: "50%", background: "hsl(var(--gold) / 0.9)" }}
                     initial={{ x: 0, y: 0, opacity: 0 }}
-                    animate={{
-                      x: Math.cos(a) * 50,
-                      y: Math.sin(a) * 50,
-                      opacity: [0, 1, 0],
-                      scale: [0, 1.5, 0],
-                    }}
+                    animate={{ x: Math.cos(a) * 50, y: Math.sin(a) * 50, opacity: [0, 1, 0], scale: [0, 1.5, 0] }}
                     transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
                   />
                 );
@@ -305,20 +278,17 @@ const FloatingCard = ({
 
         {/* Card name under revealed card */}
         <AnimatePresence>
-          {isFlipped && isSelected && (
+          {showFront && isSelected && (
             <motion.div
               className="absolute left-0 right-0 text-center pointer-events-none"
               style={{ top: cardH + 8 }}
               initial={{ opacity: 0, y: -6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
             >
               <span
                 className="font-heading text-gold/85"
-                style={{
-                  fontSize: isMobile ? 9 : 12,
-                  textShadow: "0 0 10px hsl(var(--gold) / 0.3)",
-                }}
+                style={{ fontSize: isMobile ? 9 : 12, textShadow: "0 0 10px hsl(var(--gold) / 0.3)" }}
               >
                 {card.hebrewName}
               </span>
