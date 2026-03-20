@@ -2250,14 +2250,7 @@ const HeroSection = () => {
               style={{ width: "180px", height: "180px" }}
               onClick={handleCrystalClick}
             >
-              <div className="absolute pointer-events-none z-30 rounded-full" style={{
-                width: "45%", height: "35%", top: "8%", left: "12%",
-                background: "radial-gradient(ellipse at 40% 35%, rgba(255,254,250,0.18) 0%, rgba(255,254,250,0.05) 45%, transparent 100%)",
-                filter: "blur(2px)",
-              }} />
-              <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
-                background: "radial-gradient(circle, transparent 58%, hsl(215 60% 60% / 0.06) 70%, hsl(43 80% 55% / 0.04) 80%, transparent 88%)",
-              }} />
+              {/* No overlays — pure media only */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
                   <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
