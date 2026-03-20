@@ -1051,7 +1051,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                         transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        <div className="p-6" style={{ fontSize: `${[1, 1.15, 1.3][textSizeLevel]}rem`, transition: "font-size 0.25s ease" }}>
+                        <div className="p-6">
                           {/* Text size control — mobile */}
                           <div className="flex items-center gap-1.5 mb-4" style={{ direction: "ltr" }}>
                             {([0, 1, 2] as const).map((level) => {
@@ -1078,6 +1078,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               );
                             })}
                           </div>
+                          <div style={{ zoom: [1, 1.15, 1.3][textSizeLevel], transition: "zoom 0.25s ease" }}>
                           <motion.h3
                             className="font-heading text-center mb-6"
                             style={{ fontSize: "1.15rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
@@ -1102,6 +1103,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           {aiLoading && aiText && (
                             <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
                           )}
+                          </div>{/* end mobile zoom wrapper */}
                         </div>
                       </motion.div>
 
@@ -1141,7 +1143,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           }}
                         />
 
-                        <div className="relative" style={{ padding: "0 16px 60px", fontSize: `${[1, 1.15, 1.3][textSizeLevel]}rem`, transition: "font-size 0.25s ease" }}>
+                        <div className="relative" style={{ padding: "0 16px 60px" }}>
 
                           {/* ── Text size control ── */}
                           <motion.div
@@ -1178,6 +1180,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             })}
                           </motion.div>
 
+                          <div style={{ zoom: [1, 1.15, 1.3][textSizeLevel], transition: "zoom 0.25s ease" }}>
                           {/* ── Emotional opening whisper ── */}
                           <motion.div
                             className="mb-8 text-center"
@@ -1370,6 +1373,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               </div>
                             </motion.div>
                           )}
+                          </div>{/* end zoom wrapper */}
                         </div>
                       </motion.div>
 
