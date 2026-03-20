@@ -47,17 +47,17 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         <motion.h1
           className="font-heading uppercase relative"
           style={{
-            fontSize: "clamp(28px, 4vw, 52px)",
+            fontSize: "clamp(40px, 6vw, 78px)",
             fontWeight: 700,
-            letterSpacing: "0.55em",
+            letterSpacing: "0.5em",
+            lineHeight: 1,
             background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
             backgroundSize: "200% 200%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            marginTop: "-6px",
             textShadow: "none",
-            filter: "drop-shadow(0 0 12px hsl(var(--gold) / 0.2))",
+            filter: "drop-shadow(0 0 16px hsl(var(--gold) / 0.25))",
           }}
           animate={{
             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
@@ -65,7 +65,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
           ASTROLOGAI
-          {/* Cinematic light sweep */}
           <motion.span
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -82,23 +81,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             ASTROLOGAI
           </motion.span>
         </motion.h1>
-
-        {/* Hebrew subheadline */}
-        <motion.p
-          className="font-body text-center mt-1"
-          style={{
-            fontSize: "clamp(11px, 1.4vw, 15px)",
-            color: "hsl(var(--foreground) / 0.55)",
-            letterSpacing: "0.04em",
-            lineHeight: 1.5,
-          }}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          dir="rtl"
-        >
-          גלו את העתיד שלכם באמצעות בינה מלאכותית ואסטרולוגיה
-        </motion.p>
       </div>
 
       {/* Left side: Actions */}
