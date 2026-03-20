@@ -829,6 +829,9 @@ const ZodiacWheel = ({
           const rulingIconSize = isRuling ? (isMobile ? 68 : 104) : iconSize;
           const planetColor = planetaryInfluence ? PLANET_COLORS[planetaryInfluence.planet] || "43 80% 55%" : "43 80% 55%";
 
+          // Tangential angle in degrees for orienting the icon along the curve
+          const tangentDeg = ((i / 12) * 360);
+
           return (
             <motion.div
               key={sign.en}
@@ -845,6 +848,22 @@ const ZodiacWheel = ({
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
             >
+              {/* Anchor aura — subtle golden ring connecting icon to the orbit */}
+              {!isRuling && (
+                <motion.div
+                  className="absolute rounded-full pointer-events-none"
+                  style={{
+                    inset: -4,
+                    border: "1px solid hsl(43 80% 55% / 0.1)",
+                    background: "radial-gradient(circle, hsl(43 80% 55% / 0.05) 0%, transparent 70%)",
+                    boxShadow: "0 0 8px hsl(43 80% 55% / 0.06), inset 0 0 6px hsl(43 80% 55% / 0.03)",
+                  }}
+                  animate={{
+                    opacity: [0.5, 0.8, 0.5],
+                  }}
+                  transition={{ duration: 4 + i * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                />
+              )}
               {/* Permanent planetary influence aura */}
               {isRuling && (
                 <>
