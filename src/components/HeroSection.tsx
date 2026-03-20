@@ -2548,7 +2548,7 @@ const HeroSection = () => {
 
         {/* Headline */}
         <motion.h1
-          className="font-heading text-xl md:text-3xl lg:text-4xl font-bold leading-[1.2] mb-3 md:mb-4"
+          className="font-heading text-xl md:text-3xl lg:text-4xl font-bold leading-[1.2] mb-4 md:mb-6"
           style={{
             color: "hsl(var(--foreground))",
             textShadow: "0 2px 24px hsl(var(--deep-blue)), 0 0 60px hsl(var(--deep-blue) / 0.8)",
