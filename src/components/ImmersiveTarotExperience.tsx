@@ -626,7 +626,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                 <motion.div
                   key="drawing"
                   className="pointer-events-auto text-center w-full px-4"
-                  style={{ marginTop: isMobile ? "28vh" : "22vh" }}
+                  style={{ marginTop: isMobile ? "38vh" : "36vh" }}
                   initial={{ opacity: 0, filter: "blur(8px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(8px)" }}
@@ -652,8 +652,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {language === "he" ? "הקשיבו לאינטואיציה ובחרו" : "Listen to your intuition and choose"}
                   </motion.div>
 
-                  {/* Card fan */}
-                  <div className="relative flex items-center justify-center" style={{ height: isMobile ? 140 : 200 }}>
+                  {/* Card fan — aligned with oracle's hands */}
+                  <div className="relative flex items-center justify-center" style={{ height: isMobile ? 160 : 240 }}>
                     {drawnCards.map((card, i) => (
                       <FloatingCard
                         key={`card-${i}`}
