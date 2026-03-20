@@ -2571,6 +2571,25 @@ const HeroSection = () => {
           </motion.div>
         )}
       </div>
+      {/* ── Fixed CTA below crystal ball ── */}
+      <div
+        className="absolute inset-x-0 flex justify-center pointer-events-none z-[13]"
+        style={{
+          top: `calc(50% + ${isMobile ? "145px" : "160px"} + ${isMobile ? "120px" : "210px"} + 70px)`,
+        }}
+      >
+        <motion.button
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.2, duration: 0.6 }}
+          onClick={() => setTarotOpen(true)}
+          className={`btn-gold rounded-full font-heading tracking-wider pointer-events-auto ${isMobile ? "text-sm px-10 py-3.5" : "text-base px-12 py-4"}`}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          {t.hero_cta_personal}
+        </motion.button>
+      </div>
     </div>
 
     {/* ── Scrollable content layer ── */}
@@ -2619,18 +2638,7 @@ const HeroSection = () => {
             {/* Spacer for crystal ball (now in fixed layer) */}
             <div style={{ height: "32vh", maxHeight: "280px" }} />
 
-            {/* Primary CTA */}
-            <motion.button
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.6 }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setTarotOpen(true)}
-              className="btn-gold rounded-full font-heading text-sm tracking-wider px-10 py-3.5"
-            >
-              {t.hero_cta_personal}
-            </motion.button>
+            {/* CTA moved to fixed layer */}
 
             {/* Social proof */}
             <motion.p
@@ -2773,21 +2781,13 @@ const HeroSection = () => {
             {/* Spacer for crystal ball scene (now in fixed layer) — pointer-events-none to allow clicking tabs behind */}
             <div style={{ minHeight: "520px", marginTop: "20px", pointerEvents: "none" }} />
 
-            {/* Primary CTA + Social Proof */}
+            {/* CTA moved to fixed layer */}
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ delay: 2.2 }}
               className="text-center mt-2"
             >
-              <motion.button
-                onClick={() => setTarotOpen(true)}
-                className="btn-gold rounded-full font-heading text-base tracking-wider px-12 py-4"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                {t.hero_cta_personal}
-              </motion.button>
               <p className="text-muted-foreground/40 font-body text-xs mt-3">
                 ✦ {t.hero_social_proof} ✦
               </p>
