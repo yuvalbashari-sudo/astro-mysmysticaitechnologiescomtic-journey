@@ -2676,13 +2676,13 @@ const HeroSection = () => {
       </motion.div>
     </div>
 
-    {/* ── Speech Bubble — side of character shoulders ── */}
+    {/* ── Speech Bubble — side of character, below face on mobile ── */}
     <motion.div
       className="absolute z-[64] pointer-events-none"
       style={{
-        right: isMobile ? "5%" : "8%",
-        top: isMobile ? "38%" : "35%",
-        maxWidth: isMobile ? "160px" : "220px",
+        right: isMobile ? "8%" : "8%",
+        top: isMobile ? "56%" : "35%",
+        maxWidth: isMobile ? "140px" : "220px",
       }}
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -2698,7 +2698,7 @@ const HeroSection = () => {
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        <p className="font-body text-[10px] md:text-[11px] leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.65)" }}>
+        <p className="font-body leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.65)", fontSize: isMobile ? "9px" : "11px" }}>
           ✦ אני אחשוף עבורך את מה שמסתתר מתחת לפני השטח
         </p>
         {/* Arrow pointing left toward oracle */}
