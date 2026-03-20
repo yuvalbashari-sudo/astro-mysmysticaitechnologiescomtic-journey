@@ -2294,15 +2294,15 @@ const HeroSection = () => {
           />
         </>
       )}
-      {/* ── Crystal ball + zodiac scene (fixed in viewport center) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 95px)" : "calc(5vh + 135px)" }}>
+      {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 125px)" : "calc(5vh + 165px)" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "145px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "175px" }}
           >
             {/* Aura glow */}
             <motion.div
@@ -2357,7 +2357,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "160px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "190px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
@@ -2412,18 +2412,7 @@ const HeroSection = () => {
               animate={{ rotate: [0, 360], scale: [1, 1.08, 1] }}
               transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
             />
-            <motion.div
-              className="absolute rounded-full mystical-border"
-              style={{ width: "380px", height: "380px", borderColor: "hsl(var(--gold) / 0.1)" }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute rounded-full mystical-border"
-              style={{ width: "420px", height: "420px", borderColor: "hsl(var(--gold) / 0.06)" }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-            />
+            {/* Removed mystical-border rings — they created visible container edges */}
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
             {entranceComplete && (
               <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
@@ -2528,14 +2517,14 @@ const HeroSection = () => {
                   onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
                 >
                   <motion.div
-                    className="relative flex items-center justify-center gap-2.5 px-5 py-3 rounded-full backdrop-blur-md transition-all duration-300 whitespace-nowrap"
+                    className="relative flex items-center justify-center gap-2.5 px-5 py-3 rounded-full transition-all duration-300 whitespace-nowrap"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
-                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.18)",
-                      background: hoveredItem === i ? `${itemColor.glow}22` : "hsl(var(--muted) / 0.25)",
+                      borderColor: hoveredItem === i ? `${itemColor.glow}99` : "hsl(var(--gold) / 0.12)",
+                      background: hoveredItem === i ? `${itemColor.glow}18` : "transparent",
                       boxShadow: hoveredItem === i
                         ? `0 0 30px ${itemColor.glow}55, 0 0 60px ${itemColor.glow}22`
-                        : "0 0 12px hsl(var(--gold) / 0.1)",
+                        : "none",
                     }}
                     animate={{ y: [0, -3, 0] }}
                     transition={{ duration: 3.5 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.5 }}
