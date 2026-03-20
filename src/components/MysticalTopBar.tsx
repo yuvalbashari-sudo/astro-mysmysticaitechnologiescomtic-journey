@@ -7,20 +7,6 @@ import { Link } from "react-router-dom";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
 
-const CTA_TEXT: Record<Language, string> = {
-  he: "✨ גלו את המסר האישי שלכם",
-  en: "✨ Discover Your Personal Message",
-  ru: "✨ Откройте ваше личное послание",
-  ar: "✨ اكتشفوا رسالتكم الشخصية",
-};
-
-const SUBHEADLINE_TEXT: Record<Language, string> = {
-  he: "גלו את העתיד שלכם באמצעות בינה מלאכותית ואסטרולוגיה",
-  en: "Discover your future through AI and astrology",
-  ru: "Откройте своё будущее с помощью ИИ и астрологии",
-  ar: "اكتشفوا مستقبلكم من خلال الذكاء الاصطناعي وعلم الفلك",
-};
-
 interface Props {
   onOpenHistory?: () => void;
   onOpenDashboard?: () => void;
@@ -41,11 +27,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const scrollToContent = () => {
-    const el = document.getElementById("main-content");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-[60] flex items-center justify-between px-4 md:px-8 py-3 md:py-4"
@@ -61,111 +42,45 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
       {/* Right side: Empty spacer for balance */}
       <div className="flex-1" />
 
-      {/* Center: Hero Title + Subheadline + CTA */}
-      <div className="flex flex-col items-center pointer-events-none select-none gap-1 md:gap-2">
-        {/* Premium title */}
+      {/* Center: Hero Title only */}
+      <div className="flex flex-col items-center pointer-events-none select-none">
         <motion.h1
           className="font-heading uppercase relative"
           style={{
             fontSize: "clamp(22px, 5vw, 78px)",
-            fontWeight: 800,
-            letterSpacing: "clamp(0.15em, 1.8vw, 0.6em)",
+            fontWeight: 700,
+            letterSpacing: "clamp(0.12em, 1.5vw, 0.5em)",
             lineHeight: 1,
-            background: "linear-gradient(135deg, hsl(43 70% 75%), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(43 90% 60%), hsl(43 70% 75%))",
-            backgroundSize: "300% 300%",
+            background: "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
+            backgroundSize: "200% 200%",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
             textShadow: "none",
-            filter: "drop-shadow(0 0 20px hsl(var(--gold) / 0.3)) drop-shadow(0 2px 4px hsl(0 0% 0% / 0.4))",
+            filter: "drop-shadow(0 0 16px hsl(var(--gold) / 0.25))",
           }}
           animate={{
             backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
           }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
         >
           ASTROLOGAI
-          {/* Shimmer sweep */}
           <motion.span
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.35) 45%, hsl(var(--gold-light) / 0.6) 50%, hsl(var(--gold-light) / 0.35) 55%, transparent 100%)",
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold-light) / 0.3) 45%, hsl(var(--gold-light) / 0.5) 50%, hsl(var(--gold-light) / 0.3) 55%, transparent 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               backgroundSize: "200% 100%",
             }}
             animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-            transition={{ duration: 3.5, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
+            transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "easeInOut" }}
             aria-hidden="true"
           >
             ASTROLOGAI
           </motion.span>
         </motion.h1>
-
-        {/* Subheadline */}
-        <motion.p
-          className="font-body text-center max-w-[90vw] md:max-w-lg"
-          style={{
-            fontSize: "clamp(11px, 1.8vw, 17px)",
-            color: "hsl(var(--foreground) / 0.65)",
-            letterSpacing: "0.03em",
-            lineHeight: 1.5,
-            textShadow: "0 1px 6px hsl(0 0% 0% / 0.5)",
-          }}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 1.2 }}
-        >
-          {SUBHEADLINE_TEXT[language]}
-        </motion.p>
-
-        {/* Premium CTA */}
-        <motion.button
-          onClick={scrollToContent}
-          className="pointer-events-auto relative overflow-hidden rounded-full font-body font-semibold cursor-pointer"
-          style={{
-            fontSize: "clamp(12px, 1.6vw, 16px)",
-            padding: "clamp(8px, 1vw, 14px) clamp(20px, 3vw, 40px)",
-            background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-dark)))",
-            backgroundSize: "200% 200%",
-            color: "hsl(var(--background))",
-            border: "1px solid hsl(var(--gold-light) / 0.5)",
-            boxShadow: "0 0 24px hsl(var(--gold) / 0.25), 0 4px 16px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(var(--gold-light) / 0.4)",
-            letterSpacing: "0.04em",
-          }}
-          initial={{ opacity: 0, y: 12, scale: 0.9 }}
-          animate={{
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-          }}
-          transition={{
-            opacity: { duration: 0.8, delay: 1.8 },
-            y: { duration: 0.8, delay: 1.8 },
-            scale: { duration: 0.8, delay: 1.8 },
-            backgroundPosition: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 2 },
-          }}
-          whileHover={{
-            scale: 1.06,
-            boxShadow: "0 0 40px hsl(var(--gold) / 0.4), 0 6px 24px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold-light) / 0.5)",
-          }}
-          whileTap={{ scale: 0.96 }}
-        >
-          {CTA_TEXT[language]}
-          {/* Shimmer sweep on CTA */}
-          <motion.span
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: "linear-gradient(105deg, transparent 40%, hsl(var(--gold-light) / 0.35) 48%, hsl(var(--gold-light) / 0.5) 50%, hsl(var(--gold-light) / 0.35) 52%, transparent 60%)",
-              backgroundSize: "250% 100%",
-            }}
-            animate={{ backgroundPosition: ["-150% 0%", "250% 0%"] }}
-            transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
-            aria-hidden="true"
-          />
-        </motion.button>
       </div>
 
       {/* Left side: Actions */}
