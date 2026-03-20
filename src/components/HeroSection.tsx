@@ -342,6 +342,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     transition: "opacity 1.5s ease-in-out",
     transform: "scale(1.22)",
     transformOrigin: "center center",
+    filter: "brightness(1.06)",
   };
 
   return (
