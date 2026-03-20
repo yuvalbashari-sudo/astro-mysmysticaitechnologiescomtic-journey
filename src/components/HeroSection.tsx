@@ -2412,18 +2412,7 @@ const HeroSection = () => {
               animate={{ rotate: [0, 360], scale: [1, 1.08, 1] }}
               transition={{ rotate: { duration: 30, repeat: Infinity, ease: "linear" }, scale: { duration: 5, repeat: Infinity, ease: "easeInOut" } }}
             />
-            <motion.div
-              className="absolute rounded-full mystical-border"
-              style={{ width: "380px", height: "380px", borderColor: "hsl(var(--gold) / 0.1)" }}
-              animate={{ rotate: 360 }}
-              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            />
-            <motion.div
-              className="absolute rounded-full mystical-border"
-              style={{ width: "420px", height: "420px", borderColor: "hsl(var(--gold) / 0.06)" }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
-            />
+            {/* Removed mystical-border rings — they created visible container edges */}
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
             {entranceComplete && (
               <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
