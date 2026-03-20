@@ -2522,20 +2522,25 @@ const HeroSection = () => {
       </motion.div>
     </motion.button>
 
-    {/* ── Hero Conversion Content ── */}
-    <div className="absolute z-[65] pointer-events-none inset-x-0 px-4 md:px-8" style={{ top: isMobile ? "80px" : "100px" }}>
+    {/* ── Hero Conversion Content — positioned below face, around crystal ball ── */}
+    <div
+      className="absolute z-[65] pointer-events-none inset-x-0 bottom-0 px-4 md:px-8"
+      style={{
+        top: isMobile ? "52%" : "48%",
+      }}
+    >
       <motion.div
-        className="mx-auto max-w-2xl text-center pointer-events-auto"
+        className="mx-auto max-w-2xl text-center pointer-events-auto flex flex-col items-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1.2 }}
       >
         {/* Micro label */}
         <motion.span
-          className="inline-block font-body text-xs md:text-sm tracking-[0.25em] uppercase mb-4 md:mb-5"
-          style={{ color: "hsl(var(--gold) / 0.6)" }}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="inline-block font-body text-[10px] md:text-xs tracking-[0.25em] uppercase mb-3"
+          style={{ color: "hsl(var(--gold) / 0.55)" }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 1.4, duration: 0.8 }}
         >
           תשובות מיסטיות מותאמות אישית
@@ -2543,13 +2548,13 @@ const HeroSection = () => {
 
         {/* Headline */}
         <motion.h1
-          className="font-heading text-2xl md:text-4xl lg:text-[2.75rem] font-bold leading-[1.15] mb-4 md:mb-5"
+          className="font-heading text-xl md:text-3xl lg:text-4xl font-bold leading-[1.2] mb-3 md:mb-4"
           style={{
             color: "hsl(var(--foreground))",
-            textShadow: "0 2px 20px hsl(var(--deep-blue) / 0.8)",
+            textShadow: "0 2px 24px hsl(var(--deep-blue)), 0 0 60px hsl(var(--deep-blue) / 0.8)",
             textWrap: "balance",
           }}
-          initial={{ opacity: 0, y: 18 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.6, duration: 1 }}
         >
@@ -2558,13 +2563,13 @@ const HeroSection = () => {
 
         {/* Subheadline */}
         <motion.p
-          className="font-body text-sm md:text-base lg:text-lg leading-relaxed mb-6 md:mb-8 mx-auto max-w-lg"
+          className="font-body text-xs md:text-sm lg:text-base leading-relaxed mb-5 md:mb-7 mx-auto max-w-md"
           style={{
-            color: "hsl(var(--foreground) / 0.7)",
-            textShadow: "0 1px 12px hsl(var(--deep-blue) / 0.9)",
+            color: "hsl(var(--foreground) / 0.65)",
+            textShadow: "0 1px 16px hsl(var(--deep-blue))",
             textWrap: "pretty",
           }}
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.9, duration: 0.9 }}
         >
@@ -2573,8 +2578,8 @@ const HeroSection = () => {
 
         {/* CTA Buttons */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 mb-5 md:mb-6"
-          initial={{ opacity: 0, y: 12 }}
+          className="flex flex-row items-center justify-center gap-3 md:gap-4 mb-4"
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.2, duration: 0.8 }}
         >
@@ -2582,29 +2587,28 @@ const HeroSection = () => {
           <motion.button
             type="button"
             onClick={() => setCompatibilityOpen(true)}
-            className="relative overflow-hidden rounded-xl font-heading text-sm md:text-base tracking-wider px-8 md:px-10 py-3.5 md:py-4 font-bold transition-shadow duration-300"
+            className="relative overflow-hidden rounded-xl font-heading text-xs md:text-sm tracking-wider px-6 md:px-9 py-3 md:py-3.5 font-bold transition-shadow duration-300"
             style={{
               background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
               color: "hsl(var(--deep-blue))",
-              boxShadow: "0 4px 24px hsl(var(--gold) / 0.35), 0 0 40px hsl(var(--gold) / 0.12)",
-              minHeight: "52px",
+              boxShadow: "0 4px 24px hsl(var(--gold) / 0.3), 0 0 40px hsl(var(--gold) / 0.1)",
+              minHeight: "48px",
             }}
             whileHover={{
               scale: 1.04,
-              boxShadow: "0 6px 36px hsl(43 80% 55% / 0.5), 0 0 60px hsl(43 80% 55% / 0.2)",
+              boxShadow: "0 6px 32px hsl(43 80% 55% / 0.45), 0 0 50px hsl(43 80% 55% / 0.15)",
             }}
             whileTap={{ scale: 0.97 }}
           >
             <span className="relative z-10">בדוק התאמה זוגית</span>
-            {/* Shimmer */}
             <motion.div
               className="absolute inset-0 pointer-events-none"
               style={{
-                background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+                background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%)",
                 backgroundSize: "250% 100%",
               }}
               animate={{ backgroundPosition: ["-100% 0%", "250% 0%"] }}
-              transition={{ duration: 3, repeat: Infinity, repeatDelay: 4, ease: "easeInOut" }}
+              transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "easeInOut" }}
             />
           </motion.button>
 
@@ -2612,17 +2616,17 @@ const HeroSection = () => {
           <motion.button
             type="button"
             onClick={() => setTarotOpen(true)}
-            className="rounded-xl font-heading text-sm md:text-base tracking-wider px-8 md:px-10 py-3.5 md:py-4 font-bold transition-all duration-300 backdrop-blur-md"
+            className="rounded-xl font-heading text-xs md:text-sm tracking-wider px-6 md:px-9 py-3 md:py-3.5 font-bold transition-all duration-300 backdrop-blur-md"
             style={{
-              background: "hsl(var(--deep-blue) / 0.4)",
-              border: "1.5px solid hsl(var(--gold) / 0.35)",
+              background: "hsl(var(--deep-blue) / 0.35)",
+              border: "1.5px solid hsl(var(--gold) / 0.3)",
               color: "hsl(var(--gold))",
-              minHeight: "52px",
+              minHeight: "48px",
             }}
             whileHover={{
               scale: 1.04,
-              borderColor: "hsl(var(--gold) / 0.7)",
-              boxShadow: "0 0 30px hsl(43 80% 55% / 0.2), inset 0 0 15px hsl(43 80% 55% / 0.05)",
+              borderColor: "hsl(var(--gold) / 0.6)",
+              boxShadow: "0 0 24px hsl(43 80% 55% / 0.15), inset 0 0 12px hsl(43 80% 55% / 0.04)",
             }}
             whileTap={{ scale: 0.97 }}
           >
@@ -2632,8 +2636,8 @@ const HeroSection = () => {
 
         {/* Trust line */}
         <motion.p
-          className="font-body text-[11px] md:text-xs tracking-wide"
-          style={{ color: "hsl(var(--foreground) / 0.4)" }}
+          className="font-body text-[10px] md:text-[11px] tracking-wide"
+          style={{ color: "hsl(var(--foreground) / 0.35)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.6, duration: 0.7 }}
@@ -2643,42 +2647,40 @@ const HeroSection = () => {
       </motion.div>
     </div>
 
-    {/* ── Speech Bubble near oracle ── */}
+    {/* ── Speech Bubble — side of character shoulders ── */}
     <motion.div
       className="absolute z-[64] pointer-events-none"
       style={{
-        left: isMobile ? "8%" : "12%",
-        top: isMobile ? "55%" : "48%",
-        maxWidth: isMobile ? "180px" : "240px",
+        right: isMobile ? "5%" : "8%",
+        top: isMobile ? "38%" : "35%",
+        maxWidth: isMobile ? "160px" : "220px",
       }}
-      initial={{ opacity: 0, x: 20, scale: 0.9 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
+      initial={{ opacity: 0, scale: 0.85 }}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 3.5, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
     >
       <motion.div
-        className="relative rounded-2xl px-4 py-3 backdrop-blur-xl"
+        className="relative rounded-2xl px-3.5 py-2.5 backdrop-blur-xl"
         style={{
-          background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.92))",
-          border: "1px solid hsl(var(--gold) / 0.18)",
-          boxShadow: "0 4px 24px hsl(var(--deep-blue) / 0.6), 0 0 20px hsl(var(--gold) / 0.06)",
+          background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.8), hsl(var(--deep-blue) / 0.9))",
+          border: "1px solid hsl(var(--gold) / 0.15)",
+          boxShadow: "0 4px 20px hsl(var(--deep-blue) / 0.5), 0 0 16px hsl(var(--gold) / 0.04)",
         }}
-        animate={{
-          y: [0, -4, 0],
-        }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        animate={{ y: [0, -3, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        <p className="font-body text-[11px] md:text-xs leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.75)" }}>
+        <p className="font-body text-[10px] md:text-[11px] leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.65)" }}>
           ✦ אני אחשוף עבורך את מה שמסתתר מתחת לפני השטח
         </p>
-        {/* Arrow pointing right (toward oracle) */}
+        {/* Arrow pointing left toward oracle */}
         <div
           className="absolute top-1/2 -translate-y-1/2"
           style={{
-            right: "-8px",
+            left: "-7px",
             width: 0, height: 0,
-            borderTop: "6px solid transparent",
-            borderBottom: "6px solid transparent",
-            borderLeft: "8px solid hsl(var(--gold) / 0.18)",
+            borderTop: "5px solid transparent",
+            borderBottom: "5px solid transparent",
+            borderRight: "7px solid hsl(var(--gold) / 0.15)",
           }}
         />
       </motion.div>
