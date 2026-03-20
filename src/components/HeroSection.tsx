@@ -2300,7 +2300,7 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "110px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "145px" }}
           >
             {/* Aura glow */}
             <motion.div
@@ -2355,7 +2355,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "110px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "160px" }}
           >
             <motion.div
               className="absolute rounded-full z-15 pointer-events-none"
