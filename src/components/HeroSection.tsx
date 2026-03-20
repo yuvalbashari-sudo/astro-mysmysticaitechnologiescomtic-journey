@@ -2003,14 +2003,30 @@ const HeroSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
+  // Menu items split into left and right groups for symmetrical side layout
   const menuItems = useMemo(() => [
-    { icon: Star, label: t.hero_menu_forecast, angle: -75 },
-    { icon: Sparkles, label: t.hero_menu_compatibility, angle: -45 },
-    { icon: Moon, label: t.hero_menu_rising, angle: -15 },
-    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", angle: 15 },
-    { icon: Eye, label: t.hero_menu_tarot, angle: 45 },
-    { icon: Hand, label: t.hero_menu_palm, angle: 75 },
+    { icon: Star, label: t.hero_menu_forecast, side: "left" as const, index: 0 },
+    { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
+    { icon: Moon, label: t.hero_menu_rising, side: "left" as const, index: 2 },
+    { icon: Sun, label: t.daily_ritual_card_label || "🔮 קלף יומי", side: "right" as const, index: 0 },
+    { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 1 },
+    { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 2 },
   ], [t]);
+
+  // Calculate tab positions: two arced columns on left/right sides
+  const getTabPosition = useCallback((side: "left" | "right", idx: number, mobile: boolean) => {
+    const sideSign = side === "left" ? -1 : 1;
+    const horizontalDist = mobile ? 160 : 280; // distance from center
+    const verticalSpacing = mobile ? 52 : 62; // spacing between tabs
+    const arcCurve = mobile ? 15 : 25; // how much the arc curves inward
+    const verticalOffset = mobile ? 30 : 20; // push tabs down from center to avoid face
+
+    // Soft arc: middle tab is closest to ball, top and bottom curve outward
+    const arcOffset = Math.abs(idx - 1) * arcCurve;
+    const x = sideSign * (horizontalDist + arcOffset);
+    const y = (idx - 1) * verticalSpacing + verticalOffset;
+    return { x, y };
+  }, []);
 
   // Mouse tracking
   const mouseX = useMotionValue(0.5);
