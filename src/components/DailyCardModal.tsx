@@ -327,57 +327,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const cardImage = card ? tarotCardImages[card.name] : null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <motion.div className={`absolute inset-0 bg-background/90 ${phase === "video" ? "backdrop-blur-sm" : "backdrop-blur-lg"}`} onClick={handleClose} />
-
-          <motion.div
-            ref={scrollRef}
-            className="relative z-10 w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-2xl"
-            style={{
-              background: "linear-gradient(160deg, hsl(0 30% 8% / 0.98), hsl(222 47% 6% / 0.99), hsl(0 20% 6% / 0.98))",
-              border: "1px solid hsl(var(--gold) / 0.15)",
-              boxShadow: "0 0 80px hsl(var(--crimson) / 0.1), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.1)",
-            }}
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 30 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          >
-            <MysticalReadingAtmosphere theme="dailyCard" active={phase !== "video"} />
-            {phase !== "video" && <Particles />}
-
-            {/* Video preload removed — using inline video in video phase */}
-
-            <button
-              onClick={handleClose}
-              className="absolute top-4 left-4 z-30 w-9 h-9 rounded-full flex items-center justify-center bg-muted/20 hover:bg-muted/40 transition-colors"
-              style={{ border: "1px solid hsl(var(--gold) / 0.15)" }}
-            >
-              <X className="w-4 h-4 text-gold/70" />
-            </button>
-
-            {phase !== "video" && (
-              <div className="absolute top-4 right-4 z-20">
-                <span
-                  className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.1))",
-                    border: "1px solid hsl(var(--gold) / 0.3)",
-                    color: "hsl(var(--gold))",
-                  }}
-                >
-                  ✦ חינם
-                </span>
-              </div>
-            )}
-
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>}>
             <AnimatePresence mode="wait">
               {/* PHASE: Ready */}
               {phase === "ready" && (
