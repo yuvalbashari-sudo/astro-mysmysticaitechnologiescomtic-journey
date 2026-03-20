@@ -232,8 +232,10 @@ const FloatingCard = ({
               className="w-full h-full object-cover"
               style={{
                 imageRendering: "auto",
-                /* Mirror the front image since parent is rotated 180deg */
-                transform: showFront ? "scaleX(-1)" : "none",
+                backfaceVisibility: "hidden",
+                transform: `translateZ(0)${showFront ? " scaleX(-1)" : ""}`,
+                filter: "contrast(1.08) saturate(1.05)",
+                willChange: "transform",
               }}
             />
             <div
@@ -809,10 +811,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             className="w-full h-full object-cover rounded-lg"
                             style={{
                               imageRendering: "auto",
+                              backfaceVisibility: "hidden",
+                              transform: "translateZ(0)",
                               boxShadow: isCenter
                                 ? "0 0 50px hsl(var(--gold) / 0.4), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
                                 : "0 0 30px hsl(var(--gold) / 0.2), 0 8px 28px hsl(var(--deep-blue) / 0.5)",
-                              filter: isCenter ? "none" : "brightness(0.85)",
+                              filter: isCenter ? "contrast(1.08) saturate(1.05)" : "brightness(0.85) contrast(1.06)",
+                              willChange: "transform",
                             }}
                           />
                           <div
@@ -941,10 +946,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               className="w-full h-full object-cover rounded-xl"
                               style={{
                                 imageRendering: "auto",
+                                backfaceVisibility: "hidden",
+                                transform: "translateZ(0)",
                                 boxShadow: isCenter
                                   ? "0 0 60px hsl(var(--gold) / 0.35), 0 16px 48px hsl(0 0% 0% / 0.6)"
                                   : "0 0 30px hsl(var(--gold) / 0.18), 0 10px 32px hsl(0 0% 0% / 0.5)",
-                                filter: isCenter ? "contrast(1.05) saturate(1.05)" : "brightness(0.85) contrast(1.02)",
+                                filter: isCenter ? "contrast(1.08) saturate(1.05)" : "brightness(0.85) contrast(1.06)",
+                                willChange: "transform",
                               }}
                             />
                             {/* Inner glow overlay */}
