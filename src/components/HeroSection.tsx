@@ -2398,22 +2398,6 @@ const HeroSection = () => {
               style={{ width: "320px", height: "320px" }}
               onClick={handleCrystalClick}
             >
-              {/* Crystal ball PNG — scaled up slightly to push dark rim outside clip */}
-              <div className="absolute inset-[-8%] rounded-full overflow-hidden" style={{ WebkitMaskImage: "radial-gradient(circle, white 62%, transparent 72%)", maskImage: "radial-gradient(circle, white 62%, transparent 72%)" }}>
-                <img
-                  src={crystalBall}
-                  alt="Crystal Ball"
-                  className="w-full h-full"
-                  style={{
-                    objectFit: "contain",
-                    filter: hoveredItem !== null
-                      ? `drop-shadow(0 0 40px ${ITEM_COLORS[hoveredItem]?.glow || "hsl(43 80% 55%)"}66) brightness(1.15)`
-                      : "drop-shadow(0 0 30px hsl(215 60% 60% / 0.3)) brightness(1.1)",
-                    transition: "filter 0.8s ease-in-out",
-                    mixBlendMode: "screen",
-                  }}
-                />
-              </div>
               {/* Glass reflection — top-left specular highlight */}
               <div className="absolute pointer-events-none z-30 rounded-full" style={{
                 width: "45%", height: "35%", top: "8%", left: "12%",
@@ -2422,7 +2406,7 @@ const HeroSection = () => {
               }} />
               {/* Soft outer aura glow replacing the dark rim */}
               <div className="absolute inset-[-4%] rounded-full pointer-events-none" style={{
-                background: "radial-gradient(circle, transparent 55%, hsl(215 60% 60% / 0.08) 65%, hsl(43 80% 55% / 0.06) 75%, transparent 85%)",
+                background: "radial-gradient(circle, transparent 58%, hsl(215 60% 60% / 0.06) 70%, hsl(43 80% 55% / 0.04) 80%, transparent 88%)",
               }} />
               <AnimatePresence>
                 {isNearBall && (
