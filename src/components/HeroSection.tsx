@@ -2671,6 +2671,43 @@ const HeroSection = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
           >
+            {/* Left CTA teaser — ABOVE tabs */}
+            <motion.button
+              type="button"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-1"
+              onClick={() => setCompatibilityOpen(true)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: [0.9, 1, 0.9], y: [0, -3, 0] }}
+              transition={{ delay: 2.2, duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="text-center">
+                <div
+                  className="text-[14px] font-heading font-bold tracking-wide"
+                  style={{
+                    color: "#fff",
+                    textShadow: "0 0 6px rgba(0, 150, 255, 0.6), 0 0 12px rgba(0, 150, 255, 0.35), 0 0 24px rgba(0, 150, 255, 0.15)",
+                  }}
+                >
+                  {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
+                </div>
+                <div className="text-[10px] font-body mt-1" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                  {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
+                </div>
+                <motion.div
+                  className="mx-auto mt-1.5 rounded-full"
+                  style={{
+                    width: "60%", height: 1.5,
+                    background: "linear-gradient(90deg, transparent, rgba(0, 150, 255, 0.5), transparent)",
+                    boxShadow: "0 0 6px rgba(0, 150, 255, 0.3)",
+                  }}
+                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </div>
+            </motion.button>
+
             {menuItems.filter((_, i) => i < 3).map((item, idx) => {
               const i = idx;
               const itemColor = ITEM_COLORS[i];
