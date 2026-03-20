@@ -321,21 +321,24 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     vA.playbackRate = 0.65;
     vB.playbackRate = 0.65;
 
+    // Pre-load standby at a safe point (skip potential dark first frame)
+    vB.currentTime = 0.15;
+
     // Crossfade near end of whichever copy is active
     const crossfade = () => {
       const active = activeRef.current === "a" ? vA : vB;
       const standby = activeRef.current === "a" ? vB : vA;
       if (!active.duration || active.paused) return;
       const remaining = active.duration - active.currentTime;
-      if (remaining < 1.0) {
-        standby.currentTime = 0;
+      if (remaining < 1.5) {
+        standby.currentTime = 0.15;
         standby.play().catch(() => {});
         activeRef.current = activeRef.current === "a" ? "b" : "a";
         setOpacity(activeRef.current === "a" ? { a: 1, b: 0 } : { a: 0, b: 1 });
       }
     };
 
-    const interval = setInterval(crossfade, 100);
+    const interval = setInterval(crossfade, 80);
     return () => clearInterval(interval);
   }, []);
 
