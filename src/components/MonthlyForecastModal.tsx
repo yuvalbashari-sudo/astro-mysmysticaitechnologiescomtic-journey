@@ -18,6 +18,8 @@ import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
+  const forecastAdvisorBaseSize = 64;
+  const forecastAdvisorScale = 1.5;
   const t = useT();
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
@@ -278,16 +280,17 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       <motion.button
                         className="mt-8 mx-auto rounded-full overflow-hidden cursor-pointer group relative"
                         style={{
-                          width: 144,
-                          height: 144,
+                          width: forecastAdvisorBaseSize,
+                          height: forecastAdvisorBaseSize,
+                          transformOrigin: "center center",
                           boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
                           border: "2px solid hsl(var(--gold) / 0.35)",
                         }}
                         onClick={() => setAdvisorOpen(true)}
-                        whileHover={{ scale: 1.08 }}
-                        whileTap={{ scale: 0.94 }}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
+                        whileHover={{ scale: forecastAdvisorScale * 1.08 }}
+                        whileTap={{ scale: forecastAdvisorScale * 0.94 }}
+                        initial={{ opacity: 0, y: 10, scale: forecastAdvisorScale }}
+                        animate={{ opacity: 1, y: 0, scale: forecastAdvisorScale }}
                         transition={{ delay: 1 }}
                         aria-label="התייעצות עם האסטרולוגית"
                       >
