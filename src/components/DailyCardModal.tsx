@@ -116,7 +116,7 @@ const Particles = React.memo(() => (
   </div>
 ));
 
-type Phase = "ready" | "video" | "result" | "locked";
+type Phase = "ready" | "ritual" | "result" | "locked";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
