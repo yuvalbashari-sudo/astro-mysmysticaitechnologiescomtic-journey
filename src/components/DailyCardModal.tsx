@@ -631,7 +631,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     <AnimatePresence>
                       {isOpen && (phase === "result" || phase === "locked") && card && (
                         <motion.div
-                          className="hidden md:flex flex-col items-center fixed top-[110px] right-[48px] z-[110]"
+                          className="hidden md:flex flex-col items-center fixed top-[60px] right-[48px] z-[110] pt-[50px]"
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 20 }}
@@ -733,7 +733,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                   {/* ── TEXT — scrolls normally, constrained to LEFT zone on desktop ── */}
                   <motion.div
-                    className="p-6 md:max-w-[440px] md:pl-10 md:pr-4 md:mr-auto md:pt-6 md:mt-[50px]"
+                    className="p-6 md:max-w-[440px] md:pl-10 md:pr-4 md:mr-auto md:pt-[56px]"
                     style={{ maxWidth: "min(440px, 38vw)" }}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
