@@ -166,7 +166,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const saved = getSavedDailyCard();
     if (!saved) return;
     const interval = setInterval(() => {
-      const remaining = getTimeUntilMidnight();
+      const remaining = getTimeUntilMidnight(t.daily_time_format);
       setTimeLeft(remaining);
       if (saved.date !== getTodayDate()) {
         localStorage.removeItem(DAILY_CARD_KEY);
