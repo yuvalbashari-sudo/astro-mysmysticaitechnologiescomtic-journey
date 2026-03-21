@@ -14,6 +14,7 @@ interface Message {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  forceRightAnchor?: boolean;
 }
 
 const FREE_MESSAGE_LIMIT = 5;
