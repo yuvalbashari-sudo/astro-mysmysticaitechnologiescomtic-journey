@@ -208,7 +208,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     <motion.div
                       ref={scrollRef}
                       className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 56px)", left: "calc(3vw + 50px)", width: "min(440px, 38vw)", maxHeight: "80vh", maxWidth: "calc(100vw - 10px)" }}
+                      style={{ top: "calc(10vh + 56px)", left: "calc(3vw - 10px)", width: "min(440px, 38vw)", maxHeight: "80vh", maxWidth: "calc(100vw - 10px)" }}
                       initial={{ opacity: 0, y: 40 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
