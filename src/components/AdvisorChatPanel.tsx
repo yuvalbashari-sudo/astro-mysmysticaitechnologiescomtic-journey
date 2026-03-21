@@ -501,7 +501,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isStreaming || isLimitReached}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
                   style={{
                     background: input.trim() ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))" : "transparent",
                   }}
