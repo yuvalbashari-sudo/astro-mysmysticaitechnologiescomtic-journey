@@ -161,42 +161,98 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           </div>
 
           {!hideAdvisor && (
-            <motion.button
-              className="fixed z-[106] rounded-full overflow-hidden cursor-pointer group"
+            <div
+              className="fixed z-[106] group/avatar"
               style={{
                 bottom: isMobile ? 28 : 32,
                 right: isMobile ? 20 : 40,
                 left: "auto",
                 width: isMobile ? 120 : 168,
                 height: isMobile ? 120 : 168,
-                boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
-                border: "2px solid hsl(var(--gold) / 0.35)",
               }}
-              onClick={() => setAdvisorOpen(true)}
-              whileHover={{ filter: "brightness(1.15)" }}
-              whileTap={{ filter: "brightness(0.9)" }}
-              aria-label="התייעצות עם האסטרולוגית"
             >
-              <img
-                src={astrologerAvatar}
-                alt="האסטרולוגית"
-                className="w-full h-full object-cover scale-105"
-                style={{ objectPosition: "center 42%" }}
-                draggable={false}
-              />
-              <div
-                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              {/* Hover teaser tooltip — desktop only */}
+              {!isMobile && (
+                <div
+                  className="absolute pointer-events-none opacity-0 group-hover/avatar:opacity-100 transition-all duration-300 ease-out"
+                  style={{
+                    bottom: "calc(100% + 14px)",
+                    right: 0,
+                    width: 220,
+                    padding: "14px 18px",
+                    background: "linear-gradient(160deg, hsl(222 47% 8% / 0.75), hsl(222 47% 4% / 0.6))",
+                    backdropFilter: "blur(16px) saturate(1.2)",
+                    WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+                    border: "1px solid hsl(var(--gold) / 0.18)",
+                    borderRadius: 14,
+                    boxShadow: "0 8px 32px hsl(222 47% 4% / 0.5), 0 0 20px hsl(var(--gold) / 0.05)",
+                    transform: "translateY(6px)",
+                    direction: "rtl",
+                  }}
+                >
+                  <p
+                    className="font-body"
+                    style={{
+                      fontSize: 14,
+                      lineHeight: 1.6,
+                      color: "hsl(var(--foreground) / 0.75)",
+                      textShadow: "0 1px 8px hsl(222 47% 6%)",
+                      margin: 0,
+                    }}
+                  >
+                    ✦ <span style={{ color: "hsl(var(--gold))" }}>יש לכם שאלה?</span> לחצו לשיחה אישית
+                  </p>
+                  {/* Small arrow */}
+                  <div
+                    className="absolute"
+                    style={{
+                      bottom: -6,
+                      right: 40,
+                      width: 12,
+                      height: 12,
+                      background: "hsl(222 47% 6% / 0.65)",
+                      border: "1px solid hsl(var(--gold) / 0.18)",
+                      borderTop: "none",
+                      borderLeft: "none",
+                      transform: "rotate(45deg)",
+                      borderRadius: 2,
+                    }}
+                  />
+                </div>
+              )}
+
+              <motion.button
+                className="w-full h-full rounded-full overflow-hidden cursor-pointer group"
                 style={{
-                  background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
+                  boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+                  border: "2px solid hsl(var(--gold) / 0.35)",
                 }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full pointer-events-none"
-                style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
-                animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
-              />
-            </motion.button>
+                onClick={() => setAdvisorOpen(true)}
+                whileHover={{ filter: "brightness(1.15)" }}
+                whileTap={{ filter: "brightness(0.9)" }}
+                aria-label="התייעצות עם האסטרולוגית"
+              >
+                <img
+                  src={astrologerAvatar}
+                  alt="האסטרולוגית"
+                  className="w-full h-full object-cover scale-105"
+                  style={{ objectPosition: "center 42%" }}
+                  draggable={false}
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
+                  }}
+                />
+                <motion.div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
+                  animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+                />
+              </motion.button>
+            </div>
           )}
 
           {/* Advisor chat panel */}
