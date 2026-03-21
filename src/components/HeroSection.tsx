@@ -2754,6 +2754,7 @@ const HeroSection = () => {
         left: "auto",
         width: isMobile ? 120 : 168,
         height: isMobile ? 120 : 168,
+        direction: "ltr",
       }}
     >
       <motion.button
