@@ -14,6 +14,8 @@ interface Props {
   fullscreen?: boolean;
   /** When true, content expands to ~92% width instead of narrow column */
   wide?: boolean;
+  /** When true, hides the built-in advisor avatar button */
+  hideAdvisor?: boolean;
 }
 
 /**
