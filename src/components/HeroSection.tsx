@@ -2804,7 +2804,7 @@ const HeroSection = () => {
           />
         </motion.div>
       </motion.button>
-    </div>
+    </AvatarHoverTeaser>
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
     <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
