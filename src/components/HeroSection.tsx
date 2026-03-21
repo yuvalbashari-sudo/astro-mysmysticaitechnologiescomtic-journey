@@ -2745,10 +2745,13 @@ const HeroSection = () => {
 
     <motion.button
       type="button"
-      className="absolute z-[15] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
+      className="fixed z-[60] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
       style={{
         bottom: isMobile ? 28 : 32,
         right: isMobile ? 20 : 40,
+        left: "auto",
+        width: isMobile ? 120 : 168,
+        height: isMobile ? 120 : 168,
         transformOrigin: "bottom right",
       }}
       initial={{ opacity: 0, scale: 0.8 }}
