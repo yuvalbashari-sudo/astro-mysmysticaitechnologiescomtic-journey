@@ -3177,15 +3177,16 @@ const HeroSection = () => {
 
 
     {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
-    {entranceComplete && !fortuneRevealed && (
+    {entranceComplete && !isUniverseMessageOpen && (
       <motion.button
         type="button"
-        className="fixed z-[70] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
+        aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
+        className="fixed z-[90] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
         style={{ bottom: isMobile ? 36 : 48, left: "50%", transform: "translateX(-50%)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.55, 0.9, 0.55] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        onClick={handleFortuneReveal}
+        onClick={openUniverseMessage}
         whileTap={{ scale: 0.95 }}
       >
         <span className={`text-gold/70 font-body ${isMobile ? "text-[11px]" : "text-sm"}`}>
@@ -3196,7 +3197,7 @@ const HeroSection = () => {
 
     {/* ── Fortune / Message from the Universe overlay ── */}
     <AnimatePresence>
-      {fortuneRevealed && (
+      {isUniverseMessageOpen && (
         <motion.div
           className="fixed inset-0 z-[80] flex items-center justify-center pointer-events-auto cursor-pointer"
           initial={{ opacity: 0 }}
