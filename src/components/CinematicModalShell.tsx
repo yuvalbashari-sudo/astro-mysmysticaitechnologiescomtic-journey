@@ -158,7 +158,49 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             </span>
           </div>
 
-          {/* ── Layer 4: Content — no box, just floating scene elements ── */}
+          {/* ── Astrologer consultation avatar ── */}
+          <motion.button
+            className="fixed z-[106] rounded-full overflow-hidden cursor-pointer group"
+            style={{
+              bottom: isMobile ? 20 : 28,
+              left: isMobile ? 16 : 28,
+              width: isMobile ? 52 : 64,
+              height: isMobile ? 52 : 64,
+              boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+              border: "2px solid hsl(var(--gold) / 0.35)",
+            }}
+            onClick={() => setAdvisorOpen(true)}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            aria-label="התייעצות עם האסטרולוגית"
+          >
+            <img
+              src={astrologerAvatar}
+              alt="האסטרולוגית"
+              className="w-full h-full object-cover scale-105"
+              style={{ objectPosition: "center 42%" }}
+              draggable={false}
+            />
+            {/* Shimmer on hover */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{
+                background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)",
+              }}
+            />
+            {/* Pulse ring */}
+            <motion.div
+              className="absolute inset-0 rounded-full pointer-events-none"
+              style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
+              animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+            />
+          </motion.button>
+
+          {/* Advisor chat panel */}
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
+
+
           {fullscreen ? (
             <div
               ref={activeScrollRef as React.RefObject<HTMLDivElement>}
