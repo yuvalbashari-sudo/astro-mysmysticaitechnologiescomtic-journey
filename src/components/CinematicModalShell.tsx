@@ -173,8 +173,8 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 border: "2px solid hsl(var(--gold) / 0.35)",
               }}
               onClick={() => setAdvisorOpen(true)}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.94 }}
+              whileHover={{ filter: "brightness(1.15)" }}
+              whileTap={{ filter: "brightness(0.9)" }}
               aria-label="התייעצות עם האסטרולוגית"
             >
               <img
