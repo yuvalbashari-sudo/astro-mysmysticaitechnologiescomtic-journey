@@ -27,6 +27,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const { setActiveReading } = useReadingContext();
   const [birthTime, setBirthTime] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "">(""); 
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<SignInfoState | null>(null);
