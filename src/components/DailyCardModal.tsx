@@ -441,42 +441,105 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     );
                   })}
 
-                  {/* Card reveal overlay — appears at ritual step 2 */}
+                  {/* Card awakening — summoned, not loaded */}
                   <AnimatePresence>
                     {showCardOverlay && (
                       <motion.div
                         className="absolute inset-0 z-10 flex flex-col items-center justify-center"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 1.2, ease: "easeOut" }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
                       >
-                        {/* Radial glow behind card */}
+                        {/* Stage 1: Oracle hand glow — warm energy gathering at center */}
+                        <motion.div
+                          className="absolute pointer-events-none"
+                          style={{
+                            width: 200, height: 200,
+                            background: "radial-gradient(circle, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.04), transparent 70%)",
+                            filter: "blur(35px)",
+                          }}
+                          initial={{ scale: 0.2, opacity: 0 }}
+                          animate={{ scale: [0.2, 1.6, 1.2], opacity: [0, 0.8, 0.5] }}
+                          transition={{ duration: 2.5, ease: "easeOut" }}
+                        />
+
+                        {/* Stage 2: Energy particles converging inward toward card position */}
+                        {[...Array(10)].map((_, i) => {
+                          const angle = (i / 10) * Math.PI * 2;
+                          const radius = 140 + (i % 3) * 40;
+                          return (
+                            <motion.div
+                              key={`aw-${i}`}
+                              className="absolute rounded-full pointer-events-none"
+                              style={{
+                                width: 2 + (i % 2),
+                                height: 2 + (i % 2),
+                                background: i % 3 === 0
+                                  ? "hsl(var(--gold) / 0.6)"
+                                  : "hsl(var(--celestial) / 0.4)",
+                              }}
+                              initial={{
+                                x: Math.cos(angle) * radius,
+                                y: Math.sin(angle) * radius,
+                                opacity: 0,
+                              }}
+                              animate={{
+                                x: 0,
+                                y: 0,
+                                opacity: [0, 0.7, 0],
+                              }}
+                              transition={{
+                                duration: 2.2,
+                                delay: 0.3 + i * 0.12,
+                                ease: "easeIn",
+                              }}
+                            />
+                          );
+                        })}
+
+                        {/* Stage 3: Radial glow bloom — card is forming */}
                         <motion.div
                           className="absolute rounded-full pointer-events-none"
                           style={{
                             width: 350,
                             height: 350,
-                            background: "radial-gradient(circle, hsl(var(--gold) / 0.2), hsl(var(--crimson) / 0.08), transparent)",
+                            background: "radial-gradient(circle, hsl(var(--gold) / 0.15), hsl(var(--crimson) / 0.06), transparent)",
                             filter: "blur(50px)",
                           }}
-                          initial={{ scale: 0.3, opacity: 0 }}
-                          animate={{ scale: 1.4, opacity: 1 }}
-                          transition={{ duration: 1.8, ease: "easeOut" }}
+                          initial={{ scale: 0.1, opacity: 0 }}
+                          animate={{ scale: [0.1, 0.6, 1.3], opacity: [0, 0.3, 0.7] }}
+                          transition={{ duration: 2.8, delay: 0.8, ease: "easeOut" }}
                         />
 
-                        {/* The actual daily card */}
+                        {/* Stage 4: The card — gentle emergence with slow flip */}
                         <motion.div
                           className="relative w-44 h-64 md:w-52 md:h-76 rounded-xl overflow-hidden"
                           style={{
                             border: "2px solid hsl(var(--gold) / 0.5)",
-                            boxShadow: "0 0 60px hsl(var(--gold) / 0.25), 0 0 120px hsl(var(--crimson) / 0.12), 0 20px 60px hsl(0 0% 0% / 0.5)",
+                            transformStyle: "preserve-3d",
+                            perspective: 1000,
                           }}
-                          initial={{ scale: 0.4, opacity: 0, y: 60, rotateY: -90 }}
-                          animate={{ scale: 1, opacity: 1, y: 0, rotateY: 0 }}
+                          initial={{
+                            scale: 0.3,
+                            opacity: 0,
+                            y: 40,
+                            rotateY: 180,
+                            filter: "blur(8px)",
+                          }}
+                          animate={{
+                            scale: 1,
+                            opacity: 1,
+                            y: 0,
+                            rotateY: 0,
+                            filter: "blur(0px)",
+                          }}
                           transition={{
-                            duration: 1.5,
-                            ease: [0.22, 1, 0.36, 1],
-                            opacity: { duration: 0.8 },
+                            duration: 2.2,
+                            delay: 1.2,
+                            ease: [0.16, 1, 0.3, 1],
+                            opacity: { duration: 1.2, delay: 1.2 },
+                            filter: { duration: 1.5, delay: 1.4 },
+                            rotateY: { duration: 2, delay: 1.3, ease: [0.22, 1, 0.36, 1] },
                           }}
                         >
                           {cardImage ? (
@@ -487,17 +550,30 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                             </div>
                           )}
 
-                          {/* Shimmer sweep */}
+                          {/* Shimmer sweep — delayed until card is fully revealed */}
                           <motion.div
                             className="absolute inset-0 pointer-events-none"
                             style={{
-                              background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.2) 50%, transparent 70%)",
+                              background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.18) 50%, transparent 70%)",
                             }}
                             initial={{ x: "-100%" }}
                             animate={{ x: "200%" }}
-                            transition={{ duration: 1.5, delay: 0.8, ease: "easeInOut" }}
+                            transition={{ duration: 1.8, delay: 3, ease: "easeInOut" }}
                           />
                         </motion.div>
+
+                        {/* Stage 5: Final soft glow pulse around the card */}
+                        <motion.div
+                          className="absolute pointer-events-none rounded-xl"
+                          style={{
+                            width: "clamp(200px, 60%, 260px)",
+                            aspectRatio: "2 / 3",
+                            boxShadow: "0 0 60px hsl(var(--gold) / 0.2), 0 0 120px hsl(var(--crimson) / 0.08), 0 20px 60px hsl(0 0% 0% / 0.4)",
+                          }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0, 0.6, 0.3, 0.5, 0.3] }}
+                          transition={{ duration: 3, delay: 3.2, ease: "easeInOut" }}
+                        />
 
                         {/* Card name */}
                         <motion.h2
