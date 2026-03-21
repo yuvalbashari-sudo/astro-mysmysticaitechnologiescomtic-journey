@@ -164,11 +164,11 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             <motion.button
               className="fixed z-[106] rounded-full overflow-hidden cursor-pointer group"
               style={{
-                bottom: isMobile ? 20 : 28,
-                right: isMobile ? 16 : 28,
+                bottom: isMobile ? 28 : 32,
+                right: isMobile ? 20 : 40,
                 left: "auto",
-                width: isMobile ? 52 : 64,
-                height: isMobile ? 52 : 64,
+                width: isMobile ? 120 : 168,
+                height: isMobile ? 120 : 168,
                 boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
                 border: "2px solid hsl(var(--gold) / 0.35)",
               }}
