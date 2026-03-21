@@ -3183,7 +3183,7 @@ const HeroSection = () => {
 
 
     {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
-    {entranceComplete && cardPhase === "idle" && !fortuneRevealed && (
+    {entranceComplete && !fortuneRevealed && (
       <motion.button
         type="button"
         className="fixed z-[70] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
