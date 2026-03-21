@@ -234,7 +234,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
       }
       if (trimmed.startsWith("### ")) {
         elements.push(
-          <h4 key={i} className="font-heading text-sm text-gold mt-3 mb-1">
+          <h4 key={i} className="font-heading text-base text-gold mt-3 mb-1">
             {renderInline(trimmed.slice(4))}
           </h4>
         );
