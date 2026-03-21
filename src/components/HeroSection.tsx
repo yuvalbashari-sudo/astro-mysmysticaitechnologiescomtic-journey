@@ -2680,23 +2680,7 @@ const HeroSection = () => {
                 )}
               </div>
             </motion.div>
-            {/* Tabs moved to fixed side panels outside the ball container */}
-            {entranceComplete && cardPhase === "idle" && (
-              <motion.button
-                type="button"
-                className="absolute z-30 text-center cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
-                style={{ bottom: "-50px", width: "280px", left: "50%", transform: "translateX(-50%)" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0.5, 0.85, 0.5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-                onClick={(e) => { e.stopPropagation(); handleFortuneReveal(); }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="text-gold/60 font-body text-sm">
-                  ✦ {t.hero_crystal_hint} ✦
-                </span>
-              </motion.button>
-            )}
+            {/* Fortune CTA moved to fixed bottom layer */}
 
           </motion.div>
         )}
