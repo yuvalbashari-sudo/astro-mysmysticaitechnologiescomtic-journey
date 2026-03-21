@@ -82,7 +82,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!aiText) return;
-    await navigator.clipboard.writeText(`✨ ${signInfo?.name} — ${t.readings_type_forecast}\n\n${aiText.slice(0, 300)}...`);
+    await navigator.clipboard.writeText(`✨ ${signInfo?.name} — ${t.readings_type_forecast}\n\n${aiText}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
