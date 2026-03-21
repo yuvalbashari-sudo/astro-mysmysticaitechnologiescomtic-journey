@@ -477,7 +477,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
 
             {/* Input */}
             <div
-              className="flex-shrink-0 px-5 py-4"
+              className="flex-shrink-0 px-6 py-5"
               style={{ borderTop: "1px solid hsl(var(--gold) / 0.06)" }}
             >
               <div
