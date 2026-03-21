@@ -335,6 +335,7 @@ export const he: TranslationKeys = {
   daily_premium_desc: "נסו קריאת טארוט מלאה עם מספר קלפים ופירוש אישי מפורט",
   daily_premium_cta: "חזרו לעולם הטארוט",
   daily_already_drawn: "הקלף היומי שלך כבר נחשף ✦",
+  daily_time_format: "{hours} שעות ו-{minutes} דקות",
 
   palm_title: "קריאת כף יד",
   palm_desc: "צלמו את שתי כפות הידיים שלכם וקבלו ניתוח מעמיק — יד ימין חושפת את ההווה והפעולה, יד שמאל חושפת את הפוטנציאל הנסתר.",

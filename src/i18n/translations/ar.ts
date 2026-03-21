@@ -335,6 +335,7 @@ export const ar: TranslationKeys = {
   daily_premium_desc: "جربوا قراءة تاروت كاملة مع عدة أوراق وتفسير شخصي مفصل",
   daily_premium_cta: "العودة لعالم التاروت",
   daily_already_drawn: "ورقتكم اليومية كُشفت بالفعل ✦",
+  daily_time_format: "{hours} ساعات و{minutes} دقائق",
 
   palm_title: "قراءة الكف",
   palm_desc: "صوّروا كلتا كفيكم واحصلوا على تحليل عميق — اليد اليمنى تكشف الحاضر والفعل، اليد اليسرى تكشف الإمكانات الخفية.",
