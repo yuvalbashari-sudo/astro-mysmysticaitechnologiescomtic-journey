@@ -123,42 +123,43 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* RIGHT: Form panel */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "570px", maxWidth: "42vw", paddingRight: "4vw" }}
+                      style={{ width: "700px", maxWidth: "48vw", paddingRight: "4vw" }}
                       initial={{ opacity: 0, x: 40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div
-                        className="rounded-2xl p-10"
+                        className="rounded-2xl"
                         style={{
+                          padding: "40px",
                           background: "linear-gradient(135deg, hsl(222 47% 8% / 0.75), hsl(222 47% 12% / 0.55))",
                           backdropFilter: "blur(20px)",
                           border: "1px solid hsl(var(--gold) / 0.1)",
                           boxShadow: "0 8px 40px hsl(222 47% 4% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.05)",
                         }}
                       >
-                        <div className="mb-5">
-                          <label className="block text-base text-gold/70 font-body mb-3">{t.forecast_gender_label}</label>
-                          <div className="flex gap-3">
+                        <div style={{ marginBottom: "24px" }}>
+                          <label className="block text-gold/70 font-body" style={{ fontSize: "20px", marginBottom: "12px" }}>{t.forecast_gender_label}</label>
+                          <div className="flex" style={{ gap: "12px" }}>
                             <motion.button type="button" onClick={() => setGender("male")}
-                              className="flex-1 py-3.5 rounded-xl font-body text-base transition-all duration-300"
-                              style={{ background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }}
+                              className="flex-1 rounded-xl font-body transition-all duration-300"
+                              style={{ fontSize: "20px", padding: "14px 0", background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }}
                               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                             >{t.forecast_gender_male}</motion.button>
                             <motion.button type="button" onClick={() => setGender("female")}
-                              className="flex-1 py-3.5 rounded-xl font-body text-base transition-all duration-300"
-                              style={{ background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }}
+                              className="flex-1 rounded-xl font-body transition-all duration-300"
+                              style={{ fontSize: "20px", padding: "14px 0", background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }}
                               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                             >{t.forecast_gender_female}</motion.button>
                           </div>
-                          {attempted && !gender && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
+                          {attempted && !gender && <p className="font-body" style={{ fontSize: "14px", marginTop: "6px", color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
                         </div>
-                        <div className="mb-8">
-                          <label className="block text-base text-gold/70 font-body mb-3">{t.forecast_birthdate_label}</label>
-                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center text-base" style={{ direction: "ltr" }} />
-                          {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
+                        <div style={{ marginBottom: "32px" }}>
+                          <label className="block text-gold/70 font-body" style={{ fontSize: "20px", marginBottom: "12px" }}>{t.forecast_birthdate_label}</label>
+                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr", fontSize: "20px", padding: "14px", height: "56px" }} />
+                          {attempted && !birthDate && <p className="font-body" style={{ fontSize: "14px", marginTop: "6px", color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                         </div>
-                        <motion.button onClick={handleSubmit} className="btn-gold font-body text-base w-full flex items-center justify-center gap-2 py-3.5" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-5 h-5" />{t.forecast_cta}</motion.button>
+                        <motion.button onClick={handleSubmit} className="btn-gold font-body w-full flex items-center justify-center" style={{ fontSize: "20px", padding: "14px 0", gap: "10px" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-7 h-7" />{t.forecast_cta}</motion.button>
                       </div>
                     </motion.div>
                   </div>
