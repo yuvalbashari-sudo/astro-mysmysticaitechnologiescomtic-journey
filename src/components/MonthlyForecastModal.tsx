@@ -133,7 +133,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                         }}
                       >
                         <div className="mb-5">
-                          <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
+                          <label className="block text-base text-gold/70 font-body mb-3">{t.forecast_gender_label}</label>
                           <div className="flex gap-2">
                             <motion.button type="button" onClick={() => setGender("male")}
                               className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
