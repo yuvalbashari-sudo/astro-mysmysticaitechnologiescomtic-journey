@@ -355,7 +355,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                 <div>
                   <h3 className="font-heading text-base text-gold">{t.advisor_title}</h3>
                   {activeReading && (
-                    <p className="text-xs text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
+                    <p className="text-sm text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
                   )}
                 </div>
               </div>
