@@ -2749,7 +2749,7 @@ const HeroSection = () => {
       style={{
         bottom: isMobile ? 28 : 32,
         right: isMobile ? 20 : 40,
-        transformOrigin: "center center",
+        transformOrigin: "bottom right",
       }}
       initial={{ opacity: 0, scale: 1.2 }}
       animate={{ opacity: 1, scale: 1.5 }}
