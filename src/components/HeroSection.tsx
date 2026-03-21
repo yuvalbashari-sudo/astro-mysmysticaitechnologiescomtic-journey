@@ -2185,7 +2185,9 @@ const HeroSection = () => {
 
   const handleCrystalClick = useCallback(() => {
     setClickBurst((c) => c + 1);
-    // Show "Message from the Universe" overlay
+  }, []);
+
+  const handleFortuneReveal = useCallback(() => {
     if (!fortuneRevealed) {
       const msgs = FORTUNE_MESSAGES[language] || FORTUNE_MESSAGES.he;
       const msg = msgs[Math.floor(Math.random() * msgs.length)];
