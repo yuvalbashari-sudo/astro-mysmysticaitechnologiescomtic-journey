@@ -43,7 +43,11 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
 
-  const handleSubmit = () => { if (!birthDate) return; setIsLoading(true); };
+  const handleSubmit = () => {
+    setAttempted(true);
+    if (!gender || !birthDate) return;
+    setIsLoading(true);
+  };
 
   const handleOnboardingComplete = () => {
     const date = new Date(birthDate);
