@@ -244,6 +244,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         dailyMeaning: selectedCard.meanings.daily,
         spiritualMeaning: selectedCard.meanings.spiritual,
         advice: selectedCard.meanings.advice,
+        gender,
       },
       (delta) => {
         aiTextRef.current += delta;
