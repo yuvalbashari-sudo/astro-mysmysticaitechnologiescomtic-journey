@@ -60,7 +60,12 @@ const TextSizeControl = ({ value, onChange }: Props) => {
 
 export default TextSizeControl;
 
-/** CSS class maps for each text size tier */
+/**
+ * Typography scaling system.
+ * 
+ * The "default" tier = old A++ (xl) size — this is the new baseline.
+ * "A" button = default (old xl), "A+" = larger, "A++" = largest.
+ */
 export const TEXT_SIZE_CLASSES: Record<TextSize, {
   body: string;
   heading: string;
@@ -70,27 +75,27 @@ export const TEXT_SIZE_CLASSES: Record<TextSize, {
   gap: string;
 }> = {
   default: {
-    body: "text-base md:text-lg leading-[1.9] md:leading-[2]",
-    heading: "text-lg md:text-xl",
-    subheading: "text-sm md:text-base",
-    quote: "text-base md:text-lg",
-    label: "text-sm",
-    gap: "h-4 md:h-5",
-  },
-  large: {
-    body: "text-lg md:text-xl leading-[2] md:leading-[2.1]",
-    heading: "text-xl md:text-2xl",
-    subheading: "text-base md:text-lg",
-    quote: "text-lg md:text-xl",
-    label: "text-base",
-    gap: "h-5 md:h-6",
-  },
-  xl: {
     body: "text-xl md:text-2xl leading-[2.05] md:leading-[2.15]",
     heading: "text-2xl md:text-3xl",
     subheading: "text-lg md:text-xl",
     quote: "text-xl md:text-2xl",
     label: "text-base md:text-lg",
     gap: "h-6 md:h-7",
+  },
+  large: {
+    body: "text-2xl md:text-[1.75rem] leading-[2.1] md:leading-[2.2]",
+    heading: "text-3xl md:text-4xl",
+    subheading: "text-xl md:text-2xl",
+    quote: "text-2xl md:text-[1.75rem]",
+    label: "text-lg md:text-xl",
+    gap: "h-7 md:h-8",
+  },
+  xl: {
+    body: "text-[1.75rem] md:text-[2rem] leading-[2.15] md:leading-[2.25]",
+    heading: "text-4xl md:text-5xl",
+    subheading: "text-2xl md:text-3xl",
+    quote: "text-[1.75rem] md:text-[2rem]",
+    label: "text-xl md:text-2xl",
+    gap: "h-8 md:h-10",
   },
 };
