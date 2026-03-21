@@ -131,7 +131,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [timeLeft, setTimeLeft] = useState("");
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [ritualStep, setRitualStep] = useState(0);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [showCardOverlay, setShowCardOverlay] = useState(false);
 
