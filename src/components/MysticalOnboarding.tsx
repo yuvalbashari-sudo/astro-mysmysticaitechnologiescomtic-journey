@@ -41,29 +41,82 @@ const MysticalOnboarding = ({ onComplete }: Props) => {
   const currentStep = steps[step];
 
   return (
-    <div className="relative min-h-[380px] flex flex-col items-center justify-center p-8 md:p-12 overflow-hidden">
+    <div className="relative min-h-[440px] flex flex-col items-center justify-center overflow-hidden" style={{ padding: "48px 40px" }}>
       {hasSeenBefore && (
-        <motion.button onClick={handleSkip} className="absolute top-3 left-3 z-20 text-gold/40 hover:text-gold/70 font-body text-xs transition-colors duration-300" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+        <motion.button onClick={handleSkip} className="absolute top-4 left-4 z-20 font-body transition-colors duration-300" style={{ color: "hsl(var(--gold) / 0.4)", fontSize: "13px" }} whileHover={{ color: "hsl(var(--gold) / 0.7)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           {t.onboarding_skip}
         </motion.button>
       )}
       {particles.map((p, i) => <Particle key={i} {...p} />)}
       {step === 1 && zodiacSymbols.map((sym, i) => (
-        <motion.span key={`z-${i}`} className="absolute text-gold/10 text-lg pointer-events-none select-none" style={{ left: `${8 + (i % 4) * 25}%`, top: `${15 + Math.floor(i / 4) * 30}%` }} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: [0, 0.25, 0], scale: [0.5, 1.2, 0.5] }} transition={{ duration: 3, repeat: Infinity, delay: i * 0.25 }}>{sym}</motion.span>
+        <motion.span key={`z-${i}`} className="absolute pointer-events-none select-none" style={{ left: `${8 + (i % 4) * 25}%`, top: `${15 + Math.floor(i / 4) * 30}%`, color: "hsl(var(--gold) / 0.08)", fontSize: "22px" }} initial={{ opacity: 0, scale: 0 }} animate={{ opacity: [0, 0.25, 0], scale: [0.5, 1.2, 0.5] }} transition={{ duration: 3, repeat: Infinity, delay: i * 0.25 }}>{sym}</motion.span>
       ))}
       <AnimatePresence mode="wait">
         <motion.div key={step} className="relative z-10 flex flex-col items-center text-center" initial={{ opacity: 0, y: 20, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -15, scale: 0.97 }} transition={{ duration: 0.6, ease: "easeOut" }}>
-          <motion.div className="w-20 h-20 rounded-full mb-6 flex items-center justify-center" style={{ background: step === 2 ? "radial-gradient(circle, hsl(var(--gold) / 0.25), hsl(var(--crimson) / 0.08), transparent)" : "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent)", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 40px hsl(var(--gold) / 0.15)" }} animate={step === 0 ? { scale: [1, 1.1, 1], boxShadow: ["0 0 30px hsl(43 80% 55% / 0.1)", "0 0 60px hsl(43 80% 55% / 0.25)", "0 0 30px hsl(43 80% 55% / 0.1)"] } : step === 1 ? { scale: [1, 1.15, 1], rotate: [0, 180, 360] } : { scale: [1, 1.2, 1], boxShadow: ["0 0 30px hsl(43 80% 55% / 0.15)", "0 0 80px hsl(43 80% 55% / 0.35)", "0 0 30px hsl(43 80% 55% / 0.15)"] }} transition={{ duration: step === 2 ? 1.8 : 2.5, repeat: Infinity, ease: "easeInOut" }}>
-            <motion.span className="text-2xl" animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity }}>{step === 0 ? "✦" : step === 1 ? "☽" : "⭐"}</motion.span>
+          {/* Icon orb */}
+          <motion.div
+            className="rounded-full mb-8 flex items-center justify-center"
+            style={{
+              width: 88, height: 88,
+              background: step === 2
+                ? "radial-gradient(circle, hsl(var(--gold) / 0.2), hsl(var(--crimson) / 0.06), transparent)"
+                : "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)",
+              border: "1px solid hsl(var(--gold) / 0.2)",
+              boxShadow: "0 0 50px hsl(var(--gold) / 0.12), inset 0 0 20px hsl(var(--gold) / 0.04)",
+            }}
+            animate={step === 0
+              ? { scale: [1, 1.1, 1], boxShadow: ["0 0 30px hsl(43 80% 55% / 0.1)", "0 0 60px hsl(43 80% 55% / 0.25)", "0 0 30px hsl(43 80% 55% / 0.1)"] }
+              : step === 1
+              ? { scale: [1, 1.15, 1], rotate: [0, 180, 360] }
+              : { scale: [1, 1.2, 1], boxShadow: ["0 0 30px hsl(43 80% 55% / 0.15)", "0 0 80px hsl(43 80% 55% / 0.35)", "0 0 30px hsl(43 80% 55% / 0.15)"] }}
+            transition={{ duration: step === 2 ? 1.8 : 2.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <motion.span style={{ fontSize: "32px" }} animate={{ opacity: [0.6, 1, 0.6] }} transition={{ duration: 2, repeat: Infinity }}>
+              {step === 0 ? "✦" : step === 1 ? "☽" : "⭐"}
+            </motion.span>
           </motion.div>
-          <h3 className="font-heading text-xl md:text-2xl gold-gradient-text mb-3">{currentStep.title}</h3>
-          <p className="text-foreground/65 font-body text-sm md:text-base max-w-sm mx-auto leading-relaxed mb-8">{currentStep.text}</p>
-          <div className="flex items-center gap-2 mb-6">
+
+          {/* Title */}
+          <h3 className="font-heading gold-gradient-text mb-4" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)" }}>
+            {currentStep.title}
+          </h3>
+
+          {/* Body */}
+          <p className="font-body max-w-md mx-auto leading-relaxed mb-10" style={{ fontSize: "17px", lineHeight: 1.8, color: "hsl(var(--foreground) / 0.6)", textShadow: "0 2px 15px hsl(222 47% 6%)" }}>
+            {currentStep.text}
+          </p>
+
+          {/* Step indicators */}
+          <div className="flex items-center gap-2.5 mb-8">
             {steps.map((_, i) => (
-              <motion.div key={i} className="rounded-full" style={{ width: i === step ? 24 : 6, height: 6, background: i === step ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.2)", borderRadius: 3 }} layout transition={{ type: "spring", stiffness: 300, damping: 25 }} />
+              <motion.div
+                key={i}
+                className="rounded-full"
+                style={{
+                  width: i === step ? 28 : 7,
+                  height: 7,
+                  background: i === step
+                    ? "linear-gradient(90deg, hsl(var(--gold)), hsl(var(--gold-light)))"
+                    : "hsl(var(--gold) / 0.15)",
+                  borderRadius: 4,
+                  boxShadow: i === step ? "0 0 12px hsl(var(--gold) / 0.3)" : "none",
+                }}
+                layout
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              />
             ))}
           </div>
-          <motion.button onClick={goNext} className="btn-gold font-body text-sm flex items-center justify-center gap-2" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>{currentStep.cta}</motion.button>
+
+          {/* CTA */}
+          <motion.button
+            onClick={goNext}
+            className="btn-gold font-body flex items-center justify-center gap-2"
+            style={{ fontSize: "16px", padding: "14px 36px", minWidth: 180 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            {currentStep.cta}
+          </motion.button>
         </motion.div>
       </AnimatePresence>
     </div>
