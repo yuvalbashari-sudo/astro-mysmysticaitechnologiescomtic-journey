@@ -3204,7 +3204,7 @@ const HeroSection = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          onClick={() => setFortuneRevealed(false)}
+          onClick={closeUniverseMessage}
           style={{
             background: "radial-gradient(ellipse at 50% 50%, hsl(var(--deep-blue) / 0.65) 0%, hsl(var(--deep-blue) / 0.85) 100%)",
             backdropFilter: "blur(6px)",
@@ -3285,7 +3285,7 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              onClick={() => setFortuneRevealed(false)}
+              onClick={closeUniverseMessage}
             >
               {language === "he" ? "לחצו לסגירה" : language === "ar" ? "انقر للإغلاق" : language === "ru" ? "Нажмите, чтобы закрыть" : "Tap to close"}
             </motion.span>
