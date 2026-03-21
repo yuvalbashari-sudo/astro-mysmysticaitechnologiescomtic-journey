@@ -250,20 +250,19 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <div className="text-center" style={{ padding: "24px 16px" }}>
-                        <motion.div className="mb-8" style={{ fontSize: "9rem", lineHeight: 1, textShadow: "0 0 35px hsl(222 47% 6%)" }} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>{signInfo.symbol}</motion.div>
-                        <motion.h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: "2.75rem", textShadow: "0 0 30px hsl(222 47% 6%)" }} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{signInfo.name}</motion.h2>
-                        <motion.p className="text-muted-foreground font-body mb-2" style={{ fontSize: "1.35rem", lineHeight: 1.6, textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{signInfo.dateRange} • {t.forecast_element_label} {signInfo.element}</motion.p>
-                        <motion.p className="text-gold/60 font-body mt-5" style={{ fontSize: "1.35rem", lineHeight: 1.6, textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>{t.forecast_month_label} {monthName}</motion.p>
-                        <motion.div className="flex items-center justify-center gap-5 mt-10" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-                          <motion.button onClick={handleShare} className="flex items-center gap-3 rounded-full font-body" style={{ fontSize: "1.1rem", padding: "14px 28px", background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-6 h-6" />{t.forecast_share}</motion.button>
-                          <motion.button onClick={handleCopy} className="flex items-center gap-3 rounded-full font-body" style={{ fontSize: "1.1rem", padding: "14px 28px", background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-6 h-6" /> : <Copy className="w-6 h-6" />}{copied ? t.forecast_copied : t.forecast_copy}</motion.button>
+                      <div className="text-center" style={{ padding: "32px 20px" }}>
+                        <motion.div className="mb-10" style={{ fontSize: "144px", lineHeight: 1, textShadow: "0 0 35px hsl(222 47% 6%)" }} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>{signInfo.symbol}</motion.div>
+                        <motion.h2 className="font-heading gold-gradient-text mb-6" style={{ fontSize: "44px", lineHeight: 1.2, textShadow: "0 0 30px hsl(222 47% 6%)" }} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{signInfo.name}</motion.h2>
+                        <motion.p className="text-muted-foreground font-body mb-2" style={{ fontSize: "22px", lineHeight: 1.6, textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{signInfo.dateRange} • {t.forecast_element_label} {signInfo.element}</motion.p>
+                        <motion.p className="text-gold/60 font-body mt-6" style={{ fontSize: "22px", lineHeight: 1.6, textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>{t.forecast_month_label} {monthName}</motion.p>
+                        <motion.div className="flex items-center justify-center gap-6 mt-12" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
+                          <motion.button onClick={handleShare} className="flex items-center gap-3 rounded-full font-body" style={{ fontSize: "18px", height: "56px", padding: "0 32px", background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 style={{ width: 24, height: 24 }} />{t.forecast_share}</motion.button>
+                          <motion.button onClick={handleCopy} className="flex items-center gap-3 rounded-full font-body" style={{ fontSize: "18px", height: "56px", padding: "0 32px", background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check style={{ width: 24, height: 24 }} /> : <Copy style={{ width: 24, height: 24 }} />}{copied ? t.forecast_copied : t.forecast_copy}</motion.button>
                         </motion.div>
-                        {/* Skip / close action — clearly visible */}
                         <motion.button
                           onClick={handleClose}
-                          className="font-body text-muted-foreground hover:text-gold/80 transition-colors duration-300 mt-8 block mx-auto"
-                          style={{ fontSize: "1.05rem", padding: "10px 24px", cursor: "pointer" }}
+                          className="font-body text-muted-foreground hover:text-gold/80 transition-colors duration-300 mt-10 block mx-auto"
+                          style={{ fontSize: "17px", height: "44px", padding: "0 28px", cursor: "pointer" }}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.8 }}
