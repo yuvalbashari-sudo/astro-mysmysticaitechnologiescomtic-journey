@@ -27,6 +27,7 @@ interface DailyCardData {
   card: TarotWorldCard;
   date: string;
   aiText?: string;
+  language?: string;
 }
 
 function getUserSeed(): string {
