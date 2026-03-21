@@ -20,6 +20,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
   const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "">("");
+  const [attempted, setAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<{ name: string; symbol: string; dateRange: string; element: string } | null>(null);
