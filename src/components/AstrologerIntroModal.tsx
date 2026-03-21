@@ -257,7 +257,7 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
 
         {/* ── RIGHT ZONE: Chat panel ── */}
         <motion.div
-          className="flex flex-col w-full md:w-[570px] md:max-w-[570px] md:min-w-[570px] h-full"
+          className="flex flex-col w-full md:w-[570px] md:max-w-[570px] md:min-w-[570px] h-full pt-[92px]"
           style={{
             background: "linear-gradient(170deg, hsl(222 47% 9% / 0.85), hsl(222 47% 6% / 0.92))",
             borderLeft: dir === "ltr" ? "1px solid hsl(var(--gold) / 0.1)" : "none",
