@@ -270,10 +270,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleClose = () => {
     onClose();
-    // Pause video if playing
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
     setTimeout(() => {
       if (phase !== "locked" && phase !== "result") {
         setCard(null);
