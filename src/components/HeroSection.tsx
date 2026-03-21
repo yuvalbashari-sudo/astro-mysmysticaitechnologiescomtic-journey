@@ -2765,7 +2765,7 @@ const HeroSection = () => {
 
       {/* Avatar image with breathing animation */}
       <motion.div
-        className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.06]"
+        className="relative rounded-full overflow-hidden"
         style={{
           width: "100%",
           height: "100%",
