@@ -377,7 +377,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               aria-live="polite"
             >
               {messages.length === 0 && (
-                <div className="text-center py-8 space-y-3">
+                <div className="text-center py-10 space-y-4">
                   <div
                     className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
                     style={{
