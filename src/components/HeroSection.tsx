@@ -2764,13 +2764,13 @@ const HeroSection = () => {
               right: "calc(100% + 8px)",
               bottom: 12,
               whiteSpace: "nowrap",
-              padding: "8px 14px",
-              borderRadius: 10,
-              background: "hsl(222 47% 8% / 0.7)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid hsl(var(--gold) / 0.14)",
-              boxShadow: "0 4px 16px hsl(222 47% 4% / 0.35)",
+              padding: "12px 20px",
+              borderRadius: 12,
+              background: "hsl(222 47% 8% / 0.75)",
+              backdropFilter: "blur(14px)",
+              WebkitBackdropFilter: "blur(14px)",
+              border: "1px solid hsl(var(--gold) / 0.18)",
+              boxShadow: "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
               direction: "rtl",
               zIndex: 1,
             }}
@@ -2783,12 +2783,12 @@ const HeroSection = () => {
               className="font-body"
               style={{
                 margin: 0,
-                fontSize: 13,
-                lineHeight: 1.4,
-                color: "hsl(var(--foreground) / 0.7)",
+                fontSize: 17,
+                lineHeight: 1.5,
+                color: "hsl(var(--foreground) / 0.8)",
               }}
             >
-              רוצים הכוונה? <span style={{ color: "hsl(var(--gold) / 0.9)" }}>לחצו לשיחה</span>
+              רוצים הכוונה? <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
             </p>
             {/* Arrow */}
             <div
