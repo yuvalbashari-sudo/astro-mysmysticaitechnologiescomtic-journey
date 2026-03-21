@@ -2183,20 +2183,16 @@ const HeroSection = () => {
     }
   }, [isMobile, mouseX, mouseY]);
 
-  const handleCrystalClick = useCallback(() => {
-    setClickBurst((c) => c + 1);
-  }, []);
+  const openUniverseMessage = useCallback(() => {
+    const msgs = FORTUNE_MESSAGES[language] || FORTUNE_MESSAGES.he;
+    const msg = msgs[Math.floor(Math.random() * msgs.length)];
+    setFortuneMessage(msg);
+    setIsUniverseMessageOpen(true);
+  }, [language]);
 
-  const handleFortuneReveal = useCallback(() => {
-    if (!fortuneRevealed) {
-      const msgs = FORTUNE_MESSAGES[language] || FORTUNE_MESSAGES.he;
-      const msg = msgs[Math.floor(Math.random() * msgs.length)];
-      setFortuneMessage(msg);
-      setFortuneRevealed(true);
-    } else {
-      setFortuneRevealed(false);
-    }
-  }, [fortuneRevealed, language]);
+  const closeUniverseMessage = useCallback(() => {
+    setIsUniverseMessageOpen(false);
+  }, []);
 
   const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
