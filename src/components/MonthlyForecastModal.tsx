@@ -183,7 +183,23 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                    </motion.div>
                 )
               ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><div><MysticalOnboarding onComplete={handleOnboardingComplete} /></div></motion.div>
+                isMobile ? (
+                  <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+                ) : (
+                  /* ── Desktop: onboarding in LEFT zone, oracle center clear ── */
+                  <div className="absolute inset-0 flex items-start" style={{ paddingTop: "clamp(100px, 14vh, 160px)" }} key="onboarding-desktop">
+                    <motion.div
+                      className="flex flex-col justify-center pointer-events-auto"
+                      style={{ width: "42%", maxWidth: "510px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }}
+                      initial={{ opacity: 0, x: -30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <MysticalOnboarding onComplete={handleOnboardingComplete} />
+                    </motion.div>
+                    <div className="flex-1" />
+                  </div>
+                )
               ) : signInfo ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone ── */
