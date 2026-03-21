@@ -79,14 +79,14 @@ function getDailyCardIndex(totalCards: number): number {
   return hash % totalCards;
 }
 
-function getTimeUntilMidnight(): string {
+function getTimeUntilMidnight(format: string): string {
   const now = new Date();
   const midnight = new Date(now);
   midnight.setHours(24, 0, 0, 0);
   const remaining = midnight.getTime() - now.getTime();
   const hours = Math.floor(remaining / (60 * 60 * 1000));
   const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-  return `${hours} שעות ו-${minutes} דקות`;
+  return format.replace("{hours}", String(hours)).replace("{minutes}", String(minutes));
 }
 
 const Particles = React.memo(() => (
