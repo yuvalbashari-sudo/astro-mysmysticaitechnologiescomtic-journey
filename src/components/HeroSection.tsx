@@ -2634,10 +2634,11 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 overflow-hidden cursor-pointer"
+              className="relative z-20 overflow-hidden cursor-pointer pointer-events-auto"
               style={{ width: "490px", height: "490px", borderRadius: "50%" }}
               onMouseEnter={() => setIsCrystalHovered(true)}
               onMouseLeave={() => setIsCrystalHovered(false)}
+              onClickCapture={openUniverseMessage}
               onClick={openUniverseMessage}
             >
               {/* No overlays — pure media only */}
