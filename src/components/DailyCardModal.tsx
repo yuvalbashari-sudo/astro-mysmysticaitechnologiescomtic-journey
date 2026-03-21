@@ -731,9 +731,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   </div>
 
-                  {/* ── TEXT — scrolls normally, constrained to left half on desktop ── */}
+                  {/* ── TEXT — scrolls normally, constrained to LEFT zone on desktop ── */}
                   <motion.div
-                    className="p-6 md:max-w-[500px] md:pl-8 md:pr-4 md:mr-[clamp(280px,26vw,400px)] md:pt-4"
+                    className="p-6 md:max-w-[440px] md:pl-10 md:pr-4 md:mr-auto md:pt-6"
+                    style={{ maxWidth: "min(440px, 38vw)" }}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
