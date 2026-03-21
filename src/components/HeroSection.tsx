@@ -2100,6 +2100,7 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [astrologerOpen, setAstrologerOpen] = useState(false);
+  const [astrologerTooltipOpen, setAstrologerTooltipOpen] = useState(false);
   const [zodiacSignIndex, setZodiacSignIndex] = useState<number | null>(null);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
@@ -2743,60 +2744,124 @@ const HeroSection = () => {
         </div>
       )}
 
-    <motion.button
-      type="button"
-      className="fixed z-[60] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
+    <div
+      className="fixed z-[60] pointer-events-auto"
       style={{
         bottom: isMobile ? 28 : 32,
         right: isMobile ? 20 : 40,
         left: "auto",
         width: isMobile ? 120 : 168,
         height: isMobile ? 120 : 168,
-        transformOrigin: "bottom right",
       }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 2.5, duration: 0.7, ease: "easeOut" }}
-      onClick={() => setAstrologerOpen(true)}
-      whileHover={{ filter: "brightness(1.15)" }}
-      whileTap={{ filter: "brightness(0.9)" }}
-      aria-label="שיחה עם האסטרולוגית"
+      onMouseEnter={() => !isMobile && setAstrologerTooltipOpen(true)}
+      onMouseLeave={() => setAstrologerTooltipOpen(false)}
     >
+      <AnimatePresence>
+        {astrologerTooltipOpen && !isMobile && (
+          <motion.div
+            className="absolute pointer-events-none"
+            style={{
+              right: "calc(100% + 10px)",
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: 220,
+              padding: "14px 18px",
+              borderRadius: 14,
+              background: "linear-gradient(160deg, hsl(222 47% 10% / 0.86), hsl(222 47% 6% / 0.76))",
+              backdropFilter: "blur(16px) saturate(1.2)",
+              WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+              border: "1px solid hsl(var(--gold) / 0.2)",
+              boxShadow: "0 8px 32px hsl(222 47% 4% / 0.5), 0 0 24px hsl(var(--gold) / 0.06)",
+              direction: "rtl",
+              zIndex: 1,
+            }}
+            initial={{ opacity: 0, x: 8 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 8 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+          >
+            <p
+              className="font-body"
+              style={{
+                margin: 0,
+                fontSize: 14,
+                lineHeight: 1.65,
+                color: "hsl(var(--foreground) / 0.82)",
+                textShadow: "0 1px 8px hsl(222 47% 6%)",
+              }}
+            >
+              רוצים הכוונה אישית? <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
+            </p>
+            <div
+              className="absolute"
+              style={{
+                right: -6,
+                top: "50%",
+                marginTop: -6,
+                width: 12,
+                height: 12,
+                background: "hsl(222 47% 8% / 0.82)",
+                border: "1px solid hsl(var(--gold) / 0.2)",
+                borderBottom: "none",
+                borderLeft: "none",
+                transform: "rotate(45deg)",
+                borderRadius: 2,
+              }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* Avatar image with breathing animation */}
-      <motion.div
-        className="relative rounded-full overflow-hidden"
+      <motion.button
+        type="button"
+        className="w-full h-full pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
         style={{
-          width: "100%",
-          height: "100%",
-          minWidth: isMobile ? 120 : 168,
-          minHeight: isMobile ? 120 : 168,
-          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 40px hsl(200 70% 50% / 0.15), 0 0 8px hsl(var(--gold) / 0.2)",
+          transformOrigin: "bottom right",
         }}
-        animate={{
-          y: [0, -3, 0],
-        }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2.5, duration: 0.7, ease: "easeOut" }}
+        onClick={() => setAstrologerOpen(true)}
+        whileHover={{ filter: "brightness(1.15)" }}
+        whileTap={{ filter: "brightness(0.9)" }}
+        aria-label="שיחה עם האסטרולוגית"
       >
-        <img
-          src={astrologerAvatarCta}
-          alt="שיחה עם האסטרולוגית"
-          className="w-full h-full object-cover scale-105"
-          style={{ objectPosition: "center 42%" }}
-          draggable={false}
-        />
-        {/* Hover shimmer */}
+
+        {/* Avatar image with breathing animation */}
         <motion.div
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          className="relative rounded-full overflow-hidden"
           style={{
-            background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
-            backgroundSize: "200% 100%",
+            width: "100%",
+            height: "100%",
+            minWidth: isMobile ? 120 : 168,
+            minHeight: isMobile ? 120 : 168,
+            boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 40px hsl(200 70% 50% / 0.15), 0 0 8px hsl(var(--gold) / 0.2)",
           }}
-          animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
-        />
-      </motion.div>
-    </motion.button>
+          animate={{
+            y: [0, -3, 0],
+          }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <img
+            src={astrologerAvatarCta}
+            alt="שיחה עם האסטרולוגית"
+            className="w-full h-full object-cover scale-105"
+            style={{ objectPosition: "center 42%" }}
+            draggable={false}
+          />
+          {/* Hover shimmer */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            style={{
+              background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%)",
+              backgroundSize: "200% 100%",
+            }}
+            animate={{ backgroundPosition: ["-100% 0%", "200% 0%"] }}
+            transition={{ duration: 2, repeat: Infinity, repeatDelay: 3, ease: "easeInOut" }}
+          />
+        </motion.div>
+      </motion.button>
+    </div>
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
     <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
