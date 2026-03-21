@@ -228,8 +228,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setAiLoading(true);
     setAiError(null);
     aiTextRef.current = "";
+    setAiText("");
 
-    saveDailyCard({ card: selectedCard, date: getTodayDate() });
+    saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
     streamMysticalReading(
       "dailyCard",
@@ -249,16 +250,17 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        setActiveReading({ type: "dailyCard", label: `קלף יומי — ${selectedCard.hebrewName}`, summary: aiTextRef.current });
+        const label = `${t.daily_title} — ${selectedCard.hebrewName}`;
+        setActiveReading({ type: "dailyCard", label, summary: aiTextRef.current });
         const saved = getSavedDailyCard();
         if (saved) {
-          saveDailyCard({ ...saved, aiText: aiTextRef.current });
+          saveDailyCard({ ...saved, aiText: aiTextRef.current, language });
         }
         mysticalProfile.recordDailyCard(selectedCard.hebrewName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
-          title: `קלף יומי — ${selectedCard.hebrewName}`,
-          subtitle: "הקלף שנבחר עבורכם להיום",
+          title: label,
+          subtitle: t.daily_card_chosen,
           symbol: selectedCard.symbol,
           data: { card: selectedCard.hebrewName, aiReading: aiTextRef.current },
         });
