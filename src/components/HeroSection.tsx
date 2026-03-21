@@ -2110,6 +2110,7 @@ const HeroSection = () => {
   const [hoveredZodiacColor, setHoveredZodiacColor] = useState<string | null>(null);
   const [isUniverseMessageOpen, setIsUniverseMessageOpen] = useState(false);
   const [fortuneMessage, setFortuneMessage] = useState("");
+  const [isCrystalHovered, setIsCrystalHovered] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
@@ -2479,8 +2480,9 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20"
+              className="relative z-20 cursor-pointer"
               style={{ width: "332px", height: "332px" }}
+              onClick={openUniverseMessage}
             >
               {/* No overlays — pure media only */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
@@ -2631,8 +2633,11 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 overflow-hidden"
+              className="relative z-20 overflow-hidden cursor-pointer"
               style={{ width: "490px", height: "490px", borderRadius: "50%" }}
+              onMouseEnter={() => setIsCrystalHovered(true)}
+              onMouseLeave={() => setIsCrystalHovered(false)}
+              onClick={openUniverseMessage}
             >
               {/* No overlays — pure media only */}
               <AnimatePresence>
@@ -2670,6 +2675,56 @@ const HeroSection = () => {
                   </>
                 )}
               </AnimatePresence>
+
+              <AnimatePresence>
+                {isCrystalHovered && !isUniverseMessageOpen && (
+                  <motion.div
+                    className="absolute pointer-events-none"
+                    style={{
+                      right: "calc(100% + 12px)",
+                      top: "56%",
+                      transform: "translateY(-50%)",
+                      padding: "10px 14px",
+                      borderRadius: 12,
+                      whiteSpace: "nowrap",
+                      direction: "rtl",
+                      background: "hsl(222 47% 8% / 0.75)",
+                      backdropFilter: "blur(14px)",
+                      WebkitBackdropFilter: "blur(14px)",
+                      border: "1px solid hsl(var(--gold) / 0.18)",
+                      boxShadow: "0 6px 20px hsl(222 47% 4% / 0.38), 0 0 10px hsl(var(--gold) / 0.05)",
+                      zIndex: 40,
+                    }}
+                    initial={{ opacity: 0, scale: 0.94, x: 4 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    exit={{ opacity: 0, scale: 0.94, x: 4 }}
+                    transition={{ duration: 0.16, ease: "easeOut" }}
+                  >
+                    <p
+                      className="font-body"
+                      style={{ margin: 0, fontSize: 15, lineHeight: 1.45, color: "hsl(var(--foreground) / 0.84)" }}
+                    >
+                      לחצו לקבלת <span style={{ color: "hsl(var(--gold))" }}>מסר מהיקום</span>
+                    </p>
+                    <div
+                      className="absolute"
+                      style={{
+                        right: -4,
+                        top: "50%",
+                        marginTop: -4,
+                        width: 8,
+                        height: 8,
+                        background: "hsl(222 47% 8% / 0.75)",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
+                        borderBottom: "none",
+                        borderLeft: "none",
+                        transform: "rotate(45deg)",
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
                 {entranceComplete && (
                   <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
