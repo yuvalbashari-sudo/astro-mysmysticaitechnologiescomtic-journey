@@ -195,7 +195,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                    </motion.div>
                 )
               ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><div><MysticalOnboarding onComplete={handleOnboardingComplete} /></div></motion.div>
               ) : signInfo ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone ── */
