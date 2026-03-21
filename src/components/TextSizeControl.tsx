@@ -38,7 +38,7 @@ const TextSizeControl = ({ value, onChange }: Props) => {
             }`}
             style={{
               color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--gold) / 0.6)",
-              fontSize: key === "default" ? 22 : key === "xl" ? 11 : 12,
+              fontSize: key === "default" ? 44 : key === "xl" ? 11 : 12,
             }}
           >
             {isActive && (
