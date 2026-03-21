@@ -335,6 +335,7 @@ export const en: TranslationKeys = {
   daily_premium_desc: "Try a full tarot reading with multiple cards and detailed personal interpretation",
   daily_premium_cta: "Back to Tarot World",
   daily_already_drawn: "Your daily card has already been revealed ✦",
+  daily_time_format: "{hours} hours and {minutes} minutes",
 
   palm_title: "Palm Reading",
   palm_desc: "Photograph both your palms and receive a deep analysis — the right hand reveals the present and action, the left hand reveals hidden potential.",

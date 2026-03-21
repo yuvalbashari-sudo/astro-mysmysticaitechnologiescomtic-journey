@@ -361,6 +361,7 @@ export type TranslationKeys = {
   daily_premium_desc: string;
   daily_premium_cta: string;
   daily_already_drawn: string;
+  daily_time_format: string;
 
   // Palm Reading Modal
   palm_title: string;

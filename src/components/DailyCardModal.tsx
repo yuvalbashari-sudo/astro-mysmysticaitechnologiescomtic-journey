@@ -27,6 +27,7 @@ interface DailyCardData {
   card: TarotWorldCard;
   date: string;
   aiText?: string;
+  language?: string;
 }
 
 function getUserSeed(): string {
@@ -78,14 +79,14 @@ function getDailyCardIndex(totalCards: number): number {
   return hash % totalCards;
 }
 
-function getTimeUntilMidnight(): string {
+function getTimeUntilMidnight(format: string): string {
   const now = new Date();
   const midnight = new Date(now);
   midnight.setHours(24, 0, 0, 0);
   const remaining = midnight.getTime() - now.getTime();
   const hours = Math.floor(remaining / (60 * 60 * 1000));
   const minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
-  return `${hours} שעות ו-${minutes} דקות`;
+  return format.replace("{hours}", String(hours)).replace("{minutes}", String(minutes));
 }
 
 const Particles = React.memo(() => (
@@ -135,17 +136,21 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [showCardOverlay, setShowCardOverlay] = useState(false);
 
-  // Check for existing daily card on open
+  // Check for existing daily card on open — also re-check when language changes
   useEffect(() => {
     if (isOpen) {
       const saved = getSavedDailyCard();
       if (saved) {
         setCard(saved.card);
-        setTimeLeft(getTimeUntilMidnight());
-        if (saved.aiText) {
+        setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
+        if (saved.aiText && saved.language === language) {
           setAiText(saved.aiText);
           aiTextRef.current = saved.aiText;
           setPhase("locked");
+        } else if (saved.aiText && saved.language !== language) {
+          // Language changed — re-generate AI text
+          setPhase("result");
+          startAiReading(saved.card);
         } else {
           setPhase("locked");
         }
@@ -153,7 +158,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setPhase("ready");
       }
     }
-  }, [isOpen]);
+  }, [isOpen, language]);
 
   // Countdown timer for locked state
   useEffect(() => {
@@ -161,7 +166,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const saved = getSavedDailyCard();
     if (!saved) return;
     const interval = setInterval(() => {
-      const remaining = getTimeUntilMidnight();
+      const remaining = getTimeUntilMidnight(t.daily_time_format);
       setTimeLeft(remaining);
       if (saved.date !== getTodayDate()) {
         localStorage.removeItem(DAILY_CARD_KEY);
@@ -178,7 +183,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const saved = getSavedDailyCard();
     if (saved) {
       setCard(saved.card);
-      setTimeLeft(getTimeUntilMidnight());
+      setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
       if (saved.aiText) {
         setAiText(saved.aiText);
         aiTextRef.current = saved.aiText;
@@ -223,8 +228,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setAiLoading(true);
     setAiError(null);
     aiTextRef.current = "";
+    setAiText("");
 
-    saveDailyCard({ card: selectedCard, date: getTodayDate() });
+    saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
     streamMysticalReading(
       "dailyCard",
@@ -244,16 +250,17 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        setActiveReading({ type: "dailyCard", label: `קלף יומי — ${selectedCard.hebrewName}`, summary: aiTextRef.current });
+        const label = `${t.daily_title} — ${selectedCard.hebrewName}`;
+        setActiveReading({ type: "dailyCard", label, summary: aiTextRef.current });
         const saved = getSavedDailyCard();
         if (saved) {
-          saveDailyCard({ ...saved, aiText: aiTextRef.current });
+          saveDailyCard({ ...saved, aiText: aiTextRef.current, language });
         }
         mysticalProfile.recordDailyCard(selectedCard.hebrewName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
-          title: `קלף יומי — ${selectedCard.hebrewName}`,
-          subtitle: "הקלף שנבחר עבורכם להיום",
+          title: label,
+          subtitle: t.daily_card_chosen,
           symbol: selectedCard.symbol,
           data: { card: selectedCard.hebrewName, aiReading: aiTextRef.current },
         });
@@ -755,7 +762,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {!aiLoading && (aiText || aiError) && (
                       <>
-                        <ShareResultSection symbol={card.symbol} title={`קלף יומי — ${card.hebrewName}`} subtitle="הקלף שנבחר עבורכם להיום" />
+                        <ShareResultSection symbol={card.symbol} title={`${t.daily_title} — ${card.hebrewName}`} subtitle={t.daily_card_chosen} />
                         <div className="section-divider max-w-[200px] mx-auto my-8" />
                         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                           <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
