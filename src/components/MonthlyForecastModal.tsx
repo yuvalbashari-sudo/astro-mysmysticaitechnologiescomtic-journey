@@ -99,37 +99,13 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             <AnimatePresence mode="wait">
               {!signInfo && !isLoading ? (
                 isDesktop ? (
-                  /* ── Desktop: 3-column — LEFT text + CENTER oracle + RIGHT form ── */
+                  /* ── Desktop: 3-column — LEFT form + CENTER oracle + RIGHT text ── */
                   <div className="absolute inset-0 flex items-start" style={{ paddingTop: "clamp(100px, 14vh, 160px)" }} key="input-desktop">
-                    {/* LEFT: Explanation text */}
-                    <motion.div
-                      className="flex flex-col justify-center pointer-events-auto overflow-hidden"
-                      style={{ width: "42%", maxWidth: "560px", marginLeft: "clamp(20px, 4vw, 80px)", marginRight: "10px" }}
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <div style={{ padding: "0 24px" }}>
-                        <motion.div className="w-16 h-16 mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.18)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.08)", "0 0 40px hsl(43 80% 55% / 0.18)", "0 0 20px hsl(43 80% 55% / 0.08)"] }} transition={{ duration: 3, repeat: Infinity }}>
-                          <Calendar className="w-7 h-7 text-gold" />
-                        </motion.div>
-                        <h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)" }}>{t.forecast_title}</h2>
-                        <p className="font-body leading-relaxed" style={{ fontSize: "18px", lineHeight: 1.8, color: "hsl(var(--foreground) / 0.65)", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
-
-                        <div className="section-divider max-w-[80px] my-6" />
-
-                        <p className="font-body" style={{ fontSize: "14px", lineHeight: 1.6, color: "hsl(var(--foreground) / 0.35)", textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
-                      </div>
-                    </motion.div>
-
-                    {/* CENTER: Oracle safe zone */}
-                    <div className="flex-1" />
-
-                    {/* RIGHT: Form panel */}
+                    {/* LEFT: Form panel */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "700px", maxWidth: "48vw", paddingRight: "4vw" }}
-                      initial={{ opacity: 0, x: 40 }}
+                      style={{ width: "700px", maxWidth: "48vw", paddingLeft: "4vw" }}
+                      initial={{ opacity: 0, x: -40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
@@ -160,6 +136,30 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                           {attempted && !birthDate && <p className="font-body" style={{ fontSize: "14px", marginTop: "8px", color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                         </div>
                         <motion.button onClick={handleSubmit} className="btn-gold font-body w-full flex items-center justify-center" style={{ fontSize: "20px", padding: "14px 0", gap: "10px" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-7 h-7" />{t.forecast_cta}</motion.button>
+                      </div>
+                    </motion.div>
+
+                    {/* CENTER: Oracle safe zone */}
+                    <div className="flex-1" />
+
+                    {/* RIGHT: Explanation text */}
+                    <motion.div
+                      className="flex flex-col justify-center pointer-events-auto overflow-hidden"
+                      style={{ width: "42%", maxWidth: "560px", marginRight: "clamp(20px, 4vw, 80px)", marginLeft: "10px" }}
+                      initial={{ opacity: 0, x: 30 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                      <div style={{ padding: "0 24px" }}>
+                        <motion.div className="w-16 h-16 mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.18)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.08)", "0 0 40px hsl(43 80% 55% / 0.18)", "0 0 20px hsl(43 80% 55% / 0.08)"] }} transition={{ duration: 3, repeat: Infinity }}>
+                          <Calendar className="w-7 h-7 text-gold" />
+                        </motion.div>
+                        <h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)" }}>{t.forecast_title}</h2>
+                        <p className="font-body leading-relaxed" style={{ fontSize: "18px", lineHeight: 1.8, color: "hsl(var(--foreground) / 0.65)", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
+
+                        <div className="section-divider max-w-[80px] my-6" />
+
+                        <p className="font-body" style={{ fontSize: "14px", lineHeight: 1.6, color: "hsl(var(--foreground) / 0.35)", textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
                       </div>
                     </motion.div>
                   </div>
