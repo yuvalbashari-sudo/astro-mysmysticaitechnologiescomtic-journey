@@ -2638,49 +2638,53 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 overflow-hidden cursor-pointer pointer-events-auto"
-              style={{ width: "490px", height: "490px", borderRadius: "50%" }}
-              onMouseEnter={() => setIsCrystalHovered(true)}
-              onMouseLeave={() => setIsCrystalHovered(false)}
-              onClickCapture={openUniverseMessage}
-              onClick={openUniverseMessage}
+              className="relative z-20 pointer-events-auto"
+              style={{ width: "490px", height: "490px" }}
             >
-              {/* No overlays — pure media only */}
-              <AnimatePresence>
-                {isNearBall && (
-                  <>
-                    {[0, 1, 2].map((i) => (
+              <div className="absolute inset-0 overflow-hidden" style={{ borderRadius: "50%" }}>
+                {/* No overlays — pure media only */}
+                <AnimatePresence>
+                  {isNearBall && (
+                    <>
+                      {[0, 1, 2].map((i) => (
+                        <motion.div
+                          key={`ripple-${i}`}
+                          className="absolute rounded-full pointer-events-none"
+                          style={{ inset: 0, border: "1px solid hsl(var(--gold) / 0.12)" }}
+                          initial={{ scale: 0.85, opacity: 0 }}
+                          animate={{ scale: [0.85, 1.15], opacity: [0.4, 0] }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 2, repeat: Infinity, delay: i * 0.6, ease: "easeOut" }}
+                        />
+                      ))}
                       <motion.div
-                        key={`ripple-${i}`}
-                        className="absolute rounded-full pointer-events-none"
-                        style={{ inset: 0, border: "1px solid hsl(var(--gold) / 0.12)" }}
-                        initial={{ scale: 0.85, opacity: 0 }}
-                        animate={{ scale: [0.85, 1.15], opacity: [0.4, 0] }}
+                        className="absolute inset-[10%] rounded-full pointer-events-none overflow-hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 2, repeat: Infinity, delay: i * 0.6, ease: "easeOut" }}
-                      />
-                    ))}
-                    <motion.div
-                      className="absolute inset-[10%] rounded-full pointer-events-none overflow-hidden"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <motion.div
-                        className="absolute"
-                        style={{
-                          width: "40%", height: "100%",
-                          background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.1), transparent)",
-                          filter: "blur(6px)", borderRadius: "50%", top: 0,
-                        }}
-                        animate={{ left: ["-40%", "140%"] }}
-                        transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1, ease: "easeInOut" }}
-                      />
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
+                        transition={{ duration: 0.5 }}
+                      >
+                        <motion.div
+                          className="absolute"
+                          style={{
+                            width: "40%", height: "100%",
+                            background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.1), transparent)",
+                            filter: "blur(6px)", borderRadius: "50%", top: 0,
+                          }}
+                          animate={{ left: ["-40%", "140%"] }}
+                          transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 1, ease: "easeInOut" }}
+                        />
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+
+                <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
+                  {entranceComplete && (
+                    <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
+                  )}
+                </div>
+              </div>
 
               <AnimatePresence>
                 {isCrystalHovered && !isUniverseMessageOpen && (
@@ -2731,11 +2735,15 @@ const HeroSection = () => {
                 )}
               </AnimatePresence>
 
-              <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
-                {entranceComplete && (
-                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
-                )}
-              </div>
+              <button
+                type="button"
+                aria-label={language === "he" ? "פתחו מסר מהיקום" : language === "ar" ? "افتح رسالة من الكون" : language === "ru" ? "Открыть послание Вселенной" : "Open message from the universe"}
+                className="absolute inset-0 z-[45] rounded-full bg-transparent border-0 outline-none appearance-none cursor-pointer pointer-events-auto"
+                style={{ clipPath: "circle(50% at 50% 50%)" }}
+                onMouseEnter={() => !isMobile && setIsCrystalHovered(true)}
+                onMouseLeave={() => setIsCrystalHovered(false)}
+                onClick={openUniverseMessage}
+              />
             </motion.div>
             {/* Fortune CTA moved to fixed bottom layer */}
 
