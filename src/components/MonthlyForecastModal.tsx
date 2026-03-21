@@ -124,7 +124,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div
-                        className="rounded-2xl p-7"
+                        className="rounded-2xl p-10"
                         style={{
                           background: "linear-gradient(135deg, hsl(222 47% 8% / 0.75), hsl(222 47% 12% / 0.55))",
                           backdropFilter: "blur(20px)",
