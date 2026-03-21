@@ -99,7 +99,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* LEFT: Explanation text */}
                     <motion.div
                       className="hidden md:flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "26%", maxWidth: "320px", paddingLeft: "3vw", paddingTop: "50px" }}
+                      style={{ width: "28%", maxWidth: "340px", paddingLeft: "4vw" }}
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
