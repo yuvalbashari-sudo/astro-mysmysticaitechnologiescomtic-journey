@@ -110,9 +110,17 @@ const MysticalOnboarding = ({ onComplete }: Props) => {
           {/* CTA */}
           <motion.button
             onClick={goNext}
-            className="btn-gold font-body flex items-center justify-center gap-2"
-            style={{ fontSize: "40px", padding: "35px 90px", minWidth: 450 }}
-            whileHover={{ scale: 1.04 }}
+            className="font-body flex items-center justify-center gap-3 rounded-lg font-bold tracking-wider transition-all duration-300"
+            style={{
+              fontSize: 32,
+              padding: "24px 64px",
+              minWidth: 360,
+              minHeight: 84,
+              background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
+              color: "hsl(var(--deep-blue))",
+              boxShadow: "0 4px 20px hsl(var(--gold) / 0.3)",
+            }}
+            whileHover={{ scale: 1.04, boxShadow: "0 6px 30px hsl(43 80% 55% / 0.5)" }}
             whileTap={{ scale: 0.97 }}
           >
             {currentStep.cta}
