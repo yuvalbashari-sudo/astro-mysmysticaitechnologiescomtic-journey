@@ -2106,6 +2106,8 @@ const HeroSection = () => {
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const [hoveredZodiacColor, setHoveredZodiacColor] = useState<string | null>(null);
+  const [fortuneRevealed, setFortuneRevealed] = useState(false);
+  const [fortuneMessage, setFortuneMessage] = useState("");
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
