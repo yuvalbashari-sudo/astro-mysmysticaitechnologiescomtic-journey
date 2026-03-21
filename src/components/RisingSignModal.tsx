@@ -59,7 +59,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
 
     streamMysticalReading("rising",
-      { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sunSign.hebrewName, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element },
+      { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sunSign.hebrewName, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element, gender },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => { setAiLoading(false); setActiveReading({ type: "rising", label: `${t.readings_type_rising} — ${rising.hebrewName}`, summary: aiTextRef.current }); readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sunSign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sunSign.hebrewName, birthTime, birthDate, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
