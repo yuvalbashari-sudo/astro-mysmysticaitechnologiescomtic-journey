@@ -2750,11 +2750,9 @@ const HeroSection = () => {
       className="fixed z-[60] pointer-events-auto"
       style={{
         bottom: isMobile ? 28 : 32,
-        right: isMobile ? 20 : 40,
-        left: "auto",
+        insetInlineStart: isMobile ? 20 : 40,
         width: isMobile ? 120 : 168,
         height: isMobile ? 120 : 168,
-        direction: "ltr",
       }}
     >
       <motion.button
