@@ -2494,17 +2494,19 @@ const HeroSection = () => {
             </motion.div>
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
             {entranceComplete && cardPhase === "idle" && (
-              <motion.div
-                className="absolute z-30 text-center"
+              <motion.button
+                type="button"
+                className="absolute z-30 text-center cursor-pointer bg-transparent border-0 outline-none appearance-none"
                 style={{ bottom: "-20px", width: "200px" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: [0, 0.7, 0] }}
                 transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, delay: 4 }}
+                onClick={(e) => { e.stopPropagation(); handleFortuneReveal(); }}
               >
                 <span className="text-gold/50 font-body text-[10px]">
                   {t.hero_crystal_hint}
                 </span>
-              </motion.div>
+              </motion.button>
             )}
 
           </motion.div>
