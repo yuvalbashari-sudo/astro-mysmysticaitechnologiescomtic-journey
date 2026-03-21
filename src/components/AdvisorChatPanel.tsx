@@ -456,8 +456,8 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   }}
                 >
                   <div className="flex items-center justify-center gap-2">
-                    <Lock className="w-4 h-4 text-gold/60" />
-                    <p className="text-foreground/50 font-body text-xs leading-relaxed">
+                    <Lock className="w-5 h-5 text-gold/60" />
+                    <p className="text-foreground/50 font-body text-sm leading-relaxed">
                       {t.advisor_limit_reached}
                     </p>
                   </div>
