@@ -33,10 +33,12 @@ const TextSizeControl = ({ value, onChange }: Props) => {
             aria-checked={isActive}
             aria-label={`Text size ${label}`}
             onClick={() => onChange(key)}
-            className="relative px-3 py-1.5 rounded-full font-heading text-xs transition-colors focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-1"
+            className={`relative rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-1 ${
+              key === "default" ? "px-5 py-3" : "px-3 py-1.5"
+            }`}
             style={{
               color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--gold) / 0.6)",
-              fontSize: key === "xl" ? 11 : key === "large" ? 12 : 12,
+              fontSize: key === "default" ? 22 : key === "xl" ? 11 : 12,
             }}
           >
             {isActive && (
