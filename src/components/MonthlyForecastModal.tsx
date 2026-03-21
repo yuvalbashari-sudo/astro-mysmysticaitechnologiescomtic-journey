@@ -34,6 +34,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [isMobile, setIsMobile] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
