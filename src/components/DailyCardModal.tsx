@@ -794,12 +794,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <>
                         <ShareResultSection symbol={card.symbol} title={`${t.daily_title} — ${card.hebrewName}`} subtitle={t.daily_card_chosen} />
                         <div className="section-divider max-w-[200px] mx-auto my-8" />
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-                          <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                          <h4 className="font-heading text-base text-gold mb-2">{t.daily_premium_title}</h4>
-                          <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.daily_premium_desc}</p>
-                          <button onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                            <Sparkles className="w-3.5 h-3.5" />{t.daily_premium_cta}
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-10" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                          <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
+                          <h4 className="font-heading text-2xl text-gold mb-4">{t.daily_premium_title}</h4>
+                          <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.daily_premium_desc}</p>
+                          <button onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4">
+                            <Sparkles className="w-5 h-5" />{t.daily_premium_cta}
                           </button>
                         </motion.div>
                       </>
