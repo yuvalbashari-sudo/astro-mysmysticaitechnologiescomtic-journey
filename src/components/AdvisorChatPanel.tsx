@@ -396,7 +396,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                         <button
                           key={i}
                           onClick={() => { setInput(suggestion); inputRef.current?.focus(); }}
-                          className="text-xs px-3 py-1.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",
