@@ -111,7 +111,7 @@ const MysticalOnboarding = ({ onComplete }: Props) => {
           <motion.button
             onClick={goNext}
             className="btn-gold font-body flex items-center justify-center gap-2"
-            style={{ fontSize: "16px", padding: "14px 36px", minWidth: 180 }}
+            style={{ fontSize: "40px", padding: "35px 90px", minWidth: 450 }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.97 }}
           >
