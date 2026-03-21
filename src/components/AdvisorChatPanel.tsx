@@ -371,7 +371,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
             {/* Messages */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto px-5 py-5 space-y-4 min-h-0"
+              className="flex-1 overflow-y-auto px-6 py-6 space-y-5 min-h-0"
               style={{ scrollBehavior: "smooth" }}
               role="log"
               aria-live="polite"
