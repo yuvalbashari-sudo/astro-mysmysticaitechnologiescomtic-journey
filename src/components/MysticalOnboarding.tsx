@@ -77,12 +77,12 @@ const MysticalOnboarding = ({ onComplete }: Props) => {
           </motion.div>
 
           {/* Title */}
-          <h3 className="font-heading gold-gradient-text mb-4" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)" }}>
+          <h3 className="font-heading gold-gradient-text mb-6" style={{ fontSize: "52px", lineHeight: 1.25, textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)", wordWrap: "break-word" }}>
             {currentStep.title}
           </h3>
 
           {/* Body */}
-          <p className="font-body max-w-md mx-auto leading-relaxed mb-10" style={{ fontSize: "17px", lineHeight: 1.8, color: "hsl(var(--foreground) / 0.6)", textShadow: "0 2px 15px hsl(222 47% 6%)" }}>
+          <p className="font-body mx-auto leading-relaxed mb-10" style={{ fontSize: "32px", lineHeight: 1.7, maxWidth: "90%", color: "hsl(var(--foreground) / 0.65)", textShadow: "0 2px 15px hsl(222 47% 6%)", wordWrap: "break-word" }}>
             {currentStep.text}
           </p>
 
