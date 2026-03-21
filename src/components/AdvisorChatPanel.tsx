@@ -19,7 +19,7 @@ interface Props {
 
 const FREE_MESSAGE_LIMIT = 5;
 
-const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
+const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
   const { activeReading } = useReadingContext();
