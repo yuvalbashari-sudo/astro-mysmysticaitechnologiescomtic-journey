@@ -2764,8 +2764,8 @@ const HeroSection = () => {
       <motion.div
         className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.06]"
         style={{
-          width: isMobile ? 60 : 84,
-          height: isMobile ? 60 : 84,
+          width: isMobile ? 120 : 168,
+          height: isMobile ? 120 : 168,
           boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 40px hsl(200 70% 50% / 0.15), 0 0 8px hsl(var(--gold) / 0.2)",
         }}
         animate={{
