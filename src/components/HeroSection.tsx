@@ -2110,6 +2110,7 @@ const HeroSection = () => {
   const [hoveredZodiacColor, setHoveredZodiacColor] = useState<string | null>(null);
   const [isUniverseMessageOpen, setIsUniverseMessageOpen] = useState(false);
   const [fortuneMessage, setFortuneMessage] = useState("");
+  const [isCrystalHovered, setIsCrystalHovered] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
 
