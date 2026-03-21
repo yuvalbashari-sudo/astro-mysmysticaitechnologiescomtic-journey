@@ -197,7 +197,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                     <motion.div
                       ref={scrollRef}
                       className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(480px, calc(100vw - 560px))", maxWidth: "480px", maxHeight: "80vh" }}
+                      style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(720px, 50vw)", maxHeight: "80vh" }}
                       initial={{ opacity: 0, y: 40 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
