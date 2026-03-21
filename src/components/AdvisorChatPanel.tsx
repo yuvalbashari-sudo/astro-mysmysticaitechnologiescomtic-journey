@@ -234,7 +234,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
       }
       if (trimmed.startsWith("### ")) {
         elements.push(
-          <h4 key={i} className="font-heading text-sm text-gold mt-3 mb-1">
+          <h4 key={i} className="font-heading text-base text-gold mt-3 mb-1">
             {renderInline(trimmed.slice(4))}
           </h4>
         );
@@ -242,7 +242,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
       }
       if (trimmed.startsWith("## ")) {
         elements.push(
-          <h3 key={i} className="font-heading text-[15px] text-gold mt-3 mb-1">
+          <h3 key={i} className="font-heading text-lg text-gold mt-3 mb-1">
             {renderInline(trimmed.slice(3))}
           </h3>
         );
@@ -261,7 +261,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         const num = trimmed.match(/^(\d+)[.)]\s/)?.[1];
         elements.push(
           <div key={i} className="flex gap-2 items-start">
-            <span className="text-gold/50 mt-0.5 flex-shrink-0 text-xs min-w-[1rem] text-center">{num}.</span>
+            <span className="text-gold/50 mt-0.5 flex-shrink-0 text-sm min-w-[1.25rem] text-center">{num}.</span>
             <span>{renderInline(trimmed.replace(/^\d+[.)]\s/, ""))}</span>
           </div>
         );
@@ -316,8 +316,8 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               bottom: "5.5rem",
               right: dir === "rtl" ? "auto" : "1.25rem",
               left: dir === "rtl" ? "1.25rem" : "auto",
-              width: "min(510px, calc(100vw - 2rem))",
-              maxHeight: "min(720px, calc(100vh - 7rem))",
+              width: "min(765px, calc(100vw - 2rem))",
+              maxHeight: "min(1080px, calc(100vh - 7rem))",
               background: "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
               backdropFilter: "blur(28px) saturate(1.3)",
               WebkitBackdropFilter: "blur(28px) saturate(1.3)",
@@ -336,67 +336,67 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
           >
             {/* Header */}
             <div
-              className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+              className="flex items-center justify-between px-8 py-5 flex-shrink-0"
               style={{
                 borderBottom: "1px solid hsl(var(--gold) / 0.08)",
                 background: "linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent)",
               }}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  className="w-12 h-12 rounded-full flex items-center justify-center"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                     boxShadow: "0 0 14px hsl(var(--gold) / 0.3)",
                   }}
                 >
-                  <Sparkles className="w-5 h-5 text-primary-foreground" />
+                  <Sparkles className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-heading text-sm text-gold">{t.advisor_title}</h3>
+                  <h3 className="font-heading text-base text-gold">{t.advisor_title}</h3>
                   {activeReading && (
-                    <p className="text-xs text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
+                    <p className="text-sm text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
                   )}
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
                 aria-label={t.a11y_close_modal}
               >
-                <X className="w-4.5 h-4.5 text-foreground/50" />
+                <X className="w-5 h-5 text-foreground/50" />
               </button>
             </div>
 
             {/* Messages */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto px-5 py-5 space-y-4 min-h-0"
+              className="flex-1 overflow-y-auto px-6 py-6 space-y-5 min-h-0"
               style={{ scrollBehavior: "smooth" }}
               role="log"
               aria-live="polite"
             >
               {messages.length === 0 && (
-                <div className="text-center py-8 space-y-3">
+                <div className="text-center py-10 space-y-4">
                   <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
+                    className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
                     style={{
                       background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
                       border: "1px solid hsl(var(--gold) / 0.12)",
                     }}
                   >
-                    <Sparkles className="w-7 h-7 text-gold/50" />
+                    <Sparkles className="w-9 h-9 text-gold/50" />
                   </div>
-                  <p className="text-foreground/40 font-body text-sm leading-relaxed max-w-[360px] mx-auto">
+                  <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[500px] mx-auto">
                     {welcomeMessage}
                   </p>
                   {activeReading && suggestions.length > 0 && (
-                    <div className="flex flex-wrap gap-2 justify-center mt-3">
+                    <div className="flex flex-wrap gap-2.5 justify-center mt-4">
                       {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
                           onClick={() => { setInput(suggestion); inputRef.current?.focus(); }}
-                          className="text-xs px-3 py-1.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",
@@ -417,7 +417,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 font-body text-sm leading-relaxed ${
+                    className={`max-w-[85%] rounded-2xl px-5 py-4 font-body text-base leading-relaxed ${
                       msg.role === "user"
                         ? "rounded-br-md"
                         : "rounded-bl-md"
@@ -438,7 +438,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   >
                     {msg.content
                       ? (msg.role === "assistant" ? renderMarkdown(msg.content) : msg.content)
-                      : <Loader2 className="w-4 h-4 animate-spin text-gold/50" />
+                      : <Loader2 className="w-5 h-5 animate-spin text-gold/50" />
                     }
                   </div>
                 </div>
@@ -449,20 +449,20 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl p-4 text-center space-y-3"
+                  className="rounded-xl p-5 text-center space-y-4"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--crimson) / 0.04))",
                     border: "1px solid hsl(var(--gold) / 0.15)",
                   }}
                 >
                   <div className="flex items-center justify-center gap-2">
-                    <Lock className="w-4 h-4 text-gold/60" />
-                    <p className="text-foreground/50 font-body text-xs leading-relaxed">
+                    <Lock className="w-5 h-5 text-gold/60" />
+                    <p className="text-foreground/50 font-body text-sm leading-relaxed">
                       {t.advisor_limit_reached}
                     </p>
                   </div>
                   <button
-                    className="text-xs px-4 py-2 rounded-full font-heading transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/40"
+                    className="text-sm px-5 py-2.5 rounded-full font-heading transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/40"
                     style={{
                       background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                       color: "hsl(var(--primary-foreground))",
@@ -477,11 +477,11 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
 
             {/* Input */}
             <div
-              className="flex-shrink-0 px-5 py-4"
+              className="flex-shrink-0 px-6 py-5"
               style={{ borderTop: "1px solid hsl(var(--gold) / 0.06)" }}
             >
               <div
-                className={`flex items-center gap-2.5 rounded-xl px-4 py-2.5 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+                className={`flex items-center gap-3 rounded-xl px-5 py-3 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
                 style={{
                   background: "hsl(var(--deep-blue-light) / 0.3)",
                   border: "1px solid hsl(var(--gold) / 0.08)",
@@ -494,23 +494,23 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   onKeyDown={handleKeyDown}
                   placeholder={placeholderText}
                   disabled={isStreaming || isLimitReached}
-                  className="flex-1 bg-transparent text-sm font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
+                  className="flex-1 bg-transparent text-base font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
                   dir={dir}
                   aria-label={placeholderText}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isStreaming || isLimitReached}
-                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
                   style={{
                     background: input.trim() ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))" : "transparent",
                   }}
                   aria-label={t.advisor_send}
                 >
                   {isStreaming ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-gold/60" />
+                    <Loader2 className="w-5 h-5 animate-spin text-gold/60" />
                   ) : (
-                    <Send className="w-3.5 h-3.5 text-primary-foreground" style={{ transform: dir === "rtl" ? "scaleX(-1)" : undefined }} />
+                    <Send className="w-4.5 h-4.5 text-primary-foreground" style={{ transform: dir === "rtl" ? "scaleX(-1)" : undefined }} />
                   )}
                 </button>
               </div>
