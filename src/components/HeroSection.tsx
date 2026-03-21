@@ -2106,7 +2106,7 @@ const HeroSection = () => {
   const [clickBurst, setClickBurst] = useState(0);
   const [cardPhase, setCardPhase] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const [hoveredZodiacColor, setHoveredZodiacColor] = useState<string | null>(null);
-  const [fortuneRevealed, setFortuneRevealed] = useState(false);
+  const [isUniverseMessageOpen, setIsUniverseMessageOpen] = useState(false);
   const [fortuneMessage, setFortuneMessage] = useState("");
   const sectionRef = useRef<HTMLDivElement>(null);
   const crystalRef = useRef<HTMLDivElement>(null);
@@ -2183,20 +2183,16 @@ const HeroSection = () => {
     }
   }, [isMobile, mouseX, mouseY]);
 
-  const handleCrystalClick = useCallback(() => {
-    setClickBurst((c) => c + 1);
-  }, []);
+  const openUniverseMessage = useCallback(() => {
+    const msgs = FORTUNE_MESSAGES[language] || FORTUNE_MESSAGES.he;
+    const msg = msgs[Math.floor(Math.random() * msgs.length)];
+    setFortuneMessage(msg);
+    setIsUniverseMessageOpen(true);
+  }, [language]);
 
-  const handleFortuneReveal = useCallback(() => {
-    if (!fortuneRevealed) {
-      const msgs = FORTUNE_MESSAGES[language] || FORTUNE_MESSAGES.he;
-      const msg = msgs[Math.floor(Math.random() * msgs.length)];
-      setFortuneMessage(msg);
-      setFortuneRevealed(true);
-    } else {
-      setFortuneRevealed(false);
-    }
-  }, [fortuneRevealed, language]);
+  const closeUniverseMessage = useCallback(() => {
+    setIsUniverseMessageOpen(false);
+  }, []);
 
   const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
@@ -2481,9 +2477,8 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 cursor-pointer"
+              className="relative z-20"
               style={{ width: "332px", height: "332px" }}
-              onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
@@ -2634,9 +2629,8 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 cursor-pointer overflow-hidden"
+              className="relative z-20 overflow-hidden"
               style={{ width: "490px", height: "490px", borderRadius: "50%" }}
-              onClick={handleCrystalClick}
             >
               {/* No overlays — pure media only */}
               <AnimatePresence>
@@ -3183,15 +3177,16 @@ const HeroSection = () => {
 
 
     {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
-    {entranceComplete && !fortuneRevealed && (
+    {entranceComplete && !isUniverseMessageOpen && (
       <motion.button
         type="button"
-        className="fixed z-[70] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
+        aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
+        className="fixed z-[90] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
         style={{ bottom: isMobile ? 36 : 48, left: "50%", transform: "translateX(-50%)" }}
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.55, 0.9, 0.55] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        onClick={handleFortuneReveal}
+        onClick={openUniverseMessage}
         whileTap={{ scale: 0.95 }}
       >
         <span className={`text-gold/70 font-body ${isMobile ? "text-[11px]" : "text-sm"}`}>
@@ -3202,14 +3197,14 @@ const HeroSection = () => {
 
     {/* ── Fortune / Message from the Universe overlay ── */}
     <AnimatePresence>
-      {fortuneRevealed && (
+      {isUniverseMessageOpen && (
         <motion.div
           className="fixed inset-0 z-[80] flex items-center justify-center pointer-events-auto cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          onClick={() => setFortuneRevealed(false)}
+          onClick={closeUniverseMessage}
           style={{
             background: "radial-gradient(ellipse at 50% 50%, hsl(var(--deep-blue) / 0.65) 0%, hsl(var(--deep-blue) / 0.85) 100%)",
             backdropFilter: "blur(6px)",
@@ -3290,7 +3285,7 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2 }}
-              onClick={() => setFortuneRevealed(false)}
+              onClick={closeUniverseMessage}
             >
               {language === "he" ? "לחצו לסגירה" : language === "ar" ? "انقر للإغلاق" : language === "ru" ? "Нажмите, чтобы закрыть" : "Tap to close"}
             </motion.span>
