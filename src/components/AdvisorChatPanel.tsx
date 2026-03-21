@@ -261,7 +261,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
         const num = trimmed.match(/^(\d+)[.)]\s/)?.[1];
         elements.push(
           <div key={i} className="flex gap-2 items-start">
-            <span className="text-gold/50 mt-0.5 flex-shrink-0 text-xs min-w-[1rem] text-center">{num}.</span>
+            <span className="text-gold/50 mt-0.5 flex-shrink-0 text-sm min-w-[1.25rem] text-center">{num}.</span>
             <span>{renderInline(trimmed.replace(/^\d+[.)]\s/, ""))}</span>
           </div>
         );
