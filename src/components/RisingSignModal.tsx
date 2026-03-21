@@ -106,6 +106,31 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                         <p className="text-foreground/70 font-body text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.rising_desc}</p>
                         <div className="space-y-4 mb-6">
                           <div>
+                            <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
+                            <div className="flex gap-2">
+                              <motion.button type="button" onClick={() => setGender("male")}
+                                className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                                style={{
+                                  background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                                  border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                                  color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                                  backdropFilter: "blur(8px)",
+                                }}
+                                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                              >{t.forecast_gender_male}</motion.button>
+                              <motion.button type="button" onClick={() => setGender("female")}
+                                className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                                style={{
+                                  background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                                  border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                                  color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                                  backdropFilter: "blur(8px)",
+                                }}
+                                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                              >{t.forecast_gender_female}</motion.button>
+                            </div>
+                          </div>
+                          <div>
                             <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
                             <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                           </div>
