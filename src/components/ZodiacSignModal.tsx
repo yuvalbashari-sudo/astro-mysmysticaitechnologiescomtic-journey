@@ -92,7 +92,7 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
           {/* LEFT: Reading sections */}
           <motion.div
             className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
-            style={{ top: "calc(8vh + 50px)", left: "3vw", width: "min(520px, calc(100vw - 520px))", maxWidth: "520px", maxHeight: "82vh" }}
+            style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(720px, 50vw)", maxHeight: "82vh" }}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 1, ease: [0.16, 1, 0.3, 1] }}

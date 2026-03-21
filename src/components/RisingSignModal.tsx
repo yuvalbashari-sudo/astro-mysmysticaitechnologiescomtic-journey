@@ -197,7 +197,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                     <motion.div
                       ref={scrollRef}
                       className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(480px, calc(100vw - 560px))", maxWidth: "480px", maxHeight: "80vh" }}
+                      style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(720px, 50vw)", maxHeight: "80vh" }}
                       initial={{ opacity: 0, y: 40 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
@@ -247,8 +247,8 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                           {t.rising_sun_label}: {signInfo.sunSign} ({signInfo.sunElement}) · {t.rising_asc_label}: {signInfo.name} ({signInfo.element})
                         </motion.p>
                         <motion.div className="flex items-center justify-center gap-3 mt-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                          <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-4 h-4" />{t.forecast_share}</motion.button>
-                          <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}{copied ? t.share_copied : t.share_copy}</motion.button>
+                          <motion.button onClick={handleShare} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-5 h-5" />{t.forecast_share}</motion.button>
+                          <motion.button onClick={handleCopy} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}{copied ? t.share_copied : t.share_copy}</motion.button>
                         </motion.div>
                       </div>
                     </motion.div>

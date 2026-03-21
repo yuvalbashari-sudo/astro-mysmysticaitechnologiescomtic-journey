@@ -843,8 +843,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Share buttons */}
                     <motion.div className="flex items-center justify-center gap-3 mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
-                      <motion.button onClick={handleShare} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-3.5 h-3.5" />{t.forecast_share}</motion.button>
-                      <motion.button onClick={handleCopy} className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}{copied ? t.share_copied : t.share_copy}</motion.button>
+                      <motion.button onClick={handleShare} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-5 h-5" />{t.forecast_share}</motion.button>
+                      <motion.button onClick={handleCopy} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}{copied ? t.share_copied : t.share_copy}</motion.button>
                     </motion.div>
                   </div>
 
@@ -893,11 +893,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-6 backdrop-blur-sm relative z-10" style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)" }}>
-                    <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                    <h4 className="font-heading text-base text-gold mb-2">{t.tarot_premium_title}</h4>
-                    <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
-                    <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2"><Sparkles className="w-3.5 h-3.5" />{t.tarot_premium_cta}</a>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-10 backdrop-blur-sm relative z-10" style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)" }}>
+                    <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
+                    <h4 className="font-heading text-2xl text-gold mb-4">{t.tarot_premium_title}</h4>
+                    <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
+                    <a href="#premium" onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4"><Sparkles className="w-5 h-5" />{t.tarot_premium_cta}</a>
                   </motion.div>
                 </motion.div>
               ) : null}
