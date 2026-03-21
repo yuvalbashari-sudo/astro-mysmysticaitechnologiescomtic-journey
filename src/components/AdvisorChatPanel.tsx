@@ -350,7 +350,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                     boxShadow: "0 0 14px hsl(var(--gold) / 0.3)",
                   }}
                 >
-                  <Sparkles className="w-5 h-5 text-primary-foreground" />
+                  <Sparkles className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
                   <h3 className="font-heading text-sm text-gold">{t.advisor_title}</h3>
