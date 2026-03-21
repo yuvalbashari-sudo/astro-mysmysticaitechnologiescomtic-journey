@@ -29,6 +29,7 @@ interface Props {
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [avatarHovered, setAvatarHovered] = useState(false);
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
 
@@ -162,7 +163,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
 
           {!hideAdvisor && (
             <div
-              className="fixed z-[106] group/avatar"
+              className="fixed z-[106]"
               style={{
                 bottom: isMobile ? 28 : 32,
                 right: isMobile ? 20 : 40,
@@ -170,56 +171,65 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 width: isMobile ? 120 : 168,
                 height: isMobile ? 120 : 168,
               }}
+              onMouseEnter={() => !isMobile && setAvatarHovered(true)}
+              onMouseLeave={() => setAvatarHovered(false)}
             >
               {/* Hover teaser tooltip — desktop only */}
-              {!isMobile && (
-                <div
-                  className="absolute pointer-events-none opacity-0 group-hover/avatar:opacity-100 transition-all duration-300 ease-out"
-                  style={{
-                    bottom: "calc(100% + 14px)",
-                    right: 0,
-                    width: 220,
-                    padding: "14px 18px",
-                    background: "linear-gradient(160deg, hsl(222 47% 8% / 0.75), hsl(222 47% 4% / 0.6))",
-                    backdropFilter: "blur(16px) saturate(1.2)",
-                    WebkitBackdropFilter: "blur(16px) saturate(1.2)",
-                    border: "1px solid hsl(var(--gold) / 0.18)",
-                    borderRadius: 14,
-                    boxShadow: "0 8px 32px hsl(222 47% 4% / 0.5), 0 0 20px hsl(var(--gold) / 0.05)",
-                    transform: "translateY(6px)",
-                    direction: "rtl",
-                  }}
-                >
-                  <p
-                    className="font-body"
+              <AnimatePresence>
+                {avatarHovered && !isMobile && (
+                  <motion.div
+                    className="absolute pointer-events-none"
                     style={{
-                      fontSize: 14,
-                      lineHeight: 1.6,
-                      color: "hsl(var(--foreground) / 0.75)",
-                      textShadow: "0 1px 8px hsl(222 47% 6%)",
-                      margin: 0,
+                      left: "-240px",
+                      top: "50%",
+                      width: 220,
+                      padding: "14px 18px",
+                      background: "linear-gradient(160deg, hsl(222 47% 10% / 0.85), hsl(222 47% 6% / 0.75))",
+                      backdropFilter: "blur(16px) saturate(1.2)",
+                      WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+                      border: "1px solid hsl(var(--gold) / 0.2)",
+                      borderRadius: 14,
+                      boxShadow: "0 8px 32px hsl(222 47% 4% / 0.5), 0 0 24px hsl(var(--gold) / 0.06)",
+                      direction: "rtl",
+                      transform: "translateY(-50%)",
                     }}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
                   >
-                    ✦ <span style={{ color: "hsl(var(--gold))" }}>יש לכם שאלה?</span> לחצו לשיחה אישית
-                  </p>
-                  {/* Small arrow */}
-                  <div
-                    className="absolute"
-                    style={{
-                      bottom: -6,
-                      right: 40,
-                      width: 12,
-                      height: 12,
-                      background: "hsl(222 47% 6% / 0.65)",
-                      border: "1px solid hsl(var(--gold) / 0.18)",
-                      borderTop: "none",
-                      borderLeft: "none",
-                      transform: "rotate(45deg)",
-                      borderRadius: 2,
-                    }}
-                  />
-                </div>
-              )}
+                    <p
+                      className="font-body"
+                      style={{
+                        fontSize: 14,
+                        lineHeight: 1.65,
+                        color: "hsl(var(--foreground) / 0.8)",
+                        textShadow: "0 1px 8px hsl(222 47% 6%)",
+                        margin: 0,
+                      }}
+                    >
+                      ✦ <span style={{ color: "hsl(var(--gold))" }}>רוצים הכוונה אישית?</span> לחצו לשיחה
+                    </p>
+                    {/* Arrow pointing right toward avatar */}
+                    <div
+                      className="absolute"
+                      style={{
+                        right: -6,
+                        top: "50%",
+                        marginTop: -6,
+                        width: 12,
+                        height: 12,
+                        background: "hsl(222 47% 8% / 0.8)",
+                        border: "1px solid hsl(var(--gold) / 0.2)",
+                        borderBottom: "none",
+                        borderLeft: "none",
+                        transform: "rotate(45deg)",
+                        borderRadius: 2,
+                      }}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <motion.button
                 className="w-full h-full rounded-full overflow-hidden cursor-pointer group"
