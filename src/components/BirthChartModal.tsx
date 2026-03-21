@@ -514,25 +514,25 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   <div className="flex flex-wrap justify-center gap-3">
                     <button
                       onClick={handleCopy}
-                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                      className="btn-outline-gold flex items-center gap-3 text-base px-6 py-3"
                     >
-                      {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                       {copied ? t.forecast_copied : t.forecast_copy}
                     </button>
                     <button
                       onClick={handleDownloadImage}
                       disabled={downloading}
-                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                      className="btn-outline-gold flex items-center gap-3 text-base px-6 py-3"
                     >
-                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
+                      {downloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
                       {t.birth_chart_save_image}
                     </button>
                     <button
                       onClick={handleDownloadPDF}
                       disabled={downloading}
-                      className="btn-outline-gold flex items-center gap-2 text-xs px-4 py-2"
+                      className="btn-outline-gold flex items-center gap-3 text-base px-6 py-3"
                     >
-                      {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                      {downloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
                       {t.birth_chart_save_pdf}
                     </button>
                   </div>
