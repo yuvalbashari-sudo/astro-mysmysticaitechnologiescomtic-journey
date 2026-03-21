@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import AvatarHoverTeaser from "./AvatarHoverTeaser";
 
 interface Props {
   isOpen: boolean;
