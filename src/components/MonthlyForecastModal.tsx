@@ -103,18 +103,29 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   <div className="absolute inset-0 flex items-start" style={{ paddingTop: "clamp(100px, 14vh, 160px)" }} key="input-desktop">
                     {/* LEFT: Explanation text */}
                     <motion.div
-                      className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "42%", maxWidth: "510px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }}
+                      className="flex flex-col justify-center pointer-events-auto overflow-hidden"
+                      style={{ width: "42%", maxWidth: "560px", marginLeft: "clamp(20px, 4vw, 80px)", marginRight: "10px" }}
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <motion.div className="w-14 h-14 mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>
-                        <Calendar className="w-6 h-6 text-gold" />
-                      </motion.div>
-                      <h2 className="font-heading text-3xl gold-gradient-text mb-4" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.forecast_title}</h2>
-                      <p className="text-foreground/60 font-body text-base leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
-                      <p className="text-xs text-muted-foreground font-body mt-8" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
+                      <div
+                        className="rounded-2xl"
+                        style={{
+                          padding: "40px",
+                          background: "linear-gradient(135deg, hsl(222 47% 8% / 0.75), hsl(222 47% 12% / 0.55))",
+                          backdropFilter: "blur(20px)",
+                          border: "1px solid hsl(var(--gold) / 0.1)",
+                          boxShadow: "0 8px 40px hsl(222 47% 4% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.05)",
+                        }}
+                      >
+                        <motion.div className="w-16 h-16 mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>
+                          <Calendar className="w-7 h-7 text-gold" />
+                        </motion.div>
+                        <h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.forecast_title}</h2>
+                        <p className="text-foreground/60 font-body leading-relaxed" style={{ fontSize: "18px", lineHeight: 1.7, textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
+                        <p className="text-muted-foreground font-body" style={{ fontSize: "14px", marginTop: "24px", lineHeight: 1.6, textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
+                      </div>
                     </motion.div>
 
                     {/* CENTER: Oracle safe zone */}
