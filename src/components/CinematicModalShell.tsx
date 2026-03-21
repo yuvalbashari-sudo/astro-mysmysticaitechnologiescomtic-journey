@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
+import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 
 interface Props {
   isOpen: boolean;
