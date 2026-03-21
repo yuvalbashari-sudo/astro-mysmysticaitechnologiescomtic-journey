@@ -2480,8 +2480,9 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 cursor-pointer"
+              className="relative z-20 cursor-pointer pointer-events-auto"
               style={{ width: "332px", height: "332px" }}
+              onClickCapture={openUniverseMessage}
               onClick={openUniverseMessage}
             >
               {/* No overlays — pure media only */}
