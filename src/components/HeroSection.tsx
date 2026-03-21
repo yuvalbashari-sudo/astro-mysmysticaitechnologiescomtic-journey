@@ -2751,12 +2751,12 @@ const HeroSection = () => {
         right: isMobile ? 20 : 40,
         transformOrigin: "bottom right",
       }}
-      initial={{ opacity: 0, scale: 1.2 }}
-      animate={{ opacity: 1, scale: 1.5 }}
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 2.5, duration: 0.7, ease: "easeOut" }}
       onClick={() => setAstrologerOpen(true)}
-      whileHover={{ scale: 1.62 }}
-      whileTap={{ scale: 1.425 }}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
       aria-label="שיחה עם האסטרולוגית"
     >
 
@@ -2764,8 +2764,8 @@ const HeroSection = () => {
       <motion.div
         className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.06]"
         style={{
-          width: isMobile ? 60 : 84,
-          height: isMobile ? 60 : 84,
+          width: isMobile ? 120 : 168,
+          height: isMobile ? 120 : 168,
           boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 40px hsl(200 70% 50% / 0.15), 0 0 8px hsl(var(--gold) / 0.2)",
         }}
         animate={{
