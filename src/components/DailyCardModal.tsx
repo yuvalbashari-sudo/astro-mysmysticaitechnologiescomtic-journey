@@ -381,32 +381,65 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   className="relative overflow-hidden rounded-2xl flex flex-col items-center justify-center"
                   style={{ minHeight: 450 }}
                 >
-                  {/* Ambient glow background */}
+                  {/* Slow breathing ambient glow — center */}
                   <motion.div
-                    className="absolute inset-0 pointer-events-none"
+                    className="absolute pointer-events-none"
                     style={{
-                      background: "radial-gradient(ellipse 80% 70% at 50% 50%, hsl(var(--gold) / 0.06), hsl(var(--crimson) / 0.03), transparent)",
+                      width: "60%", height: "50%",
+                      left: "20%", top: "25%",
+                      background: "radial-gradient(ellipse 100% 100% at 50% 50%, hsl(var(--gold) / 0.05), hsl(var(--celestial) / 0.03), transparent 70%)",
+                      filter: "blur(60px)",
                     }}
-                    animate={{ opacity: [0.3, 0.7, 0.3] }}
-                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                    animate={{ opacity: [0.15, 0.4, 0.15], scale: [0.95, 1.08, 0.95] }}
+                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
                   />
 
-                  {/* Floating particles during ritual */}
-                  {[...Array(8)].map((_, i) => (
-                    <motion.div
-                      key={`rp-${i}`}
-                      className="absolute rounded-full pointer-events-none"
-                      style={{
-                        width: i % 2 === 0 ? 3 : 2,
-                        height: i % 2 === 0 ? 3 : 2,
-                        left: `${15 + Math.random() * 70}%`,
-                        top: `${20 + Math.random() * 60}%`,
-                        background: i % 2 === 0 ? "hsl(var(--gold) / 0.5)" : "hsl(var(--celestial) / 0.4)",
-                      }}
-                      animate={{ opacity: [0, 0.7, 0], y: [0, -(20 + Math.random() * 30)] }}
-                      transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2, ease: "easeOut" }}
-                    />
-                  ))}
+                  {/* Secondary glow — lower, warmer */}
+                  <motion.div
+                    className="absolute pointer-events-none"
+                    style={{
+                      width: "40%", height: "30%",
+                      left: "30%", top: "55%",
+                      background: "radial-gradient(ellipse at 50% 50%, hsl(var(--crimson) / 0.04), transparent 70%)",
+                      filter: "blur(45px)",
+                    }}
+                    animate={{ opacity: [0.1, 0.3, 0.1] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                  />
+
+                  {/* Ultra-soft floating particles — very slow drift */}
+                  {[...Array(12)].map((_, i) => {
+                    const size = 1 + (i % 3) * 0.8;
+                    const startX = 10 + (i * 7) % 80;
+                    const startY = 15 + (i * 11) % 65;
+                    const isGold = i % 3 !== 2;
+                    return (
+                      <motion.div
+                        key={`rp-${i}`}
+                        className="absolute rounded-full pointer-events-none"
+                        style={{
+                          width: size,
+                          height: size,
+                          left: `${startX}%`,
+                          top: `${startY}%`,
+                          background: isGold
+                            ? "hsl(var(--gold) / 0.35)"
+                            : "hsl(var(--celestial) / 0.25)",
+                        }}
+                        animate={{
+                          opacity: [0, 0.5, 0],
+                          y: [0, -(12 + (i % 4) * 8)],
+                          x: [0, (i % 2 === 0 ? 6 : -6)],
+                        }}
+                        transition={{
+                          duration: 5 + (i % 3) * 2,
+                          repeat: Infinity,
+                          delay: (i * 0.7) % 4,
+                          ease: "easeOut",
+                        }}
+                      />
+                    );
+                  })}
 
                   {/* Card reveal overlay — appears at ritual step 2 */}
                   <AnimatePresence>
