@@ -2745,10 +2745,13 @@ const HeroSection = () => {
 
     <motion.button
       type="button"
-      className="absolute z-[15] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
+      className="fixed z-[60] pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
       style={{
         bottom: isMobile ? 28 : 32,
         right: isMobile ? 20 : 40,
+        left: "auto",
+        width: isMobile ? 120 : 168,
+        height: isMobile ? 120 : 168,
         transformOrigin: "bottom right",
       }}
       initial={{ opacity: 0, scale: 0.8 }}
@@ -2764,8 +2767,10 @@ const HeroSection = () => {
       <motion.div
         className="relative rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-[1.06]"
         style={{
-          width: isMobile ? 120 : 168,
-          height: isMobile ? 120 : 168,
+          width: "100%",
+          height: "100%",
+          minWidth: isMobile ? 120 : 168,
+          minHeight: isMobile ? 120 : 168,
           boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 40px hsl(200 70% 50% / 0.15), 0 0 8px hsl(var(--gold) / 0.2)",
         }}
         animate={{
