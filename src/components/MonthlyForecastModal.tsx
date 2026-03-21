@@ -133,20 +133,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <div
-                        className="relative rounded-2xl overflow-hidden"
-                        style={{
-                          padding: "44px 40px",
-                          background: "linear-gradient(160deg, hsl(222 47% 8% / 0.45), hsl(222 47% 4% / 0.35))",
-                          backdropFilter: "blur(20px) saturate(1.3)",
-                          WebkitBackdropFilter: "blur(20px) saturate(1.3)",
-                          border: "1px solid hsl(var(--gold) / 0.18)",
-                          boxShadow: "0 8px 40px hsl(222 47% 4% / 0.4), 0 0 60px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.1), inset 0 0 40px hsl(var(--gold) / 0.02)",
-                        }}
-                      >
-                        {/* Top gold accent line */}
-                        <div className="absolute top-0 left-[15%] right-[15%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }} />
-
+                      <div style={{ padding: "0 24px" }}>
                         <div style={{ marginBottom: "28px" }}>
                           <label className="block font-body" style={{ fontSize: "20px", marginBottom: "14px", color: "hsl(var(--gold) / 0.7)" }}>{t.forecast_gender_label}</label>
                           <div className="flex" style={{ gap: "12px" }}>
