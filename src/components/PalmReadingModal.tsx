@@ -74,7 +74,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   useEffect(() => { if (aiLoading && scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [aiText, aiLoading]);
 
   const handleShare = () => { const text = `✋ ${t.readings_type_palm}\n\n🔮 ${window.location.origin}`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank"); };
-  const handleCopy = async () => { if (!aiText) return; await navigator.clipboard.writeText(`✋ ${t.readings_type_palm} — ${name}\n\n${aiText.slice(0, 300)}...`); setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000); };
+  const handleCopy = async () => { if (!aiText) return; await navigator.clipboard.writeText(`✋ ${t.readings_type_palm} — ${name}\n\n${aiText}`); setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000); };
 
   const renderHandUpload = (side: "right" | "left", image: string | null, setImage: (v: string | null) => void, fileRef: React.RefObject<HTMLInputElement>, cameraRef: React.RefObject<HTMLInputElement>) => {
     const label = side === "right" ? t.palm_right_label : t.palm_left_label;

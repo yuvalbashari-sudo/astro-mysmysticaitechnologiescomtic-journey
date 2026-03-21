@@ -303,7 +303,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!aiText) return;
-    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${card?.hebrewName}\n\n${aiText.slice(0, 400)}...`);
+    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${card?.hebrewName}\n\n${aiText}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 

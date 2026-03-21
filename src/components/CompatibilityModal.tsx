@@ -127,7 +127,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!matchInfo) return;
-    await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%`);
+    const fullContent = aiText ? `\n\n${aiText}` : "";
+    await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%${fullContent}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
