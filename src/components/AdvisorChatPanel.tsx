@@ -342,7 +342,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                 background: "linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent)",
               }}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center"
                   style={{
