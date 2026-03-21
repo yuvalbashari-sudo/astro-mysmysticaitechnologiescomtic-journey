@@ -21,8 +21,7 @@ interface Props {
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
 const DAILY_USER_SEED_KEY = "astrologai_user_seed";
-const VIDEO_DURATION_MS = 15000; // fallback duration estimate
-const CARD_REVEAL_BEFORE_END_MS = 1500; // reveal card 1-1.5s before video ends
+const RITUAL_DURATION_MS = 4000; // duration of the card reveal ritual animation
 
 interface DailyCardData {
   card: TarotWorldCard;
