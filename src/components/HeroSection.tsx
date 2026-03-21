@@ -2744,7 +2744,8 @@ const HeroSection = () => {
         </div>
       )}
 
-    <div
+    <AvatarHoverTeaser
+      disabled={isMobile}
       className="fixed z-[60] pointer-events-auto"
       style={{
         bottom: isMobile ? 28 : 32,
@@ -2753,62 +2754,7 @@ const HeroSection = () => {
         width: isMobile ? 120 : 168,
         height: isMobile ? 120 : 168,
       }}
-      onMouseEnter={() => !isMobile && setAstrologerTooltipOpen(true)}
-      onMouseLeave={() => setAstrologerTooltipOpen(false)}
     >
-      <AnimatePresence>
-        {astrologerTooltipOpen && !isMobile && (
-          <motion.div
-            className="absolute pointer-events-none"
-            style={{
-              right: "calc(100% + 8px)",
-              bottom: 12,
-              whiteSpace: "nowrap",
-              padding: "12px 20px",
-              borderRadius: 12,
-              background: "hsl(222 47% 8% / 0.75)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
-              border: "1px solid hsl(var(--gold) / 0.18)",
-              boxShadow: "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
-              direction: "rtl",
-              zIndex: 1,
-            }}
-            initial={{ opacity: 0, scale: 0.92, x: 4 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.92, x: 4 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
-          >
-            <p
-              className="font-body"
-              style={{
-                margin: 0,
-                fontSize: 17,
-                lineHeight: 1.5,
-                color: "hsl(var(--foreground) / 0.8)",
-              }}
-            >
-              רוצים הכוונה? <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
-            </p>
-            {/* Arrow */}
-            <div
-              className="absolute"
-              style={{
-                right: -4,
-                bottom: 14,
-                width: 8,
-                height: 8,
-                background: "hsl(222 47% 8% / 0.7)",
-                border: "1px solid hsl(var(--gold) / 0.14)",
-                borderBottom: "none",
-                borderLeft: "none",
-                transform: "rotate(45deg)",
-              }}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <motion.button
         type="button"
         className="w-full h-full pointer-events-auto cursor-pointer flex flex-col items-center gap-2 bg-transparent border-0 outline-none appearance-none group"
