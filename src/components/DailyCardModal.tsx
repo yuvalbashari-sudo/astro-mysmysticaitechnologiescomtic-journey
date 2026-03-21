@@ -183,7 +183,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const saved = getSavedDailyCard();
     if (saved) {
       setCard(saved.card);
-      setTimeLeft(getTimeUntilMidnight());
+      setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
       if (saved.aiText) {
         setAiText(saved.aiText);
         aiTextRef.current = saved.aiText;
