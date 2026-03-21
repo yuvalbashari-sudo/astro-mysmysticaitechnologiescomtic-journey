@@ -275,30 +275,26 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                         </motion.button>
                       </div>
                       {/* Astrologer avatar below zodiac section */}
-                      <div className="mt-8 mx-auto" style={{ width: 64, height: 64 }}>
-                        <motion.button
-                          className="rounded-full overflow-hidden cursor-pointer group relative"
-                          style={{
-                            width: 64,
-                            height: 64,
-                            transform: "scale(1.5)",
-                            transformOrigin: "center center",
-                            boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
-                            border: "2px solid hsl(var(--gold) / 0.35)",
-                          }}
-                          onClick={() => setAdvisorOpen(true)}
-                          whileHover={{ scale: 1.62 }}
-                          whileTap={{ scale: 1.41 }}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 1 }}
-                          aria-label="התייעצות עם האסטרולוגית"
-                        >
-                          <img src={astrologerAvatar} alt="האסטרולוגית" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
-                          <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)" }} />
-                          <motion.div className="absolute inset-0 rounded-full pointer-events-none" style={{ border: "2px solid hsl(var(--gold) / 0.4)" }} animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }} />
-                        </motion.button>
-                      </div>
+                      <motion.button
+                        className="mt-8 mx-auto rounded-full overflow-hidden cursor-pointer group relative"
+                        style={{
+                          width: 144,
+                          height: 144,
+                          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+                          border: "2px solid hsl(var(--gold) / 0.35)",
+                        }}
+                        onClick={() => setAdvisorOpen(true)}
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.94 }}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1 }}
+                        aria-label="התייעצות עם האסטרולוגית"
+                      >
+                        <img src={astrologerAvatar} alt="האסטרולוגית" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
+                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)" }} />
+                        <motion.div className="absolute inset-0 rounded-full pointer-events-none" style={{ border: "2px solid hsl(var(--gold) / 0.4)" }} animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }} />
+                      </motion.button>
                     </motion.div>
                     <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
                   </div>
