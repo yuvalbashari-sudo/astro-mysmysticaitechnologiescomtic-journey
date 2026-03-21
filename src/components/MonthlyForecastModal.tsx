@@ -99,7 +99,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* LEFT: Explanation text */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "28%", maxWidth: "340px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }}
+                      style={{ width: "42%", maxWidth: "510px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }}
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -107,9 +107,9 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       <motion.div className="w-14 h-14 mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>
                         <Calendar className="w-6 h-6 text-gold" />
                       </motion.div>
-                      <h2 className="font-heading text-2xl gold-gradient-text mb-3" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.forecast_title}</h2>
-                      <p className="text-foreground/60 font-body text-sm leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
-                      <p className="text-[11px] text-muted-foreground font-body mt-6" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
+                      <h2 className="font-heading text-3xl gold-gradient-text mb-4" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.forecast_title}</h2>
+                      <p className="text-foreground/60 font-body text-base leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
+                      <p className="text-xs text-muted-foreground font-body mt-8" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
                     </motion.div>
 
                     {/* CENTER: Oracle safe zone */}
@@ -118,13 +118,13 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* RIGHT: Form panel */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "380px", maxWidth: "30vw", paddingRight: "4vw" }}
+                      style={{ width: "570px", maxWidth: "42vw", paddingRight: "4vw" }}
                       initial={{ opacity: 0, x: 40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div
-                        className="rounded-2xl p-7"
+                        className="rounded-2xl p-10"
                         style={{
                           background: "linear-gradient(135deg, hsl(222 47% 8% / 0.75), hsl(222 47% 12% / 0.55))",
                           backdropFilter: "blur(20px)",
@@ -133,27 +133,27 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                         }}
                       >
                         <div className="mb-5">
-                          <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
-                          <div className="flex gap-2">
+                          <label className="block text-base text-gold/70 font-body mb-3">{t.forecast_gender_label}</label>
+                          <div className="flex gap-3">
                             <motion.button type="button" onClick={() => setGender("male")}
-                              className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                              className="flex-1 py-3.5 rounded-xl font-body text-base transition-all duration-300"
                               style={{ background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }}
                               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                             >{t.forecast_gender_male}</motion.button>
                             <motion.button type="button" onClick={() => setGender("female")}
-                              className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                              className="flex-1 py-3.5 rounded-xl font-body text-base transition-all duration-300"
                               style={{ background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }}
                               whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
                             >{t.forecast_gender_female}</motion.button>
                           </div>
                           {attempted && !gender && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
                         </div>
-                        <div className="mb-6">
-                          <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_birthdate_label}</label>
-                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                        <div className="mb-8">
+                          <label className="block text-base text-gold/70 font-body mb-3">{t.forecast_birthdate_label}</label>
+                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center text-base" style={{ direction: "ltr" }} />
                           {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                         </div>
-                        <motion.button onClick={handleSubmit} className="btn-gold font-body text-sm w-full flex items-center justify-center gap-2 py-3" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-4 h-4" />{t.forecast_cta}</motion.button>
+                        <motion.button onClick={handleSubmit} className="btn-gold font-body text-base w-full flex items-center justify-center gap-2 py-3.5" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-5 h-5" />{t.forecast_cta}</motion.button>
                       </div>
                     </motion.div>
                   </div>
