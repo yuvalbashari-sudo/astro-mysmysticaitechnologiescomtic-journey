@@ -200,7 +200,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           )}
 
           {/* Advisor chat panel */}
-          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
 
 
           {fullscreen ? (
