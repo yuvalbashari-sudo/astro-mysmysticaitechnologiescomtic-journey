@@ -242,7 +242,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
       }
       if (trimmed.startsWith("## ")) {
         elements.push(
-          <h3 key={i} className="font-heading text-[15px] text-gold mt-3 mb-1">
+          <h3 key={i} className="font-heading text-lg text-gold mt-3 mb-1">
             {renderInline(trimmed.slice(3))}
           </h3>
         );
