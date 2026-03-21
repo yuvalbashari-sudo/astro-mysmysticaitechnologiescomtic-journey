@@ -2493,21 +2493,6 @@ const HeroSection = () => {
               </div>
             </motion.div>
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
-            {entranceComplete && cardPhase === "idle" && (
-              <motion.button
-                type="button"
-                className="absolute z-30 text-center cursor-pointer bg-transparent border-0 outline-none appearance-none"
-                style={{ bottom: "-20px", width: "200px" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.7, 0] }}
-                transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, delay: 4 }}
-                onClick={(e) => { e.stopPropagation(); handleFortuneReveal(); }}
-              >
-                <span className="text-gold/50 font-body text-[10px]">
-                  {t.hero_crystal_hint}
-                </span>
-              </motion.button>
-            )}
 
           </motion.div>
         ) : (
@@ -2695,22 +2680,7 @@ const HeroSection = () => {
                 )}
               </div>
             </motion.div>
-            {/* Tabs moved to fixed side panels outside the ball container */}
-            {entranceComplete && cardPhase === "idle" && (
-              <motion.button
-                type="button"
-                className="absolute z-30 text-center cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
-                style={{ bottom: "-40px", width: "260px", left: "50%", transform: "translateX(-50%)" }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.7, 0] }}
-                transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, delay: 4 }}
-                onClick={(e) => { e.stopPropagation(); handleFortuneReveal(); }}
-              >
-                <span className="text-gold/50 font-body text-xs">
-                  {t.hero_crystal_hint}
-                </span>
-              </motion.button>
-            )}
+            {/* Fortune CTA moved to fixed bottom layer */}
 
           </motion.div>
         )}
@@ -3211,6 +3181,24 @@ const HeroSection = () => {
       )}
     </div>
 
+
+    {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
+    {entranceComplete && !fortuneRevealed && (
+      <motion.button
+        type="button"
+        className="fixed z-[70] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
+        style={{ bottom: isMobile ? 36 : 48, left: "50%", transform: "translateX(-50%)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0.55, 0.9, 0.55] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        onClick={handleFortuneReveal}
+        whileTap={{ scale: 0.95 }}
+      >
+        <span className={`text-gold/70 font-body ${isMobile ? "text-[11px]" : "text-sm"}`}>
+          ✦ {t.hero_crystal_hint} ✦
+        </span>
+      </motion.button>
+    )}
 
     {/* ── Fortune / Message from the Universe overlay ── */}
     <AnimatePresence>
