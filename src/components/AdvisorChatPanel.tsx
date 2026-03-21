@@ -449,7 +449,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl p-4 text-center space-y-3"
+                  className="rounded-xl p-5 text-center space-y-4"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--crimson) / 0.04))",
                     border: "1px solid hsl(var(--gold) / 0.15)",
