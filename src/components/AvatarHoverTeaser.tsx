@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface AvatarHoverTeaserProps {
@@ -9,8 +9,8 @@ interface AvatarHoverTeaserProps {
   highlightText?: string;
   /** Disable teaser (e.g. on mobile) */
   disabled?: boolean;
-  /** Tooltip anchor side relative to avatar */
-  anchor?: "left" | "right";
+  /** Force tooltip anchor side. If omitted, auto-detects based on screen position */
+  anchor?: "left" | "right" | "auto";
   /** Additional className for the wrapper */
   className?: string;
   /** Additional style for the wrapper */
@@ -19,7 +19,7 @@ interface AvatarHoverTeaserProps {
 
 /**
  * Wraps any avatar button with a premium micro-tooltip on desktop hover.
- * The tooltip appears to the specified side (default: left) of the avatar.
+ * Auto-detects whether to show tooltip left or right based on screen position.
  * Children (the avatar button) remain fully clickable.
  */
 const AvatarHoverTeaser = ({
@@ -27,13 +27,25 @@ const AvatarHoverTeaser = ({
   text = "רוצים הכוונה?",
   highlightText = "לחצו לשיחה",
   disabled = false,
-  anchor = "left",
+  anchor = "auto",
   className = "",
   style,
 }: AvatarHoverTeaserProps) => {
   const [hovered, setHovered] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const isLeft = anchor === "left";
+  const getAnchorSide = useCallback((): "left" | "right" => {
+    if (anchor !== "auto") return anchor;
+    // Auto-detect: if avatar is in the left half of screen, show tooltip on right
+    const el = wrapperRef.current;
+    if (!el) return "left";
+    const rect = el.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    return centerX < window.innerWidth / 2 ? "right" : "left";
+  }, [anchor]);
+
+  const side = hovered ? getAnchorSide() : "left";
+  const isLeft = side === "left";
 
   const tooltipPosition: React.CSSProperties = isLeft
     ? { right: "calc(100% + 10px)", bottom: 12 }
@@ -57,15 +69,16 @@ const AvatarHoverTeaser = ({
 
   return (
     <div
+      ref={wrapperRef}
       className={`relative ${className}`}
-      style={style}
+      style={{ ...style, overflow: "visible" }}
       onMouseEnter={() => !disabled && setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <AnimatePresence>
         {hovered && !disabled && (
           <motion.div
-            className="absolute pointer-events-none z-[1]"
+            className="absolute pointer-events-none z-[200]"
             style={{
               ...tooltipPosition,
               whiteSpace: "nowrap",
