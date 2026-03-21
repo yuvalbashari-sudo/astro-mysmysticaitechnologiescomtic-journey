@@ -206,14 +206,14 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
 
         {/* ── LEFT ZONE: Welcome & guidance ── */}
         <motion.div
-          className="hidden md:flex flex-col justify-start px-10 pt-[92px] pb-10 origin-top-right"
-          style={{ width: "28%", maxWidth: "340px", transform: "scale(2)", transformOrigin: dir === "rtl" ? "top right" : "top left" }}
+          className="hidden md:flex flex-col justify-start px-14 pt-[92px] pb-10"
+          style={{ width: "520px", maxWidth: "520px", minWidth: "420px" }}
           initial={{ opacity: 0, x: dir === "rtl" ? 30 : -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div
-            className="w-14 h-14 rounded-full flex items-center justify-center mb-5"
+            className="w-24 h-24 rounded-full flex items-center justify-center mb-8"
             style={{
               background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)",
               border: "1px solid hsl(var(--gold) / 0.2)",
@@ -221,25 +221,25 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
             animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 35px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            <Sparkles className="w-6 h-6 text-gold" />
+            <Sparkles className="w-10 h-10 text-gold" />
           </motion.div>
 
-          <h2 className="font-heading text-xl gold-gradient-text mb-3 leading-tight">
+          <h2 className="font-heading text-3xl gold-gradient-text mb-5 leading-tight">
             {language === "he" ? "שיחה עם האסטרולוגית" : "Chat with the Astrologer"}
           </h2>
-          <p className="text-foreground/50 font-body text-sm leading-relaxed mb-6">
+          <p className="text-foreground/50 font-body text-lg leading-relaxed mb-10">
             {language === "he"
               ? "שאלו כל שאלה — על מזל, אהבה, קריירה, או החלטות חשובות. האסטרולוגית תעניק לכם הכוונה אישית."
               : "Ask any question — about fortune, love, career, or important decisions. The astrologer will give you personal guidance."}
           </p>
 
           {/* Suggestion chips */}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4">
             {suggestions.filter(Boolean).slice(0, 3).map((s, i) => (
               <button
                 key={i}
                 onClick={() => { setInput(s); inputRef.current?.focus(); }}
-                className="text-start text-xs px-3 py-2 rounded-lg font-body transition-all hover:scale-[1.02]"
+                className="text-start text-base px-6 py-4 rounded-xl font-body transition-all hover:scale-[1.02]"
                 style={{
                   background: "hsl(var(--gold) / 0.06)",
                   border: "1px solid hsl(var(--gold) / 0.12)",
