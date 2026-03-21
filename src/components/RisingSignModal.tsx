@@ -27,6 +27,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const { setActiveReading } = useReadingContext();
   const [birthTime, setBirthTime] = useState("");
   const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "">(""); 
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<SignInfoState | null>(null);
@@ -58,7 +59,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
 
     streamMysticalReading("rising",
-      { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sunSign.hebrewName, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element },
+      { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sunSign.hebrewName, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element, gender },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => { setAiLoading(false); setActiveReading({ type: "rising", label: `${t.readings_type_rising} — ${rising.hebrewName}`, summary: aiTextRef.current }); readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sunSign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sunSign.hebrewName, birthTime, birthDate, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
@@ -66,7 +67,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setGender(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [aiText, aiLoading]);
 
@@ -105,6 +106,31 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                         <p className="text-foreground/70 font-body text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.rising_desc}</p>
                         <div className="space-y-4 mb-6">
                           <div>
+                            <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
+                            <div className="flex gap-2">
+                              <motion.button type="button" onClick={() => setGender("male")}
+                                className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                                style={{
+                                  background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                                  border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                                  color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                                  backdropFilter: "blur(8px)",
+                                }}
+                                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                              >{t.forecast_gender_male}</motion.button>
+                              <motion.button type="button" onClick={() => setGender("female")}
+                                className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                                style={{
+                                  background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                                  border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                                  color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                                  backdropFilter: "blur(8px)",
+                                }}
+                                whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                              >{t.forecast_gender_female}</motion.button>
+                            </div>
+                          </div>
+                          <div>
                             <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
                             <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                           </div>
@@ -124,6 +150,31 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                     <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.rising_title}</h2>
                     <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.rising_desc}</p>
                     <div className="max-w-xs mx-auto space-y-5 mb-8">
+                      <div>
+                        <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
+                        <div className="flex gap-2">
+                          <motion.button type="button" onClick={() => setGender("male")}
+                            className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                            style={{
+                              background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                              border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                              color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                              backdropFilter: "blur(8px)",
+                            }}
+                            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                          >{t.forecast_gender_male}</motion.button>
+                          <motion.button type="button" onClick={() => setGender("female")}
+                            className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                            style={{
+                              background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                              border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                              color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                              backdropFilter: "blur(8px)",
+                            }}
+                            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                          >{t.forecast_gender_female}</motion.button>
+                        </div>
+                      </div>
                       <div>
                         <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
                         <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
