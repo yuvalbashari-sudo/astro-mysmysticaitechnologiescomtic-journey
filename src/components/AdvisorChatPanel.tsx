@@ -361,7 +361,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               </div>
               <button
                 onClick={onClose}
-                className="w-9 h-9 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
                 aria-label={t.a11y_close_modal}
               >
                 <X className="w-4.5 h-4.5 text-foreground/50" />
