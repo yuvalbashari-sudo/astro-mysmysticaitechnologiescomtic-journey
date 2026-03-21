@@ -2775,7 +2775,6 @@ const HeroSection = () => {
         }}
         animate={{
           y: [0, -3, 0],
-          scale: [1, 1.02, 1],
         }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       >
