@@ -2759,59 +2759,50 @@ const HeroSection = () => {
       <AnimatePresence>
         {astrologerTooltipOpen && !isMobile && (
           <motion.div
-            className="absolute pointer-events-none overflow-visible"
+            className="absolute pointer-events-none"
             style={{
-              right: "calc(100% + 10px)",
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 290,
-              padding: "18px 22px",
-              borderRadius: 18,
-              background: "linear-gradient(160deg, hsl(222 47% 10% / 0.88), hsl(222 47% 6% / 0.8))",
-              backdropFilter: "blur(18px) saturate(1.2)",
-              WebkitBackdropFilter: "blur(18px) saturate(1.2)",
-              border: "1px solid hsl(var(--gold) / 0.22)",
-              boxShadow: "0 12px 36px hsl(222 47% 4% / 0.55), 0 0 30px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+              right: "calc(100% + 8px)",
+              bottom: 12,
+              whiteSpace: "nowrap",
+              padding: "8px 14px",
+              borderRadius: 10,
+              background: "hsl(222 47% 8% / 0.7)",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid hsl(var(--gold) / 0.14)",
+              boxShadow: "0 4px 16px hsl(222 47% 4% / 0.35)",
               direction: "rtl",
               zIndex: 1,
             }}
-            initial={{ opacity: 0, x: 8 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 8 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.92, x: 4 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.92, x: 4 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
           >
-            <div
-              className="absolute top-0 left-[18%] right-[18%] h-px"
-              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }}
-            />
             <p
               className="font-body"
               style={{
                 margin: 0,
-                fontSize: 18,
-                lineHeight: 1.85,
-                color: "hsl(var(--foreground) / 0.92)",
-                textShadow: "0 2px 14px hsl(222 47% 6%), 0 0 18px hsl(222 47% 6% / 0.7)",
-                textAlign: "right",
+                fontSize: 13,
+                lineHeight: 1.4,
+                color: "hsl(var(--foreground) / 0.7)",
               }}
             >
-              רוצים הכוונה אישית? <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
+              רוצים הכוונה? <span style={{ color: "hsl(var(--gold) / 0.9)" }}>לחצו לשיחה</span>
             </p>
+            {/* Arrow */}
             <div
               className="absolute"
               style={{
-                right: -6,
-                top: "50%",
-                marginTop: -6,
-                width: 12,
-                height: 12,
-                background: "hsl(222 47% 8% / 0.84)",
-                border: "1px solid hsl(var(--gold) / 0.22)",
+                right: -4,
+                bottom: 14,
+                width: 8,
+                height: 8,
+                background: "hsl(222 47% 8% / 0.7)",
+                border: "1px solid hsl(var(--gold) / 0.14)",
                 borderBottom: "none",
                 borderLeft: "none",
                 transform: "rotate(45deg)",
-                borderRadius: 2,
-                boxShadow: "2px -2px 10px hsl(var(--gold) / 0.05)",
               }}
             />
           </motion.div>
