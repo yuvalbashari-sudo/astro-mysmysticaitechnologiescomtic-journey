@@ -131,16 +131,16 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
 
           {/* ── Controls: close + badge ── */}
           <motion.button
-            className="fixed top-5 left-5 z-[105] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer"
+            className="fixed top-5 left-5 z-[105] w-[52px] h-[52px] min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer transition-colors duration-200"
             style={{
-              background: "hsl(var(--deep-blue) / 0.5)",
-              border: "1px solid hsl(var(--gold) / 0.15)",
+              background: "hsl(var(--deep-blue) / 0.55)",
+              border: "1px solid hsl(var(--gold) / 0.2)",
             }}
             onClick={onClose}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.1, backgroundColor: "hsl(var(--deep-blue) / 0.7)" }}
+            whileTap={{ scale: 0.92 }}
           >
-            <X className="w-4 h-4 text-gold/70" />
+            <X className="w-6 h-6 text-gold/80" />
           </motion.button>
           <div className="fixed top-5 right-5 z-[105]">
             <span
