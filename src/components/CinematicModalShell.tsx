@@ -149,7 +149,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           </motion.button>
           <div className="fixed top-5 right-5 z-[105]">
             <span
-              className="px-3 py-1 rounded-full text-[10px] font-bold font-body tracking-wider"
+              className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
               style={{
                 background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
                 border: "1px solid hsl(var(--gold) / 0.2)",
