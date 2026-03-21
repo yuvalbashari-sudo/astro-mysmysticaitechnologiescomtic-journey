@@ -135,6 +135,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [ritualStep, setRitualStep] = useState(0);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [showCardOverlay, setShowCardOverlay] = useState(false);
+  const [gender, setGender] = useState<"male" | "female" | "">("");
 
   // Check for existing daily card on open — also re-check when language changes
   useEffect(() => {
