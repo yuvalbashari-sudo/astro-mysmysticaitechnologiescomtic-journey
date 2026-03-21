@@ -692,24 +692,24 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                               transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
                             />
                           </motion.div>
-                          <motion.h2 className="font-heading text-xl gold-gradient-text mt-4 text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+                          <motion.h2 className="font-heading text-3xl gold-gradient-text mt-6 text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
                             {card.hebrewName}
                           </motion.h2>
-                          <motion.p className="text-foreground/50 font-body text-xs text-center mt-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
+                          <motion.p className="text-foreground/50 font-body text-lg text-center mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
                             {t.daily_arcana_label} {card.number}
                           </motion.p>
                           {phase === "locked" && (
-                            <motion.div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                              <Clock className="w-3 h-3 text-gold/60" />
-                              <span className="font-body text-[11px] text-gold/70">{t.daily_next_card} {timeLeft}</span>
+                            <motion.div className="inline-flex items-center gap-3 mt-4 px-5 py-3 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                              <Clock className="w-5 h-5 text-gold/60" />
+                              <span className="font-body text-base text-gold/70">{t.daily_next_card} {timeLeft}</span>
                             </motion.div>
                           )}
-                          <motion.div className="flex items-center gap-2 mt-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                            <motion.button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                              <Share2 className="w-3 h-3" />{t.forecast_share}
+                          <motion.div className="flex items-center gap-4 mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
+                            <motion.button onClick={handleShare} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                              <Share2 className="w-5 h-5" />{t.forecast_share}
                             </motion.button>
-                            <motion.button onClick={handleCopy} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                              {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                            <motion.button onClick={handleCopy} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+                              {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                               {copied ? t.share_copied : t.share_copy}
                             </motion.button>
                           </motion.div>
@@ -762,8 +762,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                   {/* ── TEXT — scrolls normally, constrained to LEFT zone on desktop ── */}
                   <motion.div
-                    className="p-6 md:max-w-[440px] md:pl-10 md:pr-4 md:mr-auto md:pt-[56px]"
-                    style={{ maxWidth: "min(440px, 38vw)" }}
+                    className="p-6 md:max-w-[720px] md:pl-14 md:pr-6 md:mr-auto md:pt-[56px]"
+                    style={{ maxWidth: "min(720px, 50vw)" }}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -794,12 +794,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <>
                         <ShareResultSection symbol={card.symbol} title={`${t.daily_title} — ${card.hebrewName}`} subtitle={t.daily_card_chosen} />
                         <div className="section-divider max-w-[200px] mx-auto my-8" />
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-6" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-                          <Crown className="w-6 h-6 text-gold mx-auto mb-3" />
-                          <h4 className="font-heading text-base text-gold mb-2">{t.daily_premium_title}</h4>
-                          <p className="text-foreground/60 font-body text-xs mb-4 max-w-sm mx-auto leading-relaxed">{t.daily_premium_desc}</p>
-                          <button onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
-                            <Sparkles className="w-3.5 h-3.5" />{t.daily_premium_cta}
+                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-10" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                          <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
+                          <h4 className="font-heading text-2xl text-gold mb-4">{t.daily_premium_title}</h4>
+                          <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.daily_premium_desc}</p>
+                          <button onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4">
+                            <Sparkles className="w-5 h-5" />{t.daily_premium_cta}
                           </button>
                         </motion.div>
                       </>
