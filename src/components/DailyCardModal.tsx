@@ -193,7 +193,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const selectedCard = majorArcana[cardIndex];
     setCard(selectedCard);
     setShowCardOverlay(false);
-    setPhase("video");
+    setRitualStep(0);
+    setPhase("ritual");
   }, [t.daily_already_drawn]);
 
   // Preload video asset when modal opens
