@@ -14,11 +14,12 @@ interface Message {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  forceRightAnchor?: boolean;
 }
 
 const FREE_MESSAGE_LIMIT = 5;
 
-const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
+const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
   const { activeReading } = useReadingContext();
@@ -314,8 +315,8 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
             className="fixed z-[106] flex flex-col overflow-hidden"
             style={{
               bottom: "5.5rem",
-              right: dir === "rtl" ? "auto" : "1.25rem",
-              left: dir === "rtl" ? "1.25rem" : "auto",
+              right: forceRightAnchor ? "1.25rem" : dir === "rtl" ? "auto" : "1.25rem",
+              left: forceRightAnchor ? "auto" : dir === "rtl" ? "1.25rem" : "auto",
               width: "min(765px, calc(100vw - 2rem))",
               maxHeight: "min(1080px, calc(100vh - 7rem))",
               background: "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
