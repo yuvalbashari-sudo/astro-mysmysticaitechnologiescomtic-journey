@@ -113,10 +113,11 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                         className="relative rounded-2xl overflow-hidden"
                         style={{
                           padding: "44px 40px",
-                          background: "linear-gradient(160deg, hsl(222 47% 10% / 0.8), hsl(222 47% 6% / 0.7))",
-                          backdropFilter: "blur(24px) saturate(1.2)",
-                          border: "1px solid hsl(var(--gold) / 0.15)",
-                          boxShadow: "0 12px 48px hsl(222 47% 4% / 0.6), 0 0 80px hsl(var(--gold) / 0.04), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                          background: "linear-gradient(160deg, hsl(222 47% 8% / 0.45), hsl(222 47% 4% / 0.35))",
+                          backdropFilter: "blur(20px) saturate(1.3)",
+                          WebkitBackdropFilter: "blur(20px) saturate(1.3)",
+                          border: "1px solid hsl(var(--gold) / 0.18)",
+                          boxShadow: "0 8px 40px hsl(222 47% 4% / 0.4), 0 0 60px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.1), inset 0 0 40px hsl(var(--gold) / 0.02)",
                         }}
                       >
                         {/* Top gold accent line */}
