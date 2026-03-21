@@ -282,6 +282,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                         style={{
                           width: forecastAdvisorBaseSize,
                           height: forecastAdvisorBaseSize,
+                          transformOrigin: "center center",
                           boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
                           border: "2px solid hsl(var(--gold) / 0.35)",
                         }}
