@@ -336,7 +336,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
           >
             {/* Header */}
             <div
-              className="flex items-center justify-between px-6 py-4 flex-shrink-0"
+              className="flex items-center justify-between px-8 py-5 flex-shrink-0"
               style={{
                 borderBottom: "1px solid hsl(var(--gold) / 0.08)",
                 background: "linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent)",
