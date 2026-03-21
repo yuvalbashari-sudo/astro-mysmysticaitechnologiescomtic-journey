@@ -481,7 +481,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               style={{ borderTop: "1px solid hsl(var(--gold) / 0.06)" }}
             >
               <div
-                className={`flex items-center gap-2.5 rounded-xl px-4 py-2.5 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+                className={`flex items-center gap-3 rounded-xl px-5 py-3 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
                 style={{
                   background: "hsl(var(--deep-blue-light) / 0.3)",
                   border: "1px solid hsl(var(--gold) / 0.08)",
