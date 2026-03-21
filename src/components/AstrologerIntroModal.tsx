@@ -206,7 +206,7 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
 
         {/* ── LEFT ZONE: Welcome & guidance ── */}
         <motion.div
-          className="hidden md:flex flex-col justify-center px-10 pt-[110px] pb-10"
+          className="hidden md:flex flex-col justify-start px-10 pt-[92px] pb-10"
           style={{ width: "28%", maxWidth: "340px" }}
           initial={{ opacity: 0, x: dir === "rtl" ? 30 : -30 }}
           animate={{ opacity: 1, x: 0 }}
