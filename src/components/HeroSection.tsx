@@ -2754,12 +2754,12 @@ const HeroSection = () => {
         height: isMobile ? 120 : 168,
         transformOrigin: "bottom right",
       }}
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ delay: 2.5, duration: 0.7, ease: "easeOut" }}
       onClick={() => setAstrologerOpen(true)}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={{ filter: "brightness(1.15)" }}
+      whileTap={{ filter: "brightness(0.9)" }}
       aria-label="שיחה עם האסטרולוגית"
     >
 
