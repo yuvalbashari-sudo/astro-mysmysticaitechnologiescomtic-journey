@@ -343,7 +343,34 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                   <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.daily_title}</h2>
                   <p className="text-foreground/60 font-body text-sm md:text-base max-w-md mx-auto leading-relaxed mb-2">{t.daily_desc}</p>
-                  <p className="text-foreground/40 font-body text-xs mb-8">{t.daily_note}</p>
+                  <p className="text-foreground/40 font-body text-xs mb-6">{t.daily_note}</p>
+
+                  {/* Gender Selection */}
+                  <div className="max-w-xs mx-auto mb-6">
+                    <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
+                    <div className="flex gap-2">
+                      <motion.button type="button" onClick={() => setGender("male")}
+                        className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                        style={{
+                          background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                          border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                          color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                          backdropFilter: "blur(8px)",
+                        }}
+                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      >{t.forecast_gender_male}</motion.button>
+                      <motion.button type="button" onClick={() => setGender("female")}
+                        className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
+                        style={{
+                          background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
+                          border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
+                          color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                          backdropFilter: "blur(8px)",
+                        }}
+                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      >{t.forecast_gender_female}</motion.button>
+                    </div>
+                  </div>
 
                   <div className="section-divider max-w-[100px] mx-auto mb-8" />
 
