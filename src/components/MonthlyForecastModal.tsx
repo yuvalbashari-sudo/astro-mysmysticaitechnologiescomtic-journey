@@ -118,7 +118,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* RIGHT: Form panel */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "480px", maxWidth: "30vw", paddingRight: "3vw", paddingTop: "50px" }}
+                      style={{ width: "400px", maxWidth: "32vw", paddingRight: "4vw" }}
                       initial={{ opacity: 0, x: 40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
