@@ -631,7 +631,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     <AnimatePresence>
                       {isOpen && (phase === "result" || phase === "locked") && card && (
                         <motion.div
-                          className="hidden md:flex flex-col items-center fixed top-[110px] right-[48px] z-[110]"
+                          className="hidden md:flex flex-col items-center fixed top-[60px] right-[48px] z-[110] pt-[50px]"
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 20 }}
