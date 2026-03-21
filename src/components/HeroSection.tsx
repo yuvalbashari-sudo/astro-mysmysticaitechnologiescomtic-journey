@@ -2185,7 +2185,16 @@ const HeroSection = () => {
 
   const handleCrystalClick = useCallback(() => {
     setClickBurst((c) => c + 1);
-  }, []);
+    // Show "Message from the Universe" overlay
+    if (!fortuneRevealed) {
+      const msgs = FORTUNE_MESSAGES[language] || FORTUNE_MESSAGES.he;
+      const msg = msgs[Math.floor(Math.random() * msgs.length)];
+      setFortuneMessage(msg);
+      setFortuneRevealed(true);
+    } else {
+      setFortuneRevealed(false);
+    }
+  }, [fortuneRevealed, language]);
 
   const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
