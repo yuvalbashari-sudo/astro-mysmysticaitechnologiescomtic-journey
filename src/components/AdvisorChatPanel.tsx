@@ -438,7 +438,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   >
                     {msg.content
                       ? (msg.role === "assistant" ? renderMarkdown(msg.content) : msg.content)
-                      : <Loader2 className="w-4 h-4 animate-spin text-gold/50" />
+                      : <Loader2 className="w-5 h-5 animate-spin text-gold/50" />
                     }
                   </div>
                 </div>
