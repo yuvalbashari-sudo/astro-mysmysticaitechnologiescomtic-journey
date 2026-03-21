@@ -2197,6 +2197,22 @@ const HeroSection = () => {
     setIsUniverseMessageOpen(false);
   }, []);
 
+  const crystalBallAriaLabel = language === "he"
+    ? "פתחו מסר מהיקום"
+    : language === "ar"
+      ? "افتح رسالة من الكون"
+      : language === "ru"
+        ? "Открыть послание Вселенной"
+        : "Open message from the universe";
+
+  const crystalBallTeaserText = language === "he"
+    ? "לחצו לקבלת מסר מהיקום"
+    : language === "ar"
+      ? "اضغطوا للحصول على رسالة من الكون"
+      : language === "ru"
+        ? "Нажмите, чтобы получить послание Вселенной"
+        : "Click to receive a message from the universe";
+
   const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
   const particles = useMemo(() => {
@@ -2489,12 +2505,6 @@ const HeroSection = () => {
                   <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
                 )}
               </div>
-              <button
-                type="button"
-                aria-label={language === "he" ? "פתחו מסר מהיקום" : language === "ar" ? "افتح رسالة من الكون" : language === "ru" ? "Открыть послание Вселенной" : "Open message from the universe"}
-                className="absolute inset-0 z-[35] rounded-full bg-transparent border-0 outline-none appearance-none cursor-pointer pointer-events-auto"
-                onClick={openUniverseMessage}
-              />
             </motion.div>
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
 
@@ -2685,65 +2695,6 @@ const HeroSection = () => {
                   )}
                 </div>
               </div>
-
-              <AnimatePresence>
-                {isCrystalHovered && !isUniverseMessageOpen && (
-                  <motion.div
-                    className="absolute pointer-events-none"
-                    style={{
-                      right: "calc(100% + 12px)",
-                      top: "56%",
-                      transform: "translateY(-50%)",
-                      padding: "10px 14px",
-                      borderRadius: 12,
-                      whiteSpace: "nowrap",
-                      direction: "rtl",
-                      background: "hsl(222 47% 8% / 0.75)",
-                      backdropFilter: "blur(14px)",
-                      WebkitBackdropFilter: "blur(14px)",
-                      border: "1px solid hsl(var(--gold) / 0.18)",
-                      boxShadow: "0 6px 20px hsl(222 47% 4% / 0.38), 0 0 10px hsl(var(--gold) / 0.05)",
-                      zIndex: 40,
-                    }}
-                    initial={{ opacity: 0, scale: 0.94, x: 4 }}
-                    animate={{ opacity: 1, scale: 1, x: 0 }}
-                    exit={{ opacity: 0, scale: 0.94, x: 4 }}
-                    transition={{ duration: 0.16, ease: "easeOut" }}
-                  >
-                    <p
-                      className="font-body"
-                      style={{ margin: 0, fontSize: 15, lineHeight: 1.45, color: "hsl(var(--foreground) / 0.84)" }}
-                    >
-                      לחצו לקבלת <span style={{ color: "hsl(var(--gold))" }}>מסר מהיקום</span>
-                    </p>
-                    <div
-                      className="absolute"
-                      style={{
-                        right: -4,
-                        top: "50%",
-                        marginTop: -4,
-                        width: 8,
-                        height: 8,
-                        background: "hsl(222 47% 8% / 0.75)",
-                        border: "1px solid hsl(var(--gold) / 0.18)",
-                        borderBottom: "none",
-                        borderLeft: "none",
-                        transform: "rotate(45deg)",
-                      }}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <button
-                type="button"
-                aria-label={language === "he" ? "פתחו מסר מהיקום" : language === "ar" ? "افتح رسالة من الكون" : language === "ru" ? "Открыть послание Вселенной" : "Open message from the universe"}
-                className="absolute inset-0 z-[45] rounded-full bg-transparent border-0 outline-none appearance-none cursor-pointer pointer-events-auto"
-                style={{ clipPath: "circle(50% at 50% 50%)" }}
-                onMouseEnter={() => !isMobile && setIsCrystalHovered(true)}
-                onMouseLeave={() => setIsCrystalHovered(false)}
-                onClick={openUniverseMessage}
-              />
             </motion.div>
             {/* Fortune CTA moved to fixed bottom layer */}
 
@@ -2813,6 +2764,119 @@ const HeroSection = () => {
           </div>
         </div>
       )}
+
+      <div
+        className="absolute inset-0 pointer-events-none z-[26]"
+        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "calc(5vh + 202px)" }}
+      >
+        <div className="flex h-full w-full items-center justify-center">
+          {isMobile ? (
+            <div
+              className="relative flex items-center justify-center"
+              style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
+            >
+              <div className="relative pointer-events-none" style={{ width: "332px", height: "332px" }}>
+                <motion.button
+                  type="button"
+                  aria-label={crystalBallAriaLabel}
+                  className="absolute inset-0 z-[2] rounded-full border-0 bg-transparent outline-none appearance-none cursor-pointer pointer-events-auto"
+                  style={{
+                    clipPath: "circle(50% at 50% 50%)",
+                    WebkitClipPath: "circle(50% at 50% 50%)",
+                  }}
+                  onClick={openUniverseMessage}
+                />
+              </div>
+            </div>
+          ) : (
+            <motion.div
+              className="relative flex items-center justify-center"
+              style={{ x: crystalX, y: crystalY, marginTop: "352px", marginLeft: "10px" }}
+            >
+              <div className="relative pointer-events-none" style={{ width: "490px", height: "490px" }}>
+                <AnimatePresence>
+                  {isCrystalHovered && !isUniverseMessageOpen && (
+                    <>
+                      <motion.div
+                        className="absolute inset-[-10px] z-[1] rounded-full pointer-events-none"
+                        style={{
+                          border: "1px solid hsl(var(--gold) / 0.38)",
+                          boxShadow: "0 0 28px hsl(var(--gold) / 0.22), 0 0 70px hsl(var(--gold) / 0.1), inset 0 0 26px hsl(var(--gold) / 0.08)",
+                        }}
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.96 }}
+                        transition={{ duration: 0.18, ease: "easeOut" }}
+                      />
+                      <motion.div
+                        className="absolute z-[3] pointer-events-none"
+                        style={{
+                          right: "calc(100% + 12px)",
+                          top: "56%",
+                          transform: "translateY(-50%)",
+                          padding: "10px 14px",
+                          borderRadius: 12,
+                          whiteSpace: "nowrap",
+                          direction: language === "he" || language === "ar" ? "rtl" : "ltr",
+                          background: "hsl(222 47% 8% / 0.75)",
+                          backdropFilter: "blur(14px)",
+                          WebkitBackdropFilter: "blur(14px)",
+                          border: "1px solid hsl(var(--gold) / 0.18)",
+                          boxShadow: "0 6px 20px hsl(222 47% 4% / 0.38), 0 0 10px hsl(var(--gold) / 0.05)",
+                        }}
+                        initial={{ opacity: 0, scale: 0.94, x: 4 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.94, x: 4 }}
+                        transition={{ duration: 0.16, ease: "easeOut" }}
+                      >
+                        <p
+                          className="font-body"
+                          style={{ margin: 0, fontSize: 15, lineHeight: 1.45, color: "hsl(var(--foreground) / 0.84)" }}
+                        >
+                          {language === "he"
+                            ? <>לחצו לקבלת <span style={{ color: "hsl(var(--gold))" }}>מסר מהיקום</span></>
+                            : crystalBallTeaserText}
+                        </p>
+                        <div
+                          className="absolute"
+                          style={{
+                            right: -4,
+                            top: "50%",
+                            marginTop: -4,
+                            width: 8,
+                            height: 8,
+                            background: "hsl(222 47% 8% / 0.75)",
+                            border: "1px solid hsl(var(--gold) / 0.18)",
+                            borderBottom: "none",
+                            borderLeft: "none",
+                            transform: "rotate(45deg)",
+                          }}
+                        />
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+
+                <motion.button
+                  type="button"
+                  aria-label={crystalBallAriaLabel}
+                  className="absolute inset-0 z-[2] rounded-full border-0 bg-transparent outline-none appearance-none cursor-pointer pointer-events-auto"
+                  style={{
+                    clipPath: "circle(50% at 50% 50%)",
+                    WebkitClipPath: "circle(50% at 50% 50%)",
+                  }}
+                  onPointerEnter={() => setIsCrystalHovered(true)}
+                  onPointerLeave={() => setIsCrystalHovered(false)}
+                  onFocus={() => setIsCrystalHovered(true)}
+                  onBlur={() => setIsCrystalHovered(false)}
+                  onClick={openUniverseMessage}
+                  whileTap={{ scale: 0.99 }}
+                />
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
 
     <AvatarHoverTeaser
       disabled={isMobile}
