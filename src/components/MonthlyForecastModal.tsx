@@ -265,7 +265,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* RIGHT: Sign info */}
                     <motion.div
                       className="absolute pointer-events-auto flex flex-col items-center"
-                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(340px, 24vw)" }}
+                      style={{ top: "calc(10vh + 56px)", right: "48px", width: "min(340px, 24vw)" }}
                       initial={{ opacity: 0, x: 40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
