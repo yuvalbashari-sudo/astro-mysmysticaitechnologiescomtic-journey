@@ -153,7 +153,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                           <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center text-base" style={{ direction: "ltr" }} />
                           {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                         </div>
-                        <motion.button onClick={handleSubmit} className="btn-gold font-body text-sm w-full flex items-center justify-center gap-2 py-3" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-4 h-4" />{t.forecast_cta}</motion.button>
+                        <motion.button onClick={handleSubmit} className="btn-gold font-body text-base w-full flex items-center justify-center gap-2 py-3.5" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-5 h-5" />{t.forecast_cta}</motion.button>
                       </div>
                     </motion.div>
                   </div>
