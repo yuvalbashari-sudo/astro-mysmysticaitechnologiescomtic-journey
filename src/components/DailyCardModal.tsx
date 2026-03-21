@@ -764,7 +764,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   <motion.div
                     className="p-6 md:max-w-[720px] md:pl-14 md:pr-6 md:mr-auto md:pt-[56px]"
                     style={{ maxWidth: "min(720px, 50vw)", position: "relative", left: "-30px" }}
-                    style={{ maxWidth: "min(720px, 50vw)" }}
                     initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
