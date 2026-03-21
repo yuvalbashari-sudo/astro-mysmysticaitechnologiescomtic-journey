@@ -2749,9 +2749,9 @@ const HeroSection = () => {
       disabled={isMobile}
       className="fixed z-[60] pointer-events-auto"
       style={{
+        position: "fixed",
         bottom: isMobile ? 28 : 32,
-        left: `calc(100% - ${isMobile ? 140 : 208}px)`,
-        right: "auto",
+        left: isMobile ? `calc(100vw - ${120 + 20}px)` : `calc(100vw - ${168 + 40}px)`,
         width: isMobile ? 120 : 168,
         height: isMobile ? 120 : 168,
       }}
