@@ -99,7 +99,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* LEFT: Explanation text */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "28%", maxWidth: "340px", paddingLeft: "calc(4vw + 150px)" }}
+                      style={{ width: "28%", maxWidth: "340px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }}
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -192,7 +192,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     <motion.div
                       ref={scrollRef}
                       className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 56px)", left: "3vw", width: "min(440px, 38vw)", maxHeight: "80vh" }}
+                      style={{ top: "calc(10vh + 56px)", left: "calc(3vw + 150px)", width: "min(440px, 38vw)", maxHeight: "80vh", maxWidth: "calc(100vw - 10px)" }}
                       initial={{ opacity: 0, y: 40 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
