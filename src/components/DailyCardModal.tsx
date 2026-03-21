@@ -218,7 +218,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       clearTimeout(step3);
     };
   }, [phase, card]);
-  }, [phase, card]);
 
   const startAiReading = (selectedCard: TarotWorldCard) => {
     setAiLoading(true);
