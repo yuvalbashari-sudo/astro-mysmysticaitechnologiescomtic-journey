@@ -58,7 +58,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
     streamMysticalReading(
       "forecast",
-      { signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element, dateRange: sign.dateRange, monthName },
+      { signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element, dateRange: sign.dateRange, monthName, gender },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
