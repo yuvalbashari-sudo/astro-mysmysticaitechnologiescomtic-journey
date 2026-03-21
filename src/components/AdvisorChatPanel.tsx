@@ -385,7 +385,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                       border: "1px solid hsl(var(--gold) / 0.12)",
                     }}
                   >
-                    <Sparkles className="w-7 h-7 text-gold/50" />
+                    <Sparkles className="w-9 h-9 text-gold/50" />
                   </div>
                   <p className="text-foreground/40 font-body text-sm leading-relaxed max-w-[360px] mx-auto">
                     {welcomeMessage}
