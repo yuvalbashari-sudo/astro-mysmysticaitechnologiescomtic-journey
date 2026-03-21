@@ -2480,10 +2480,8 @@ const HeroSection = () => {
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
-              className="relative z-20 cursor-pointer pointer-events-auto"
+              className="relative z-20 pointer-events-auto"
               style={{ width: "332px", height: "332px" }}
-              onClickCapture={openUniverseMessage}
-              onClick={openUniverseMessage}
             >
               {/* No overlays — pure media only */}
               <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
@@ -2491,6 +2489,12 @@ const HeroSection = () => {
                   <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
                 )}
               </div>
+              <button
+                type="button"
+                aria-label={language === "he" ? "פתחו מסר מהיקום" : language === "ar" ? "افتح رسالة من الكون" : language === "ru" ? "Открыть послание Вселенной" : "Open message from the universe"}
+                className="absolute inset-0 z-[35] rounded-full bg-transparent border-0 outline-none appearance-none cursor-pointer pointer-events-auto"
+                onClick={openUniverseMessage}
+              />
             </motion.div>
             <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
 
