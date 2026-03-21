@@ -417,7 +417,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 font-body text-sm leading-relaxed ${
+                    className={`max-w-[85%] rounded-2xl px-5 py-4 font-body text-base leading-relaxed ${
                       msg.role === "user"
                         ? "rounded-br-md"
                         : "rounded-bl-md"
