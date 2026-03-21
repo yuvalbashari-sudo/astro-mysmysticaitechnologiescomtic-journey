@@ -197,47 +197,27 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setPhase("ritual");
   }, [t.daily_already_drawn]);
 
-  // Preload video asset when modal opens
+  // Ritual animation sequence (no video)
   useEffect(() => {
-    if (isOpen) {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "video";
-      link.href = "/videos/daily-tarot-ritual.mp4";
-      document.head.appendChild(link);
-      return () => { document.head.removeChild(link); };
-    }
-  }, [isOpen]);
+    if (phase !== "ritual" || !card) return;
 
-  // Explicitly play video when video phase starts + fallback timer
-  useEffect(() => {
-    if (phase !== "video" || !card) return;
-
-    // Small delay to let the video element mount
-    const playTimer = setTimeout(() => {
-      const v = videoRef.current;
-      if (v) {
-        v.currentTime = 0;
-        v.play().catch(() => {
-          // Autoplay truly blocked — skip to result
-          setPhase("result");
-          startAiReading(card);
-        });
-      }
-    }, 100);
-
-    const fallback = setTimeout(() => {
+    // Step 1: show shuffling text, Step 2: reveal card overlay
+    const step1 = setTimeout(() => setRitualStep(1), 800);
+    const step2 = setTimeout(() => {
       setShowCardOverlay(true);
-      setTimeout(() => {
-        setPhase("result");
-        startAiReading(card);
-      }, 2500);
-    }, VIDEO_DURATION_MS + 2000);
+      setRitualStep(2);
+    }, RITUAL_DURATION_MS - 1500);
+    const step3 = setTimeout(() => {
+      setPhase("result");
+      startAiReading(card);
+    }, RITUAL_DURATION_MS + 1000);
 
     return () => {
-      clearTimeout(playTimer);
-      clearTimeout(fallback);
+      clearTimeout(step1);
+      clearTimeout(step2);
+      clearTimeout(step3);
     };
+  }, [phase, card]);
   }, [phase, card]);
 
   const startAiReading = (selectedCard: TarotWorldCard) => {
