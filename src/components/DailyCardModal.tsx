@@ -136,17 +136,21 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [showCardOverlay, setShowCardOverlay] = useState(false);
 
-  // Check for existing daily card on open
+  // Check for existing daily card on open — also re-check when language changes
   useEffect(() => {
     if (isOpen) {
       const saved = getSavedDailyCard();
       if (saved) {
         setCard(saved.card);
-        setTimeLeft(getTimeUntilMidnight());
-        if (saved.aiText) {
+        setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
+        if (saved.aiText && saved.language === language) {
           setAiText(saved.aiText);
           aiTextRef.current = saved.aiText;
           setPhase("locked");
+        } else if (saved.aiText && saved.language !== language) {
+          // Language changed — re-generate AI text
+          setPhase("result");
+          startAiReading(saved.card);
         } else {
           setPhase("locked");
         }
@@ -154,7 +158,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setPhase("ready");
       }
     }
-  }, [isOpen]);
+  }, [isOpen, language]);
 
   // Countdown timer for locked state
   useEffect(() => {
