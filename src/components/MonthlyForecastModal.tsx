@@ -99,7 +99,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     {/* LEFT: Explanation text */}
                     <motion.div
                       className="flex flex-col justify-center pointer-events-auto"
-                      style={{ width: "28%", maxWidth: "340px", paddingLeft: "calc(4vw + 150px)" }}
+                      style={{ width: "28%", maxWidth: "340px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }}
                       initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
