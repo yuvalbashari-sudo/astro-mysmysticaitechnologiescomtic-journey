@@ -2496,15 +2496,16 @@ const HeroSection = () => {
             {entranceComplete && cardPhase === "idle" && (
               <motion.button
                 type="button"
-                className="absolute z-30 text-center cursor-pointer bg-transparent border-0 outline-none appearance-none"
-                style={{ bottom: "-20px", width: "200px" }}
+                className="absolute z-30 text-center cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
+                style={{ bottom: "-28px", width: "220px" }}
                 initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.7, 0] }}
-                transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, delay: 4 }}
+                animate={{ opacity: [0.5, 0.85, 0.5] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
                 onClick={(e) => { e.stopPropagation(); handleFortuneReveal(); }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span className="text-gold/50 font-body text-[10px]">
-                  {t.hero_crystal_hint}
+                <span className="text-gold/60 font-body text-[11px]">
+                  ✦ {t.hero_crystal_hint} ✦
                 </span>
               </motion.button>
             )}
