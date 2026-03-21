@@ -3182,6 +3182,24 @@ const HeroSection = () => {
     </div>
 
 
+    {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
+    {entranceComplete && cardPhase === "idle" && !fortuneRevealed && (
+      <motion.button
+        type="button"
+        className="fixed z-[70] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
+        style={{ bottom: isMobile ? 36 : 48, left: "50%", transform: "translateX(-50%)" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0.55, 0.9, 0.55] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        onClick={handleFortuneReveal}
+        whileTap={{ scale: 0.95 }}
+      >
+        <span className={`text-gold/70 font-body ${isMobile ? "text-[11px]" : "text-sm"}`}>
+          ✦ {t.hero_crystal_hint} ✦
+        </span>
+      </motion.button>
+    )}
+
     {/* ── Fortune / Message from the Universe overlay ── */}
     <AnimatePresence>
       {fortuneRevealed && (
