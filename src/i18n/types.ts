@@ -190,6 +190,11 @@ export type TranslationKeys = {
   forecast_title: string;
   forecast_desc: string;
   forecast_birthdate_label: string;
+  forecast_gender_label: string;
+  forecast_gender_male: string;
+  forecast_gender_female: string;
+  forecast_gender_required: string;
+  forecast_birthdate_required: string;
   forecast_cta: string;
   forecast_free_badge: string;
   forecast_note: string;
