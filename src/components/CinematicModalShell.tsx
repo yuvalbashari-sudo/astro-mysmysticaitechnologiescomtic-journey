@@ -30,7 +30,7 @@ interface Props {
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
-  const [avatarHovered, setAvatarHovered] = useState(false);
+  
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
 
