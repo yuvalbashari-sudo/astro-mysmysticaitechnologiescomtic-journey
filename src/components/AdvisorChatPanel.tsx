@@ -353,7 +353,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   <Sparkles className="w-6 h-6 text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-heading text-sm text-gold">{t.advisor_title}</h3>
+                  <h3 className="font-heading text-base text-gold">{t.advisor_title}</h3>
                   {activeReading && (
                     <p className="text-xs text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
                   )}
