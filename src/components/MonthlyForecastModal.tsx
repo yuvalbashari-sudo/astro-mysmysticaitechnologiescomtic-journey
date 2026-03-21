@@ -109,28 +109,14 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <div
-                        className="relative rounded-2xl overflow-hidden"
-                        style={{
-                          padding: "44px 40px",
-                          background: "linear-gradient(160deg, hsl(222 47% 8% / 0.45), hsl(222 47% 4% / 0.35))",
-                          backdropFilter: "blur(20px) saturate(1.3)",
-                          WebkitBackdropFilter: "blur(20px) saturate(1.3)",
-                          border: "1px solid hsl(var(--gold) / 0.18)",
-                          boxShadow: "0 8px 40px hsl(222 47% 4% / 0.4), 0 0 60px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.1), inset 0 0 40px hsl(var(--gold) / 0.02)",
-                        }}
-                      >
-                        {/* Top gold accent line */}
-                        <div className="absolute top-0 left-[15%] right-[15%] h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }} />
-
+                      <div style={{ padding: "0 24px" }}>
                         <motion.div className="w-16 h-16 mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.18)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.08)", "0 0 40px hsl(43 80% 55% / 0.18)", "0 0 20px hsl(43 80% 55% / 0.08)"] }} transition={{ duration: 3, repeat: Infinity }}>
                           <Calendar className="w-7 h-7 text-gold" />
                         </motion.div>
-                        <h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 0 30px hsl(222 47% 6%), 0 2px 20px hsl(222 47% 6%)" }}>{t.forecast_title}</h2>
-                        <p className="font-body leading-relaxed" style={{ fontSize: "18px", lineHeight: 1.8, color: "hsl(var(--foreground) / 0.65)", textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
+                        <h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: "28px", lineHeight: 1.3, textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)" }}>{t.forecast_title}</h2>
+                        <p className="font-body leading-relaxed" style={{ fontSize: "18px", lineHeight: 1.8, color: "hsl(var(--foreground) / 0.65)", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6%)" }}>{t.forecast_desc}</p>
 
-                        {/* Divider */}
-                        <div className="mx-auto my-6" style={{ width: 80, height: 1, background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.25), transparent)" }} />
+                        <div className="section-divider max-w-[80px] my-6" />
 
                         <p className="font-body" style={{ fontSize: "14px", lineHeight: 1.6, color: "hsl(var(--foreground) / 0.35)", textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.forecast_note}</p>
                       </div>
