@@ -90,7 +90,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const isDesktopInput = !isMobile && !signInfo && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
             <AnimatePresence mode="wait">
               {!signInfo && !isLoading ? (
                 isDesktopInput ? (
