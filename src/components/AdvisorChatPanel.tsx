@@ -462,7 +462,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                     </p>
                   </div>
                   <button
-                    className="text-xs px-4 py-2 rounded-full font-heading transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/40"
+                    className="text-sm px-5 py-2.5 rounded-full font-heading transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/40"
                     style={{
                       background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                       color: "hsl(var(--primary-foreground))",
