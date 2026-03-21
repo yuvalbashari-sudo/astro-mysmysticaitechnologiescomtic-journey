@@ -25,7 +25,7 @@ const Index = () => {
       <HeroSection />
 
       {/* ── Layer 2: Scrolling page content ── */}
-      <div className="relative z-10 min-h-screen" dir={dir} style={{ background: "transparent" }}>
+      <div className="relative z-10 md:h-screen md:overflow-hidden" dir={dir} style={{ background: "transparent" }}>
         {/* Skip to content link */}
         <a
           href="#main-content"
@@ -38,11 +38,13 @@ const Index = () => {
           onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
-        {/* Spacer to push content below the hero viewport */}
-        <div className="h-screen pointer-events-none" aria-hidden="true" />
-        <main id="main-content" className="relative z-10">
-          <DailyRitualSection />
-        </main>
+        {/* Spacer + below-hero content: mobile only */}
+        <div className="md:hidden">
+          <div className="h-screen pointer-events-none" aria-hidden="true" />
+          <main id="main-content" className="relative z-10">
+            <DailyRitualSection />
+          </main>
+        </div>
         <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
       </div>
 
