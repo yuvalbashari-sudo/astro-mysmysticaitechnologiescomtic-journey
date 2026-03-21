@@ -494,7 +494,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   onKeyDown={handleKeyDown}
                   placeholder={placeholderText}
                   disabled={isStreaming || isLimitReached}
-                  className="flex-1 bg-transparent text-sm font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
+                  className="flex-1 bg-transparent text-base font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
                   dir={dir}
                   aria-label={placeholderText}
                 />
