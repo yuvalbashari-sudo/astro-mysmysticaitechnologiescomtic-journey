@@ -2759,19 +2759,19 @@ const HeroSection = () => {
       <AnimatePresence>
         {astrologerTooltipOpen && !isMobile && (
           <motion.div
-            className="absolute pointer-events-none"
+            className="absolute pointer-events-none overflow-visible"
             style={{
               right: "calc(100% + 10px)",
               top: "50%",
               transform: "translateY(-50%)",
-              width: 220,
-              padding: "14px 18px",
-              borderRadius: 14,
-              background: "linear-gradient(160deg, hsl(222 47% 10% / 0.86), hsl(222 47% 6% / 0.76))",
-              backdropFilter: "blur(16px) saturate(1.2)",
-              WebkitBackdropFilter: "blur(16px) saturate(1.2)",
-              border: "1px solid hsl(var(--gold) / 0.2)",
-              boxShadow: "0 8px 32px hsl(222 47% 4% / 0.5), 0 0 24px hsl(var(--gold) / 0.06)",
+              width: 290,
+              padding: "18px 22px",
+              borderRadius: 18,
+              background: "linear-gradient(160deg, hsl(222 47% 10% / 0.88), hsl(222 47% 6% / 0.8))",
+              backdropFilter: "blur(18px) saturate(1.2)",
+              WebkitBackdropFilter: "blur(18px) saturate(1.2)",
+              border: "1px solid hsl(var(--gold) / 0.22)",
+              boxShadow: "0 12px 36px hsl(222 47% 4% / 0.55), 0 0 30px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.08)",
               direction: "rtl",
               zIndex: 1,
             }}
@@ -2780,14 +2780,19 @@ const HeroSection = () => {
             exit={{ opacity: 0, x: 8 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
+            <div
+              className="absolute top-0 left-[18%] right-[18%] h-px"
+              style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.3), transparent)" }}
+            />
             <p
               className="font-body"
               style={{
                 margin: 0,
-                fontSize: 14,
-                lineHeight: 1.65,
-                color: "hsl(var(--foreground) / 0.82)",
-                textShadow: "0 1px 8px hsl(222 47% 6%)",
+                fontSize: 18,
+                lineHeight: 1.85,
+                color: "hsl(var(--foreground) / 0.92)",
+                textShadow: "0 2px 14px hsl(222 47% 6%), 0 0 18px hsl(222 47% 6% / 0.7)",
+                textAlign: "right",
               }}
             >
               רוצים הכוונה אישית? <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
@@ -2800,12 +2805,13 @@ const HeroSection = () => {
                 marginTop: -6,
                 width: 12,
                 height: 12,
-                background: "hsl(222 47% 8% / 0.82)",
-                border: "1px solid hsl(var(--gold) / 0.2)",
+                background: "hsl(222 47% 8% / 0.84)",
+                border: "1px solid hsl(var(--gold) / 0.22)",
                 borderBottom: "none",
                 borderLeft: "none",
                 transform: "rotate(45deg)",
                 borderRadius: 2,
+                boxShadow: "2px -2px 10px hsl(var(--gold) / 0.05)",
               }}
             />
           </motion.div>
