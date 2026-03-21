@@ -508,9 +508,9 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   aria-label={t.advisor_send}
                 >
                   {isStreaming ? (
-                    <Loader2 className="w-4 h-4 animate-spin text-gold/60" />
+                    <Loader2 className="w-5 h-5 animate-spin text-gold/60" />
                   ) : (
-                    <Send className="w-3.5 h-3.5 text-primary-foreground" style={{ transform: dir === "rtl" ? "scaleX(-1)" : undefined }} />
+                    <Send className="w-4.5 h-4.5 text-primary-foreground" style={{ transform: dir === "rtl" ? "scaleX(-1)" : undefined }} />
                   )}
                 </button>
               </div>
