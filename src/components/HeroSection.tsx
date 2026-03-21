@@ -2100,6 +2100,7 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [astrologerOpen, setAstrologerOpen] = useState(false);
+  const [astrologerTooltipOpen, setAstrologerTooltipOpen] = useState(false);
   const [zodiacSignIndex, setZodiacSignIndex] = useState<number | null>(null);
   const [entranceComplete, setEntranceComplete] = useState(false);
   const [isNearBall, setIsNearBall] = useState(false);
