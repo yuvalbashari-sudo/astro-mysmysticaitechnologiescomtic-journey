@@ -372,57 +372,44 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* PHASE: Video ritual */}
-              {phase === "video" && card && (
+              {/* PHASE: Ritual (card reveal animation — no video) */}
+              {phase === "ritual" && card && (
                 <motion.div
-                  key="video"
+                  key="ritual"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="relative overflow-hidden rounded-2xl"
+                  className="relative overflow-hidden rounded-2xl flex flex-col items-center justify-center"
                   style={{ minHeight: 450 }}
                 >
-                  {/* Video background — visible */}
-                  <video
-                    src="/videos/daily-tarot-ritual.mp4"
-                    className="w-full h-full object-cover absolute inset-0"
-                    style={{ minHeight: 450 }}
-                    autoPlay
-                    playsInline
-                    muted
-                    preload="auto"
-                    ref={videoRef}
-                    onTimeUpdate={() => {
-                      const v = videoRef.current;
-                      if (v && v.duration) {
-                        const remaining = (v.duration - v.currentTime) * 1000;
-                        if (remaining <= CARD_REVEAL_BEFORE_END_MS) {
-                          setShowCardOverlay(true);
-                        }
-                      }
-                    }}
-                    onEnded={() => {
-                      setTimeout(() => {
-                        setPhase("result");
-                        if (card) startAiReading(card);
-                      }, 800);
-                    }}
-                    onError={() => {
-                      // Video failed — go straight to result
-                      setPhase("result");
-                      if (card) startAiReading(card);
-                    }}
-                  />
-
-                  {/* Dark gradient overlay for readability */}
-                  <div
+                  {/* Ambient glow background */}
+                  <motion.div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: "linear-gradient(to bottom, transparent 30%, hsl(222 50% 3% / 0.7) 80%, hsl(222 50% 3% / 0.95) 100%)",
+                      background: "radial-gradient(ellipse 80% 70% at 50% 50%, hsl(var(--gold) / 0.06), hsl(var(--crimson) / 0.03), transparent)",
                     }}
+                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   />
 
-                  {/* Card reveal overlay — appears near video end */}
+                  {/* Floating particles during ritual */}
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={`rp-${i}`}
+                      className="absolute rounded-full pointer-events-none"
+                      style={{
+                        width: i % 2 === 0 ? 3 : 2,
+                        height: i % 2 === 0 ? 3 : 2,
+                        left: `${15 + Math.random() * 70}%`,
+                        top: `${20 + Math.random() * 60}%`,
+                        background: i % 2 === 0 ? "hsl(var(--gold) / 0.5)" : "hsl(var(--celestial) / 0.4)",
+                      }}
+                      animate={{ opacity: [0, 0.7, 0], y: [0, -(20 + Math.random() * 30)] }}
+                      transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2, ease: "easeOut" }}
+                    />
+                  ))}
+
+                  {/* Card reveal overlay — appears at ritual step 2 */}
                   <AnimatePresence>
                     {showCardOverlay && (
                       <motion.div
@@ -504,7 +491,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   {/* Loading text before card appears */}
                   {!showCardOverlay && (
                     <motion.div
-                      className="absolute bottom-8 left-0 right-0 z-10 text-center"
+                      className="relative z-10 text-center"
                       animate={{ opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
