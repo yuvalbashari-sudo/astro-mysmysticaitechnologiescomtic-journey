@@ -95,7 +95,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               {!signInfo && !isLoading ? (
                 isDesktopInput ? (
                   /* ── Desktop: 3-zone – LEFT text + CENTER oracle + RIGHT form ── */
-                  <div className="absolute inset-0 flex" key="input-desktop">
+                  <div className="absolute inset-0 flex items-center" key="input-desktop">
                     {/* LEFT: Explanation text */}
                     <motion.div
                       className="hidden md:flex flex-col justify-center pointer-events-auto"
