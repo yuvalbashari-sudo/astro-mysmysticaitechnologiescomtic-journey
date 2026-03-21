@@ -125,7 +125,6 @@ ${genderInstruction}
 ${data.gender ? `\nתזכורת: כתוב את כל התשובה בלשון ${isMale ? 'זכר' : 'נקבה'} בלבד מהמילה הראשונה ועד האחרונה.` : ''}`,
   };
   },
-  }),
 
   compatibility: (data) => {
     const has1Rising = !!data.sign1Rising;
