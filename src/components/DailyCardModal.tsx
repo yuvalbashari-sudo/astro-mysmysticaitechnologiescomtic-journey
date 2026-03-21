@@ -21,8 +21,7 @@ interface Props {
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
 const DAILY_USER_SEED_KEY = "astrologai_user_seed";
-const VIDEO_DURATION_MS = 15000; // fallback duration estimate
-const CARD_REVEAL_BEFORE_END_MS = 1500; // reveal card 1-1.5s before video ends
+const RITUAL_DURATION_MS = 4000; // duration of the card reveal ritual animation
 
 interface DailyCardData {
   card: TarotWorldCard;
@@ -117,7 +116,7 @@ const Particles = React.memo(() => (
   </div>
 ));
 
-type Phase = "ready" | "video" | "result" | "locked";
+type Phase = "ready" | "ritual" | "result" | "locked";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -132,7 +131,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [timeLeft, setTimeLeft] = useState("");
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [ritualStep, setRitualStep] = useState(0);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [showCardOverlay, setShowCardOverlay] = useState(false);
 
@@ -194,49 +193,29 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     const selectedCard = majorArcana[cardIndex];
     setCard(selectedCard);
     setShowCardOverlay(false);
-    setPhase("video");
+    setRitualStep(0);
+    setPhase("ritual");
   }, [t.daily_already_drawn]);
 
-  // Preload video asset when modal opens
+  // Ritual animation sequence (no video)
   useEffect(() => {
-    if (isOpen) {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "video";
-      link.href = "/videos/daily-tarot-ritual.mp4";
-      document.head.appendChild(link);
-      return () => { document.head.removeChild(link); };
-    }
-  }, [isOpen]);
+    if (phase !== "ritual" || !card) return;
 
-  // Explicitly play video when video phase starts + fallback timer
-  useEffect(() => {
-    if (phase !== "video" || !card) return;
-
-    // Small delay to let the video element mount
-    const playTimer = setTimeout(() => {
-      const v = videoRef.current;
-      if (v) {
-        v.currentTime = 0;
-        v.play().catch(() => {
-          // Autoplay truly blocked — skip to result
-          setPhase("result");
-          startAiReading(card);
-        });
-      }
-    }, 100);
-
-    const fallback = setTimeout(() => {
+    // Step 1: show shuffling text, Step 2: reveal card overlay
+    const step1 = setTimeout(() => setRitualStep(1), 800);
+    const step2 = setTimeout(() => {
       setShowCardOverlay(true);
-      setTimeout(() => {
-        setPhase("result");
-        startAiReading(card);
-      }, 2500);
-    }, VIDEO_DURATION_MS + 2000);
+      setRitualStep(2);
+    }, RITUAL_DURATION_MS - 1500);
+    const step3 = setTimeout(() => {
+      setPhase("result");
+      startAiReading(card);
+    }, RITUAL_DURATION_MS + 1000);
 
     return () => {
-      clearTimeout(playTimer);
-      clearTimeout(fallback);
+      clearTimeout(step1);
+      clearTimeout(step2);
+      clearTimeout(step3);
     };
   }, [phase, card]);
 
@@ -290,10 +269,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleClose = () => {
     onClose();
-    // Pause video if playing
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
     setTimeout(() => {
       if (phase !== "locked" && phase !== "result") {
         setCard(null);
@@ -396,57 +371,44 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* PHASE: Video ritual */}
-              {phase === "video" && card && (
+              {/* PHASE: Ritual (card reveal animation — no video) */}
+              {phase === "ritual" && card && (
                 <motion.div
-                  key="video"
+                  key="ritual"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="relative overflow-hidden rounded-2xl"
+                  className="relative overflow-hidden rounded-2xl flex flex-col items-center justify-center"
                   style={{ minHeight: 450 }}
                 >
-                  {/* Video background — visible */}
-                  <video
-                    src="/videos/daily-tarot-ritual.mp4"
-                    className="w-full h-full object-cover absolute inset-0"
-                    style={{ minHeight: 450 }}
-                    autoPlay
-                    playsInline
-                    muted
-                    preload="auto"
-                    ref={videoRef}
-                    onTimeUpdate={() => {
-                      const v = videoRef.current;
-                      if (v && v.duration) {
-                        const remaining = (v.duration - v.currentTime) * 1000;
-                        if (remaining <= CARD_REVEAL_BEFORE_END_MS) {
-                          setShowCardOverlay(true);
-                        }
-                      }
-                    }}
-                    onEnded={() => {
-                      setTimeout(() => {
-                        setPhase("result");
-                        if (card) startAiReading(card);
-                      }, 800);
-                    }}
-                    onError={() => {
-                      // Video failed — go straight to result
-                      setPhase("result");
-                      if (card) startAiReading(card);
-                    }}
-                  />
-
-                  {/* Dark gradient overlay for readability */}
-                  <div
+                  {/* Ambient glow background */}
+                  <motion.div
                     className="absolute inset-0 pointer-events-none"
                     style={{
-                      background: "linear-gradient(to bottom, transparent 30%, hsl(222 50% 3% / 0.7) 80%, hsl(222 50% 3% / 0.95) 100%)",
+                      background: "radial-gradient(ellipse 80% 70% at 50% 50%, hsl(var(--gold) / 0.06), hsl(var(--crimson) / 0.03), transparent)",
                     }}
+                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   />
 
-                  {/* Card reveal overlay — appears near video end */}
+                  {/* Floating particles during ritual */}
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={`rp-${i}`}
+                      className="absolute rounded-full pointer-events-none"
+                      style={{
+                        width: i % 2 === 0 ? 3 : 2,
+                        height: i % 2 === 0 ? 3 : 2,
+                        left: `${15 + Math.random() * 70}%`,
+                        top: `${20 + Math.random() * 60}%`,
+                        background: i % 2 === 0 ? "hsl(var(--gold) / 0.5)" : "hsl(var(--celestial) / 0.4)",
+                      }}
+                      animate={{ opacity: [0, 0.7, 0], y: [0, -(20 + Math.random() * 30)] }}
+                      transition={{ duration: 3 + Math.random() * 2, repeat: Infinity, delay: Math.random() * 2, ease: "easeOut" }}
+                    />
+                  ))}
+
+                  {/* Card reveal overlay — appears at ritual step 2 */}
                   <AnimatePresence>
                     {showCardOverlay && (
                       <motion.div
@@ -528,7 +490,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   {/* Loading text before card appears */}
                   {!showCardOverlay && (
                     <motion.div
-                      className="absolute bottom-8 left-0 right-0 z-10 text-center"
+                      className="relative z-10 text-center"
                       animate={{ opacity: [0.4, 1, 0.4] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     >
