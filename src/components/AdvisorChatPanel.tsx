@@ -344,7 +344,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="w-10 h-10 rounded-full flex items-center justify-center"
+                  className="w-12 h-12 rounded-full flex items-center justify-center"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                     boxShadow: "0 0 14px hsl(var(--gold) / 0.3)",
