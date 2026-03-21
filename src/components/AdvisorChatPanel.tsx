@@ -316,14 +316,14 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
               bottom: "5.5rem",
               right: dir === "rtl" ? "auto" : "1.25rem",
               left: dir === "rtl" ? "1.25rem" : "auto",
-              width: "min(340px, calc(100vw - 2rem))",
-              maxHeight: "min(480px, calc(100vh - 9rem))",
-              background: "linear-gradient(170deg, hsl(222 47% 9% / 0.88), hsl(222 47% 5% / 0.92))",
-              backdropFilter: "blur(24px) saturate(1.3)",
-              WebkitBackdropFilter: "blur(24px) saturate(1.3)",
-              border: "1px solid hsl(var(--gold) / 0.12)",
-              borderRadius: "1rem",
-              boxShadow: "0 12px 40px hsl(0 0% 0% / 0.45), 0 0 20px hsl(var(--gold) / 0.04), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+              width: "min(510px, calc(100vw - 2rem))",
+              maxHeight: "min(720px, calc(100vh - 7rem))",
+              background: "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
+              backdropFilter: "blur(28px) saturate(1.3)",
+              WebkitBackdropFilter: "blur(28px) saturate(1.3)",
+              border: "1px solid hsl(var(--gold) / 0.14)",
+              borderRadius: "1.25rem",
+              boxShadow: "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 24px hsl(var(--gold) / 0.05), inset 0 1px 0 hsl(var(--gold) / 0.07)",
             }}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -336,67 +336,67 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
           >
             {/* Header */}
             <div
-              className="flex items-center justify-between px-4 py-2.5 flex-shrink-0"
+              className="flex items-center justify-between px-6 py-4 flex-shrink-0"
               style={{
                 borderBottom: "1px solid hsl(var(--gold) / 0.08)",
                 background: "linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent)",
               }}
             >
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center"
+                  className="w-10 h-10 rounded-full flex items-center justify-center"
                   style={{
                     background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
-                    boxShadow: "0 0 10px hsl(var(--gold) / 0.25)",
+                    boxShadow: "0 0 14px hsl(var(--gold) / 0.3)",
                   }}
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-primary-foreground" />
+                  <Sparkles className="w-5 h-5 text-primary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-heading text-xs text-gold">{t.advisor_title}</h3>
+                  <h3 className="font-heading text-sm text-gold">{t.advisor_title}</h3>
                   {activeReading && (
-                    <p className="text-[10px] text-foreground/35 font-body leading-tight">{activeReading.label}</p>
+                    <p className="text-xs text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
                   )}
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="w-7 h-7 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
                 aria-label={t.a11y_close_modal}
               >
-                <X className="w-3.5 h-3.5 text-foreground/45" />
+                <X className="w-4.5 h-4.5 text-foreground/50" />
               </button>
             </div>
 
             {/* Messages */}
             <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto px-3.5 py-3 space-y-3 min-h-0"
+              className="flex-1 overflow-y-auto px-5 py-5 space-y-4 min-h-0"
               style={{ scrollBehavior: "smooth" }}
               role="log"
               aria-live="polite"
             >
               {messages.length === 0 && (
-                <div className="text-center py-5 space-y-2.5">
+                <div className="text-center py-8 space-y-3">
                   <div
-                    className="w-11 h-11 rounded-full flex items-center justify-center mx-auto"
+                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
                     style={{
                       background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
                       border: "1px solid hsl(var(--gold) / 0.12)",
                     }}
                   >
-                    <Sparkles className="w-5 h-5 text-gold/50" />
+                    <Sparkles className="w-7 h-7 text-gold/50" />
                   </div>
-                  <p className="text-foreground/40 font-body text-xs leading-relaxed max-w-[240px] mx-auto">
+                  <p className="text-foreground/40 font-body text-sm leading-relaxed max-w-[360px] mx-auto">
                     {welcomeMessage}
                   </p>
                   {activeReading && suggestions.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 justify-center mt-2">
+                    <div className="flex flex-wrap gap-2 justify-center mt-3">
                       {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
                           onClick={() => { setInput(suggestion); inputRef.current?.focus(); }}
-                          className="text-[11px] px-2.5 py-1 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          className="text-xs px-3 py-1.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",
@@ -477,11 +477,11 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
 
             {/* Input */}
             <div
-              className="flex-shrink-0 px-3.5 py-2.5"
+              className="flex-shrink-0 px-5 py-4"
               style={{ borderTop: "1px solid hsl(var(--gold) / 0.06)" }}
             >
               <div
-                className={`flex items-center gap-2 rounded-lg px-3 py-1.5 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+                className={`flex items-center gap-2.5 rounded-xl px-4 py-2.5 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
                 style={{
                   background: "hsl(var(--deep-blue-light) / 0.3)",
                   border: "1px solid hsl(var(--gold) / 0.08)",
@@ -494,14 +494,14 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   onKeyDown={handleKeyDown}
                   placeholder={placeholderText}
                   disabled={isStreaming || isLimitReached}
-                  className="flex-1 bg-transparent text-xs font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
+                  className="flex-1 bg-transparent text-sm font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
                   dir={dir}
                   aria-label={placeholderText}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isStreaming || isLimitReached}
-                  className="w-7 h-7 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
                   style={{
                     background: input.trim() ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))" : "transparent",
                   }}
