@@ -18,8 +18,8 @@ import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
-  const forecastAdvisorBaseSize = 64;
-  const forecastAdvisorScale = 1.5;
+  const forecastAdvisorBaseSize = 168;
+  const forecastAdvisorScale = 1;
   const t = useT();
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
