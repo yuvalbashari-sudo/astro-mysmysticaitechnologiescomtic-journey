@@ -387,7 +387,7 @@ const AdvisorChatPanel = ({ isOpen, onClose }: Props) => {
                   >
                     <Sparkles className="w-9 h-9 text-gold/50" />
                   </div>
-                  <p className="text-foreground/40 font-body text-sm leading-relaxed max-w-[360px] mx-auto">
+                  <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[500px] mx-auto">
                     {welcomeMessage}
                   </p>
                   {activeReading && suggestions.length > 0 && (
