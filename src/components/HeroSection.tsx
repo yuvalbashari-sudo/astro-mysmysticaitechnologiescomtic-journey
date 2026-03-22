@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import AstrologerIntroModal from "./AstrologerIntroModal";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
-import RisingSignModal from "./RisingSignModal";
+
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
