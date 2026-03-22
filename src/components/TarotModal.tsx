@@ -603,17 +603,18 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
 
                   {/* Tarot table cards */}
-                  <div className="relative z-30 flex items-center justify-center gap-3 sm:gap-5 mb-6 max-w-full overflow-hidden px-2">
+                  <div className="relative z-30 flex items-center justify-center gap-3 sm:gap-5 mb-6 max-w-full overflow-hidden px-2" style={{ maxHeight: "50vh" }}>
                     {tableCards.map((card, i) => {
                       const isFlipped = flippedIndices.has(i);
                       const isActive = activeRevealIndex === i;
-                      const cardW = tableCards.length === 1 ? 170 : 140;
-                      const cardH = tableCards.length === 1 ? 245 : 205;
+                      // Viewport-relative sizing: cards scale to fit available height
+                      const maxCardH = tableCards.length === 1 ? "min(245px, 40vh)" : "min(205px, 35vh)";
+                      const aspectRatio = 0.67; // width/height ratio for tarot cards
                       return (
                         <motion.div
                           key={i}
                           className="relative"
-                          style={{ perspective: 1000, width: cardW, height: cardH, zIndex: isActive ? 50 : isFlipped ? 10 : 5, cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default" }}
+                          style={{ perspective: 1000, width: `calc(${maxCardH} * ${aspectRatio})`, height: maxCardH, maxHeight: maxCardH, zIndex: isActive ? 50 : isFlipped ? 10 : 5, cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default", aspectRatio: `${aspectRatio}` }}
                           initial={{ opacity: 0, y: 40, rotate: (i - Math.floor(tableCards.length / 2)) * 6 }}
                           animate={{
                             opacity: 1,
