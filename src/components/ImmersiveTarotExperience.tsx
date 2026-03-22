@@ -1497,6 +1497,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           </div>
 
+          {/* Advisor chat panel */}
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
+
           {/* Persistent Astrologer avatar — always visible across all phases */}
           <AvatarHoverTeaser
             disabled={isMobile}
@@ -1521,6 +1524,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ filter: "brightness(1.15)", scale: 1.05 }}
+              onClick={() => setAdvisorOpen(true)}
             >
               <img
                 src={astrologerAvatarCta}
