@@ -54,6 +54,7 @@ function getSavedDailyCard(): { card: TarotWorldCard; date: string } | null {
 interface Props {
   isMobile: boolean;
   onOpenFullReading: () => void;
+  onAvatarClick: () => void;
 }
 
 const InlineDailyCard = ({ isMobile, onOpenFullReading }: Props) => {
