@@ -94,7 +94,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
           <motion.div className="rounded-xl p-5 cursor-pointer group transition-all duration-300" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.04), hsl(var(--gold) / 0.02))", border: "2px dashed hsl(var(--gold) / 0.2)" }} whileHover={{ scale: 1.01 }} onClick={() => fileRef.current?.click()}>
             <div className="flex flex-col items-center gap-2">
               <motion.div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.15)" }} animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3, repeat: Infinity }}><ImageIcon className="w-5 h-5 text-gold/60 group-hover:text-gold/80 transition-colors" /></motion.div>
-              <p className="text-foreground/50 font-body text-[11px]">{t.palm_upload_click}</p>
+              <p className="text-foreground/50 font-body text-[22px]">{t.palm_upload_click}</p>
             </div>
           </motion.div>
         )}
