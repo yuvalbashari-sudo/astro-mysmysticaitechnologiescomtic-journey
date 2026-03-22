@@ -323,7 +323,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
-      <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor>
+      <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor transparent>
             <AnimatePresence mode="wait">
               {/* PHASE: Ready */}
               {phase === "ready" && (
