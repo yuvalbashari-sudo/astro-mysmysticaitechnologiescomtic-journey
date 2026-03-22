@@ -3304,7 +3304,7 @@ const HeroSection = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.6, 1, 0.6] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        onClick={openUniverseMessage}
+        onClick={() => setDailyCardOpen(true)}
         whileTap={{ scale: 0.95 }}
       >
         <span className={`text-gold/80 font-body font-medium ${isMobile ? "text-base" : "text-2xl"} tracking-wide`}>
