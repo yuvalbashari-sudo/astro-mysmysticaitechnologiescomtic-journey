@@ -107,14 +107,13 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.95 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="fixed z-[70] overflow-y-auto rounded-xl border border-border shadow-2xl"
+              className="fixed z-[80] overflow-y-auto rounded-xl border border-border shadow-2xl"
               style={{
                 top: "102px",
                 left: "16px",
                 width: "min(400px, calc(100vw - 32px))",
                 maxHeight: "calc(100vh - 96px)",
-                background: "linear-gradient(145deg, hsl(222 40% 10% / 0.97), hsl(222 47% 8% / 0.97))",
-                backdropFilter: "blur(16px)",
+                background: "hsl(222 47% 8%)",
               }}
               role="dialog"
               aria-label={t.dashboard_title}
