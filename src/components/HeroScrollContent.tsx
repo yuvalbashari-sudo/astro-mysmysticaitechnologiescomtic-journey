@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
-import { Eye, Hand, Moon, Sparkles, Star } from "lucide-react";
+import { Eye, Hand, Sparkles, Star } from "lucide-react";
 import { useT } from "@/i18n";
 
 interface HeroScrollContentProps {
   onOpenForecast: () => void;
-  onOpenRising: () => void;
   onOpenCompatibility: () => void;
   onOpenTarot: () => void;
   onOpenPalm: () => void;
@@ -13,13 +12,11 @@ interface HeroScrollContentProps {
 const MOBILE_ACTIONS = [
   { key: "tarot", icon: Eye, color: "hsl(var(--crimson))" },
   { key: "compatibility", icon: Sparkles, color: "hsl(var(--gold))" },
-  { key: "rising", icon: Moon, color: "hsl(var(--celestial))" },
   { key: "palm", icon: Hand, color: "hsl(var(--gold-dark))" },
 ] as const;
 
 const HeroScrollContent = ({
   onOpenForecast,
-  onOpenRising,
   onOpenCompatibility,
   onOpenTarot,
   onOpenPalm,
@@ -29,8 +26,7 @@ const HeroScrollContent = ({
   const mobileActions = [
     { ...MOBILE_ACTIONS[0], label: t.hero_menu_tarot, action: onOpenTarot },
     { ...MOBILE_ACTIONS[1], label: t.hero_menu_compatibility, action: onOpenCompatibility },
-    { ...MOBILE_ACTIONS[2], label: t.hero_menu_rising, action: onOpenRising },
-    { ...MOBILE_ACTIONS[3], label: t.hero_menu_palm, action: onOpenPalm },
+    { ...MOBILE_ACTIONS[2], label: t.hero_menu_palm, action: onOpenPalm },
   ];
 
   return (

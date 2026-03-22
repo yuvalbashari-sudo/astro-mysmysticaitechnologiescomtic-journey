@@ -1,13 +1,13 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Eye, Hand } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import AstrologerIntroModal from "./AstrologerIntroModal";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
-import RisingSignModal from "./RisingSignModal";
+
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
@@ -76,7 +76,6 @@ const FORTUNE_MESSAGES: Record<Language, string[]> = {
 /* ── Energy colors per menu item ── */
 const ITEM_COLORS = [
   { glow: "hsl(43, 80%, 55%)", bg: "hsl(43, 80%, 55%)", label: "gold" },        // Forecast - gold
-  { glow: "hsl(215, 70%, 65%)", bg: "hsl(215, 70%, 65%)", label: "silver-blue" }, // Rising - silver blue
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
@@ -2093,7 +2092,7 @@ const HeroSection = () => {
   const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
-  const [risingOpen, setRisingOpen] = useState(false);
+  
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
   const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
@@ -2117,7 +2116,6 @@ const HeroSection = () => {
   const menuItems = useMemo(() => [
     { icon: Star, label: t.hero_menu_forecast, side: "left" as const, index: 0 },
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
-    { icon: Moon, label: t.hero_menu_rising, side: "left" as const, index: 2 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 1 },
   ], [t]);
@@ -2929,7 +2927,7 @@ const HeroSection = () => {
                 onBlur={() => setHoveredItem(null)}
                 whileHover={{ scale: 1.08, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
+                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setPalmOpen(true); }}
                 aria-label={item.label}
               >
                 <div
@@ -3051,8 +3049,8 @@ const HeroSection = () => {
               </motion.div>
             </motion.button>
 
-            {[menuItems[0], menuItems[2]].map((item, idx) => {
-              const i = item === menuItems[0] ? 0 : 2;
+            {[menuItems[0]].map((item, idx) => {
+              const i = 0;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
@@ -3069,7 +3067,7 @@ const HeroSection = () => {
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: 4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 2) setRisingOpen(true); }}
+                  onClick={() => setForecastOpen(true)}
                   aria-label={item.label}
                 >
                   <div
@@ -3209,8 +3207,8 @@ const HeroSection = () => {
               </motion.div>
             </motion.button>
 
-            {[menuItems[4]].map((item, idx) => {
-              const i = 4;
+            {[menuItems[3]].map((item, idx) => {
+              const i = 3;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
@@ -3521,7 +3519,6 @@ const HeroSection = () => {
     <>
       {heroLayer}
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
-      <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
