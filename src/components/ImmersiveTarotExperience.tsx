@@ -741,7 +741,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           style={{ color: `hsl(${opt.color})` }}
                         >
                           {opt.icon}
-                          <span className="font-heading text-base md:text-xl tracking-wide">
+                          <span className="font-heading text-xl md:text-2xl tracking-wide">
                             {opt.label}
                           </span>
                         </div>
