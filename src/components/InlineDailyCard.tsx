@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Sun, Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Sparkles, Star } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n/LanguageContext";
@@ -73,206 +73,243 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
   }, []);
 
   const handleDraw = useCallback(() => {
-    if (drawn) {
-      onOpenFullReading();
-      return;
-    }
+    if (drawn) return; // already drawn, don't re-draw
     const idx = getDailyCardIndex(majorArcana.length);
     const selectedCard = majorArcana[idx];
     setCard(selectedCard);
     setDrawn(true);
     setTimeout(() => setFlipped(true), 600);
-  }, [drawn, onOpenFullReading]);
+  }, [drawn]);
 
   const cardImage = card ? tarotCardImages[card.name] : null;
-  const cardW = isMobile ? 48 : 64;
-  const cardH = cardW * 1.5;
 
-  const avatarSize = isMobile ? 40 : 48;
+  // ── COLLAPSED STATE: compact bar to draw the card ──
+  if (!flipped) {
+    const cardW = isMobile ? 48 : 64;
+    const cardH = cardW * 1.5;
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 3, duration: 0.8 }}
+        className="relative rounded-2xl backdrop-blur-xl pointer-events-auto cursor-pointer"
+        style={{
+          padding: isMobile ? "8px 12px" : "12px 18px",
+          background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.82), hsl(var(--deep-blue) / 0.88))",
+          border: "1px solid hsl(var(--gold) / 0.18)",
+          boxShadow: "0 4px 24px hsl(var(--deep-blue) / 0.5), 0 0 20px hsl(var(--gold) / 0.06)",
+        }}
+        onClick={handleDraw}
+        whileHover={{
+          scale: 1.03,
+          boxShadow: "0 4px 30px hsl(var(--deep-blue) / 0.5), 0 0 30px hsl(var(--gold) / 0.12)",
+        }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <div className="flex items-center gap-3">
+          {/* Card back thumbnail */}
+          <div
+            className="relative flex-shrink-0 rounded-lg overflow-hidden"
+            style={{
+              width: cardW,
+              height: cardH,
+              border: "1px solid hsl(var(--gold) / 0.25)",
+              boxShadow: "0 2px 10px hsl(var(--deep-blue) / 0.4)",
+            }}
+          >
+            <img src={cardBack} alt="" className="w-full h-full object-cover" />
+          </div>
+
+          {/* Text */}
+          <div className="flex flex-col items-start gap-0.5 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <Sun
+                className="flex-shrink-0"
+                style={{
+                  width: isMobile ? 12 : 14,
+                  height: isMobile ? 12 : 14,
+                  color: "hsl(var(--gold))",
+                }}
+              />
+              <span
+                className="font-heading tracking-wider"
+                style={{ color: "hsl(var(--gold))", fontSize: isMobile ? 11 : 13 }}
+              >
+                {t.daily_title}
+              </span>
+            </div>
+            <span
+              className="font-body"
+              style={{ color: "hsl(var(--foreground) / 0.6)", fontSize: isMobile ? 10 : 11 }}
+            >
+              {t.daily_cta}
+            </span>
+            <motion.div
+              className="flex items-center gap-1"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Sparkles style={{ width: 10, height: 10, color: "hsl(var(--gold) / 0.4)" }} />
+              <span className="font-body" style={{ color: "hsl(var(--gold) / 0.4)", fontSize: 9 }}>
+                {t.daily_note}
+              </span>
+            </motion.div>
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // ── EXPANDED STATE: compact vertical card with meaning ──
+  if (!card) return null;
+
+  const expandedCardW = isMobile ? 100 : 130;
+  const expandedCardH = expandedCardW * 1.5;
+  const avatarSize = isMobile ? 36 : 42;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 3, duration: 0.8 }}
-      className="relative rounded-2xl backdrop-blur-xl pointer-events-auto cursor-pointer"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="relative rounded-2xl backdrop-blur-xl pointer-events-auto"
       style={{
-        padding: isMobile ? "8px 12px" : "12px 18px",
-        paddingRight: isMobile ? 52 : 64,
-        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.82), hsl(var(--deep-blue) / 0.88))",
-        border: "1px solid hsl(var(--gold) / 0.18)",
-        boxShadow: "0 4px 24px hsl(var(--deep-blue) / 0.5), 0 0 20px hsl(var(--gold) / 0.06)",
+        padding: isMobile ? "14px 16px 14px 16px" : "18px 22px 18px 22px",
+        maxWidth: isMobile ? 260 : 300,
+        width: "auto",
+        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.85), hsl(var(--deep-blue) / 0.92))",
+        border: "1px solid hsl(var(--gold) / 0.2)",
+        boxShadow: "0 8px 40px hsl(var(--deep-blue) / 0.6), 0 0 30px hsl(var(--gold) / 0.06)",
       }}
-      onClick={handleDraw}
-      whileHover={{
-        scale: 1.03,
-        boxShadow: "0 4px 30px hsl(var(--deep-blue) / 0.5), 0 0 30px hsl(var(--gold) / 0.12)",
-      }}
-      whileTap={{ scale: 0.98 }}
     >
-      <div className="flex items-center gap-3">
-        {/* Card thumbnail with flip */}
-        <div
-          className="relative flex-shrink-0"
-          style={{ width: cardW, height: cardH, perspective: 600 }}
+      {/* Title */}
+      <div className="flex items-center gap-1.5 mb-2">
+        <Sun
+          className="flex-shrink-0"
+          style={{ width: isMobile ? 12 : 14, height: isMobile ? 12 : 14, color: "hsl(var(--gold))" }}
+        />
+        <span
+          className="font-heading tracking-wider"
+          style={{ color: "hsl(var(--gold))", fontSize: isMobile ? 11 : 12 }}
         >
-          <motion.div
-            style={{
-              width: "100%",
-              height: "100%",
-              transformStyle: "preserve-3d",
-            }}
-            animate={{ rotateY: flipped ? 180 : 0 }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-          >
-            {/* Back face */}
-            <div
-              className="absolute inset-0 rounded-lg overflow-hidden"
-              style={{
-                backfaceVisibility: "hidden",
-                border: "1px solid hsl(var(--gold) / 0.25)",
-                boxShadow: "0 2px 10px hsl(var(--deep-blue) / 0.4)",
-              }}
-            >
-              <img src={cardBack} alt="" className="w-full h-full object-cover" />
-            </div>
-            {/* Front face */}
-            <div
-              className="absolute inset-0 rounded-lg overflow-hidden"
-              style={{
-                backfaceVisibility: "hidden",
-                transform: "rotateY(180deg)",
-                border: "1px solid hsl(var(--gold) / 0.3)",
-                boxShadow: "0 0 15px hsl(var(--gold) / 0.15)",
-              }}
-            >
-              {cardImage && (
-                <img
-                  src={cardImage}
-                  alt={card?.hebrewName || ""}
-                  className="w-full h-full object-cover"
-                />
-              )}
-            </div>
-          </motion.div>
-
-          {/* Glow after flip */}
-          {flipped && (
-            <motion.div
-              className="absolute -inset-1 rounded-xl pointer-events-none"
-              initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0, 0.4, 0.15],
-                boxShadow: [
-                  "0 0 10px hsl(var(--gold) / 0.1)",
-                  "0 0 25px hsl(var(--gold) / 0.25)",
-                  "0 0 10px hsl(var(--gold) / 0.1)",
-                ],
-              }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              style={{
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent 70%)",
-              }}
-            />
-          )}
-        </div>
-
-        {/* Text content */}
-        <div className="flex flex-col items-start gap-0.5 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <Sun
-              className="flex-shrink-0"
-              style={{
-                width: isMobile ? 12 : 14,
-                height: isMobile ? 12 : 14,
-                color: "hsl(var(--gold))",
-              }}
-            />
-            <span
-              className="font-heading tracking-wider"
-              style={{
-                color: "hsl(var(--gold))",
-                fontSize: isMobile ? 11 : 13,
-              }}
-            >
-              {t.daily_title}
-            </span>
-          </div>
-
-          {flipped && card ? (
-            <>
-              <span
-                className="font-heading"
-                style={{
-                  color: "hsl(var(--gold-light))",
-                  fontSize: isMobile ? 13 : 15,
-                  textShadow: "0 0 12px hsl(var(--gold) / 0.2)",
-                }}
-              >
-                {card.symbol} {card.hebrewName}
-              </span>
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
-                className="font-body"
-                style={{
-                  color: "hsl(var(--gold) / 0.55)",
-                  fontSize: isMobile ? 9 : 10,
-                  textDecoration: "underline",
-                  textUnderlineOffset: 2,
-                }}
-              >
-                {t.hero_open_full_reading} ✦
-              </motion.span>
-            </>
-          ) : (
-            <>
-              <span
-                className="font-body"
-                style={{
-                  color: "hsl(var(--foreground) / 0.6)",
-                  fontSize: isMobile ? 10 : 11,
-                }}
-              >
-                {t.daily_cta}
-              </span>
-              <motion.div
-                className="flex items-center gap-1"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                <Sparkles
-                  style={{
-                    width: 10,
-                    height: 10,
-                    color: "hsl(var(--gold) / 0.4)",
-                  }}
-                />
-                <span
-                  className="font-body"
-                  style={{
-                    color: "hsl(var(--gold) / 0.4)",
-                    fontSize: 9,
-                  }}
-                >
-                  {t.daily_note}
-                </span>
-              </motion.div>
-            </>
-          )}
-        </div>
+          {t.daily_title}
+        </span>
       </div>
 
-      {/* Avatar anchored bottom-right inside the daily card */}
+      {/* Card + name stack */}
+      <div className="flex flex-col items-center">
+        {/* Revealed card */}
+        <motion.div
+          className="relative rounded-xl overflow-hidden"
+          style={{
+            width: expandedCardW,
+            height: expandedCardH,
+            border: "2px solid hsl(var(--gold) / 0.3)",
+            boxShadow: "0 0 20px hsl(var(--gold) / 0.12), 0 8px 30px hsl(var(--deep-blue) / 0.5)",
+          }}
+          initial={{ rotateY: 90, opacity: 0 }}
+          animate={{ rotateY: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+        >
+          {cardImage ? (
+            <img
+              src={cardImage}
+              alt={card.hebrewName}
+              className="w-full h-full object-contain"
+              style={{ background: "hsl(var(--deep-blue))" }}
+            />
+          ) : (
+            <div
+              className="w-full h-full flex items-center justify-center"
+              style={{ background: "hsl(var(--deep-blue))" }}
+            >
+              <span className="text-3xl">{card.symbol}</span>
+            </div>
+          )}
+          {/* Shimmer */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.15) 50%, transparent 70%)",
+            }}
+            animate={{ x: ["-100%", "200%"] }}
+            transition={{ duration: 3, repeat: Infinity, repeatDelay: 4 }}
+          />
+          {/* Glow ring */}
+          <motion.div
+            className="absolute -inset-px rounded-xl pointer-events-none"
+            animate={{
+              boxShadow: [
+                "0 0 8px hsl(var(--gold) / 0.1)",
+                "0 0 18px hsl(var(--gold) / 0.2)",
+                "0 0 8px hsl(var(--gold) / 0.1)",
+              ],
+            }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+
+        {/* Card name */}
+        <motion.h3
+          className="font-heading gold-gradient-text text-center mt-2"
+          style={{ fontSize: isMobile ? 15 : 18 }}
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          {card.symbol} {card.hebrewName}
+        </motion.h3>
+
+        {/* Short meaning */}
+        <motion.p
+          className="font-body text-center mt-1 leading-snug"
+          style={{
+            color: "hsl(var(--foreground) / 0.55)",
+            fontSize: isMobile ? 10 : 11,
+            maxWidth: isMobile ? 200 : 240,
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          {card.meanings.daily}
+        </motion.p>
+
+        {/* CTA button */}
+        <motion.button
+          className="mt-3 flex items-center gap-1.5 rounded-full font-body cursor-pointer"
+          style={{
+            padding: isMobile ? "6px 14px" : "7px 18px",
+            fontSize: isMobile ? 11 : 12,
+            background: "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.08))",
+            border: "1px solid hsl(var(--gold) / 0.3)",
+            color: "hsl(var(--gold))",
+          }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onOpenFullReading();
+          }}
+          whileHover={{ scale: 1.05, boxShadow: "0 0 16px hsl(var(--gold) / 0.15)" }}
+          whileTap={{ scale: 0.96 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+        >
+          <Star style={{ width: 12, height: 12 }} />
+          {t.hero_open_full_reading}
+        </motion.button>
+      </div>
+
+      {/* Avatar anchored bottom-right */}
       <motion.button
         type="button"
         className="absolute pointer-events-auto cursor-pointer flex items-center justify-center bg-transparent border-0 outline-none appearance-none group"
         style={{
           width: avatarSize,
           height: avatarSize,
-          bottom: isMobile ? 6 : 8,
-          right: isMobile ? 6 : 10,
+          bottom: isMobile ? -14 : -16,
+          right: isMobile ? -10 : -14,
         }}
         onClick={(e) => {
           e.stopPropagation();
@@ -281,15 +318,20 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
         whileHover={{ filter: "brightness(1.15)", scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         aria-label="שיחה עם האסטרולוגית"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1.1 }}
       >
         <motion.div
           className="relative rounded-full overflow-hidden"
           style={{
             width: "100%",
             height: "100%",
-            boxShadow: "0 2px 12px hsl(270 60% 45% / 0.3), 0 0 16px hsl(200 70% 50% / 0.12), 0 0 4px hsl(var(--gold) / 0.15)",
+            boxShadow:
+              "0 2px 10px hsl(270 60% 45% / 0.3), 0 0 12px hsl(200 70% 50% / 0.1), 0 0 4px hsl(var(--gold) / 0.15)",
+            border: "1.5px solid hsl(var(--gold) / 0.25)",
           }}
-          animate={{ y: [0, -1.5, 0] }}
+          animate={{ y: [0, -1, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         >
           <img
