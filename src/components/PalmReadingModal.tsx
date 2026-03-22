@@ -12,6 +12,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -36,6 +37,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const rightCameraRef = useRef<HTMLInputElement>(null);
   const leftCameraRef = useRef<HTMLInputElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [avatarHovered, setAvatarHovered] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -120,14 +123,52 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
                   <div className="absolute inset-0" key="input-desktop">
+                    {/* Advisor chat panel */}
+                    <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+
                     {/* Top-right avatar */}
                     <motion.div
-                      className="absolute pointer-events-auto z-10"
+                      className="absolute pointer-events-auto z-10 cursor-pointer"
                       style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                      onMouseEnter={() => setAvatarHovered(true)}
+                      onMouseLeave={() => setAvatarHovered(false)}
+                      onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
                     >
+                      {/* Hover teaser tooltip */}
+                      <AnimatePresence>
+                        {avatarHovered && (
+                          <motion.div
+                            className="absolute pointer-events-none z-[200]"
+                            style={{
+                              right: "calc(100% + 10px)",
+                              bottom: 12,
+                              whiteSpace: "nowrap",
+                              padding: "12px 20px",
+                              borderRadius: 12,
+                              background: "hsl(222 47% 8% / 0.75)",
+                              backdropFilter: "blur(14px)",
+                              WebkitBackdropFilter: "blur(14px)",
+                              border: "1px solid hsl(var(--gold) / 0.18)",
+                              boxShadow: "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
+                              direction: "rtl",
+                            }}
+                            initial={{ opacity: 0, scale: 0.92, x: 4 }}
+                            animate={{ opacity: 1, scale: 1, x: 0 }}
+                            exit={{ opacity: 0, scale: 0.92, x: 4 }}
+                            transition={{ duration: 0.15, ease: "easeOut" }}
+                          >
+                            <p className="font-body" style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: "hsl(var(--foreground) / 0.8)" }}>
+                              רוצים הכוונה?{" "}
+                              <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
+                            </p>
+                            <div className="absolute" style={{ right: -4, bottom: 14, transform: "rotate(45deg)", width: 8, height: 8, background: "hsl(222 47% 8% / 0.75)", border: "1px solid hsl(var(--gold) / 0.18)", borderBottom: "none", borderLeft: "none" }} />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
                       <div
                         className="w-full h-full rounded-full overflow-hidden"
                         style={{
