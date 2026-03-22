@@ -124,7 +124,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                   /* ── Desktop: form on RIGHT side ── */
                   <div className="absolute inset-0" key="input-desktop">
                     {/* Advisor chat panel */}
-                    <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+                    <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} forceRightAnchor />
 
                     {/* Avatar — click only, no hover teaser */}
                     <motion.div
