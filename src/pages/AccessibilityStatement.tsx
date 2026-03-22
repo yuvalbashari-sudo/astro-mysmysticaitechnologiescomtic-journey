@@ -66,24 +66,24 @@ const AccessibilityStatement = () => {
       </div>
 
       <main id="main-content" className="max-w-2xl mx-auto px-6 py-12">
-        <h1 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-8">
+        <h1 className="font-heading text-7xl md:text-8xl gold-gradient-text mb-10 leading-tight">
           {t.a11y_statement_title}
         </h1>
 
-        <div className="space-y-8 font-body text-foreground/80 leading-relaxed">
+        <div className="space-y-10 font-body text-foreground/80" style={{ fontSize: "1.875rem", lineHeight: "2.8rem" }}>
           {t.a11y_statement_intro.split("\n").map((line, i) => (
             <p key={i}>{line}</p>
           ))}
 
           {t.a11y_statement_standards && (
-            <p className="text-gold/70 text-sm">{t.a11y_statement_standards}</p>
+            <p className="text-gold/70" style={{ fontSize: "1.5rem", lineHeight: "2.2rem" }}>{t.a11y_statement_standards}</p>
           )}
 
           <section>
-            <h2 className="font-heading text-xl text-gold mb-4">
+            <h2 className="font-heading text-gold mb-6" style={{ fontSize: "2.5rem", lineHeight: "3rem" }}>
               {t.a11y_statement_features_title}
             </h2>
-            <ul className="space-y-3" role="list">
+            <ul className="space-y-4" role="list">
               {features.map((feature, i) => (
                 <li key={i} className="flex items-start gap-3">
                   <span className="text-gold/60 mt-1" aria-hidden="true">✦</span>
@@ -94,7 +94,7 @@ const AccessibilityStatement = () => {
           </section>
 
           <section>
-            <h2 className="font-heading text-xl text-gold mb-4">
+            <h2 className="font-heading text-gold mb-6" style={{ fontSize: "2.5rem", lineHeight: "3rem" }}>
               {t.a11y_statement_contact_title}
             </h2>
             <p>{t.a11y_statement_contact_text}</p>
@@ -102,7 +102,8 @@ const AccessibilityStatement = () => {
               href="https://wa.me/972500000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 mt-4 text-sm text-gold hover:text-gold-light transition-colors"
+              className="inline-flex items-center gap-2 mt-4 text-gold hover:text-gold-light transition-colors"
+              style={{ fontSize: "1.5rem" }}
               aria-label={t.a11y_whatsapp_contact}
             >
               💬 WhatsApp
@@ -110,7 +111,7 @@ const AccessibilityStatement = () => {
           </section>
 
           {t.a11y_statement_last_updated && (
-            <p className="text-xs text-muted-foreground pt-6 border-t border-border">
+            <p className="text-muted-foreground pt-8 border-t border-border" style={{ fontSize: "1.25rem", lineHeight: "1.8rem" }}>
               {t.a11y_statement_last_updated}
             </p>
           )}
