@@ -109,7 +109,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="fixed z-[70] overflow-y-auto rounded-xl border border-border shadow-2xl"
               style={{
-                top: "72px",
+                top: "102px",
                 left: "16px",
                 width: "min(400px, calc(100vw - 32px))",
                 maxHeight: "calc(100vh - 96px)",
