@@ -303,8 +303,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                             <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.palm_loading}</motion.p>
                           </div>
                         )}
-                        {!aiLoading && (aiText || aiError) && (
-                          <ShareResultSection symbol="✋" title={`${t.palm_title} — ${name}`} />
+                        {!aiLoading && aiText && (
+                          renderResultActions(false)
                         )}
                       </div>
                     </motion.div>
