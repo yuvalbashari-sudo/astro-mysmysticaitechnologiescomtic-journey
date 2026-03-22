@@ -3346,16 +3346,16 @@ const HeroSection = () => {
     <AnimatePresence>
       {isUniverseMessageOpen && (
         <motion.div
-          className="fixed inset-0 z-[80] flex items-center justify-end pointer-events-auto"
+          className="fixed inset-0 z-[80] flex items-center justify-start pointer-events-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           onClick={closeUniverseMessage}
           style={{
-            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.55) 0%, hsl(var(--deep-blue) / 0.8) 60%, hsl(222 47% 3% / 0.92) 100%)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
+            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.5) 0%, hsl(var(--deep-blue) / 0.75) 60%, hsl(222 47% 3% / 0.88) 100%)",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
           }}
         >
           {/* Central radial glow */}
@@ -3431,14 +3431,14 @@ const HeroSection = () => {
             style={{
               maxWidth: isMobile ? 340 : 420,
               width: isMobile ? "90%" : 420,
-              marginRight: isMobile ? "auto" : 0,
-              marginLeft: isMobile ? "auto" : 100,
+              marginRight: isMobile ? "auto" : 80,
+              marginLeft: isMobile ? "auto" : 0,
               padding: isMobile ? "36px 24px" : "48px 40px",
-              background: "linear-gradient(160deg, hsl(var(--deep-blue) / 0.85) 0%, hsl(222 47% 4% / 0.9) 100%)",
-              border: "1px solid hsl(var(--gold) / 0.12)",
-              boxShadow: "0 8px 60px hsl(var(--deep-blue) / 0.6), 0 0 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
+              background: "linear-gradient(160deg, hsl(var(--deep-blue) / 0.92) 0%, hsl(222 47% 4% / 0.96) 100%)",
+              border: "1px solid hsl(var(--gold) / 0.15)",
+              boxShadow: "0 8px 60px hsl(var(--deep-blue) / 0.7), 0 0 1px hsl(var(--gold) / 0.2), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+              backdropFilter: "blur(24px)",
+              WebkitBackdropFilter: "blur(24px)",
               marginTop: isMobile ? 0 : 20,
             }}
             initial={{ opacity: 0, y: 40, scale: 0.85 }}
