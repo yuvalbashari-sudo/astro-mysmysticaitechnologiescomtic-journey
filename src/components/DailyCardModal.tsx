@@ -22,7 +22,7 @@ interface Props {
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
 const DAILY_USER_SEED_KEY = "astrologai_user_seed";
-const RITUAL_DURATION_MS = 5500; // duration of the card awakening ritual
+const RITUAL_DURATION_MS = 4200;
 
 interface DailyCardData {
   card: TarotWorldCard;
