@@ -871,6 +871,37 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       />
                     ))}
                   </motion.div>
+
+                  {/* Astrologer avatar — bottom right */}
+                  <motion.div
+                    className="absolute flex items-center justify-center"
+                    style={{
+                      bottom: isMobile ? 16 : 32,
+                      right: isMobile ? 16 : 40,
+                      zIndex: 20,
+                    }}
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <div
+                      className="rounded-full overflow-hidden"
+                      style={{
+                        width: isMobile ? 64 : 90,
+                        height: isMobile ? 64 : 90,
+                        border: "2px solid hsl(var(--gold) / 0.4)",
+                        boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 8px 20px hsl(0 0% 0% / 0.4)",
+                      }}
+                    >
+                      <img
+                        src={astrologerAvatarCta}
+                        alt="האסטרולוגית"
+                        className="w-full h-full object-cover scale-105"
+                        style={{ objectPosition: "center 35%" }}
+                        draggable={false}
+                      />
+                    </div>
+                  </motion.div>
                 </motion.div>
               )}
 
