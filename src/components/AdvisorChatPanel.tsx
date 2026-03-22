@@ -319,12 +319,16 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               left: forceRightAnchor ? "auto" : dir === "rtl" ? "1.25rem" : "auto",
               width: forceRightAnchor ? "min(685px, calc(100vw - 2rem - 80px))" : "min(765px, calc(100vw - 2rem))",
               maxHeight: "min(1080px, calc(100vh - 7rem))",
-              background: "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
-              backdropFilter: "blur(28px) saturate(1.3)",
-              WebkitBackdropFilter: "blur(28px) saturate(1.3)",
-              border: "1px solid hsl(var(--gold) / 0.14)",
+              background: forceRightAnchor
+                ? "linear-gradient(170deg, hsl(222 47% 9% / 0.55), hsl(222 47% 5% / 0.60))"
+                : "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
+              backdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
+              WebkitBackdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
+              border: forceRightAnchor ? "1px solid hsl(var(--gold) / 0.2)" : "1px solid hsl(var(--gold) / 0.14)",
               borderRadius: "1.25rem",
-              boxShadow: "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 24px hsl(var(--gold) / 0.05), inset 0 1px 0 hsl(var(--gold) / 0.07)",
+              boxShadow: forceRightAnchor
+                ? "0 8px 32px hsl(0 0% 0% / 0.3), 0 0 16px hsl(var(--gold) / 0.04)"
+                : "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 24px hsl(var(--gold) / 0.05), inset 0 1px 0 hsl(var(--gold) / 0.07)",
             }}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
