@@ -2884,7 +2884,7 @@ const HeroSection = () => {
       {!isMobile && entranceComplete && (
         <div className="fixed z-[30] pointer-events-none" style={{ bottom: 100, right: 48 }}>
           <AstrologerAvatarButton
-            size={72}
+            size={108}
             onClick={() => setAstrologerOpen(true)}
             entranceDelay={0.5}
           />
