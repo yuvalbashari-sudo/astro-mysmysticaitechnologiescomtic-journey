@@ -100,7 +100,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm"
+              className="fixed inset-0 z-[9998] bg-background/80 backdrop-blur-sm"
               onClick={() => closePanel()}
             />
 
@@ -110,7 +110,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "-100%", opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[70] w-full max-w-md bg-card border-r border-border overflow-y-auto shadow-2xl"
+              className="fixed inset-y-0 left-0 z-[9999] w-full max-w-md bg-card border-r border-border overflow-y-auto shadow-2xl"
               role="dialog"
               aria-label={t.dashboard_title}
             >
