@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
-import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand } from "lucide-react";
+import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand, AlertTriangle } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
 
 const typeIcons: Record<string, typeof Star> = {
@@ -23,6 +23,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
   const { language, dir } = useLanguage();
   const [readings, setReadings] = useState<SavedReading[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   const typeLabels: Record<string, string> = {
     forecast: t.readings_type_forecast,
@@ -41,6 +42,12 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
   const handleDelete = (id: string) => {
     readingsStorage.remove(id);
     setReadings(readingsStorage.getAll());
+  };
+
+  const handleClearAll = () => {
+    readingsStorage.clearAll();
+    setReadings([]);
+    setConfirmClear(false);
   };
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -65,6 +72,67 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
               </div>
             ) : (
               <div className="space-y-3">
+                {/* Clear All button + confirmation */}
+                <div className="flex justify-end mb-1">
+                  <AnimatePresence mode="wait">
+                    {confirmClear ? (
+                      <motion.div
+                        key="confirm"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className="flex items-center gap-2 rounded-xl px-4 py-2.5"
+                        style={{
+                          background: "hsl(var(--deep-blue-light) / 0.6)",
+                          border: "1px solid hsl(var(--crimson) / 0.2)",
+                        }}
+                      >
+                        <AlertTriangle className="w-3.5 h-3.5 text-crimson-light/70 flex-shrink-0" />
+                        <span className="text-foreground/60 font-body text-[11px]">האם למחוק את כל ההיסטוריה?</span>
+                        <button
+                          onClick={handleClearAll}
+                          className="text-[11px] font-body px-3 py-1 rounded-lg transition-colors"
+                          style={{
+                            background: "hsl(var(--crimson) / 0.15)",
+                            color: "hsl(var(--crimson-light))",
+                            border: "1px solid hsl(var(--crimson) / 0.25)",
+                          }}
+                        >
+                          אישור
+                        </button>
+                        <button
+                          onClick={() => setConfirmClear(false)}
+                          className="text-[11px] font-body px-3 py-1 rounded-lg text-foreground/40 hover:text-foreground/60 transition-colors"
+                          style={{
+                            background: "hsl(var(--deep-blue-light) / 0.4)",
+                            border: "1px solid hsl(var(--gold) / 0.08)",
+                          }}
+                        >
+                          ביטול
+                        </button>
+                      </motion.div>
+                    ) : (
+                      <motion.button
+                        key="clear-btn"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setConfirmClear(true)}
+                        className="flex items-center gap-1.5 text-[11px] font-body px-3 py-1.5 rounded-lg transition-colors"
+                        style={{
+                          color: "hsl(var(--crimson-light) / 0.5)",
+                          border: "1px solid hsl(var(--crimson) / 0.1)",
+                        }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        מחק את כל ההיסטוריה
+                      </motion.button>
+                    )}
+                  </AnimatePresence>
+                </div>
+
                 <AnimatePresence>
                   {readings.map((reading, i) => {
                     const IconComp = typeIcons[reading.type] || Star;
