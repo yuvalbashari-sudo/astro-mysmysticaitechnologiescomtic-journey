@@ -3207,8 +3207,8 @@ const HeroSection = () => {
               </motion.div>
             </motion.button>
 
-            {[menuItems[4]].map((item, idx) => {
-              const i = 4;
+            {[menuItems[3]].map((item, idx) => {
+              const i = 3;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
