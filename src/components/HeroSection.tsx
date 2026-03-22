@@ -3342,100 +3342,198 @@ const HeroSection = () => {
       </motion.button>
     )}
 
-    {/* ── Fortune / Message from the Universe overlay ── */}
+    {/* ── Fortune / Message from the Universe — Premium Cinematic ── */}
     <AnimatePresence>
       {isUniverseMessageOpen && (
         <motion.div
-          className="fixed inset-0 z-[80] flex items-center justify-center pointer-events-auto cursor-pointer"
+          className="fixed inset-0 z-[80] flex items-center justify-center pointer-events-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           onClick={closeUniverseMessage}
           style={{
-            background: "radial-gradient(ellipse at 50% 50%, hsl(var(--deep-blue) / 0.65) 0%, hsl(var(--deep-blue) / 0.85) 100%)",
-            backdropFilter: "blur(6px)",
-            WebkitBackdropFilter: "blur(6px)",
+            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.7) 0%, hsl(var(--deep-blue) / 0.92) 60%, hsl(222 47% 3% / 0.97) 100%)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
           }}
         >
-          {/* Mystical glow behind message */}
+          {/* Central radial glow */}
           <motion.div
-            className="absolute rounded-full pointer-events-none"
+            className="absolute pointer-events-none"
             style={{
-              width: isMobile ? 280 : 450,
-              height: isMobile ? 280 : 450,
-              background: "radial-gradient(circle, hsl(var(--gold) / 0.12) 0%, hsl(var(--celestial) / 0.06) 40%, transparent 70%)",
+              width: isMobile ? 350 : 600,
+              height: isMobile ? 350 : 600,
+              borderRadius: "50%",
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, hsl(var(--celestial) / 0.06) 30%, hsl(270 50% 40% / 0.04) 50%, transparent 70%)",
             }}
-            animate={{ scale: [1, 1.15, 1], opacity: [0.5, 0.9, 0.5] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            initial={{ scale: 0.3, opacity: 0 }}
+            animate={{ scale: [1, 1.08, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
 
-          {/* Fortune message card */}
+          {/* Warm pulse */}
           <motion.div
-            className="relative text-center px-6"
-            style={{ maxWidth: isMobile ? 320 : 480 }}
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            className="absolute pointer-events-none"
+            style={{
+              width: isMobile ? 200 : 340,
+              height: isMobile ? 200 : 340,
+              borderRadius: "50%",
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.15) 0%, transparent 60%)",
+              filter: "blur(40px)",
+            }}
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.7, 0.3] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          />
+
+          {/* Floating light particles */}
+          {[...Array(isMobile ? 8 : 18)].map((_, i) => (
+            <motion.div
+              key={`up-${i}`}
+              className="absolute rounded-full pointer-events-none"
+              style={{
+                width: i % 4 === 0 ? 3 : i % 3 === 0 ? 2 : 1.5,
+                height: i % 4 === 0 ? 3 : i % 3 === 0 ? 2 : 1.5,
+                left: `${15 + Math.random() * 70}%`,
+                top: `${20 + Math.random() * 60}%`,
+                background: i % 3 === 0
+                  ? "hsl(var(--gold) / 0.6)"
+                  : i % 2 === 0
+                    ? "hsl(var(--celestial) / 0.4)"
+                    : "hsl(270 60% 70% / 0.35)",
+              }}
+              animate={{
+                opacity: [0, 0.7, 0],
+                y: [0, -(20 + Math.random() * 40)],
+                x: [(Math.random() - 0.5) * 15],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 3,
+                ease: "easeOut",
+              }}
+            />
+          ))}
+
+          {/* Outer vignette */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, hsl(222 47% 3% / 0.6) 100%)",
+            }}
+          />
+
+          {/* Content */}
+          <motion.div
+            className="relative text-center px-6 flex flex-col items-center"
+            style={{ maxWidth: isMobile ? 360 : 560 }}
+            initial={{ opacity: 0, y: 40, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Decorative top */}
+            {/* Top label */}
             <motion.div
-              className="mb-4"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="mb-8"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
             >
-              <span className="text-gold/60 font-heading text-xs tracking-[0.3em] uppercase">
-                {language === "he" ? "✦ מסר מהיקום ✦" : language === "ar" ? "✦ رسالة من الكون ✦" : language === "ru" ? "✦ Послание Вселенной ✦" : "✦ Message from the Universe ✦"}
+              <span
+                className="font-heading tracking-[0.35em] uppercase"
+                style={{
+                  fontSize: isMobile ? 11 : 13,
+                  color: "hsl(var(--gold) / 0.6)",
+                  textShadow: "0 0 15px hsl(var(--gold) / 0.2)",
+                }}
+              >
+                {language === "he" ? "מסר מהיקום ✨" : language === "ar" ? "رسالة من الكون ✨" : language === "ru" ? "Послание Вселенной ✨" : "Message from the Universe ✨"}
               </span>
             </motion.div>
 
-            {/* Glowing orb icon */}
+            {/* Gold line separator */}
             <motion.div
-              className="mx-auto mb-5"
+              className="mb-8"
               style={{
-                width: isMobile ? 48 : 60,
-                height: isMobile ? 48 : 60,
-                borderRadius: "50%",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.25) 0%, hsl(var(--gold) / 0.08) 60%, transparent 100%)",
-                boxShadow: "0 0 30px hsl(var(--gold) / 0.2), 0 0 60px hsl(var(--gold) / 0.1)",
+                width: isMobile ? 60 : 90,
+                height: 1,
+                background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.5), transparent)",
               }}
-              animate={{
-                boxShadow: [
-                  "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.08)",
-                  "0 0 40px hsl(43 80% 55% / 0.3), 0 0 80px hsl(43 80% 55% / 0.15)",
-                  "0 0 20px hsl(43 80% 55% / 0.15), 0 0 40px hsl(43 80% 55% / 0.08)",
-                ],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <div className="w-full h-full flex items-center justify-center text-2xl">🔮</div>
-            </motion.div>
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.8, ease: "easeOut" }}
+            />
 
-            {/* The message */}
+            {/* Main message */}
             <motion.p
-              className="font-body text-foreground/90 leading-relaxed mb-6"
-              style={{ fontSize: isMobile ? 18 : 22, textShadow: "0 0 20px hsl(var(--gold) / 0.15)" }}
+              className="font-body leading-[1.9] mb-4"
+              style={{
+                fontSize: isMobile ? 24 : 34,
+                fontWeight: 500,
+                color: "hsl(var(--foreground) / 0.95)",
+                textShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 2px 10px hsl(var(--deep-blue) / 0.5)",
+                maxWidth: isMobile ? 300 : 480,
+              }}
               dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.8 }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 1, ease: [0.16, 1, 0.3, 1] }}
             >
               {fortuneMessage}
             </motion.p>
 
-            {/* Dismiss hint */}
-            <motion.span
-              className="text-muted-foreground/40 font-body text-xs cursor-pointer"
+            {/* Secondary line */}
+            <motion.p
+              className="font-body mb-10"
+              style={{
+                fontSize: isMobile ? 13 : 15,
+                color: "hsl(var(--muted-foreground) / 0.5)",
+              }}
+              dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.2 }}
+              transition={{ delay: 1.4, duration: 0.8 }}
+            >
+              {language === "he" ? "הקשיבו לאותות סביבכם" : language === "ar" ? "استمعوا للإشارات حولكم" : language === "ru" ? "Прислушайтесь к знакам вокруг вас" : "Listen to the signs around you"}
+            </motion.p>
+
+            {/* Premium CTA */}
+            <motion.button
+              type="button"
+              className="relative overflow-hidden font-body font-bold tracking-wider cursor-pointer"
+              style={{
+                padding: isMobile ? "14px 40px" : "16px 52px",
+                fontSize: isMobile ? 15 : 17,
+                borderRadius: 12,
+                background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
+                color: "hsl(var(--deep-blue))",
+                boxShadow: "0 4px 30px hsl(var(--gold) / 0.3), 0 0 60px hsl(var(--gold) / 0.08)",
+                border: "none",
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{
+                boxShadow: "0 6px 40px hsl(43 80% 55% / 0.5), 0 0 80px hsl(43 80% 55% / 0.15)",
+                y: -2,
+              }}
+              whileTap={{ scale: 0.97 }}
               onClick={closeUniverseMessage}
             >
-              {language === "he" ? "לחצו לסגירה" : language === "ar" ? "انقر للإغلاق" : language === "ru" ? "Нажмите, чтобы закрыть" : "Tap to close"}
-            </motion.span>
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)",
+                  backgroundSize: "200% 100%",
+                }}
+                animate={{ backgroundPosition: ["-100% 0", "200% 0"] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear", delay: 2 }}
+              />
+              {language === "he" ? "המשיכו" : language === "ar" ? "تابعوا" : language === "ru" ? "Продолжить" : "Continue"}
+            </motion.button>
           </motion.div>
         </motion.div>
       )}
