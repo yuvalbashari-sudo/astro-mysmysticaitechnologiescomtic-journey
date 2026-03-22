@@ -358,7 +358,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               ) : hasResult ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone ── */
-                  <div className="absolute inset-0 relative">
+                  <div className="absolute inset-0" style={{ position: "relative" }}>
                     {/* LEFT: Interpretation */}
                     <motion.div
                       ref={scrollRef}
