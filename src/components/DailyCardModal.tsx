@@ -429,7 +429,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Gender Selection */}
                     <motion.div
-                      className="w-full max-w-[260px] mb-9"
+                      className="w-full max-w-[360px] mb-9"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
