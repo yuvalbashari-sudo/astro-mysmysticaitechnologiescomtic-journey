@@ -2880,6 +2880,17 @@ const HeroSection = () => {
         </div>
       </div>
 
+      {/* ── Astrologer Avatar — desktop only ── */}
+      {!isMobile && entranceComplete && (
+        <div className="fixed z-[30] pointer-events-none" style={{ bottom: 100, right: 48 }}>
+          <AstrologerAvatarButton
+            size={72}
+            onClick={() => setAstrologerOpen(true)}
+            entranceDelay={0.5}
+          />
+        </div>
+      )}
+
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
     <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
