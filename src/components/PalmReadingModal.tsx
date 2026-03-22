@@ -77,9 +77,78 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => { if (aiLoading && scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [aiText, aiLoading]);
 
-  const handleShare = () => { const text = `✋ ${t.readings_type_palm}\n\n🔮 ${window.location.origin}`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank"); };
-  const handleCopy = async () => { if (!aiText) return; await navigator.clipboard.writeText(`✋ ${t.readings_type_palm} — ${name}\n\n${aiText}`); setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000); };
+  const palmResultText = aiText.trim();
+  const shareActionLabel = language === "he" ? "שתפו" : t.forecast_share;
+  const copyActionLabel = language === "he" ? "העתיקו תוצאה" : t.share_copy;
+  const copiedToastLabel = language === "he" ? "התוצאה הועתקה" : t.share_copy_toast;
 
+  const handleShare = async () => {
+    if (!palmResultText) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${t.readings_type_palm} — ${name}`,
+          text: palmResultText,
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+
+    await navigator.clipboard.writeText(palmResultText);
+    toast(copiedToastLabel);
+  };
+
+  const handleCopy = async () => {
+    if (!palmResultText) return;
+    await navigator.clipboard.writeText(palmResultText);
+    setCopied(true);
+    toast(copiedToastLabel);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const renderResultActions = (compact = false) => (
+    <motion.div
+      className={`flex items-center justify-center gap-3 flex-wrap ${compact ? "mt-6" : "mt-8"}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.8 }}
+    >
+      <motion.button
+        onClick={handleShare}
+        className={`flex items-center gap-2 ${compact ? "px-5 py-2.5 text-sm" : "px-6 py-3 text-base"} rounded-full font-body`}
+        style={{
+          background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))",
+          border: "1px solid hsl(142 70% 45% / 0.3)",
+          color: "hsl(142 70% 60%)",
+          backdropFilter: "blur(8px)",
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        <Share2 className={compact ? "w-4 h-4" : "w-5 h-5"} />
+        {shareActionLabel}
+      </motion.button>
+
+      <motion.button
+        onClick={handleCopy}
+        className={`flex items-center gap-2 ${compact ? "px-5 py-2.5 text-sm" : "px-6 py-3 text-base"} rounded-full font-body`}
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+          border: "1px solid hsl(var(--gold) / 0.2)",
+          color: "hsl(var(--gold))",
+          backdropFilter: "blur(8px)",
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        {copied ? <Check className={compact ? "w-4 h-4" : "w-5 h-5"} /> : <Copy className={compact ? "w-4 h-4" : "w-5 h-5"} />}
+        {copied ? copiedToastLabel : copyActionLabel}
+      </motion.button>
+    </motion.div>
+  );
   const renderHandUpload = (side: "right" | "left", image: string | null, setImage: (v: string | null) => void, fileRef: React.RefObject<HTMLInputElement>, cameraRef: React.RefObject<HTMLInputElement>) => {
     const label = side === "right" ? t.palm_right_label : t.palm_left_label;
     const emoji = side === "right" ? "🤚" : "✋";
