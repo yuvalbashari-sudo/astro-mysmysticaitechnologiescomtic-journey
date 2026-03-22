@@ -784,10 +784,24 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       : (language === "he" ? "הקלפים נבחרו ✦" : "Cards chosen ✦")}
                   </motion.div>
                   <motion.div
-                    className="text-foreground/30 font-body text-xs mb-6"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: selectedCardIndices.size < 3 ? 0.7 : 0 }}
-                    transition={{ delay: 0.5, duration: 0.3 }}
+                    className="font-heading font-bold tracking-wider"
+                    style={{
+                      fontSize: isMobile ? "1.5rem" : "2.2rem",
+                      color: "hsl(var(--gold))",
+                      textShadow: "0 0 30px hsl(var(--gold) / 0.4), 0 0 60px hsl(var(--gold) / 0.15)",
+                      letterSpacing: "0.08em",
+                    }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{
+                      opacity: selectedCardIndices.size < 3 ? 1 : 0,
+                      scale: 1,
+                      textShadow: [
+                        "0 0 30px hsl(43 80% 55% / 0.4), 0 0 60px hsl(43 80% 55% / 0.15)",
+                        "0 0 40px hsl(43 80% 55% / 0.6), 0 0 80px hsl(43 80% 55% / 0.25)",
+                        "0 0 30px hsl(43 80% 55% / 0.4), 0 0 60px hsl(43 80% 55% / 0.15)",
+                      ],
+                    }}
+                    transition={{ delay: 0.5, duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
                     {language === "he" ? "הקשיבו לאינטואיציה" : "Listen to your intuition"}
                   </motion.div>
