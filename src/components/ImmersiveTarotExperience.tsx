@@ -418,7 +418,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     },
     {
       key: "general",
-      icon: <Sparkles className="w-6 h-6" />,
+      icon: <Sparkles className="w-9 h-9" />,
       label: language === "he" ? "כללי" : language === "ar" ? "عام" : language === "ru" ? "Общее" : "General",
       color: "270 50% 60%",
     },
