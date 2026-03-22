@@ -143,8 +143,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                           <motion.div
                             className="absolute pointer-events-none z-[200]"
                             style={{
-                              right: "calc(100% + 10px)",
-                              bottom: 12,
+                              bottom: "calc(100% + 10px)",
+                              right: 0,
                               whiteSpace: "nowrap",
                               padding: "12px 20px",
                               borderRadius: 12,
@@ -155,16 +155,16 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                               boxShadow: "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
                               direction: "rtl",
                             }}
-                            initial={{ opacity: 0, scale: 0.92, x: 4 }}
-                            animate={{ opacity: 1, scale: 1, x: 0 }}
-                            exit={{ opacity: 0, scale: 0.92, x: 4 }}
+                            initial={{ opacity: 0, scale: 0.92, y: 4 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.92, y: 4 }}
                             transition={{ duration: 0.15, ease: "easeOut" }}
                           >
                             <p className="font-body" style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: "hsl(var(--foreground) / 0.8)" }}>
                               רוצים הכוונה?{" "}
                               <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
                             </p>
-                            <div className="absolute" style={{ right: -4, bottom: 14, transform: "rotate(45deg)", width: 8, height: 8, background: "hsl(222 47% 8% / 0.75)", border: "1px solid hsl(var(--gold) / 0.18)", borderBottom: "none", borderLeft: "none" }} />
+                            <div className="absolute" style={{ right: 24, bottom: -4, transform: "rotate(45deg)", width: 8, height: 8, background: "hsl(222 47% 8% / 0.75)", border: "1px solid hsl(var(--gold) / 0.18)", borderTop: "none", borderLeft: "none" }} />
                           </motion.div>
                         )}
                       </AnimatePresence>
