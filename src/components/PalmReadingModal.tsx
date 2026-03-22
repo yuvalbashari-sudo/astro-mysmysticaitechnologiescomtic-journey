@@ -117,12 +117,12 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const isDesktopInput = !isMobile && !submitted && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor={isDesktopInput}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor>
             <AnimatePresence mode="wait">
               {!submitted && !isLoading ? (
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
-                  <div className="relative w-full h-full" key="input-desktop">
+                  <div className="absolute inset-0" key="input-desktop">
                     {/* Top-right avatar with teaser & advisor */}
                     <AvatarHoverTeaser
                       disabled={false}
