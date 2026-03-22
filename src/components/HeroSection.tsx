@@ -2883,7 +2883,7 @@ const HeroSection = () => {
       {/* ── Astrologer Avatar — desktop only ── */}
       {!isMobile && entranceComplete && (
         <motion.div
-          className="absolute z-[30] pointer-events-none"
+          className="fixed z-[30] pointer-events-none"
           style={{
             bottom: 10,
             right: 10,
@@ -2897,6 +2897,7 @@ const HeroSection = () => {
             size={132}
             onClick={() => setAstrologerOpen(true)}
             entranceDelay={0.6}
+            className="relative"
           />
         </motion.div>
       )}
