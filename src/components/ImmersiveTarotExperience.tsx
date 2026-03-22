@@ -400,25 +400,25 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const questionOptions = useMemo((): QuestionOption[] => [
     {
       key: "love",
-      icon: <Heart className="w-6 h-6" />,
+      icon: <Heart className="w-9 h-9" />,
       label: language === "he" ? "אהבה" : language === "ar" ? "الحب" : language === "ru" ? "Любовь" : "Love",
       color: "340 60% 55%",
     },
     {
       key: "career",
-      icon: <Briefcase className="w-6 h-6" />,
+      icon: <Briefcase className="w-9 h-9" />,
       label: language === "he" ? "קריירה" : language === "ar" ? "المهنة" : language === "ru" ? "Карьера" : "Career",
       color: "215 60% 55%",
     },
     {
       key: "money",
-      icon: <DollarSign className="w-6 h-6" />,
+      icon: <DollarSign className="w-9 h-9" />,
       label: language === "he" ? "כסף" : language === "ar" ? "المال" : language === "ru" ? "Деньги" : "Money",
       color: "43 80% 55%",
     },
     {
       key: "general",
-      icon: <Sparkles className="w-6 h-6" />,
+      icon: <Sparkles className="w-9 h-9" />,
       label: language === "he" ? "כללי" : language === "ar" ? "عام" : language === "ru" ? "Общее" : "General",
       color: "270 50% 60%",
     },
@@ -711,12 +711,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {language === "he" ? "על מה תרצה לקבל מסר?" : language === "ar" ? "ما الذي تريد معرفته؟" : language === "ru" ? "О чём вы хотите узнать?" : "What would you like guidance on?"}
                   </motion.h2>
 
-                  <div className="grid grid-cols-2 gap-3 md:gap-4">
+                  <div className="grid grid-cols-2 gap-5 md:gap-6">
                     {questionOptions.map((opt, i) => (
                       <motion.button
                         key={opt.key}
                         type="button"
-                        className="relative rounded-xl p-4 md:p-5 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
+                        className="relative rounded-xl p-6 md:p-8 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
                         style={{
                           background: selectedQuestion === opt.key
                             ? `linear-gradient(145deg, hsl(${opt.color} / 0.2), hsl(${opt.color} / 0.08))`
@@ -737,11 +737,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         onClick={() => handleQuestionSelect(opt.key)}
                       >
                         <div
-                          className="flex flex-col items-center gap-2"
+                          className="flex flex-col items-center gap-3"
                           style={{ color: `hsl(${opt.color})` }}
                         >
                           {opt.icon}
-                          <span className="font-heading text-sm md:text-base tracking-wide">
+                          <span className="font-heading text-base md:text-xl tracking-wide">
                             {opt.label}
                           </span>
                         </div>
