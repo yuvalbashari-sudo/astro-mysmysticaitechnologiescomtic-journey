@@ -299,10 +299,10 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       <div className="space-y-2">
                         {profile.compatibilityHistory.slice(0, 3).map((entry, i) => (
                           <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/30">
-                            <span className="text-sm text-foreground font-body">
+                            <span className="text-lg text-foreground font-body">
                               {entry.partnerSymbol} {entry.partnerSign}
                             </span>
-                            <span className={`text-sm font-heading ${entry.score >= 70 ? "text-green-400" : entry.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
+                            <span className={`text-lg font-heading ${entry.score >= 70 ? "text-green-400" : entry.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
                               {entry.score}%
                             </span>
                           </div>
