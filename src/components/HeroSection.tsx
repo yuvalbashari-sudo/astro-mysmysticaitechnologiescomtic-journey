@@ -3427,7 +3427,7 @@ const HeroSection = () => {
 
           {/* Content */}
           <motion.div
-            className="relative text-center px-6 flex flex-col items-center"
+            className="relative text-center px-6 flex flex-col items-center justify-center"
             style={{ maxWidth: isMobile ? 360 : 560 }}
             initial={{ opacity: 0, y: 40, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -3437,7 +3437,7 @@ const HeroSection = () => {
           >
             {/* Top label */}
             <motion.div
-              className="mb-8"
+              className="mb-5"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
@@ -3456,7 +3456,7 @@ const HeroSection = () => {
 
             {/* Gold line separator */}
             <motion.div
-              className="mb-8"
+              className="mb-6"
               style={{
                 width: isMobile ? 60 : 90,
                 height: 1,
@@ -3469,7 +3469,7 @@ const HeroSection = () => {
 
             {/* Main message */}
             <motion.p
-              className="font-body leading-[1.9] mb-4"
+              className="font-body leading-[1.9] mb-5"
               style={{
                 fontSize: isMobile ? 24 : 34,
                 fontWeight: 500,
@@ -3487,7 +3487,7 @@ const HeroSection = () => {
 
             {/* Secondary line */}
             <motion.p
-              className="font-body mb-10"
+              className="font-body mb-8"
               style={{
                 fontSize: isMobile ? 13 : 15,
                 color: "hsl(var(--muted-foreground) / 0.5)",
