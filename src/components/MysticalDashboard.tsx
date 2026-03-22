@@ -174,9 +174,9 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       <div className="grid grid-cols-2 gap-4">
                         {profile.zodiacSign && (
                           <div className="text-center p-3 rounded-lg bg-background/50">
-                            <span className="text-2xl block mb-1">{profile.zodiacSymbol}</span>
-                            <span className="text-sm font-heading text-foreground block">{profile.zodiacSign}</span>
-                            <span className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-1">
+                            <span className="text-3xl block mb-1">{profile.zodiacSymbol}</span>
+                            <span className="text-lg font-heading text-foreground block">{profile.zodiacSign}</span>
+                            <span className="text-base text-muted-foreground flex items-center justify-center gap-1 mt-1">
                               {profile.zodiacElement && ELEMENT_ICONS[profile.zodiacElement] && (() => {
                                 const Icon = ELEMENT_ICONS[profile.zodiacElement!];
                                 return <Icon className="w-3 h-3" />;
