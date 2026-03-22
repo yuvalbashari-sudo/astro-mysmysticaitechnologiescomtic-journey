@@ -99,7 +99,9 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
             <div
               className="fixed inset-0 z-[119]"
               style={{ background: "transparent", pointerEvents: "all" }}
-              onClick={(e) => { e.stopPropagation(); closePanel(); }}
+              onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); closePanel(); }}
+              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              onMouseUp={(e) => { e.preventDefault(); e.stopPropagation(); }}
             />
 
             {/* Compact floating panel */}
