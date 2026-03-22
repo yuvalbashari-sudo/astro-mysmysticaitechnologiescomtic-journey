@@ -338,7 +338,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 >
                   {/* ── Premium container ── */}
                   <div
-                    className="relative z-10 w-full max-w-[420px] rounded-[28px] px-10 py-14 md:px-12 md:py-16 flex flex-col items-center"
+                    className="relative z-10 w-full max-w-[840px] rounded-[28px] px-10 py-14 md:px-12 md:py-16 flex flex-col items-center"
                     style={{
                       background: "linear-gradient(175deg, hsl(222 40% 10% / 0.94), hsl(222 45% 6% / 0.97))",
                       border: "1px solid hsl(var(--gold) / 0.1)",
@@ -776,7 +776,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0, y: 12 }}
                   className="px-4 pb-10 pt-6 md:px-0 md:pb-16 md:pt-8"
                 >
-                  <div className="mx-auto w-full max-w-[420px]">
+                  <div className="mx-auto w-full max-w-[840px]">
                     <motion.div
                       className="relative rounded-[28px] overflow-visible"
                       style={{
