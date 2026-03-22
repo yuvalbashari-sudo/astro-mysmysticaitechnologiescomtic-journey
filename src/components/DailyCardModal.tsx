@@ -384,7 +384,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Title */}
                     <motion.h2
-                      className="font-heading text-[2.6rem] md:text-[3.2rem] leading-tight mb-3"
+                      className="font-heading text-[2rem] md:text-[2.4rem] leading-tight mb-3"
                       style={{
                         color: "hsl(var(--gold))",
                         textShadow: "0 2px 20px hsl(var(--gold) / 0.2)",
@@ -411,7 +411,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Subtitle */}
                     <motion.p
-                      className="text-foreground/60 font-body text-[17px] md:text-[19px] max-w-[700px] leading-[1.7] mb-1.5"
+                      className="text-foreground/60 font-body text-[15px] md:text-base max-w-[300px] leading-[1.7] mb-1.5"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.2 }}
@@ -419,7 +419,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       {t.daily_desc}
                     </motion.p>
                     <motion.p
-                      className="text-foreground/30 font-body text-[13px] mb-9"
+                      className="text-foreground/30 font-body text-[11px] mb-9"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.25 }}
@@ -429,19 +429,19 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Gender Selection */}
                     <motion.div
-                      className="w-full max-w-[360px] mb-9"
+                      className="w-full max-w-[260px] mb-9"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <label className="block text-[13px] text-gold/45 font-body mb-3 tracking-[0.12em] uppercase">{t.forecast_gender_label}</label>
+                      <label className="block text-[11px] text-gold/45 font-body mb-3 tracking-[0.12em] uppercase">{t.forecast_gender_label}</label>
                       <div className="flex gap-2">
                         {(["male", "female"] as const).map((g) => (
                           <motion.button
                             key={g}
                             type="button"
                             onClick={() => setGender(g)}
-                            className="flex-1 py-3.5 rounded-xl font-body text-[15px] transition-all duration-200"
+                            className="flex-1 py-3 rounded-xl font-body text-[13px] transition-all duration-200"
                             style={{
                               background: gender === g
                                 ? "linear-gradient(145deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))"
@@ -508,7 +508,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     {/* CTA Button */}
                     <motion.button
                       onClick={handleDraw}
-                      className="relative font-body flex items-center justify-center gap-2.5 text-[17px] px-12 py-4 rounded-full overflow-hidden font-medium tracking-wide"
+                      className="relative font-body flex items-center justify-center gap-2.5 text-[15px] px-9 py-3.5 rounded-full overflow-hidden font-medium tracking-wide"
                       style={{
                         background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                         color: "hsl(var(--primary-foreground))",
