@@ -292,7 +292,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       transition={{ delay: 0.4 }}
                       className="rounded-xl bg-muted/50 border border-border p-5"
                     >
-                      <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
+                      <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
                         <Heart className="w-4 h-4" />
                         {t.dashboard_compatibility}
                       </h3>
