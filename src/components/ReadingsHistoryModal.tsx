@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
-import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand } from "lucide-react";
+import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand, AlertTriangle } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
 
 const typeIcons: Record<string, typeof Star> = {
