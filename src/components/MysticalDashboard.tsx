@@ -95,22 +95,27 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[60] bg-background/80 backdrop-blur-sm"
+            {/* Click-away layer (transparent, no dimming) */}
+            <div
+              className="fixed inset-0 z-[60]"
               onClick={() => closePanel()}
             />
 
-            {/* Panel */}
+            {/* Compact floating panel */}
             <motion.div
-              initial={{ x: "-100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "-100%", opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[70] w-full max-w-md bg-card border-r border-border overflow-y-auto shadow-2xl"
+              initial={{ opacity: 0, y: -12, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.95 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="fixed z-[70] overflow-y-auto rounded-xl border border-border shadow-2xl"
+              style={{
+                top: "72px",
+                right: "16px",
+                width: "min(400px, calc(100vw - 32px))",
+                maxHeight: "calc(100vh - 96px)",
+                background: "linear-gradient(145deg, hsl(222 40% 10% / 0.97), hsl(222 47% 8% / 0.97))",
+                backdropFilter: "blur(16px)",
+              }}
               role="dialog"
               aria-label={t.dashboard_title}
             >
