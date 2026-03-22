@@ -80,7 +80,6 @@ const ITEM_COLORS = [
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
-  { glow: "hsl(280, 70%, 65%)", bg: "hsl(280, 70%, 65%)", label: "violet" },     // Daily Card - mystical violet
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
