@@ -207,8 +207,8 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     className="grid grid-cols-3 gap-3"
                   >
                     <div className="text-center p-4 rounded-xl bg-muted/50 border border-border">
-                      <span className="text-2xl font-heading text-primary block">{profile.totalReadings}</span>
-                      <span className="text-xs text-muted-foreground">{t.dashboard_readings}</span>
+                      <span className="text-3xl font-heading text-primary block">{profile.totalReadings}</span>
+                      <span className="text-base text-muted-foreground">{t.dashboard_readings}</span>
                     </div>
                     <div className="text-center p-4 rounded-xl bg-muted/50 border border-border">
                       <span className="text-2xl font-heading text-primary block">{topCards.length}</span>
