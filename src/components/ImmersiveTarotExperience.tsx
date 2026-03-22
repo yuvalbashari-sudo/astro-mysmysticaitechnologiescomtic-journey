@@ -412,7 +412,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     },
     {
       key: "money",
-      icon: <DollarSign className="w-6 h-6" />,
+      icon: <DollarSign className="w-9 h-9" />,
       label: language === "he" ? "כסף" : language === "ar" ? "المال" : language === "ru" ? "Деньги" : "Money",
       color: "43 80% 55%",
     },
