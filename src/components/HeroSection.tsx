@@ -3456,7 +3456,7 @@ const HeroSection = () => {
 
             {/* Gold line separator */}
             <motion.div
-              className="mb-8"
+              className="mb-6"
               style={{
                 width: isMobile ? 60 : 90,
                 height: 1,
