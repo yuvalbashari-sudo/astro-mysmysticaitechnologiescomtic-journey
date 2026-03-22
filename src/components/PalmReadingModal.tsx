@@ -143,7 +143,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                           <motion.div
                             className="absolute pointer-events-none z-[200]"
                             style={{
-                              bottom: "calc(100% + 10px)",
+                              bottom: "calc(100% + 30px)",
                               right: 0,
                               whiteSpace: "nowrap",
                               padding: "12px 20px",
