@@ -215,8 +215,8 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       <span className="text-base text-muted-foreground">{t.dashboard_unique_cards}</span>
                     </div>
                     <div className="text-center p-4 rounded-xl bg-muted/50 border border-border">
-                      <span className="text-2xl font-heading text-primary block">{daysSinceFirst || 1}</span>
-                      <span className="text-xs text-muted-foreground">{t.dashboard_days}</span>
+                      <span className="text-3xl font-heading text-primary block">{daysSinceFirst || 1}</span>
+                      <span className="text-base text-muted-foreground">{t.dashboard_days}</span>
                     </div>
                   </motion.div>
 
