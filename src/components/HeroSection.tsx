@@ -2098,7 +2098,7 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
-  const [dailyCardOpen, setDailyCardOpen] = useState(false);
+  
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
   const [zodiacSignIndex, setZodiacSignIndex] = useState<number | null>(null);
