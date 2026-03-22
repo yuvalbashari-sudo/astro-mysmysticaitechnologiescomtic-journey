@@ -148,6 +148,31 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     </motion.div>
   );
 
+  const renderPalmAdvisorLayer = () => (
+    <>
+      <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} forceRightAnchor />
+
+      <motion.div
+        className="absolute pointer-events-auto z-10 cursor-pointer"
+        style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+        onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
+      >
+        <div
+          className="w-full h-full rounded-full overflow-hidden"
+          style={{
+            boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+            border: "2px solid hsl(var(--gold) / 0.35)",
+          }}
+        >
+          <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
+        </div>
+      </motion.div>
+    </>
+  );
+
   const renderHandUpload = (side: "right" | "left", image: string | null, setImage: (v: string | null) => void, fileRef: React.RefObject<HTMLInputElement>, cameraRef: React.RefObject<HTMLInputElement>) => {
     const label = side === "right" ? t.palm_right_label : t.palm_left_label;
     const emoji = side === "right" ? "🤚" : "✋";
@@ -185,34 +210,13 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const isDesktopInput = !isMobile && !submitted && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor={isDesktopInput}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor={isDesktopInput || isDesktopResult}>
       <AnimatePresence mode="wait">
         {!submitted && !isLoading ? (
           isDesktopInput ? (
             /* ── Desktop: form on RIGHT side ── */
             <div className="absolute inset-0" key="input-desktop">
-              {/* Advisor chat panel */}
-              <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} forceRightAnchor />
-
-              {/* Avatar — click only, no hover teaser */}
-              <motion.div
-                className="absolute pointer-events-auto z-10 cursor-pointer"
-                style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-                onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
-              >
-                <div
-                  className="w-full h-full rounded-full overflow-hidden"
-                  style={{
-                    boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
-                    border: "2px solid hsl(var(--gold) / 0.35)",
-                  }}
-                >
-                  <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
-                </div>
-              </motion.div>
+              {renderPalmAdvisorLayer()}
 
               {/* Form panel — LEFT side */}
               <motion.div
@@ -305,6 +309,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                   )}
                 </div>
               </motion.div>
+
+              {renderPalmAdvisorLayer()}
 
               {/* RIGHT: Palm images */}
               <motion.div
