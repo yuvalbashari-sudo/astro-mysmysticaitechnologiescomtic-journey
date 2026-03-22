@@ -100,7 +100,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9998] bg-background/80 backdrop-blur-sm"
+              className="fixed inset-0 z-[9998] bg-background/95 backdrop-blur-md"
               onClick={() => closePanel()}
             />
 
