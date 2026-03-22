@@ -318,13 +318,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  const tableCardColumnHeight = tableCards.length === 1
-    ? "clamp(16rem, calc(100vh - 24rem), 22rem)"
-    : "clamp(22rem, calc(100vh - 23rem), 34rem)";
-
-  const tableCardColumnGap = tableCards.length > 1
-    ? "clamp(0.75rem, 1.5vh, 1rem)"
-    : "0px";
+  // No pre-calculated vars needed — cards sized via CSS in the container
 
   return (
     <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
@@ -610,33 +604,50 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {t.tarot_table_hint}
                   </motion.p>
 
-                  {/* Tarot table cards */}
-                  <div className="relative z-30 w-full max-w-full overflow-hidden px-2 md:px-4 mb-6 flex items-center justify-center">
+                  {/* Tarot table cards — rebuilt with proper viewport-fitting layout */}
+                  <div className="relative z-30 w-full overflow-hidden px-2 md:px-4 mb-6 flex items-center justify-center">
+                    {/* 
+                      Container height = 100vh minus top chrome (~11rem) and bottom chrome (~7rem).
+                      Cards split this evenly with gaps accounted for.
+                    */}
                     <div
-                      className="w-full max-w-[16rem] md:max-w-[18rem] flex flex-col items-center justify-between overflow-hidden"
+                      className="flex flex-col items-center gap-3"
                       style={{
-                        height: tableCardColumnHeight,
-                        maxHeight: tableCardColumnHeight,
-                        gap: tableCardColumnGap,
+                        height: `calc(100vh - 18rem)`,
+                        maxHeight: `calc(100vh - 18rem)`,
+                        width: "100%",
+                        maxWidth: "12rem",
                       }}
                     >
                       {tableCards.map((card, i) => {
                         const isFlipped = flippedIndices.has(i);
                         const isActive = activeRevealIndex === i;
+                        const cardCount = tableCards.length;
+                        // Each card gets equal share of remaining height after gaps
+                        // gap-3 = 0.75rem, (cardCount-1) gaps
+                        const flexBasis = `calc((100% - ${(cardCount - 1) * 0.75}rem) / ${cardCount})`;
 
                         return (
                           <div
                             key={i}
-                            className="relative w-full flex-1 min-h-0 max-h-full flex items-center justify-center"
-                            style={{ zIndex: isActive ? 50 : isFlipped ? 10 : 5 }}
+                            className="relative flex items-center justify-center"
+                            style={{
+                              flex: `0 0 ${flexBasis}`,
+                              height: flexBasis,
+                              maxHeight: flexBasis,
+                              minHeight: 0,
+                              width: "100%",
+                              zIndex: isActive ? 50 : isFlipped ? 10 : 5,
+                            }}
                           >
+                            {/* Card wrapper — height 100% of slot, width derived from aspect ratio */}
                             <motion.div
-                              className="relative h-full max-h-full min-h-0"
+                              className="relative"
                               style={{
-                                perspective: 1000,
+                                height: "100%",
                                 aspectRatio: "2 / 3",
-                                width: "auto",
                                 maxWidth: "100%",
+                                perspective: 1000,
                                 cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default",
                               }}
                               initial={{ opacity: 0, y: 24 }}
@@ -682,7 +693,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                       transition={{ duration: 1.2, delay: pi * 0.06, ease: "easeOut" }}
                                     />
                                   ))}
-                                  {/* Golden glow around card */}
                                   <motion.div
                                     className="absolute -inset-4 rounded-2xl pointer-events-none"
                                     style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 60%)" }}
@@ -720,7 +730,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                     animate={{ scale: [0, 10], opacity: [0.5, 0] }}
                                     transition={{ duration: 1.5, delay: 0.15, ease: "easeOut" }}
                                   />
-                                  {/* Light burst */}
                                   <motion.div
                                     className="absolute -inset-6 pointer-events-none"
                                     style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.35), transparent 50%)" }}
