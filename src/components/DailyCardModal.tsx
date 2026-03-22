@@ -646,165 +646,154 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* PHASE: Result (AI interpretation) — cinematic side-by-side */}
+              {/* PHASE: Result / Locked — compact in-flow daily card */}
               {(phase === "result" || phase === "locked") && card && (
                 <motion.div
                   key="result"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="relative"
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 12 }}
+                  className="px-4 pb-10 pt-6 md:px-0 md:pb-16 md:pt-8"
                 >
-                  {/* ── DESKTOP: Card portaled to body so fixed positioning isn't broken by parent transforms ── */}
-                  {typeof window !== "undefined" && createPortal(
-                    <AnimatePresence>
-                      {isOpen && (phase === "result" || phase === "locked") && card && (
-                        <motion.div
-                          className="hidden md:flex flex-col items-center fixed top-[60px] right-[48px] z-[110] pt-[50px]"
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 20 }}
-                          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                          <motion.div
-                            className="relative rounded-xl overflow-hidden"
-                            style={{
-                              width: "clamp(200px, 22vw, 320px)",
-                              aspectRatio: "2 / 3",
-                              border: "2px solid hsl(var(--gold) / 0.25)",
-                              boxShadow: "0 0 50px hsl(var(--gold) / 0.15), 0 0 100px hsl(var(--crimson) / 0.06), 0 20px 60px hsl(0 0% 0% / 0.4)",
-                            }}
-                            initial={{ scale: 0.85, opacity: 0, rotateY: -15 }}
-                            animate={{ scale: 1, opacity: 1, rotateY: 0 }}
-                            transition={{ delay: 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                          >
-                            {cardImage ? (
-                              <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
-                                <span className="text-5xl">{card.symbol}</span>
-                              </div>
-                            )}
-                            <motion.div
-                              className="absolute inset-0 pointer-events-none"
-                              style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.12) 50%, transparent 70%)" }}
-                              animate={{ x: ["-100%", "200%"] }}
-                              transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
-                            />
-                          </motion.div>
-                          <motion.h2 className="font-heading text-3xl gold-gradient-text mt-6 text-center" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
-                            {card.hebrewName}
-                          </motion.h2>
-                          <motion.p className="text-foreground/50 font-body text-lg text-center mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.45 }}>
-                            {t.daily_arcana_label} {card.number}
-                          </motion.p>
-                          {phase === "locked" && (
-                            <motion.div className="inline-flex items-center gap-3 mt-4 px-5 py-3 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                              <Clock className="w-5 h-5 text-gold/60" />
-                              <span className="font-body text-base text-gold/70">{t.daily_next_card} {timeLeft}</span>
-                            </motion.div>
-                          )}
-                          <motion.div className="flex items-center gap-4 mt-5" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                            <motion.button onClick={handleShare} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                              <Share2 className="w-5 h-5" />{t.forecast_share}
-                            </motion.button>
-                            <motion.button onClick={handleCopy} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-                              {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                              {copied ? t.share_copied : t.share_copy}
-                            </motion.button>
-                          </motion.div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>,
-                    document.body
-                  )}
-
-                  {/* Mobile-only card (in flow) */}
-                  <div className="md:hidden flex flex-col items-center p-6 pb-2">
+                  <div className="mx-auto w-full max-w-[420px]">
                     <motion.div
-                      className="relative rounded-xl overflow-hidden"
+                      className="relative overflow-hidden rounded-[28px]"
                       style={{
-                        width: "clamp(180px, 55vw, 260px)",
-                        aspectRatio: "2 / 3",
-                        border: "2px solid hsl(var(--gold) / 0.25)",
-                        boxShadow: "0 0 40px hsl(var(--gold) / 0.12), 0 16px 48px hsl(0 0% 0% / 0.4)",
+                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.84), hsl(var(--deep-blue) / 0.92))",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
+                        boxShadow: "0 16px 60px hsl(var(--deep-blue) / 0.45), 0 0 24px hsl(var(--gold) / 0.06)",
                       }}
-                      initial={{ scale: 0.85, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ duration: 0.7 }}
                     >
-                      {cardImage ? (
-                        <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}>
-                          <span className="text-4xl">{card.symbol}</span>
-                        </div>
-                      )}
-                    </motion.div>
-                    <h2 className="font-heading text-xl gold-gradient-text mt-4 text-center">{card.hebrewName}</h2>
-                    <p className="text-foreground/50 font-body text-xs text-center mt-1">{t.daily_arcana_label} {card.number}</p>
-                    {phase === "locked" && (
-                      <div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full" style={{ background: "hsl(var(--gold) / 0.06)", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-                        <Clock className="w-3 h-3 text-gold/60" />
-                        <span className="font-body text-[11px] text-gold/70">{t.daily_next_card} {timeLeft}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-2 mt-3">
-                      <button onClick={handleShare} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }}>
-                        <Share2 className="w-3 h-3" />{t.forecast_share}
-                      </button>
-                      <button onClick={handleCopy} className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }}>
-                        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                        {copied ? t.share_copied : t.share_copy}
-                      </button>
-                    </div>
-                  </div>
+                      <div
+                        className="absolute inset-x-0 top-0 pointer-events-none"
+                        style={{
+                          height: "120px",
+                          background: "radial-gradient(circle at top, hsl(var(--gold) / 0.12), transparent 72%)",
+                        }}
+                      />
 
-                  {/* ── TEXT — scrolls normally, constrained to LEFT zone on desktop ── */}
-                  <motion.div
-                    className="p-6 md:max-w-[720px] md:pr-6 md:pt-[56px]"
-                    style={{ maxWidth: "min(720px, 50vw)", marginLeft: "10px", marginRight: "auto", paddingLeft: "0px" }}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.45, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    {aiText ? (
-                      <div>
-                        <div className="flex justify-end mb-4"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                        {renderMysticalText(aiText, textSize)}
-                        {aiLoading && (
-                          <motion.div className="flex items-center justify-center gap-2 mt-6" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
-                            <Loader2 className="w-4 h-4 text-gold/60 animate-spin" />
-                            <span className="font-body text-xs text-gold/50">{t.daily_loading}</span>
-                          </motion.div>
+                      <div className="relative flex flex-col items-center gap-3 px-5 pb-6 pt-5 text-center md:px-7 md:pb-7 md:pt-6">
+                        <div className="flex items-center gap-2">
+                          <Sun className="h-4 w-4" style={{ color: "hsl(var(--gold))" }} />
+                          <span className="font-heading tracking-[0.24em] text-[11px] md:text-xs" style={{ color: "hsl(var(--gold))" }}>
+                            {t.daily_title}
+                          </span>
+                        </div>
+
+                        <p className="max-w-[26ch] font-body text-sm leading-relaxed md:text-[15px]" style={{ color: "hsl(var(--foreground) / 0.72)" }}>
+                          {t.daily_card_chosen}
+                        </p>
+
+                        <motion.div
+                          className="relative overflow-hidden rounded-2xl"
+                          style={{
+                            width: "clamp(140px, 22vw, 190px)",
+                            aspectRatio: "2 / 3",
+                            border: "2px solid hsl(var(--gold) / 0.28)",
+                            boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 18px 40px hsl(0 0% 0% / 0.35)",
+                            background: "hsl(var(--deep-blue))",
+                          }}
+                          initial={{ scale: 0.92, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                          {cardImage ? (
+                            <img src={cardImage} alt={card.hebrewName} className="h-full w-full object-contain" />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center">
+                              <span className="text-5xl">{card.symbol}</span>
+                            </div>
+                          )}
+                          <motion.div
+                            className="absolute inset-0 pointer-events-none"
+                            style={{ background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.12) 50%, transparent 70%)" }}
+                            animate={{ x: ["-100%", "200%"] }}
+                            transition={{ duration: 3, repeat: Infinity, repeatDelay: 3 }}
+                          />
+                        </motion.div>
+
+                        <div className="flex flex-col items-center gap-1">
+                          <h2 className="font-heading text-[26px] leading-none gold-gradient-text md:text-[30px]">
+                            {card.hebrewName}
+                          </h2>
+                          <p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
+                            {t.daily_arcana_label} {card.number}
+                          </p>
+                        </div>
+
+                        {phase === "locked" && (
+                          <div
+                            className="inline-flex items-center gap-2 rounded-full px-3 py-1.5"
+                            style={{
+                              background: "hsl(var(--gold) / 0.06)",
+                              border: "1px solid hsl(var(--gold) / 0.12)",
+                            }}
+                          >
+                            <Clock className="h-3.5 w-3.5" style={{ color: "hsl(var(--gold) / 0.7)" }} />
+                            <span className="font-body text-[11px] md:text-xs" style={{ color: "hsl(var(--gold) / 0.75)" }}>
+                              {t.daily_next_card} {timeLeft}
+                            </span>
+                          </div>
+                        )}
+
+                        <div className="w-full max-w-[30ch] font-body text-sm leading-relaxed md:text-[15px]" style={{ color: "hsl(var(--foreground) / 0.72)" }}>
+                          {aiText ? (
+                            <div className="text-left [&>div]:space-y-3">{renderMysticalText(aiText, textSize)}</div>
+                          ) : aiError ? (
+                            <div className="rounded-2xl px-4 py-3 text-center" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                              <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{aiError}</p>
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center gap-3 py-2">
+                              <motion.div
+                                className="h-12 w-12 rounded-full"
+                                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
+                                animate={{ scale: [1, 1.12, 1], rotate: [0, 180, 360] }}
+                                transition={{ duration: 3, repeat: Infinity }}
+                              />
+                              <motion.p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--gold) / 0.75)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                                {t.daily_loading}
+                              </motion.p>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                          <motion.button
+                            onClick={handleShare}
+                            className="flex items-center gap-2 rounded-full px-4 py-2 font-body text-xs md:text-sm"
+                            style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            <Share2 className="h-4 w-4" />{t.forecast_share}
+                          </motion.button>
+                          <motion.button
+                            onClick={handleCopy}
+                            className="flex items-center gap-2 rounded-full px-4 py-2 font-body text-xs md:text-sm"
+                            style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                            {copied ? t.share_copied : t.share_copy}
+                          </motion.button>
+                        </div>
+
+                        {!aiLoading && (aiText || aiError) && (
+                          <motion.button
+                            onClick={handleClose}
+                            className="mt-1 inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-body text-sm md:text-base"
+                            style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.22), hsl(var(--gold) / 0.1))", border: "1px solid hsl(var(--gold) / 0.25)", color: "hsl(var(--gold))" }}
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                          >
+                            <Sparkles className="h-4 w-4" />{t.daily_premium_cta}
+                          </motion.button>
                         )}
                       </div>
-                    ) : aiError ? (
-                      <div className="text-center rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                        <p className="text-foreground/50 font-body text-xs">{aiError}</p>
-                      </div>
-                    ) : aiLoading ? (
-                      <div className="flex flex-col items-center justify-center py-12">
-                        <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                        <motion.p className="font-body text-gold/70 text-sm" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.daily_loading}</motion.p>
-                      </div>
-                    ) : null}
-
-                    {!aiLoading && (aiText || aiError) && (
-                      <>
-                        <ShareResultSection symbol={card.symbol} title={`${t.daily_title} — ${card.hebrewName}`} subtitle={t.daily_card_chosen} />
-                        <div className="section-divider max-w-[200px] mx-auto my-8" />
-                        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-10" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-                          <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
-                          <h4 className="font-heading text-2xl text-gold mb-4">{t.daily_premium_title}</h4>
-                          <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.daily_premium_desc}</p>
-                          <button onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4">
-                            <Sparkles className="w-5 h-5" />{t.daily_premium_cta}
-                          </button>
-                        </motion.div>
-                      </>
-                    )}
-                  </motion.div>
+                    </motion.div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
