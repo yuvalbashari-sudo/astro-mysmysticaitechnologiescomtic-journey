@@ -434,7 +434,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <label className="block text-[11px] text-gold/45 font-body mb-3 tracking-[0.12em] uppercase">{t.forecast_gender_label}</label>
+                      <label className="block text-[13px] text-gold/45 font-body mb-3 tracking-[0.12em] uppercase">{t.forecast_gender_label}</label>
                       <div className="flex gap-2">
                         {(["male", "female"] as const).map((g) => (
                           <motion.button
