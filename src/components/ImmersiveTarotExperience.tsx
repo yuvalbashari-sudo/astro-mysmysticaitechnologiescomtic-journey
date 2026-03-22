@@ -773,7 +773,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   <motion.div
                     className="text-gold font-heading font-bold mb-2"
                     style={{ fontSize: isMobile ? "1.8rem" : "3rem", textShadow: "0 0 30px hsl(var(--gold) / 0.4)", letterSpacing: "0.05em" }}
-                    style={{ textShadow: "0 0 20px hsl(var(--gold) / 0.2)" }}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
