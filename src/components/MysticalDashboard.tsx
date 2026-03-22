@@ -131,13 +131,19 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     <p className="text-xs text-muted-foreground">{t.dashboard_subtitle}</p>
                   </div>
                 </div>
-                <button
+                <motion.button
                   onClick={() => closePanel()}
-                  className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-muted/80 transition-colors"
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+                  style={{
+                    background: "hsl(var(--gold) / 0.15)",
+                    border: "1px solid hsl(var(--gold) / 0.3)",
+                  }}
+                  whileHover={{ scale: 1.1, background: "hsl(var(--gold) / 0.25)" }}
+                  whileTap={{ scale: 0.9 }}
                   aria-label={t.a11y_close_modal}
                 >
-                  <X className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
-                </button>
+                  <X className="w-5 h-5 text-primary" aria-hidden="true" />
+                </motion.button>
               </div>
 
               {!hasData ? (
