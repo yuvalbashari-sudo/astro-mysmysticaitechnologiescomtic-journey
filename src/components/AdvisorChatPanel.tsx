@@ -315,7 +315,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
             className="fixed z-[106] flex flex-col overflow-hidden"
             style={{
               bottom: forceRightAnchor ? "calc(5.5rem + 500px)" : "5.5rem",
-              right: forceRightAnchor ? "calc(1.25rem + 80px)" : dir === "rtl" ? "auto" : "1.25rem",
+              right: forceRightAnchor ? "5px" : dir === "rtl" ? "auto" : "1.25rem",
               left: forceRightAnchor ? "auto" : dir === "rtl" ? "1.25rem" : "auto",
               width: forceRightAnchor ? "min(685px, calc(100vw - 2rem - 80px))" : "min(765px, calc(100vw - 2rem))",
               maxHeight: "min(1080px, calc(100vh - 7rem))",
