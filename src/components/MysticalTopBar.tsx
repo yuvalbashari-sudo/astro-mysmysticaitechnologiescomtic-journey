@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
@@ -18,6 +19,18 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
+  const langBtnRef = useRef<HTMLButtonElement>(null);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
+
+  const updateDropdownPos = useCallback(() => {
+    if (langBtnRef.current) {
+      const rect = langBtnRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -26,6 +39,10 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  useEffect(() => {
+    if (langOpen) updateDropdownPos();
+  }, [langOpen, updateDropdownPos]);
 
   return (
     <motion.header
@@ -107,6 +124,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         {/* Language Selector */}
         <div ref={langRef} className="relative">
           <motion.button
+            ref={langBtnRef}
             onClick={() => setLangOpen(!langOpen)}
             className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
             style={{
@@ -124,48 +142,55 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             <span>{languageConfig[language].label}</span>
           </motion.button>
 
-          <AnimatePresence>
-            {langOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                transition={{ duration: 0.15 }}
-                className="absolute top-full mt-2 right-0 rounded-xl overflow-hidden z-[70]"
-                style={{
-                  background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
-                  border: "1px solid hsl(var(--gold) / 0.2)",
-                  boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
-                  minWidth: "170px",
-                }}
-                role="listbox"
-                aria-label={t.a11y_language_selector}
-              >
-                {languages.map((lang) => (
-                  <button
-                    key={lang}
-                    role="option"
-                    aria-selected={lang === language}
-                    onPointerDown={(e) => {
-                      e.stopPropagation();
-                      setLanguage(lang);
-                      setLangOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-3 px-5 py-3 text-sm font-body transition-colors cursor-pointer ${
-                      lang === language
-                        ? "text-gold bg-gold/10"
-                        : "text-foreground/70 hover:text-gold hover:bg-gold/5"
-                    }`}
-                    aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
-                  >
-                    <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
-                    <span>{languageConfig[lang].label}</span>
-                    {lang === language && <span className="mr-auto text-gold/50 text-[10px]" aria-hidden="true">✦</span>}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {createPortal(
+            <AnimatePresence>
+              {langOpen && (
+                <motion.div
+                  ref={langRef}
+                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="fixed rounded-xl overflow-hidden"
+                  style={{
+                    top: dropdownPos.top,
+                    right: dropdownPos.right,
+                    zIndex: 99999,
+                    background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
+                    border: "1px solid hsl(var(--gold) / 0.2)",
+                    boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
+                    minWidth: "170px",
+                  }}
+                  role="listbox"
+                  aria-label={t.a11y_language_selector}
+                >
+                  {languages.map((lang) => (
+                    <button
+                      key={lang}
+                      role="option"
+                      aria-selected={lang === language}
+                      onPointerDown={(e) => {
+                        e.stopPropagation();
+                        setLanguage(lang);
+                        setLangOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-5 py-3 text-sm font-body transition-colors cursor-pointer ${
+                        lang === language
+                          ? "text-gold bg-gold/10"
+                          : "text-foreground/70 hover:text-gold hover:bg-gold/5"
+                      }`}
+                      aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
+                    >
+                      <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
+                      <span>{languageConfig[lang].label}</span>
+                      {lang === language && <span className="mr-auto text-gold/50 text-[10px]" aria-hidden="true">✦</span>}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>,
+            document.body
+          )}
         </div>
 
         {/* Accessibility link */}
