@@ -3520,7 +3520,6 @@ const HeroSection = () => {
     <>
       {heroLayer}
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
-      <RisingSignModal isOpen={risingOpen} onClose={() => setRisingOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
