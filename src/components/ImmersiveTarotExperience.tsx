@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
+import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -873,19 +874,18 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   </motion.div>
 
                   {/* Astrologer avatar — bottom right */}
-                  <motion.div
+                  <AvatarHoverTeaser
+                    disabled={isMobile}
+                    anchor="left"
                     className="absolute flex items-center justify-center"
                     style={{
                       bottom: 5,
                       right: isMobile ? 8 : 10,
                       zIndex: 20,
                     }}
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <div
-                      className="rounded-full overflow-hidden"
+                    <motion.div
+                      className="rounded-full overflow-hidden cursor-pointer"
                       style={{
                         width: isMobile ? 80 : 140,
                         height: isMobile ? 80 : 140,
@@ -893,6 +893,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 8px 20px hsl(0 0% 0% / 0.4)",
                         filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
                       }}
+                      initial={{ opacity: 0, scale: 0.7 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                      whileHover={{ filter: "brightness(1.15)", scale: 1.05 }}
                     >
                       <img
                         src={astrologerAvatarCta}
@@ -901,8 +905,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         style={{ objectPosition: "center 35%" }}
                         draggable={false}
                       />
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </AvatarHoverTeaser>
                 </motion.div>
               )}
 
