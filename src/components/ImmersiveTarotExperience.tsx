@@ -1493,41 +1493,42 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               )}
             </AnimatePresence>
 
-            {/* Persistent Astrologer avatar — always visible across all phases */}
-            <AvatarHoverTeaser
-              disabled={isMobile}
-              anchor="left"
-              className="fixed flex items-center justify-center"
-              style={{
-                bottom: 5,
-                right: isMobile ? 8 : 10,
-                zIndex: 200,
-              }}
-            >
-              <motion.div
-                className="rounded-full overflow-hidden cursor-pointer"
-                style={{
-                  width: isMobile ? 80 : 140,
-                  height: isMobile ? 80 : 140,
-                  border: "2px solid hsl(var(--gold) / 0.4)",
-                  boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 8px 20px hsl(0 0% 0% / 0.4)",
-                  filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
-                }}
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ filter: "brightness(1.15)", scale: 1.05 }}
-              >
-                <img
-                  src={astrologerAvatarCta}
-                  alt="האסטרולוגית"
-                  className="w-full h-full object-cover scale-105"
-                  style={{ objectPosition: "center 35%" }}
-                  draggable={false}
-                />
-              </motion.div>
-            </AvatarHoverTeaser>
           </div>
+
+          {/* Persistent Astrologer avatar — always visible across all phases */}
+          <AvatarHoverTeaser
+            disabled={isMobile}
+            anchor="left"
+            className="fixed flex items-center justify-center pointer-events-auto"
+            style={{
+              bottom: 5,
+              right: isMobile ? 8 : 10,
+              zIndex: 200,
+            }}
+          >
+            <motion.div
+              className="rounded-full overflow-hidden cursor-pointer"
+              style={{
+                width: isMobile ? 80 : 140,
+                height: isMobile ? 80 : 140,
+                border: "2px solid hsl(var(--gold) / 0.4)",
+                boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 8px 20px hsl(0 0% 0% / 0.4)",
+                filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
+              }}
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ filter: "brightness(1.15)", scale: 1.05 }}
+            >
+              <img
+                src={astrologerAvatarCta}
+                alt="האסטרולוגית"
+                className="w-full h-full object-cover scale-105"
+                style={{ objectPosition: "center 35%" }}
+                draggable={false}
+              />
+            </motion.div>
+          </AvatarHoverTeaser>
         </motion.div>
       )}
     </AnimatePresence>
