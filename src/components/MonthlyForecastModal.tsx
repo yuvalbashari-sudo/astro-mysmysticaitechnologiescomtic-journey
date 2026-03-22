@@ -13,6 +13,9 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
+import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
+import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 
 type Mode = "forecast" | "rising";
 
@@ -38,7 +41,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [isMobile, setIsMobile] = useState(false);
-  
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -180,7 +183,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen hideAdvisor={false}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen hideAdvisor>
             <AnimatePresence mode="wait">
               {!hasResult && !isLoading ? (
                 isDesktop ? (
@@ -512,6 +515,32 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 )
               ) : null}
             </AnimatePresence>
+
+            {/* ── Astrologer Avatar — matches Hero placement exactly ── */}
+            {!isMobile && (
+              <motion.div
+                className="fixed z-[110] pointer-events-auto"
+                style={{
+                  bottom: 10,
+                  right: 10,
+                  filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
+                }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 1 }}
+              >
+                <AvatarHoverTeaser anchor="left">
+                  <AstrologerAvatarButton
+                    size={132}
+                    onClick={() => setAdvisorOpen(true)}
+                    entranceDelay={0.6}
+                    className="relative"
+                  />
+                </AvatarHoverTeaser>
+              </motion.div>
+            )}
+
+            <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
     </CinematicModalShell>
   );
 };
