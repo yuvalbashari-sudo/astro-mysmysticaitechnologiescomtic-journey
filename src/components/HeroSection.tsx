@@ -2882,13 +2882,23 @@ const HeroSection = () => {
 
       {/* ── Astrologer Avatar — desktop only ── */}
       {!isMobile && entranceComplete && (
-        <div className="fixed z-[30] pointer-events-none" style={{ bottom: 100, right: 48 }}>
+        <motion.div
+          className="fixed z-[30] pointer-events-none"
+          style={{
+            bottom: 90,
+            right: 56,
+            filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 1 }}
+        >
           <AstrologerAvatarButton
-            size={108}
+            size={132}
             onClick={() => setAstrologerOpen(true)}
-            entranceDelay={0.5}
+            entranceDelay={0.6}
           />
-        </div>
+        </motion.div>
       )}
 
 
