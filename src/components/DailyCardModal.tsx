@@ -441,7 +441,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                             key={g}
                             type="button"
                             onClick={() => setGender(g)}
-                            className="flex-1 py-3 rounded-xl font-body text-[13px] transition-all duration-200"
+                            className="flex-1 py-3.5 rounded-xl font-body text-[15px] transition-all duration-200"
                             style={{
                               background: gender === g
                                 ? "linear-gradient(145deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))"
