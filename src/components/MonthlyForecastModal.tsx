@@ -445,8 +445,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     </motion.div>
 
-                    {/* Advisor chat panel for result view */}
-                    <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
                   </div>
                 ) : (
                   /* ── Mobile: stacked ── */
