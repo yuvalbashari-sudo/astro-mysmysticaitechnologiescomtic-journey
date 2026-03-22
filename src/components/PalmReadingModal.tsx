@@ -82,7 +82,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     const emoji = side === "right" ? "🤚" : "✋";
     return (
       <div className="flex-1 min-w-0">
-        <label className="block text-sm text-gold/70 font-body mb-2 text-right">{emoji} {label}</label>
+        <label className="block text-[28px] text-gold/70 font-body mb-2 text-right">{emoji} {label}</label>
         {image ? (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative rounded-xl overflow-hidden" style={{ border: "2px solid hsl(var(--gold) / 0.3)", boxShadow: "0 0 20px hsl(var(--gold) / 0.08)" }}>
             <img src={image} alt={label} className="w-full h-40 object-cover" />
@@ -94,7 +94,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
           <motion.div className="rounded-xl p-5 cursor-pointer group transition-all duration-300" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.04), hsl(var(--gold) / 0.02))", border: "2px dashed hsl(var(--gold) / 0.2)" }} whileHover={{ scale: 1.01 }} onClick={() => fileRef.current?.click()}>
             <div className="flex flex-col items-center gap-2">
               <motion.div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)", border: "1px solid hsl(var(--gold) / 0.15)" }} animate={{ scale: [1, 1.05, 1] }} transition={{ duration: 3, repeat: Infinity }}><ImageIcon className="w-5 h-5 text-gold/60 group-hover:text-gold/80 transition-colors" /></motion.div>
-              <p className="text-foreground/50 font-body text-[11px]">{t.palm_upload_click}</p>
+              <p className="text-foreground/50 font-body text-[22px]">{t.palm_upload_click}</p>
             </div>
           </motion.div>
         )}
@@ -102,8 +102,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload(side)} />
         {!image && (
           <div className="flex items-center justify-center gap-2 mt-2">
-            <motion.button onClick={() => cameraRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-body" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Camera className="w-3 h-3" />{t.palm_capture}</motion.button>
-            <motion.button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-body" style={{ background: "hsl(var(--foreground) / 0.04)", border: "1px solid hsl(var(--foreground) / 0.1)", color: "hsl(var(--foreground) / 0.6)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Upload className="w-3 h-3" />{t.palm_gallery}</motion.button>
+            <motion.button onClick={() => cameraRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[20px] font-body" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Camera className="w-3 h-3" />{t.palm_capture}</motion.button>
+            <motion.button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[20px] font-body" style={{ background: "hsl(var(--foreground) / 0.04)", border: "1px solid hsl(var(--foreground) / 0.1)", color: "hsl(var(--foreground) / 0.6)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Upload className="w-3 h-3" />{t.palm_gallery}</motion.button>
           </div>
         )}
       </div>
