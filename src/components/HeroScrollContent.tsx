@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Eye, Hand, Moon, Sparkles, Star } from "lucide-react";
+import { Eye, Hand, Sparkles, Star } from "lucide-react";
 import { useT } from "@/i18n";
 
 interface HeroScrollContentProps {
