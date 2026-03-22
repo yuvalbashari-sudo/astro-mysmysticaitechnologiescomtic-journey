@@ -338,7 +338,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 >
                   {/* ── Premium container ── */}
                   <div
-                    className="relative z-10 w-full max-w-[420px] rounded-[28px] px-10 py-14 md:px-12 md:py-16 flex flex-col items-center"
+                    className="relative z-10 w-full max-w-[840px] rounded-[28px] px-10 py-14 md:px-12 md:py-16 flex flex-col items-center"
                     style={{
                       background: "linear-gradient(175deg, hsl(222 40% 10% / 0.94), hsl(222 45% 6% / 0.97))",
                       border: "1px solid hsl(var(--gold) / 0.1)",
