@@ -24,7 +24,7 @@ const AccessibilityStatement = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-background"
+      className="min-h-screen bg-background overflow-x-hidden"
       dir={dir}
     >
       {/* Sticky top bar with close + back */}
