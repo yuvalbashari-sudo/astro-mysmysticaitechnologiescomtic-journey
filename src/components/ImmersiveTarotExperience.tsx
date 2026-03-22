@@ -1498,7 +1498,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           </div>
 
           {/* Advisor chat panel */}
-          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
 
           {/* Persistent Astrologer avatar — always visible across all phases */}
           <AvatarHoverTeaser
