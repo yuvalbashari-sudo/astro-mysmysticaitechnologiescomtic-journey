@@ -603,7 +603,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
 
                   {/* Tarot table cards */}
-                  <div className="relative z-30 flex items-center justify-center gap-4 sm:gap-6 mb-6">
+                  <div className="relative z-30 flex items-center justify-center gap-3 sm:gap-5 mb-6 max-w-full overflow-hidden px-2">
                     {tableCards.map((card, i) => {
                       const isFlipped = flippedIndices.has(i);
                       const isActive = activeRevealIndex === i;
