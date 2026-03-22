@@ -318,13 +318,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  const tableCardColumnHeight = tableCards.length === 1
-    ? "clamp(16rem, calc(100vh - 24rem), 22rem)"
-    : "clamp(22rem, calc(100vh - 23rem), 34rem)";
-
-  const tableCardColumnGap = tableCards.length > 1
-    ? "clamp(0.75rem, 1.5vh, 1rem)"
-    : "0px";
+  // No pre-calculated vars needed — cards sized via CSS in the container
 
   return (
     <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
