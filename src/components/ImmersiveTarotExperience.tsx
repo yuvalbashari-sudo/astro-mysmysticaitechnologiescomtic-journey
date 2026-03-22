@@ -400,7 +400,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const questionOptions = useMemo((): QuestionOption[] => [
     {
       key: "love",
-      icon: <Heart className="w-9 h-9" />,
+      icon: <Heart className="w-12 h-12" />,
       label: language === "he" ? "אהבה" : language === "ar" ? "الحب" : language === "ru" ? "Любовь" : "Love",
       color: "340 60% 55%",
     },
