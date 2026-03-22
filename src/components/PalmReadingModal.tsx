@@ -8,6 +8,8 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
