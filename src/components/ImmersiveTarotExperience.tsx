@@ -737,11 +737,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         onClick={() => handleQuestionSelect(opt.key)}
                       >
                         <div
-                          className="flex flex-col items-center gap-2"
+                          className="flex flex-col items-center gap-3"
                           style={{ color: `hsl(${opt.color})` }}
                         >
                           {opt.icon}
-                          <span className="font-heading text-sm md:text-base tracking-wide">
+                          <span className="font-heading text-base md:text-xl tracking-wide">
                             {opt.label}
                           </span>
                         </div>
