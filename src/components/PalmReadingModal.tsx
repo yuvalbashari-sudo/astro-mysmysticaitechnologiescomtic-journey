@@ -160,6 +160,13 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
         transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
         onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
       >
+        {/* Pulse ring */}
+        <motion.div
+          className="absolute inset-0 rounded-full pointer-events-none"
+          style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
+          animate={{ scale: [1, 1.45, 1.45], opacity: [0.5, 0, 0] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+        />
         <div
           className="w-full h-full rounded-full overflow-hidden"
           style={{
