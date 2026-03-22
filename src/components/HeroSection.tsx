@@ -1,4 +1,5 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
+import AstrologerAvatarButton from "./AstrologerAvatarButton";
 import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
@@ -2878,6 +2879,17 @@ const HeroSection = () => {
           )}
         </div>
       </div>
+
+      {/* ── Astrologer Avatar — desktop only ── */}
+      {!isMobile && entranceComplete && (
+        <div className="fixed z-[30] pointer-events-none" style={{ bottom: 100, right: 48 }}>
+          <AstrologerAvatarButton
+            size={72}
+            onClick={() => setAstrologerOpen(true)}
+            entranceDelay={0.5}
+          />
+        </div>
+      )}
 
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
