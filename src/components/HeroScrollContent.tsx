@@ -12,7 +12,6 @@ interface HeroScrollContentProps {
 const MOBILE_ACTIONS = [
   { key: "tarot", icon: Eye, color: "hsl(var(--crimson))" },
   { key: "compatibility", icon: Sparkles, color: "hsl(var(--gold))" },
-  { key: "rising", icon: Moon, color: "hsl(var(--celestial))" },
   { key: "palm", icon: Hand, color: "hsl(var(--gold-dark))" },
 ] as const;
 
