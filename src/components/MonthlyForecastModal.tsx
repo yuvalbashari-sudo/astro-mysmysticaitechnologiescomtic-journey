@@ -13,6 +13,9 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
+import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
+import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 
 type Mode = "forecast" | "rising";
 
