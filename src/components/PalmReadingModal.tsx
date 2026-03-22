@@ -126,8 +126,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                     {/* Top-right avatar with teaser & advisor */}
                     <AvatarHoverTeaser
                       disabled={false}
-                      className="fixed z-[106]"
-                      style={{ bottom: 32, right: 40, left: "auto", width: 168, height: 168 }}
+                      className="absolute z-[106]"
+                      style={{ bottom: 10, right: 10, width: 168, height: 168 }}
                     >
                       <motion.button
                         className="w-full h-full rounded-full overflow-hidden cursor-pointer group"
