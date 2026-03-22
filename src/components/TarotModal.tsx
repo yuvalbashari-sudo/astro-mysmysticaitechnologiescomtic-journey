@@ -530,7 +530,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isShufflePhase ? (
                 <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotShufflePhase onComplete={handleShuffleComplete} /></motion.div>
               ) : isTablePhase ? (
-                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden">
+                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle center vignette */}
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.45) 0%, transparent 70%)" }} />
 
