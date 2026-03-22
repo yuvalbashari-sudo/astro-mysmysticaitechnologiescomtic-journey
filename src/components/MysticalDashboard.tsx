@@ -126,13 +126,13 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
             >
               {/* Header */}
               <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border p-5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-primary" />
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="w-8 h-8 text-primary" />
                   </div>
                   <div>
-                    <h2 className="font-heading text-2xl text-primary">{t.dashboard_title}</h2>
-                    <p className="text-base text-muted-foreground">{t.dashboard_subtitle}</p>
+                    <h2 className="font-heading text-3xl text-primary">{t.dashboard_title}</h2>
+                    <p className="text-lg text-muted-foreground">{t.dashboard_subtitle}</p>
                   </div>
                 </div>
                 <motion.button
