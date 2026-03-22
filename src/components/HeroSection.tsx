@@ -12,6 +12,7 @@ import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmReadingModal from "./PalmReadingModal";
+import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT, useLanguage } from "@/i18n";
@@ -2097,6 +2098,7 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
+  const [dailyCardOpen, setDailyCardOpen] = useState(false);
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
@@ -2780,7 +2782,7 @@ const HeroSection = () => {
                     clipPath: "circle(50% at 50% 50%)",
                     WebkitClipPath: "circle(50% at 50% 50%)",
                   }}
-                  onClick={openUniverseMessage}
+                  onClick={() => setDailyCardOpen(true)}
                 />
               </div>
             </div>
@@ -2865,7 +2867,7 @@ const HeroSection = () => {
                   onPointerLeave={() => setIsCrystalHovered(false)}
                   onFocus={() => setIsCrystalHovered(true)}
                   onBlur={() => setIsCrystalHovered(false)}
-                  onClick={openUniverseMessage}
+                  onClick={() => setDailyCardOpen(true)}
                   whileTap={{ scale: 0.99 }}
                 />
               </div>
@@ -3302,7 +3304,7 @@ const HeroSection = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.6, 1, 0.6] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        onClick={openUniverseMessage}
+        onClick={() => setDailyCardOpen(true)}
         whileTap={{ scale: 0.95 }}
       >
         <span className={`text-gold/80 font-body font-medium ${isMobile ? "text-base" : "text-2xl"} tracking-wide`}>
@@ -3535,6 +3537,7 @@ const HeroSection = () => {
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
+      <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
     </>
   );
 };
