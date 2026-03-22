@@ -167,30 +167,30 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       animate={{ opacity: 1, y: 0 }}
                       className="rounded-xl bg-muted/50 border border-border p-5"
                     >
-                      <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
-                        <Sun className="w-4 h-4" />
+                      <h3 className="font-heading text-2xl text-primary mb-5 flex items-center gap-3">
+                        <Sun className="w-7 h-7" />
                         {t.dashboard_identity}
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         {profile.zodiacSign && (
-                          <div className="text-center p-3 rounded-lg bg-background/50">
-                            <span className="text-3xl block mb-1">{profile.zodiacSymbol}</span>
-                            <span className="text-lg font-heading text-foreground block">{profile.zodiacSign}</span>
-                            <span className="text-base text-muted-foreground flex items-center justify-center gap-1 mt-1">
+                          <div className="text-center p-4 rounded-lg bg-background/50">
+                            <span className="text-5xl block mb-2">{profile.zodiacSymbol}</span>
+                            <span className="text-2xl font-heading text-foreground block">{profile.zodiacSign}</span>
+                            <span className="text-lg text-muted-foreground flex items-center justify-center gap-2 mt-2">
                               {profile.zodiacElement && ELEMENT_ICONS[profile.zodiacElement] && (() => {
                                 const Icon = ELEMENT_ICONS[profile.zodiacElement!];
-                                return <Icon className="w-3 h-3" />;
+                                return <Icon className="w-5 h-5" />;
                               })()}
                               {profile.zodiacElement}
                             </span>
                           </div>
                         )}
                         {profile.risingSign && (
-                          <div className="text-center p-3 rounded-lg bg-background/50">
-                            <span className="text-3xl block mb-1">{profile.risingSymbol}</span>
-                            <span className="text-lg font-heading text-foreground block">{profile.risingSign}</span>
-                            <span className="text-base text-muted-foreground flex items-center justify-center gap-1 mt-1">
-                              <TrendingUp className="w-3 h-3" />
+                          <div className="text-center p-4 rounded-lg bg-background/50">
+                            <span className="text-5xl block mb-2">{profile.risingSymbol}</span>
+                            <span className="text-2xl font-heading text-foreground block">{profile.risingSign}</span>
+                            <span className="text-lg text-muted-foreground flex items-center justify-center gap-2 mt-2">
+                              <TrendingUp className="w-5 h-5" />
                               {t.dashboard_rising}
                             </span>
                           </div>
