@@ -131,8 +131,8 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h2 className="font-heading text-lg text-primary">{t.dashboard_title}</h2>
-                    <p className="text-xs text-muted-foreground">{t.dashboard_subtitle}</p>
+                    <h2 className="font-heading text-2xl text-primary">{t.dashboard_title}</h2>
+                    <p className="text-base text-muted-foreground">{t.dashboard_subtitle}</p>
                   </div>
                 </div>
                 <motion.button
