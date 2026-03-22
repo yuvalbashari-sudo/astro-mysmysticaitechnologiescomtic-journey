@@ -82,7 +82,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     const emoji = side === "right" ? "🤚" : "✋";
     return (
       <div className="flex-1 min-w-0">
-        <label className="block text-sm text-gold/70 font-body mb-2 text-right">{emoji} {label}</label>
+        <label className="block text-[28px] text-gold/70 font-body mb-2 text-right">{emoji} {label}</label>
         {image ? (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative rounded-xl overflow-hidden" style={{ border: "2px solid hsl(var(--gold) / 0.3)", boxShadow: "0 0 20px hsl(var(--gold) / 0.08)" }}>
             <img src={image} alt={label} className="w-full h-40 object-cover" />
