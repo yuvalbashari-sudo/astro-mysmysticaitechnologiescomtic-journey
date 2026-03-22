@@ -2867,7 +2867,7 @@ const HeroSection = () => {
                   onPointerLeave={() => setIsCrystalHovered(false)}
                   onFocus={() => setIsCrystalHovered(true)}
                   onBlur={() => setIsCrystalHovered(false)}
-                  onClick={openUniverseMessage}
+                  onClick={() => setDailyCardOpen(true)}
                   whileTap={{ scale: 0.99 }}
                 />
               </div>
