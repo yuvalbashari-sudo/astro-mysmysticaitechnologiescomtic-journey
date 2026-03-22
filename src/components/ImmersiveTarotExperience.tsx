@@ -1065,7 +1065,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               </div>
                               <motion.span
                                 className="font-heading mt-3 text-center"
-                                style={{ fontSize: isCenter ? 13 : 11, color: isCenter ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.7)" }}
+                                style={{ fontSize: isCenter ? 26 : 22, color: isCenter ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.7)" }}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 + i * 0.15 }}
