@@ -179,6 +179,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                         <p className="text-[1.4rem] text-muted-foreground font-body mt-5 leading-relaxed" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
                       </div>
                     </motion.div>
+                    <AdvisorChatPanel isOpen={palmAdvisorOpen} onClose={() => setPalmAdvisorOpen(false)} forceRightAnchor />
                   </div>
                 ) : (
                   /* ── Mobile: centered form ── */
