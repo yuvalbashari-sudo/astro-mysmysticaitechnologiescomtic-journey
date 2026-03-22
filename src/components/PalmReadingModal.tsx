@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Hand, Crown, Share2, Copy, Check, Loader2, Camera, Upload, ImageIcon } from "lucide-react";
