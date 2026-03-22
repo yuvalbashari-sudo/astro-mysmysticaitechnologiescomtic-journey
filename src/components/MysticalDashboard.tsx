@@ -119,7 +119,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                 background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 47% 8%))",
                 border: "1px solid hsl(var(--gold) / 0.2)",
                 boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
-                fontSize: "2em",
+                fontSize: "16px",
               }}
               role="dialog"
               aria-label={t.dashboard_title}
@@ -131,8 +131,8 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     <Sparkles className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h2 className="font-heading text-lg text-primary">{t.dashboard_title}</h2>
-                    <p className="text-xs text-muted-foreground">{t.dashboard_subtitle}</p>
+                    <h2 className="font-heading text-2xl text-primary">{t.dashboard_title}</h2>
+                    <p className="text-base text-muted-foreground">{t.dashboard_subtitle}</p>
                   </div>
                 </div>
                 <motion.button
@@ -155,8 +155,8 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/5 flex items-center justify-center">
                     <Star className="w-10 h-10 text-primary/40" />
                   </div>
-                  <h3 className="font-heading text-primary text-lg mb-2">{t.dashboard_empty_title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{t.dashboard_empty_desc}</p>
+                  <h3 className="font-heading text-primary text-2xl mb-2">{t.dashboard_empty_title}</h3>
+                  <p className="text-lg text-muted-foreground leading-relaxed">{t.dashboard_empty_desc}</p>
                 </div>
               ) : (
                 <div className="p-5 space-y-6">
@@ -167,16 +167,16 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       animate={{ opacity: 1, y: 0 }}
                       className="rounded-xl bg-muted/50 border border-border p-5"
                     >
-                      <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
+                      <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
                         <Sun className="w-4 h-4" />
                         {t.dashboard_identity}
                       </h3>
                       <div className="grid grid-cols-2 gap-4">
                         {profile.zodiacSign && (
                           <div className="text-center p-3 rounded-lg bg-background/50">
-                            <span className="text-2xl block mb-1">{profile.zodiacSymbol}</span>
-                            <span className="text-sm font-heading text-foreground block">{profile.zodiacSign}</span>
-                            <span className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-1">
+                            <span className="text-3xl block mb-1">{profile.zodiacSymbol}</span>
+                            <span className="text-lg font-heading text-foreground block">{profile.zodiacSign}</span>
+                            <span className="text-base text-muted-foreground flex items-center justify-center gap-1 mt-1">
                               {profile.zodiacElement && ELEMENT_ICONS[profile.zodiacElement] && (() => {
                                 const Icon = ELEMENT_ICONS[profile.zodiacElement!];
                                 return <Icon className="w-3 h-3" />;
@@ -187,9 +187,9 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                         )}
                         {profile.risingSign && (
                           <div className="text-center p-3 rounded-lg bg-background/50">
-                            <span className="text-2xl block mb-1">{profile.risingSymbol}</span>
-                            <span className="text-sm font-heading text-foreground block">{profile.risingSign}</span>
-                            <span className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-1">
+                            <span className="text-3xl block mb-1">{profile.risingSymbol}</span>
+                            <span className="text-lg font-heading text-foreground block">{profile.risingSign}</span>
+                            <span className="text-base text-muted-foreground flex items-center justify-center gap-1 mt-1">
                               <TrendingUp className="w-3 h-3" />
                               {t.dashboard_rising}
                             </span>
@@ -207,16 +207,16 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     className="grid grid-cols-3 gap-3"
                   >
                     <div className="text-center p-4 rounded-xl bg-muted/50 border border-border">
-                      <span className="text-2xl font-heading text-primary block">{profile.totalReadings}</span>
-                      <span className="text-xs text-muted-foreground">{t.dashboard_readings}</span>
+                      <span className="text-3xl font-heading text-primary block">{profile.totalReadings}</span>
+                      <span className="text-base text-muted-foreground">{t.dashboard_readings}</span>
                     </div>
                     <div className="text-center p-4 rounded-xl bg-muted/50 border border-border">
-                      <span className="text-2xl font-heading text-primary block">{topCards.length}</span>
-                      <span className="text-xs text-muted-foreground">{t.dashboard_unique_cards}</span>
+                      <span className="text-3xl font-heading text-primary block">{topCards.length}</span>
+                      <span className="text-base text-muted-foreground">{t.dashboard_unique_cards}</span>
                     </div>
                     <div className="text-center p-4 rounded-xl bg-muted/50 border border-border">
-                      <span className="text-2xl font-heading text-primary block">{daysSinceFirst || 1}</span>
-                      <span className="text-xs text-muted-foreground">{t.dashboard_days}</span>
+                      <span className="text-3xl font-heading text-primary block">{daysSinceFirst || 1}</span>
+                      <span className="text-base text-muted-foreground">{t.dashboard_days}</span>
                     </div>
                   </motion.div>
 
@@ -228,16 +228,16 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       transition={{ delay: 0.2 }}
                       className="rounded-xl bg-muted/50 border border-border p-5"
                     >
-                      <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
+                      <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
                         <Moon className="w-4 h-4" />
                         {t.dashboard_recurring_cards}
                       </h3>
                       <div className="space-y-2">
                         {topCards.map(([name, data]) => (
                           <div key={name} className="flex items-center gap-3 p-2 rounded-lg bg-background/30">
-                            <span className="text-xl w-8 text-center">{data.symbol}</span>
-                            <span className="text-sm text-foreground flex-1 font-body">{name}</span>
-                            <span className="text-xs text-primary font-heading">×{data.count}</span>
+                            <span className="text-2xl w-10 text-center">{data.symbol}</span>
+                            <span className="text-lg text-foreground flex-1 font-body">{name}</span>
+                            <span className="text-base text-primary font-heading">×{data.count}</span>
                           </div>
                         ))}
                       </div>
@@ -252,7 +252,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       transition={{ delay: 0.3 }}
                       className="rounded-xl bg-muted/50 border border-border p-5"
                     >
-                      <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
+                      <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
                         <Flame className="w-4 h-4" />
                         {t.dashboard_energy_themes}
                       </h3>
@@ -263,11 +263,11 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                           return (
                             <div key={theme} className="space-y-1">
                               <div className="flex items-center justify-between">
-                                <span className="text-xs text-foreground flex items-center gap-2 font-body">
-                                  <Icon className="w-3.5 h-3.5 text-primary/70" />
+                                <span className="text-base text-foreground flex items-center gap-2 font-body">
+                                  <Icon className="w-4 h-4 text-primary/70" />
                                   {THEME_LABELS[theme] || theme}
                                 </span>
-                                <span className="text-xs text-muted-foreground">×{count}</span>
+                                <span className="text-base text-muted-foreground">×{count}</span>
                               </div>
                               <div className="h-1.5 rounded-full bg-background/50 overflow-hidden">
                                 <motion.div
@@ -292,17 +292,17 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       transition={{ delay: 0.4 }}
                       className="rounded-xl bg-muted/50 border border-border p-5"
                     >
-                      <h3 className="font-heading text-sm text-primary mb-4 flex items-center gap-2">
+                      <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
                         <Heart className="w-4 h-4" />
                         {t.dashboard_compatibility}
                       </h3>
                       <div className="space-y-2">
                         {profile.compatibilityHistory.slice(0, 3).map((entry, i) => (
                           <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/30">
-                            <span className="text-sm text-foreground font-body">
+                            <span className="text-lg text-foreground font-body">
                               {entry.partnerSymbol} {entry.partnerSign}
                             </span>
-                            <span className={`text-sm font-heading ${entry.score >= 70 ? "text-green-400" : entry.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
+                            <span className={`text-lg font-heading ${entry.score >= 70 ? "text-green-400" : entry.score >= 40 ? "text-yellow-400" : "text-red-400"}`}>
                               {entry.score}%
                             </span>
                           </div>
