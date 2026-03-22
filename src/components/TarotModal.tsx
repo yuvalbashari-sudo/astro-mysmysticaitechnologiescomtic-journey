@@ -606,17 +606,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Tarot table cards — rebuilt with proper viewport-fitting layout */}
                   <div className="relative z-30 w-full overflow-hidden px-2 md:px-4 mb-6 flex items-center justify-center">
-                    {/* 
-                      Container height = 100vh minus top chrome (~11rem) and bottom chrome (~7rem).
-                      Cards split this evenly with gaps accounted for.
-                    */}
                     <div
                       className="flex flex-col items-center gap-3"
                       style={{
-                        height: `calc(100vh - 18rem)`,
-                        maxHeight: `calc(100vh - 18rem)`,
+                        height: tableCards.length === 1 ? "auto" : `calc(100vh - 18rem)`,
+                        maxHeight: tableCards.length === 1 ? "min(20rem, 40vh)" : `calc(100vh - 18rem)`,
                         width: "100%",
-                        maxWidth: "12rem",
+                        maxWidth: tableCards.length === 1 ? "10rem" : "12rem",
                       }}
                     >
                       {tableCards.map((card, i) => {
