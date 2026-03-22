@@ -148,25 +148,25 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="text-center">
-                        <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-6 h-6 text-gold" /></motion.div>
-                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.palm_title}</h2>
-                        <p className="text-foreground/70 font-body text-sm mb-4 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.palm_desc}</p>
-                        <div className="mb-4">
-                          <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
-                          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
+                        <motion.div className="w-14 h-14 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-6 h-6 text-gold" /></motion.div>
+                        <h2 className="font-heading text-[2.8rem] gold-gradient-text mb-4 leading-tight" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.palm_title}</h2>
+                        <p className="text-foreground/70 font-body text-[1.6rem] mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.palm_desc}</p>
+                        <div className="mb-6">
+                          <label className="block text-[1.5rem] text-gold/70 font-body mb-3 text-right leading-relaxed">{t.palm_name_label}</label>
+                          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center text-[1.4rem]" dir="rtl" />
                         </div>
-                        <div className="mb-4 flex flex-col gap-4" dir="rtl">
+                        <div className="mb-6 flex flex-col gap-5" dir="rtl">
                           {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
                           {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
                         </div>
-                        <div className="mb-5 rounded-xl p-3 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
-                          <p className="text-gold/60 font-body text-[11px] font-semibold mb-1">{t.palm_tips_title}</p>
-                          <ul className="text-foreground/50 font-body text-[10px] space-y-0.5 leading-relaxed">
+                        <div className="mb-7 rounded-xl p-5 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
+                          <p className="text-gold/60 font-body text-[1.25rem] font-semibold mb-2">{t.palm_tips_title}</p>
+                          <ul className="text-foreground/50 font-body text-[1.1rem] space-y-1.5 leading-relaxed">
                             <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
                           </ul>
                         </div>
-                        <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />{t.palm_cta}</motion.button>
-                        <p className="text-[11px] text-muted-foreground font-body mt-4" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
+                        <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body text-[1.4rem] flex items-center justify-center gap-3 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-6 h-6" />{t.palm_cta}</motion.button>
+                        <p className="text-[1.2rem] text-muted-foreground font-body mt-5 leading-relaxed" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
                       </div>
                     </motion.div>
                   </div>
