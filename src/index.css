@@ -300,3 +300,10 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Double all text sizes inside advisor panel for Palm Reading */
+.advisor-text-2x {
+  font-size: 2rem;
+}
+.advisor-text-2x h3 { font-size: 2rem; }
+.advisor-text-2x p, .advisor-text-2x span, .advisor-text-2x button, .advisor-text-2x input { font-size: 1.75rem; }
