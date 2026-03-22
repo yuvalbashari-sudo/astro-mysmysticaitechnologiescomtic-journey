@@ -4,7 +4,6 @@ import { useT } from "@/i18n";
 
 interface HeroScrollContentProps {
   onOpenForecast: () => void;
-  onOpenRising: () => void;
   onOpenCompatibility: () => void;
   onOpenTarot: () => void;
   onOpenPalm: () => void;
