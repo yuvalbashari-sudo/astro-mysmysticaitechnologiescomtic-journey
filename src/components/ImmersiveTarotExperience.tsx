@@ -278,6 +278,7 @@ const FloatingCard = ({
             />
           </div>
         </motion.div>
+        </div>
 
         {/* Enhanced reveal burst — multi-layer */}
         <AnimatePresence>
