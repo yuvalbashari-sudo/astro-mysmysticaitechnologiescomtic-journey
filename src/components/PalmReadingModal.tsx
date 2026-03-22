@@ -126,47 +126,13 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                     {/* Advisor chat panel */}
                     <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
 
-                    {/* Teaser panel — independent sibling, right:10px from container */}
-                    <AnimatePresence>
-                      {avatarHovered && (
-                        <motion.div
-                          className="absolute pointer-events-none z-[200]"
-                          style={{
-                            bottom: 230,
-                            right: 10,
-                            whiteSpace: "nowrap",
-                            padding: "12px 20px",
-                            borderRadius: 12,
-                            background: "hsl(222 47% 8% / 0.75)",
-                            backdropFilter: "blur(14px)",
-                            WebkitBackdropFilter: "blur(14px)",
-                            border: "1px solid hsl(var(--gold) / 0.18)",
-                            boxShadow: "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
-                            direction: "rtl",
-                          }}
-                          initial={{ opacity: 0, scale: 0.92, y: 4 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.92, y: 4 }}
-                          transition={{ duration: 0.15, ease: "easeOut" }}
-                        >
-                          <p className="font-body" style={{ margin: 0, fontSize: 17, lineHeight: 1.5, color: "hsl(var(--foreground) / 0.8)" }}>
-                            רוצים הכוונה?{" "}
-                            <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
-                          </p>
-                          <div className="absolute" style={{ right: 24, bottom: -4, transform: "rotate(45deg)", width: 8, height: 8, background: "hsl(222 47% 8% / 0.75)", border: "1px solid hsl(var(--gold) / 0.18)", borderTop: "none", borderLeft: "none" }} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-
-                    {/* Avatar — UNCHANGED */}
+                    {/* Avatar — click only, no hover teaser */}
                     <motion.div
                       className="absolute pointer-events-auto z-10 cursor-pointer"
                       style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-                      onMouseEnter={() => setAvatarHovered(true)}
-                      onMouseLeave={() => setAvatarHovered(false)}
                       onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
                     >
                       <div
