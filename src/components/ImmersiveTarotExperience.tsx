@@ -400,25 +400,25 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const questionOptions = useMemo((): QuestionOption[] => [
     {
       key: "love",
-      icon: <Heart className="w-9 h-9" />,
+      icon: <Heart className="w-12 h-12" />,
       label: language === "he" ? "אהבה" : language === "ar" ? "الحب" : language === "ru" ? "Любовь" : "Love",
       color: "340 60% 55%",
     },
     {
       key: "career",
-      icon: <Briefcase className="w-9 h-9" />,
+      icon: <Briefcase className="w-12 h-12" />,
       label: language === "he" ? "קריירה" : language === "ar" ? "المهنة" : language === "ru" ? "Карьера" : "Career",
       color: "215 60% 55%",
     },
     {
       key: "money",
-      icon: <DollarSign className="w-9 h-9" />,
+      icon: <DollarSign className="w-12 h-12" />,
       label: language === "he" ? "כסף" : language === "ar" ? "المال" : language === "ru" ? "Деньги" : "Money",
       color: "43 80% 55%",
     },
     {
       key: "general",
-      icon: <Sparkles className="w-9 h-9" />,
+      icon: <Sparkles className="w-12 h-12" />,
       label: language === "he" ? "כללי" : language === "ar" ? "عام" : language === "ru" ? "Общее" : "General",
       color: "270 50% 60%",
     },
@@ -690,7 +690,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <motion.div
-                    className="text-gold/50 text-[11px] tracking-[0.3em] uppercase font-body mb-3"
+                    className="text-gold/50 text-[22px] tracking-[0.3em] uppercase font-body mb-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
@@ -698,7 +698,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {language === "he" ? "קריאת טארוט" : "Tarot Reading"}
                   </motion.div>
                   <motion.h2
-                    className="font-heading text-2xl md:text-3xl mb-8"
+                    className="font-heading text-4xl md:text-5xl mb-10"
                     style={{
                       color: "hsl(var(--gold))",
                       textShadow: "0 0 20px hsl(var(--gold) / 0.3)",
@@ -716,7 +716,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       <motion.button
                         key={opt.key}
                         type="button"
-                        className="relative rounded-xl p-6 md:p-8 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
+                        className="relative rounded-xl p-8 md:p-10 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
                         style={{
                           background: selectedQuestion === opt.key
                             ? `linear-gradient(145deg, hsl(${opt.color} / 0.2), hsl(${opt.color} / 0.08))`
@@ -741,7 +741,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           style={{ color: `hsl(${opt.color})` }}
                         >
                           {opt.icon}
-                          <span className="font-heading text-base md:text-xl tracking-wide">
+                          <span className="font-heading text-xl md:text-2xl tracking-wide">
                             {opt.label}
                           </span>
                         </div>
