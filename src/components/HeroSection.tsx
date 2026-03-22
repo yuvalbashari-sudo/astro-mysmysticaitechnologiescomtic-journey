@@ -2879,26 +2879,6 @@ const HeroSection = () => {
         </div>
       </div>
 
-    {/* ── Integrated hero bottom bar: avatar + daily card ── */}
-    <motion.div
-      className="fixed z-[70] pointer-events-none"
-      style={{
-        bottom: isMobile ? 70 : 90,
-        left: "50%",
-        transform: "translateX(-50%)",
-      }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 2.5, duration: 0.8, ease: "easeOut" }}
-    >
-      <div className="pointer-events-auto">
-        <InlineDailyCard
-          isMobile={isMobile}
-          onOpenFullReading={() => setDailyCardOpen(true)}
-          onAvatarClick={() => setAstrologerOpen(true)}
-        />
-      </div>
-    </motion.div>
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
     <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
