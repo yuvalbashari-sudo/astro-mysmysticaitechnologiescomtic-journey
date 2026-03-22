@@ -411,7 +411,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Subtitle */}
                     <motion.p
-                      className="text-foreground/60 font-body text-[17px] md:text-[19px] max-w-[560px] leading-[1.7] mb-1.5"
+                      className="text-foreground/60 font-body text-[17px] md:text-[19px] max-w-[700px] leading-[1.7] mb-1.5"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.2 }}
