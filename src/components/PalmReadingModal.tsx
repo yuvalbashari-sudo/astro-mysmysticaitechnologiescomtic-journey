@@ -126,25 +126,17 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                     {/* Advisor chat panel */}
                     <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
 
-                    {/* Avatar + teaser share same positioning context */}
-                    <motion.div
-                      className="absolute pointer-events-auto z-10 cursor-pointer"
-                      style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-                      onMouseEnter={() => setAvatarHovered(true)}
-                      onMouseLeave={() => setAvatarHovered(false)}
-                      onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
+                    <div
+                      className="absolute pointer-events-auto z-10"
+                      style={{ bottom: 32, right: "4vw", width: 168, height: 168, position: "relative" }}
                     >
-                      {/* Hover teaser — positioned relative to avatar */}
                       <AnimatePresence>
                         {avatarHovered && (
                           <motion.div
                             className="absolute pointer-events-none z-[200]"
                             style={{
+                              right: 10,
                               bottom: "calc(100% + 30px)",
-                              right: 0,
                               whiteSpace: "nowrap",
                               padding: "12px 20px",
                               borderRadius: 12,
@@ -169,16 +161,26 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                         )}
                       </AnimatePresence>
 
-                      <div
-                        className="w-full h-full rounded-full overflow-hidden"
-                        style={{
-                          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
-                          border: "2px solid hsl(var(--gold) / 0.35)",
-                        }}
+                      <motion.div
+                        className="w-full h-full cursor-pointer"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                        onMouseEnter={() => setAvatarHovered(true)}
+                        onMouseLeave={() => setAvatarHovered(false)}
+                        onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
                       >
-                        <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
-                      </div>
-                    </motion.div>
+                        <div
+                          className="w-full h-full rounded-full overflow-hidden"
+                          style={{
+                            boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+                            border: "2px solid hsl(var(--gold) / 0.35)",
+                          }}
+                        >
+                          <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
+                        </div>
+                      </motion.div>
+                    </div>
 
                     {/* Form panel — LEFT side */}
                     <motion.div
