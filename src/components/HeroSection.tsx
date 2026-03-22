@@ -3434,11 +3434,11 @@ const HeroSection = () => {
               marginRight: isMobile ? "auto" : 80,
               marginLeft: isMobile ? "auto" : 0,
               padding: isMobile ? "36px 24px" : "48px 40px",
-              background: "linear-gradient(160deg, hsl(var(--deep-blue) / 0.92) 0%, hsl(222 47% 4% / 0.96) 100%)",
-              border: "1px solid hsl(var(--gold) / 0.15)",
-              boxShadow: "0 8px 60px hsl(var(--deep-blue) / 0.7), 0 0 1px hsl(var(--gold) / 0.2), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-              backdropFilter: "blur(24px)",
-              WebkitBackdropFilter: "blur(24px)",
+              background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.8), hsl(var(--deep-blue) / 0.9))",
+              border: "1px solid hsl(var(--gold) / 0.2)",
+              boxShadow: "0 0 30px hsl(var(--gold) / 0.15), 0 0 60px hsl(var(--gold) / 0.05), 0 8px 32px hsl(var(--deep-blue) / 0.5), 0 0 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.1)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
               marginTop: isMobile ? 0 : 20,
             }}
             initial={{ opacity: 0, y: 40, scale: 0.85 }}
