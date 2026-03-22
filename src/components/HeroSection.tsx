@@ -3353,9 +3353,9 @@ const HeroSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           onClick={closeUniverseMessage}
           style={{
-            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.7) 0%, hsl(var(--deep-blue) / 0.92) 60%, hsl(222 47% 3% / 0.97) 100%)",
-            backdropFilter: "blur(12px)",
-            WebkitBackdropFilter: "blur(12px)",
+            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.55) 0%, hsl(var(--deep-blue) / 0.8) 60%, hsl(222 47% 3% / 0.92) 100%)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
           }}
         >
           {/* Central radial glow */}
@@ -3427,8 +3427,19 @@ const HeroSection = () => {
 
           {/* Content */}
           <motion.div
-            className="relative text-center px-6 flex flex-col items-center justify-center"
-            style={{ maxWidth: isMobile ? 360 : 520, marginRight: isMobile ? 0 : 80, marginLeft: isMobile ? 0 : "auto" }}
+            className="relative text-center flex flex-col items-center justify-center rounded-2xl"
+            style={{
+              maxWidth: isMobile ? 340 : 420,
+              width: isMobile ? "90%" : 420,
+              marginRight: isMobile ? "auto" : 60,
+              marginLeft: isMobile ? "auto" : 0,
+              padding: isMobile ? "32px 24px" : "44px 36px",
+              background: "linear-gradient(160deg, hsl(var(--deep-blue) / 0.85) 0%, hsl(222 47% 4% / 0.9) 100%)",
+              border: "1px solid hsl(var(--gold) / 0.12)",
+              boxShadow: "0 8px 60px hsl(var(--deep-blue) / 0.6), 0 0 1px hsl(var(--gold) / 0.15), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
+            }}
             initial={{ opacity: 0, y: 40, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
