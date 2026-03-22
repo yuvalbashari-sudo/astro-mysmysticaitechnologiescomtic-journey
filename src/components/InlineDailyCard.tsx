@@ -57,7 +57,7 @@ interface Props {
   onAvatarClick: () => void;
 }
 
-const InlineDailyCard = ({ isMobile, onOpenFullReading }: Props) => {
+const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [flipped, setFlipped] = useState(false);
