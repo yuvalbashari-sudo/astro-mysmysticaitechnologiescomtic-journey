@@ -302,9 +302,8 @@
 }
 
 /* Double all text sizes inside advisor panel for Palm Reading */
-.advisor-text-2x * {
-  font-size: calc(var(--tw-font-size, 1em) * 2) !important;
+.advisor-text-2x {
+  font-size: 2rem;
 }
-.advisor-text-2x input::placeholder {
-  font-size: inherit !important;
-}
+.advisor-text-2x h3 { font-size: 2rem; }
+.advisor-text-2x p, .advisor-text-2x span, .advisor-text-2x button, .advisor-text-2x input { font-size: 1.75rem; }
