@@ -410,6 +410,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
