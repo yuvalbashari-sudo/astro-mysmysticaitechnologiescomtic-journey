@@ -454,7 +454,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     <AvatarHoverTeaser
                       disabled={isMobile}
                       anchor="left"
-                      className="fixed z-[110] pointer-events-auto"
+                      className="absolute z-[110] pointer-events-auto"
                       style={{ right: 10, bottom: 10, width: forecastAdvisorBaseSize, height: forecastAdvisorBaseSize }}
                     >
                       <motion.button
