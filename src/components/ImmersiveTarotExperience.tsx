@@ -798,6 +798,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     style={{
                       height: isMobile ? 180 : 280,
                       maxWidth: isMobile ? 340 : 520,
+                      zIndex: 10,
                     }}
                   >
                     {drawnCards.map((card, i) => (
