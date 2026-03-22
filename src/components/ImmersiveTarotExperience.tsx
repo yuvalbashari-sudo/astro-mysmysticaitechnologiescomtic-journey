@@ -876,7 +876,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   <motion.div
                     className="absolute flex items-center justify-center"
                     style={{
-                      bottom: isMobile ? 8 : 10,
+                      bottom: 5,
                       right: isMobile ? 8 : 10,
                       zIndex: 20,
                     }}
