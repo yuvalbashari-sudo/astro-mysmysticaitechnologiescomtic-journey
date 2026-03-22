@@ -164,7 +164,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                               רוצים הכוונה?{" "}
                               <span style={{ color: "hsl(var(--gold))" }}>לחצו לשיחה</span>
                             </p>
-                            <div className="absolute" style={{ right: -4, bottom: 14, transform: "rotate(45deg)", width: 8, height: 8, background: "hsl(222 47% 8% / 0.75)", border: "1px solid hsl(var(--gold) / 0.18)", borderBottom: "none", borderLeft: "none" }} />
+                            <div className="absolute" style={{ right: 24, bottom: -4, transform: "rotate(45deg)", width: 8, height: 8, background: "hsl(222 47% 8% / 0.75)", border: "1px solid hsl(var(--gold) / 0.18)", borderTop: "none", borderLeft: "none" }} />
                           </motion.div>
                         )}
                       </AnimatePresence>
