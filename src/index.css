@@ -80,6 +80,10 @@
       height: 100dvh;
       overflow: hidden;
     }
+    html:has(.a11y-page), html:has(.a11y-page) body {
+      height: auto;
+      overflow: auto;
+    }
   }
 
   p {
