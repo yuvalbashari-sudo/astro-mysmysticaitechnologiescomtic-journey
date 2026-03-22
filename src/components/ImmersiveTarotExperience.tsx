@@ -664,7 +664,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Close button ── */}
           <motion.button
-            className="fixed top-5 left-5 z-[95] w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer"
+            className="fixed top-5 left-5 z-[200] w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer pointer-events-auto"
             style={{
               background: "hsl(var(--deep-blue) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.2)",
