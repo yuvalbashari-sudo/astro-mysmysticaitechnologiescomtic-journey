@@ -3469,7 +3469,7 @@ const HeroSection = () => {
 
             {/* Main message */}
             <motion.p
-              className="font-body leading-[1.9] mb-4"
+              className="font-body leading-[1.9] mb-5"
               style={{
                 fontSize: isMobile ? 24 : 34,
                 fontWeight: 500,
