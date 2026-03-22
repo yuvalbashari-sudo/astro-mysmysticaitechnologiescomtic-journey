@@ -336,53 +336,60 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   className="relative flex flex-col items-end justify-center text-center min-h-[70vh] px-4"
                   style={{ paddingRight: isMobileViewport ? 4 : 5 }}
                 >
-                  {/* ── Glass container ── */}
+                  {/* ── Premium container ── */}
                   <div
-                    className="relative z-10 w-full max-w-md rounded-3xl px-8 py-10 md:px-10 md:py-12 flex flex-col items-center"
+                    className="relative z-10 w-full max-w-[420px] rounded-[28px] px-10 py-14 md:px-12 md:py-16 flex flex-col items-center"
                     style={{
-                      background: "linear-gradient(170deg, hsl(222 47% 8% / 0.88), hsl(222 47% 5% / 0.92))",
-                      backdropFilter: "blur(6px)",
-                      WebkitBackdropFilter: "blur(6px)",
-                      border: "1px solid hsl(var(--gold) / 0.12)",
-                      boxShadow: "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 1px hsl(var(--gold) / 0.1), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                      background: "linear-gradient(175deg, hsl(222 40% 10% / 0.94), hsl(222 45% 6% / 0.97))",
+                      border: "1px solid hsl(var(--gold) / 0.1)",
+                      boxShadow: `
+                        0 24px 80px hsl(0 0% 0% / 0.6),
+                        0 8px 32px hsl(0 0% 0% / 0.3),
+                        0 0 0 1px hsl(var(--gold) / 0.04),
+                        inset 0 1px 0 hsl(var(--gold) / 0.07),
+                        inset 0 -1px 0 hsl(222 40% 3% / 0.5)
+                      `,
                     }}
                   >
-                    {/* Ambient glow behind container */}
-                    <motion.div
-                      className="absolute -inset-10 pointer-events-none rounded-3xl"
+                    {/* Outer glow — very subtle */}
+                    <div
+                      className="absolute -inset-px rounded-[28px] pointer-events-none"
                       style={{
-                        background: "radial-gradient(ellipse at 50% 40%, hsl(var(--gold) / 0.04), transparent 70%)",
-                        filter: "blur(40px)",
+                        background: "linear-gradient(175deg, hsl(var(--gold) / 0.06), transparent 40%)",
+                        borderRadius: "inherit",
                       }}
-                      animate={{ opacity: [0.4, 0.7, 0.4] }}
-                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                     />
 
                     {/* Icon */}
                     <motion.div
-                      className="w-16 h-16 mb-5 rounded-full flex items-center justify-center relative"
+                      className="w-14 h-14 mb-7 rounded-full flex items-center justify-center relative"
                       style={{
-                        background: "radial-gradient(circle, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.04) 70%, transparent)",
-                        border: "1px solid hsl(var(--gold) / 0.18)",
+                        background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 80%)",
+                        border: "1px solid hsl(var(--gold) / 0.15)",
+                        boxShadow: "0 0 24px hsl(var(--gold) / 0.08)",
                       }}
                       animate={{
                         boxShadow: [
                           "0 0 20px hsl(var(--gold) / 0.06)",
-                          "0 0 35px hsl(var(--gold) / 0.15)",
+                          "0 0 30px hsl(var(--gold) / 0.12)",
                           "0 0 20px hsl(var(--gold) / 0.06)",
                         ],
                       }}
-                      transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                       initial={{ scale: 0.8, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
                     >
-                      <Sun className="w-7 h-7 text-gold/90" />
+                      <Sun className="w-6 h-6 text-gold" />
                     </motion.div>
 
                     {/* Title */}
                     <motion.h2
-                      className="font-heading text-3xl md:text-4xl gold-gradient-text mb-2"
-                      style={{ textShadow: "0 0 30px hsl(var(--gold) / 0.15)" }}
+                      className="font-heading text-[2rem] md:text-[2.4rem] leading-tight mb-3"
+                      style={{
+                        color: "hsl(var(--gold))",
+                        textShadow: "0 2px 20px hsl(var(--gold) / 0.2)",
+                        fontWeight: 600,
+                      }}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1, duration: 0.5 }}
@@ -390,21 +397,21 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       {t.daily_title}
                     </motion.h2>
 
-                    {/* Decorative divider */}
+                    {/* Divider */}
                     <motion.div
-                      className="flex items-center gap-2 mb-4"
+                      className="flex items-center gap-2.5 mb-5"
                       initial={{ opacity: 0, scaleX: 0 }}
                       animate={{ opacity: 1, scaleX: 1 }}
                       transition={{ delay: 0.15 }}
                     >
-                      <div className="w-10 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.25))" }} />
-                      <span className="text-gold/30 text-[10px]">✦</span>
-                      <div className="w-10 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--gold) / 0.25), transparent)" }} />
+                      <div className="w-12 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.2))" }} />
+                      <span className="text-gold/25 text-[9px]">✦</span>
+                      <div className="w-12 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--gold) / 0.2), transparent)" }} />
                     </motion.div>
 
                     {/* Subtitle */}
                     <motion.p
-                      className="text-foreground/50 font-body text-sm md:text-base max-w-xs leading-relaxed mb-1"
+                      className="text-foreground/60 font-body text-[15px] md:text-base max-w-[300px] leading-[1.7] mb-1.5"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.2 }}
@@ -412,7 +419,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       {t.daily_desc}
                     </motion.p>
                     <motion.p
-                      className="text-foreground/25 font-body text-[11px] mb-7"
+                      className="text-foreground/30 font-body text-[11px] mb-9"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.25 }}
@@ -422,34 +429,34 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Gender Selection */}
                     <motion.div
-                      className="w-full max-w-[280px] mb-7"
+                      className="w-full max-w-[260px] mb-9"
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <label className="block text-xs text-gold/50 font-body mb-2.5 tracking-wider uppercase">{t.forecast_gender_label}</label>
-                      <div className="flex gap-2.5">
+                      <label className="block text-[11px] text-gold/45 font-body mb-3 tracking-[0.12em] uppercase">{t.forecast_gender_label}</label>
+                      <div className="flex gap-2">
                         {(["male", "female"] as const).map((g) => (
                           <motion.button
                             key={g}
                             type="button"
                             onClick={() => setGender(g)}
-                            className="flex-1 py-2.5 rounded-lg font-body text-sm transition-all duration-300"
+                            className="flex-1 py-3 rounded-xl font-body text-[13px] transition-all duration-200"
                             style={{
                               background: gender === g
-                                ? "linear-gradient(135deg, hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.06))"
-                                : "hsl(var(--deep-blue-light) / 0.3)",
+                                ? "linear-gradient(145deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))"
+                                : "hsl(222 40% 12% / 0.6)",
                               border: gender === g
-                                ? "1px solid hsl(var(--gold) / 0.4)"
-                                : "1px solid hsl(var(--gold) / 0.08)",
+                                ? "1px solid hsl(var(--gold) / 0.35)"
+                                : "1px solid hsl(222 30% 20% / 0.5)",
                               color: gender === g
                                 ? "hsl(var(--gold))"
-                                : "hsl(var(--foreground) / 0.4)",
+                                : "hsl(var(--foreground) / 0.5)",
                               boxShadow: gender === g
-                                ? "0 0 12px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.1)"
-                                : "none",
+                                ? "0 0 12px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)"
+                                : "inset 0 1px 0 hsl(222 30% 18% / 0.3)",
                             }}
-                            whileHover={{ scale: 1.03 }}
+                            whileHover={{ scale: 1.03, borderColor: gender === g ? undefined : "hsl(222 30% 25% / 0.6)" }}
                             whileTap={{ scale: 0.97 }}
                           >
                             {g === "male" ? t.forecast_gender_male : t.forecast_gender_female}
@@ -460,7 +467,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Card fan preview */}
                     <motion.div
-                      className="relative w-24 h-34 mx-auto mb-7"
+                      className="relative w-[88px] mx-auto mb-10"
+                      style={{ height: 124 }}
                       initial={{ opacity: 0, scale: 0.85 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.35, duration: 0.6 }}
@@ -470,8 +478,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           key={i}
                           className="absolute inset-0 rounded-lg overflow-hidden"
                           style={{
-                            border: "1px solid hsl(var(--gold) / 0.18)",
-                            boxShadow: "0 6px 20px hsl(0 0% 0% / 0.3)",
+                            border: "1px solid hsl(var(--gold) / 0.15)",
+                            boxShadow: `0 8px 24px hsl(0 0% 0% / 0.35), 0 0 8px hsl(var(--gold) / ${i === 1 ? 0.06 : 0.02})`,
                             zIndex: 3 - i,
                           }}
                           animate={{
@@ -484,34 +492,36 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           <img src={cardBack} alt="Card" className="w-full h-full object-cover" />
                         </motion.div>
                       ))}
+                      {/* Card glow */}
                       <motion.div
-                        className="absolute -inset-6 rounded-full pointer-events-none"
+                        className="absolute pointer-events-none"
                         style={{
-                          background: "radial-gradient(circle, hsl(var(--gold) / 0.05), transparent 70%)",
-                          filter: "blur(15px)",
+                          inset: "-20px -16px",
+                          background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06), transparent 65%)",
+                          filter: "blur(12px)",
                         }}
-                        animate={{ opacity: [0.3, 0.5, 0.3] }}
-                        transition={{ duration: 3, repeat: Infinity }}
+                        animate={{ opacity: [0.4, 0.7, 0.4] }}
+                        transition={{ duration: 3.5, repeat: Infinity }}
                       />
                     </motion.div>
 
                     {/* CTA Button */}
                     <motion.button
                       onClick={handleDraw}
-                      className="relative font-body flex items-center justify-center gap-2.5 text-sm md:text-base px-8 py-3.5 rounded-full overflow-hidden font-medium"
+                      className="relative font-body flex items-center justify-center gap-2.5 text-[15px] px-9 py-3.5 rounded-full overflow-hidden font-medium tracking-wide"
                       style={{
                         background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                         color: "hsl(var(--primary-foreground))",
-                        boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 4px 16px hsl(0 0% 0% / 0.25)",
+                        boxShadow: "0 4px 20px hsl(var(--gold) / 0.2), 0 8px 30px hsl(0 0% 0% / 0.25)",
                         letterSpacing: "0.04em",
                       }}
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4 }}
-                      whileHover={{ scale: 1.05, boxShadow: "0 0 35px hsl(var(--gold) / 0.3), 0 6px 20px hsl(0 0% 0% / 0.3)" }}
+                      whileHover={{ scale: 1.04, boxShadow: "0 6px 28px hsl(var(--gold) / 0.3), 0 10px 35px hsl(0 0% 0% / 0.3)" }}
                       whileTap={{ scale: 0.97 }}
                     >
-                      <Sparkles className="w-4.5 h-4.5" />
+                      <Sparkles className="w-4 h-4" />
                       {t.daily_cta}
                     </motion.button>
                   </div>
