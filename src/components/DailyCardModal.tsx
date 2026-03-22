@@ -213,25 +213,31 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setPhase("ritual");
   }, [t.daily_already_drawn]);
 
-  // Ritual animation sequence (no video)
+  // Ritual animation sequence — crystal ball → emerge → flip → reveal
   useEffect(() => {
     if (phase !== "ritual" || !card) return;
 
-    // Step 1: show shuffling text, Step 2: reveal card overlay
+    // Step 0: energy gathering (crystal ball glow)
+    // Step 1: card begins emerging (0.8s)
     const step1 = setTimeout(() => setRitualStep(1), 800);
+    // Step 2: card visible, beginning flip (1.8s)
     const step2 = setTimeout(() => {
       setShowCardOverlay(true);
       setRitualStep(2);
-    }, RITUAL_DURATION_MS - 1500);
-    const step3 = setTimeout(() => {
+    }, 1800);
+    // Step 3: card fully revealed, glow burst (3.2s)
+    const step3 = setTimeout(() => setRitualStep(3), 3200);
+    // Step 4: transition to result phase
+    const step4 = setTimeout(() => {
       setPhase("result");
       startAiReading(card);
-    }, RITUAL_DURATION_MS + 1000);
+    }, RITUAL_DURATION_MS);
 
     return () => {
       clearTimeout(step1);
       clearTimeout(step2);
       clearTimeout(step3);
+      clearTimeout(step4);
     };
   }, [phase, card]);
 
