@@ -102,8 +102,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload(side)} />
         {!image && (
           <div className="flex items-center justify-center gap-2 mt-2">
-            <motion.button onClick={() => cameraRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-body" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Camera className="w-3 h-3" />{t.palm_capture}</motion.button>
-            <motion.button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-body" style={{ background: "hsl(var(--foreground) / 0.04)", border: "1px solid hsl(var(--foreground) / 0.1)", color: "hsl(var(--foreground) / 0.6)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Upload className="w-3 h-3" />{t.palm_gallery}</motion.button>
+            <motion.button onClick={() => cameraRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[20px] font-body" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Camera className="w-3 h-3" />{t.palm_capture}</motion.button>
+            <motion.button onClick={() => fileRef.current?.click()} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[20px] font-body" style={{ background: "hsl(var(--foreground) / 0.04)", border: "1px solid hsl(var(--foreground) / 0.1)", color: "hsl(var(--foreground) / 0.6)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Upload className="w-3 h-3" />{t.palm_gallery}</motion.button>
           </div>
         )}
       </div>
