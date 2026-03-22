@@ -38,6 +38,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const rightCameraRef = useRef<HTMLInputElement>(null);
   const leftCameraRef = useRef<HTMLInputElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [palmAdvisorOpen, setPalmAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
