@@ -3487,7 +3487,7 @@ const HeroSection = () => {
 
             {/* Secondary line */}
             <motion.p
-              className="font-body mb-10"
+              className="font-body mb-8"
               style={{
                 fontSize: isMobile ? 13 : 15,
                 color: "hsl(var(--muted-foreground) / 0.5)",
