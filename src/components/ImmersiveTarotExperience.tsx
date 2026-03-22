@@ -876,8 +876,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   <motion.div
                     className="absolute flex items-center justify-center"
                     style={{
-                      bottom: isMobile ? 16 : 32,
-                      right: isMobile ? 16 : 40,
+                      bottom: isMobile ? 8 : 10,
+                      right: isMobile ? 8 : 10,
                       zIndex: 20,
                     }}
                     initial={{ opacity: 0, scale: 0.7 }}
@@ -887,10 +887,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     <div
                       className="rounded-full overflow-hidden"
                       style={{
-                        width: isMobile ? 64 : 90,
-                        height: isMobile ? 64 : 90,
+                        width: isMobile ? 80 : 140,
+                        height: isMobile ? 80 : 140,
                         border: "2px solid hsl(var(--gold) / 0.4)",
                         boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 8px 20px hsl(0 0% 0% / 0.4)",
+                        filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
                       }}
                     >
                       <img
