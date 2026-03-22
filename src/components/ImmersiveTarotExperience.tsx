@@ -217,6 +217,7 @@ const FloatingCard = ({
         />
 
         {/* Card body — rotates on Y, image swaps at midpoint */}
+        <div style={{ perspective: 900, width: "100%", height: "100%" }}>
         <motion.div
           className="w-full h-full rounded-xl"
           animate={{
@@ -224,7 +225,7 @@ const FloatingCard = ({
             scale: isFlipped ? [1, 1.06, 1] : 1,
           }}
           transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
-          style={{ perspective: 900 }}
+          style={{ transformStyle: "preserve-3d" }}
         >
           <div
             className="w-full h-full rounded-xl overflow-hidden relative"
@@ -277,6 +278,7 @@ const FloatingCard = ({
             />
           </div>
         </motion.div>
+        </div>
 
         {/* Enhanced reveal burst — multi-layer */}
         <AnimatePresence>
