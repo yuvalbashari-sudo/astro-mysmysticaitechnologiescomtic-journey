@@ -17,6 +17,8 @@ interface Props {
   wide?: boolean;
   /** When true, hides the built-in advisor avatar button */
   hideAdvisor?: boolean;
+  /** When true, skips oracle background — shows only a subtle dark backdrop */
+  transparent?: boolean;
 }
 
 /**
@@ -27,7 +29,7 @@ interface Props {
  * Children scroll naturally over a rising fog gradient that provides
  * text legibility without hiding the figure.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   
@@ -60,81 +62,90 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
-          {/* ── Layer 0: Oracle — the scene itself ── */}
-          <motion.div
-            className="absolute inset-0"
-            initial={{ scale: 1 }}
-            animate={{ scale: 1.04 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-          >
-            <img
-              src={heroFigure}
-              alt=""
-              className="w-full h-full object-cover"
-              style={{
-                objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                filter: "brightness(0.5) saturate(1.15)",
-              }}
-            />
-          </motion.div>
-
-          {/* ── Layer 1: Minimal vignette — edges only, center open ── */}
-          <div className="absolute inset-0 pointer-events-none">
+          {transparent ? (
+            /* Subtle dark backdrop — hero shows through */
             <div
               className="absolute inset-0"
-              style={{
-                background: "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
-              }}
+              style={{ background: "hsl(222 47% 3% / 0.45)", backdropFilter: "blur(2px)" }}
             />
-            {/* Top whisper for close-button legibility */}
-            <div
-              className="absolute top-0 left-0 right-0"
-              style={{
-                height: "8%",
-                background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.45), transparent)",
-              }}
-            />
-          </div>
+          ) : (
+            <>
+              {/* ── Layer 0: Oracle — the scene itself ── */}
+              <motion.div
+                className="absolute inset-0"
+                initial={{ scale: 1 }}
+                animate={{ scale: 1.04 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+              >
+                <img
+                  src={heroFigure}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  style={{
+                    objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
+                    filter: "brightness(0.5) saturate(1.15)",
+                  }}
+                />
+              </motion.div>
 
-          {/* ── Layer 2: Floating particles — depth cue ── */}
-          {[...Array(isMobile ? 6 : 14)].map((_, i) => (
-            <motion.div
-              key={`cp-${i}`}
-              className="absolute rounded-full pointer-events-none"
-              style={{
-                width: i % 3 === 0 ? 2.5 : 1.5,
-                height: i % 3 === 0 ? 2.5 : 1.5,
-                left: `${8 + Math.random() * 84}%`,
-                top: `${10 + Math.random() * 75}%`,
-                background: i % 2 === 0
-                  ? "hsl(var(--gold) / 0.4)"
-                  : "hsl(var(--celestial) / 0.3)",
-              }}
-              animate={{
-                opacity: [0, 0.5, 0],
-                y: [0, -(18 + Math.random() * 25)],
-              }}
-              transition={{
-                duration: 4 + Math.random() * 3,
-                repeat: Infinity,
-                delay: Math.random() * 5,
-                ease: "easeOut",
-              }}
-            />
-          ))}
+              {/* ── Layer 1: Minimal vignette ── */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
+                  }}
+                />
+                <div
+                  className="absolute top-0 left-0 right-0"
+                  style={{
+                    height: "8%",
+                    background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.45), transparent)",
+                  }}
+                />
+              </div>
 
-          {/* ── Layer 3: Warm glow near oracle's hands ── */}
-          <motion.div
-            className="absolute pointer-events-none"
-            style={{
-              left: "25%", right: "25%",
-              top: "45%", height: "20%",
-              background: "radial-gradient(ellipse 100% 100% at 50% 50%, hsl(var(--gold) / 0.04) 0%, transparent 70%)",
-              filter: "blur(30px)",
-            }}
-            animate={{ opacity: [0.2, 0.6, 0.2] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          />
+              {/* ── Layer 2: Floating particles ── */}
+              {[...Array(isMobile ? 6 : 14)].map((_, i) => (
+                <motion.div
+                  key={`cp-${i}`}
+                  className="absolute rounded-full pointer-events-none"
+                  style={{
+                    width: i % 3 === 0 ? 2.5 : 1.5,
+                    height: i % 3 === 0 ? 2.5 : 1.5,
+                    left: `${8 + Math.random() * 84}%`,
+                    top: `${10 + Math.random() * 75}%`,
+                    background: i % 2 === 0
+                      ? "hsl(var(--gold) / 0.4)"
+                      : "hsl(var(--celestial) / 0.3)",
+                  }}
+                  animate={{
+                    opacity: [0, 0.5, 0],
+                    y: [0, -(18 + Math.random() * 25)],
+                  }}
+                  transition={{
+                    duration: 4 + Math.random() * 3,
+                    repeat: Infinity,
+                    delay: Math.random() * 5,
+                    ease: "easeOut",
+                  }}
+                />
+              ))}
+
+              {/* ── Layer 3: Warm glow ── */}
+              <motion.div
+                className="absolute pointer-events-none"
+                style={{
+                  left: "25%", right: "25%",
+                  top: "45%", height: "20%",
+                  background: "radial-gradient(ellipse 100% 100% at 50% 50%, hsl(var(--gold) / 0.04) 0%, transparent 70%)",
+                  filter: "blur(30px)",
+                }}
+                animate={{ opacity: [0.2, 0.6, 0.2] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </>
+          )}
 
           {/* ── Controls: close + badge ── */}
           <motion.button
