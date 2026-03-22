@@ -801,8 +801,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         style={{
                           width: 44,
                           height: 44,
-                          bottom: -16,
-                          right: -12,
+                          bottom: 10,
+                          right: 10,
                           zIndex: 10,
                         }}
                         onClick={(e) => e.stopPropagation()}
