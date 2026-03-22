@@ -117,7 +117,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const isDesktopInput = !isMobile && !submitted && !isLoading;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor={isDesktopInput}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor>
             <AnimatePresence mode="wait">
               {!submitted && !isLoading ? (
                 isDesktopInput ? (
