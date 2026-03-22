@@ -2117,7 +2117,6 @@ const HeroSection = () => {
   const menuItems = useMemo(() => [
     { icon: Star, label: t.hero_menu_forecast, side: "left" as const, index: 0 },
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
-    { icon: Moon, label: t.hero_menu_rising, side: "left" as const, index: 2 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 1 },
   ], [t]);
