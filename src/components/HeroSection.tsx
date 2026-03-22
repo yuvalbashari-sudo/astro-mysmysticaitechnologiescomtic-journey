@@ -3209,8 +3209,8 @@ const HeroSection = () => {
               </motion.div>
             </motion.button>
 
-            {[menuItems[3], menuItems[5]].map((item, idx) => {
-              const i = item === menuItems[3] ? 3 : 5;
+            {[menuItems[4]].map((item, idx) => {
+              const i = 4;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
@@ -3227,7 +3227,7 @@ const HeroSection = () => {
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: -4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { if (i === 3) setDailyCardOpen(true); if (i === 5) setPalmOpen(true); }}
+                  onClick={() => setPalmOpen(true)}
                   aria-label={item.label}
                 >
                   <div
