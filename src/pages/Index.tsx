@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import MysticalDashboard from "@/components/MysticalDashboard";
-import DailyRitualSection from "@/components/DailyRitualSection";
+import MysticalTopBar from "@/components/MysticalTopBar";
 import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 

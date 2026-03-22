@@ -3526,7 +3526,6 @@ const HeroSection = () => {
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
-      <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
     </>
