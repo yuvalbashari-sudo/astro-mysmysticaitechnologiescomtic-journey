@@ -811,7 +811,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
                 </motion.div>
               ) : cards ? (
-                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-10 min-h-screen relative">
+                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle readability vignette */}
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 40%, hsl(222 47% 5% / 0.55) 0%, transparent 75%)" }} />
                   {/* Header */}
