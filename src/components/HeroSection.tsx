@@ -2093,7 +2093,7 @@ const HeroSection = () => {
   const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
-  const [risingOpen, setRisingOpen] = useState(false);
+  
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
   const [tarotOpen, setTarotOpen] = useState(false);
   const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
