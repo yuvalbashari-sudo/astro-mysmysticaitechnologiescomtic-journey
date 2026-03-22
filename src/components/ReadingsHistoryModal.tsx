@@ -44,6 +44,12 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
     setReadings(readingsStorage.getAll());
   };
 
+  const handleClearAll = () => {
+    readingsStorage.clearAll();
+    setReadings([]);
+    setConfirmClear(false);
+  };
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
