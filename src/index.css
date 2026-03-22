@@ -300,3 +300,11 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Double all text sizes inside advisor panel for Palm Reading */
+.advisor-text-2x * {
+  font-size: calc(var(--tw-font-size, 1em) * 2) !important;
+}
+.advisor-text-2x input::placeholder {
+  font-size: inherit !important;
+}
