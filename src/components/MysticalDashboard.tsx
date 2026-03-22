@@ -119,7 +119,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                 background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 47% 8%))",
                 border: "1px solid hsl(var(--gold) / 0.2)",
                 boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
-                fontSize: "1.5em",
+                fontSize: "2em",
               }}
               role="dialog"
               aria-label={t.dashboard_title}
