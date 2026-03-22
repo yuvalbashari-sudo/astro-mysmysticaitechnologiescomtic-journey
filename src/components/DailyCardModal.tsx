@@ -419,7 +419,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       {t.daily_desc}
                     </motion.p>
                     <motion.p
-                      className="text-foreground/30 font-body text-[11px] mb-9"
+                      className="text-foreground/30 font-body text-[13px] mb-9"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.25 }}
