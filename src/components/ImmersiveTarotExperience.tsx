@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
