@@ -3533,7 +3533,7 @@ const HeroSection = () => {
                 y: -2,
               }}
               whileTap={{ scale: 0.97 }}
-              onClick={closeUniverseMessage}
+              onClick={() => { closeUniverseMessage(); setImmersiveTarotOpen(true); }}
             >
               <motion.div
                 className="absolute inset-0 pointer-events-none"
