@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Moon, Eye, Hand, Sun } from "lucide-react";
+import { Sparkles, Star, Moon, Eye, Hand } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -12,8 +12,6 @@ import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmReadingModal from "./PalmReadingModal";
-import DailyCardModal from "./DailyCardModal";
-import InlineDailyCard from "./InlineDailyCard";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT, useLanguage } from "@/i18n";
@@ -82,7 +80,6 @@ const ITEM_COLORS = [
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
-  { glow: "hsl(280, 70%, 65%)", bg: "hsl(280, 70%, 65%)", label: "violet" },     // Daily Card - mystical violet
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
@@ -2101,7 +2098,7 @@ const HeroSection = () => {
   const [tarotOpen, setTarotOpen] = useState(false);
   const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
-  const [dailyCardOpen, setDailyCardOpen] = useState(false);
+  
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
   const [zodiacSignIndex, setZodiacSignIndex] = useState<number | null>(null);
@@ -2121,9 +2118,8 @@ const HeroSection = () => {
     { icon: Star, label: t.hero_menu_forecast, side: "left" as const, index: 0 },
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
     { icon: Moon, label: t.hero_menu_rising, side: "left" as const, index: 2 },
-    { icon: Sun, label: t.daily_ritual_card_label, side: "right" as const, index: 0 },
-    { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 1 },
-    { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 2 },
+    { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
+    { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 1 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
@@ -2933,7 +2929,7 @@ const HeroSection = () => {
                 onBlur={() => setHoveredItem(null)}
                 whileHover={{ scale: 1.08, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
+                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 aria-label={item.label}
               >
                 <div
@@ -3213,8 +3209,8 @@ const HeroSection = () => {
               </motion.div>
             </motion.button>
 
-            {[menuItems[3], menuItems[5]].map((item, idx) => {
-              const i = item === menuItems[3] ? 3 : 5;
+            {[menuItems[4]].map((item, idx) => {
+              const i = 4;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
@@ -3231,7 +3227,7 @@ const HeroSection = () => {
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: -4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { if (i === 3) setDailyCardOpen(true); if (i === 5) setPalmOpen(true); }}
+                  onClick={() => setPalmOpen(true)}
                   aria-label={item.label}
                 >
                   <div
@@ -3529,7 +3525,6 @@ const HeroSection = () => {
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
       <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
-      <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />

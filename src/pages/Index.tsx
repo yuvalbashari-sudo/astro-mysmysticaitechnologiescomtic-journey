@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import MysticalDashboard from "@/components/MysticalDashboard";
-import DailyRitualSection from "@/components/DailyRitualSection";
 import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 
@@ -41,9 +40,6 @@ const Index = () => {
         {/* Spacer + below-hero content: mobile only */}
         <div className="md:hidden">
           <div className="h-screen pointer-events-none" aria-hidden="true" />
-          <main id="main-content" className="relative z-10">
-            <DailyRitualSection />
-          </main>
         </div>
         <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
       </div>
