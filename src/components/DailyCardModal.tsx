@@ -322,7 +322,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const cardImage = card ? tarotCardImages[card.name] : null;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor>
+    <>
+      <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor>
             <AnimatePresence mode="wait">
               {/* PHASE: Ready */}
               {phase === "ready" && (
@@ -818,8 +819,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
             </AnimatePresence>
-    </CinematicModalShell>
-    <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
+      </CinematicModalShell>
+      <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
+    </>
   );
 };
 
