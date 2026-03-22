@@ -136,6 +136,7 @@ const FloatingCard = ({
     }
   }, [isFlipped, showFront]);
 
+  const hasCustomImage = !!tarotCardImages[card.name];
   const frontImgSrc = tarotCardImages[card.name] || cardBack;
 
   return (
