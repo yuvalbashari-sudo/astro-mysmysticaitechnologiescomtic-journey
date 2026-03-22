@@ -66,7 +66,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             /* Subtle dark backdrop — hero shows through */
             <div
               className="absolute inset-0"
-              style={{ background: "hsl(222 47% 3% / 0.45)", backdropFilter: "blur(2px)" }}
+              style={{ background: "hsl(222 47% 3% / 0.55)" }}
             />
           ) : (
             <>
