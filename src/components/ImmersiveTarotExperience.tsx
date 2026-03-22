@@ -577,7 +577,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[140]"
+          className="fixed inset-0 z-[140] pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
