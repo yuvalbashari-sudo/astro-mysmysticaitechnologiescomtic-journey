@@ -310,6 +310,8 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                 </div>
               </motion.div>
 
+              {renderPalmAdvisorLayer()}
+
               {/* RIGHT: Palm images */}
               <motion.div
                 className="absolute pointer-events-auto flex flex-col items-center gap-4"
