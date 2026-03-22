@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
