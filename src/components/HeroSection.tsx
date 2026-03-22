@@ -1401,7 +1401,7 @@ const ZodiacWheel = ({
             </motion.svg>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* Cosmic energy pulse on wheel — radius-locked, no scale drift */}
       <motion.div
