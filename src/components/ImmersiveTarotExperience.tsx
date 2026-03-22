@@ -662,7 +662,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
             />
           ))}
 
-          {/* ── Navigation buttons — rendered AFTER phase content so they sit on top ── */}
+          
 
           {/* ── Phase Content ── */}
           <div className={`absolute inset-0 z-[92] pointer-events-none ${phase === "interpretation" ? "" : "flex items-center justify-center"}`}>
