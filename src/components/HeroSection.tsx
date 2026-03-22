@@ -2782,7 +2782,7 @@ const HeroSection = () => {
                     clipPath: "circle(50% at 50% 50%)",
                     WebkitClipPath: "circle(50% at 50% 50%)",
                   }}
-                  onClick={openUniverseMessage}
+                  onClick={() => setDailyCardOpen(true)}
                 />
               </div>
             </div>
