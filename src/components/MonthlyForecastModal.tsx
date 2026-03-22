@@ -19,8 +19,6 @@ type Mode = "forecast" | "rising";
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
-  const forecastAdvisorBaseSize = 168;
-  const forecastAdvisorScale = 1;
   const t = useT();
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
