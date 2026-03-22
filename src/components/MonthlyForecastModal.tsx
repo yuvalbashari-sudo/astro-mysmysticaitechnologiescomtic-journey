@@ -13,17 +13,12 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
-import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
-import AdvisorChatPanel from "@/components/AdvisorChatPanel";
-import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 
 type Mode = "forecast" | "rising";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
-  const forecastAdvisorBaseSize = 168;
-  const forecastAdvisorScale = 1;
   const t = useT();
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
@@ -43,7 +38,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [isMobile, setIsMobile] = useState(false);
-  const [advisorOpen, setAdvisorOpen] = useState(false);
+  
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -185,7 +180,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen hideAdvisor={hasResult && !isMobile}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen hideAdvisor={false}>
             <AnimatePresence mode="wait">
               {!hasResult && !isLoading ? (
                 isDesktop ? (
@@ -450,34 +445,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     </motion.div>
 
-                    {/* Astrologer avatar — bottom-right of result container */}
-                    <AvatarHoverTeaser
-                      disabled={isMobile}
-                      anchor="left"
-                      className="absolute z-[110] pointer-events-auto"
-                      style={{ right: 10, bottom: 10, width: forecastAdvisorBaseSize, height: forecastAdvisorBaseSize }}
-                    >
-                      <motion.button
-                        className="w-full h-full rounded-full overflow-hidden cursor-pointer group relative"
-                        style={{
-                          transformOrigin: "center center",
-                          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
-                          border: "2px solid hsl(var(--gold) / 0.35)",
-                        }}
-                        onClick={() => setAdvisorOpen(true)}
-                        whileHover={{ scale: forecastAdvisorScale * 1.08 }}
-                        whileTap={{ scale: forecastAdvisorScale * 0.94 }}
-                        initial={{ opacity: 0, y: 10, scale: forecastAdvisorScale }}
-                        animate={{ opacity: 1, y: 0, scale: forecastAdvisorScale }}
-                        transition={{ delay: 1 }}
-                        aria-label="התייעצות עם האסטרולוגית"
-                      >
-                        <img src={astrologerAvatar} alt="האסטרולוגית" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
-                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)" }} />
-                        <motion.div className="absolute inset-0 rounded-full pointer-events-none" style={{ border: "2px solid hsl(var(--gold) / 0.4)" }} animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }} />
-                      </motion.button>
-                    </AvatarHoverTeaser>
-                    <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
                   </div>
                 ) : (
                   /* ── Mobile: stacked ── */
