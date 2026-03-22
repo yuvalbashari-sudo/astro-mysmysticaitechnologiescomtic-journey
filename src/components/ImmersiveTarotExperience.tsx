@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -409,6 +410,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -1495,6 +1497,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           </div>
 
+          {/* Advisor chat panel */}
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
+
           {/* Persistent Astrologer avatar — always visible across all phases */}
           <AvatarHoverTeaser
             disabled={isMobile}
@@ -1519,6 +1524,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ filter: "brightness(1.15)", scale: 1.05 }}
+              onClick={() => setAdvisorOpen(true)}
             >
               <img
                 src={astrologerAvatarCta}
