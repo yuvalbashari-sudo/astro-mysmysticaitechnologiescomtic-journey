@@ -8,6 +8,8 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
@@ -36,6 +38,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const rightCameraRef = useRef<HTMLInputElement>(null);
   const leftCameraRef = useRef<HTMLInputElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [palmAdvisorOpen, setPalmAdvisorOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -120,24 +123,31 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
                   <div className="absolute inset-0" key="input-desktop">
-                    {/* Top-right avatar */}
-                    <motion.div
+                    {/* Top-right avatar with teaser & advisor */}
+                    <AvatarHoverTeaser
+                      disabled={false}
                       className="absolute pointer-events-auto z-10"
                       style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
                     >
-                      <div
-                        className="w-full h-full rounded-full overflow-hidden"
+                      <motion.button
+                        className="w-full h-full rounded-full overflow-hidden cursor-pointer group"
                         style={{
                           boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
                           border: "2px solid hsl(var(--gold) / 0.35)",
                         }}
+                        onClick={() => setPalmAdvisorOpen(true)}
+                        whileHover={{ filter: "brightness(1.15)" }}
+                        whileTap={{ filter: "brightness(0.9)" }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                        aria-label="התייעצות עם האסטרולוגית"
                       >
-                        <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
-                      </div>
-                    </motion.div>
+                        <img src={astrologerAvatar} alt="האסטרולוגית" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
+                        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)" }} />
+                        <motion.div className="absolute inset-0 rounded-full pointer-events-none" style={{ border: "2px solid hsl(var(--gold) / 0.4)" }} animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }} transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }} />
+                      </motion.button>
+                    </AvatarHoverTeaser>
 
                     {/* Form panel — LEFT side */}
                     <motion.div
@@ -169,6 +179,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                         <p className="text-[1.4rem] text-muted-foreground font-body mt-5 leading-relaxed" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
                       </div>
                     </motion.div>
+                    <AdvisorChatPanel isOpen={palmAdvisorOpen} onClose={() => setPalmAdvisorOpen(false)} forceRightAnchor />
                   </div>
                 ) : (
                   /* ── Mobile: centered form ── */
