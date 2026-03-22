@@ -2929,7 +2929,7 @@ const HeroSection = () => {
                 onBlur={() => setHoveredItem(null)}
                 whileHover={{ scale: 1.08, y: -3 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setDailyCardOpen(true); if (i === 4) setTarotOpen(true); if (i === 5) setPalmOpen(true); }}
+                onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setRisingOpen(true); if (i === 3) setTarotOpen(true); if (i === 4) setPalmOpen(true); }}
                 aria-label={item.label}
               >
                 <div
