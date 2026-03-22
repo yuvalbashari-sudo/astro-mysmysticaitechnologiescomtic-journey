@@ -508,7 +508,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     {/* CTA Button */}
                     <motion.button
                       onClick={handleDraw}
-                      className="relative font-body flex items-center justify-center gap-2.5 text-[15px] px-9 py-3.5 rounded-full overflow-hidden font-medium tracking-wide"
+                      className="relative font-body flex items-center justify-center gap-2.5 text-[17px] px-12 py-4 rounded-full overflow-hidden font-medium tracking-wide"
                       style={{
                         background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
                         color: "hsl(var(--primary-foreground))",
