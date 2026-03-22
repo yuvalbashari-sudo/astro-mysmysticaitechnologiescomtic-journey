@@ -690,7 +690,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <motion.div
-                    className="text-gold/50 text-[11px] tracking-[0.3em] uppercase font-body mb-3"
+                    className="text-gold/50 text-[22px] tracking-[0.3em] uppercase font-body mb-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
