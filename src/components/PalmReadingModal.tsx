@@ -122,7 +122,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
               {!submitted && !isLoading ? (
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
-                  <div className="relative w-full h-full" key="input-desktop">
+                  <div className="absolute inset-0" key="input-desktop">
                     {/* Top-right avatar with teaser & advisor */}
                     <AvatarHoverTeaser
                       disabled={false}
