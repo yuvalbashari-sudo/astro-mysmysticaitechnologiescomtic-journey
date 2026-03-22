@@ -698,7 +698,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {language === "he" ? "קריאת טארוט" : "Tarot Reading"}
                   </motion.div>
                   <motion.h2
-                    className="font-heading text-2xl md:text-3xl mb-8"
+                    className="font-heading text-4xl md:text-5xl mb-10"
                     style={{
                       color: "hsl(var(--gold))",
                       textShadow: "0 0 20px hsl(var(--gold) / 0.3)",
