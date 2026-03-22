@@ -585,7 +585,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         >
           {/* ── Background: Oracle woman persists ── */}
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             initial={{ scale: 1 }}
             animate={{ scale: phase === "question" ? 1.03 : 1.06 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
