@@ -8,7 +8,6 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
-import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
@@ -37,7 +36,6 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
   const rightCameraRef = useRef<HTMLInputElement>(null);
   const leftCameraRef = useRef<HTMLInputElement>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [avatarHovered, setAvatarHovered] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
 
   useEffect(() => {
@@ -77,8 +75,78 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => { if (aiLoading && scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [aiText, aiLoading]);
 
-  const handleShare = () => { const text = `✋ ${t.readings_type_palm}\n\n🔮 ${window.location.origin}`; window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank"); };
-  const handleCopy = async () => { if (!aiText) return; await navigator.clipboard.writeText(`✋ ${t.readings_type_palm} — ${name}\n\n${aiText}`); setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000); };
+  const palmResultText = aiText.trim();
+  const shareActionLabel = language === "he" ? "שתפו" : t.forecast_share;
+  const copyActionLabel = language === "he" ? "העתיקו תוצאה" : t.share_copy;
+  const copiedToastLabel = language === "he" ? "התוצאה הועתקה" : t.share_copy_toast;
+
+  const handleShare = async () => {
+    if (!palmResultText) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${t.readings_type_palm} — ${name}`,
+          text: palmResultText,
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+
+    await navigator.clipboard.writeText(palmResultText);
+    toast(copiedToastLabel);
+  };
+
+  const handleCopy = async () => {
+    if (!palmResultText) return;
+    await navigator.clipboard.writeText(palmResultText);
+    setCopied(true);
+    toast(copiedToastLabel);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const renderResultActions = (compact = false) => (
+    <motion.div
+      className={`flex items-center justify-center gap-3 flex-wrap ${compact ? "mt-6" : "mt-8"}`}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.8 }}
+    >
+      <motion.button
+        onClick={handleShare}
+        className={`flex items-center gap-2 ${compact ? "px-5 py-2.5 text-sm" : "px-6 py-3 text-base"} rounded-full font-body`}
+        style={{
+          background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))",
+          border: "1px solid hsl(142 70% 45% / 0.3)",
+          color: "hsl(142 70% 60%)",
+          backdropFilter: "blur(8px)",
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        <Share2 className={compact ? "w-4 h-4" : "w-5 h-5"} />
+        {shareActionLabel}
+      </motion.button>
+
+      <motion.button
+        onClick={handleCopy}
+        className={`flex items-center gap-2 ${compact ? "px-5 py-2.5 text-sm" : "px-6 py-3 text-base"} rounded-full font-body`}
+        style={{
+          background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+          border: "1px solid hsl(var(--gold) / 0.2)",
+          color: "hsl(var(--gold))",
+          backdropFilter: "blur(8px)",
+        }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        {copied ? <Check className={compact ? "w-4 h-4" : "w-5 h-5"} /> : <Copy className={compact ? "w-4 h-4" : "w-5 h-5"} />}
+        {copied ? copiedToastLabel : copyActionLabel}
+      </motion.button>
+    </motion.div>
+  );
 
   const renderHandUpload = (side: "right" | "left", image: string | null, setImage: (v: string | null) => void, fileRef: React.RefObject<HTMLInputElement>, cameraRef: React.RefObject<HTMLInputElement>) => {
     const label = side === "right" ? t.palm_right_label : t.palm_left_label;
@@ -118,208 +186,197 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} hideAdvisor={isDesktopInput}>
-            <AnimatePresence mode="wait">
-              {!submitted && !isLoading ? (
-                isDesktopInput ? (
-                  /* ── Desktop: form on RIGHT side ── */
-                  <div className="absolute inset-0" key="input-desktop">
-                    {/* Advisor chat panel */}
-                    <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} forceRightAnchor />
+      <AnimatePresence mode="wait">
+        {!submitted && !isLoading ? (
+          isDesktopInput ? (
+            /* ── Desktop: form on RIGHT side ── */
+            <div className="absolute inset-0" key="input-desktop">
+              {/* Advisor chat panel */}
+              <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} forceRightAnchor />
 
-                    {/* Avatar — click only, no hover teaser */}
-                    <motion.div
-                      className="absolute pointer-events-auto z-10 cursor-pointer"
-                      style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
-                      onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
-                    >
-                      <div
-                        className="w-full h-full rounded-full overflow-hidden"
-                        style={{
-                          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
-                          border: "2px solid hsl(var(--gold) / 0.35)",
-                        }}
-                      >
-                        <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
-                      </div>
-                    </motion.div>
+              {/* Avatar — click only, no hover teaser */}
+              <motion.div
+                className="absolute pointer-events-auto z-10 cursor-pointer"
+                style={{ bottom: 32, right: "4vw", width: 168, height: 168 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                onClick={(e) => { e.stopPropagation(); setChatOpen(true); }}
+              >
+                <div
+                  className="w-full h-full rounded-full overflow-hidden"
+                  style={{
+                    boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+                    border: "2px solid hsl(var(--gold) / 0.35)",
+                  }}
+                >
+                  <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
+                </div>
+              </motion.div>
 
-                    {/* Form panel — LEFT side */}
-                    <motion.div
-                      className="absolute pointer-events-auto overflow-y-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(456px, 31.2vw)", maxHeight: "80vh" }}
-                      initial={{ opacity: 0, x: -40 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <div className="text-center">
-                        <motion.div className="w-14 h-14 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-6 h-6 text-gold" /></motion.div>
-                        <h2 className="font-heading text-[3.3rem] gold-gradient-text mb-4 leading-tight" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.palm_title}</h2>
-                        <p className="text-foreground/70 font-body text-[1.9rem] mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.palm_desc}</p>
-                        <div className="mb-6">
-                          <label className="block text-[1.75rem] text-gold/70 font-body mb-3 text-right leading-relaxed">{t.palm_name_label}</label>
-                          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center text-[1.65rem]" dir="rtl" />
-                        </div>
-                        <div className="mb-6 flex flex-col gap-5" dir="rtl">
-                          {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
-                          {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
-                        </div>
-                        <div className="mb-7 rounded-xl p-5 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
-                          <p className="text-gold/60 font-body text-[1.5rem] font-semibold mb-2">{t.palm_tips_title}</p>
-                          <ul className="text-foreground/50 font-body text-[1.3rem] space-y-1.5 leading-relaxed">
-                            <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
-                          </ul>
-                        </div>
-                        <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body text-[1.65rem] flex items-center justify-center gap-3 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-6 h-6" />{t.palm_cta}</motion.button>
-                        <p className="text-[1.4rem] text-muted-foreground font-body mt-5 leading-relaxed" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
-                      </div>
-                    </motion.div>
+              {/* Form panel — LEFT side */}
+              <motion.div
+                className="absolute pointer-events-auto overflow-y-auto scrollbar-hide"
+                style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(456px, 31.2vw)", maxHeight: "80vh" }}
+                initial={{ opacity: 0, x: -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="text-center">
+                  <motion.div className="w-14 h-14 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-6 h-6 text-gold" /></motion.div>
+                  <h2 className="font-heading text-[3.3rem] gold-gradient-text mb-4 leading-tight" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.palm_title}</h2>
+                  <p className="text-foreground/70 font-body text-[1.9rem] mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.palm_desc}</p>
+                  <div className="mb-6">
+                    <label className="block text-[1.75rem] text-gold/70 font-body mb-3 text-right leading-relaxed">{t.palm_name_label}</label>
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center text-[1.65rem]" dir="rtl" />
                   </div>
-                ) : (
-                  /* ── Mobile: centered form ── */
-                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
-                    <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-7 h-7 text-gold" /></motion.div>
-                    <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.palm_title}</h2>
-                    <p className="text-foreground/70 font-body text-sm md:text-base mb-4 max-w-md mx-auto leading-relaxed">{t.palm_desc}</p>
-                    <div className="max-w-xs mx-auto mb-6">
-                      <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
-                      <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
-                    </div>
-                    <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4" dir="rtl">
-                      {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
-                      {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
-                    </div>
-                    <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
-                      <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">{t.palm_tips_title}</p>
-                      <ul className="text-foreground/50 font-body text-[11px] space-y-1 leading-relaxed">
-                        <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
-                      </ul>
-                    </div>
-                    <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />{t.palm_cta}</motion.button>
-                    <p className="text-[11px] text-muted-foreground font-body mt-6">{t.palm_note}</p>
-                  </motion.div>
-                )
-              ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
-              ) : submitted ? (
-                isDesktopResult ? (
-                  /* ── Desktop 3-zone ── */
-                  <div className="absolute inset-0">
-                    {/* LEFT: Interpretation */}
-                    <motion.div
-                      ref={scrollRef}
-                      className="absolute overflow-y-auto overflow-x-hidden pointer-events-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(576px, 40vw)", maxHeight: "80vh", wordBreak: "break-word", overflowWrap: "break-word" }}
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
-                      <div className="relative w-full min-w-0" style={{ padding: "0 16px 60px" }}>
-                        {aiText ? (
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
-                            <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                            <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
-                              {renderMysticalText(aiText, textSize)}
-                            </div>
-                            {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.palm_loading}</span></motion.div>)}
-                          </motion.div>
-                        ) : aiError ? (
-                          <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center py-16">
-                            <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                            <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.palm_loading}</motion.p>
-                          </div>
-                        )}
-                        {!aiLoading && (aiText || aiError) && (
-                          <ShareResultSection symbol="✋" title={`${t.palm_title} — ${name}`} />
-                        )}
-                      </div>
-                    </motion.div>
-
-                    {/* RIGHT: Palm images */}
-                    <motion.div
-                      className="absolute pointer-events-auto flex flex-col items-center gap-4"
-                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(300px, 22vw)" }}
-                      initial={{ opacity: 0, x: 40 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                      <div className="text-center mb-2">
-                        <motion.div className="text-5xl mb-3 flex items-center justify-center gap-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
-                          <span style={{ textShadow: "0 0 15px hsl(222 47% 6%)" }}>🤚</span>
-                          <span className="text-gold text-xl" style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.2)" }}>✦</span>
-                          <span style={{ textShadow: "0 0 15px hsl(222 47% 6%)" }}>✋</span>
-                        </motion.div>
-                        <motion.h3 className="font-heading text-lg gold-gradient-text" style={{ textShadow: "0 0 20px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                          {t.palm_title} — {name}
-                        </motion.h3>
-                      </div>
-                      {/* Palm thumbnails */}
-                      <div className="flex gap-3 w-full">
-                        {rightPalmImage && (
-                          <motion.div className="flex-1 rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.08)" }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-                            <img src={rightPalmImage} alt={t.palm_right_label} className="w-full h-32 object-cover" />
-                          </motion.div>
-                        )}
-                        {leftPalmImage && (
-                          <motion.div className="flex-1 rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.08)" }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                            <img src={leftPalmImage} alt={t.palm_left_label} className="w-full h-32 object-cover" />
-                          </motion.div>
-                        )}
-                      </div>
-                      <motion.div className="flex items-center justify-center gap-3 mt-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                        <motion.button onClick={handleShare} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-5 h-5" />{t.forecast_share}</motion.button>
-                        <motion.button onClick={handleCopy} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}{copied ? t.share_copied : t.share_copy}</motion.button>
-                      </motion.div>
-                    </motion.div>
+                  <div className="mb-6 flex flex-col gap-5" dir="rtl">
+                    {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
+                    {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
                   </div>
-                ) : (
-                  /* ── Mobile: stacked ── */
-                  <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-12 lg:p-14">
-                    <div className="text-center mb-10">
-                      <motion.div className="text-6xl mb-4 flex items-center justify-center gap-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}><span>🤚</span><span className="text-gold text-2xl">✦</span><span>✋</span></motion.div>
-                      <motion.h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{t.palm_title} — {name}</motion.h2>
-                      <motion.p className="text-foreground/50 font-body text-sm md:text-base mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{t.palm_result_subtitle}</motion.p>
-                      <motion.div className="section-divider max-w-[120px] mx-auto mt-5" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5 }} />
-                      <motion.div className="flex items-center justify-center gap-3 mt-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}>
-                        <motion.button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-4 h-4" />{t.forecast_share}</motion.button>
-                        <motion.button onClick={handleCopy} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}{copied ? t.share_copied : t.share_copy}</motion.button>
-                      </motion.div>
-                    </div>
-                    {aiText ? (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                        <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                  <div className="mb-7 rounded-xl p-5 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
+                    <p className="text-gold/60 font-body text-[1.5rem] font-semibold mb-2">{t.palm_tips_title}</p>
+                    <ul className="text-foreground/50 font-body text-[1.3rem] space-y-1.5 leading-relaxed">
+                      <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
+                    </ul>
+                  </div>
+                  <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body text-[1.65rem] flex items-center justify-center gap-3 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-6 h-6" />{t.palm_cta}</motion.button>
+                  <p className="text-[1.4rem] text-muted-foreground font-body mt-5 leading-relaxed" style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{t.palm_note}</p>
+                </div>
+              </motion.div>
+            </div>
+          ) : (
+            /* ── Mobile: centered form ── */
+            <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
+              <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Hand className="w-7 h-7 text-gold" /></motion.div>
+              <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.palm_title}</h2>
+              <p className="text-foreground/70 font-body text-sm md:text-base mb-4 max-w-md mx-auto leading-relaxed">{t.palm_desc}</p>
+              <div className="max-w-xs mx-auto mb-6">
+                <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
+              </div>
+              <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4" dir="rtl">
+                {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
+                {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
+              </div>
+              <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+                <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">{t.palm_tips_title}</p>
+                <ul className="text-foreground/50 font-body text-[11px] space-y-1 leading-relaxed">
+                  <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
+                </ul>
+              </div>
+              <motion.button onClick={handleSubmit} disabled={!name.trim() || !rightPalmImage || !leftPalmImage} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Hand className="w-4 h-4" />{t.palm_cta}</motion.button>
+              <p className="text-[11px] text-muted-foreground font-body mt-6">{t.palm_note}</p>
+            </motion.div>
+          )
+        ) : isLoading ? (
+          <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+        ) : submitted ? (
+          isDesktopResult ? (
+            /* ── Desktop 3-zone ── */
+            <div className="absolute inset-0">
+              {/* LEFT: Interpretation */}
+              <motion.div
+                ref={scrollRef}
+                className="absolute overflow-y-auto overflow-x-hidden pointer-events-auto scrollbar-hide"
+                style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(576px, 40vw)", maxHeight: "80vh", wordBreak: "break-word", overflowWrap: "break-word" }}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
+                <div className="relative w-full min-w-0" style={{ padding: "0 16px 60px" }}>
+                  {aiText ? (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
                         {renderMysticalText(aiText, textSize)}
-                        {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.palm_loading}</span></motion.div>)}
-                      </motion.div>
-                    ) : aiError ? (
-                      <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center py-16">
-                        <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                        <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.palm_loading}</motion.p>
                       </div>
-                    )}
-                    {!aiLoading && (aiText || aiError) && (
-                      <>
-                        <ShareResultSection symbol="✋" title={`${t.palm_title} — ${name}`} />
-                        <div className="section-divider max-w-[200px] mx-auto my-10" />
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
-                          <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
-                          <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.forecast_premium_title}</h4>
-                          <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.forecast_premium_desc}</p>
-                          <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.forecast_premium_cta}</a>
-                        </motion.div>
-                      </>
-                    )}
+                      {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.palm_loading}</span></motion.div>)}
+                      {!aiLoading && aiText && renderResultActions(false)}
+                    </motion.div>
+                  ) : aiError ? (
+                    <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
+                      <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.palm_loading}</motion.p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* RIGHT: Palm images */}
+              <motion.div
+                className="absolute pointer-events-auto flex flex-col items-center gap-4"
+                style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(300px, 22vw)" }}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="text-center mb-2">
+                  <motion.div className="text-5xl mb-3 flex items-center justify-center gap-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
+                    <span style={{ textShadow: "0 0 15px hsl(222 47% 6%)" }}>🤚</span>
+                    <span className="text-gold text-xl" style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.2)" }}>✦</span>
+                    <span style={{ textShadow: "0 0 15px hsl(222 47% 6%)" }}>✋</span>
                   </motion.div>
-                )
-              ) : null}
-            </AnimatePresence>
+                  <motion.h3 className="font-heading text-lg gold-gradient-text" style={{ textShadow: "0 0 20px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                    {t.palm_title} — {name}
+                  </motion.h3>
+                </div>
+                <div className="flex gap-3 w-full">
+                  {rightPalmImage && (
+                    <motion.div className="flex-1 rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.08)" }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+                      <img src={rightPalmImage} alt={t.palm_right_label} className="w-full h-32 object-cover" />
+                    </motion.div>
+                  )}
+                  {leftPalmImage && (
+                    <motion.div className="flex-1 rounded-xl overflow-hidden" style={{ border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.08)" }} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                      <img src={leftPalmImage} alt={t.palm_left_label} className="w-full h-32 object-cover" />
+                    </motion.div>
+                  )}
+                </div>
+              </motion.div>
+            </div>
+          ) : (
+            /* ── Mobile: stacked ── */
+            <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-12 lg:p-14">
+              <div className="text-center mb-10">
+                <motion.div className="text-6xl mb-4 flex items-center justify-center gap-2" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}><span>🤚</span><span className="text-gold text-2xl">✦</span><span>✋</span></motion.div>
+                <motion.h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{t.palm_title} — {name}</motion.h2>
+                <motion.p className="text-foreground/50 font-body text-sm md:text-base mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{t.palm_result_subtitle}</motion.p>
+                <motion.div className="section-divider max-w-[120px] mx-auto mt-5" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5 }} />
+              </div>
+              {aiText ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
+                  <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                  {renderMysticalText(aiText, textSize)}
+                  {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.palm_loading}</span></motion.div>)}
+                  {!aiLoading && aiText && renderResultActions(true)}
+                </motion.div>
+              ) : aiError ? (
+                <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16">
+                  <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
+                  <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.palm_loading}</motion.p>
+                </div>
+              )}
+              {!aiLoading && (aiText || aiError) && (
+                <>
+                  <div className="section-divider max-w-[200px] mx-auto my-10" />
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                    <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
+                    <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.forecast_premium_title}</h4>
+                    <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.forecast_premium_desc}</p>
+                    <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.forecast_premium_cta}</a>
+                  </motion.div>
+                </>
+              )}
+            </motion.div>
+          )
+        ) : null}
+      </AnimatePresence>
     </CinematicModalShell>
   );
 };
