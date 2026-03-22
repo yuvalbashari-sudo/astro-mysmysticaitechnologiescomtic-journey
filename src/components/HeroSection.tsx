@@ -782,11 +782,13 @@ const ZodiacWheel = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 2, delay: 1.5 }}
     >
-      {/* Slowly rotating container */}
-      <motion.div
+      {/* Slowly rotating container — pauses on hover */}
+      <div
         className="relative w-full h-full"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+        style={{
+          animation: "spin 120s linear infinite",
+          animationPlayState: hoveredSign !== null ? "paused" : "running",
+        }}
       >
         {/* Faint circle track with integrated glow */}
         <motion.div
@@ -1399,7 +1401,7 @@ const ZodiacWheel = ({
             </motion.svg>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
 
       {/* Cosmic energy pulse on wheel — radius-locked, no scale drift */}
       <motion.div
@@ -2757,7 +2759,7 @@ const HeroSection = () => {
                 : { marginTop: "352px", marginLeft: "10px" }
               }
             >
-              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={(i) => setZodiacSignIndex(i)} />
+              <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={() => setForecastOpen(true)} />
             </div>
           </div>
         </div>
