@@ -136,6 +136,7 @@ const FloatingCard = ({
     }
   }, [isFlipped, showFront]);
 
+  const hasCustomImage = !!tarotCardImages[card.name];
   const frontImgSrc = tarotCardImages[card.name] || cardBack;
 
   return (
@@ -236,17 +237,32 @@ const FloatingCard = ({
               transition: "box-shadow 0.3s ease-out",
             }}
           >
-            {/* Card image — NO filters on the artwork */}
-            <img
-              src={showFront ? frontImgSrc : cardBack}
-              alt={showFront ? card.hebrewName : ""}
-              className="w-full h-full object-cover"
-              style={{
-                backfaceVisibility: "hidden",
-                transform: `translateZ(0)${showFront ? " scaleX(-1)" : ""}`,
-                willChange: "transform",
-              }}
-            />
+            {showFront && !hasCustomImage ? (
+              <div className="w-full h-full flex flex-col items-center justify-center"
+                style={{
+                  background: "linear-gradient(160deg, hsl(222 40% 14%), hsl(222 47% 8%))",
+                  border: "2px solid hsl(var(--gold) / 0.3)",
+                  borderRadius: "inherit",
+                }}>
+                <span className="text-center font-heading text-gold px-2" style={{ fontSize: cardW > 90 ? "0.85rem" : "0.6rem", lineHeight: 1.3, textShadow: "0 0 12px hsl(var(--gold) / 0.4)" }}>
+                  {card.symbol}
+                </span>
+                <span className="text-center font-heading text-gold/90 px-2 mt-1" style={{ fontSize: cardW > 90 ? "0.75rem" : "0.5rem", lineHeight: 1.3 }}>
+                  {card.hebrewName}
+                </span>
+              </div>
+            ) : (
+              <img
+                src={showFront ? frontImgSrc : cardBack}
+                alt={showFront ? card.hebrewName : ""}
+                className="w-full h-full object-cover"
+                style={{
+                  backfaceVisibility: "hidden",
+                  transform: `translateZ(0)${showFront ? " scaleX(-1)" : ""}`,
+                  willChange: "transform",
+                }}
+              />
+            )}
             {/* Premium frame overlay */}
             <img
               src={cardFrameImg}
