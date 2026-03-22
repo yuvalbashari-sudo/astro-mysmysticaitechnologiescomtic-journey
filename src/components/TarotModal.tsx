@@ -820,23 +820,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <motion.h2 className="font-heading text-2xl gold-gradient-text mb-4" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.8)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.tarot_cards_title}</motion.h2>
 
                     {/* Card display */}
-                     <div className="flex items-center justify-center gap-4 sm:gap-6 mb-8 flex-wrap">
-                      {cards.map((card, i) => (
-                        <motion.div
-                          key={i}
-                          className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl backdrop-blur-sm"
-                          style={{ background: "hsl(var(--deep-blue) / 0.4)", border: "1px solid hsl(var(--gold) / 0.1)" }}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.3 + i * 0.2 }}
-                        >
-                          {tarotCardImages[card.name]
-                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-20 h-28 sm:w-24 sm:h-34 md:w-28 md:h-40 object-cover rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
-                            : <span className="text-4xl">{card.symbol}</span>}
-                          <span className="font-body text-sm text-gold mt-1">{card.hebrewName}</span>
-                          <span className="text-xs text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
-                        </motion.div>
-                      ))}
+                    <div className="w-full max-w-3xl mx-auto overflow-hidden">
+                      <div className="flex items-center justify-center gap-3 sm:gap-5 mb-8 flex-wrap px-2">
+                        {cards.map((card, i) => (
+                          <motion.div
+                            key={i}
+                            className="flex flex-col items-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm shrink-0"
+                            style={{ background: "hsl(var(--deep-blue) / 0.4)", border: "1px solid hsl(var(--gold) / 0.1)", maxWidth: cards.length === 1 ? 200 : 160 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 + i * 0.2 }}
+                          >
+                            {tarotCardImages[card.name]
+                              ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-20 h-28 sm:w-22 sm:h-32 md:w-24 md:h-34 object-contain rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                              : <span className="text-4xl">{card.symbol}</span>}
+                            <span className="font-body text-sm text-gold mt-1">{card.hebrewName}</span>
+                            <span className="text-xs text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
+                          </motion.div>
+                        ))}
+                      </div>
                     </div>
 
                     <motion.div className="section-divider max-w-[120px] mx-auto" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.8 }} />
