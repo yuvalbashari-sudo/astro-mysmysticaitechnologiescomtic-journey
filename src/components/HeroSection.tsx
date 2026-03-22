@@ -3292,11 +3292,11 @@ const HeroSection = () => {
           bottom: isMobile ? 80 : 110,
           left: "50%",
           transform: "translateX(-50%)",
-          padding: isMobile ? "14px 32px" : "20px 48px",
+          padding: isMobile ? "10px 22px" : "14px 34px",
           background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--gold) / 0.02))",
           border: "1px solid hsl(var(--gold) / 0.12)",
           borderRadius: "9999px",
-          boxShadow: "0 0 30px hsl(var(--gold) / 0.08), 0 4px 20px hsl(0 0% 0% / 0.3)",
+          boxShadow: "0 0 22px hsl(var(--gold) / 0.06), 0 3px 14px hsl(0 0% 0% / 0.25)",
           backdropFilter: "blur(8px)",
         }}
         initial={{ opacity: 0 }}
@@ -3305,7 +3305,7 @@ const HeroSection = () => {
         onClick={openUniverseMessage}
         whileTap={{ scale: 0.95 }}
       >
-        <span className={`text-gold/80 font-body font-medium ${isMobile ? "text-xl" : "text-3xl"} tracking-wide`}>
+        <span className={`text-gold/80 font-body font-medium ${isMobile ? "text-base" : "text-2xl"} tracking-wide`}>
           ✦ {t.hero_crystal_hint} ✦
         </span>
       </motion.button>
