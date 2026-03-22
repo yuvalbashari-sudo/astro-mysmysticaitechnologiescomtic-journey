@@ -2889,7 +2889,7 @@ const HeroSection = () => {
         >
           <AvatarHoverTeaser anchor="left">
             <AstrologerAvatarButton
-              size={132}
+              size={198}
               onClick={() => setAstrologerOpen(true)}
               entranceDelay={0.6}
               className="relative"
