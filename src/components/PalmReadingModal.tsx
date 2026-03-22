@@ -154,7 +154,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
 
       <motion.div
         className="absolute pointer-events-auto z-10 cursor-pointer"
-        style={{ bottom: 32, right: "4vw", width: 218, height: 218 }}
+        style={{ bottom: 32, right: "4vw", width: 284, height: 284 }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
