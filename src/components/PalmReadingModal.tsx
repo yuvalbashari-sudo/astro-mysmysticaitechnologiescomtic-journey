@@ -142,7 +142,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                     {/* Form panel — LEFT side */}
                     <motion.div
                       className="absolute pointer-events-auto overflow-y-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(570px, 39vw)", maxHeight: "80vh" }}
+                      style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(456px, 31.2vw)", maxHeight: "80vh" }}
                       initial={{ opacity: 0, x: -40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
