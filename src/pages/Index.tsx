@@ -41,8 +41,8 @@ const Index = () => {
         <div className="md:hidden">
           <div className="h-screen pointer-events-none" aria-hidden="true" />
         </div>
-        <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
       </div>
+      <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
 
       <ReadingsHistoryModal
         isOpen={historyOpen}
