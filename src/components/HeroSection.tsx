@@ -3353,9 +3353,9 @@ const HeroSection = () => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           onClick={closeUniverseMessage}
           style={{
-            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.55) 0%, hsl(var(--deep-blue) / 0.8) 60%, hsl(222 47% 3% / 0.92) 100%)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
+            background: "radial-gradient(ellipse 70% 60% at 50% 48%, hsl(var(--deep-blue) / 0.5) 0%, hsl(var(--deep-blue) / 0.75) 60%, hsl(222 47% 3% / 0.88) 100%)",
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
           }}
         >
           {/* Central radial glow */}
