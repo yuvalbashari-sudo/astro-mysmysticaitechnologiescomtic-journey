@@ -333,11 +333,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative flex flex-col items-center justify-center text-center min-h-[70vh] px-4"
+                  className="relative flex flex-col items-end justify-center text-center min-h-[70vh] px-4"
+                  style={{ paddingRight: isMobileViewport ? 4 : 5 }}
                 >
                   {/* ── Glass container ── */}
                   <div
-                    className="relative z-10 w-full max-w-md mx-auto rounded-3xl px-8 py-10 md:px-10 md:py-12 flex flex-col items-center"
+                    className="relative z-10 w-full max-w-md rounded-3xl px-8 py-10 md:px-10 md:py-12 flex flex-col items-center"
                     style={{
                       background: "linear-gradient(170deg, hsl(222 47% 8% / 0.45), hsl(222 47% 5% / 0.55))",
                       backdropFilter: "blur(24px) saturate(1.2)",
