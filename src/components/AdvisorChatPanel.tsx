@@ -449,6 +449,11 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                 </div>
               ))}
 
+              {/* Share/Copy actions — only when advisor answers exist */}
+              {messages.some(m => m.role === "assistant" && m.content) && !isStreaming && (
+                <AdvisorShareActions messages={messages} dir={dir} />
+              )}
+
               {/* Limit reached banner */}
               {isLimitReached && !isStreaming && (
                 <motion.div
