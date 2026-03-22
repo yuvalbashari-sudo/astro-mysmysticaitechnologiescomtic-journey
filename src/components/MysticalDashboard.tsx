@@ -97,7 +97,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
           <>
             {/* Click-away layer (transparent, no dimming) */}
             <div
-              className="fixed inset-0 z-[79]"
+              className="fixed inset-0 z-[119]"
               style={{ background: "transparent" }}
               onClick={() => closePanel()}
             />
