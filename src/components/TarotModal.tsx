@@ -603,17 +603,18 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
 
                   {/* Tarot table cards */}
-                  <div className="relative z-30 flex items-center justify-center gap-3 sm:gap-5 mb-6 max-w-full overflow-hidden px-2">
+                  <div className="relative z-30 flex items-center justify-center gap-3 sm:gap-5 mb-6 max-w-full overflow-hidden px-2" style={{ maxHeight: "50vh" }}>
                     {tableCards.map((card, i) => {
                       const isFlipped = flippedIndices.has(i);
                       const isActive = activeRevealIndex === i;
-                      const cardW = tableCards.length === 1 ? 170 : 140;
-                      const cardH = tableCards.length === 1 ? 245 : 205;
+                      // Viewport-relative sizing: cards scale to fit available height
+                      const maxCardH = tableCards.length === 1 ? "min(245px, 40vh)" : "min(205px, 35vh)";
+                      const aspectRatio = 0.67; // width/height ratio for tarot cards
                       return (
                         <motion.div
                           key={i}
                           className="relative"
-                          style={{ perspective: 1000, width: cardW, height: cardH, zIndex: isActive ? 50 : isFlipped ? 10 : 5, cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default" }}
+                          style={{ perspective: 1000, width: `calc(${maxCardH} * ${aspectRatio})`, height: maxCardH, maxHeight: maxCardH, zIndex: isActive ? 50 : isFlipped ? 10 : 5, cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default", aspectRatio: `${aspectRatio}` }}
                           initial={{ opacity: 0, y: 40, rotate: (i - Math.floor(tableCards.length / 2)) * 6 }}
                           animate={{
                             opacity: 1,
@@ -749,7 +750,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                               }}
                             >
                               {tarotCardImages[card.name]
-                                ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[85%] h-[68%] object-cover rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
+                                ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[85%] h-[68%] object-contain rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
                                 : <span className="text-5xl mb-1">{card.symbol}</span>}
                               <span className="font-heading text-xs md:text-sm text-gold text-center leading-tight mt-1.5">{card.hebrewName}</span>
                               <span className="text-[10px] text-muted-foreground/60 font-body">{selectedSpread.positionLabels[i]}</span>
@@ -832,7 +833,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             transition={{ delay: 0.3 + i * 0.2 }}
                           >
                             {tarotCardImages[card.name]
-                              ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-20 h-28 sm:w-22 sm:h-32 md:w-24 md:h-34 object-contain rounded-lg shadow-lg" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                              ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="rounded-lg shadow-lg object-contain" style={{ border: "1px solid hsl(var(--gold) / 0.2)", width: "min(6rem, 15vw)", height: "min(8.5rem, 22vh)", aspectRatio: "2/3" }} />
                               : <span className="text-4xl">{card.symbol}</span>}
                             <span className="font-body text-sm text-gold mt-1">{card.hebrewName}</span>
                             <span className="text-xs text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
