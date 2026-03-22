@@ -4,6 +4,7 @@ import { Sun, Sparkles } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n/LanguageContext";
+import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
 const DAILY_USER_SEED_KEY = "astrologai_user_seed";
