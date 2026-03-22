@@ -17,6 +17,8 @@ interface Props {
   wide?: boolean;
   /** When true, hides the built-in advisor avatar button */
   hideAdvisor?: boolean;
+  /** When true, skips oracle background — shows only a subtle dark backdrop */
+  transparent?: boolean;
 }
 
 /**
