@@ -63,10 +63,10 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           {transparent ? (
-            /* Subtle dark backdrop — hero shows through */
+            /* Clean dark overlay — hero visible but dimmed for focus */
             <div
               className="absolute inset-0"
-              style={{ background: "hsl(222 47% 3% / 0.55)" }}
+              style={{ background: "linear-gradient(180deg, hsl(222 47% 3% / 0.6) 0%, hsl(222 47% 3% / 0.5) 50%, hsl(222 47% 3% / 0.65) 100%)" }}
             />
           ) : (
             <>
