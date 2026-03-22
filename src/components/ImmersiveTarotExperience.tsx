@@ -406,7 +406,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     },
     {
       key: "career",
-      icon: <Briefcase className="w-9 h-9" />,
+      icon: <Briefcase className="w-12 h-12" />,
       label: language === "he" ? "קריירה" : language === "ar" ? "المهنة" : language === "ru" ? "Карьера" : "Career",
       color: "215 60% 55%",
     },
