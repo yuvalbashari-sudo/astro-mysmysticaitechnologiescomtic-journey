@@ -782,11 +782,11 @@ const ZodiacWheel = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 2, delay: 1.5 }}
     >
-      {/* Slowly rotating container */}
+      {/* Slowly rotating container — pauses on hover */}
       <motion.div
         className="relative w-full h-full"
         animate={{ rotate: 360 }}
-        transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: hoveredSign !== null ? 1e8 : 120, repeat: Infinity, ease: "linear" }}
       >
         {/* Faint circle track with integrated glow */}
         <motion.div
