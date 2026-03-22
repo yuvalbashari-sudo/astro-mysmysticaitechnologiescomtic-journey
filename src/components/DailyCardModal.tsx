@@ -329,87 +329,167 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
               {phase === "ready" && (
                 <motion.div
                   key="ready"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="relative p-8 md:p-12 text-center"
+                  transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                  className="relative flex flex-col items-center justify-center text-center px-6 md:px-12 py-12 md:py-16 min-h-[70vh]"
                 >
+                  {/* Ambient background glow */}
                   <motion.div
-                    className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center relative"
+                    className="absolute pointer-events-none"
                     style={{
-                      background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), hsl(var(--gold) / 0.08), transparent)",
-                      border: "1px solid hsl(var(--gold) / 0.2)",
+                      width: "80%",
+                      height: "60%",
+                      left: "10%",
+                      top: "20%",
+                      background: "radial-gradient(ellipse at 50% 50%, hsl(var(--gold) / 0.04), hsl(var(--celestial) / 0.02), transparent 70%)",
+                      filter: "blur(60px)",
+                    }}
+                    animate={{ opacity: [0.3, 0.6, 0.3], scale: [0.95, 1.05, 0.95] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                  />
+
+                  {/* Icon */}
+                  <motion.div
+                    className="w-24 h-24 mx-auto mb-8 rounded-full flex items-center justify-center relative"
+                    style={{
+                      background: "radial-gradient(circle, hsl(var(--crimson) / 0.12), hsl(var(--gold) / 0.06), transparent 80%)",
+                      border: "1px solid hsl(var(--gold) / 0.15)",
                     }}
                     animate={{
                       boxShadow: [
-                        "0 0 20px hsl(var(--gold) / 0.1)",
-                        "0 0 50px hsl(var(--gold) / 0.25)",
-                        "0 0 20px hsl(var(--gold) / 0.1)",
+                        "0 0 30px hsl(var(--gold) / 0.08), 0 0 60px hsl(var(--gold) / 0.04)",
+                        "0 0 50px hsl(var(--gold) / 0.2), 0 0 80px hsl(var(--gold) / 0.08)",
+                        "0 0 30px hsl(var(--gold) / 0.08), 0 0 60px hsl(var(--gold) / 0.04)",
                       ],
                     }}
-                    transition={{ duration: 3, repeat: Infinity }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
                   >
-                    <Sun className="w-9 h-9 text-gold" />
+                    <Sun className="w-10 h-10 text-gold/90" />
                   </motion.div>
 
-                  <h2 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{t.daily_title}</h2>
-                  <p className="text-foreground/60 font-body text-sm md:text-base max-w-md mx-auto leading-relaxed mb-2">{t.daily_desc}</p>
-                  <p className="text-foreground/40 font-body text-xs mb-6">{t.daily_note}</p>
+                  {/* Title */}
+                  <motion.h2
+                    className="font-heading text-4xl md:text-5xl gold-gradient-text mb-4"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15, duration: 0.6 }}
+                  >
+                    {t.daily_title}
+                  </motion.h2>
+
+                  {/* Subtitle */}
+                  <motion.p
+                    className="text-foreground/55 font-body text-base md:text-lg max-w-md mx-auto leading-relaxed mb-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.25 }}
+                  >
+                    {t.daily_desc}
+                  </motion.p>
+                  <motion.p
+                    className="text-foreground/30 font-body text-xs mb-10"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    {t.daily_note}
+                  </motion.p>
 
                   {/* Gender Selection */}
-                  <div className="max-w-xs mx-auto mb-6">
-                    <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
-                    <div className="flex gap-2">
-                      <motion.button type="button" onClick={() => setGender("male")}
-                        className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
-                        style={{
-                          background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
-                          border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
-                          color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
-                          backdropFilter: "blur(8px)",
-                        }}
-                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                      >{t.forecast_gender_male}</motion.button>
-                      <motion.button type="button" onClick={() => setGender("female")}
-                        className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300"
-                        style={{
-                          background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)",
-                          border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)",
-                          color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
-                          backdropFilter: "blur(8px)",
-                        }}
-                        whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                      >{t.forecast_gender_female}</motion.button>
+                  <motion.div
+                    className="max-w-sm w-full mx-auto mb-10"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.35 }}
+                  >
+                    <label className="block text-sm text-gold/60 font-body mb-3 tracking-wide">{t.forecast_gender_label}</label>
+                    <div className="flex gap-3">
+                      {(["male", "female"] as const).map((g) => (
+                        <motion.button
+                          key={g}
+                          type="button"
+                          onClick={() => setGender(g)}
+                          className="flex-1 py-3 rounded-xl font-body text-sm transition-all duration-300"
+                          style={{
+                            background: gender === g
+                              ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.08))"
+                              : "hsl(var(--deep-blue-light) / 0.4)",
+                            border: gender === g
+                              ? "1px solid hsl(var(--gold) / 0.45)"
+                              : "1px solid hsl(var(--gold) / 0.1)",
+                            color: gender === g
+                              ? "hsl(var(--gold))"
+                              : "hsl(var(--foreground) / 0.45)",
+                            backdropFilter: "blur(12px)",
+                            boxShadow: gender === g
+                              ? "0 0 16px hsl(var(--gold) / 0.1)"
+                              : "none",
+                          }}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                        >
+                          {g === "male" ? t.forecast_gender_male : t.forecast_gender_female}
+                        </motion.button>
+                      ))}
                     </div>
-                  </div>
+                  </motion.div>
 
-                  <div className="section-divider max-w-[100px] mx-auto mb-8" />
-
-                  <div className="relative w-28 h-40 mx-auto mb-8">
+                  {/* Card fan preview */}
+                  <motion.div
+                    className="relative w-32 h-44 mx-auto mb-10"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                  >
                     {[0, 1, 2].map(i => (
                       <motion.div
                         key={i}
                         className="absolute inset-0 rounded-xl overflow-hidden"
                         style={{
                           border: "1px solid hsl(var(--gold) / 0.2)",
-                          boxShadow: "0 4px 20px hsl(0 0% 0% / 0.3)",
+                          boxShadow: "0 8px 30px hsl(0 0% 0% / 0.35), 0 0 12px hsl(var(--gold) / 0.05)",
                           zIndex: 3 - i,
                         }}
                         animate={{
-                          rotate: (i - 1) * 5,
-                          x: (i - 1) * 8,
+                          rotate: (i - 1) * 6,
+                          x: (i - 1) * 10,
                           y: i * 2,
                         }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
                       >
                         <img src={cardBack} alt="Card" className="w-full h-full object-cover" />
                       </motion.div>
                     ))}
-                  </div>
+                    {/* Subtle glow under cards */}
+                    <motion.div
+                      className="absolute -inset-8 rounded-full pointer-events-none"
+                      style={{
+                        background: "radial-gradient(circle, hsl(var(--gold) / 0.06), transparent 70%)",
+                        filter: "blur(20px)",
+                      }}
+                      animate={{ opacity: [0.3, 0.6, 0.3] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    />
+                  </motion.div>
 
+                  {/* CTA Button */}
                   <motion.button
                     onClick={handleDraw}
-                    className="btn-gold font-body flex items-center justify-center gap-2 mx-auto text-base px-8 py-3"
-                    whileHover={{ scale: 1.05 }}
+                    className="relative font-body flex items-center justify-center gap-3 mx-auto text-base md:text-lg px-10 py-4 rounded-full overflow-hidden"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
+                      color: "hsl(var(--primary-foreground))",
+                      boxShadow: "0 0 30px hsl(var(--gold) / 0.25), 0 6px 20px hsl(0 0% 0% / 0.3)",
+                      letterSpacing: "0.03em",
+                    }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 40px hsl(var(--gold) / 0.35), 0 8px 25px hsl(0 0% 0% / 0.35)" }}
                     whileTap={{ scale: 0.97 }}
                   >
                     <Sparkles className="w-5 h-5" />
