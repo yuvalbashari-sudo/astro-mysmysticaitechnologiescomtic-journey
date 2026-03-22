@@ -235,9 +235,9 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       <div className="space-y-2">
                         {topCards.map(([name, data]) => (
                           <div key={name} className="flex items-center gap-3 p-2 rounded-lg bg-background/30">
-                            <span className="text-xl w-8 text-center">{data.symbol}</span>
-                            <span className="text-sm text-foreground flex-1 font-body">{name}</span>
-                            <span className="text-xs text-primary font-heading">×{data.count}</span>
+                            <span className="text-2xl w-10 text-center">{data.symbol}</span>
+                            <span className="text-lg text-foreground flex-1 font-body">{name}</span>
+                            <span className="text-base text-primary font-heading">×{data.count}</span>
                           </div>
                         ))}
                       </div>
