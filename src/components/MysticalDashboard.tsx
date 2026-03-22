@@ -187,9 +187,9 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                         )}
                         {profile.risingSign && (
                           <div className="text-center p-3 rounded-lg bg-background/50">
-                            <span className="text-2xl block mb-1">{profile.risingSymbol}</span>
-                            <span className="text-sm font-heading text-foreground block">{profile.risingSign}</span>
-                            <span className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-1">
+                            <span className="text-3xl block mb-1">{profile.risingSymbol}</span>
+                            <span className="text-lg font-heading text-foreground block">{profile.risingSign}</span>
+                            <span className="text-base text-muted-foreground flex items-center justify-center gap-1 mt-1">
                               <TrendingUp className="w-3 h-3" />
                               {t.dashboard_rising}
                             </span>
