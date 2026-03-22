@@ -23,6 +23,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
   const { language, dir } = useLanguage();
   const [readings, setReadings] = useState<SavedReading[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   const typeLabels: Record<string, string> = {
     forecast: t.readings_type_forecast,
