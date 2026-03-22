@@ -114,7 +114,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                 left: "16px",
                 width: "min(400px, calc(100vw - 32px))",
                 maxHeight: "calc(100vh - 96px)",
-                background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
+                background: "linear-gradient(145deg, hsl(222 40% 10%), hsl(222 47% 8%))",
                 border: "1px solid hsl(var(--gold) / 0.2)",
                 boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
                 fontSize: "1.5em",
