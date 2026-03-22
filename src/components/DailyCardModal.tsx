@@ -384,7 +384,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                     {/* Title */}
                     <motion.h2
-                      className="font-heading text-[2rem] md:text-[2.4rem] leading-tight mb-3"
+                      className="font-heading text-[2.6rem] md:text-[3.2rem] leading-tight mb-3"
                       style={{
                         color: "hsl(var(--gold))",
                         textShadow: "0 2px 20px hsl(var(--gold) / 0.2)",
