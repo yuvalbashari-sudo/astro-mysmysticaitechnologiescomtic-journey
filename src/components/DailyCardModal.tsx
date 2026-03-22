@@ -340,11 +340,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   <div
                     className="relative z-10 w-full max-w-md rounded-3xl px-8 py-10 md:px-10 md:py-12 flex flex-col items-center"
                     style={{
-                      background: "linear-gradient(170deg, hsl(222 47% 8% / 0.45), hsl(222 47% 5% / 0.55))",
-                      backdropFilter: "blur(24px) saturate(1.2)",
-                      WebkitBackdropFilter: "blur(24px) saturate(1.2)",
-                      border: "1px solid hsl(var(--gold) / 0.08)",
-                      boxShadow: "0 20px 60px hsl(0 0% 0% / 0.4), 0 0 40px hsl(var(--gold) / 0.03), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                      background: "linear-gradient(170deg, hsl(222 47% 8% / 0.88), hsl(222 47% 5% / 0.92))",
+                      backdropFilter: "blur(6px)",
+                      WebkitBackdropFilter: "blur(6px)",
+                      border: "1px solid hsl(var(--gold) / 0.12)",
+                      boxShadow: "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 1px hsl(var(--gold) / 0.1), inset 0 1px 0 hsl(var(--gold) / 0.08)",
                     }}
                   >
                     {/* Ambient glow behind container */}
