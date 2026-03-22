@@ -658,7 +658,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 >
                   <div className="mx-auto w-full max-w-[420px]">
                     <motion.div
-                      className="relative rounded-[28px]"
+                      className="relative rounded-[28px] overflow-visible"
                       style={{
                         background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.84), hsl(var(--deep-blue) / 0.92))",
                         border: "1px solid hsl(var(--gold) / 0.18)",
@@ -801,8 +801,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         style={{
                           width: 44,
                           height: 44,
-                          bottom: -16,
-                          right: -12,
+                          bottom: 10,
+                          right: 10,
                           zIndex: 10,
                         }}
                         onClick={(e) => e.stopPropagation()}
