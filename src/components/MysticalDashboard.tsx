@@ -263,11 +263,11 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                           return (
                             <div key={theme} className="space-y-1">
                               <div className="flex items-center justify-between">
-                                <span className="text-xs text-foreground flex items-center gap-2 font-body">
-                                  <Icon className="w-3.5 h-3.5 text-primary/70" />
+                                <span className="text-base text-foreground flex items-center gap-2 font-body">
+                                  <Icon className="w-4 h-4 text-primary/70" />
                                   {THEME_LABELS[theme] || theme}
                                 </span>
-                                <span className="text-xs text-muted-foreground">×{count}</span>
+                                <span className="text-base text-muted-foreground">×{count}</span>
                               </div>
                               <div className="h-1.5 rounded-full bg-background/50 overflow-hidden">
                                 <motion.div
