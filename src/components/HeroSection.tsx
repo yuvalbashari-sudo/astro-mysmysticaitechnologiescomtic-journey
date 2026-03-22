@@ -3288,14 +3288,24 @@ const HeroSection = () => {
         type="button"
         aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
         className="fixed z-[90] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
-        style={{ bottom: isMobile ? 36 : 48, left: "50%", transform: "translateX(-50%)" }}
+        style={{
+          bottom: isMobile ? 80 : 110,
+          left: "50%",
+          transform: "translateX(-50%)",
+          padding: isMobile ? "14px 32px" : "20px 48px",
+          background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--gold) / 0.02))",
+          border: "1px solid hsl(var(--gold) / 0.12)",
+          borderRadius: "9999px",
+          boxShadow: "0 0 30px hsl(var(--gold) / 0.08), 0 4px 20px hsl(0 0% 0% / 0.3)",
+          backdropFilter: "blur(8px)",
+        }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: [0.55, 0.9, 0.55] }}
+        animate={{ opacity: [0.6, 1, 0.6] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
         onClick={openUniverseMessage}
         whileTap={{ scale: 0.95 }}
       >
-        <span className={`text-gold/70 font-body ${isMobile ? "text-[11px]" : "text-sm"}`}>
+        <span className={`text-gold/80 font-body font-medium ${isMobile ? "text-xl" : "text-3xl"} tracking-wide`}>
           ✦ {t.hero_crystal_hint} ✦
         </span>
       </motion.button>
