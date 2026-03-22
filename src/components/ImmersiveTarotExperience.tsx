@@ -577,7 +577,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[140]"
+          className="fixed inset-0 z-[140] pointer-events-none"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -585,7 +585,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         >
           {/* ── Background: Oracle woman persists ── */}
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             initial={{ scale: 1 }}
             animate={{ scale: phase === "question" ? 1.03 : 1.06 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
@@ -680,7 +680,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           <AnimatePresence>
             {phase !== "question" && phase !== "interpretation" && (
               <motion.button
-                className="fixed top-5 left-16 z-[95] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer"
+                className="fixed top-5 left-16 z-[200] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer pointer-events-auto"
                 style={{
                   background: "hsl(var(--deep-blue) / 0.6)",
                   border: "1px solid hsl(var(--gold) / 0.2)",
