@@ -3427,7 +3427,7 @@ const HeroSection = () => {
 
           {/* Content */}
           <motion.div
-            className="relative text-center px-6 flex flex-col items-center"
+            className="relative text-center px-6 flex flex-col items-center justify-center"
             style={{ maxWidth: isMobile ? 360 : 560 }}
             initial={{ opacity: 0, y: 40, scale: 0.85 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
