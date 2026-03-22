@@ -115,6 +115,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                 width: "min(400px, calc(100vw - 32px))",
                 maxHeight: "calc(100vh - 96px)",
                 background: "hsl(222 47% 8%)",
+                fontSize: "1.5em",
               }}
               role="dialog"
               aria-label={t.dashboard_title}
