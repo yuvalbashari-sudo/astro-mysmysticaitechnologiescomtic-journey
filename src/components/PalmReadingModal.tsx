@@ -120,10 +120,30 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
                   <div className="absolute inset-0" key="input-desktop">
+                    {/* Top-right avatar */}
+                    <motion.div
+                      className="absolute pointer-events-auto z-10"
+                      style={{ top: "calc(8vh + 20px)", right: "4vw", width: 120, height: 120 }}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
+                    >
+                      <div
+                        className="w-full h-full rounded-full overflow-hidden"
+                        style={{
+                          boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+                          border: "2px solid hsl(var(--gold) / 0.35)",
+                        }}
+                      >
+                        <img src={astrologerAvatar} alt="" className="w-full h-full object-cover scale-105" style={{ objectPosition: "center 42%" }} draggable={false} />
+                      </div>
+                    </motion.div>
+
+                    {/* Form panel — LEFT side */}
                     <motion.div
                       className="absolute pointer-events-auto overflow-y-auto scrollbar-hide"
-                      style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(380px, 26vw)", maxHeight: "80vh" }}
-                      initial={{ opacity: 0, x: 40 }}
+                      style={{ top: "calc(10vh + 50px)", left: "3vw", width: "min(380px, 26vw)", maxHeight: "80vh" }}
+                      initial={{ opacity: 0, x: -40 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
