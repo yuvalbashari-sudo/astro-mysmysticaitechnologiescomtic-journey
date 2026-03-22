@@ -716,7 +716,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       <motion.button
                         key={opt.key}
                         type="button"
-                        className="relative rounded-xl p-4 md:p-5 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
+                        className="relative rounded-xl p-6 md:p-8 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
                         style={{
                           background: selectedQuestion === opt.key
                             ? `linear-gradient(145deg, hsl(${opt.color} / 0.2), hsl(${opt.color} / 0.08))`
