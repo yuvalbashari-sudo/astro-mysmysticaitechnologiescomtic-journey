@@ -76,7 +76,6 @@ const FORTUNE_MESSAGES: Record<Language, string[]> = {
 /* ── Energy colors per menu item ── */
 const ITEM_COLORS = [
   { glow: "hsl(43, 80%, 55%)", bg: "hsl(43, 80%, 55%)", label: "gold" },        // Forecast - gold
-  { glow: "hsl(215, 70%, 65%)", bg: "hsl(215, 70%, 65%)", label: "silver-blue" }, // Rising - silver blue
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
