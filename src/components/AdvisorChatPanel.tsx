@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Sparkles, Loader2, Lock } from "lucide-react";
+import { X, Send, Sparkles, Loader2, Lock, Share2, Copy, Check } from "lucide-react";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -449,6 +449,11 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                 </div>
               ))}
 
+              {/* Share/Copy actions — only when advisor answers exist */}
+              {messages.some(m => m.role === "assistant" && m.content) && !isStreaming && (
+                <AdvisorShareActions messages={messages} dir={dir} />
+              )}
+
               {/* Limit reached banner */}
               {isLimitReached && !isStreaming && (
                 <motion.div
@@ -524,6 +529,81 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
         </>
       )}
     </AnimatePresence>
+  );
+};
+
+/* ── Share/Copy Actions Sub-component ── */
+const AdvisorShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const answersText = useMemo(() => {
+    return messages
+      .filter(m => m.role === "assistant" && m.content)
+      .map(m => m.content)
+      .join("\n\n");
+  }, [messages]);
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(answersText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+      const ta = document.createElement("textarea");
+      ta.value = answersText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }, [answersText]);
+
+  const handleShare = useCallback(async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ text: answersText });
+      } catch { /* user cancelled */ }
+    } else {
+      handleCopy();
+    }
+  }, [answersText, handleCopy]);
+
+  return (
+    <motion.div
+      className="flex items-center justify-center gap-3 pt-3 pb-1"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.3 }}
+      dir={dir}
+    >
+      <button
+        onClick={handleShare}
+        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+        style={{
+          background: "hsl(var(--gold) / 0.08)",
+          border: "1px solid hsl(var(--gold) / 0.15)",
+          color: "hsl(var(--gold) / 0.7)",
+        }}
+      >
+        <Share2 className="w-3.5 h-3.5" />
+        <span>שתפו תשובות</span>
+      </button>
+      <button
+        onClick={handleCopy}
+        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+        style={{
+          background: "hsl(var(--gold) / 0.08)",
+          border: "1px solid hsl(var(--gold) / 0.15)",
+          color: "hsl(var(--gold) / 0.7)",
+        }}
+      >
+        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+        <span>{copied ? "התשובות הועתקו" : "העתיקו תשובות"}</span>
+      </button>
+    </motion.div>
   );
 };
 
