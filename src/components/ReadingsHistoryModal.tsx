@@ -54,7 +54,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <CinematicModalShell isOpen={isOpen} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide>
-        <div className="p-8 md:p-12 pt-12 md:pt-16 max-w-2xl" dir={dir} style={{ marginRight: "auto", marginLeft: "-45px" }}>
+        <div className="p-8 md:p-12 pt-12 md:pt-16 max-w-2xl" dir={dir} style={{ marginRight: "auto", marginLeft: "-65px" }}>
             <div className="text-center mb-12">
               <Clock className="w-14 h-14 text-gold mx-auto mb-6" />
               <h2 className="font-heading text-4xl md:text-5xl gold-gradient-text mb-4">
