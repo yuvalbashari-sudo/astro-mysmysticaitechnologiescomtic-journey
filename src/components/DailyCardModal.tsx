@@ -662,7 +662,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       >
                         {/* The card — emerges, floats, rotates, then flips */}
                         <motion.div
-                          className="relative overflow-hidden rounded-xl"
+                          className="relative rounded-xl"
                           style={{
                             width: isMobileViewport ? 160 : 200,
                             height: isMobileViewport ? 240 : 300,
