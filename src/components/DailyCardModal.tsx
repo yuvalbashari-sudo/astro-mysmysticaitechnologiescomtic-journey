@@ -233,11 +233,23 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       startAiReading(card);
     }, RITUAL_DURATION_MS);
 
+    // Fallback safety: if animation fails, force result after 6s
+    const fallback = setTimeout(() => {
+      setPhase((prev) => {
+        if (prev === "ritual") {
+          startAiReading(card);
+          return "result";
+        }
+        return prev;
+      });
+    }, 6000);
+
     return () => {
       clearTimeout(step1);
       clearTimeout(step2);
       clearTimeout(step3);
       clearTimeout(step4);
+      clearTimeout(fallback);
     };
   }, [phase, card]);
 
