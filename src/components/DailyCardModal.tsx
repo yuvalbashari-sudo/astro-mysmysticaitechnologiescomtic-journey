@@ -695,8 +695,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           }}
                         >
                           {/* Card back (visible when rotateY=180) */}
+                          {/* Card back (visible when rotateY=180) */}
                           <motion.div
-                            className="absolute inset-0"
+                            className="absolute inset-0 rounded-xl overflow-hidden"
                             style={{
                               backfaceVisibility: "hidden",
                               transform: "rotateY(180deg)",
@@ -705,9 +706,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                             <img src={cardBack} alt="" className="w-full h-full object-cover" />
                           </motion.div>
 
-                          {/* Card front */}
+                          {/* Card front (visible when rotateY=0) */}
                           <div
-                            className="absolute inset-0"
+                            className="absolute inset-0 rounded-xl overflow-hidden"
                             style={{ backfaceVisibility: "hidden" }}
                           >
                             {cardImage ? (
