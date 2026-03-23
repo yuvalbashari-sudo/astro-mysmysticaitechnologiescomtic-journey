@@ -65,7 +65,52 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide>
+    <CinematicModalShell isOpen={isOpen} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor>
+        {/* Avatar pinned to bottom-right of this screen */}
+        <AvatarHoverTeaser
+          disabled={isMobile}
+          className="fixed z-[106]"
+          style={{
+            bottom: 10,
+            right: 10,
+            left: "auto",
+            width: isMobile ? 120 : 168,
+            height: isMobile ? 120 : 168,
+          }}
+        >
+          <motion.button
+            className="w-full h-full rounded-full overflow-hidden cursor-pointer group"
+            style={{
+              boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 30px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+              border: "2px solid hsl(var(--gold) / 0.35)",
+            }}
+            onClick={() => setAdvisorOpen(true)}
+            whileHover={{ filter: "brightness(1.15)" }}
+            whileTap={{ filter: "brightness(0.9)" }}
+            aria-label="התייעצות עם האסטרולוגית"
+          >
+            <img
+              src={astrologerAvatar}
+              alt="האסטרולוגית"
+              className="w-full h-full object-cover scale-105"
+              style={{ objectPosition: "center 42%" }}
+              draggable={false}
+            />
+            <div
+              className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              style={{ background: "linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%)" }}
+            />
+            <motion.div
+              className="absolute inset-0 rounded-full pointer-events-none"
+              style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
+              animate={{ scale: [1, 1.5, 1.5], opacity: [0.5, 0, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut" }}
+            />
+          </motion.button>
+        </AvatarHoverTeaser>
+
+        <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
+
         <div className="p-8 md:p-12 pt-16 md:pt-20 max-w-2xl" dir={dir} style={{ marginRight: "auto", marginLeft: "-65px" }}>
             <div className="text-center mb-12">
               <Clock className="w-14 h-14 text-gold mx-auto mb-6" />
