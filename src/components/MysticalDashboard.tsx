@@ -314,6 +314,44 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       </div>
                     </motion.div>
                   )}
+                  {/* Reset Profile */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="pt-2 border-t border-border/30"
+                  >
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-lg text-muted-foreground hover:text-destructive transition-colors font-body text-base"
+                          style={{ background: "hsl(var(--destructive) / 0.05)" }}
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                          איפוס פרופיל
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="z-[200]" style={{ background: "hsl(222 40% 10%)", border: "1px solid hsl(var(--gold) / 0.2)" }}>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="font-heading text-xl text-primary text-right">
+                            האם לאפס את הפרופיל האישי?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="text-base text-muted-foreground text-right leading-relaxed">
+                            כל הנתונים האישיים יימחקו ותצטרכו להזין אותם מחדש. היסטוריית הקריאות והקלפים תישמר.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="flex gap-2 sm:flex-row-reverse">
+                          <AlertDialogAction
+                            onClick={() => { mysticalProfile.clearProfile(); setProfile(mysticalProfile.getProfile()); }}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            אישור
+                          </AlertDialogAction>
+                          <AlertDialogCancel>ביטול</AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </motion.div>
                 </div>
               )}
             </motion.div>
