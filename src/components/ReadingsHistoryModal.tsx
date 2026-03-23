@@ -27,6 +27,15 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
   const [readings, setReadings] = useState<SavedReading[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const typeLabels: Record<string, string> = {
     forecast: t.readings_type_forecast,
