@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Star, Flame, Droplets, Wind, Mountain, Sparkles, Eye, Heart, Zap, Sun, Moon, TrendingUp } from "lucide-react";
+import { X, Star, Flame, Droplets, Wind, Mountain, Sparkles, Eye, Heart, Zap, Sun, Moon, TrendingUp, RotateCcw } from "lucide-react";
 import { mysticalProfile, type MysticalProfileData } from "@/lib/mysticalProfile";
+import {
+  AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
+  AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction, AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { useT } from "@/i18n";
 
 const THEME_ICONS: Record<string, typeof Flame> = {
