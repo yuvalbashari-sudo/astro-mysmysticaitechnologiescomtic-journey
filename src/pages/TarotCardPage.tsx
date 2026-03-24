@@ -10,10 +10,11 @@ import { useCardName } from "@/hooks/useCardName";
 
 const TarotCardPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const localizeCardName = useCardName();
 
-  const cardName = slug ? TAROT_SLUG_MAP[slug] : undefined;
-  const card = cardName ? majorArcana.find(c => c.name === cardName) : undefined;
-  const cardImage = cardName ? tarotCardImages[cardName] : undefined;
+  const cardEnglishName = slug ? TAROT_SLUG_MAP[slug] : undefined;
+  const card = cardEnglishName ? majorArcana.find(c => c.name === cardEnglishName) : undefined;
+  const cardImage = cardEnglishName ? tarotCardImages[cardEnglishName] : undefined;
 
   useEffect(() => {
     if (!card) return;
