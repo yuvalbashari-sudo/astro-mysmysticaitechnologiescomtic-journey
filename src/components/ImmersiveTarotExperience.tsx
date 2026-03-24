@@ -1094,7 +1094,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.7, duration: 0.5 }}
                           >
-                            {language === "he" ? "✦ הפירוש שלך ✦" : "✦ Your Reading ✦"}
+                            {t.imm_tarot_your_reading}
                           </motion.h3>
                           {aiText ? (
                             <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
