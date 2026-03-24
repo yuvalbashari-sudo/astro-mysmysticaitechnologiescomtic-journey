@@ -14,6 +14,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 

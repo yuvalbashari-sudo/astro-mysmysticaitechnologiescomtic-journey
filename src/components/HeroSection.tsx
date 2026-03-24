@@ -16,6 +16,7 @@ import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT, useLanguage } from "@/i18n";
+import { useCardName } from "@/hooks/useCardName";
 import type { Language } from "@/i18n";
 import { drawTarotCards, type TarotCard } from "@/data/tarotData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";

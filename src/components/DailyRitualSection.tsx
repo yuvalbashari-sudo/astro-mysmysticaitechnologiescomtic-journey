@@ -4,6 +4,7 @@ import { Sparkles, Clock, ChevronDown } from "lucide-react";
 import { getDailyRitual, revealDailyRitual, msUntilReset, type DailyRitualData } from "@/lib/dailyRitual";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n";
+import { useCardName } from "@/hooks/useCardName";
 
 const DailyRitualSection = () => {
   const t = useT();

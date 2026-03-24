@@ -4,6 +4,7 @@ import { Sun, Sparkles, Star } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n/LanguageContext";
+import { useCardName } from "@/hooks/useCardName";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 
 const DAILY_CARD_KEY = "astrologai_daily_card";

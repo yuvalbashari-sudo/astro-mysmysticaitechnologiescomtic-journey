@@ -14,6 +14,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
