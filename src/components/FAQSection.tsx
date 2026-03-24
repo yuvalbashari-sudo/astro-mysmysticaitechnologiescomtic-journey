@@ -70,7 +70,7 @@ const FAQSection = () => {
                   <span className="text-[15px]">{item.q}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="font-body text-muted-foreground text-sm leading-[1.9] pb-6 pr-[52px] text-start">
+              <AccordionContent className="font-body text-muted-foreground text-sm leading-[1.9] pb-6 pe-[52px] text-start">
                 {item.a}
               </AccordionContent>
             </AccordionItem>
