@@ -173,11 +173,11 @@ const DailyRitualSection = () => {
                 className="mystical-card-elevated p-8 text-center flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_message_label}</div>
+                  <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_message_label}</div>
                   <div className="icon-glow w-14 h-14 mx-auto mb-5">
                     <span className="text-2xl">🌌</span>
                   </div>
-                  <p className="text-foreground font-body text-base leading-relaxed">
+                  <p className="text-foreground font-body text-lg" style={{ lineHeight: 1.7 }}>
                     {ritual.message}
                   </p>
                 </div>
