@@ -161,8 +161,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         <div className="mb-4 rounded-xl p-4" style={{ background: "hsl(var(--gold) / 0.03)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
                           <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
                           <div className="flex flex-col gap-2 mb-2">
-                            <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
-                            <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                            <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: dir }} />
+                            <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: dir }}>
                               <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
                             </select>
                           </div>
@@ -174,7 +174,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                             </div>
                           </div>
                           {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
-                          <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm mt-2" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                          <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm mt-2" style={{ direction: dir }}>
                             <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
                           </select>
                         </div>
@@ -183,8 +183,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         <div className="mb-5 rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.03)", border: "1px solid hsl(var(--crimson) / 0.1)", backdropFilter: "blur(8px)" }}>
                           <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
                           <div className="flex flex-col gap-2 mb-2">
-                            <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
-                            <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                            <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: dir }} />
+                            <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center text-sm" style={{ direction: dir }}>
                               <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
                             </select>
                           </div>
@@ -196,7 +196,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                             </div>
                           </div>
                           {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
-                          <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm mt-2" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                          <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm mt-2" style={{ direction: dir }}>
                             <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
                           </select>
                         </div>
@@ -218,8 +218,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                     <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--gold) / 0.03)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
                       <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date1_label}</label>
                       <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                        <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
-                        <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <input placeholder={t.compat_name_placeholder} value={name1} onChange={(e) => setName1(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: dir }} />
+                        <select value={relation1} onChange={(e) => setRelation1(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: dir }}>
                           <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
                         </select>
                       </div>
@@ -232,7 +232,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                       {!time1 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
                       <div className="mt-2">
-                        <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <select value={gender1} onChange={(e) => setGender1(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: dir }}>
                           <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
                         </select>
                       </div>
@@ -242,8 +242,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                     <div className="max-w-sm mx-auto mb-6 rounded-xl p-4" style={{ background: "hsl(var(--crimson) / 0.03)", border: "1px solid hsl(var(--crimson) / 0.1)" }}>
                       <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.compat_date2_label}</label>
                       <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                        <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }} />
-                        <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <input placeholder={t.compat_name_placeholder} value={name2} onChange={(e) => setName2(e.target.value)} className="mystical-input font-body text-center flex-1 text-sm" style={{ direction: dir }} />
+                        <select value={relation2} onChange={(e) => setRelation2(e.target.value)} className="mystical-input font-body text-center sm:w-[130px] text-sm" style={{ direction: dir }}>
                           <option value="me">{t.compat_relation_me}</option><option value="partner">{t.compat_relation_partner}</option><option value="friend">{t.compat_relation_friend}</option><option value="family">{t.compat_relation_family}</option><option value="other">{t.compat_relation_other}</option>
                         </select>
                       </div>
@@ -256,7 +256,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                       {!time2 && <p className="text-[10px] text-foreground/40 font-body mt-1 text-right">{t.compat_time_optional}</p>}
                       <div className="mt-2">
-                        <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: language === "en" ? "ltr" : "rtl" }}>
+                        <select value={gender2} onChange={(e) => setGender2(e.target.value)} className="mystical-input font-body text-center w-full text-sm" style={{ direction: dir }}>
                           <option value="">{t.compat_gender_label} ({t.compat_gender_optional})</option><option value="woman">{t.compat_gender_woman}</option><option value="man">{t.compat_gender_man}</option><option value="nonbinary">{t.compat_gender_nonbinary}</option><option value="other">{t.compat_gender_other}</option><option value="prefer_not">{t.compat_gender_prefer_not}</option>
                         </select>
                       </div>
