@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
-import AstrologerIntroModal from "@/components/AstrologerIntroModal";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -917,7 +917,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
               }}
             />
       </CinematicModalShell>
-      <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
+      <AdvisorChatPanel isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} forceRightAnchor />
     </>
   );
 };
