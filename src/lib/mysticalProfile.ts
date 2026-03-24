@@ -270,6 +270,8 @@ function clearProfile(): void {
 
 export const mysticalProfile = {
   getProfile,
+  recordUserName,
+  getUserName,
   recordZodiac,
   recordRising,
   recordCompatibility,
