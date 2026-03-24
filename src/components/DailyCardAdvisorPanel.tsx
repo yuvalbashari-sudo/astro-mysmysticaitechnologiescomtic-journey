@@ -294,7 +294,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
           className="fixed z-[200] flex flex-col overflow-hidden"
           style={{
             top: 0, left: 0, bottom: 0,
-            width: "360px",
+            width: "680px",
             background: "linear-gradient(170deg, hsl(222 47% 9% / 0.95), hsl(222 47% 5% / 0.98))",
             borderRight: dir === "rtl" ? "none" : "1px solid hsl(var(--gold) / 0.12)",
             borderLeft: dir === "rtl" ? "1px solid hsl(var(--gold) / 0.12)" : "none",
