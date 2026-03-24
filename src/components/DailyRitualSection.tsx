@@ -114,7 +114,7 @@ const DailyRitualSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="mystical-card-elevated p-6 text-center"
+                className="mystical-card-elevated p-8 text-center"
               >
                 <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_card_label}</div>
 
