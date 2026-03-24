@@ -426,28 +426,28 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     {
       key: "love",
       icon: <Heart className="w-12 h-12" />,
-      label: language === "he" ? "אהבה" : language === "ar" ? "الحب" : language === "ru" ? "Любовь" : "Love",
+      label: t.imm_tarot_category_love,
       color: "340 60% 55%",
     },
     {
       key: "career",
       icon: <Briefcase className="w-12 h-12" />,
-      label: language === "he" ? "קריירה" : language === "ar" ? "المهنة" : language === "ru" ? "Карьера" : "Career",
+      label: t.imm_tarot_category_career,
       color: "215 60% 55%",
     },
     {
       key: "money",
       icon: <DollarSign className="w-12 h-12" />,
-      label: language === "he" ? "כסף" : language === "ar" ? "المال" : language === "ru" ? "Деньги" : "Money",
+      label: t.imm_tarot_category_money,
       color: "43 80% 55%",
     },
     {
       key: "general",
       icon: <Sparkles className="w-12 h-12" />,
-      label: language === "he" ? "כללי" : language === "ar" ? "عام" : language === "ru" ? "Общее" : "General",
+      label: t.imm_tarot_category_general,
       color: "270 50% 60%",
     },
-  ], [language]);
+  ], [language, t]);
 
   const handleQuestionSelect = useCallback((key: string) => {
     setSelectedQuestion(key);
