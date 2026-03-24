@@ -768,10 +768,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     transition={{ delay: 0.3 }}
                   >
                     {selectedCardIndices.size < 3
-                      ? (language === "he"
-                        ? `בחרו ${3 - selectedCardIndices.size} קלפים`
-                        : `Choose ${3 - selectedCardIndices.size} cards`)
-                      : (language === "he" ? "הקלפים נבחרו ✦" : "Cards chosen ✦")}
+                      ? t.imm_tarot_choose_cards.replace("{n}", String(3 - selectedCardIndices.size))
+                      : t.imm_tarot_cards_chosen}
                   </motion.div>
                   <motion.div
                     className="font-heading font-bold tracking-wider"
