@@ -189,8 +189,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                       key={lang}
                       role="option"
                       aria-selected={lang === language}
-                      onPointerDown={(e) => {
-                        e.stopPropagation();
+                      onClick={() => {
                         setLanguage(lang);
                         setLangOpen(false);
                       }}
