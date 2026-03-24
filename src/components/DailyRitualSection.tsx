@@ -39,7 +39,7 @@ const DailyRitualSection = () => {
 
   return (
     <section
-      className="py-16 md:py-24 px-4 relative"
+      className="py-16 md:py-24 px-6 md:px-8 relative"
       aria-label={t.a11y_daily_section}
       style={{
         background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.15) 0%, hsl(var(--deep-blue) / 0.25) 50%, hsl(var(--deep-blue) / 0.15) 100%)",
@@ -54,17 +54,17 @@ const DailyRitualSection = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-12"
+        className="text-center mb-14"
       >
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="w-5 h-5 text-gold" />
-          <span className="text-sm font-body text-gold/70 tracking-widest uppercase">{t.daily_ritual_label}</span>
-          <Sparkles className="w-5 h-5 text-gold" />
+          <Sparkles className="w-6 h-6 text-gold" />
+          <span className="text-base font-body text-gold/70 tracking-widest uppercase">{t.daily_ritual_label}</span>
+          <Sparkles className="w-6 h-6 text-gold" />
         </div>
-        <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-3">
+        <h2 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-4" style={{ lineHeight: 1.3 }}>
           {t.daily_ritual_title}
         </h2>
-        <p className="text-muted-foreground font-body text-base md:text-lg max-w-md mx-auto leading-relaxed">
+        <p className="text-muted-foreground font-body text-lg md:text-xl max-w-lg mx-auto" style={{ lineHeight: 1.7 }}>
           {t.daily_ritual_desc}
         </p>
       </motion.div>
