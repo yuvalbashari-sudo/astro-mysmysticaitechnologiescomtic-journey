@@ -4,9 +4,11 @@ import { Sparkles, Clock, ChevronDown } from "lucide-react";
 import { getDailyRitual, revealDailyRitual, msUntilReset, type DailyRitualData } from "@/lib/dailyRitual";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n";
+import { useCardName } from "@/hooks/useCardName";
 
 const DailyRitualSection = () => {
   const t = useT();
+  const cardName = useCardName();
   const [ritual, setRitual] = useState<DailyRitualData & { isNew: boolean }>(getDailyRitual);
   const [revealed, setRevealed] = useState(ritual.revealed);
   const [cardFlipped, setCardFlipped] = useState(ritual.revealed);
@@ -159,7 +161,7 @@ const DailyRitualSection = () => {
                   )}
                 </div>
 
-                <h3 className="font-heading text-xl text-gold mb-2">{ritual.card.hebrewName}</h3>
+                <h3 className="font-heading text-xl text-gold mb-2">{cardName(ritual.card.name, ritual.card.hebrewName)}</h3>
                 <p className="text-base text-muted-foreground font-body line-clamp-4" style={{ lineHeight: 1.7 }}>
                   {ritual.card.meaning.slice(0, 120)}...
                 </p>

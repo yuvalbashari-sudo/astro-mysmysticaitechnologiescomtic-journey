@@ -14,6 +14,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
@@ -203,6 +204,7 @@ function useTranslatedSpread(t: ReturnType<typeof useT>) {
 const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const cardName = useCardName();
   const { setActiveReading } = useReadingContext();
   const { nameMap, descMap, posMap } = useTranslatedSpread(t);
   const [phase, setPhase] = useState<Phase>("select");
@@ -596,14 +598,14 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                               >
                                 <img 
                                   src={tarotCardImages[card.name] || ""} 
-                                  alt={card.hebrewName} 
+                                  alt={cardName(card.name, card.hebrewName)} 
                                   className="w-full h-full object-cover"
                                 />
                                 {/* Bottom overlay with card name */}
                                 <div className="absolute inset-x-0 bottom-0 flex flex-col items-center pb-2 pt-6" style={{ background: "linear-gradient(to top, hsl(0 0% 0% / 0.8), transparent)" }}>
                                   <span className="font-heading text-[10px] md:text-xs text-gold text-center px-2 leading-tight"
                                     style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.4)" }}>
-                                    {card.hebrewName}
+                                    {cardName(card.name, card.hebrewName)}
                                   </span>
                                   <span className="font-body text-[8px] md:text-[9px] text-foreground/40 mt-0.5">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</span>
                                 </div>
@@ -689,7 +691,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         >
                           <img
                             src={tarotCardImages[card.name] || ""}
-                            alt={card.hebrewName}
+                            alt={cardName(card.name, card.hebrewName)}
                             className="w-full h-full object-cover"
                           />
                           {/* Shimmer overlay */}
@@ -710,7 +712,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                           transition={{ delay: 0.8 + i * 0.3 }}
                         >
                           <span className="font-heading text-base md:text-lg text-gold" style={{ textShadow: "0 0 15px hsl(var(--gold) / 0.3)" }}>
-                            {card.hebrewName}
+                            {cardName(card.name, card.hebrewName)}
                           </span>
                           <p className="font-body text-[11px] text-foreground/40 mt-1">{posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]}</p>
                         </motion.div>
@@ -820,7 +822,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                 <span className="text-2xl">{card.symbol}</span>
                               </div>
                               <div className="text-start">
-                                <h3 className="font-heading text-xl text-gold">{card.hebrewName}</h3>
+                                <h3 className="font-heading text-xl text-gold">{cardName(card.name, card.hebrewName)}</h3>
                                 <span className="font-body text-sm text-foreground/40">{interp.positionLabel}</span>
                               </div>
                             </div>

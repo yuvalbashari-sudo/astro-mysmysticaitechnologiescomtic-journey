@@ -4,6 +4,7 @@ import { Sun, Sparkles, Star } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n/LanguageContext";
+import { useCardName } from "@/hooks/useCardName";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 
 const DAILY_CARD_KEY = "astrologai_daily_card";
@@ -59,6 +60,7 @@ interface Props {
 
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
+  const cardName = useCardName();
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(false);
@@ -215,7 +217,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           {cardImage ? (
             <img
               src={cardImage}
-              alt={card.hebrewName}
+              alt={cardName(card.name, card.hebrewName)}
               className="w-full h-full object-contain"
               style={{ background: "hsl(var(--deep-blue))" }}
             />
@@ -258,7 +260,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          {card.symbol} {card.hebrewName}
+          {card.symbol} {cardName(card.name, card.hebrewName)}
         </motion.h3>
 
         {/* Short meaning */}
