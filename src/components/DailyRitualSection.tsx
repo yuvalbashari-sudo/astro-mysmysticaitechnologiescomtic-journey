@@ -170,7 +170,7 @@ const DailyRitualSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="mystical-card-elevated p-6 text-center flex flex-col justify-between"
+                className="mystical-card-elevated p-8 text-center flex flex-col justify-between"
               >
                 <div>
                   <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_message_label}</div>
