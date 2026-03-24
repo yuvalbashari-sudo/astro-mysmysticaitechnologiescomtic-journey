@@ -572,12 +572,14 @@ serve(async (req) => {
     const lang = language || "he";
     const langName = LANG_NAMES[lang] || "Hebrew";
     
-    let languageInstruction = "";
-    if (lang === "he") {
-      languageInstruction = "\n\nאתה כותב בעברית בלבד.";
-    } else {
-      languageInstruction = `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST write your ENTIRE response in ${langName}. Every single word, including all headers, section titles, descriptions, advice, and summaries MUST be in ${langName}. Do NOT use Hebrew or any other language. The emoji headers (like **⭐**, **❤️**, etc.) should remain, but ALL text MUST be in ${langName}.`;
-    }
+    const LANG_NATIVE_TONE: Record<string, string> = {
+      he: "\n\nאתה כותב בעברית בלבד. הכתיבה צריכה להרגיש טבעית, זורמת ואינטימית — לא כמו תרגום. השתמש בביטויים עבריים אותנטיים ובמטאפורות שמרגישות טבעי בעברית. הימנע מפתיחות חוזרות ומקלישאות רוחניות גנריות. אל תשתמש בניסוחי 'בן/בת מזל', 'המזל שלך', 'לבני מזל' — דבר ישירות אל האדם.",
+      en: `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST write your ENTIRE response in English. Every single word, including all headers, section titles, descriptions, advice, and summaries MUST be in English. Do NOT use Hebrew or any other language. The emoji headers should remain, but ALL text MUST be in English.\n\nTONE: Write in natural, elegant English. The tone should feel warm, personal, and emotionally intelligent — like a wise guide speaking intimately. Avoid overly flowery or New Age clichés. Vary sentence openings. Never use generic zodiac group phrasing like "for Virgos" — address the person directly.`,
+      ru: `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST write your ENTIRE response in Russian. Every single word, including all headers, section titles, descriptions, advice, and summaries MUST be in Russian. Do NOT use Hebrew or any other language. The emoji headers should remain, but ALL text MUST be in Russian.\n\nТОН: Пиши на естественном, эмоционально богатом русском языке. Тон должен быть тёплым, интимным и душевным — как мудрый наставник, говорящий по душам. Используй красивые русские выражения и метафоры, которые звучат органично. Избегай буквального перевода с английского. Никогда не используй обобщённые зодиакальные фразы вроде "для Дев" — говори лично.`,
+      ar: `\n\nCRITICAL LANGUAGE INSTRUCTION: You MUST write your ENTIRE response in Arabic. Every single word, including all headers, section titles, descriptions, advice, and summaries MUST be in Arabic. Do NOT use Hebrew or any other language. The emoji headers should remain, but ALL text MUST be in Arabic.\n\nالأسلوب: اكتب بالعربية الطبيعية الدافئة والمتدفقة. يجب أن يكون الأسلوب حميمياً وعاطفياً — كمرشد روحي حكيم يتحدث من القلب إلى القلب. استخدم تعبيرات عربية أصيلة. تجنب الترجمة الحرفية من الإنجليزية. لا تستخدم عبارات عامة مثل "لبرج العذراء" — تحدث بشكل شخصي ومباشر.`,
+    };
+
+    let languageInstruction = LANG_NATIVE_TONE[lang] || LANG_NATIVE_TONE["he"];
 
     // Inject language + profile context into system prompt
     let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction;
