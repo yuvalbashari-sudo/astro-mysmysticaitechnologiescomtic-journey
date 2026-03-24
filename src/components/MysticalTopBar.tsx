@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { createPortal } from "react-dom";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
@@ -21,27 +20,10 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
   const langContainerRef = useRef<HTMLDivElement>(null);
-  const langDropdownRef = useRef<HTMLDivElement>(null);
-  const langBtnRef = useRef<HTMLButtonElement>(null);
-  const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
-
-  const updateDropdownPos = useCallback(() => {
-    if (langBtnRef.current) {
-      const rect = langBtnRef.current.getBoundingClientRect();
-      setDropdownPos({
-        top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
-      });
-    }
-  }, []);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      const target = e.target as Node;
-      const clickedInsideButton = !!langContainerRef.current?.contains(target);
-      const clickedInsideDropdown = !!langDropdownRef.current?.contains(target);
-
-      if (!clickedInsideButton && !clickedInsideDropdown) {
+      if (langContainerRef.current && !langContainerRef.current.contains(e.target as Node)) {
         setLangOpen(false);
       }
     };
@@ -49,20 +31,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
-
-  useEffect(() => {
-    if (!langOpen) return;
-    updateDropdownPos();
-
-    const handleViewportChange = () => updateDropdownPos();
-    window.addEventListener("resize", handleViewportChange);
-    window.addEventListener("scroll", handleViewportChange, true);
-
-    return () => {
-      window.removeEventListener("resize", handleViewportChange);
-      window.removeEventListener("scroll", handleViewportChange, true);
-    };
-  }, [langOpen, updateDropdownPos]);
 
   return (
     <motion.header
@@ -76,10 +44,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
       role="banner"
       aria-label={t.a11y_main_navigation}
     >
-      {/* Right side: Empty spacer for balance */}
       <div className="flex-1" />
 
-      {/* Center: Hero Title only */}
       <div className="flex flex-col items-center pointer-events-none select-none">
         <motion.h1
           className="font-heading uppercase"
@@ -105,76 +71,69 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         </motion.h1>
       </div>
 
-      {/* Left side: Actions */}
       <div className="flex-1 flex justify-end">
-      <nav className="flex items-center gap-3" aria-label={t.a11y_main_navigation}>
-        {/* Mystical Profile Dashboard */}
-        <motion.button
-          onClick={onOpenDashboard}
-          className="flex items-center justify-center w-14 h-14 rounded-full backdrop-blur-md transition-all"
-          style={{
-            background: "hsl(var(--deep-blue-light) / 0.6)",
-            border: "1px solid hsl(var(--gold) / 0.15)",
-            color: "hsl(var(--gold) / 0.7)",
-          }}
-          whileHover={{ scale: 1.08, borderColor: "hsl(var(--gold) / 0.3)" }}
-          whileTap={{ scale: 0.95 }}
-          aria-label={t.dashboard_title || "Mystical Profile"}
-        >
-          <Sparkles className="w-7 h-7" aria-hidden="true" />
-        </motion.button>
-        {/* Readings History */}
-        {hasHistory && (
+        <nav className="flex items-center gap-3" aria-label={t.a11y_main_navigation}>
           <motion.button
-            onClick={onOpenHistory}
-            className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
+            onClick={onOpenDashboard}
+            className="flex items-center justify-center w-14 h-14 rounded-full backdrop-blur-md transition-all"
             style={{
               background: "hsl(var(--deep-blue-light) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.15)",
               color: "hsl(var(--gold) / 0.7)",
             }}
-            whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
-            whileTap={{ scale: 0.97 }}
-            aria-label={t.a11y_readings_history}
+            whileHover={{ scale: 1.08, borderColor: "hsl(var(--gold) / 0.3)" }}
+            whileTap={{ scale: 0.95 }}
+            aria-label={t.dashboard_title || "Mystical Profile"}
           >
-            <Clock className="w-6 h-6" aria-hidden="true" />
-          </motion.button>
-        )}
-
-        {/* Language Selector */}
-        <div ref={langContainerRef} className="relative">
-          <motion.button
-            ref={langBtnRef}
-            onClick={() => setLangOpen((prev) => !prev)}
-            className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
-            style={{
-              background: "hsl(var(--deep-blue-light) / 0.6)",
-              border: "1px solid hsl(var(--gold) / 0.15)",
-              color: "hsl(var(--gold) / 0.7)",
-            }}
-            whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
-            whileTap={{ scale: 0.97 }}
-            aria-label={t.a11y_language_selector}
-            aria-expanded={langOpen}
-            aria-haspopup="listbox"
-          >
-            <Globe className="w-6 h-6" aria-hidden="true" />
-            <span>{languageConfig[language].label}</span>
+            <Sparkles className="w-7 h-7" aria-hidden="true" />
           </motion.button>
 
-          {createPortal(
+          {hasHistory && (
+            <motion.button
+              onClick={onOpenHistory}
+              className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
+              style={{
+                background: "hsl(var(--deep-blue-light) / 0.6)",
+                border: "1px solid hsl(var(--gold) / 0.15)",
+                color: "hsl(var(--gold) / 0.7)",
+              }}
+              whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
+              whileTap={{ scale: 0.97 }}
+              aria-label={t.a11y_readings_history}
+            >
+              <Clock className="w-6 h-6" aria-hidden="true" />
+            </motion.button>
+          )}
+
+          <div ref={langContainerRef} className="relative">
+            <motion.button
+              type="button"
+              onClick={() => setLangOpen((prev) => !prev)}
+              className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
+              style={{
+                background: "hsl(var(--deep-blue-light) / 0.6)",
+                border: "1px solid hsl(var(--gold) / 0.15)",
+                color: "hsl(var(--gold) / 0.7)",
+              }}
+              whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
+              whileTap={{ scale: 0.97 }}
+              aria-label={t.a11y_language_selector}
+              aria-expanded={langOpen}
+              aria-haspopup="listbox"
+            >
+              <Globe className="w-6 h-6" aria-hidden="true" />
+              <span>{languageConfig[language].label}</span>
+            </motion.button>
+
             <AnimatePresence>
               {langOpen && (
                 <motion.div
-                  ref={langDropdownRef}
                   initial={{ opacity: 0, y: -8, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="fixed rounded-xl overflow-hidden"
+                  className="absolute top-full right-0 mt-2 rounded-xl overflow-hidden"
                   style={{
-                    top: dropdownPos.top,
-                    right: dropdownPos.right,
                     zIndex: 99999,
                     background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
                     border: "1px solid hsl(var(--gold) / 0.2)",
@@ -187,6 +146,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                   {languages.map((lang) => (
                     <button
                       key={lang}
+                      type="button"
                       role="option"
                       aria-selected={lang === language}
                       onClick={() => {
@@ -202,92 +162,91 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                     >
                       <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
                       <span>{languageConfig[lang].label}</span>
-                      {lang === language && <span className="mr-auto text-gold/50 text-[10px]" aria-hidden="true">✦</span>}
+                      {lang === language && (
+                        <span className="text-gold/50 text-[10px] ms-auto" aria-hidden="true">
+                          ✦
+                        </span>
+                      )}
                     </button>
                   ))}
                 </motion.div>
               )}
-            </AnimatePresence>,
-            document.body
-          )}
-        </div>
+            </AnimatePresence>
+          </div>
 
-        {/* Font Scale Control */}
-        <div
-          className="inline-flex items-center gap-0.5 rounded-full px-1 py-0.5"
-          style={{
-            background: "hsl(var(--deep-blue-light) / 0.6)",
-            border: "1px solid hsl(var(--gold) / 0.15)",
-          }}
-          role="radiogroup"
-          aria-label="Font size"
-        >
-          {([
-            { key: "default" as FontScale, label: "A", size: 14 },
-            { key: "large" as FontScale, label: "A+", size: 16 },
-            { key: "xl" as FontScale, label: "A++", size: 18 },
-          ]).map(({ key, label, size }) => {
-            const isActive = scale === key;
-            return (
-              <button
-                key={key}
-                role="radio"
-                aria-checked={isActive}
-                onClick={() => setScale(key)}
-                className="relative px-2.5 py-1.5 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold"
-                style={{
-                  color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--gold) / 0.6)",
-                  fontSize: size,
-                }}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="global-font-pill"
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
-                      boxShadow: "0 0 10px hsl(var(--gold) / 0.25)",
-                    }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  />
-                )}
-                <span className="relative z-10">{label}</span>
-              </button>
-            );
-          })}
-        </div>
+          <div
+            className="inline-flex items-center gap-0.5 rounded-full px-1 py-0.5"
+            style={{
+              background: "hsl(var(--deep-blue-light) / 0.6)",
+              border: "1px solid hsl(var(--gold) / 0.15)",
+            }}
+            role="radiogroup"
+            aria-label="Font size"
+          >
+            {([
+              { key: "default" as FontScale, label: "A", size: 14 },
+              { key: "large" as FontScale, label: "A+", size: 16 },
+              { key: "xl" as FontScale, label: "A++", size: 18 },
+            ]).map(({ key, label, size }) => {
+              const isActive = scale === key;
+              return (
+                <button
+                  key={key}
+                  role="radio"
+                  aria-checked={isActive}
+                  onClick={() => setScale(key)}
+                  className="relative px-2.5 py-1.5 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold"
+                  style={{
+                    color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--gold) / 0.6)",
+                    fontSize: size,
+                  }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="global-font-pill"
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
+                        boxShadow: "0 0 10px hsl(var(--gold) / 0.25)",
+                      }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">{label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-        {/* Accessibility link */}
-        <Link
-          to="/accessibility"
-          className="flex items-center justify-center w-14 h-14 rounded-full transition-all text-gold/50 hover:text-gold text-lg"
-          style={{
-            background: "hsl(var(--deep-blue-light) / 0.6)",
-            border: "1px solid hsl(var(--gold) / 0.15)",
-          }}
-          aria-label={t.a11y_link_label}
-          title={t.a11y_link_label}
-        >
-          ♿
-        </Link>
+          <Link
+            to="/accessibility"
+            className="flex items-center justify-center w-14 h-14 rounded-full transition-all text-gold/50 hover:text-gold text-lg"
+            style={{
+              background: "hsl(var(--deep-blue-light) / 0.6)",
+              border: "1px solid hsl(var(--gold) / 0.15)",
+            }}
+            aria-label={t.a11y_link_label}
+            title={t.a11y_link_label}
+          >
+            ♿
+          </Link>
 
-        {/* WhatsApp */}
-        <motion.a
-          href="https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center w-14 h-14 rounded-full transition-all"
-          style={{
-            background: "linear-gradient(135deg, hsl(142 70% 40% / 0.8), hsl(142 70% 32% / 0.8))",
-            boxShadow: "0 2px 10px hsl(142 70% 35% / 0.3)",
-          }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          aria-label={t.a11y_whatsapp_contact}
-        >
-          <MessageCircle className="w-7 h-7 text-white" aria-hidden="true" />
-        </motion.a>
-      </nav>
+          <motion.a
+            href="https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center w-14 h-14 rounded-full transition-all"
+            style={{
+              background: "linear-gradient(135deg, hsl(142 70% 40% / 0.8), hsl(142 70% 32% / 0.8))",
+              boxShadow: "0 2px 10px hsl(142 70% 35% / 0.3)",
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label={t.a11y_whatsapp_contact}
+          >
+            <MessageCircle className="w-7 h-7 text-white" aria-hidden="true" />
+          </motion.a>
+        </nav>
       </div>
     </motion.header>
   );
