@@ -839,7 +839,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
-                        <div className="w-full max-w-[30ch] font-body text-sm leading-relaxed md:text-[15px]" style={{ color: "hsl(var(--foreground) / 0.72)" }}>
+                        <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                           {aiText ? (
                             <div className="text-left [&>div]:space-y-3">{renderMysticalText(aiText, textSize)}</div>
                           ) : aiError ? (
