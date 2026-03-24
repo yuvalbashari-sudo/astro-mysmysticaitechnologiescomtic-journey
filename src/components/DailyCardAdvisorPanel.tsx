@@ -417,7 +417,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[90%] rounded-2xl px-6 py-5 font-body text-xl leading-relaxed ${
+                className={`max-w-[90%] rounded-2xl px-6 py-5 font-body text-2xl leading-relaxed ${
                   msg.role === "user" ? "rounded-br-md" : "rounded-bl-md"
                 }`}
                 style={
