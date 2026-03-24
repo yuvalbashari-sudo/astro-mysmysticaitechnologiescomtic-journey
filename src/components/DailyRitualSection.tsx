@@ -161,7 +161,7 @@ const DailyRitualSection = () => {
                   )}
                 </div>
 
-                <h3 className="font-heading text-xl text-gold mb-2">{ritual.card.hebrewName}</h3>
+                <h3 className="font-heading text-xl text-gold mb-2">{cardName(ritual.card.name, ritual.card.hebrewName)}</h3>
                 <p className="text-base text-muted-foreground font-body line-clamp-4" style={{ lineHeight: 1.7 }}>
                   {ritual.card.meaning.slice(0, 120)}...
                 </p>

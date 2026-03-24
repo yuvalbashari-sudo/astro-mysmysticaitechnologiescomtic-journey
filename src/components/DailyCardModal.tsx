@@ -289,7 +289,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        const label = `${t.daily_title} — ${selectedCard.hebrewName}`;
+        const label = `${t.daily_title} — ${cardName(selectedCard.name, selectedCard.hebrewName)}`;
         setActiveReading({ type: "dailyCard", label, summary: aiTextRef.current });
         const saved = getSavedDailyCard();
         if (saved) {
@@ -336,7 +336,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!card) return;
-    const text = `🔮 ${t.daily_title}: ${card.symbol} ${card.hebrewName}\n\n✨ ${window.location.origin}`;
+    const text = `🔮 ${t.daily_title}: ${card.symbol} ${cardName(card.name, card.hebrewName)}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
@@ -682,7 +682,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         {/* Card FRONT — always present, guaranteed visible */}
                         <div className="absolute inset-0">
                           {cardImage ? (
-                            <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+                            <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
                           ) : (
                             <div
                               className="w-full h-full flex items-center justify-center"
@@ -755,7 +755,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: ritualStep >= 3 ? 1 : 0, y: ritualStep >= 3 ? 0 : 15 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {card.symbol} {card.hebrewName}
+                        {card.symbol} {cardName(card.name, card.hebrewName)}
                       </motion.h2>
                       <motion.p
                         className="text-foreground/50 font-body text-sm relative z-10 mt-1"
@@ -851,7 +851,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                         >
                           {cardImage ? (
-                            <img src={cardImage} alt={card.hebrewName} className="h-full w-full object-contain" />
+                            <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="h-full w-full object-contain" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center">
                               <span className="text-5xl">{card.symbol}</span>
@@ -867,7 +867,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                         <div className="flex flex-col items-center gap-1.5">
                           <h2 className="font-heading text-[36px] leading-none gold-gradient-text md:text-[44px]">
-                            {card.hebrewName}
+                            {cardName(card.name, card.hebrewName)}
                           </h2>
                           <p className="font-body text-base md:text-lg" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
                             {t.daily_arcana_label} {card.number}

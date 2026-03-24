@@ -779,9 +779,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                   }}
                                 >
                                   {tarotCardImages[card.name]
-                                    ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-[85%] h-[68%] object-contain rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
+                                    ? <img src={tarotCardImages[card.name]} alt={cardName(card.name, card.hebrewName)} className="w-[85%] h-[68%] object-contain rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
                                     : <span className="text-5xl mb-1">{card.symbol}</span>}
-                                  <span className="font-heading text-xs md:text-sm text-gold text-center leading-tight mt-1.5">{card.hebrewName}</span>
+                                  <span className="font-heading text-xs md:text-sm text-gold text-center leading-tight mt-1.5">{cardName(card.name, card.hebrewName)}</span>
                                   <span className="text-[10px] text-muted-foreground/60 font-body">{selectedSpread.positionLabels[i]}</span>
                                 </div>
                               </motion.div>
@@ -822,7 +822,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                               transition={{ delay: 0.2 }}
                             >
                               <span className="text-sm">{card.symbol}</span>
-                              <span className="font-heading text-xs text-gold">{card.hebrewName}</span>
+                              <span className="font-heading text-xs text-gold">{cardName(card.name, card.hebrewName)}</span>
                             </motion.div>
                           )
                         ))}
@@ -864,9 +864,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             transition={{ delay: 0.3 + i * 0.2 }}
                           >
                             {tarotCardImages[card.name]
-                              ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="rounded-lg shadow-lg object-contain" style={{ border: "1px solid hsl(var(--gold) / 0.2)", width: "min(6rem, 15vw)", height: "min(8.5rem, 22vh)", aspectRatio: "2/3" }} />
+                              ? <img src={tarotCardImages[card.name]} alt={cardName(card.name, card.hebrewName)} className="rounded-lg shadow-lg object-contain" style={{ border: "1px solid hsl(var(--gold) / 0.2)", width: "min(6rem, 15vw)", height: "min(8.5rem, 22vh)", aspectRatio: "2/3" }} />
                               : <span className="text-4xl">{card.symbol}</span>}
-                            <span className="font-body text-sm text-gold mt-1">{card.hebrewName}</span>
+                            <span className="font-body text-sm text-gold mt-1">{cardName(card.name, card.hebrewName)}</span>
                             <span className="text-xs text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
                           </motion.div>
                         ))}
@@ -899,9 +899,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       {cards.map((card, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5 shrink-0">
                           {tarotCardImages[card.name]
-                            ? <img src={tarotCardImages[card.name]} alt={card.hebrewName} className="w-14 h-20 md:w-16 md:h-22 object-contain rounded-md" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                            ? <img src={tarotCardImages[card.name]} alt={cardName(card.name, card.hebrewName)} className="w-14 h-20 md:w-16 md:h-22 object-contain rounded-md" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
                             : <span className="text-xl">{card.symbol}</span>}
-                          <span className="text-xs text-gold/60 font-body">{card.hebrewName}</span>
+                          <span className="text-xs text-gold/60 font-body">{cardName(card.name, card.hebrewName)}</span>
                         </div>
                       ))}
                     </div>

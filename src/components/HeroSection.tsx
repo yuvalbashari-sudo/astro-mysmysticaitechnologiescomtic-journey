@@ -1842,7 +1842,7 @@ const TarotCardReveal = ({
   if (!card) return null;
 
   const cardImage = tarotCardImages[card.name] || cardBack;
-  const message = TAROT_MESSAGES[language]?.[card.name] || `${card.hebrewName} ${t.hero_tarot_fallback_message}`;
+  const message = TAROT_MESSAGES[language]?.[card.name] || `${cardName(card.name, card.hebrewName)} ${t.hero_tarot_fallback_message}`;
 
   return (
     <div
@@ -1984,7 +1984,7 @@ const TarotCardReveal = ({
                 className="absolute inset-0 rounded-lg overflow-hidden"
                 style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
               >
-                <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+                <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
               </div>
             </motion.div>
 
@@ -2033,7 +2033,7 @@ const TarotCardReveal = ({
                 boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
               }}
             >
-              <img src={cardImage} alt={card.hebrewName} className="w-full h-full object-cover" />
+              <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
             </motion.div>
 
             {/* Card info below */}
@@ -2057,7 +2057,7 @@ const TarotCardReveal = ({
                 }}
               >
                 <p className="font-heading text-primary text-sm mb-1">
-                  {card.symbol} {card.hebrewName}
+                  {card.symbol} {cardName(card.name, card.hebrewName)}
                 </p>
                 <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir={dir}>
                   {message}

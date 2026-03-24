@@ -217,7 +217,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           {cardImage ? (
             <img
               src={cardImage}
-              alt={card.hebrewName}
+              alt={cardName(card.name, card.hebrewName)}
               className="w-full h-full object-contain"
               style={{ background: "hsl(var(--deep-blue))" }}
             />
@@ -260,7 +260,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          {card.symbol} {card.hebrewName}
+          {card.symbol} {cardName(card.name, card.hebrewName)}
         </motion.h3>
 
         {/* Short meaning */}
