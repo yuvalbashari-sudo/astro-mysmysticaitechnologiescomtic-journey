@@ -1105,7 +1105,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
                                 <Sparkles className="w-8 h-8 text-gold/50" />
                               </motion.div>
-                              <p className="text-gold/50 font-body text-lg">{language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}</p>
+                              <p className="text-gold/50 font-body text-lg">{t.imm_tarot_deciphering}</p>
                             </div>
                           ) : null}
                           {aiLoading && aiText && (
