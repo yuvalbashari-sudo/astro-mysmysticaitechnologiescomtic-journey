@@ -188,18 +188,18 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
     const elements: React.ReactNode[] = [];
     lines.forEach((line, i) => {
       const trimmed = line.trim();
-      if (!trimmed) { elements.push(<div key={i} className="h-2" />); return; }
+      if (!trimmed) { elements.push(<div key={i} className="h-3" />); return; }
       if (trimmed.startsWith("### ")) {
-        elements.push(<h4 key={i} className="font-heading text-sm text-gold mt-2 mb-1">{renderInline(trimmed.slice(4))}</h4>);
+        elements.push(<h4 key={i} className="font-heading text-xl text-gold mt-3 mb-1.5">{renderInline(trimmed.slice(4))}</h4>);
         return;
       }
       if (trimmed.startsWith("## ")) {
-        elements.push(<h3 key={i} className="font-heading text-base text-gold mt-2 mb-1">{renderInline(trimmed.slice(3))}</h3>);
+        elements.push(<h3 key={i} className="font-heading text-2xl text-gold mt-3 mb-1.5">{renderInline(trimmed.slice(3))}</h3>);
         return;
       }
       if (/^[-•*]\s/.test(trimmed)) {
         elements.push(
-          <div key={i} className="flex gap-1.5 items-start">
+          <div key={i} className="flex gap-2 items-start text-lg">
             <span className="text-gold/50 mt-0.5 flex-shrink-0">•</span>
             <span>{renderInline(trimmed.replace(/^[-•*]\s/, ""))}</span>
           </div>
@@ -209,14 +209,14 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
       if (/^\d+[.)]\s/.test(trimmed)) {
         const num = trimmed.match(/^(\d+)[.)]\s/)?.[1];
         elements.push(
-          <div key={i} className="flex gap-1.5 items-start">
-            <span className="text-gold/50 mt-0.5 flex-shrink-0 text-xs min-w-[1rem] text-center">{num}.</span>
+          <div key={i} className="flex gap-2 items-start text-lg">
+            <span className="text-gold/50 mt-0.5 flex-shrink-0 min-w-[1.5rem] text-center">{num}.</span>
             <span>{renderInline(trimmed.replace(/^\d+[.)]\s/, ""))}</span>
           </div>
         );
         return;
       }
-      elements.push(<p key={i}>{renderInline(trimmed)}</p>);
+      elements.push(<p key={i} className="text-lg">{renderInline(trimmed)}</p>);
     });
     return <div className="space-y-1">{elements}</div>;
   };
