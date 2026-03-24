@@ -95,8 +95,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   const isLimitReached = userMessageCount >= FREE_MESSAGE_LIMIT;
 
-  const sendMessage = async () => {
-    const text = input.trim();
+  const sendMessage = async (prefilledText?: string) => {
+    const text = (prefilledText ?? input).trim();
     if (!text || isStreaming || isLimitReached) return;
 
     const userMsg: Message = { role: "user", content: text };
@@ -402,8 +402,9 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                       {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
-                          onClick={() => { setInput(suggestion); inputRef.current?.focus(); }}
-                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          onClick={() => void sendMessage(suggestion)}
+                          disabled={isStreaming || isLimitReached}
+                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",
@@ -511,7 +512,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   aria-label={placeholderText}
                 />
                 <button
-                  onClick={sendMessage}
+                  onClick={() => void sendMessage()}
                   disabled={!input.trim() || isStreaming || isLimitReached}
                   className="w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
                   style={{

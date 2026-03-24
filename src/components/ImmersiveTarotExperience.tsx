@@ -500,6 +500,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     }));
 
     const spreadType = selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
+    const selectedQuestionLabel = questionOptions.find((option) => option.key === selectedQuestion)?.label || selectedQuestion || t.imm_tarot_category_general;
 
     streamTarotReading(
       spreadType,
@@ -512,7 +513,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         setAiLoading(false);
         setActiveReading({
           type: "tarot",
-          label: `${t.readings_type_tarot} — ${selectedQuestion}`,
+          label: `${t.readings_type_tarot} — ${selectedQuestionLabel}`,
           summary: aiTextRef.current,
         });
         tarotMemory.recordReading(spreadType, cardsPayload);
@@ -532,7 +533,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       selectedQuestion || undefined,
       language,
     );
-  }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards]);
+  }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards, questionOptions]);
 
   useEffect(() => {
     if (phase === "reveal") {
