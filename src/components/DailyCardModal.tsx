@@ -533,16 +533,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       {t.daily_cta}
                     </motion.button>
 
-                    <AstrologerAvatarButton
-                      size={isMobileViewport ? 36 : 42}
-                      onClick={() => setAstrologerOpen(true)}
-                      entranceDelay={0.6}
-                      style={{
-                        bottom: isMobileViewport ? 14 : 16,
-                        right: isMobileViewport ? 14 : 16,
-                        zIndex: 12,
-                      }}
-                    />
                   </div>
                 </motion.div>
               )}
@@ -758,17 +748,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                     </motion.div>
                    )}
 
-                  <AstrologerAvatarButton
-                    size={isMobileViewport ? 36 : 42}
-                    onClick={() => setAstrologerOpen(true)}
-                    entranceDelay={0.3}
-                    style={{
-                      position: "absolute",
-                      bottom: isMobileViewport ? 14 : 16,
-                      right: isMobileViewport ? 14 : 16,
-                      zIndex: 12,
-                    }}
-                  />
                 </motion.div>
               )}
 
@@ -919,21 +898,24 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         )}
                       </div>
 
-                      <AstrologerAvatarButton
-                        size={isMobileViewport ? 36 : 42}
-                        onClick={() => setAstrologerOpen(true)}
-                        entranceDelay={0.8}
-                        style={{
-                          bottom: isMobileViewport ? 14 : 16,
-                          right: isMobileViewport ? 14 : 16,
-                          zIndex: 12,
-                        }}
-                      />
                     </motion.div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Advisor avatar — fixed on top of all phases */}
+            <AstrologerAvatarButton
+              size={isMobileViewport ? 36 : 42}
+              onClick={() => setAstrologerOpen(true)}
+              entranceDelay={0.5}
+              style={{
+                position: "fixed",
+                bottom: isMobileViewport ? 14 : 20,
+                right: isMobileViewport ? 14 : 20,
+                zIndex: 200,
+              }}
+            />
       </CinematicModalShell>
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
     </>
