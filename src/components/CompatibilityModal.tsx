@@ -18,7 +18,7 @@ interface Props { isOpen: boolean; onClose: () => void; }
 
 const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
-  const { language } = useLanguage();
+  const { language, dir } = useLanguage();
   const { setActiveReading } = useReadingContext();
   const [name1, setName1] = useState("");
   const [name2, setName2] = useState("");
