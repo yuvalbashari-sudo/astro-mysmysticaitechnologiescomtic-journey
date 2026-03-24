@@ -1253,7 +1253,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1.6 }}
                           >
-                            {language === "he" ? "הקלפים בחרו לדבר אליך" : "The cards have chosen to speak to you"}
+                            {t.imm_tarot_cards_speak}
                           </motion.p>
 
                           {/* ── The living text ── */}
