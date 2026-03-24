@@ -39,7 +39,7 @@ const DailyRitualSection = () => {
 
   return (
     <section
-      className="py-16 md:py-24 px-4 relative"
+      className="py-16 md:py-24 px-6 md:px-8 relative"
       aria-label={t.a11y_daily_section}
       style={{
         background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.15) 0%, hsl(var(--deep-blue) / 0.25) 50%, hsl(var(--deep-blue) / 0.15) 100%)",
@@ -54,17 +54,17 @@ const DailyRitualSection = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-12"
+        className="text-center mb-14"
       >
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="w-5 h-5 text-gold" />
-          <span className="text-sm font-body text-gold/70 tracking-widest uppercase">{t.daily_ritual_label}</span>
-          <Sparkles className="w-5 h-5 text-gold" />
+          <Sparkles className="w-6 h-6 text-gold" />
+          <span className="text-base font-body text-gold/70 tracking-widest uppercase">{t.daily_ritual_label}</span>
+          <Sparkles className="w-6 h-6 text-gold" />
         </div>
-        <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-3">
+        <h2 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-4" style={{ lineHeight: 1.3 }}>
           {t.daily_ritual_title}
         </h2>
-        <p className="text-muted-foreground font-body text-base md:text-lg max-w-md mx-auto leading-relaxed">
+        <p className="text-muted-foreground font-body text-lg md:text-xl max-w-lg mx-auto" style={{ lineHeight: 1.7 }}>
           {t.daily_ritual_desc}
         </p>
       </motion.div>
@@ -106,7 +106,7 @@ const DailyRitualSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-4xl mx-auto"
+            className="max-w-5xl mx-auto"
           >
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Daily Card */}
@@ -114,9 +114,9 @@ const DailyRitualSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="mystical-card-elevated p-6 text-center"
+                className="mystical-card-elevated p-8 text-center"
               >
-                <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_card_label}</div>
+                <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_card_label}</div>
 
                 {/* Card flip */}
                 <div className="relative w-24 h-36 mx-auto mb-4" style={{ perspective: 800 }}>
@@ -158,11 +158,11 @@ const DailyRitualSection = () => {
                   )}
                 </div>
 
-                <h3 className="font-heading text-lg text-gold mb-2">{ritual.card.hebrewName}</h3>
-                <p className="text-sm text-muted-foreground font-body leading-relaxed line-clamp-4">
+                <h3 className="font-heading text-xl text-gold mb-2">{ritual.card.hebrewName}</h3>
+                <p className="text-base text-muted-foreground font-body line-clamp-4" style={{ lineHeight: 1.7 }}>
                   {ritual.card.meaning.slice(0, 120)}...
                 </p>
-                <p className="text-xs text-gold/50 mt-3 font-body">{ritual.card.advice.slice(0, 80)}...</p>
+                <p className="text-sm text-gold/50 mt-3 font-body" style={{ lineHeight: 1.6 }}>{ritual.card.advice.slice(0, 80)}...</p>
               </motion.div>
 
               {/* Daily Message */}
@@ -170,18 +170,18 @@ const DailyRitualSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="mystical-card-elevated p-6 text-center flex flex-col justify-between"
+                className="mystical-card-elevated p-8 text-center flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_message_label}</div>
+                  <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_message_label}</div>
                   <div className="icon-glow w-14 h-14 mx-auto mb-5">
                     <span className="text-2xl">🌌</span>
                   </div>
-                  <p className="text-foreground font-body text-base leading-relaxed">
+                  <p className="text-foreground font-body text-lg" style={{ lineHeight: 1.7 }}>
                     {ritual.message}
                   </p>
                 </div>
-                <p className="text-xs text-gold/40 mt-4 font-body italic">
+                <p className="text-sm text-gold/40 mt-4 font-body italic" style={{ lineHeight: 1.6 }}>
                   "{t.daily_ritual_message_quote}"
                 </p>
               </motion.div>
@@ -191,15 +191,15 @@ const DailyRitualSection = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="mystical-card-elevated p-6 text-center flex flex-col justify-between"
+                className="mystical-card-elevated p-8 text-center flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_energy_label}</div>
+                  <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_energy_label}</div>
                   <div className="icon-glow w-14 h-14 mx-auto mb-4">
                     <span className="text-2xl">{ritual.energy.icon}</span>
                   </div>
-                  <h3 className="font-heading text-lg text-gold mb-2">{ritual.energy.theme}</h3>
-                  <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  <h3 className="font-heading text-xl text-gold mb-2">{ritual.energy.theme}</h3>
+                  <p className="text-base text-muted-foreground font-body" style={{ lineHeight: 1.7 }}>
                     {ritual.energy.insight}
                   </p>
                 </div>
