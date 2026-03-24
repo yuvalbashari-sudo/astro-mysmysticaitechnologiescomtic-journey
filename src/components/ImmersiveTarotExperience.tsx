@@ -1372,7 +1372,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                   }}
                                   whileTap={{ scale: 0.97 }}
                                 >
-                                  {language === "he" ? "סיום ✦" : "Finish ✦"}
+                                  {t.imm_tarot_finish}
                                 </motion.button>
                               </div>
                             </motion.div>
