@@ -758,7 +758,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0, y: 12 }}
                   className="px-4 pb-10 pt-6 md:px-0 md:pb-16 md:pt-8"
                 >
-                  <div className="mx-auto w-full max-w-[420px]">
+                  <div className="mx-auto w-full max-w-[620px]">
                     <motion.div
                       className="relative rounded-[28px] overflow-visible"
                       style={{
