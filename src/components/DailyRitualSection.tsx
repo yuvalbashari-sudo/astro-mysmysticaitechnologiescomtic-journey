@@ -8,6 +8,7 @@ import { useCardName } from "@/hooks/useCardName";
 
 const DailyRitualSection = () => {
   const t = useT();
+  const cardName = useCardName();
   const [ritual, setRitual] = useState<DailyRitualData & { isNew: boolean }>(getDailyRitual);
   const [revealed, setRevealed] = useState(ritual.revealed);
   const [cardFlipped, setCardFlipped] = useState(ritual.revealed);

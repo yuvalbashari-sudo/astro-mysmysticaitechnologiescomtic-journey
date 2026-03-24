@@ -60,6 +60,7 @@ interface Props {
 
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
+  const cardName = useCardName();
   const [card, setCard] = useState<TarotWorldCard | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(false);
