@@ -385,7 +385,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
             {/* Divider */}
             <div className="flex items-center gap-4 mt-6">
               <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }} />
-              <span className="text-base text-gold/25 font-body">או הקלידו שאלה</span>
+              <span className="text-base text-gold/25 font-body">{t.advisor_or_type_question}</span>
               <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }} />
             </div>
           </div>
