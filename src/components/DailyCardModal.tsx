@@ -471,7 +471,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         style={{
                           background: "hsl(var(--deep-blue-light) / 0.3)",
                           border: "1px solid hsl(var(--gold) / 0.08)",
-                          direction: "rtl",
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.3)";
