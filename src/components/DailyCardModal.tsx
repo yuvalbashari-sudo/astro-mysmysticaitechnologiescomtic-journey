@@ -917,7 +917,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
               }}
             />
       </CinematicModalShell>
-      <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
+      <AdvisorChatPanel isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} forceRightAnchor />
     </>
   );
 };
