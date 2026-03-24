@@ -329,6 +329,8 @@ export const he: TranslationKeys = {
   daily_title: "הקלף היומי",
   daily_desc: "קלף אחד שנבחר עבורכם מהארקנה הגדולה — מסר מיסטי שמאיר את היום שלכם באור חדש",
   daily_note: "✦ ניתן לפתוח קלף יומי אחד כל 24 שעות ✦",
+  daily_name_label: "השם שלך",
+  daily_name_placeholder: "הכניסו את שמכם הפרטי...",
   daily_cta: "חשפו את הקלף היומי",
   daily_shuffle: "הקלפים נערבבים...",
   daily_shuffle_focus: "התרכזו ברגע הזה ✦",
