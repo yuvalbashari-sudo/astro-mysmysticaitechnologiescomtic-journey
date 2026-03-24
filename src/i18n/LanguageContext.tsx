@@ -49,7 +49,11 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem(STORAGE_KEY, lang);
+    try {
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch {
+      // Ignore storage failures and still update UI language in-memory.
+    }
   }, []);
 
   // Apply direction and lang to document
