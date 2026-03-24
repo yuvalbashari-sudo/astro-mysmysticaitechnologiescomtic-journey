@@ -54,17 +54,18 @@ const DailyRitualSection = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-14"
+        className="text-center mb-14 mx-auto px-6"
+        style={{ maxWidth: 580 }}
       >
         <div className="flex items-center justify-center gap-2 mb-4">
           <Sparkles className="w-6 h-6 text-gold" />
           <span className="text-base font-body text-gold/70 tracking-widest uppercase">{t.daily_ritual_label}</span>
           <Sparkles className="w-6 h-6 text-gold" />
         </div>
-        <h2 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-4" style={{ lineHeight: 1.3 }}>
+        <h2 className="font-heading gold-gradient-text mb-5" style={{ fontSize: 30, lineHeight: 1.4 }}>
           {t.daily_ritual_title}
         </h2>
-        <p className="text-muted-foreground font-body text-lg md:text-xl max-w-lg mx-auto" style={{ lineHeight: 1.7 }}>
+        <p className="text-muted-foreground font-body" style={{ fontSize: 22, lineHeight: 1.8 }}>
           {t.daily_ritual_desc}
         </p>
       </motion.div>
