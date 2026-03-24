@@ -341,7 +341,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
+      {/* Advisor side panel — pushes content on desktop */}
+      <DailyCardAdvisorPanel isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
+
       <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor transparent>
+        <div
+          className="transition-all duration-300 ease-out"
+          style={{
+            marginLeft: !isMobileViewport && astrologerOpen ? "360px" : "0",
+          }}
+        >
             <AnimatePresence mode="wait">
               {/* PHASE: Ready */}
               {phase === "ready" && (
