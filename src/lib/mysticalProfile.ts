@@ -116,6 +116,16 @@ function updateThemes(profile: MysticalProfileData, themes: string[]): void {
 
 // ---- Recording functions ----
 
+function recordUserName(name: string): void {
+  const profile = getProfile();
+  profile.userName = name.trim();
+  saveProfile(profile);
+}
+
+function getUserName(): string | undefined {
+  return getProfile().userName;
+}
+
 function recordZodiac(sign: string, symbol: string, element: string, birthDate: string): void {
   const profile = getProfile();
   profile.zodiacSign = sign;
