@@ -95,8 +95,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   const isLimitReached = userMessageCount >= FREE_MESSAGE_LIMIT;
 
-  const sendMessage = async () => {
-    const text = input.trim();
+  const sendMessage = async (prefilledText?: string) => {
+    const text = (prefilledText ?? input).trim();
     if (!text || isStreaming || isLimitReached) return;
 
     const userMsg: Message = { role: "user", content: text };
