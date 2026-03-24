@@ -260,6 +260,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     aiTextRef.current = "";
     setAiText("");
 
+    // Save userName to profile if provided
+    if (userName.trim()) {
+      mysticalProfile.recordUserName(userName.trim());
+    }
+
     saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
     streamMysticalReading(
@@ -274,6 +279,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         spiritualMeaning: selectedCard.meanings.spiritual,
         advice: selectedCard.meanings.advice,
         gender,
+        userName: userName.trim() || undefined,
       },
       (delta) => {
         aiTextRef.current += delta;
