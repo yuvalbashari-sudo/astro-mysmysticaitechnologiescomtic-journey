@@ -17,6 +17,7 @@ interface Props {
 
 const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { language, setLanguage } = useLanguage();
+  const { scale, setScale } = useFontScale();
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
