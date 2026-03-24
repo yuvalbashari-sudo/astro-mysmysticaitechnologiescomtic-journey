@@ -355,6 +355,8 @@ export type TranslationKeys = {
   daily_title: string;
   daily_desc: string;
   daily_note: string;
+  daily_name_label: string;
+  daily_name_placeholder: string;
   daily_cta: string;
   daily_shuffle: string;
   daily_shuffle_focus: string;
