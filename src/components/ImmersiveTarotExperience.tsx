@@ -486,9 +486,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     setAiText("");
 
     const posLabels = [
-      language === "he" ? "עבר" : "Past",
-      language === "he" ? "הווה" : "Present",
-      language === "he" ? "עתיד" : "Future",
+      t.tarot_pos_past,
+      t.tarot_pos_present,
+      t.tarot_pos_future,
     ];
 
     const cards = Array.from(selectedCardIndices).map(i => drawnCards[i]);
