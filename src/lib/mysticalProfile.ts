@@ -7,6 +7,7 @@
 
 export interface MysticalProfileData {
   // Identity
+  userName?: string;
   zodiacSign?: string;
   zodiacSymbol?: string;
   zodiacElement?: string;
