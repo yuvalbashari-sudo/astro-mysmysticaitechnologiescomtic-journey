@@ -6,6 +6,7 @@ import { TAROT_SLUG_MAP, tarotSeoMeta } from "@/data/seoData";
 import { majorArcana } from "@/data/tarotWorldData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import StarField from "@/components/StarField";
+import { useCardName } from "@/hooks/useCardName";
 
 const TarotCardPage = () => {
   const { slug } = useParams<{ slug: string }>();
