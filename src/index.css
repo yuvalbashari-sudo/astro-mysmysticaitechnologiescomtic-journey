@@ -68,7 +68,6 @@
   body {
     @apply text-foreground font-body;
     background: transparent;
-    direction: rtl;
     line-height: 1.8;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
