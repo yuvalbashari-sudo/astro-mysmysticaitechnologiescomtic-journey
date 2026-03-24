@@ -142,10 +142,10 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         )}
 
         {/* Language Selector */}
-        <div ref={langRef} className="relative">
+        <div ref={langContainerRef} className="relative">
           <motion.button
             ref={langBtnRef}
-            onClick={() => setLangOpen(!langOpen)}
+            onClick={() => setLangOpen((prev) => !prev)}
             className="flex items-center gap-2 px-5 py-3 rounded-full backdrop-blur-md font-body text-sm transition-all"
             style={{
               background: "hsl(var(--deep-blue-light) / 0.6)",
@@ -166,7 +166,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             <AnimatePresence>
               {langOpen && (
                 <motion.div
-                  ref={langRef}
+                  ref={langDropdownRef}
                   initial={{ opacity: 0, y: -8, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
