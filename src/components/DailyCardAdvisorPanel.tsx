@@ -363,7 +363,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
           <div className="flex-shrink-0 px-8 py-6">
             <p className="text-xl font-heading text-gold/60 tracking-wider mb-4 uppercase">{t.advisor_quick_questions_label}</p>
             <div className="flex flex-wrap gap-3">
-              {QUICK_QUESTIONS.map((q, i) => (
+              {getQuickQuestions(t).map((q, i) => (
                 <motion.button
                   key={i}
                   onClick={() => sendMessage(q)}
