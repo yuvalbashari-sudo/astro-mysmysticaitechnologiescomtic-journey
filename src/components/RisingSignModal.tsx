@@ -131,11 +131,11 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                             </div>
                           </div>
                           <div>
-                            <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
+                            <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Calendar className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthdate_label}</label>
                             <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                           </div>
                           <div>
-                            <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}</label>
+                            <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
                             <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                           </div>
                         </div>
@@ -176,11 +176,11 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Calendar className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthdate_label}</label>
+                        <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Calendar className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthdate_label}</label>
                         <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                       </div>
                       <div>
-                        <label className="block text-sm text-gold/70 font-body mb-2 text-right"><Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}</label>
+                        <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
                         <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                       </div>
                     </div>

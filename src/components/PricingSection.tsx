@@ -169,7 +169,7 @@ const PricingSection = ({ onOrderClick }: PricingSectionProps) => {
               <h3 className="font-heading text-xl md:text-2xl text-foreground mb-3">{pkg.title}</h3>
               <p className="font-body text-sm text-foreground/60 leading-relaxed mb-7">{pkg.desc}</p>
 
-              <ul className="space-y-3 mb-8 flex-1 text-right">
+              <ul className="space-y-3 mb-8 flex-1 text-start">
                 {pkg.features.map((f) => (
                   <li key={f} className="flex items-center gap-3 font-body text-sm text-foreground/75">
                     <Star className="w-3.5 h-3.5 text-gold/50 flex-shrink-0" />

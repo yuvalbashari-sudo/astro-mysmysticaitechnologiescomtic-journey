@@ -471,7 +471,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         style={{
                           background: "hsl(var(--deep-blue-light) / 0.3)",
                           border: "1px solid hsl(var(--gold) / 0.08)",
-                          direction: "rtl",
                         }}
                         onFocus={(e) => {
                           e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.3)";
@@ -890,7 +889,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                         <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                           {aiText ? (
-                            <div className="text-left [&>div]:space-y-3">{renderMysticalText(aiText, textSize)}</div>
+                            <div className="text-start [&>div]:space-y-3">{renderMysticalText(aiText, textSize)}</div>
                           ) : aiError ? (
                             <div className="rounded-2xl px-4 py-3 text-center" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
                               <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{aiError}</p>

@@ -124,7 +124,7 @@ const ZodiacSignPage = () => {
                   <p className="font-body text-foreground/30 text-xs">{section.titleEn}</p>
                 </div>
               </div>
-              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-right" dir="rtl">{section.content}</p>
+              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-start">{section.content}</p>
             </motion.div>
           ))}
         </div>
@@ -153,8 +153,8 @@ const ZodiacSignPage = () => {
             style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.06))", border: "1px solid hsl(var(--gold) / 0.15)" }}
           >
             <Heart className="w-6 h-6 text-gold mx-auto mb-3" />
-            <h3 className="font-heading text-sm text-gold mb-2" dir="rtl">בדקו התאמה זוגית</h3>
-            <p className="text-foreground/40 font-body text-xs" dir="rtl">גלו את הכימיה הרוחנית שלכם</p>
+            <h3 className="font-heading text-sm text-gold mb-2">בדקו התאמה זוגית</h3>
+            <p className="text-foreground/40 font-body text-xs">גלו את הכימיה הרוחנית שלכם</p>
           </Link>
           <Link
             to="/"
@@ -162,8 +162,8 @@ const ZodiacSignPage = () => {
             style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--deep-blue-light) / 0.3))", border: "1px solid hsl(var(--gold) / 0.15)" }}
           >
             <Sparkles className="w-6 h-6 text-gold mx-auto mb-3" />
-            <h3 className="font-heading text-sm text-gold mb-2" dir="rtl">קריאת טארוט אישית</h3>
-            <p className="text-foreground/40 font-body text-xs" dir="rtl">קבלו מסר מהקלפים</p>
+            <h3 className="font-heading text-sm text-gold mb-2">קריאת טארוט אישית</h3>
+            <p className="text-foreground/40 font-body text-xs">קבלו מסר מהקלפים</p>
           </Link>
         </motion.div>
 

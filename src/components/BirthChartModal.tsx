@@ -189,7 +189,7 @@ type Phase = "form" | "loading" | "result";
 
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
-  const { language } = useLanguage();
+  const { language, dir } = useLanguage();
   const [phase, setPhase] = useState<Phase>("form");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
@@ -334,7 +334,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       if (printWindow) {
         printWindow.document.write(`
           <!DOCTYPE html>
-          <html dir="rtl">
+          <html dir="${dir}">
           <head>
             <title>ASTROLOGAI — מפת לידה</title>
             <style>

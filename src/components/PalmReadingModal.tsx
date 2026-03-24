@@ -185,7 +185,7 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     const emoji = side === "right" ? "🤚" : "✋";
     return (
       <div className="flex-1 min-w-0">
-        <label className="block text-[28px] text-gold/70 font-body mb-2 text-right">{emoji} {label}</label>
+        <label className="block text-[28px] text-gold/70 font-body mb-2 text-start">{emoji} {label}</label>
         {image ? (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="relative rounded-xl overflow-hidden" style={{ border: "2px solid hsl(var(--gold) / 0.3)", boxShadow: "0 0 20px hsl(var(--gold) / 0.08)" }}>
             <img src={image} alt={label} className="w-full h-40 object-cover" />
@@ -238,14 +238,14 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
                   <h2 className="font-heading text-[3.3rem] gold-gradient-text mb-4 leading-tight" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.palm_title}</h2>
                   <p className="text-foreground/70 font-body text-[1.9rem] mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.palm_desc}</p>
                   <div className="mb-6">
-                    <label className="block text-[1.75rem] text-gold/70 font-body mb-3 text-right leading-relaxed">{t.palm_name_label}</label>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center text-[1.65rem]" dir="rtl" />
+                    <label className="block text-[1.75rem] text-gold/70 font-body mb-3 text-start leading-relaxed">{t.palm_name_label}</label>
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center text-[1.65rem]" />
                   </div>
-                  <div className="mb-6 flex flex-col gap-5" dir="rtl">
+                  <div className="mb-6 flex flex-col gap-5">
                     {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
                     {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
                   </div>
-                  <div className="mb-7 rounded-xl p-5 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
+                  <div className="mb-7 rounded-xl p-5 text-start" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)", backdropFilter: "blur(8px)" }}>
                     <p className="text-gold/60 font-body text-[1.5rem] font-semibold mb-2">{t.palm_tips_title}</p>
                     <ul className="text-foreground/50 font-body text-[1.3rem] space-y-1.5 leading-relaxed">
                       <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>
@@ -263,14 +263,14 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
               <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.palm_title}</h2>
               <p className="text-foreground/70 font-body text-sm md:text-base mb-4 max-w-md mx-auto leading-relaxed">{t.palm_desc}</p>
               <div className="max-w-xs mx-auto mb-6">
-                <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.palm_name_label}</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" dir="rtl" />
+                <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.palm_name_label}</label>
+                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t.palm_name_placeholder} className="mystical-input font-body text-center" />
               </div>
-              <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4" dir="rtl">
+              <div className="max-w-lg mx-auto mb-6 flex flex-col md:flex-row gap-4">
                 {renderHandUpload("right", rightPalmImage, setRightPalmImage, rightFileRef, rightCameraRef)}
                 {renderHandUpload("left", leftPalmImage, setLeftPalmImage, leftFileRef, leftCameraRef)}
               </div>
-              <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-right" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
+              <div className="max-w-lg mx-auto mb-8 rounded-xl p-4 text-start" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.1)" }}>
                 <p className="text-gold/60 font-body text-[11px] font-semibold mb-2">{t.palm_tips_title}</p>
                 <ul className="text-foreground/50 font-body text-[11px] space-y-1 leading-relaxed">
                   <li>• {t.palm_tip1}</li><li>• {t.palm_tip2}</li><li>• {t.palm_tip3}</li><li>• {t.palm_tip4}</li>

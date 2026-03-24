@@ -50,7 +50,7 @@ const ReadingSection = ({ icon, title, content, delay, accentHue }: SectionProps
         </div>
         <h3 className="font-heading text-base font-bold tracking-wide" style={{ color: `hsl(${accentHue})` }}>{title}</h3>
       </div>
-      <p className="font-body text-sm leading-[1.9] text-right" style={{ color: "hsl(var(--foreground) / 0.85)" }}>{content}</p>
+      <p className="font-body text-sm leading-[1.9] text-start" style={{ color: "hsl(var(--foreground) / 0.85)" }}>{content}</p>
     </div>
   </motion.div>
 );

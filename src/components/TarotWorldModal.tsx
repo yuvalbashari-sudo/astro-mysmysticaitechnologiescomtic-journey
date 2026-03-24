@@ -411,7 +411,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       <motion.button
                         key={spread.key}
                         onClick={() => handleSelectSpread(spread)}
-                        className="group relative text-right p-5 rounded-xl transition-all"
+                        className="group relative text-start p-5 rounded-xl transition-all"
                         style={{
                           background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.5), hsl(0 20% 10% / 0.3))",
                           border: "1px solid hsl(var(--gold) / 0.1)",
@@ -468,21 +468,21 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                   </div>
 
                   <div className="max-w-lg mx-auto">
-                    <label className="block text-gold/80 font-body text-sm mb-3 text-right">{t.tarot_question_label}</label>
+                    <label className="block text-gold/80 font-body text-sm mb-3 text-start">{t.tarot_question_label}</label>
                     <textarea
                       value={userQuestion}
                       onChange={(e) => setUserQuestion(e.target.value)}
                       placeholder={t.tarot_question_placeholder}
                       maxLength={300}
                       rows={3}
-                      className="w-full rounded-xl p-4 font-body text-sm text-foreground/90 placeholder:text-foreground/30 resize-none focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all text-right"
+                      className="w-full rounded-xl p-4 font-body text-sm text-foreground/90 placeholder:text-foreground/30 resize-none focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all text-start"
                       style={{
                         background: "hsl(var(--deep-blue-light) / 0.4)",
                         border: "1px solid hsl(var(--gold) / 0.15)",
                       }}
-                      dir="rtl"
+                      dir="auto"
                     />
-                    <p className="text-foreground/30 font-body text-[10px] mt-1 text-left">{userQuestion.length}/300</p>
+                    <p className="text-foreground/30 font-body text-[10px] mt-1 text-end">{userQuestion.length}/300</p>
 
                     <motion.button
                       onClick={handleQuestionSubmit}
@@ -819,7 +819,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                               <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(135deg, hsl(0 30% 15%), hsl(222 30% 12%))", border: "1px solid hsl(var(--gold) / 0.25)", boxShadow: "0 0 20px hsl(var(--gold) / 0.1)" }}>
                                 <span className="text-2xl">{card.symbol}</span>
                               </div>
-                              <div className="text-right">
+                              <div className="text-start">
                                 <h3 className="font-heading text-xl text-gold">{card.hebrewName}</h3>
                                 <span className="font-body text-sm text-foreground/40">{interp.positionLabel}</span>
                               </div>

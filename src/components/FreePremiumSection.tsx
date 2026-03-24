@@ -139,7 +139,7 @@ const FreePremiumSection = () => {
                 )}
               </div>
 
-              <ul className="space-y-2 mb-8 text-right">
+              <ul className="space-y-2 mb-8 text-start">
                 {pkg.features.map((f) => (
                   <li key={f} className="text-sm text-foreground/70 font-body flex items-center gap-2 justify-end">
                     {f}

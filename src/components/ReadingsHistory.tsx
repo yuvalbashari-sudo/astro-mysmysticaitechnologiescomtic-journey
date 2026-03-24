@@ -86,7 +86,7 @@ const ReadingsHistory = () => {
                 >
                   <button
                     onClick={() => setExpanded(isExpanded ? null : reading.id)}
-                    className="w-full flex items-center gap-4 p-4 md:p-5 text-right hover:bg-gold/5 transition-colors"
+                    className="w-full flex items-center gap-4 p-4 md:p-5 text-start hover:bg-gold/5 transition-colors"
                   >
                     <div
                       className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"

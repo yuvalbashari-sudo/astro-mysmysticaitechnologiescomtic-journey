@@ -2090,7 +2090,7 @@ const TarotCardReveal = ({
 /* ── Main Hero ─────────────────────────────────────── */
 const HeroSection = () => {
   const t = useT();
-  const { language } = useLanguage();
+  const { language, dir } = useLanguage();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -2817,7 +2817,7 @@ const HeroSection = () => {
                           padding: "10px 14px",
                           borderRadius: 12,
                           whiteSpace: "nowrap",
-                          direction: language === "he" || language === "ar" ? "rtl" : "ltr",
+                          direction: dir,
                           background: "hsl(222 47% 8% / 0.75)",
                           backdropFilter: "blur(14px)",
                           WebkitBackdropFilter: "blur(14px)",
