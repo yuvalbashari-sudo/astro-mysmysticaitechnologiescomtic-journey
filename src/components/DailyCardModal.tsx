@@ -898,16 +898,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         )}
                       </div>
 
-                      <AstrologerAvatarButton
-                        size={isMobileViewport ? 36 : 42}
-                        onClick={() => setAstrologerOpen(true)}
-                        entranceDelay={0.8}
-                        style={{
-                          bottom: isMobileViewport ? 14 : 16,
-                          right: isMobileViewport ? 14 : 16,
-                          zIndex: 12,
-                        }}
-                      />
                     </motion.div>
                   </div>
                 </motion.div>
