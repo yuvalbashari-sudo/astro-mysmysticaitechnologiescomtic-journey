@@ -119,6 +119,7 @@ const FloatingCard = ({
   card: TarotCard; index: number; isSelected: boolean; isFlipped: boolean;
   onClick: () => void; totalCards: number; isMobile: boolean; showBurst: boolean;
 }) => {
+  const cardName = useCardName();
   const mid = (totalCards - 1) / 2;
   const distFromCenter = Math.abs(index - mid);
   const depthScale = 1 - distFromCenter * 0.02;
