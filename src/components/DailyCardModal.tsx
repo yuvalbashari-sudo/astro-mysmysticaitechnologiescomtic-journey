@@ -348,7 +348,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         <div
           className="transition-all duration-300 ease-out"
           style={{
-            marginLeft: !isMobileViewport && astrologerOpen ? "360px" : "0",
+            marginLeft: !isMobileViewport && astrologerOpen ? "680px" : "0",
           }}
         >
             <AnimatePresence mode="wait">
