@@ -1118,7 +1118,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       {!aiLoading && aiText && (
                         <motion.div className="mt-6 text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
                           <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
-                            {language === "he" ? "סיום ✦" : "Finish ✦"}
+                            {t.imm_tarot_finish}
                           </motion.button>
                         </motion.div>
                       )}
