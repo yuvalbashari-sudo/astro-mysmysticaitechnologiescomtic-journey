@@ -523,7 +523,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
-          subtitle: cards.map(c => c.hebrewName).join(" • "),
+          subtitle: cards.map(c => cardName(c.name, c.hebrewName)).join(" • "),
           symbol: "🔮",
           data: { spread: spreadType, cards },
         });
