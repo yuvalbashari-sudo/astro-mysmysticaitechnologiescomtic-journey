@@ -1806,6 +1806,7 @@ const TarotCardReveal = ({
 }) => {
   const { language, dir } = useLanguage();
   const t = useT();
+  const cardName = useCardName();
   const [phase, setPhaseInternal] = useState<"idle" | "silhouette" | "flipping" | "revealed">("idle");
   const setPhase = useCallback((p: "idle" | "silhouette" | "flipping" | "revealed") => {
     setPhaseInternal(p);
