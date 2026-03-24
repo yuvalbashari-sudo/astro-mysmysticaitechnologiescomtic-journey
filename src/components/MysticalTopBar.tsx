@@ -5,6 +5,7 @@ import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
 import { useT } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
+import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
 
