@@ -7,6 +7,7 @@
 
 export interface MysticalProfileData {
   // Identity
+  userName?: string;
   zodiacSign?: string;
   zodiacSymbol?: string;
   zodiacElement?: string;
@@ -115,6 +116,16 @@ function updateThemes(profile: MysticalProfileData, themes: string[]): void {
 
 // ---- Recording functions ----
 
+function recordUserName(name: string): void {
+  const profile = getProfile();
+  profile.userName = name.trim();
+  saveProfile(profile);
+}
+
+function getUserName(): string | undefined {
+  return getProfile().userName;
+}
+
 function recordZodiac(sign: string, symbol: string, element: string, birthDate: string): void {
   const profile = getProfile();
   profile.zodiacSign = sign;
@@ -184,6 +195,9 @@ function buildContextForAI(): string | null {
   const lines: string[] = [];
 
   // Identity
+  if (profile.userName) {
+    lines.push(`שם הקורא/ת: ${profile.userName}`);
+  }
   if (profile.zodiacSign) {
     lines.push(`מזל השמש: ${profile.zodiacSign} ${profile.zodiacSymbol || ""} (יסוד: ${profile.zodiacElement || "לא ידוע"})`);
   }
@@ -256,6 +270,8 @@ function clearProfile(): void {
 
 export const mysticalProfile = {
   getProfile,
+  recordUserName,
+  getUserName,
   recordZodiac,
   recordRising,
   recordCompatibility,

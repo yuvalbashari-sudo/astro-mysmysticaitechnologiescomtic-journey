@@ -5,6 +5,7 @@ import { X, Send, Sparkles, Loader2, Lock, Share2, Copy, Check } from "lucide-re
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { readingsStorage } from "@/lib/readingsStorage";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 
 interface Message {
   role: "user" | "assistant";
@@ -94,6 +95,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
             type: r.type, title: r.title, subtitle: r.subtitle, date: r.date,
           })),
           language,
+          userName: mysticalProfile.getUserName() || undefined,
         }),
       });
 

@@ -329,6 +329,8 @@ export const en: TranslationKeys = {
   daily_title: "Daily Card",
   daily_desc: "One card chosen for you from the Major Arcana — a mystical message that illuminates your day in a new light",
   daily_note: "✦ You can open one daily card every 24 hours ✦",
+  daily_name_label: "Your name",
+  daily_name_placeholder: "Enter your first name...",
   daily_cta: "Reveal your daily card",
   daily_shuffle: "The cards are being shuffled...",
   daily_shuffle_focus: "Focus on this moment ✦",

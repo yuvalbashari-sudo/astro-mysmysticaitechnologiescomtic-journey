@@ -6,6 +6,7 @@ import { Sparkles, Send, Loader2, Lock } from "lucide-react";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { readingsStorage } from "@/lib/readingsStorage";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 
 interface Props {
   isOpen: boolean;
@@ -96,6 +97,7 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
             type: r.type, title: r.title, subtitle: r.subtitle, date: r.date,
           })),
           language,
+          userName: mysticalProfile.getUserName() || undefined,
         }),
       });
 

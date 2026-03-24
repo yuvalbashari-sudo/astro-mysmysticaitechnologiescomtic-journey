@@ -329,6 +329,8 @@ export const ru: TranslationKeys = {
   daily_title: "Карта дня",
   daily_desc: "Одна карта, выбранная для вас из Старших Арканов — мистическое послание, освещающее ваш день новым светом",
   daily_note: "✦ Можно открыть одну карту дня каждые 24 часа ✦",
+  daily_name_label: "Ваше имя",
+  daily_name_placeholder: "Введите ваше имя...",
   daily_cta: "Открыть карту дня",
   daily_shuffle: "Карты перемешиваются...",
   daily_shuffle_focus: "Сосредоточьтесь на этом моменте ✦",
