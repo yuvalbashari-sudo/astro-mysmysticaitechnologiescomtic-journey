@@ -426,28 +426,28 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     {
       key: "love",
       icon: <Heart className="w-12 h-12" />,
-      label: language === "he" ? "אהבה" : language === "ar" ? "الحب" : language === "ru" ? "Любовь" : "Love",
+      label: t.imm_tarot_category_love,
       color: "340 60% 55%",
     },
     {
       key: "career",
       icon: <Briefcase className="w-12 h-12" />,
-      label: language === "he" ? "קריירה" : language === "ar" ? "المهنة" : language === "ru" ? "Карьера" : "Career",
+      label: t.imm_tarot_category_career,
       color: "215 60% 55%",
     },
     {
       key: "money",
       icon: <DollarSign className="w-12 h-12" />,
-      label: language === "he" ? "כסף" : language === "ar" ? "المال" : language === "ru" ? "Деньги" : "Money",
+      label: t.imm_tarot_category_money,
       color: "43 80% 55%",
     },
     {
       key: "general",
       icon: <Sparkles className="w-12 h-12" />,
-      label: language === "he" ? "כללי" : language === "ar" ? "عام" : language === "ru" ? "Общее" : "General",
+      label: t.imm_tarot_category_general,
       color: "270 50% 60%",
     },
-  ], [language]);
+  ], [language, t]);
 
   const handleQuestionSelect = useCallback((key: string) => {
     setSelectedQuestion(key);
@@ -486,9 +486,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     setAiText("");
 
     const posLabels = [
-      language === "he" ? "עבר" : "Past",
-      language === "he" ? "הווה" : "Present",
-      language === "he" ? "עתיד" : "Future",
+      t.tarot_pos_past,
+      t.tarot_pos_present,
+      t.tarot_pos_future,
     ];
 
     const cards = Array.from(selectedCardIndices).map(i => drawnCards[i]);
@@ -523,7 +523,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
-          subtitle: cards.map(c => c.hebrewName).join(" • "),
+          subtitle: cards.map(c => cardName(c.name, c.hebrewName)).join(" • "),
           symbol: "🔮",
           data: { spread: spreadType, cards },
         });
@@ -687,7 +687,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    {language === "he" ? "קריאת טארוט" : "Tarot Reading"}
+                    {t.imm_tarot_label}
                   </motion.div>
                   <motion.h2
                     className="font-heading text-4xl md:text-5xl mb-10"
@@ -700,7 +700,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.6 }}
                   >
-                    {language === "he" ? "על מה תרצה לקבל מסר?" : language === "ar" ? "ما الذي تريد معرفته؟" : language === "ru" ? "О чём вы хотите узнать?" : "What would you like guidance on?"}
+                    {t.imm_tarot_question_title}
                   </motion.h2>
 
                   <div className="grid grid-cols-2 gap-5 md:gap-6">
@@ -768,10 +768,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     transition={{ delay: 0.3 }}
                   >
                     {selectedCardIndices.size < 3
-                      ? (language === "he"
-                        ? `בחרו ${3 - selectedCardIndices.size} קלפים`
-                        : `Choose ${3 - selectedCardIndices.size} cards`)
-                      : (language === "he" ? "הקלפים נבחרו ✦" : "Cards chosen ✦")}
+                      ? t.imm_tarot_choose_cards.replace("{n}", String(3 - selectedCardIndices.size))
+                      : t.imm_tarot_cards_chosen}
                   </motion.div>
                   <motion.div
                     className="font-heading font-bold tracking-wider"
@@ -793,7 +791,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     }}
                     transition={{ delay: 0.5, duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    {language === "he" ? "הקשיבו לאינטואיציה" : "Listen to your intuition"}
+                    {t.imm_tarot_listen_intuition}
                   </motion.div>
 
                   {/* Card fan — cinematic arc */}
@@ -1096,7 +1094,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.7, duration: 0.5 }}
                           >
-                            {language === "he" ? "✦ הפירוש שלך ✦" : "✦ Your Reading ✦"}
+                            {t.imm_tarot_your_reading}
                           </motion.h3>
                           {aiText ? (
                             <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
@@ -1107,7 +1105,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
                                 <Sparkles className="w-8 h-8 text-gold/50" />
                               </motion.div>
-                              <p className="text-gold/50 font-body text-lg">{language === "he" ? "מפענחת את המסר..." : "Deciphering the message..."}</p>
+                              <p className="text-gold/50 font-body text-lg">{t.imm_tarot_deciphering}</p>
                             </div>
                           ) : null}
                           {aiLoading && aiText && (
@@ -1120,7 +1118,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       {!aiLoading && aiText && (
                         <motion.div className="mt-6 text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
                           <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
-                            {language === "he" ? "סיום ✦" : "Finish ✦"}
+                            {t.imm_tarot_finish}
                           </motion.button>
                         </motion.div>
                       )}
@@ -1210,9 +1208,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               animate={{ opacity: [0.4, 0.65, 0.4] }}
                               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                             >
-                              {language === "he"
-                                ? "המסר הזה הגיע אליך בדיוק ברגע הנכון..."
-                                : "This message reached you at exactly the right moment..."}
+                              {t.imm_tarot_message_right_moment}
                             </motion.p>
                           </motion.div>
 
@@ -1241,7 +1237,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 1.4, duration: 0.8 }}
                           >
-                            {language === "he" ? "המסר שנחשף לך" : "The Message Revealed"}
+                            {t.imm_tarot_message_revealed}
                           </motion.h3>
 
                           {/* Whispered subtitle */}
@@ -1257,7 +1253,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 1.6 }}
                           >
-                            {language === "he" ? "הקלפים בחרו לדבר אליך" : "The cards have chosen to speak to you"}
+                            {t.imm_tarot_cards_speak}
                           </motion.p>
 
                           {/* ── The living text ── */}
@@ -1305,7 +1301,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic"
                                 style={{ textShadow: "0 2px 20px hsl(222 47% 6% / 0.9)" }}
                               >
-                                {language === "he" ? "מפענחת את המסר הנסתר..." : "Deciphering the hidden message..."}
+                                {t.imm_tarot_deciphering}
                               </p>
                             </motion.div>
                           ) : null}
@@ -1353,9 +1349,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                               >
-                                {language === "he"
-                                  ? "קח רגע לנשום את המסר הזה… הוא שלך."
-                                  : "Take a moment to breathe this message in… it's yours."}
+                                {t.imm_tarot_breathe_message}
                               </motion.p>
 
                               <div className="text-center">
@@ -1378,7 +1372,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                   }}
                                   whileTap={{ scale: 0.97 }}
                                 >
-                                  {language === "he" ? "סיום ✦" : "Finish ✦"}
+                                  {t.imm_tarot_finish}
                                 </motion.button>
                               </div>
                             </motion.div>

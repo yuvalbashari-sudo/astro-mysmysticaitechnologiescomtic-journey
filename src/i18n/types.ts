@@ -498,6 +498,28 @@ export type TranslationKeys = {
   hero_open_full_reading: string;
   hero_tarot_fallback_message: string;
 
+  // Immersive Tarot Experience
+  imm_tarot_label: string;
+  imm_tarot_question_title: string;
+  imm_tarot_choose_cards: string;
+  imm_tarot_cards_chosen: string;
+  imm_tarot_listen_intuition: string;
+  imm_tarot_your_reading: string;
+  imm_tarot_deciphering: string;
+  imm_tarot_message_revealed: string;
+  imm_tarot_cards_speak: string;
+  imm_tarot_message_right_moment: string;
+  imm_tarot_breathe_message: string;
+  imm_tarot_finish: string;
+  imm_tarot_category_love: string;
+  imm_tarot_category_career: string;
+  imm_tarot_category_money: string;
+  imm_tarot_category_general: string;
+
+  // Advisor panel
+  advisor_quick_questions_label: string;
+  advisor_or_type_question: string;
+
   // Daily Ritual
   daily_ritual_label: string;
   daily_ritual_title: string;

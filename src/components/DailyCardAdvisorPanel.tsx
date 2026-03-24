@@ -19,14 +19,17 @@ interface Props {
 
 const FREE_MESSAGE_LIMIT = 5;
 
-const QUICK_QUESTIONS = [
-  "מה המסר המרכזי של הקלף?",
-  "איך זה משפיע על הזוגיות שלי?",
-  "מה עליי לעשות היום?",
-  "מה עליי להיזהר ממנו?",
-  "איזה הזדמנות מסתתרת כאן?",
-  "מה הקלף אומר על העתיד הקרוב?",
-];
+// Quick questions are now derived from translation keys
+function getQuickQuestions(t: ReturnType<typeof useT>): string[] {
+  return [
+    t.advisor_tarot_s1,
+    t.advisor_tarot_s2,
+    t.advisor_tarot_s3,
+    t.advisor_tarot_s4,
+    t.advisor_suggestion_1,
+    t.advisor_suggestion_2,
+  ];
+}
 
 const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -358,9 +361,9 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
         {/* Quick Questions */}
         {messages.length === 0 && (
           <div className="flex-shrink-0 px-8 py-6">
-            <p className="text-xl font-heading text-gold/60 tracking-wider mb-4 uppercase">שאלות מהירות</p>
+            <p className="text-xl font-heading text-gold/60 tracking-wider mb-4 uppercase">{t.advisor_quick_questions_label}</p>
             <div className="flex flex-wrap gap-3">
-              {QUICK_QUESTIONS.map((q, i) => (
+              {getQuickQuestions(t).map((q, i) => (
                 <motion.button
                   key={i}
                   onClick={() => sendMessage(q)}
@@ -382,7 +385,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
             {/* Divider */}
             <div className="flex items-center gap-4 mt-6">
               <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }} />
-              <span className="text-base text-gold/25 font-body">או הקלידו שאלה</span>
+              <span className="text-base text-gold/25 font-body">{t.advisor_or_type_question}</span>
               <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }} />
             </div>
           </div>

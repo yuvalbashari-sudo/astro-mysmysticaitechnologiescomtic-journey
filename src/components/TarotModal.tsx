@@ -233,7 +233,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             readingsStorage.save({
               type: "tarot",
               title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-              subtitle: tableCards.map(c => c.hebrewName).join(" • "),
+              subtitle: tableCards.map(c => cardName(c.name, c.hebrewName)).join(" • "),
               symbol: "🔮",
               data: { spread: selectedSpread.key, cards: tableCards },
             });
@@ -309,13 +309,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!cards) return;
-    const text = `🔮 ${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}:\n${cards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
+    const text = `🔮 ${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}:\n${cards.map(c => `${c.symbol} ${cardName(c.name, c.hebrewName)}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!cards) return;
-    const textToCopy = aiText || cards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ");
+    const textToCopy = aiText || cards.map(c => `${c.symbol} ${cardName(c.name, c.hebrewName)}`).join(" • ");
     await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
@@ -923,7 +923,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     )}
                   </motion.div>
 
-                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => c.hebrewName).join(" • ")} subtitle={t.readings_type_tarot} />
+                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => cardName(c.name, c.hebrewName)).join(" • ")} subtitle={t.readings_type_tarot} />
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
