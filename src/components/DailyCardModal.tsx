@@ -775,15 +775,15 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         }}
                       />
 
-                      <div className="relative flex flex-col items-center gap-3 px-5 pb-6 pt-5 text-center md:px-7 md:pb-7 md:pt-6">
+                       <div className="relative flex flex-col items-center gap-4 px-7 pb-8 pt-7 text-center md:px-10 md:pb-10 md:pt-8">
                         <div className="flex items-center gap-2">
-                          <Sun className="h-4 w-4" style={{ color: "hsl(var(--gold))" }} />
-                          <span className="font-heading tracking-[0.24em] text-[11px] md:text-xs" style={{ color: "hsl(var(--gold))" }}>
+                          <Sun className="h-5 w-5" style={{ color: "hsl(var(--gold))" }} />
+                          <span className="font-heading tracking-[0.24em] text-base md:text-lg" style={{ color: "hsl(var(--gold))" }}>
                             {t.daily_title}
                           </span>
                         </div>
 
-                        <p className="max-w-[26ch] font-body text-sm leading-relaxed md:text-[15px]" style={{ color: "hsl(var(--foreground) / 0.72)" }}>
+                        <p className="max-w-[32ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                           {t.daily_card_chosen}
                         </p>
 
