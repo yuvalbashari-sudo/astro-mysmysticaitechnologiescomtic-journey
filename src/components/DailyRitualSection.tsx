@@ -120,7 +120,7 @@ const DailyRitualSection = () => {
                 <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_card_label}</div>
 
                 {/* Card flip */}
-                <div className="relative w-24 h-36 mx-auto mb-4" style={{ perspective: 800 }}>
+                <div className="relative w-36 h-54 mx-auto mb-5" style={{ perspective: 800, width: 144, height: 216 }}>
                   <motion.div
                     className="absolute inset-0 rounded-lg overflow-hidden"
                     initial={false}
