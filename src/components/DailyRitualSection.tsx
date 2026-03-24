@@ -116,7 +116,7 @@ const DailyRitualSection = () => {
                 transition={{ delay: 0.1 }}
                 className="mystical-card-elevated p-8 text-center"
               >
-                <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_card_label}</div>
+                <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_card_label}</div>
 
                 {/* Card flip */}
                 <div className="relative w-24 h-36 mx-auto mb-4" style={{ perspective: 800 }}>
