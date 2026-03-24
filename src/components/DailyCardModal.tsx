@@ -137,6 +137,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [showCardOverlay, setShowCardOverlay] = useState(false);
   const [gender, setGender] = useState<"male" | "female" | "">("");
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
 
