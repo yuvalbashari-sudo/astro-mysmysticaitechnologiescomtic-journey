@@ -74,7 +74,7 @@ const TarotCardPage = () => {
           <span>/</span>
           <span className="text-gold/60">Tarot</span>
           <span>/</span>
-          <span className="text-gold">{card.hebrewName}</span>
+          <span className="text-gold">{localizeCardName(card.name, card.hebrewName)}</span>
         </nav>
 
         {/* Hero */}
@@ -95,7 +95,7 @@ const TarotCardPage = () => {
             </motion.div>
           )}
           <span className="text-4xl block mb-3">{card.symbol}</span>
-          <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{card.hebrewName}</h1>
+          <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{localizeCardName(card.name, card.hebrewName)}</h1>
           <p className="font-body text-foreground/50 text-lg mb-1">{card.name}</p>
           <p className="font-body text-foreground/30 text-sm">Arcana #{card.number}</p>
         </motion.div>
