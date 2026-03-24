@@ -315,7 +315,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!cards) return;
-    const textToCopy = aiText || cards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ");
+    const textToCopy = aiText || cards.map(c => `${c.symbol} ${cardName(c.name, c.hebrewName)}`).join(" • ");
     await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
