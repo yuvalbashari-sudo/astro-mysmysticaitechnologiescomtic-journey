@@ -448,6 +448,37 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       {t.daily_note}
                     </motion.p>
 
+                    {/* Name Input */}
+                    <motion.div
+                      className="w-full max-w-[280px] mb-5"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.28 }}
+                    >
+                      <label className="block text-xs text-gold/50 font-body mb-2.5 tracking-wider uppercase">{t.daily_name_label}</label>
+                      <input
+                        type="text"
+                        value={userName}
+                        onChange={(e) => setUserName(e.target.value)}
+                        placeholder={t.daily_name_placeholder}
+                        className="w-full py-2.5 px-4 rounded-lg font-body text-sm text-foreground/80 placeholder:text-foreground/25 focus:outline-none transition-all duration-300"
+                        style={{
+                          background: "hsl(var(--deep-blue-light) / 0.3)",
+                          border: "1px solid hsl(var(--gold) / 0.08)",
+                          direction: "rtl",
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.3)";
+                          e.currentTarget.style.boxShadow = "0 0 12px hsl(var(--gold) / 0.08)";
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.08)";
+                          e.currentTarget.style.boxShadow = "none";
+                        }}
+                        dir="auto"
+                      />
+                    </motion.div>
+
                     {/* Gender Selection */}
                     <motion.div
                       className="w-full max-w-[280px] mb-7"
