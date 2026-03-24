@@ -298,7 +298,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                      <h2 className="font-heading text-2xl gold-gradient-text mb-3">{mode === "forecast" ? t.forecast_title : t.rising_title}</h2>
                      <p className="text-foreground/70 font-body text-sm mb-8 max-w-md mx-auto leading-relaxed">{mode === "forecast" ? t.forecast_desc : t.rising_desc}</p>
                      <div className="max-w-xs mx-auto mb-6">
-                       <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.forecast_gender_label}</label>
+                       <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_gender_label}</label>
                        <div className="flex gap-2">
                          <motion.button type="button" onClick={() => setGender("male")} className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300" style={{ background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>{t.forecast_gender_male}</motion.button>
                          <motion.button type="button" onClick={() => setGender("female")} className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300" style={{ background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>{t.forecast_gender_female}</motion.button>
@@ -306,7 +306,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                        {attempted && !gender && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
                      </div>
                      <div className="max-w-xs mx-auto mb-6">
-                       <label className="block text-sm text-gold/70 font-body mb-2 text-right">{t.forecast_birthdate_label}</label>
+                       <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_birthdate_label}</label>
                        <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                        {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                      </div>
@@ -320,7 +320,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                            exit={{ opacity: 0, height: 0 }}
                            className="max-w-xs mx-auto mb-6 overflow-hidden"
                          >
-                           <label className="block text-sm text-gold/70 font-body mb-2 text-right">
+                           <label className="block text-sm text-gold/70 font-body mb-2 text-start">
                              <Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}
                            </label>
                            <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />

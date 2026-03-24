@@ -62,15 +62,15 @@ const FAQSection = () => {
               value={`item-${i}`}
               className="mystical-card px-6 md:px-8 border-none hover:mystical-glow transition-all duration-500"
             >
-              <AccordionTrigger className="font-body text-foreground/90 text-right hover:no-underline hover:text-gold transition-colors py-6 gap-4">
-                <div className="flex items-center gap-4 flex-1 text-right">
+              <AccordionTrigger className="font-body text-foreground/90 text-start hover:no-underline hover:text-gold transition-colors py-6 gap-4">
+                <div className="flex items-center gap-4 flex-1 text-start">
                   <div className="icon-glow w-9 h-9 flex-shrink-0">
                     <item.icon className="w-4 h-4 text-gold/70" />
                   </div>
                   <span className="text-[15px]">{item.q}</span>
                 </div>
               </AccordionTrigger>
-              <AccordionContent className="font-body text-muted-foreground text-sm leading-[1.9] pb-6 pr-[52px] text-right">
+              <AccordionContent className="font-body text-muted-foreground text-sm leading-[1.9] pb-6 pr-[52px] text-start">
                 {item.a}
               </AccordionContent>
             </AccordionItem>
