@@ -195,6 +195,9 @@ function buildContextForAI(): string | null {
   const lines: string[] = [];
 
   // Identity
+  if (profile.userName) {
+    lines.push(`שם הקורא/ת: ${profile.userName}`);
+  }
   if (profile.zodiacSign) {
     lines.push(`מזל השמש: ${profile.zodiacSign} ${profile.zodiacSymbol || ""} (יסוד: ${profile.zodiacElement || "לא ידוע"})`);
   }
