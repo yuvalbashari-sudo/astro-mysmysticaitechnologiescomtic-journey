@@ -398,6 +398,7 @@ const FloatingCard = ({
 const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const cardName = useCardName();
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("question");
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
