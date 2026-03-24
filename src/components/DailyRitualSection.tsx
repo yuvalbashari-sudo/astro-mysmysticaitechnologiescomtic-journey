@@ -194,12 +194,12 @@ const DailyRitualSection = () => {
                 className="mystical-card-elevated p-8 text-center flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-sm text-gold/60 font-body mb-3 tracking-wider">{t.daily_ritual_energy_label}</div>
+                  <div className="text-base text-gold/60 font-body mb-4 tracking-wider">{t.daily_ritual_energy_label}</div>
                   <div className="icon-glow w-14 h-14 mx-auto mb-4">
                     <span className="text-2xl">{ritual.energy.icon}</span>
                   </div>
-                  <h3 className="font-heading text-lg text-gold mb-2">{ritual.energy.theme}</h3>
-                  <p className="text-sm text-muted-foreground font-body leading-relaxed">
+                  <h3 className="font-heading text-xl text-gold mb-2">{ritual.energy.theme}</h3>
+                  <p className="text-base text-muted-foreground font-body" style={{ lineHeight: 1.7 }}>
                     {ritual.energy.insight}
                   </p>
                 </div>
