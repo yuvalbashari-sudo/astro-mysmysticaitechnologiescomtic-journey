@@ -700,7 +700,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.6 }}
                   >
-                    {language === "he" ? "על מה תרצה לקבל מסר?" : language === "ar" ? "ما الذي تريد معرفته؟" : language === "ru" ? "О чём вы хотите узнать?" : "What would you like guidance on?"}
+                    {t.imm_tarot_question_title}
                   </motion.h2>
 
                   <div className="grid grid-cols-2 gap-5 md:gap-6">
