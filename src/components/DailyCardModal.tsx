@@ -903,6 +903,19 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {/* Advisor avatar — fixed on top of all phases */}
+            <AstrologerAvatarButton
+              size={isMobileViewport ? 36 : 42}
+              onClick={() => setAstrologerOpen(true)}
+              entranceDelay={0.5}
+              style={{
+                position: "fixed",
+                bottom: isMobileViewport ? 14 : 20,
+                right: isMobileViewport ? 14 : 20,
+                zIndex: 200,
+              }}
+            />
       </CinematicModalShell>
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
     </>
