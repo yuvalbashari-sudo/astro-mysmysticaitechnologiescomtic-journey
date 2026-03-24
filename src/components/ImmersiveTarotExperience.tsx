@@ -1301,7 +1301,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic"
                                 style={{ textShadow: "0 2px 20px hsl(222 47% 6% / 0.9)" }}
                               >
-                                {language === "he" ? "מפענחת את המסר הנסתר..." : "Deciphering the hidden message..."}
+                                {t.imm_tarot_deciphering}
                               </p>
                             </motion.div>
                           ) : null}
