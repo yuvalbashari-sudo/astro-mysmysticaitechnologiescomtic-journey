@@ -5,6 +5,7 @@ import { Globe, MessageCircle, Clock, Sparkles } from "lucide-react";
 import { useLanguage, languageConfig, type Language } from "@/i18n";
 import { useT } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
+import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
 
@@ -16,6 +17,7 @@ interface Props {
 
 const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { language, setLanguage } = useLanguage();
+  const { scale, setScale } = useFontScale();
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
@@ -191,6 +193,51 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </AnimatePresence>,
             document.body
           )}
+        </div>
+
+        {/* Font Scale Control */}
+        <div
+          className="inline-flex items-center gap-0.5 rounded-full px-1 py-0.5"
+          style={{
+            background: "hsl(var(--deep-blue-light) / 0.6)",
+            border: "1px solid hsl(var(--gold) / 0.15)",
+          }}
+          role="radiogroup"
+          aria-label="Font size"
+        >
+          {([
+            { key: "default" as FontScale, label: "A", size: 14 },
+            { key: "large" as FontScale, label: "A+", size: 16 },
+            { key: "xl" as FontScale, label: "A++", size: 18 },
+          ]).map(({ key, label, size }) => {
+            const isActive = scale === key;
+            return (
+              <button
+                key={key}
+                role="radio"
+                aria-checked={isActive}
+                onClick={() => setScale(key)}
+                className="relative px-2.5 py-1.5 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold"
+                style={{
+                  color: isActive ? "hsl(var(--primary-foreground))" : "hsl(var(--gold) / 0.6)",
+                  fontSize: size,
+                }}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="global-font-pill"
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
+                      boxShadow: "0 0 10px hsl(var(--gold) / 0.25)",
+                    }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Accessibility link */}
