@@ -687,7 +687,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    {language === "he" ? "קריאת טארוט" : "Tarot Reading"}
+                    {t.imm_tarot_label}
                   </motion.div>
                   <motion.h2
                     className="font-heading text-4xl md:text-5xl mb-10"
