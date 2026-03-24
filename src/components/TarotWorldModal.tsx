@@ -475,14 +475,14 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       placeholder={t.tarot_question_placeholder}
                       maxLength={300}
                       rows={3}
-                      className="w-full rounded-xl p-4 font-body text-sm text-foreground/90 placeholder:text-foreground/30 resize-none focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all text-right"
+                      className="w-full rounded-xl p-4 font-body text-sm text-foreground/90 placeholder:text-foreground/30 resize-none focus:outline-none focus:ring-1 focus:ring-gold/30 transition-all text-start"
                       style={{
                         background: "hsl(var(--deep-blue-light) / 0.4)",
                         border: "1px solid hsl(var(--gold) / 0.15)",
                       }}
-                      dir="rtl"
+                      dir="auto"
                     />
-                    <p className="text-foreground/30 font-body text-[10px] mt-1 text-left">{userQuestion.length}/300</p>
+                    <p className="text-foreground/30 font-body text-[10px] mt-1 text-end">{userQuestion.length}/300</p>
 
                     <motion.button
                       onClick={handleQuestionSubmit}
