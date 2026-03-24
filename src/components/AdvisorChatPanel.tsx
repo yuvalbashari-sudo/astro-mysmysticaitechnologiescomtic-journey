@@ -402,8 +402,9 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                       {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
-                          onClick={() => { setInput(suggestion); inputRef.current?.focus(); }}
-                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          onClick={() => void sendMessage(suggestion)}
+                          disabled={isStreaming || isLimitReached}
+                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",

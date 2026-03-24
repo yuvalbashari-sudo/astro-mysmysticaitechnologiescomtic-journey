@@ -533,7 +533,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       selectedQuestion || undefined,
       language,
     );
-  }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards]);
+  }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards, questionOptions]);
 
   useEffect(() => {
     if (phase === "reveal") {
