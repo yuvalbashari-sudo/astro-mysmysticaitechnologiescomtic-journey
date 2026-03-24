@@ -906,13 +906,13 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
             {/* Advisor avatar — fixed on top of all phases */}
             <AstrologerAvatarButton
-              size={isMobileViewport ? 100 : 132}
+              size={isMobileViewport ? 140 : 198}
               onClick={() => setAstrologerOpen(true)}
               entranceDelay={0.5}
               style={{
                 position: "fixed",
-                bottom: isMobileViewport ? 10 : 16,
-                right: isMobileViewport ? 10 : 16,
+                bottom: isMobileViewport ? 6 : 10,
+                right: isMobileViewport ? 6 : 10,
                 zIndex: 200,
               }}
             />
