@@ -758,7 +758,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   exit={{ opacity: 0, y: 12 }}
                   className="px-4 pb-10 pt-6 md:px-0 md:pb-16 md:pt-8"
                 >
-                  <div className="mx-auto w-full max-w-[420px]">
+                  <div className="mx-auto w-full max-w-[620px]">
                     <motion.div
                       className="relative rounded-[28px] overflow-visible"
                       style={{
@@ -775,22 +775,22 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         }}
                       />
 
-                      <div className="relative flex flex-col items-center gap-3 px-5 pb-6 pt-5 text-center md:px-7 md:pb-7 md:pt-6">
+                       <div className="relative flex flex-col items-center gap-4 px-7 pb-8 pt-7 text-center md:px-10 md:pb-10 md:pt-8">
                         <div className="flex items-center gap-2">
-                          <Sun className="h-4 w-4" style={{ color: "hsl(var(--gold))" }} />
-                          <span className="font-heading tracking-[0.24em] text-[11px] md:text-xs" style={{ color: "hsl(var(--gold))" }}>
+                          <Sun className="h-5 w-5" style={{ color: "hsl(var(--gold))" }} />
+                          <span className="font-heading tracking-[0.24em] text-base md:text-lg" style={{ color: "hsl(var(--gold))" }}>
                             {t.daily_title}
                           </span>
                         </div>
 
-                        <p className="max-w-[26ch] font-body text-sm leading-relaxed md:text-[15px]" style={{ color: "hsl(var(--foreground) / 0.72)" }}>
+                        <p className="max-w-[32ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                           {t.daily_card_chosen}
                         </p>
 
                         <motion.div
                           className="relative overflow-hidden rounded-2xl"
                           style={{
-                            width: "clamp(140px, 22vw, 190px)",
+                            width: "clamp(200px, 30vw, 280px)",
                             aspectRatio: "2 / 3",
                             border: "2px solid hsl(var(--gold) / 0.28)",
                             boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 18px 40px hsl(0 0% 0% / 0.35)",
@@ -815,11 +815,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           />
                         </motion.div>
 
-                        <div className="flex flex-col items-center gap-1">
-                          <h2 className="font-heading text-[26px] leading-none gold-gradient-text md:text-[30px]">
+                        <div className="flex flex-col items-center gap-1.5">
+                          <h2 className="font-heading text-[36px] leading-none gold-gradient-text md:text-[44px]">
                             {card.hebrewName}
                           </h2>
-                          <p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
+                          <p className="font-body text-base md:text-lg" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
                             {t.daily_arcana_label} {card.number}
                           </p>
                         </div>
@@ -839,7 +839,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
-                        <div className="w-full max-w-[30ch] font-body text-sm leading-relaxed md:text-[15px]" style={{ color: "hsl(var(--foreground) / 0.72)" }}>
+                        <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                           {aiText ? (
                             <div className="text-left [&>div]:space-y-3">{renderMysticalText(aiText, textSize)}</div>
                           ) : aiError ? (
