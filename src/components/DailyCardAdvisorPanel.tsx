@@ -188,19 +188,19 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
     const elements: React.ReactNode[] = [];
     lines.forEach((line, i) => {
       const trimmed = line.trim();
-      if (!trimmed) { elements.push(<div key={i} className="h-3" />); return; }
+      if (!trimmed) { elements.push(<div key={i} className="h-4" />); return; }
       if (trimmed.startsWith("### ")) {
-        elements.push(<h4 key={i} className="font-heading text-xl text-gold mt-3 mb-1.5">{renderInline(trimmed.slice(4))}</h4>);
+        elements.push(<h4 key={i} className="font-heading text-3xl text-gold mt-4 mb-2">{renderInline(trimmed.slice(4))}</h4>);
         return;
       }
       if (trimmed.startsWith("## ")) {
-        elements.push(<h3 key={i} className="font-heading text-2xl text-gold mt-3 mb-1.5">{renderInline(trimmed.slice(3))}</h3>);
+        elements.push(<h3 key={i} className="font-heading text-4xl text-gold mt-4 mb-2">{renderInline(trimmed.slice(3))}</h3>);
         return;
       }
       if (/^[-•*]\s/.test(trimmed)) {
         elements.push(
-          <div key={i} className="flex gap-2 items-start text-lg">
-            <span className="text-gold/50 mt-0.5 flex-shrink-0">•</span>
+          <div key={i} className="flex gap-3 items-start text-2xl leading-relaxed">
+            <span className="text-gold/50 mt-1 flex-shrink-0">•</span>
             <span>{renderInline(trimmed.replace(/^[-•*]\s/, ""))}</span>
           </div>
         );
@@ -209,16 +209,16 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
       if (/^\d+[.)]\s/.test(trimmed)) {
         const num = trimmed.match(/^(\d+)[.)]\s/)?.[1];
         elements.push(
-          <div key={i} className="flex gap-2 items-start text-lg">
-            <span className="text-gold/50 mt-0.5 flex-shrink-0 min-w-[1.5rem] text-center">{num}.</span>
+          <div key={i} className="flex gap-3 items-start text-2xl leading-relaxed">
+            <span className="text-gold/50 mt-1 flex-shrink-0 min-w-[2rem] text-center">{num}.</span>
             <span>{renderInline(trimmed.replace(/^\d+[.)]\s/, ""))}</span>
           </div>
         );
         return;
       }
-      elements.push(<p key={i} className="text-lg">{renderInline(trimmed)}</p>);
+      elements.push(<p key={i} className="text-2xl leading-relaxed">{renderInline(trimmed)}</p>);
     });
-    return <div className="space-y-1">{elements}</div>;
+    return <div className="space-y-2">{elements}</div>;
   };
 
   const renderInline = (text: string): React.ReactNode => {
@@ -417,7 +417,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
               className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[90%] rounded-2xl px-6 py-5 font-body text-xl leading-relaxed ${
+                className={`max-w-[90%] rounded-2xl px-6 py-5 font-body text-2xl leading-relaxed ${
                   msg.role === "user" ? "rounded-br-md" : "rounded-bl-md"
                 }`}
                 style={
