@@ -158,11 +158,11 @@ const DailyRitualSection = () => {
                   )}
                 </div>
 
-                <h3 className="font-heading text-lg text-gold mb-2">{ritual.card.hebrewName}</h3>
-                <p className="text-sm text-muted-foreground font-body leading-relaxed line-clamp-4">
+                <h3 className="font-heading text-xl text-gold mb-2">{ritual.card.hebrewName}</h3>
+                <p className="text-base text-muted-foreground font-body line-clamp-4" style={{ lineHeight: 1.7 }}>
                   {ritual.card.meaning.slice(0, 120)}...
                 </p>
-                <p className="text-xs text-gold/50 mt-3 font-body">{ritual.card.advice.slice(0, 80)}...</p>
+                <p className="text-sm text-gold/50 mt-3 font-body" style={{ lineHeight: 1.6 }}>{ritual.card.advice.slice(0, 80)}...</p>
               </motion.div>
 
               {/* Daily Message */}
