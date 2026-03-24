@@ -815,11 +815,11 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           />
                         </motion.div>
 
-                        <div className="flex flex-col items-center gap-1">
-                          <h2 className="font-heading text-[26px] leading-none gold-gradient-text md:text-[30px]">
+                        <div className="flex flex-col items-center gap-1.5">
+                          <h2 className="font-heading text-[36px] leading-none gold-gradient-text md:text-[44px]">
                             {card.hebrewName}
                           </h2>
-                          <p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
+                          <p className="font-body text-base md:text-lg" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
                             {t.daily_arcana_label} {card.number}
                           </p>
                         </div>
