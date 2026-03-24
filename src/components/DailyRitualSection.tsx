@@ -181,7 +181,7 @@ const DailyRitualSection = () => {
                     {ritual.message}
                   </p>
                 </div>
-                <p className="text-xs text-gold/40 mt-4 font-body italic">
+                <p className="text-sm text-gold/40 mt-4 font-body italic" style={{ lineHeight: 1.6 }}>
                   "{t.daily_ritual_message_quote}"
                 </p>
               </motion.div>
