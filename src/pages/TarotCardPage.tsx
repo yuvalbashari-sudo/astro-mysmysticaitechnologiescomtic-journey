@@ -123,7 +123,7 @@ const TarotCardPage = () => {
                   <p className="font-body text-foreground/30 text-xs">{section.titleEn}</p>
                 </div>
               </div>
-              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-right" dir="rtl">{section.content}</p>
+              <p className="text-foreground/70 font-body text-sm leading-[1.9] text-start">{section.content}</p>
             </motion.div>
           ))}
         </div>
@@ -157,8 +157,8 @@ const TarotCardPage = () => {
           }}
         >
           <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
-          <h2 className="font-heading text-2xl gold-gradient-text mb-3" dir="rtl">גלו מה הקלפים אומרים לכם</h2>
-          <p className="text-foreground/50 font-body text-sm mb-6 max-w-md mx-auto" dir="rtl">
+          <h2 className="font-heading text-2xl gold-gradient-text mb-3">גלו מה הקלפים אומרים לכם</h2>
+          <p className="text-foreground/50 font-body text-sm mb-6 max-w-md mx-auto">
             קבלו קריאת טארוט אישית ומיסטית — הקלפים מחכים לחשוף את המסר שנועד רק לכם
           </p>
           <Link
@@ -172,7 +172,7 @@ const TarotCardPage = () => {
             }}
           >
             <MessageCircle className="w-4 h-4" />
-            <span dir="rtl">פתחו קריאת טארוט חינם</span>
+            <span>פתחו קריאת טארוט חינם</span>
           </Link>
         </motion.div>
 
