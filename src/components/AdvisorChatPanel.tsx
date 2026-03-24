@@ -125,6 +125,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
             date: r.date,
           })),
           language,
+          userName: mysticalProfile.getUserName() || undefined,
         }),
       });
 
