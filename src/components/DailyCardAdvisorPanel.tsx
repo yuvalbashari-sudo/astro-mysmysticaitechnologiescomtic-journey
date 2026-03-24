@@ -19,14 +19,17 @@ interface Props {
 
 const FREE_MESSAGE_LIMIT = 5;
 
-const QUICK_QUESTIONS = [
-  "מה המסר המרכזי של הקלף?",
-  "איך זה משפיע על הזוגיות שלי?",
-  "מה עליי לעשות היום?",
-  "מה עליי להיזהר ממנו?",
-  "איזה הזדמנות מסתתרת כאן?",
-  "מה הקלף אומר על העתיד הקרוב?",
-];
+// Quick questions are now derived from translation keys
+function getQuickQuestions(t: ReturnType<typeof useT>): string[] {
+  return [
+    t.advisor_tarot_s1,
+    t.advisor_tarot_s2,
+    t.advisor_tarot_s3,
+    t.advisor_tarot_s4,
+    t.advisor_suggestion_1,
+    t.advisor_suggestion_2,
+  ];
+}
 
 const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
   const t = useT();
