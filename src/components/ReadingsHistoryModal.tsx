@@ -213,7 +213,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
                       >
                         <button
                           onClick={() => setExpanded(isExpanded ? null : reading.id)}
-                          className="w-full flex items-center gap-5 p-6 text-right hover:bg-gold/5 transition-colors"
+                          className="w-full flex items-center gap-5 p-6 text-start hover:bg-gold/5 transition-colors"
                           aria-expanded={isExpanded}
                           aria-label={`${isExpanded ? t.a11y_collapse_reading : t.a11y_expand_reading}: ${reading.title}`}
                         >

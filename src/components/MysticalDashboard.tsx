@@ -333,10 +333,10 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                       </AlertDialogTrigger>
                       <AlertDialogContent className="z-[200]" style={{ background: "hsl(222 40% 10%)", border: "1px solid hsl(var(--gold) / 0.2)" }}>
                         <AlertDialogHeader>
-                          <AlertDialogTitle className="font-heading text-xl text-primary text-right">
+                          <AlertDialogTitle className="font-heading text-xl text-primary text-start">
                             האם לאפס את הפרופיל האישי?
                           </AlertDialogTitle>
-                          <AlertDialogDescription className="text-base text-muted-foreground text-right leading-relaxed">
+                          <AlertDialogDescription className="text-base text-muted-foreground text-start leading-relaxed">
                             כל הנתונים האישיים יימחקו ותצטרכו להזין אותם מחדש. היסטוריית הקריאות והקלפים תישמר.
                           </AlertDialogDescription>
                         </AlertDialogHeader>

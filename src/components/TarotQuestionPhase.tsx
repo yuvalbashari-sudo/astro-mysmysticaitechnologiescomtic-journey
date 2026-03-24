@@ -355,7 +355,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 0.5 }}
       >
-        <label className="block text-xs text-gold/50 font-body mb-2.5 text-right" dir={dir}>
+        <label className="block text-xs text-gold/50 font-body mb-2.5 text-start" dir={dir}>
           {copy.questionLabel}
         </label>
 
@@ -426,7 +426,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
 
         {/* Micro guidance */}
         <motion.p
-          className="text-[10px] text-foreground/25 font-body mt-2.5 text-right leading-relaxed"
+          className="text-[10px] text-foreground/25 font-body mt-2.5 text-start leading-relaxed"
           dir={dir}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
