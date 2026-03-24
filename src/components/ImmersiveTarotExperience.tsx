@@ -1208,9 +1208,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               animate={{ opacity: [0.4, 0.65, 0.4] }}
                               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                             >
-                              {language === "he"
-                                ? "המסר הזה הגיע אליך בדיוק ברגע הנכון..."
-                                : "This message reached you at exactly the right moment..."}
+                              {t.imm_tarot_message_right_moment}
                             </motion.p>
                           </motion.div>
 
