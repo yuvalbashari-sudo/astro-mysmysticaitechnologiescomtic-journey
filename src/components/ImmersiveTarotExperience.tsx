@@ -1349,9 +1349,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 animate={{ opacity: [0.3, 0.5, 0.3] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                               >
-                                {language === "he"
-                                  ? "קח רגע לנשום את המסר הזה… הוא שלך."
-                                  : "Take a moment to breathe this message in… it's yours."}
+                                {t.imm_tarot_breathe_message}
                               </motion.p>
 
                               <div className="text-center">
