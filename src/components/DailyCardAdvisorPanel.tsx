@@ -556,7 +556,7 @@ const ShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) =
 
   return (
     <motion.div
-      className="flex items-center justify-center gap-2 pt-2 pb-1"
+      className="flex items-center justify-center gap-3 pt-3 pb-2"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
@@ -564,26 +564,26 @@ const ShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) =
     >
       <button
         onClick={handleShare}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body transition-all hover:scale-105"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-body transition-all hover:scale-105"
         style={{
           background: "hsl(var(--gold) / 0.08)",
           border: "1px solid hsl(var(--gold) / 0.15)",
           color: "hsl(var(--gold) / 0.7)",
         }}
       >
-        <Share2 className="w-3 h-3" />
+        <Share2 className="w-5 h-5" />
         <span>שתפו</span>
       </button>
       <button
         onClick={handleCopy}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body transition-all hover:scale-105"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-body transition-all hover:scale-105"
         style={{
           background: "hsl(var(--gold) / 0.08)",
           border: "1px solid hsl(var(--gold) / 0.15)",
           color: "hsl(var(--gold) / 0.7)",
         }}
       >
-        {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+        {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
         <span>{copied ? "הועתק" : "העתקה"}</span>
       </button>
     </motion.div>
