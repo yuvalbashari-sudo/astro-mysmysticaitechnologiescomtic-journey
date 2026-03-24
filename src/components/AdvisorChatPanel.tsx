@@ -512,7 +512,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   aria-label={placeholderText}
                 />
                 <button
-                  onClick={sendMessage}
+                  onClick={() => void sendMessage()}
                   disabled={!input.trim() || isStreaming || isLimitReached}
                   className="w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
                   style={{
