@@ -791,7 +791,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     }}
                     transition={{ delay: 0.5, duration: 2, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    {language === "he" ? "הקשיבו לאינטואיציה" : "Listen to your intuition"}
+                    {t.imm_tarot_listen_intuition}
                   </motion.div>
 
                   {/* Card fan — cinematic arc */}
