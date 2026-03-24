@@ -532,6 +532,17 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <Sparkles className="w-4.5 h-4.5" />
                       {t.daily_cta}
                     </motion.button>
+
+                    <AstrologerAvatarButton
+                      size={isMobileViewport ? 36 : 42}
+                      onClick={() => setAstrologerOpen(true)}
+                      entranceDelay={0.6}
+                      style={{
+                        bottom: isMobileViewport ? 14 : 16,
+                        right: isMobileViewport ? 14 : 16,
+                        zIndex: 12,
+                      }}
+                    />
                   </div>
                 </motion.div>
               )}
