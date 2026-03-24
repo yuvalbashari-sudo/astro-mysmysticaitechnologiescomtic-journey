@@ -334,7 +334,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       if (printWindow) {
         printWindow.document.write(`
           <!DOCTYPE html>
-          <html dir="rtl">
+          <html dir="${dir}">
           <head>
             <title>ASTROLOGAI — מפת לידה</title>
             <style>
