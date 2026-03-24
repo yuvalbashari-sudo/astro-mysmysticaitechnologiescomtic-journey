@@ -2817,7 +2817,7 @@ const HeroSection = () => {
                           padding: "10px 14px",
                           borderRadius: 12,
                           whiteSpace: "nowrap",
-                          direction: language === "he" || language === "ar" ? "rtl" : "ltr",
+                          direction: dir,
                           background: "hsl(222 47% 8% / 0.75)",
                           backdropFilter: "blur(14px)",
                           WebkitBackdropFilter: "blur(14px)",

@@ -90,7 +90,7 @@ const AvatarHoverTeaser = ({
               border: "1px solid hsl(var(--gold) / 0.18)",
               boxShadow:
                 "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
-              direction: "rtl",
+              
             }}
             initial={{ opacity: 0, scale: 0.92, x: isLeft ? 4 : -4 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
