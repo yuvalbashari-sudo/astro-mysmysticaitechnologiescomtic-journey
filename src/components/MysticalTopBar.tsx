@@ -20,7 +20,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
   const { scale, setScale } = useFontScale();
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
-  const langRef = useRef<HTMLDivElement>(null);
+  const langContainerRef = useRef<HTMLDivElement>(null);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
   const langBtnRef = useRef<HTMLButtonElement>(null);
   const [dropdownPos, setDropdownPos] = useState({ top: 0, right: 0 });
 
@@ -36,14 +37,31 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+      const target = e.target as Node;
+      const clickedInsideButton = !!langContainerRef.current?.contains(target);
+      const clickedInsideDropdown = !!langDropdownRef.current?.contains(target);
+
+      if (!clickedInsideButton && !clickedInsideDropdown) {
+        setLangOpen(false);
+      }
     };
+
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   useEffect(() => {
-    if (langOpen) updateDropdownPos();
+    if (!langOpen) return;
+    updateDropdownPos();
+
+    const handleViewportChange = () => updateDropdownPos();
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, true);
+
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, true);
+    };
   }, [langOpen, updateDropdownPos]);
 
   return (
