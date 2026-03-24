@@ -95,6 +95,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
             type: r.type, title: r.title, subtitle: r.subtitle, date: r.date,
           })),
           language,
+          userName: mysticalProfile.getUserName() || undefined,
         }),
       });
 
