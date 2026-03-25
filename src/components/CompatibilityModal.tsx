@@ -282,7 +282,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
               ) : matchInfo ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone: LEFT=text, CENTER=oracle, RIGHT=score panel ── */
-                  <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute inset-0 overflow-visible">
                     {/* LEFT: Interpretation text */}
                     <motion.div
                       ref={scrollRef}
