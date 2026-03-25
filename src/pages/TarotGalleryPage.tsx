@@ -21,11 +21,10 @@ const introText: Record<string, string> = {
   ar: "اكتشف جميع بطاقات التاروت الـ78 ومعانيها.",
 };
 
-const filters: TarotSuitFilter[] = ["all", "major", "swords", "cups", "wands", "pentacles"];
-
 export default function TarotGalleryPage() {
   const { language, dir } = useLanguage();
   const navigate = useNavigate();
+  const availableFilters = useMemo(() => getAvailableFilters(), []);
   const [activeFilter, setActiveFilter] = useState<TarotSuitFilter>("all");
   const [selectedCard, setSelectedCard] = useState<UnifiedTarotCard | null>(null);
 
