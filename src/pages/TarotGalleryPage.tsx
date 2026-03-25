@@ -14,11 +14,11 @@ const sectionTitle: Record<string, string> = {
   ar: "بطاقات التاروت",
 };
 
-const introText: Record<string, (count: number) => string> = {
-  he: (count) => `גלו את ${count} קלפי הטארוט הזמינים בגלריה.`,
-  en: (count) => `Explore the ${count} tarot cards available in the gallery.`,
-  ru: (count) => `Изучите ${count} карт Таро, доступных в галерее.`,
-  ar: (count) => `اكتشف ${count} من بطاقات التاروت المتاحة في المعرض.`,
+const introText: Record<string, string> = {
+  he: "גלו את כל קלפי הטארוט לפי ארקנה גדולה וארבע הסדרות.",
+  en: "Explore all tarot cards by Major Arcana and the four suits.",
+  ru: "Изучите все карты Таро по Старшим Арканам и четырем мастям.",
+  ar: "اكتشف جميع بطاقات التاروت حسب الأركانا الكبرى والسلاسل الأربع.",
 };
 
 export default function TarotGalleryPage() {
