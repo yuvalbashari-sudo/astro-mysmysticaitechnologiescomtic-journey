@@ -369,6 +369,12 @@ export type TranslationKeys = {
   daily_premium_cta: string;
   daily_already_drawn: string;
   daily_time_format: string;
+  daily_section_summary: string;
+  daily_section_love: string;
+  daily_section_career: string;
+  daily_section_advice: string;
+  daily_section_keywords: string;
+  daily_advisor_cta_text: string;
 
   // Palm Reading Modal
   palm_title: string;
