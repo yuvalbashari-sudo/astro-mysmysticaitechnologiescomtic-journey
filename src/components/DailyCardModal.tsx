@@ -760,7 +760,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: ritualStep >= 3 ? 1 : 0, y: ritualStep >= 3 ? 0 : 15 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {card.symbol} {cardName(card.name, card.hebrewName)}
+                        {card.symbol} {card.name[language] || card.name.en}
                       </motion.h2>
                       <motion.p
                         className="text-foreground/50 font-body text-sm relative z-10 mt-1"
