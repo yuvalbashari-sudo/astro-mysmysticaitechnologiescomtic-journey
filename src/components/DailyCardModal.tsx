@@ -207,31 +207,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    // Select card deterministically
+    // Select card deterministically from full 78-card deck
     const cardIndex = getDailyCardIndex(allReadingCards.length);
-    const readingCard = allReadingCards[cardIndex];
-    // Convert ReadingCard to TarotWorldCard-compatible shape
-    const majorMatch = majorArcana.find(m => m.name === readingCard.name.en);
-    const selectedCard: TarotWorldCard = majorMatch || {
-      name: readingCard.name.en,
-      hebrewName: readingCard.name.he,
-      number: cardIndex,
-      symbol: readingCard.symbol,
-      image: readingCard.image,
-      meanings: {
-        general: readingCard.name.en,
-        daily: readingCard.name.en,
-        love: readingCard.name.en,
-        career: readingCard.name.en,
-        decision: readingCard.name.en,
-        universe: readingCard.name.en,
-        past: readingCard.name.en,
-        present: readingCard.name.en,
-        future: readingCard.name.en,
-        spiritual: readingCard.name.en,
-        advice: readingCard.name.en,
-      },
-    };
+    const selectedCard = allReadingCards[cardIndex];
     setCard(selectedCard);
     setShowCardOverlay(false);
     setRitualStep(0);
