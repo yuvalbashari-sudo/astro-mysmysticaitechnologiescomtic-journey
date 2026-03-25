@@ -253,7 +253,7 @@ const FloatingCard = ({
                   {card.symbol}
                 </span>
                 <span className="text-center font-heading text-gold/90 px-2 mt-1" style={{ fontSize: cardW > 90 ? "0.75rem" : "0.5rem", lineHeight: 1.3 }}>
-                  {cardName(card.name, card.hebrewName)}
+                  {cardName(card.name.en, card.name.he)}
                 </span>
               </div>
             ) : (
