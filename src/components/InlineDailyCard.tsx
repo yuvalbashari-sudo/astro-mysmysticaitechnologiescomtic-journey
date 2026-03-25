@@ -61,7 +61,7 @@ interface Props {
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
   const cardName = useCardName();
-  const [card, setCard] = useState<MajorArcanaCard | null>(null);
+  const [card, setCard] = useState<ReadingCard | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(false);
 
