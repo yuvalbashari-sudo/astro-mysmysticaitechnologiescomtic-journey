@@ -337,7 +337,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       style={{
                         top: "calc(10vh + 50px)",
                         right: "3vw",
-                        width: "min(340px, 24vw)",
+                        width: "min(340px, 28vw)",
+                        minWidth: "260px",
+                        maxHeight: "calc(90vh - 50px)",
+                        overflowY: "auto",
                       }}
                       initial={{ opacity: 0, x: 40 }}
                       animate={{ opacity: 1, x: 0 }}
