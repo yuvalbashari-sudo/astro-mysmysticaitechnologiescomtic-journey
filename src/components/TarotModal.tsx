@@ -15,7 +15,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
-import { useCardName } from "@/hooks/useCardName";
+import { useReadingContext } from "@/contexts/ReadingContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
