@@ -497,7 +497,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       hebrewName: c.name.he,
       symbol: c.symbol,
       name: c.name.en,
-      localizedName: getCardName(c, language),
+      localizedName: c.name[language] || c.name.en || c.name.he,
       positionLabel: posLabels[i] || "",
     }));
 
