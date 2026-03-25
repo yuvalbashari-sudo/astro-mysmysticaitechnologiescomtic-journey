@@ -62,7 +62,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
 
         {/* Right nav – all icons in a single flex row */}
         <nav
-          className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2 md:gap-3"
+          className="flex flex-1 items-center justify-end"
+          style={{ gap: dir === "ltr" ? "5px" : undefined }}
+          {...(dir === "rtl" ? { className: "flex flex-1 items-center justify-end gap-1.5 sm:gap-2 md:gap-3" } : {})}
           aria-label={t.a11y_main_navigation}
         >
           {/* Dashboard */}
