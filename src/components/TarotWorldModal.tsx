@@ -307,11 +307,17 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
       setAiError(null);
       aiTextRef.current = "";
 
-      const cards = drawnCards.map((c, i) => ({
-        hebrewName: c.hebrewName,
-        symbol: c.symbol,
-        positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
-      }));
+      const cards = drawnCards.map((c, i) => {
+        const majorCard = findMajorArcanaByEnglishName(c.name);
+        const localizedName = majorCard ? getMajorCardName(majorCard, language) : c.hebrewName;
+        return {
+          hebrewName: c.hebrewName,
+          name: c.name,
+          localizedName,
+          symbol: c.symbol,
+          positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
+        };
+      });
 
       streamTarotReading(
         selectedSpread.key,
@@ -322,8 +328,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         },
         () => {
           setAiLoading(false);
-          setActiveReading({ type: "tarotWorld", label: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`, summary: aiTextRef.current });
-          // Record cards in tarot memory
+          const spreadLabel = nameMap[selectedSpread.key] || selectedSpread.hebrewName;
+          setActiveReading({ type: "tarotWorld", label: `${t.readings_type_tarot} — ${spreadLabel}`, summary: aiTextRef.current });
           tarotMemory.recordReading(
             selectedSpread.key,
             drawnCards.map((c, i) => ({
@@ -333,18 +339,19 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
               positionLabel: posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i],
             }))
           );
-          // Record in mystical profile
           mysticalProfile.recordTarotCards(
             drawnCards.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
             selectedSpread.key
           );
-          // Save reading
           readingsStorage.save({
             type: "tarot",
-            title: `טארוט — ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}`,
-            subtitle: drawnCards.map(c => c.hebrewName).join(" • "),
+            title: `${t.readings_type_tarot} — ${spreadLabel}`,
+            subtitle: drawnCards.map(c => {
+              const mc = findMajorArcanaByEnglishName(c.name);
+              return mc ? getMajorCardName(mc, language) : c.hebrewName;
+            }).join(" • "),
             symbol: selectedSpread.icon,
-            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.hebrewName), aiReading: aiTextRef.current, userQuestion: userQuestion || undefined },
+            data: { spread: selectedSpread.key, cards: drawnCards.map(c => c.name), aiReading: aiTextRef.current, userQuestion: userQuestion || undefined },
           });
         },
         (err) => {
