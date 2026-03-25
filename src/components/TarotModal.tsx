@@ -151,7 +151,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const isMobileTarot = useIsMobile();
   const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
-  const [cards, setCards] = useState<MajorArcanaCard[] | null>(null);
+  const [cards, setCards] = useState<ReadingCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTablePhase, setIsTablePhase] = useState(false);
   const [isShufflePhase, setIsShufflePhase] = useState(false);
