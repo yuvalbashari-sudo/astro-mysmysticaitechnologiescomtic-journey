@@ -1,6 +1,6 @@
 /**
  * Unified tarot card model combining Major and Minor Arcana.
- * Single import for the gallery and any future features.
+ * STRICT: Only cards with real uploaded image assets are included.
  */
 import type { Language } from "@/i18n/types";
 import { majorArcanaCards, type MajorArcanaCard } from "./majorArcanaCards";
@@ -45,9 +45,21 @@ function minorToUnified(card: MinorArcanaCard): UnifiedTarotCard {
   };
 }
 
+// Import card-back to identify placeholder images that should be excluded
+import cardBackImg from "@/assets/tarot/card-back.jpg";
+
+/**
+ * STRICT ASSET CONTROL: Only include cards whose image is a real uploaded asset,
+ * not the card-back placeholder.
+ */
+const majorCards = majorArcanaCards.map(toUnified);
+const minorCards = minorArcanaCards
+  .filter((c) => c.image !== cardBackImg)
+  .map(minorToUnified);
+
 export const allTarotCards: UnifiedTarotCard[] = [
-  ...majorArcanaCards.map(toUnified),
-  ...minorArcanaCards.map(minorToUnified),
+  ...majorCards,
+  ...minorCards,
 ];
 
 export function filterBySuit(suit: TarotSuitFilter): UnifiedTarotCard[] {
@@ -64,3 +76,9 @@ export const suitFilterLabels: Record<TarotSuitFilter, Record<Language, string>>
   wands: { he: "מטות", en: "Wands", ru: "Жезлы", ar: "العصي" },
   pentacles: { he: "מטבעות", en: "Pentacles", ru: "Пентакли", ar: "النجوم" },
 };
+
+/** Returns only suit filters that have at least one card with a real asset */
+export function getAvailableFilters(): TarotSuitFilter[] {
+  const all: TarotSuitFilter[] = ["all", "major", "swords", "cups", "wands", "pentacles"];
+  return all.filter((f) => filterBySuit(f).length > 0);
+}

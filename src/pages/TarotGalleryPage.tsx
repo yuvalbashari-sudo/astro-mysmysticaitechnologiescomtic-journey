@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { allTarotCards, filterBySuit, suitFilterLabels, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
+import { filterBySuit, suitFilterLabels, getAvailableFilters, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
 import TarotGalleryCard from "@/components/TarotGalleryCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
@@ -21,11 +21,10 @@ const introText: Record<string, string> = {
   ar: "اكتشف جميع بطاقات التاروت الـ78 ومعانيها.",
 };
 
-const filters: TarotSuitFilter[] = ["all", "major", "swords", "cups", "wands", "pentacles"];
-
 export default function TarotGalleryPage() {
   const { language, dir } = useLanguage();
   const navigate = useNavigate();
+  const availableFilters = useMemo(() => getAvailableFilters(), []);
   const [activeFilter, setActiveFilter] = useState<TarotSuitFilter>("all");
   const [selectedCard, setSelectedCard] = useState<UnifiedTarotCard | null>(null);
 
@@ -70,7 +69,7 @@ export default function TarotGalleryPage() {
           aria-label="Filter cards"
         >
           <div className="flex gap-2 overflow-x-auto no-scrollbar justify-center">
-            {filters.map((f) => (
+            {availableFilters.map((f) => (
               <button
                 key={f}
                 role="tab"
