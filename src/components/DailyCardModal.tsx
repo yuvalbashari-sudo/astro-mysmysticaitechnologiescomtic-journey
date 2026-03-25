@@ -127,7 +127,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const cardName = useCardName();
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("ready");
-  const [card, setCard] = useState<TarotWorldCard | null>(null);
+  const [card, setCard] = useState<ReadingCard | null>(null);
   const [copied, setCopied] = useState(false);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
