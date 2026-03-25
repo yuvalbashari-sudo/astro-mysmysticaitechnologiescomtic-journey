@@ -79,8 +79,8 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
 
   const handleDraw = useCallback(() => {
     if (drawn) return;
-    const idx = getDailyCardIndex(majorArcanaCards.length);
-    const selectedCard = majorArcanaCards[idx];
+    const idx = getDailyCardIndex(allReadingCards.length);
+    const selectedCard = allReadingCards[idx];
     setCard(selectedCard);
     setDrawn(true);
     setTimeout(() => setFlipped(true), 600);
