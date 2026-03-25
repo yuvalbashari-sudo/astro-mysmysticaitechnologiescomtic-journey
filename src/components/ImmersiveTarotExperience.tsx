@@ -493,9 +493,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
     const cards = Array.from(selectedCardIndices).map(i => drawnCards[i]);
     const cardsPayload = cards.map((c, i) => ({
-      hebrewName: c.hebrewName,
+      hebrewName: c.name.he,
       symbol: c.symbol,
-      name: c.name,
+      name: c.name.en,
+      localizedName: getCardName(c, language),
       positionLabel: posLabels[i] || "",
     }));
 
@@ -524,9 +525,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
-          subtitle: cards.map(c => cardName(c.name, c.hebrewName)).join(" • "),
+          subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
           symbol: "🔮",
-          data: { spread: spreadType, cards },
+          data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
         });
       },
       (err) => { setAiLoading(false); toast(err); },
