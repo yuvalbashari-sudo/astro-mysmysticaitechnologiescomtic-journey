@@ -68,14 +68,17 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
   useEffect(() => {
     const saved = getSavedDailyCard();
     if (saved) {
+      // Card already assigned for today — load it but replay reveal animation
       setCard(saved.card);
       setDrawn(true);
-      setFlipped(true);
+      // Short delay before flip to let the collapsed state render first
+      const timer = setTimeout(() => setFlipped(true), 700);
+      return () => clearTimeout(timer);
     }
   }, []);
 
   const handleDraw = useCallback(() => {
-    if (drawn) return; // already drawn, don't re-draw
+    if (drawn) return;
     const idx = getDailyCardIndex(majorArcana.length);
     const selectedCard = majorArcana[idx];
     setCard(selectedCard);
