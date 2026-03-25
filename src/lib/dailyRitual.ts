@@ -1,4 +1,4 @@
-import { drawTarotCards, type TarotCard } from "@/data/tarotData";
+import { majorArcanaCards, type MajorArcanaCard } from "@/data/majorArcanaCards";
 
 const STORAGE_KEY = "astrologai_daily_ritual";
 
