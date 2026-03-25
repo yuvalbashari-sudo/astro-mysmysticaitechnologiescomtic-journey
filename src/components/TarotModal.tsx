@@ -158,7 +158,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [isQuestionPhase, setIsQuestionPhase] = useState(false);
   const [isAnalysisPhase, setIsAnalysisPhase] = useState(false);
   const [userQuestion, setUserQuestion] = useState("");
-  const [tableCards, setTableCards] = useState<MajorArcanaCard[]>([]);
+  const [tableCards, setTableCards] = useState<ReadingCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
