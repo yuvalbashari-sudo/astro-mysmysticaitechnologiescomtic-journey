@@ -866,7 +866,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       const h = w * 1.55;
                       return (
                         <motion.div
-                          key={card.name}
+                          key={card.name.en}
                           className="relative"
                           style={{ width: w, height: h }}
                           initial={{ opacity: 0, y: 40, rotateY: 180 }}
@@ -887,8 +887,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           />
                           <div className="relative w-full h-full">
                             <img
-                              src={tarotCardImages[card.name] || cardBack}
-                              alt={cardName(card.name, card.hebrewName)}
+                              src={tarotCardImages[card.name.en] || cardBack}
+                              alt={cardName(card.name.en, card.name.he)}
                               className="w-full h-full object-cover rounded-lg"
                               style={{
                                 imageRendering: "-webkit-optimize-contrast" as any,
@@ -945,7 +945,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             transition={{ delay: i * 0.4 + 1 }}
                           >
                             <span className="font-heading text-sm md:text-base text-gold/85">
-                              {cardName(card.name, card.hebrewName)}
+                              {cardName(card.name.en, card.name.he)}
                             </span>
                           </motion.div>
                         </motion.div>
@@ -1008,7 +1008,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           const h = w * 1.55;
                           return (
                             <motion.div
-                              key={card.name}
+                              key={card.name.en}
                               className="relative flex flex-col items-center"
                               initial={{ opacity: 0, y: 30, scale: 0.85 }}
                               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1016,8 +1016,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             >
                               <div className="relative" style={{ width: w, height: h }}>
                                 <img
-                                  src={tarotCardImages[card.name] || cardBack}
-                                  alt={cardName(card.name, card.hebrewName)}
+                                  src={tarotCardImages[card.name.en] || cardBack}
+                                  alt={cardName(card.name.en, card.name.he)}
                                   className="w-full h-full object-cover rounded-xl"
                                   style={{
                                     imageRendering: "-webkit-optimize-contrast" as any,
@@ -1039,7 +1039,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 + i * 0.15 }}
                               >
-                                {cardName(card.name, card.hebrewName)}
+                                {cardName(card.name.en, card.name.he)}
                               </motion.span>
                             </motion.div>
                           );
@@ -1400,7 +1400,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           const h = w * 1.55;
                           return (
                             <motion.div
-                              key={card.name}
+                              key={card.name.en}
                               className="relative flex flex-col items-center"
                               initial={{ opacity: 0, y: 30, scale: 0.85 }}
                               animate={{ opacity: 1, y: isCenter ? -20 : 0, scale: 1 }}
@@ -1415,8 +1415,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               />
                               <div className="relative" style={{ width: w, height: h }}>
                                 <img
-                                  src={tarotCardImages[card.name] || cardBack}
-                                  alt={cardName(card.name, card.hebrewName)}
+                                  src={tarotCardImages[card.name.en] || cardBack}
+                                  alt={cardName(card.name.en, card.name.he)}
                                   className="w-full h-full object-cover rounded-xl"
                                   style={{
                                     imageRendering: "-webkit-optimize-contrast" as any,
@@ -1448,7 +1448,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 + i * 0.15 }}
                               >
-                                {cardName(card.name, card.hebrewName)}
+                                {cardName(card.name.en, card.name.he)}
                               </motion.span>
                             </motion.div>
                           );
