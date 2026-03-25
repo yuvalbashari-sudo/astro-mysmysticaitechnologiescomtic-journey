@@ -141,8 +141,8 @@ const FloatingCard = ({
     }
   }, [isFlipped, showFront]);
 
-  const hasCustomImage = !!tarotCardImages[card.name];
-  const frontImgSrc = tarotCardImages[card.name] || cardBack;
+  const hasCustomImage = !!tarotCardImages[card.name.en];
+  const frontImgSrc = tarotCardImages[card.name.en] || card.image || cardBack;
 
   return (
     <motion.div
