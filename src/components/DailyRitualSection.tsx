@@ -37,8 +37,7 @@ const DailyRitualSection = () => {
     setTimeout(() => setCardFlipped(true), 400);
   }, [revealed]);
 
-  const cardKey = ritual.card.name.toLowerCase().replace(/^the\s+/, "").replace(/\s+/g, "-");
-  const cardImage = tarotCardImages[cardKey] || cardBack;
+  const cardImage = ritual.card.image || cardBack;
 
   return (
     <section
