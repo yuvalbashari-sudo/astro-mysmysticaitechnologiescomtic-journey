@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { allTarotCards, filterBySuit, suitFilterLabels, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
+import { filterBySuit, suitFilterLabels, getAvailableFilters, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
 import TarotGalleryCard from "@/components/TarotGalleryCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
