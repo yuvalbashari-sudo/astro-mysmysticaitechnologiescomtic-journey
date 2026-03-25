@@ -60,6 +60,7 @@ interface Props {
 
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const cardName = useCardName();
   const [card, setCard] = useState<ReadingCard | null>(null);
   const [flipped, setFlipped] = useState(false);
