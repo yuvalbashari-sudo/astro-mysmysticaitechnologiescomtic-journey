@@ -368,11 +368,13 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
                   key={i}
                   onClick={() => sendMessage(q)}
                   disabled={isStreaming || isLimitReached}
-                  className="text-lg px-5 py-3 rounded-full font-body transition-all focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40"
+                  className="text-lg px-5 py-3 rounded-full font-body transition-all focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 text-start leading-snug"
                   style={{
                     background: "hsl(var(--gold) / 0.07)",
                     border: "1px solid hsl(var(--gold) / 0.14)",
                     color: "hsl(var(--gold) / 0.7)",
+                    maxWidth: "100%",
+                    wordBreak: "break-word",
                   }}
                   whileHover={{ scale: 1.04, background: "hsl(var(--gold) / 0.12)" }}
                   whileTap={{ scale: 0.96 }}

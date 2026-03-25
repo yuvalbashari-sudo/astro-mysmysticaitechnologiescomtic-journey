@@ -404,11 +404,13 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                           key={i}
                           onClick={() => void sendMessage(suggestion)}
                           disabled={isStreaming || isLimitReached}
-                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100"
+                          className="text-sm px-4 py-2.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100 text-start leading-snug"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",
                             color: "hsl(var(--gold) / 0.6)",
+                            maxWidth: "100%",
+                            wordBreak: "break-word",
                           }}
                         >
                           {suggestion}
