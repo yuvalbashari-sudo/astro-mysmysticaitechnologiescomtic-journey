@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Clock, Sparkles } from "lucide-react";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
