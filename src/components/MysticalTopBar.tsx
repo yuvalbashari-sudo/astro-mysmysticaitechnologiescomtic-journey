@@ -15,7 +15,7 @@ interface Props {
 }
 
 const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, dir } = useLanguage();
   const { scale, setScale } = useFontScale();
   const t = useT();
   const [langOpen, setLangOpen] = useState(false);
@@ -105,7 +105,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </motion.button>
           )}
 
-          <div ref={langContainerRef} className="relative" style={{ zIndex: langOpen ? 99999 : undefined }}>
+          <div
+            ref={langContainerRef}
+            className="relative isolate"
+            style={{ zIndex: langOpen ? 99999 : undefined }}
+          >
             <motion.button
               type="button"
               onClick={() => setLangOpen((prev) => !prev)}
@@ -132,13 +136,17 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 mt-2 rounded-xl overflow-hidden backdrop-blur-xl"
+                  className="absolute overflow-hidden rounded-2xl border border-border/80 bg-card/95 p-1.5 text-foreground shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-card/90"
                   style={{
+                    top: "calc(100% + 0.35rem)",
+                    insetInlineEnd: 0,
                     zIndex: 99999,
-                    background: "linear-gradient(145deg, hsl(222 40% 8%), hsl(222 47% 6%))",
-                    border: "1px solid hsl(var(--gold) / 0.3)",
-                    boxShadow: "0 12px 40px hsl(0 0% 0% / 0.6), 0 0 0 1px hsl(222 40% 12% / 0.5)",
-                    minWidth: "170px",
+                    minWidth: "11rem",
+                    maxWidth: "min(18rem, calc(100vw - 1rem))",
+                    maxHeight: "min(70vh, 20rem)",
+                    boxShadow: "0 20px 50px hsl(var(--deep-blue) / 0.68), 0 0 0 1px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--foreground) / 0.04)",
+                    background: "linear-gradient(180deg, hsl(var(--card) / 0.98), hsl(var(--deep-blue) / 0.96))",
+                    transformOrigin: dir === "rtl" ? "top left" : "top right",
                   }}
                   role="listbox"
                   aria-label={t.a11y_language_selector}
@@ -153,11 +161,16 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                         setLanguage(lang);
                         setLangOpen(false);
                       }}
-                      className={`w-full flex items-center gap-3 px-5 py-3 text-sm font-body transition-colors cursor-pointer ${
+                      className={`flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body transition-colors cursor-pointer ${
                         lang === language
-                          ? "text-gold bg-gold/10"
-                          : "text-foreground/70 hover:text-gold hover:bg-gold/5"
+                          ? "bg-accent/25 text-foreground"
+                          : "bg-transparent text-foreground hover:bg-accent/12 hover:text-foreground"
                       }`}
+                      style={{
+                        border: lang === language
+                          ? "1px solid hsl(var(--gold) / 0.22)"
+                          : "1px solid transparent",
+                      }}
                       aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
                     >
                       <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
