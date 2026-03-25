@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { filterBySuit, suitFilterLabels, getAvailableFilters, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
+import { allTarotCards, filterBySuit, suitFilterLabels, getAvailableFilters, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
 import TarotGalleryCard from "@/components/TarotGalleryCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
@@ -14,11 +14,11 @@ const sectionTitle: Record<string, string> = {
   ar: "بطاقات التاروت",
 };
 
-const introText: Record<string, string> = {
-  he: "גלו את כל 78 קלפי הטארוט ומשמעותם.",
-  en: "Explore all 78 tarot cards and their meanings.",
-  ru: "Изучите все 78 карт Таро и их значения.",
-  ar: "اكتشف جميع بطاقات التاروت الـ78 ومعانيها.",
+const introText: Record<string, (count: number) => string> = {
+  he: (count) => `גלו את ${count} קלפי הטארוט הזמינים בגלריה.`,
+  en: (count) => `Explore the ${count} tarot cards available in the gallery.`,
+  ru: (count) => `Изучите ${count} карт Таро, доступных в галерее.`,
+  ar: (count) => `اكتشف ${count} من بطاقات التاروت المتاحة في المعرض.`,
 };
 
 export default function TarotGalleryPage() {
@@ -58,7 +58,7 @@ export default function TarotGalleryPage() {
             {sectionTitle[language]}
           </h1>
           <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
-            {introText[language]}
+            {introText[language](allTarotCards.length)}
           </p>
         </header>
 
