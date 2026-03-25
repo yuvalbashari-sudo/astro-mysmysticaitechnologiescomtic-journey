@@ -94,8 +94,7 @@ export function getDailyRitual(): DailyRitualData & { isNew: boolean } {
 
   // Generate new daily ritual
   const idx = dayIndex();
-  const cards = drawTarotCards(22); // get all, pick deterministically
-  const card = cards[idx % cards.length];
+  const card = majorArcanaCards[idx % majorArcanaCards.length];
   const message = DAILY_MESSAGES[idx % DAILY_MESSAGES.length];
   const energy = ENERGY_INSIGHTS[idx % ENERGY_INSIGHTS.length];
 
