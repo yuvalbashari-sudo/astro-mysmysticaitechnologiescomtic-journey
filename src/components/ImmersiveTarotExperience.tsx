@@ -545,6 +545,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
   const handleClose = useCallback(() => {
     onClose();
+    setAdvisorOpen(false);
     setTimeout(() => {
       setPhase("question");
       setSelectedQuestion(null);
