@@ -1,30 +1,138 @@
-/**
- * Tarot gallery cards built strictly from uploaded tarot assets.
- * Uploaded filenames are the single source of truth for inclusion.
- */
 import type { Language } from "@/i18n/types";
 
 export type MinorArcanaSuit = "swords" | "cups" | "wands" | "pentacles";
-export type TarotSuitFilter = "all" | "major" | MinorArcanaSuit;
+export type TarotSuit = "major" | MinorArcanaSuit;
+export type TarotSuitFilter = "all" | TarotSuit;
 
-type TarotSuit = "major" | MinorArcanaSuit;
 type LocalizedText = Record<Language, string>;
 
-export interface UnifiedTarotCard {
-  id: string;
-  slug: string;
-  name: LocalizedText;
-  image: string;
-  suit: TarotSuit;
-  shortMeaning: LocalizedText;
-}
+type TarotAssetInventory = Record<TarotSuit, TarotGalleryCardRecord[]>;
 
-interface MajorDefinition {
+interface MajorArcanaDefinition {
   number: number;
   names: LocalizedText;
 }
 
-const MAJOR_DEFINITIONS: Record<string, MajorDefinition> = {
+interface ParsedAssetIdentity {
+  slug: string;
+  suit: TarotSuit;
+  names: LocalizedText;
+  shortMeaning: LocalizedText;
+  sortOrder: number;
+}
+
+export interface UnifiedTarotCard {
+  id: string;
+  slug: string;
+  suit: TarotSuit;
+  image: string;
+  assetPath: string;
+  name: LocalizedText;
+  shortMeaning: LocalizedText;
+  ctaLabel: LocalizedText;
+}
+
+interface TarotGalleryCardRecord extends UnifiedTarotCard {
+  sortOrder: number;
+}
+
+export const tarotGalleryTranslations = {
+  sectionTitle: {
+    he: "קלפי טארוט",
+    en: "Tarot Cards",
+    ru: "Карты Таро",
+    ar: "بطاقات التاروت",
+  },
+  introText: {
+    he: "גלו את כל קלפי הטארוט לפי ארקנה גדולה וארבע הסדרות.",
+    en: "Explore all tarot cards by Major Arcana and the four suits.",
+    ru: "Изучите все карты Таро по Старшим Арканам и четырем мастям.",
+    ar: "اكتشف جميع بطاقات التاروت حسب الأركانا الكبرى والسلاسل الأربع.",
+  },
+  ctaLabel: {
+    he: "לצפייה בקלף",
+    en: "View Card",
+    ru: "Открыть карту",
+    ar: "عرض البطاقة",
+  },
+  backLabel: {
+    he: "חזרה",
+    en: "Back",
+    ru: "Назад",
+    ar: "رجوع",
+  },
+  filterAriaLabel: {
+    he: "סינון קלפים",
+    en: "Filter cards",
+    ru: "Фильтр карт",
+    ar: "تصفية البطاقات",
+  },
+  countLabel: {
+    he: "קלפים",
+    en: "cards",
+    ru: "карт",
+    ar: "بطاقة",
+  },
+  modalComingSoon: {
+    he: "דף הקלף המלא יתווסף בקרוב ✦",
+    en: "Full card page coming soon ✦",
+    ru: "Полная страница карты скоро появится ✦",
+    ar: "صفحة البطاقة الكاملة ستضاف قريباً ✦",
+  },
+  filterLabel: {
+    all: { he: "כל הקלפים", en: "All Cards", ru: "Все карты", ar: "جميع البطاقات" },
+    major: { he: "ארקנה עליונה", en: "Major Arcana", ru: "Старшие Арканы", ar: "الأركانا الكبرى" },
+    swords: { he: "חרבות", en: "Swords", ru: "Мечи", ar: "السيوف" },
+    cups: { he: "גביעים", en: "Cups", ru: "Кубки", ar: "الكؤوس" },
+    wands: { he: "מטות", en: "Wands", ru: "Жезлы", ar: "العصي" },
+    pentacles: { he: "מטבעות", en: "Pentacles", ru: "Пентакли", ar: "البنتاكل" },
+  },
+  shortMeaningBySuit: {
+    major: {
+      he: "ארקנה עליונה — מסר רוחני עמוק",
+      en: "Major Arcana — a profound spiritual message",
+      ru: "Старший Аркан — глубокое духовное послание",
+      ar: "الأركانا الكبرى — رسالة روحية عميقة",
+    },
+    swords: {
+      he: "מחשבה, אמת ואתגר פנימי",
+      en: "Thought, truth, and inner challenge",
+      ru: "Мысль, истина и внутренний вызов",
+      ar: "فكر، حقيقة، وتحدٍ داخلي",
+    },
+    cups: {
+      he: "רגש, אינטואיציה וקשרים",
+      en: "Emotion, intuition, and relationships",
+      ru: "Эмоции, интуиция и отношения",
+      ar: "عاطفة، حدس، وعلاقات",
+    },
+    wands: {
+      he: "אש פנימית, רצון ותנועה",
+      en: "Inner fire, will, and momentum",
+      ru: "Внутренний огонь, воля и движение",
+      ar: "نار داخلية، إرادة، وحركة",
+    },
+    pentacles: {
+      he: "חומר, יציבות ושפע מעשי",
+      en: "Material life, stability, and practical abundance",
+      ru: "Материальный мир, стабильность и практическое изобилие",
+      ar: "الحياة المادية، الاستقرار، والوفرة العملية",
+    },
+  },
+} as const;
+
+const tarotAssetModules = import.meta.glob("/src/assets/tarot/**/*.{png,jpg,jpeg,webp,avif}", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const NON_CARD_ASSET_SLUGS = new Set(["card-back", "card-frame"]);
+const FILTER_ORDER: TarotSuitFilter[] = ["all", "major", "swords", "cups", "wands", "pentacles"];
+const SUIT_ORDER: Record<TarotSuit, number> = { major: 0, swords: 1, cups: 2, wands: 3, pentacles: 4 };
+const MINOR_RANKS = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "knight", "prince", "queen", "king"] as const;
+type MinorRank = typeof MINOR_RANKS[number];
+const RANK_ORDER = new Map<MinorRank, number>(MINOR_RANKS.map((rank, index) => [rank, index + 1]));
+const MAJOR_ARCANA: Record<string, MajorArcanaDefinition> = {
   fool: { number: 0, names: { he: "השוטה", en: "The Fool", ru: "Шут", ar: "الأحمق" } },
   magician: { number: 1, names: { he: "הקוסם", en: "The Magician", ru: "Маг", ar: "الساحر" } },
   "high-priestess": { number: 2, names: { he: "הכוהנת הגדולה", en: "The High Priestess", ru: "Верховная Жрица", ar: "الكاهنة العظمى" } },
@@ -48,10 +156,6 @@ const MAJOR_DEFINITIONS: Record<string, MajorDefinition> = {
   judgement: { number: 20, names: { he: "השיפוט", en: "Judgement", ru: "Суд", ar: "الحكم" } },
   world: { number: 21, names: { he: "העולם", en: "The World", ru: "Мир", ar: "العالم" } },
 };
-
-const MINOR_RANKS = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "knight", "prince", "queen", "king"] as const;
-type MinorRank = typeof MINOR_RANKS[number];
-
 const MINOR_RANK_LABELS: Record<MinorRank, LocalizedText> = {
   ace: { he: "אס", en: "Ace", ru: "Туз", ar: "آس" },
   two: { he: "שני", en: "Two", ru: "Двойка", ar: "اثنان" },
@@ -68,66 +172,42 @@ const MINOR_RANK_LABELS: Record<MinorRank, LocalizedText> = {
   queen: { he: "מלכת", en: "Queen", ru: "Королева", ar: "ملكة" },
   king: { he: "מלך", en: "King", ru: "Король", ar: "ملك" },
 };
-
 const MINOR_SUIT_LABELS: Record<MinorArcanaSuit, LocalizedText> = {
   swords: { he: "חרבות", en: "Swords", ru: "Мечей", ar: "السيوف" },
   cups: { he: "גביעים", en: "Cups", ru: "Кубков", ar: "الكؤوس" },
   wands: { he: "מטות", en: "Wands", ru: "Жезлов", ar: "العصي" },
   pentacles: { he: "מטבעות", en: "Pentacles", ru: "Пентаклей", ar: "البنتاكل" },
 };
-
-const SUIT_MEANINGS: Record<TarotSuit, LocalizedText> = {
-  major: {
-    he: "ארקנה עליונה — מסר רוחני עמוק",
-    en: "Major Arcana — a profound spiritual message",
-    ru: "Старший Аркан — глубокое духовное послание",
-    ar: "الأركانا الكبرى — رسالة روحية عميقة",
-  },
-  swords: {
-    he: "מחשבה, אמת ואתגר פנימי",
-    en: "Thought, truth, and inner challenge",
-    ru: "Мысль, истина и внутренний вызов",
-    ar: "فكر، حقيقة، وتحدٍ داخلي",
-  },
-  cups: {
-    he: "רגש, אינטואיציה וקשרים",
-    en: "Emotion, intuition, and relationships",
-    ru: "Эмоции, интуиция и отношения",
-    ar: "عاطفة، حدس، وعلاقات",
-  },
-  wands: {
-    he: "אש פנימית, רצון ותנועה",
-    en: "Inner fire, will, and momentum",
-    ru: "Внутренний огонь, воля и движение",
-    ar: "نار داخلية، إرادة، وحركة",
-  },
-  pentacles: {
-    he: "חומר, יציבות ושפע מעשי",
-    en: "Material life, stability, and practical abundance",
-    ru: "Материальный мир, стабильность и практическое изобилие",
-    ar: "الحياة المادية، الاستقرار، والوفرة العملية",
-  },
+const SUIT_FOLDER_ALIASES: Record<string, TarotSuit> = {
+  major: "major",
+  "major-arcana": "major",
+  majors: "major",
+  swords: "swords",
+  cups: "cups",
+  wands: "wands",
+  pentacles: "pentacles",
 };
 
-const tarotAssetModules = import.meta.glob("/src/assets/tarot/*.{png,jpg,jpeg,webp,avif}", {
-  eager: true,
-  import: "default",
-}) as Record<string, string>;
+function normalizeToken(value: string): string {
+  return value.toLowerCase().replace(/\.[^.]+$/, "").replace(/[_\s]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+}
 
-const NON_CARD_ASSET_SLUGS = new Set(["card-back", "card-frame"]);
-const FILTER_ORDER: TarotSuitFilter[] = ["all", "major", "swords", "cups", "wands", "pentacles"];
-const SUIT_ORDER: Record<TarotSuit, number> = { major: 0, swords: 1, cups: 2, wands: 3, pentacles: 4 };
-const RANK_ORDER = new Map<MinorRank, number>(MINOR_RANKS.map((rank, index) => [rank, index + 1]));
+function getPathContext(filePath: string) {
+  const segments = filePath.split("/").map(normalizeToken).filter(Boolean);
+  const basename = segments.at(-1) ?? "";
+  const folders = segments.slice(0, -1);
+  const folderSuit = [...folders].reverse().find((segment) => segment in SUIT_FOLDER_ALIASES);
 
-function getFileSlug(filePath: string): string {
-  const fileName = filePath.split("/").pop() ?? "";
-  const basename = fileName.replace(/\.[^.]+$/, "");
-  return basename.toLowerCase().replace(/[_\s]+/g, "-").replace(/-+/g, "-").trim();
+  return {
+    basename,
+    folderSuit: folderSuit ? SUIT_FOLDER_ALIASES[folderSuit] : null,
+  };
 }
 
 function canonicalizeMajorSlug(slug: string): string {
-  if (slug.startsWith("the-") && MAJOR_DEFINITIONS[slug.slice(4)]) {
-    return slug.slice(4);
+  if (slug.startsWith("the-")) {
+    const withoutArticle = slug.slice(4);
+    if (MAJOR_ARCANA[withoutArticle]) return withoutArticle;
   }
   return slug;
 }
@@ -135,10 +215,23 @@ function canonicalizeMajorSlug(slug: string): string {
 function parseMinorSlug(slug: string): { rank: MinorRank; suit: MinorArcanaSuit } | null {
   const match = slug.match(/^(ace|two|three|four|five|six|seven|eight|nine|ten|knight|prince|queen|king)-of-(swords|cups|wands|pentacles)$/);
   if (!match) return null;
+  return { rank: match[1] as MinorRank, suit: match[2] as MinorArcanaSuit };
+}
+
+function resolveMinorSlug(basename: string, folderSuit: TarotSuit | null): { rank: MinorRank; suit: MinorArcanaSuit; slug: string } | null {
+  const direct = parseMinorSlug(basename);
+  if (direct) {
+    if (folderSuit && folderSuit !== direct.suit) return null;
+    return { ...direct, slug: basename };
+  }
+
+  if (!folderSuit || folderSuit === "major") return null;
+  if (!MINOR_RANKS.includes(basename as MinorRank)) return null;
 
   return {
-    rank: match[1] as MinorRank,
-    suit: match[2] as MinorArcanaSuit,
+    rank: basename as MinorRank,
+    suit: folderSuit,
+    slug: `${basename}-of-${folderSuit}`,
   };
 }
 
@@ -151,74 +244,95 @@ function createMinorNames(rank: MinorRank, suit: MinorArcanaSuit): LocalizedText
   };
 }
 
-function buildCardFromAsset(filePath: string, image: string): UnifiedTarotCard | null {
-  const rawSlug = getFileSlug(filePath);
-  if (NON_CARD_ASSET_SLUGS.has(rawSlug)) return null;
+function parseAssetIdentity(filePath: string): ParsedAssetIdentity | null {
+  const { basename, folderSuit } = getPathContext(filePath);
+  if (!basename || NON_CARD_ASSET_SLUGS.has(basename)) return null;
 
-  const majorSlug = canonicalizeMajorSlug(rawSlug);
-  const major = MAJOR_DEFINITIONS[majorSlug];
-  if (major) {
+  const majorSlug = canonicalizeMajorSlug(basename);
+  const major = MAJOR_ARCANA[majorSlug];
+  if (major && (!folderSuit || folderSuit === "major")) {
     return {
-      id: majorSlug,
       slug: majorSlug,
-      name: major.names,
-      image,
       suit: "major",
-      shortMeaning: SUIT_MEANINGS.major,
+      names: major.names,
+      shortMeaning: tarotGalleryTranslations.shortMeaningBySuit.major,
+      sortOrder: major.number,
     };
   }
 
-  const minor = parseMinorSlug(rawSlug);
+  const minor = resolveMinorSlug(basename, folderSuit);
   if (!minor) return null;
 
   return {
-    id: rawSlug,
-    slug: rawSlug,
-    name: createMinorNames(minor.rank, minor.suit),
-    image,
+    slug: minor.slug,
     suit: minor.suit,
-    shortMeaning: SUIT_MEANINGS[minor.suit],
+    names: createMinorNames(minor.rank, minor.suit),
+    shortMeaning: tarotGalleryTranslations.shortMeaningBySuit[minor.suit],
+    sortOrder: RANK_ORDER.get(minor.rank) ?? 999,
   };
 }
 
-function getSortValue(card: UnifiedTarotCard): number {
-  if (card.suit === "major") {
-    return MAJOR_DEFINITIONS[card.slug]?.number ?? 999;
-  }
-
-  const minor = parseMinorSlug(card.slug);
-  if (!minor) return 999;
-  return RANK_ORDER.get(minor.rank) ?? 999;
+function createCardRecord(filePath: string, image: string, identity: ParsedAssetIdentity): TarotGalleryCardRecord {
+  return {
+    id: identity.slug,
+    slug: identity.slug,
+    suit: identity.suit,
+    image,
+    assetPath: filePath,
+    name: identity.names,
+    shortMeaning: identity.shortMeaning,
+    ctaLabel: tarotGalleryTranslations.ctaLabel,
+    sortOrder: identity.sortOrder,
+  };
 }
 
-function sortCards(a: UnifiedTarotCard, b: UnifiedTarotCard): number {
-  const suitDiff = SUIT_ORDER[a.suit] - SUIT_ORDER[b.suit];
-  if (suitDiff !== 0) return suitDiff;
+function createEmptyInventory(): TarotAssetInventory {
+  return {
+    major: [],
+    swords: [],
+    cups: [],
+    wands: [],
+    pentacles: [],
+  };
+}
 
-  const valueDiff = getSortValue(a) - getSortValue(b);
-  if (valueDiff !== 0) return valueDiff;
+function sortCards(a: TarotGalleryCardRecord, b: TarotGalleryCardRecord): number {
+  const suitDifference = SUIT_ORDER[a.suit] - SUIT_ORDER[b.suit];
+  if (suitDifference !== 0) return suitDifference;
+
+  const orderDifference = a.sortOrder - b.sortOrder;
+  if (orderDifference !== 0) return orderDifference;
 
   return a.slug.localeCompare(b.slug);
 }
 
-export const allTarotCards: UnifiedTarotCard[] = Object.entries(tarotAssetModules)
-  .map(([filePath, image]) => buildCardFromAsset(filePath, image))
-  .filter((card): card is UnifiedTarotCard => card !== null)
-  .sort(sortCards);
+function buildTarotAssetInventory(): TarotAssetInventory {
+  const inventory = createEmptyInventory();
+
+  Object.entries(tarotAssetModules)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .forEach(([filePath, image]) => {
+      const identity = parseAssetIdentity(filePath);
+      if (!identity) return;
+      inventory[identity.suit].push(createCardRecord(filePath, image, identity));
+    });
+
+  (Object.keys(inventory) as TarotSuit[]).forEach((suit) => {
+    inventory[suit].sort(sortCards);
+  });
+
+  return inventory;
+}
+
+export const tarotAssetInventory = buildTarotAssetInventory();
+export const allTarotCards: UnifiedTarotCard[] = FILTER_ORDER
+  .filter((filter): filter is TarotSuit => filter !== "all")
+  .flatMap((suit) => tarotAssetInventory[suit]);
 
 export function filterBySuit(suit: TarotSuitFilter): UnifiedTarotCard[] {
   if (suit === "all") return allTarotCards;
-  return allTarotCards.filter((card) => card.suit === suit);
+  return tarotAssetInventory[suit];
 }
-
-export const suitFilterLabels: Record<TarotSuitFilter, LocalizedText> = {
-  all: { he: "כל הקלפים", en: "All Cards", ru: "Все карты", ar: "جميع البطاقات" },
-  major: { he: "ארקנה עליונה", en: "Major Arcana", ru: "Старшие Арканы", ar: "الأركانا الكبرى" },
-  swords: { he: "חרבות", en: "Swords", ru: "Мечи", ar: "السيوف" },
-  cups: { he: "גביעים", en: "Cups", ru: "Кубки", ar: "الكؤوس" },
-  wands: { he: "מטות", en: "Wands", ru: "Жезлы", ar: "العصي" },
-  pentacles: { he: "מטבעות", en: "Pentacles", ru: "Пентакли", ar: "البنتاكل" },
-};
 
 export function getAvailableFilters(): TarotSuitFilter[] {
   return FILTER_ORDER.filter((filter) => filterBySuit(filter).length > 0);

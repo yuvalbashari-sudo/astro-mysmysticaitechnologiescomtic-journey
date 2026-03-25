@@ -1,25 +1,11 @@
 import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { allTarotCards, filterBySuit, suitFilterLabels, getAvailableFilters, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
+import { allTarotCards, filterBySuit, getAvailableFilters, tarotGalleryTranslations, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
 import TarotGalleryCard from "@/components/TarotGalleryCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const sectionTitle: Record<string, string> = {
-  he: "קלפי טארוט",
-  en: "Tarot Cards",
-  ru: "Карты Таро",
-  ar: "بطاقات التاروت",
-};
-
-const introText: Record<string, string> = {
-  he: "גלו את כל קלפי הטארוט לפי ארקנה גדולה וארבע הסדרות.",
-  en: "Explore all tarot cards by Major Arcana and the four suits.",
-  ru: "Изучите все карты Таро по Старшим Арканам и четырем мастям.",
-  ar: "اكتشف جميع بطاقات التاروت حسب الأركانا الكبرى والسلاسل الأربع.",
-};
 
 export default function TarotGalleryPage() {
   const { language, dir } = useLanguage();
@@ -49,16 +35,16 @@ export default function TarotGalleryPage() {
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          {language === "he" ? "חזרה" : language === "ar" ? "رجوع" : language === "ru" ? "Назад" : "Back"}
+          {tarotGalleryTranslations.backLabel[language]}
         </button>
 
         {/* Header */}
         <header className="text-center mb-8 md:mb-12">
           <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-3">
-            {sectionTitle[language]}
+            {tarotGalleryTranslations.sectionTitle[language]}
           </h1>
           <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
-            {introText[language]}
+            {tarotGalleryTranslations.introText[language]}
           </p>
         </header>
 
@@ -66,7 +52,7 @@ export default function TarotGalleryPage() {
         <nav
           className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/40 -mx-4 px-4 py-3 mb-8 md:mb-10"
           role="tablist"
-          aria-label="Filter cards"
+          aria-label={tarotGalleryTranslations.filterAriaLabel[language]}
         >
           <div className="flex gap-2 overflow-x-auto no-scrollbar justify-center">
             {availableFilters.map((f) => (
@@ -81,7 +67,7 @@ export default function TarotGalleryPage() {
                     : "bg-muted/40 text-muted-foreground border-border/30 hover:bg-muted hover:text-foreground"
                 }`}
               >
-                {suitFilterLabels[f][language]}
+                {tarotGalleryTranslations.filterLabel[f][language]}
               </button>
             ))}
           </div>
@@ -89,7 +75,7 @@ export default function TarotGalleryPage() {
 
         {/* Card count */}
         <p className="text-center text-xs text-muted-foreground mb-6">
-          {cards.length} {language === "he" ? "קלפים" : language === "ar" ? "بطاقة" : language === "ru" ? "карт" : "cards"}
+          {cards.length} {tarotGalleryTranslations.countLabel[language]}
         </p>
 
         {/* Cards grid */}
@@ -131,13 +117,7 @@ export default function TarotGalleryPage() {
                 />
               </div>
               <p className="text-center text-xs text-muted-foreground">
-                {language === "he"
-                  ? "דף הקלף המלא יתווסף בקרוב ✦"
-                  : language === "ar"
-                  ? "صفحة البطاقة الكاملة ستضاف قريباً ✦"
-                  : language === "ru"
-                  ? "Полная страница карты скоро появится ✦"
-                  : "Full card page coming soon ✦"}
+                {tarotGalleryTranslations.modalComingSoon[language]}
               </p>
             </>
           )}
