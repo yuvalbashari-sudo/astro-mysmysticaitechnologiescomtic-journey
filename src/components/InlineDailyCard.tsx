@@ -37,7 +37,7 @@ function getDailyCardIndex(total: number): number {
   return hashToNumber(`${getUserSeed()}-${getTodayDate()}`) % total;
 }
 
-function getSavedDailyCard(): { card: TarotWorldCard; date: string } | null {
+function getSavedDailyCard(): { card: MajorArcanaCard; date: string } | null {
   try {
     const raw = localStorage.getItem(DAILY_CARD_KEY);
     if (!raw) return null;
@@ -61,7 +61,7 @@ interface Props {
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
   const cardName = useCardName();
-  const [card, setCard] = useState<TarotWorldCard | null>(null);
+  const [card, setCard] = useState<MajorArcanaCard | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(false);
 
@@ -79,8 +79,8 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
 
   const handleDraw = useCallback(() => {
     if (drawn) return;
-    const idx = getDailyCardIndex(majorArcana.length);
-    const selectedCard = majorArcana[idx];
+    const idx = getDailyCardIndex(majorArcanaCards.length);
+    const selectedCard = majorArcanaCards[idx];
     setCard(selectedCard);
     setDrawn(true);
     setTimeout(() => setFlipped(true), 600);
