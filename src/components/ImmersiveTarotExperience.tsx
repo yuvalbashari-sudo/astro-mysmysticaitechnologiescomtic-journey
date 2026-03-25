@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import { drawTarotCards, type TarotCard } from "@/data/tarotData";
+import { majorArcanaCards, drawMajorArcana, getCardName, type MajorArcanaCard } from "@/data/majorArcanaCards";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import cardFrameImg from "@/assets/tarot/card-frame.png";
 import { tarotMemory } from "@/lib/tarotMemory";
