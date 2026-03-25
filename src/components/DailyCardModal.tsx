@@ -6,6 +6,7 @@ import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Sun, Lock, Share2, Copy, Check, Loader2, Clock, Crown } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
+import { allReadingCards, type ReadingCard } from "@/data/allTarotCards";
 import { findMajorArcanaByEnglishName, getCardName as getMajorCardName } from "@/data/majorArcanaCards";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
@@ -209,8 +210,30 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     }
 
     // Select card deterministically
-    const cardIndex = getDailyCardIndex(majorArcana.length);
-    const selectedCard = majorArcana[cardIndex];
+    const cardIndex = getDailyCardIndex(allReadingCards.length);
+    const readingCard = allReadingCards[cardIndex];
+    // Convert ReadingCard to TarotWorldCard-compatible shape
+    const majorMatch = majorArcana.find(m => m.name === readingCard.name.en);
+    const selectedCard: TarotWorldCard = majorMatch || {
+      name: readingCard.name.en,
+      hebrewName: readingCard.name.he,
+      number: cardIndex,
+      symbol: readingCard.symbol,
+      image: readingCard.image,
+      meanings: {
+        general: readingCard.name.en,
+        daily: readingCard.name.en,
+        love: readingCard.name.en,
+        career: readingCard.name.en,
+        decision: readingCard.name.en,
+        universe: readingCard.name.en,
+        past: readingCard.name.en,
+        present: readingCard.name.en,
+        future: readingCard.name.en,
+        spiritual: readingCard.name.en,
+        advice: readingCard.name.en,
+      },
+    };
     setCard(selectedCard);
     setShowCardOverlay(false);
     setRitualStep(0);
@@ -351,7 +374,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  const cardImage = card ? tarotCardImages[card.name] : null;
+  const cardImage = card ? (tarotCardImages[card.name] || card.image) : null;
 
   return (
     <>

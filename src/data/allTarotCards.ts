@@ -379,12 +379,28 @@ function toReadingCard(card: UnifiedTarotCard): ReadingCard {
   };
 }
 
+/** All cards as ReadingCard[] — cached for daily card and reading flows. */
+export const allReadingCards: ReadingCard[] = allTarotCards.map(toReadingCard);
+
 /** Draw N random cards from the full 78-card deck (Fisher-Yates shuffle). No duplicates. */
 export function drawReadingCards(count: number = 7): ReadingCard[] {
-  const deck = allTarotCards.map(toReadingCard);
+  const deck = [...allReadingCards];
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
   }
   return deck.slice(0, Math.min(count, deck.length));
+}
+
+/** Get a deterministic daily card index based on a seed and date string. */
+export function getDailyCardFromFullDeck(seed: string, date: string): ReadingCard {
+  let hash = 0;
+  const str = `${seed}-${date}`;
+  for (let i = 0; i < str.length; i++) {
+    const c = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + c;
+    hash = hash & hash;
+  }
+  const index = Math.abs(hash) % allReadingCards.length;
+  return allReadingCards[index];
 }

@@ -1,10 +1,9 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Sparkles, Star } from "lucide-react";
-import { majorArcanaCards, type MajorArcanaCard } from "@/data/majorArcanaCards";
-import { majorArcana as majorArcanaWorld } from "@/data/tarotWorldData";
+import { allReadingCards, type ReadingCard } from "@/data/allTarotCards";
 import { cardBack } from "@/data/tarotCardImages";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 
@@ -38,7 +37,7 @@ function getDailyCardIndex(total: number): number {
   return hashToNumber(`${getUserSeed()}-${getTodayDate()}`) % total;
 }
 
-function getSavedDailyCard(): { card: MajorArcanaCard; date: string } | null {
+function getSavedDailyCard(): { card: ReadingCard; date: string } | null {
   try {
     const raw = localStorage.getItem(DAILY_CARD_KEY);
     if (!raw) return null;
@@ -61,8 +60,9 @@ interface Props {
 
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const cardName = useCardName();
-  const [card, setCard] = useState<MajorArcanaCard | null>(null);
+  const [card, setCard] = useState<ReadingCard | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(false);
 
@@ -80,8 +80,8 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
 
   const handleDraw = useCallback(() => {
     if (drawn) return;
-    const idx = getDailyCardIndex(majorArcanaCards.length);
-    const selectedCard = majorArcanaCards[idx];
+    const idx = getDailyCardIndex(allReadingCards.length);
+    const selectedCard = allReadingCards[idx];
     setCard(selectedCard);
     setDrawn(true);
     setTimeout(() => setFlipped(true), 600);
@@ -279,7 +279,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          {majorArcanaWorld.find(w => w.name === card.name.en)?.meanings.daily || ""}
+          {card.suit !== "major" ? (card.name[language] || card.name.en) : ""}
         </motion.p>
 
         {/* CTA button */}
