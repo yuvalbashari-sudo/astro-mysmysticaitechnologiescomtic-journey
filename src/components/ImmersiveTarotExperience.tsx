@@ -6,7 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import { majorArcanaCards, drawMajorArcana, getCardName, type MajorArcanaCard } from "@/data/majorArcanaCards";
+import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
+
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import cardFrameImg from "@/assets/tarot/card-frame.png";
 import { tarotMemory } from "@/lib/tarotMemory";
@@ -116,7 +117,7 @@ async function streamTarotReading(
 const FloatingCard = ({
   card, index, isSelected, isFlipped, onClick, totalCards, isMobile, showBurst,
 }: {
-  card: MajorArcanaCard; index: number; isSelected: boolean; isFlipped: boolean;
+  card: ReadingCard; index: number; isSelected: boolean; isFlipped: boolean;
   onClick: () => void; totalCards: number; isMobile: boolean; showBurst: boolean;
 }) => {
   const cardName = useCardName();
@@ -403,10 +404,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("question");
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  const [drawnCards, setDrawnCards] = useState<MajorArcanaCard[]>([]);
+  const [drawnCards, setDrawnCards] = useState<ReadingCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
-  const [revealedCard, setRevealedCard] = useState<MajorArcanaCard | null>(null);
+  const [revealedCard, setRevealedCard] = useState<ReadingCard | null>(null);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
@@ -452,7 +453,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const handleQuestionSelect = useCallback((key: string) => {
     setSelectedQuestion(key);
     setTimeout(() => {
-      setDrawnCards(drawMajorArcana(7));
+      setDrawnCards(drawReadingCards(7));
       setPhase("drawing");
     }, 600);
   }, []);
@@ -496,7 +497,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       hebrewName: c.name.he,
       symbol: c.symbol,
       name: c.name.en,
-      localizedName: getCardName(c, language),
+      localizedName: c.name[language] || c.name.en || c.name.he,
       positionLabel: posLabels[i] || "",
     }));
 

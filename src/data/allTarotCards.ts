@@ -6,6 +6,15 @@ export type TarotSuitFilter = "all" | TarotSuit;
 
 type LocalizedText = Record<Language, string>;
 
+/** Card shape used by the reading/drawing flow — compatible with MajorArcanaCard */
+export interface ReadingCard {
+  id: string;
+  name: LocalizedText;
+  image: string;
+  suit: TarotSuit;
+  symbol: string;
+}
+
 type TarotAssetInventory = Record<TarotSuit, TarotGalleryCardRecord[]>;
 
 interface MajorArcanaDefinition {
@@ -336,4 +345,46 @@ export function filterBySuit(suit: TarotSuitFilter): UnifiedTarotCard[] {
 
 export function getAvailableFilters(): TarotSuitFilter[] {
   return FILTER_ORDER.filter((filter) => filterBySuit(filter).length > 0);
+}
+
+/* ── Suit symbols for minor arcana ── */
+const SUIT_SYMBOLS: Record<TarotSuit, string> = {
+  major: "✦",
+  swords: "⚔️",
+  cups: "🏆",
+  wands: "🪄",
+  pentacles: "🪙",
+};
+
+/* ── Major arcana symbol overrides (same as majorArcanaCards.ts) ── */
+const MAJOR_SYMBOLS: Record<string, string> = {
+  fool: "🃏", magician: "🎩", "high-priestess": "🌙", empress: "👑", emperor: "🏛️",
+  hierophant: "🔑", lovers: "💕", chariot: "🏇", strength: "🦁", hermit: "🏔️",
+  "wheel-of-fortune": "🎡", justice: "⚖️", "hanged-man": "🙃", death: "💀",
+  temperance: "⚗️", devil: "😈", tower: "🗼", star: "⭐", moon: "🌙",
+  sun: "☀️", judgement: "📯", world: "🌍",
+};
+
+/** Convert a UnifiedTarotCard to a ReadingCard for the reading flow. */
+function toReadingCard(card: UnifiedTarotCard): ReadingCard {
+  const symbol = card.suit === "major"
+    ? (MAJOR_SYMBOLS[card.slug] || SUIT_SYMBOLS.major)
+    : SUIT_SYMBOLS[card.suit];
+  return {
+    id: card.id,
+    name: card.name,
+    image: card.image,
+    suit: card.suit,
+    symbol,
+  };
+}
+
+/** Draw N random cards from the full 78-card deck (Fisher-Yates shuffle). No duplicates. */
+export function drawReadingCards(count: number = 7): ReadingCard[] {
+  const deck = allTarotCards.map(toReadingCard);
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck.slice(0, Math.min(count, deck.length));
 }
