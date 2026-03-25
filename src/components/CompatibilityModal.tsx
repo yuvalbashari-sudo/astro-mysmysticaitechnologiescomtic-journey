@@ -136,8 +136,17 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const isDesktopResult = !isMobile && !!matchInfo;
   const isDesktopInput = !isMobile && !matchInfo && !isLoading;
 
+  const isLtr = dir === "ltr";
+  const compatAvatarStyle = isLtr ? {
+    bottom: isMobile ? 0 : 0,
+    right: isMobile ? 0 : 10,
+    left: "auto" as const,
+    width: isMobile ? 120 : 168,
+    height: isMobile ? 120 : 168,
+  } : undefined;
+
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} avatarStyle={compatAvatarStyle}>
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
                 isDesktopInput ? (
