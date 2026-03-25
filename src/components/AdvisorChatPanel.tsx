@@ -314,7 +314,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
           {/* Chat Panel */}
           <motion.div
-            className={`fixed z-[106] flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
+            className={`fixed ${forceRightAnchor ? "z-[206]" : "z-[106]"} flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
             style={{
               bottom: forceRightAnchor ? "60px" : "5.5rem",
               right: forceRightAnchor ? "5px" : dir === "rtl" ? "auto" : "1.25rem",
