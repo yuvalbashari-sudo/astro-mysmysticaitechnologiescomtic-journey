@@ -52,7 +52,7 @@ export default function TarotGalleryPage() {
         <nav
           className="sticky top-0 z-30 bg-background/80 backdrop-blur-xl border-b border-border/40 -mx-4 px-4 py-3 mb-8 md:mb-10"
           role="tablist"
-          aria-label="Filter cards"
+          aria-label={tarotGalleryTranslations.filterAriaLabel[language]}
         >
           <div className="flex gap-2 overflow-x-auto no-scrollbar justify-center">
             {availableFilters.map((f) => (
