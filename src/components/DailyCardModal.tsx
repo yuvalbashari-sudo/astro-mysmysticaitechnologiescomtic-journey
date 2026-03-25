@@ -827,7 +827,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* PHASE: Result / Locked — compact in-flow daily card */}
+              {/* PHASE: Result / Locked — structured daily card */}
               {(phase === "result" || phase === "locked") && card && (
                 <motion.div
                   key="result"
@@ -917,9 +917,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
+                        {/* Structured AI reading content */}
                         <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                           {aiText ? (
-                            <div className="text-start [&>div]:space-y-3">{renderMysticalText(aiText, textSize)}</div>
+                            <div className="text-start space-y-5">
+                              {renderMysticalText(aiText, textSize)}
+                            </div>
                           ) : aiError ? (
                             <div className="rounded-2xl px-4 py-3 text-center" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
                               <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{aiError}</p>
@@ -939,6 +942,47 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           )}
                         </div>
 
+                        {/* Advisor CTA — conversion-driven */}
+                        {!aiLoading && (aiText || aiError) && (
+                          <motion.div
+                            className="w-full max-w-[42ch] mt-2"
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.8, duration: 0.6 }}
+                          >
+                            {/* Decorative separator */}
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.2))" }} />
+                              <span className="text-gold/40 text-xs">✦</span>
+                              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--gold) / 0.2), transparent)" }} />
+                            </div>
+
+                            {/* CTA text */}
+                            <p className="text-center font-body text-sm md:text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>
+                              {t.daily_advisor_cta_text}
+                            </p>
+
+                            {/* Advisor button — prominent */}
+                            <div className="flex justify-center">
+                              <motion.button
+                                onClick={() => setAstrologerOpen(true)}
+                                className="flex items-center gap-2.5 rounded-full px-6 py-3 font-body text-sm md:text-base font-medium"
+                                style={{
+                                  background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
+                                  color: "hsl(var(--primary-foreground))",
+                                  boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 4px 16px hsl(0 0% 0% / 0.25)",
+                                }}
+                                whileHover={{ scale: 1.05, boxShadow: "0 0 35px hsl(var(--gold) / 0.3), 0 6px 20px hsl(0 0% 0% / 0.3)" }}
+                                whileTap={{ scale: 0.97 }}
+                              >
+                                <Crown className="h-4 w-4" />
+                                {t.daily_premium_title}
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        )}
+
+                        {/* Action buttons */}
                         <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
                           <motion.button
                             onClick={handleShare}

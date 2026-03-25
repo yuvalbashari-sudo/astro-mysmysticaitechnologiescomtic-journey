@@ -343,6 +343,12 @@ export const ar: TranslationKeys = {
   daily_premium_cta: "العودة لعالم التاروت",
   daily_already_drawn: "ورقتكم اليومية كُشفت بالفعل ✦",
   daily_time_format: "{hours} ساعات و{minutes} دقائق",
+  daily_section_summary: "✨ رسالة اليوم",
+  daily_section_love: "💕 الحب والعلاقات",
+  daily_section_career: "💼 المهنة والمال",
+  daily_section_advice: "🌟 نصيحة اليوم",
+  daily_section_keywords: "🔑 كلمات مفتاحية",
+  daily_advisor_cta_text: "هل تريد تفسيرًا شخصيًا؟",
 
   palm_title: "قراءة الكف",
   palm_desc: "صوّروا كلتا كفيكم واحصلوا على تحليل عميق — اليد اليمنى تكشف الحاضر والفعل، اليد اليسرى تكشف الإمكانات الخفية.",
