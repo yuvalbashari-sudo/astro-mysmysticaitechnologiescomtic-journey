@@ -1818,7 +1818,7 @@ const TarotCardReveal = ({
   // Show silhouette after delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      const [drawn] = drawMajorArcana(1);
+      const [drawn] = drawReadingCards(1);
       setCard(drawn);
       setPhase("silhouette");
     }, 5000);
@@ -1833,7 +1833,7 @@ const TarotCardReveal = ({
       setPhase("idle");
       // Re-draw a new card and show silhouette again after a brief pause
       setTimeout(() => {
-        const [drawn] = drawMajorArcana(1);
+        const [drawn] = drawReadingCards(1);
         setCard(drawn);
         setPhase("silhouette");
       }, 3000);
