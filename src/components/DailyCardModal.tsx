@@ -856,7 +856,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                         >
                           {cardImage ? (
-                            <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="h-full w-full object-contain" />
+                            <img src={cardImage} alt={card.name[language] || card.name.en} className="h-full w-full object-contain" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center">
                               <span className="text-5xl">{card.symbol}</span>
