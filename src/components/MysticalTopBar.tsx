@@ -132,12 +132,12 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute top-full right-0 mt-2 rounded-xl overflow-hidden"
+                  className="absolute top-full right-0 mt-2 rounded-xl overflow-hidden backdrop-blur-xl"
                   style={{
                     zIndex: 99999,
-                    background: "linear-gradient(145deg, hsl(222 40% 10% / 0.98), hsl(222 47% 8% / 0.98))",
-                    border: "1px solid hsl(var(--gold) / 0.2)",
-                    boxShadow: "0 8px 30px hsl(0 0% 0% / 0.4)",
+                    background: "linear-gradient(145deg, hsl(222 40% 8%), hsl(222 47% 6%))",
+                    border: "1px solid hsl(var(--gold) / 0.3)",
+                    boxShadow: "0 12px 40px hsl(0 0% 0% / 0.6), 0 0 0 1px hsl(222 40% 12% / 0.5)",
                     minWidth: "170px",
                   }}
                   role="listbox"
