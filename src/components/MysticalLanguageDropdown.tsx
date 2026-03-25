@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Globe } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -6,20 +6,32 @@ import { languageConfig, useLanguage, useT, type Language } from "@/i18n";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
 
+type MenuPosition = {
+  top: number;
+  left: number;
+  minWidth: number;
+  maxHeight: number;
+  transformOrigin: string;
+};
+
 const MysticalLanguageDropdown = () => {
   const { language, setLanguage, dir } = useLanguage();
   const t = useT();
   const [open, setOpen] = useState(false);
-  const [hoveredLanguage, setHoveredLanguage] = useState<Language | null>(null);
+  const [mounted, setMounted] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const [menuPosition, setMenuPosition] = useState({
+  const [menuPosition, setMenuPosition] = useState<MenuPosition>({
     top: 0,
     left: 0,
     minWidth: 176,
     maxHeight: 320,
-    transformOrigin: "top right",
+    transformOrigin: dir === "rtl" ? "top left" : "top right",
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const updateMenuPosition = useCallback(() => {
     const trigger = triggerRef.current;
@@ -27,8 +39,8 @@ const MysticalLanguageDropdown = () => {
     if (!trigger) return;
 
     const rect = trigger.getBoundingClientRect();
-    const viewportPadding = 8;
-    const gap = 6;
+    const viewportPadding = 12;
+    const gap = 8;
     const menuWidth = Math.max(176, Math.ceil(rect.width));
     const idealLeft = dir === "rtl" ? rect.left : rect.right - menuWidth;
     const left = Math.min(
@@ -93,34 +105,26 @@ const MysticalLanguageDropdown = () => {
     };
   }, [open]);
 
-  const optionBaseStyle = useMemo(
-    () => ({
-      opacity: 1,
-      backgroundImage: "none",
-      backdropFilter: "none",
-      WebkitBackdropFilter: "none",
-      filter: "none",
-      mixBlendMode: "normal" as const,
-      boxShadow: "none",
-    }),
-    [],
-  );
-
   return (
-    <div className="relative isolate pointer-events-auto">
+    <div className="relative pointer-events-auto">
       <motion.button
         ref={triggerRef}
         type="button"
-        onPointerDown={(event) => event.stopPropagation()}
         onClick={() => {
           if (!open) updateMenuPosition();
           setOpen((prev) => !prev);
         }}
         className="flex items-center gap-2 px-5 py-3 rounded-full font-body text-sm transition-all"
         style={{
-          background: "hsl(var(--deep-blue-light) / 0.6)",
-          border: "1px solid hsl(var(--gold) / 0.15)",
-          color: "hsl(var(--gold) / 0.7)",
+          background: "hsl(var(--deep-blue-light))",
+          border: "1px solid hsl(var(--gold) / 0.18)",
+          color: "hsl(var(--gold) / 0.78)",
+          opacity: 1,
+          backgroundImage: "none",
+          backdropFilter: "none",
+          WebkitBackdropFilter: "none",
+          filter: "none",
+          mixBlendMode: "normal",
         }}
         whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
         whileTap={{ scale: 0.97 }}
@@ -133,28 +137,28 @@ const MysticalLanguageDropdown = () => {
       </motion.button>
 
       <AnimatePresence>
-        {open && typeof document !== "undefined" && createPortal(
+        {open && mounted && createPortal(
           <motion.div
             ref={menuRef}
-            initial={{ y: -6, scale: 0.98 }}
+            initial={{ y: -8, scale: 0.98 }}
             animate={{ y: 0, scale: 1 }}
-            exit={{ y: -6, scale: 0.98 }}
-            transition={{ duration: 0.15 }}
-            className="fixed isolate overflow-hidden rounded-2xl p-1.5 text-foreground shadow-2xl pointer-events-auto"
+            exit={{ y: -8, scale: 0.98 }}
+            transition={{ duration: 0.16, ease: "easeOut" }}
+            className="fixed overflow-hidden rounded-2xl p-1.5 text-foreground pointer-events-auto"
             style={{
               top: menuPosition.top,
               left: menuPosition.left,
-              zIndex: 2147483646,
+              zIndex: 2147483647,
               minWidth: menuPosition.minWidth,
               maxWidth: "min(18rem, calc(100vw - 1rem))",
               maxHeight: menuPosition.maxHeight,
               overflowY: "auto",
               overscrollBehavior: "contain",
               opacity: 1,
-              background: "hsl(var(--deep-blue))",
+              background: "hsl(var(--card))",
               backgroundImage: "none",
-              border: "1px solid hsl(var(--gold) / 0.28)",
-              boxShadow: "0 28px 80px hsl(224 40% 2% / 0.96), 0 0 0 1px hsl(var(--gold) / 0.12)",
+              border: "1px solid hsl(var(--gold) / 0.3)",
+              boxShadow: "0 32px 80px hsl(var(--deep-blue) / 0.96), 0 0 0 1px hsl(var(--border))",
               backdropFilter: "none",
               WebkitBackdropFilter: "none",
               filter: "none",
@@ -164,11 +168,9 @@ const MysticalLanguageDropdown = () => {
             }}
             role="listbox"
             aria-label={t.a11y_language_selector}
-            onPointerDown={(event) => event.stopPropagation()}
           >
             {languages.map((lang) => {
               const isSelected = lang === language;
-              const isHovered = hoveredLanguage === lang;
 
               return (
                 <button
@@ -176,26 +178,35 @@ const MysticalLanguageDropdown = () => {
                   type="button"
                   role="option"
                   aria-selected={isSelected}
-                  onMouseEnter={() => setHoveredLanguage(lang)}
-                  onMouseLeave={() => setHoveredLanguage((current) => (current === lang ? null : current))}
-                  onFocus={() => setHoveredLanguage(lang)}
-                  onBlur={() => setHoveredLanguage((current) => (current === lang ? null : current))}
                   onClick={() => {
                     setLanguage(lang);
                     setOpen(false);
-                    setHoveredLanguage(null);
+                  }}
+                  onMouseEnter={(event) => {
+                    if (!isSelected) {
+                      event.currentTarget.style.background = "hsl(var(--muted))";
+                      event.currentTarget.style.borderColor = "hsl(var(--gold) / 0.18)";
+                    }
+                  }}
+                  onMouseLeave={(event) => {
+                    if (!isSelected) {
+                      event.currentTarget.style.background = "hsl(var(--deep-blue))";
+                      event.currentTarget.style.borderColor = "hsl(var(--border))";
+                    }
                   }}
                   className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body text-foreground transition-colors cursor-pointer"
                   style={{
-                    ...optionBaseStyle,
-                    color: isSelected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.92)",
-                    background: isSelected
-                      ? "hsl(var(--deep-blue-light))"
-                      : isHovered
-                        ? "hsl(var(--muted))"
-                        : "hsl(var(--card))",
+                    opacity: 1,
+                    backgroundImage: "none",
+                    backdropFilter: "none",
+                    WebkitBackdropFilter: "none",
+                    filter: "none",
+                    mixBlendMode: "normal",
+                    boxShadow: isSelected ? "0 0 0 1px hsl(var(--gold) / 0.08) inset" : "none",
+                    color: isSelected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.96)",
+                    background: isSelected ? "hsl(var(--deep-blue-light))" : "hsl(var(--deep-blue))",
                     border: isSelected
-                      ? "1px solid hsl(var(--gold) / 0.28)"
+                      ? "1px solid hsl(var(--gold) / 0.34)"
                       : "1px solid hsl(var(--border))",
                   }}
                   aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
@@ -203,7 +214,7 @@ const MysticalLanguageDropdown = () => {
                   <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
                   <span>{languageConfig[lang].label}</span>
                   {isSelected && (
-                    <span className="text-gold/70 text-[10px] ms-auto" aria-hidden="true">
+                    <span className="text-[10px] ms-auto" style={{ color: "hsl(var(--gold) / 0.78)" }} aria-hidden="true">
                       ✦
                     </span>
                   )}
