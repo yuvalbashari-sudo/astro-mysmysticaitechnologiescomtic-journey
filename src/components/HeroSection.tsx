@@ -18,7 +18,7 @@ import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT, useLanguage } from "@/i18n";
 import { useCardName } from "@/hooks/useCardName";
 import type { Language } from "@/i18n";
-import { drawTarotCards, type TarotCard } from "@/data/tarotData";
+import { drawMajorArcana, type MajorArcanaCard } from "@/data/majorArcanaCards";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import ariesIcon from "@/assets/zodiac-icons/aries.png";
 import taurusIcon from "@/assets/zodiac-icons/taurus.png";
@@ -1812,13 +1812,13 @@ const TarotCardReveal = ({
     setPhaseInternal(p);
     onPhaseChange?.(p);
   }, [onPhaseChange]);
-  const [card, setCard] = useState<TarotCard | null>(null);
+  const [card, setCard] = useState<MajorArcanaCard | null>(null);
   const cardSize = isMobile ? 70 : 100;
 
   // Show silhouette after delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      const [drawn] = drawTarotCards(1);
+      const [drawn] = drawMajorArcana(1);
       setCard(drawn);
       setPhase("silhouette");
     }, 5000);
@@ -1833,7 +1833,7 @@ const TarotCardReveal = ({
       setPhase("idle");
       // Re-draw a new card and show silhouette again after a brief pause
       setTimeout(() => {
-        const [drawn] = drawTarotCards(1);
+        const [drawn] = drawMajorArcana(1);
         setCard(drawn);
         setPhase("silhouette");
       }, 3000);
@@ -1842,8 +1842,8 @@ const TarotCardReveal = ({
 
   if (!card) return null;
 
-  const cardImage = tarotCardImages[card.name] || cardBack;
-  const message = TAROT_MESSAGES[language]?.[card.name] || `${cardName(card.name, card.hebrewName)} ${t.hero_tarot_fallback_message}`;
+  const cardImage = tarotCardImages[card.name.en] || cardBack;
+  const message = TAROT_MESSAGES[language]?.[card.name.en] || `${cardName(card.name.en, card.name.he)} ${t.hero_tarot_fallback_message}`;
 
   return (
     <div
@@ -1985,7 +1985,7 @@ const TarotCardReveal = ({
                 className="absolute inset-0 rounded-lg overflow-hidden"
                 style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
               >
-                <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
+                <img src={cardImage} alt={cardName(card.name.en, card.name.he)} className="w-full h-full object-cover" />
               </div>
             </motion.div>
 
@@ -2034,7 +2034,7 @@ const TarotCardReveal = ({
                 boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" },
               }}
             >
-              <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
+              <img src={cardImage} alt={cardName(card.name.en, card.name.he)} className="w-full h-full object-cover" />
             </motion.div>
 
             {/* Card info below */}
@@ -2058,7 +2058,7 @@ const TarotCardReveal = ({
                 }}
               >
                 <p className="font-heading text-primary text-sm mb-1">
-                  {card.symbol} {cardName(card.name, card.hebrewName)}
+                  {card.symbol} {cardName(card.name.en, card.name.he)}
                 </p>
                 <p className="text-foreground/70 font-body text-[10px] leading-relaxed mb-2" dir={dir}>
                   {message}

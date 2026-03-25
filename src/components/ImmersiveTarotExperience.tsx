@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import { drawTarotCards, type TarotCard } from "@/data/tarotData";
+import { majorArcanaCards, drawMajorArcana, getCardName, type MajorArcanaCard } from "@/data/majorArcanaCards";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import cardFrameImg from "@/assets/tarot/card-frame.png";
 import { tarotMemory } from "@/lib/tarotMemory";
@@ -116,7 +116,7 @@ async function streamTarotReading(
 const FloatingCard = ({
   card, index, isSelected, isFlipped, onClick, totalCards, isMobile, showBurst,
 }: {
-  card: TarotCard; index: number; isSelected: boolean; isFlipped: boolean;
+  card: MajorArcanaCard; index: number; isSelected: boolean; isFlipped: boolean;
   onClick: () => void; totalCards: number; isMobile: boolean; showBurst: boolean;
 }) => {
   const cardName = useCardName();
@@ -141,8 +141,8 @@ const FloatingCard = ({
     }
   }, [isFlipped, showFront]);
 
-  const hasCustomImage = !!tarotCardImages[card.name];
-  const frontImgSrc = tarotCardImages[card.name] || cardBack;
+  const hasCustomImage = !!tarotCardImages[card.name.en];
+  const frontImgSrc = tarotCardImages[card.name.en] || card.image || cardBack;
 
   return (
     <motion.div
@@ -253,13 +253,13 @@ const FloatingCard = ({
                   {card.symbol}
                 </span>
                 <span className="text-center font-heading text-gold/90 px-2 mt-1" style={{ fontSize: cardW > 90 ? "0.75rem" : "0.5rem", lineHeight: 1.3 }}>
-                  {cardName(card.name, card.hebrewName)}
+                  {cardName(card.name.en, card.name.he)}
                 </span>
               </div>
             ) : (
               <img
                 src={showFront ? frontImgSrc : cardBack}
-                alt={showFront ? card.hebrewName : ""}
+                alt={showFront ? cardName(card.name.en, card.name.he) : ""}
                 className="w-full h-full object-cover"
                 style={{
                   backfaceVisibility: "hidden",
@@ -385,7 +385,7 @@ const FloatingCard = ({
                   letterSpacing: "0.05em",
                 }}
               >
-                {cardName(card.name, card.hebrewName)}
+                {cardName(card.name.en, card.name.he)}
               </span>
             </motion.div>
           )}
@@ -403,10 +403,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("question");
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  const [drawnCards, setDrawnCards] = useState<TarotCard[]>([]);
+  const [drawnCards, setDrawnCards] = useState<MajorArcanaCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
-  const [revealedCard, setRevealedCard] = useState<TarotCard | null>(null);
+  const [revealedCard, setRevealedCard] = useState<MajorArcanaCard | null>(null);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
@@ -452,7 +452,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const handleQuestionSelect = useCallback((key: string) => {
     setSelectedQuestion(key);
     setTimeout(() => {
-      setDrawnCards(drawTarotCards(7));
+      setDrawnCards(drawMajorArcana(7));
       setPhase("drawing");
     }, 600);
   }, []);
@@ -493,9 +493,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
     const cards = Array.from(selectedCardIndices).map(i => drawnCards[i]);
     const cardsPayload = cards.map((c, i) => ({
-      hebrewName: c.hebrewName,
+      hebrewName: c.name.he,
       symbol: c.symbol,
-      name: c.name,
+      name: c.name.en,
+      localizedName: getCardName(c, language),
       positionLabel: posLabels[i] || "",
     }));
 
@@ -524,9 +525,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
-          subtitle: cards.map(c => cardName(c.name, c.hebrewName)).join(" • "),
+          subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
           symbol: "🔮",
-          data: { spread: spreadType, cards },
+          data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
         });
       },
       (err) => { setAiLoading(false); toast(err); },
@@ -866,7 +867,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       const h = w * 1.55;
                       return (
                         <motion.div
-                          key={card.name}
+                          key={card.name.en}
                           className="relative"
                           style={{ width: w, height: h }}
                           initial={{ opacity: 0, y: 40, rotateY: 180 }}
@@ -887,8 +888,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           />
                           <div className="relative w-full h-full">
                             <img
-                              src={tarotCardImages[card.name] || cardBack}
-                              alt={cardName(card.name, card.hebrewName)}
+                              src={tarotCardImages[card.name.en] || cardBack}
+                              alt={cardName(card.name.en, card.name.he)}
                               className="w-full h-full object-cover rounded-lg"
                               style={{
                                 imageRendering: "-webkit-optimize-contrast" as any,
@@ -945,7 +946,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             transition={{ delay: i * 0.4 + 1 }}
                           >
                             <span className="font-heading text-sm md:text-base text-gold/85">
-                              {cardName(card.name, card.hebrewName)}
+                              {cardName(card.name.en, card.name.he)}
                             </span>
                           </motion.div>
                         </motion.div>
@@ -1008,7 +1009,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           const h = w * 1.55;
                           return (
                             <motion.div
-                              key={card.name}
+                              key={card.name.en}
                               className="relative flex flex-col items-center"
                               initial={{ opacity: 0, y: 30, scale: 0.85 }}
                               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -1016,8 +1017,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             >
                               <div className="relative" style={{ width: w, height: h }}>
                                 <img
-                                  src={tarotCardImages[card.name] || cardBack}
-                                  alt={cardName(card.name, card.hebrewName)}
+                                  src={tarotCardImages[card.name.en] || cardBack}
+                                  alt={cardName(card.name.en, card.name.he)}
                                   className="w-full h-full object-cover rounded-xl"
                                   style={{
                                     imageRendering: "-webkit-optimize-contrast" as any,
@@ -1039,7 +1040,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 + i * 0.15 }}
                               >
-                                {cardName(card.name, card.hebrewName)}
+                                {cardName(card.name.en, card.name.he)}
                               </motion.span>
                             </motion.div>
                           );
@@ -1400,7 +1401,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           const h = w * 1.55;
                           return (
                             <motion.div
-                              key={card.name}
+                              key={card.name.en}
                               className="relative flex flex-col items-center"
                               initial={{ opacity: 0, y: 30, scale: 0.85 }}
                               animate={{ opacity: 1, y: isCenter ? -20 : 0, scale: 1 }}
@@ -1415,8 +1416,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               />
                               <div className="relative" style={{ width: w, height: h }}>
                                 <img
-                                  src={tarotCardImages[card.name] || cardBack}
-                                  alt={cardName(card.name, card.hebrewName)}
+                                  src={tarotCardImages[card.name.en] || cardBack}
+                                  alt={cardName(card.name.en, card.name.he)}
                                   className="w-full h-full object-cover rounded-xl"
                                   style={{
                                     imageRendering: "-webkit-optimize-contrast" as any,
@@ -1448,7 +1449,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 animate={{ opacity: 1 }}
                                 transition={{ delay: 0.6 + i * 0.15 }}
                               >
-                                {cardName(card.name, card.hebrewName)}
+                                {cardName(card.name.en, card.name.he)}
                               </motion.span>
                             </motion.div>
                           );

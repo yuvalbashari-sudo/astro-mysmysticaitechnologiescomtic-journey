@@ -1,4 +1,4 @@
-import { drawTarotCards, type TarotCard } from "@/data/tarotData";
+import { majorArcanaCards, type MajorArcanaCard } from "@/data/majorArcanaCards";
 
 const STORAGE_KEY = "astrologai_daily_ritual";
 
@@ -56,7 +56,7 @@ const ENERGY_INSIGHTS = [
 ];
 
 export interface DailyRitualData {
-  card: TarotCard;
+  card: MajorArcanaCard;
   message: string;
   energy: { theme: string; insight: string; icon: string };
   timestamp: number; // ms
@@ -94,8 +94,7 @@ export function getDailyRitual(): DailyRitualData & { isNew: boolean } {
 
   // Generate new daily ritual
   const idx = dayIndex();
-  const cards = drawTarotCards(22); // get all, pick deterministically
-  const card = cards[idx % cards.length];
+  const card = majorArcanaCards[idx % majorArcanaCards.length];
   const message = DAILY_MESSAGES[idx % DAILY_MESSAGES.length];
   const energy = ENERGY_INSIGHTS[idx % ENERGY_INSIGHTS.length];
 

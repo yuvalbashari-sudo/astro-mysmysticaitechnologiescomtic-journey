@@ -1,8 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Sparkles, Star } from "lucide-react";
-import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
-import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import { majorArcanaCards, type MajorArcanaCard } from "@/data/majorArcanaCards";
+import { majorArcana as majorArcanaWorld } from "@/data/tarotWorldData";
+import { cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
@@ -37,7 +38,7 @@ function getDailyCardIndex(total: number): number {
   return hashToNumber(`${getUserSeed()}-${getTodayDate()}`) % total;
 }
 
-function getSavedDailyCard(): { card: TarotWorldCard; date: string } | null {
+function getSavedDailyCard(): { card: MajorArcanaCard; date: string } | null {
   try {
     const raw = localStorage.getItem(DAILY_CARD_KEY);
     if (!raw) return null;
@@ -61,7 +62,7 @@ interface Props {
 const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) => {
   const t = useT();
   const cardName = useCardName();
-  const [card, setCard] = useState<TarotWorldCard | null>(null);
+  const [card, setCard] = useState<MajorArcanaCard | null>(null);
   const [flipped, setFlipped] = useState(false);
   const [drawn, setDrawn] = useState(false);
 
@@ -79,14 +80,14 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
 
   const handleDraw = useCallback(() => {
     if (drawn) return;
-    const idx = getDailyCardIndex(majorArcana.length);
-    const selectedCard = majorArcana[idx];
+    const idx = getDailyCardIndex(majorArcanaCards.length);
+    const selectedCard = majorArcanaCards[idx];
     setCard(selectedCard);
     setDrawn(true);
     setTimeout(() => setFlipped(true), 600);
   }, [drawn]);
 
-  const cardImage = card ? tarotCardImages[card.name] : null;
+  const cardImage = card ? card.image : null;
 
   // ── COLLAPSED STATE: compact bar to draw the card ──
   if (!flipped) {
@@ -220,7 +221,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           {cardImage ? (
             <img
               src={cardImage}
-              alt={cardName(card.name, card.hebrewName)}
+              alt={cardName(card.name.en, card.name.he)}
               className="w-full h-full object-contain"
               style={{ background: "hsl(var(--deep-blue))" }}
             />
@@ -263,7 +264,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
         >
-          {card.symbol} {cardName(card.name, card.hebrewName)}
+          {card.symbol} {cardName(card.name.en, card.name.he)}
         </motion.h3>
 
         {/* Short meaning */}
@@ -278,7 +279,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          {card.meanings.daily}
+          {majorArcanaWorld.find(w => w.name === card.name.en)?.meanings.daily || ""}
         </motion.p>
 
         {/* CTA button */}
