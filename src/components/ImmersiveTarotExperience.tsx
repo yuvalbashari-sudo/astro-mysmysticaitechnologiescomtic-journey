@@ -7,7 +7,7 @@ import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-r
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
-import { majorArcanaCards } from "@/data/majorArcanaCards";
+
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import cardFrameImg from "@/assets/tarot/card-frame.png";
 import { tarotMemory } from "@/lib/tarotMemory";
