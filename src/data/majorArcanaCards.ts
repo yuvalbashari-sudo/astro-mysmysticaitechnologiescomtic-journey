@@ -1,25 +1,25 @@
-import foolImg from "@/assets/tarot/fool.jpg";
-import magicianImg from "@/assets/tarot/magician.jpg";
-import highPriestessImg from "@/assets/tarot/high-priestess.jpg";
-import empressImg from "@/assets/tarot/empress.jpg";
-import emperorImg from "@/assets/tarot/emperor.jpg";
-import hierophantImg from "@/assets/tarot/hierophant.jpg";
-import loversImg from "@/assets/tarot/lovers.jpg";
-import chariotImg from "@/assets/tarot/chariot.jpg";
-import strengthImg from "@/assets/tarot/strength.jpg";
-import hermitImg from "@/assets/tarot/hermit.jpg";
-import wheelImg from "@/assets/tarot/wheel-of-fortune.jpg";
-import justiceImg from "@/assets/tarot/justice.jpg";
-import hangedManImg from "@/assets/tarot/hanged-man.jpg";
-import deathImg from "@/assets/tarot/death.jpg";
-import temperanceImg from "@/assets/tarot/temperance.jpg";
-import devilImg from "@/assets/tarot/devil.jpg";
-import towerImg from "@/assets/tarot/tower.jpg";
-import starImg from "@/assets/tarot/star.jpg";
-import moonImg from "@/assets/tarot/moon.jpg";
-import sunImg from "@/assets/tarot/sun.jpg";
-import judgementImg from "@/assets/tarot/judgement.jpg";
-import worldImg from "@/assets/tarot/world.jpg";
+import foolImg from "@/assets/tarot/major-arcana/fool/fool.png";
+import magicianImg from "@/assets/tarot/major-arcana/magician/magician.png";
+import highPriestessImg from "@/assets/tarot/major-arcana/high-priestess/high-priestess.png";
+import empressImg from "@/assets/tarot/major-arcana/empress/empress.png";
+import emperorImg from "@/assets/tarot/major-arcana/emperor/emperor.png";
+import hierophantImg from "@/assets/tarot/major-arcana/hierophant/hierophant.jpg";
+import loversImg from "@/assets/tarot/major-arcana/lovers/lovers.png";
+import chariotImg from "@/assets/tarot/major-arcana/chariot/chariot.png";
+import strengthImg from "@/assets/tarot/major-arcana/strength/strength.png";
+import hermitImg from "@/assets/tarot/major-arcana/hermit/hermit.png";
+import wheelImg from "@/assets/tarot/major-arcana/wheel-of-fortune/wheel-of-fortune.png";
+import justiceImg from "@/assets/tarot/major-arcana/justice/justice.png";
+import hangedManImg from "@/assets/tarot/major-arcana/hanged-man/hanged-man.png";
+import deathImg from "@/assets/tarot/major-arcana/death/death.png";
+import temperanceImg from "@/assets/tarot/major-arcana/temperance/temperance.png";
+import devilImg from "@/assets/tarot/major-arcana/devil/devil.png";
+import towerImg from "@/assets/tarot/major-arcana/tower/tower.png";
+import starImg from "@/assets/tarot/major-arcana/star/star.png";
+import moonImg from "@/assets/tarot/major-arcana/moon/moon.png";
+import sunImg from "@/assets/tarot/major-arcana/sun/sun.png";
+import judgementImg from "@/assets/tarot/major-arcana/judgement/judgement.png";
+import worldImg from "@/assets/tarot/major-arcana/world/world.png";
 
 import type { Language } from "@/i18n/types";
 
@@ -65,7 +65,6 @@ export const majorArcanaCards: MajorArcanaCard[] = [
 /**
  * Get a card's localized display name.
  * Priority: current language → English fallback → Hebrew fallback.
- * Hebrew is only used as final fallback (never shown to non-Hebrew users if English exists).
  */
 export function getCardName(card: MajorArcanaCard, language: Language): string {
   return card.name[language] || card.name.en || card.name.he;
@@ -126,7 +125,6 @@ const VALID_CARD_NAMES = new Set(majorArcanaCards.map(c => c.name.en));
 
 /**
  * Debug safeguard: returns true if the name belongs to the Major Arcana set.
- * Logs a warning in dev if an unknown card appears.
  */
 export function isValidMajorArcana(englishName: string): boolean {
   const valid = VALID_CARD_NAMES.has(englishName);
