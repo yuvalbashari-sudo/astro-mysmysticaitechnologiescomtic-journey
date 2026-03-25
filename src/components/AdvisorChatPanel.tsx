@@ -305,7 +305,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-[105] bg-background/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:pointer-events-none"
+            className={`fixed inset-0 ${forceRightAnchor ? "z-[205]" : "z-[105]"} bg-background/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:pointer-events-none`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
