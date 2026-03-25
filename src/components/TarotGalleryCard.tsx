@@ -8,12 +8,6 @@ interface Props {
   onSelect: (card: UnifiedTarotCard) => void;
 }
 
-const ctaLabels: Record<string, string> = {
-  he: "לצפייה בקלף",
-  en: "View Card",
-  ru: "Открыть карту",
-  ar: "عرض البطاقة",
-};
 
 export default function TarotGalleryCard({ card, index, onSelect }: Props) {
   const { language } = useLanguage();

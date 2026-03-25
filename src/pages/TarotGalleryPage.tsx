@@ -1,25 +1,11 @@
 import { useState, useMemo, useCallback } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { allTarotCards, filterBySuit, suitFilterLabels, getAvailableFilters, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
+import { allTarotCards, filterBySuit, getAvailableFilters, tarotGalleryTranslations, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
 import TarotGalleryCard from "@/components/TarotGalleryCard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const sectionTitle: Record<string, string> = {
-  he: "קלפי טארוט",
-  en: "Tarot Cards",
-  ru: "Карты Таро",
-  ar: "بطاقات التاروت",
-};
-
-const introText: Record<string, string> = {
-  he: "גלו את כל קלפי הטארוט לפי ארקנה גדולה וארבע הסדרות.",
-  en: "Explore all tarot cards by Major Arcana and the four suits.",
-  ru: "Изучите все карты Таро по Старшим Арканам и четырем мастям.",
-  ar: "اكتشف جميع بطاقات التاروت حسب الأركانا الكبرى والسلاسل الأربع.",
-};
 
 export default function TarotGalleryPage() {
   const { language, dir } = useLanguage();
