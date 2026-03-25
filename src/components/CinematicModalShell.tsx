@@ -19,6 +19,8 @@ interface Props {
   hideAdvisor?: boolean;
   /** When true, skips oracle background — shows only a subtle dark backdrop */
   transparent?: boolean;
+  /** Override default avatar positioning styles */
+  avatarStyle?: React.CSSProperties;
 }
 
 /**
@@ -29,7 +31,7 @@ interface Props {
  * Children scroll naturally over a rising fog gradient that provides
  * text legibility without hiding the figure.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle }: Props) => {
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   
@@ -177,7 +179,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             <AvatarHoverTeaser
               disabled={isMobile}
               className="absolute z-[106]"
-              style={{
+              style={avatarStyle ?? {
                 bottom: isMobile ? 28 : 32,
                 right: isMobile ? 20 : 40,
                 left: "auto",
