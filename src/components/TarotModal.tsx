@@ -233,7 +233,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             readingsStorage.save({
               type: "tarot",
               title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-              subtitle: tableCards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
+              subtitle: tableCards.map(c => localizedName(c)).join(" • "),
               symbol: "🔮",
               data: { spread: selectedSpread.key, cards: tableCards },
             });
