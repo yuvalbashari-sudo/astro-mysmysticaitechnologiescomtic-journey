@@ -339,17 +339,19 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!card) return;
-    const text = `🔮 ${t.daily_title}: ${card.symbol} ${cardName(card.name, card.hebrewName)}\n\n✨ ${window.location.origin}`;
+    const displayName = card.name[language] || card.name.en;
+    const text = `🔮 ${t.daily_title}: ${card.symbol} ${displayName}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!aiText) return;
-    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${card?.hebrewName}\n\n${aiText}`);
+    const displayName = card ? (card.name[language] || card.name.en) : "";
+    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${displayName}\n\n${aiText}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  const cardImage = card ? (card.image || tarotCardImages[card.name]) : null;
+  const cardImage = card ? card.image : null;
 
   return (
     <>
