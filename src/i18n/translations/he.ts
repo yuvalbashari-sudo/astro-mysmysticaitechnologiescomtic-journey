@@ -570,4 +570,7 @@ export const he: TranslationKeys = {
 
   advisor_quick_questions_label: "שאלות מהירות",
   advisor_or_type_question: "או הקלידו שאלה",
+  advisor_share: "שתפו תשובות",
+  advisor_copy: "העתיקו תשובות",
+  advisor_copied: "התשובות הועתקו",
 };

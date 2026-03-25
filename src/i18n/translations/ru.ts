@@ -570,4 +570,7 @@ export const ru: TranslationKeys = {
 
   advisor_quick_questions_label: "Быстрые вопросы",
   advisor_or_type_question: "или введите вопрос",
+  advisor_share: "Поделиться ответами",
+  advisor_copy: "Скопировать ответы",
+  advisor_copied: "Скопировано!",
 };

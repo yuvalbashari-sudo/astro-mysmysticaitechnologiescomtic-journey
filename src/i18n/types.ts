@@ -519,6 +519,9 @@ export type TranslationKeys = {
   // Advisor panel
   advisor_quick_questions_label: string;
   advisor_or_type_question: string;
+  advisor_share: string;
+  advisor_copy: string;
+  advisor_copied: string;
 
   // Daily Ritual
   daily_ritual_label: string;
