@@ -37,7 +37,7 @@ function getDailyCardIndex(total: number): number {
   return hashToNumber(`${getUserSeed()}-${getTodayDate()}`) % total;
 }
 
-function getSavedDailyCard(): { card: MajorArcanaCard; date: string } | null {
+function getSavedDailyCard(): { card: ReadingCard; date: string } | null {
   try {
     const raw = localStorage.getItem(DAILY_CARD_KEY);
     if (!raw) return null;
