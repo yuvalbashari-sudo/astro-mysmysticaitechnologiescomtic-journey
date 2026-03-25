@@ -87,3 +87,36 @@ export function getLocalizedCardName(englishName: string, language: Language): s
   if (!card) return englishName;
   return card.name[language] || card.name.en || card.name.he;
 }
+
+/**
+ * Draw N random Major Arcana cards (Fisher-Yates shuffle).
+ */
+export function drawMajorArcana(count: number = 3): MajorArcanaCard[] {
+  const shuffled = [...majorArcanaCards];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, Math.min(count, shuffled.length));
+}
+
+/**
+ * Get a deterministic daily card index based on a seed and date.
+ */
+export function getDailyMajorArcanaIndex(seed: string, date: string): number {
+  let hash = 0;
+  const str = `${seed}-${date}`;
+  for (let i = 0; i < str.length; i++) {
+    const c = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + c;
+    hash = hash & hash;
+  }
+  return Math.abs(hash) % majorArcanaCards.length;
+}
+
+/**
+ * Get a MajorArcanaCard's image from tarotCardImages by english name.
+ */
+export function getCardImage(card: MajorArcanaCard): string {
+  return card.image;
+}
