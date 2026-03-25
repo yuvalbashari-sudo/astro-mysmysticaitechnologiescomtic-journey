@@ -26,7 +26,7 @@ const DAILY_USER_SEED_KEY = "astrologai_user_seed";
 const RITUAL_DURATION_MS = 4200;
 
 interface DailyCardData {
-  card: TarotWorldCard;
+  card: ReadingCard;
   date: string;
   aiText?: string;
   language?: string;
