@@ -374,7 +374,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  const cardImage = card ? tarotCardImages[card.name] : null;
+  const cardImage = card ? (tarotCardImages[card.name] || card.image) : null;
 
   return (
     <>
