@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import AstrologerAvatarButton from "./AstrologerAvatarButton";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -1477,29 +1477,15 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               zIndex: 200,
             }}
           >
-            <motion.div
-              className="rounded-full overflow-hidden cursor-pointer"
+            <AstrologerAvatarButton
+              size={isMobile ? 80 : 140}
+              onClick={() => setAdvisorOpen(true)}
+              entranceDelay={1.2}
+              className="relative"
               style={{
-                width: isMobile ? 80 : 140,
-                height: isMobile ? 80 : 140,
-                border: "2px solid hsl(var(--gold) / 0.4)",
-                boxShadow: "0 0 24px hsl(var(--gold) / 0.2), 0 8px 20px hsl(0 0% 0% / 0.4)",
                 filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
               }}
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ filter: "brightness(1.15)", scale: 1.05 }}
-              onClick={() => setAdvisorOpen(true)}
-            >
-              <img
-                src={astrologerAvatarCta}
-                alt="האסטרולוגית"
-                className="w-full h-full object-cover scale-105"
-                style={{ objectPosition: "center 35%" }}
-                draggable={false}
-              />
-            </motion.div>
+            />
           </AvatarHoverTeaser>
 
           {/* ── Close button — rendered last to sit on top of everything ── */}
