@@ -60,13 +60,13 @@ const MysticalLanguageDropdown = () => {
     syncTriggerPosition();
 
     const syncOnFrame = () => window.requestAnimationFrame(syncTriggerPosition);
-+   const resizeObserver = typeof ResizeObserver !== "undefined"
-+      ? new ResizeObserver(syncOnFrame)
-+      : null;
-+
-+    if (anchorRef.current && resizeObserver) {
-+      resizeObserver.observe(anchorRef.current);
-+    }
+    const resizeObserver = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(syncOnFrame)
+      : null;
+
+    if (anchorRef.current && resizeObserver) {
+      resizeObserver.observe(anchorRef.current);
+    }
  
     window.addEventListener("resize", syncOnFrame);
     window.addEventListener("scroll", syncOnFrame, true);
@@ -74,10 +74,9 @@ const MysticalLanguageDropdown = () => {
     return () => {
       window.removeEventListener("resize", syncOnFrame);
       window.removeEventListener("scroll", syncOnFrame, true);
-+      resizeObserver?.disconnect();
+      resizeObserver?.disconnect();
     };
--  }, [mounted, syncTriggerPosition]);
-+  }, [mounted, syncTriggerPosition, language]);
+  }, [mounted, syncTriggerPosition, language]);
 
   useEffect(() => {
     if (!open) return;
