@@ -41,10 +41,10 @@ export default function TarotGalleryPage() {
         {/* Header */}
         <header className="text-center mb-8 md:mb-12">
           <h1 className="font-heading text-3xl md:text-5xl font-bold text-foreground mb-3">
-            {sectionTitle[language]}
+            {tarotGalleryTranslations.sectionTitle[language]}
           </h1>
           <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
-            {introText[language]}
+            {tarotGalleryTranslations.introText[language]}
           </p>
         </header>
 
