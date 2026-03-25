@@ -270,10 +270,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
     saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
+    const majorCard = findMajorArcanaByEnglishName(selectedCard.name);
+    const localizedName = majorCard ? getMajorCardName(majorCard, language) : cardName(selectedCard.name, selectedCard.hebrewName);
+
     streamMysticalReading(
       "dailyCard",
       {
         cardName: selectedCard.name,
+        cardLocalizedName: localizedName,
         cardHebrewName: selectedCard.hebrewName,
         cardNumber: selectedCard.number,
         cardSymbol: selectedCard.symbol,
@@ -290,19 +294,19 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        const label = `${t.daily_title} — ${cardName(selectedCard.name, selectedCard.hebrewName)}`;
+        const label = `${t.daily_title} — ${localizedName}`;
         setActiveReading({ type: "dailyCard", label, summary: aiTextRef.current });
         const saved = getSavedDailyCard();
         if (saved) {
           saveDailyCard({ ...saved, aiText: aiTextRef.current, language });
         }
-        mysticalProfile.recordDailyCard(selectedCard.hebrewName, selectedCard.symbol);
+        mysticalProfile.recordDailyCard(localizedName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
           title: label,
           subtitle: t.daily_card_chosen,
           symbol: selectedCard.symbol,
-          data: { card: selectedCard.hebrewName, aiReading: aiTextRef.current },
+          data: { card: localizedName, aiReading: aiTextRef.current },
         });
       },
       (err) => {
