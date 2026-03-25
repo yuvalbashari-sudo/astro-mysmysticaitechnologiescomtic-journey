@@ -123,7 +123,7 @@ type Phase = "ready" | "ritual" | "result" | "locked";
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
-  const cardName = useCardName();
+  
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("ready");
   const [card, setCard] = useState<ReadingCard | null>(null);
