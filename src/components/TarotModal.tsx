@@ -244,7 +244,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
 
-  const startAIReading = (drawnCards: MajorArcanaCard[]) => {
+  const startAIReading = (drawnCards: ReadingCard[]) => {
     setAiLoading(true);
     aiTextRef.current = "";
     setAiText("");
