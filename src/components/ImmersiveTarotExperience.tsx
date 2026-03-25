@@ -259,7 +259,7 @@ const FloatingCard = ({
             ) : (
               <img
                 src={showFront ? frontImgSrc : cardBack}
-                alt={showFront ? card.hebrewName : ""}
+                alt={showFront ? cardName(card.name.en, card.name.he) : ""}
                 className="w-full h-full object-cover"
                 style={{
                   backfaceVisibility: "hidden",
