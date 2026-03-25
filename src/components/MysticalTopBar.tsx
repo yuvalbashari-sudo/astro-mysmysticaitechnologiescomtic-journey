@@ -16,6 +16,7 @@ const iconBtn =
 
 const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { scale, setScale } = useFontScale();
+  const { dir } = useLanguage();
   const t = useT();
 
   return (
