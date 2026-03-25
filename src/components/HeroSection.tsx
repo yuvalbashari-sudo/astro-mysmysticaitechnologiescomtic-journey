@@ -2885,8 +2885,8 @@ const HeroSection = () => {
         <motion.div
           className="fixed z-[30] pointer-events-auto"
           style={{
-            bottom: 10,
-            right: 10,
+            bottom: 110,
+            right: 210,
             filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
           }}
           initial={{ opacity: 0 }}
