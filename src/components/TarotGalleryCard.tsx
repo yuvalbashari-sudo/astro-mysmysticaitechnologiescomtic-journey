@@ -55,7 +55,7 @@ export default function TarotGalleryCard({ card, index, onSelect }: Props) {
 
         {/* CTA */}
         <span className="inline-flex items-center justify-center text-xs font-medium px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary">
-          {ctaLabels[language] || ctaLabels.en}
+          {card.ctaLabel[language]}
         </span>
       </button>
     </motion.div>

@@ -117,13 +117,7 @@ export default function TarotGalleryPage() {
                 />
               </div>
               <p className="text-center text-xs text-muted-foreground">
-                {language === "he"
-                  ? "דף הקלף המלא יתווסף בקרוב ✦"
-                  : language === "ar"
-                  ? "صفحة البطاقة الكاملة ستضاف قريباً ✦"
-                  : language === "ru"
-                  ? "Полная страница карты скоро появится ✦"
-                  : "Full card page coming soon ✦"}
+                {tarotGalleryTranslations.modalComingSoon[language]}
               </p>
             </>
           )}
