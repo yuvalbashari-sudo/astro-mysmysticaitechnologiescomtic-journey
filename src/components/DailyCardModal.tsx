@@ -256,7 +256,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     };
   }, [phase, card]);
 
-  const startAiReading = (selectedCard: TarotWorldCard) => {
+  const startAiReading = (selectedCard: ReadingCard) => {
     setAiLoading(true);
     setAiError(null);
     aiTextRef.current = "";
@@ -269,21 +269,20 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
     saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
-    const majorCard = findMajorArcanaByEnglishName(selectedCard.name);
-    const localizedName = majorCard ? getMajorCardName(majorCard, language) : cardName(selectedCard.name, selectedCard.hebrewName);
+    const localizedName = selectedCard.name[language] || selectedCard.name.en;
 
     streamMysticalReading(
       "dailyCard",
       {
-        cardName: selectedCard.name,
+        cardName: selectedCard.name.en,
         cardLocalizedName: localizedName,
-        cardHebrewName: selectedCard.hebrewName,
-        cardNumber: selectedCard.number,
+        cardHebrewName: selectedCard.name.he,
+        cardNumber: 0,
         cardSymbol: selectedCard.symbol,
-        generalMeaning: selectedCard.meanings.general,
-        dailyMeaning: selectedCard.meanings.daily,
-        spiritualMeaning: selectedCard.meanings.spiritual,
-        advice: selectedCard.meanings.advice,
+        generalMeaning: selectedCard.name.en,
+        dailyMeaning: selectedCard.name.en,
+        spiritualMeaning: selectedCard.name.en,
+        advice: selectedCard.name.en,
         gender,
         userName: userName.trim() || undefined,
       },
