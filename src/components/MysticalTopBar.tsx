@@ -105,7 +105,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </motion.button>
           )}
 
-          <div ref={langContainerRef} className="relative">
+          <div ref={langContainerRef} className="relative" style={{ zIndex: langOpen ? 99999 : undefined }}>
             <motion.button
               type="button"
               onClick={() => setLangOpen((prev) => !prev)}
