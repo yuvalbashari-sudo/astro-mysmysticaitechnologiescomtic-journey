@@ -58,7 +58,7 @@ export default function TarotGalleryPage() {
             {sectionTitle[language]}
           </h1>
           <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto">
-            {introText[language](allTarotCards.length)}
+            {introText[language]}
           </p>
         </header>
 
