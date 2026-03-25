@@ -5,17 +5,14 @@ import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Sun, Lock, Share2, Copy, Check, Loader2, Clock, Crown } from "lucide-react";
-import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
 import { allReadingCards, type ReadingCard } from "@/data/allTarotCards";
-import { findMajorArcanaByEnglishName, getCardName as getMajorCardName } from "@/data/majorArcanaCards";
-import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import { cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
-import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
@@ -28,7 +25,7 @@ const DAILY_USER_SEED_KEY = "astrologai_user_seed";
 const RITUAL_DURATION_MS = 4200;
 
 interface DailyCardData {
-  card: TarotWorldCard;
+  card: ReadingCard;
   date: string;
   aiText?: string;
   language?: string;
@@ -126,10 +123,10 @@ type Phase = "ready" | "ritual" | "result" | "locked";
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
-  const cardName = useCardName();
+  
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("ready");
-  const [card, setCard] = useState<TarotWorldCard | null>(null);
+  const [card, setCard] = useState<ReadingCard | null>(null);
   const [copied, setCopied] = useState(false);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
@@ -209,31 +206,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    // Select card deterministically
+    // Select card deterministically from full 78-card deck
     const cardIndex = getDailyCardIndex(allReadingCards.length);
-    const readingCard = allReadingCards[cardIndex];
-    // Convert ReadingCard to TarotWorldCard-compatible shape
-    const majorMatch = majorArcana.find(m => m.name === readingCard.name.en);
-    const selectedCard: TarotWorldCard = majorMatch || {
-      name: readingCard.name.en,
-      hebrewName: readingCard.name.he,
-      number: cardIndex,
-      symbol: readingCard.symbol,
-      image: readingCard.image,
-      meanings: {
-        general: readingCard.name.en,
-        daily: readingCard.name.en,
-        love: readingCard.name.en,
-        career: readingCard.name.en,
-        decision: readingCard.name.en,
-        universe: readingCard.name.en,
-        past: readingCard.name.en,
-        present: readingCard.name.en,
-        future: readingCard.name.en,
-        spiritual: readingCard.name.en,
-        advice: readingCard.name.en,
-      },
-    };
+    const selectedCard = allReadingCards[cardIndex];
     setCard(selectedCard);
     setShowCardOverlay(false);
     setRitualStep(0);
@@ -280,7 +255,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     };
   }, [phase, card]);
 
-  const startAiReading = (selectedCard: TarotWorldCard) => {
+  const startAiReading = (selectedCard: ReadingCard) => {
     setAiLoading(true);
     setAiError(null);
     aiTextRef.current = "";
@@ -293,21 +268,20 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
     saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
-    const majorCard = findMajorArcanaByEnglishName(selectedCard.name);
-    const localizedName = majorCard ? getMajorCardName(majorCard, language) : cardName(selectedCard.name, selectedCard.hebrewName);
+    const localizedName = selectedCard.name[language] || selectedCard.name.en;
 
     streamMysticalReading(
       "dailyCard",
       {
-        cardName: selectedCard.name,
+        cardName: selectedCard.name.en,
         cardLocalizedName: localizedName,
-        cardHebrewName: selectedCard.hebrewName,
-        cardNumber: selectedCard.number,
+        cardHebrewName: selectedCard.name.he,
+        cardNumber: 0,
         cardSymbol: selectedCard.symbol,
-        generalMeaning: selectedCard.meanings.general,
-        dailyMeaning: selectedCard.meanings.daily,
-        spiritualMeaning: selectedCard.meanings.spiritual,
-        advice: selectedCard.meanings.advice,
+        generalMeaning: selectedCard.name.en,
+        dailyMeaning: selectedCard.name.en,
+        spiritualMeaning: selectedCard.name.en,
+        advice: selectedCard.name.en,
         gender,
         userName: userName.trim() || undefined,
       },
@@ -364,17 +338,19 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!card) return;
-    const text = `🔮 ${t.daily_title}: ${card.symbol} ${cardName(card.name, card.hebrewName)}\n\n✨ ${window.location.origin}`;
+    const displayName = card.name[language] || card.name.en;
+    const text = `🔮 ${t.daily_title}: ${card.symbol} ${displayName}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!aiText) return;
-    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${card?.hebrewName}\n\n${aiText}`);
+    const displayName = card ? (card.name[language] || card.name.en) : "";
+    await navigator.clipboard.writeText(`🔮 ${t.daily_title} — ${displayName}\n\n${aiText}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  const cardImage = card ? (card.image || tarotCardImages[card.name]) : null;
+  const cardImage = card ? card.image : null;
 
   return (
     <>
@@ -710,7 +686,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         {/* Card FRONT — always present, guaranteed visible */}
                         <div className="absolute inset-0">
                           {cardImage ? (
-                            <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
+                            <img src={cardImage} alt={card.name[language] || card.name.en} className="w-full h-full object-cover" />
                           ) : (
                             <div
                               className="w-full h-full flex items-center justify-center"
@@ -783,7 +759,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         animate={{ opacity: ritualStep >= 3 ? 1 : 0, y: ritualStep >= 3 ? 0 : 15 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                       >
-                        {card.symbol} {cardName(card.name, card.hebrewName)}
+                        {card.symbol} {card.name[language] || card.name.en}
                       </motion.h2>
                       <motion.p
                         className="text-foreground/50 font-body text-sm relative z-10 mt-1"
@@ -879,7 +855,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
                         >
                           {cardImage ? (
-                            <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="h-full w-full object-contain" />
+                            <img src={cardImage} alt={card.name[language] || card.name.en} className="h-full w-full object-contain" />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center">
                               <span className="text-5xl">{card.symbol}</span>
@@ -895,10 +871,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                         <div className="flex flex-col items-center gap-1.5">
                           <h2 className="font-heading text-[36px] leading-none gold-gradient-text md:text-[44px]">
-                            {cardName(card.name, card.hebrewName)}
+                            {card.name[language] || card.name.en}
                           </h2>
                           <p className="font-body text-base md:text-lg" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
-                            {t.daily_arcana_label} {card.number}
+                            {card.symbol} {card.suit !== "major" ? card.suit : t.daily_arcana_label}
                           </p>
                         </div>
 

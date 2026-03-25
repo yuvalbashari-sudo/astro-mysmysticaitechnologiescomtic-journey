@@ -1,23 +1,26 @@
 import { useLanguage } from "@/i18n/LanguageContext";
-import { getLocalizedCardName } from "@/data/majorArcanaCards";
+import { allTarotCards } from "@/data/allTarotCards";
+
+// Build a lookup from English name → localized names for all 78 cards
+const cardNameMap = new Map<string, Record<string, string>>();
+for (const card of allTarotCards) {
+  cardNameMap.set(card.name.en, card.name as unknown as Record<string, string>);
+}
 
 /**
  * Hook that returns a function to get the localized card display name.
- * Usage: const cardName = useCardName();
- *        cardName("The Fool") → "השוטה" (in Hebrew) or "The Fool" (in English)
- * 
- * For cards with hebrewName already available, pass both:
- *        cardName("The Fool", "השוטה") → uses majorArcanaCards lookup, falls back to hebrewName
+ * Supports the full 78-card deck (Major + Minor Arcana).
  */
 export function useCardName() {
   const { language } = useLanguage();
 
   return (englishName: string, hebrewFallback?: string): string => {
-    const localized = getLocalizedCardName(englishName, language);
-    // If the lookup returned the english name unchanged and we have a hebrew fallback for Hebrew lang
-    if (localized === englishName && language === "he" && hebrewFallback) {
-      return hebrewFallback;
+    const names = cardNameMap.get(englishName);
+    if (names) {
+      return names[language] || names.en || englishName;
     }
-    return localized;
+    // Fallback for unknown cards
+    if (language === "he" && hebrewFallback) return hebrewFallback;
+    return englishName;
   };
 }

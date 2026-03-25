@@ -18,8 +18,8 @@ import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT, useLanguage } from "@/i18n";
 import { useCardName } from "@/hooks/useCardName";
 import type { Language } from "@/i18n";
-import { drawMajorArcana, type MajorArcanaCard } from "@/data/majorArcanaCards";
-import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
+import { cardBack } from "@/data/tarotCardImages";
 import ariesIcon from "@/assets/zodiac-icons/aries.png";
 import taurusIcon from "@/assets/zodiac-icons/taurus.png";
 import geminiIcon from "@/assets/zodiac-icons/gemini.png";
@@ -1812,13 +1812,13 @@ const TarotCardReveal = ({
     setPhaseInternal(p);
     onPhaseChange?.(p);
   }, [onPhaseChange]);
-  const [card, setCard] = useState<MajorArcanaCard | null>(null);
+  const [card, setCard] = useState<ReadingCard | null>(null);
   const cardSize = isMobile ? 70 : 100;
 
   // Show silhouette after delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      const [drawn] = drawMajorArcana(1);
+      const [drawn] = drawReadingCards(1);
       setCard(drawn);
       setPhase("silhouette");
     }, 5000);
@@ -1833,7 +1833,7 @@ const TarotCardReveal = ({
       setPhase("idle");
       // Re-draw a new card and show silhouette again after a brief pause
       setTimeout(() => {
-        const [drawn] = drawMajorArcana(1);
+        const [drawn] = drawReadingCards(1);
         setCard(drawn);
         setPhase("silhouette");
       }, 3000);
@@ -1842,8 +1842,9 @@ const TarotCardReveal = ({
 
   if (!card) return null;
 
-  const cardImage = tarotCardImages[card.name.en] || cardBack;
-  const message = TAROT_MESSAGES[language]?.[card.name.en] || `${cardName(card.name.en, card.name.he)} ${t.hero_tarot_fallback_message}`;
+  const cardImage = card.image || cardBack;
+  const localName = card.name[language] || card.name.en;
+  const message = TAROT_MESSAGES[language]?.[card.name.en] || `${localName} ${t.hero_tarot_fallback_message}`;
 
   return (
     <div

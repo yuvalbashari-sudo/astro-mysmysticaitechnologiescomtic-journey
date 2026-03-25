@@ -1,4 +1,4 @@
-import { majorArcanaCards, type MajorArcanaCard } from "@/data/majorArcanaCards";
+import { allReadingCards, type ReadingCard } from "@/data/allTarotCards";
 
 const STORAGE_KEY = "astrologai_daily_ritual";
 
@@ -56,10 +56,10 @@ const ENERGY_INSIGHTS = [
 ];
 
 export interface DailyRitualData {
-  card: MajorArcanaCard;
+  card: ReadingCard;
   message: string;
   energy: { theme: string; insight: string; icon: string };
-  timestamp: number; // ms
+  timestamp: number;
   revealed: boolean;
 }
 
@@ -68,7 +68,7 @@ function getDayKey(): string {
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
 }
 
-/** Deterministic index based on date (same card/message every day for all users) */
+/** Deterministic index based on date */
 function dayIndex(): number {
   const now = new Date();
   const start = new Date(2024, 0, 1);
@@ -92,9 +92,9 @@ export function getDailyRitual(): DailyRitualData & { isNew: boolean } {
     return { ...saved, isNew: false };
   }
 
-  // Generate new daily ritual
+  // Generate new daily ritual from FULL 78-card deck
   const idx = dayIndex();
-  const card = majorArcanaCards[idx % majorArcanaCards.length];
+  const card = allReadingCards[idx % allReadingCards.length];
   const message = DAILY_MESSAGES[idx % DAILY_MESSAGES.length];
   const energy = ENERGY_INSIGHTS[idx % ENERGY_INSIGHTS.length];
 

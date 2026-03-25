@@ -397,7 +397,7 @@ export const majorArcana: TarotWorldCard[] = [
 ];
 
 export function drawCardsForSpread(spread: SpreadConfig): TarotWorldCard[] {
-  // Fisher-Yates shuffle for true randomness
+  // Fisher-Yates shuffle from the full majorArcana array (TarotWorldModal uses this for its specific flow)
   const shuffled = [...majorArcana];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
