@@ -69,7 +69,7 @@ export default function TarotGalleryPage() {
           aria-label="Filter cards"
         >
           <div className="flex gap-2 overflow-x-auto no-scrollbar justify-center">
-            {filters.map((f) => (
+            {availableFilters.map((f) => (
               <button
                 key={f}
                 role="tab"
