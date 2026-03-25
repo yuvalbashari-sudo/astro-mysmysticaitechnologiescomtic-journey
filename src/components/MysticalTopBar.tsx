@@ -136,7 +136,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute overflow-hidden rounded-2xl border border-border/80 bg-card/95 p-1.5 text-foreground shadow-2xl backdrop-blur-xl supports-[backdrop-filter]:bg-card/90"
+                  className="absolute overflow-hidden rounded-2xl p-1.5 text-foreground"
                   style={{
                     top: "calc(100% + 0.35rem)",
                     insetInlineEnd: 0,
@@ -144,8 +144,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                     minWidth: "11rem",
                     maxWidth: "min(18rem, calc(100vw - 1rem))",
                     maxHeight: "min(70vh, 20rem)",
-                    boxShadow: "0 20px 50px hsl(var(--deep-blue) / 0.68), 0 0 0 1px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--foreground) / 0.04)",
-                    background: "linear-gradient(180deg, hsl(var(--card) / 0.98), hsl(var(--deep-blue) / 0.96))",
+                    boxShadow: "0 20px 50px hsl(0 0% 0% / 0.85), 0 0 0 1px hsl(var(--gold) / 0.18)",
+                    background: "hsl(222 47% 7%)",
+                    border: "1px solid hsl(var(--gold) / 0.25)",
                     transformOrigin: dir === "rtl" ? "top left" : "top right",
                   }}
                   role="listbox"
