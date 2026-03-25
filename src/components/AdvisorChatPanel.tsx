@@ -305,7 +305,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
         <>
           {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-[105] bg-background/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:pointer-events-none"
+            className={`fixed inset-0 ${forceRightAnchor ? "z-[205]" : "z-[105]"} bg-background/40 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none md:pointer-events-none`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -314,7 +314,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
           {/* Chat Panel */}
           <motion.div
-            className={`fixed z-[106] flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
+            className={`fixed ${forceRightAnchor ? "z-[206]" : "z-[106]"} flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
             style={{
               bottom: forceRightAnchor ? "60px" : "5.5rem",
               right: forceRightAnchor ? "5px" : dir === "rtl" ? "auto" : "1.25rem",
