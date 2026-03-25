@@ -86,7 +86,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
     setTimeout(() => setFlipped(true), 600);
   }, [drawn]);
 
-  const cardImage = card ? tarotCardImages[card.name] : null;
+  const cardImage = card ? card.image : null;
 
   // ── COLLAPSED STATE: compact bar to draw the card ──
   if (!flipped) {
