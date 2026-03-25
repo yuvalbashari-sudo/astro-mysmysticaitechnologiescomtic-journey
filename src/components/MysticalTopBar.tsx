@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { MessageCircle, Clock, Sparkles } from "lucide-react";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
@@ -16,11 +16,13 @@ const iconBtn =
 
 const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { scale, setScale } = useFontScale();
+  const { dir } = useLanguage();
   const t = useT();
 
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-[60] px-3 sm:px-4 md:px-8 py-2 md:py-3"
+      dir={dir}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.3 }}
