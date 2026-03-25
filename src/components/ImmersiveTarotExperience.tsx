@@ -453,7 +453,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const handleQuestionSelect = useCallback((key: string) => {
     setSelectedQuestion(key);
     setTimeout(() => {
-      setDrawnCards(drawMajorArcana(7));
+      setDrawnCards(drawReadingCards(7));
       setPhase("drawing");
     }, 600);
   }, []);
