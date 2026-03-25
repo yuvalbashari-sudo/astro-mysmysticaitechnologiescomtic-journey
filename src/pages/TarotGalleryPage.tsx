@@ -35,7 +35,7 @@ export default function TarotGalleryPage() {
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6 text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          {language === "he" ? "חזרה" : language === "ar" ? "رجوع" : language === "ru" ? "Назад" : "Back"}
+          {tarotGalleryTranslations.backLabel[language]}
         </button>
 
         {/* Header */}
