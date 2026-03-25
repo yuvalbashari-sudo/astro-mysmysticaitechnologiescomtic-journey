@@ -1,7 +1,8 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Sparkles, Star } from "lucide-react";
 import { majorArcanaCards, type MajorArcanaCard } from "@/data/majorArcanaCards";
+import { majorArcana as majorArcanaWorld } from "@/data/tarotWorldData";
 import { cardBack } from "@/data/tarotCardImages";
 import { useT } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
