@@ -75,7 +75,7 @@ export default function TarotGalleryPage() {
 
         {/* Card count */}
         <p className="text-center text-xs text-muted-foreground mb-6">
-          {cards.length} {language === "he" ? "קלפים" : language === "ar" ? "بطاقة" : language === "ru" ? "карт" : "cards"}
+          {cards.length} {tarotGalleryTranslations.countLabel[language]}
         </p>
 
         {/* Cards grid */}
