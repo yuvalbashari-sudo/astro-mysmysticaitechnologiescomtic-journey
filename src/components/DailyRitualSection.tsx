@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Clock, ChevronDown } from "lucide-react";
 import { getDailyRitual, revealDailyRitual, msUntilReset, type DailyRitualData } from "@/lib/dailyRitual";
-import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import { cardBack } from "@/data/tarotCardImages";
+import { majorArcana as majorArcanaWorld } from "@/data/tarotWorldData";
 import { useT } from "@/i18n";
 import { useCardName } from "@/hooks/useCardName";
 
