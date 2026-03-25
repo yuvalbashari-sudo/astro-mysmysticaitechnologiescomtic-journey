@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Sparkles, Star } from "lucide-react";
 import { allReadingCards, type ReadingCard } from "@/data/allTarotCards";
 import { cardBack } from "@/data/tarotCardImages";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 
