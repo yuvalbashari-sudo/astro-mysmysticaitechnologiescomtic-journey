@@ -282,16 +282,16 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
               ) : matchInfo ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone: LEFT=text, CENTER=oracle, RIGHT=score panel ── */
-                  <div className="absolute inset-0">
+                  <div className="absolute inset-0 overflow-hidden">
                     {/* LEFT: Interpretation text */}
                     <motion.div
                       ref={scrollRef}
                       className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
                       style={{
                         top: "calc(10vh + 56px)",
-                        left: "10px",
+                        ...(isLtr ? { left: "10px" } : { left: "10px" }),
                         width: "min(720px, 50vw)",
-                        maxHeight: "80vh",
+                        maxHeight: "calc(90vh - 56px)",
                       }}
                       initial={{ opacity: 0, y: 40 }}
                       animate={{ opacity: 1, y: 0 }}
