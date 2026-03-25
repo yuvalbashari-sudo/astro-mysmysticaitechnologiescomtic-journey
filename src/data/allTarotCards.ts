@@ -6,6 +6,15 @@ export type TarotSuitFilter = "all" | TarotSuit;
 
 type LocalizedText = Record<Language, string>;
 
+/** Card shape used by the reading/drawing flow — compatible with MajorArcanaCard */
+export interface ReadingCard {
+  id: string;
+  name: LocalizedText;
+  image: string;
+  suit: TarotSuit;
+  symbol: string;
+}
+
 type TarotAssetInventory = Record<TarotSuit, TarotGalleryCardRecord[]>;
 
 interface MajorArcanaDefinition {
