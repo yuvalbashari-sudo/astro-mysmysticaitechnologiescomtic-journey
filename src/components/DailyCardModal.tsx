@@ -6,6 +6,7 @@ import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Sun, Lock, Share2, Copy, Check, Loader2, Clock, Crown } from "lucide-react";
 import { majorArcana, type TarotWorldCard } from "@/data/tarotWorldData";
+import { allReadingCards, type ReadingCard } from "@/data/allTarotCards";
 import { findMajorArcanaByEnglishName, getCardName as getMajorCardName } from "@/data/majorArcanaCards";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
