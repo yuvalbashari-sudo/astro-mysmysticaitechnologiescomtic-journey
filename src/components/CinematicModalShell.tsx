@@ -19,6 +19,8 @@ interface Props {
   hideAdvisor?: boolean;
   /** When true, skips oracle background — shows only a subtle dark backdrop */
   transparent?: boolean;
+  /** Override default avatar positioning styles */
+  avatarStyle?: React.CSSProperties;
 }
 
 /**
