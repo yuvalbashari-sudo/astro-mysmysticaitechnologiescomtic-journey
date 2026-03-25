@@ -161,11 +161,18 @@ const DailyRitualSection = () => {
                   )}
                 </div>
 
-                <h3 className="font-heading text-xl text-gold mb-2">{cardName(ritual.card.name, ritual.card.hebrewName)}</h3>
-                <p className="text-base text-muted-foreground font-body line-clamp-4" style={{ lineHeight: 1.7 }}>
-                  {ritual.card.meaning.slice(0, 120)}...
-                </p>
-                <p className="text-sm text-gold/50 mt-3 font-body" style={{ lineHeight: 1.6 }}>{ritual.card.advice.slice(0, 80)}...</p>
+                <h3 className="font-heading text-xl text-gold mb-2">{cardName(ritual.card.name.en, ritual.card.name.he)}</h3>
+                {(() => {
+                  const worldCard = majorArcanaWorld.find(w => w.name === ritual.card.name.en);
+                  return (
+                    <>
+                      <p className="text-base text-muted-foreground font-body line-clamp-4" style={{ lineHeight: 1.7 }}>
+                        {(worldCard?.meanings.general || "").slice(0, 120)}...
+                      </p>
+                      <p className="text-sm text-gold/50 mt-3 font-body" style={{ lineHeight: 1.6 }}>{(worldCard?.meanings.advice || "").slice(0, 80)}...</p>
+                    </>
+                  );
+                })()}
               </motion.div>
 
               {/* Daily Message */}
