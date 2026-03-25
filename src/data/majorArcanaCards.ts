@@ -115,8 +115,23 @@ export function getDailyMajorArcanaIndex(seed: string, date: string): number {
 }
 
 /**
- * Get a MajorArcanaCard's image from tarotCardImages by english name.
+ * Get a MajorArcanaCard's image. Always use card.image directly.
  */
 export function getCardImage(card: MajorArcanaCard): string {
   return card.image;
+}
+
+/** Valid Major Arcana English names — the ONLY cards allowed in the app. */
+const VALID_CARD_NAMES = new Set(majorArcanaCards.map(c => c.name.en));
+
+/**
+ * Debug safeguard: returns true if the name belongs to the Major Arcana set.
+ * Logs a warning in dev if an unknown card appears.
+ */
+export function isValidMajorArcana(englishName: string): boolean {
+  const valid = VALID_CARD_NAMES.has(englishName);
+  if (!valid && import.meta.env.DEV) {
+    console.warn(`[Tarot] Unknown card rejected: "${englishName}" — not in Major Arcana dataset`);
+  }
+  return valid;
 }
