@@ -385,7 +385,7 @@ const FloatingCard = ({
                   letterSpacing: "0.05em",
                 }}
               >
-                {cardName(card.name, card.hebrewName)}
+                {cardName(card.name.en, card.name.he)}
               </span>
             </motion.div>
           )}
