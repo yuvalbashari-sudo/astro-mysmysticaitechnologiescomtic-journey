@@ -406,7 +406,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [drawnCards, setDrawnCards] = useState<MajorArcanaCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
-  const [revealedCard, setRevealedCard] = useState<TarotCard | null>(null);
+  const [revealedCard, setRevealedCard] = useState<MajorArcanaCard | null>(null);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
