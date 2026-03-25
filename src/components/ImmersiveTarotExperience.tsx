@@ -117,7 +117,7 @@ async function streamTarotReading(
 const FloatingCard = ({
   card, index, isSelected, isFlipped, onClick, totalCards, isMobile, showBurst,
 }: {
-  card: MajorArcanaCard; index: number; isSelected: boolean; isFlipped: boolean;
+  card: ReadingCard; index: number; isSelected: boolean; isFlipped: boolean;
   onClick: () => void; totalCards: number; isMobile: boolean; showBurst: boolean;
 }) => {
   const cardName = useCardName();
