@@ -56,7 +56,7 @@ const ENERGY_INSIGHTS = [
 ];
 
 export interface DailyRitualData {
-  card: TarotCard;
+  card: MajorArcanaCard;
   message: string;
   energy: { theme: string; insight: string; icon: string };
   timestamp: number; // ms
