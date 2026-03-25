@@ -18,7 +18,7 @@ import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT, useLanguage } from "@/i18n";
 import { useCardName } from "@/hooks/useCardName";
 import type { Language } from "@/i18n";
-import { drawTarotCards, type TarotCard } from "@/data/tarotData";
+import { drawMajorArcana, type MajorArcanaCard } from "@/data/majorArcanaCards";
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import ariesIcon from "@/assets/zodiac-icons/aries.png";
 import taurusIcon from "@/assets/zodiac-icons/taurus.png";
