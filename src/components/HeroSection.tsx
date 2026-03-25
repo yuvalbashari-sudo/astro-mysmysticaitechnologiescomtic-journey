@@ -1812,7 +1812,7 @@ const TarotCardReveal = ({
     setPhaseInternal(p);
     onPhaseChange?.(p);
   }, [onPhaseChange]);
-  const [card, setCard] = useState<MajorArcanaCard | null>(null);
+  const [card, setCard] = useState<ReadingCard | null>(null);
   const cardSize = isMobile ? 70 : 100;
 
   // Show silhouette after delay
