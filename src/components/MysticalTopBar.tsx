@@ -136,7 +136,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.95 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute overflow-hidden rounded-2xl p-1.5 text-foreground"
+                  className="absolute overflow-hidden rounded-2xl p-1.5 text-foreground shadow-2xl"
                   style={{
                     top: "calc(100% + 0.35rem)",
                     insetInlineEnd: 0,
@@ -144,9 +144,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                     minWidth: "11rem",
                     maxWidth: "min(18rem, calc(100vw - 1rem))",
                     maxHeight: "min(70vh, 20rem)",
-                    boxShadow: "0 20px 50px hsl(0 0% 0% / 0.85), 0 0 0 1px hsl(var(--gold) / 0.18)",
-                    background: "hsl(222 47% 7%)",
-                    border: "1px solid hsl(var(--gold) / 0.25)",
+                    boxShadow: "0 24px 60px hsl(0 0% 0% / 0.92), 0 0 0 1px hsl(var(--gold) / 0.18)",
+                    background: "hsl(var(--deep-blue))",
+                    border: "1px solid hsl(var(--gold) / 0.28)",
                     transformOrigin: dir === "rtl" ? "top left" : "top right",
                   }}
                   role="listbox"
@@ -164,13 +164,28 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                       }}
                       className={`flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body transition-colors cursor-pointer ${
                         lang === language
-                          ? "bg-accent/25 text-foreground"
-                          : "bg-transparent text-foreground hover:bg-accent/12 hover:text-foreground"
+                          ? "text-foreground"
+                          : "text-foreground hover:text-foreground"
                       }`}
                       style={{
+                        background: lang === language
+                          ? "hsl(var(--deep-blue-light))"
+                          : "hsl(var(--card))",
                         border: lang === language
-                          ? "1px solid hsl(var(--gold) / 0.22)"
-                          : "1px solid transparent",
+                          ? "1px solid hsl(var(--gold) / 0.28)"
+                          : "1px solid hsl(var(--border))",
+                      }}
+                      onMouseEnter={(event) => {
+                        if (lang !== language) {
+                          event.currentTarget.style.background = "hsl(var(--muted))";
+                          event.currentTarget.style.borderColor = "hsl(var(--gold) / 0.18)";
+                        }
+                      }}
+                      onMouseLeave={(event) => {
+                        if (lang !== language) {
+                          event.currentTarget.style.background = "hsl(var(--card))";
+                          event.currentTarget.style.borderColor = "hsl(var(--border))";
+                        }
                       }}
                       aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
                     >
