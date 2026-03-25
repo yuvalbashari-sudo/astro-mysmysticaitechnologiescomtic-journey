@@ -343,6 +343,12 @@ export const ru: TranslationKeys = {
   daily_premium_cta: "Вернуться в Мир Таро",
   daily_already_drawn: "Ваша карта дня уже раскрыта ✦",
   daily_time_format: "{hours} часов и {minutes} минут",
+  daily_section_summary: "✨ Послание дня",
+  daily_section_love: "💕 Любовь и отношения",
+  daily_section_career: "💼 Карьера и деньги",
+  daily_section_advice: "🌟 Совет на сегодня",
+  daily_section_keywords: "🔑 Ключевые слова",
+  daily_advisor_cta_text: "Хотите персональное толкование?",
 
   palm_title: "Хиромантия",
   palm_desc: "Сфотографируйте обе ладони и получите глубокий анализ — правая рука раскрывает настоящее и действие, левая — скрытый потенциал.",

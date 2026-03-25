@@ -343,6 +343,12 @@ export const en: TranslationKeys = {
   daily_premium_cta: "Back to Tarot World",
   daily_already_drawn: "Your daily card has already been revealed ✦",
   daily_time_format: "{hours} hours and {minutes} minutes",
+  daily_section_summary: "✨ Today's Message",
+  daily_section_love: "💕 Love & Relationships",
+  daily_section_career: "💼 Career & Money",
+  daily_section_advice: "🌟 Daily Advice",
+  daily_section_keywords: "🔑 Keywords",
+  daily_advisor_cta_text: "Want a personal interpretation of this card?",
 
   palm_title: "Palm Reading",
   palm_desc: "Photograph both your palms and receive a deep analysis — the right hand reveals the present and action, the left hand reveals hidden potential.",

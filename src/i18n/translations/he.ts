@@ -343,6 +343,12 @@ export const he: TranslationKeys = {
   daily_premium_cta: "חזרו לעולם הטארוט",
   daily_already_drawn: "הקלף היומי שלך כבר נחשף ✦",
   daily_time_format: "{hours} שעות ו-{minutes} דקות",
+  daily_section_summary: "✨ מסר היום",
+  daily_section_love: "💕 אהבה ומערכות יחסים",
+  daily_section_career: "💼 קריירה וכסף",
+  daily_section_advice: "🌟 עצה ליום",
+  daily_section_keywords: "🔑 מילות מפתח",
+  daily_advisor_cta_text: "רוצה פירוש אישי לקלף הזה?",
 
   palm_title: "קריאת כף יד",
   palm_desc: "צלמו את שתי כפות הידיים שלכם וקבלו ניתוח מעמיק — יד ימין חושפת את ההווה והפעולה, יד שמאל חושפת את הפוטנציאל הנסתר.",
