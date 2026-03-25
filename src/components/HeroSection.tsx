@@ -1842,8 +1842,9 @@ const TarotCardReveal = ({
 
   if (!card) return null;
 
-  const cardImage = tarotCardImages[card.name.en] || cardBack;
-  const message = TAROT_MESSAGES[language]?.[card.name.en] || `${cardName(card.name.en, card.name.he)} ${t.hero_tarot_fallback_message}`;
+  const cardImage = card.image || cardBack;
+  const localName = card.name[language] || card.name.en;
+  const message = TAROT_MESSAGES[language]?.[card.name.en] || `${localName} ${t.hero_tarot_fallback_message}`;
 
   return (
     <div
