@@ -11,6 +11,7 @@ import NotFound from "./pages/NotFound";
 import TarotCardPage from "./pages/TarotCardPage";
 import ZodiacSignPage from "./pages/ZodiacSignPage";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
+import TarotGalleryPage from "./pages/TarotGalleryPage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/tarot-gallery" element={<TarotGalleryPage />} />
                 <Route path="/tarot/:slug" element={<TarotCardPage />} />
                 <Route path="/zodiac/:slug" element={<ZodiacSignPage />} />
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
