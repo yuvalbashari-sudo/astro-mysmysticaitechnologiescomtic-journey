@@ -570,4 +570,7 @@ export const ar: TranslationKeys = {
 
   advisor_quick_questions_label: "أسئلة سريعة",
   advisor_or_type_question: "أو اكتبوا سؤالاً",
+  advisor_share: "مشاركة الإجابات",
+  advisor_copy: "نسخ الإجابات",
+  advisor_copied: "تم النسخ!",
 };

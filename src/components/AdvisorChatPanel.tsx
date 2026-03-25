@@ -404,11 +404,13 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                           key={i}
                           onClick={() => void sendMessage(suggestion)}
                           disabled={isStreaming || isLimitReached}
-                          className="text-sm px-4 py-2 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100"
+                          className="text-sm px-4 py-2.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100 text-start leading-snug"
                           style={{
                             background: "hsl(var(--gold) / 0.06)",
                             border: "1px solid hsl(var(--gold) / 0.1)",
                             color: "hsl(var(--gold) / 0.6)",
+                            maxWidth: "100%",
+                            wordBreak: "break-word",
                           }}
                         >
                           {suggestion}
@@ -538,6 +540,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 /* ── Share/Copy Actions Sub-component ── */
 const AdvisorShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) => {
   const [copied, setCopied] = useState(false);
+  const t = useT();
 
   const answersText = useMemo(() => {
     return messages
@@ -552,7 +555,6 @@ const AdvisorShareActions = ({ messages, dir }: { messages: Message[]; dir: stri
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback
       const ta = document.createElement("textarea");
       ta.value = answersText;
       document.body.appendChild(ta);
@@ -576,7 +578,7 @@ const AdvisorShareActions = ({ messages, dir }: { messages: Message[]; dir: stri
 
   return (
     <motion.div
-      className="flex items-center justify-center gap-3 pt-3 pb-1"
+      className="flex items-center justify-center gap-3 pt-3 pb-1 flex-wrap"
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
@@ -584,27 +586,27 @@ const AdvisorShareActions = ({ messages, dir }: { messages: Message[]; dir: stri
     >
       <button
         onClick={handleShare}
-        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 whitespace-nowrap"
         style={{
           background: "hsl(var(--gold) / 0.08)",
           border: "1px solid hsl(var(--gold) / 0.15)",
           color: "hsl(var(--gold) / 0.7)",
         }}
       >
-        <Share2 className="w-3.5 h-3.5" />
-        <span>שתפו תשובות</span>
+        <Share2 className="w-3.5 h-3.5 flex-shrink-0" />
+        <span>{t.advisor_share}</span>
       </button>
       <button
         onClick={handleCopy}
-        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30"
+        className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 whitespace-nowrap"
         style={{
           background: "hsl(var(--gold) / 0.08)",
           border: "1px solid hsl(var(--gold) / 0.15)",
           color: "hsl(var(--gold) / 0.7)",
         }}
       >
-        {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-        <span>{copied ? "התשובות הועתקו" : "העתיקו תשובות"}</span>
+        {copied ? <Check className="w-3.5 h-3.5 flex-shrink-0" /> : <Copy className="w-3.5 h-3.5 flex-shrink-0" />}
+        <span>{copied ? t.advisor_copied : t.advisor_copy}</span>
       </button>
     </motion.div>
   );

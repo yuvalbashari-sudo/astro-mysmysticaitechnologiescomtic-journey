@@ -368,11 +368,13 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
                   key={i}
                   onClick={() => sendMessage(q)}
                   disabled={isStreaming || isLimitReached}
-                  className="text-lg px-5 py-3 rounded-full font-body transition-all focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40"
+                  className="text-lg px-5 py-3 rounded-full font-body transition-all focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 text-start leading-snug"
                   style={{
                     background: "hsl(var(--gold) / 0.07)",
                     border: "1px solid hsl(var(--gold) / 0.14)",
                     color: "hsl(var(--gold) / 0.7)",
+                    maxWidth: "100%",
+                    wordBreak: "break-word",
                   }}
                   whileHover={{ scale: 1.04, background: "hsl(var(--gold) / 0.12)" }}
                   whileTap={{ scale: 0.96 }}
@@ -529,6 +531,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
 /* ── Share Actions ── */
 const ShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) => {
   const [copied, setCopied] = useState(false);
+  const t = useT();
   const answersText = useMemo(() =>
     messages.filter(m => m.role === "assistant" && m.content).map(m => m.content).join("\n\n"),
     [messages]
@@ -561,7 +564,7 @@ const ShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) =
 
   return (
     <motion.div
-      className="flex items-center justify-center gap-3 pt-3 pb-2"
+      className="flex items-center justify-center gap-3 pt-3 pb-2 flex-wrap"
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
@@ -569,27 +572,27 @@ const ShareActions = ({ messages, dir }: { messages: Message[]; dir: string }) =
     >
       <button
         onClick={handleShare}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-body transition-all hover:scale-105"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-body transition-all hover:scale-105 whitespace-nowrap"
         style={{
           background: "hsl(var(--gold) / 0.08)",
           border: "1px solid hsl(var(--gold) / 0.15)",
           color: "hsl(var(--gold) / 0.7)",
         }}
       >
-        <Share2 className="w-5 h-5" />
-        <span>שתפו</span>
+        <Share2 className="w-5 h-5 flex-shrink-0" />
+        <span>{t.advisor_share}</span>
       </button>
       <button
         onClick={handleCopy}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-body transition-all hover:scale-105"
+        className="flex items-center gap-2 px-5 py-2.5 rounded-full text-lg font-body transition-all hover:scale-105 whitespace-nowrap"
         style={{
           background: "hsl(var(--gold) / 0.08)",
           border: "1px solid hsl(var(--gold) / 0.15)",
           color: "hsl(var(--gold) / 0.7)",
         }}
       >
-        {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-        <span>{copied ? "הועתק" : "העתקה"}</span>
+        {copied ? <Check className="w-5 h-5 flex-shrink-0" /> : <Copy className="w-5 h-5 flex-shrink-0" />}
+        <span>{copied ? t.advisor_copied : t.advisor_copy}</span>
       </button>
     </motion.div>
   );

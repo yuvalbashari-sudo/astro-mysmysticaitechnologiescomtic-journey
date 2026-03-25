@@ -570,4 +570,7 @@ export const en: TranslationKeys = {
 
   advisor_quick_questions_label: "Quick questions",
   advisor_or_type_question: "or type a question",
+  advisor_share: "Share answers",
+  advisor_copy: "Copy answers",
+  advisor_copied: "Copied!",
 };
