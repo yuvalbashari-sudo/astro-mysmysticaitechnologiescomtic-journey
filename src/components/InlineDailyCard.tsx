@@ -279,7 +279,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          {card.meanings.daily}
+          {majorArcanaWorld.find(w => w.name === card.name.en)?.meanings.daily || ""}
         </motion.p>
 
         {/* CTA button */}
