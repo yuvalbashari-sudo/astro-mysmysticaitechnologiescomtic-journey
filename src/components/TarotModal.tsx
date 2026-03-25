@@ -5,8 +5,8 @@ import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Briefcase, Eye, Compass, Crown, Share2, Copy, Check, Layers, Star, Sun, MessageCircle } from "lucide-react";
-import { drawMajorArcana, type MajorArcanaCard, getCardName as getMajorCardName } from "@/data/majorArcanaCards";
-import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
+import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
+import { cardBack } from "@/data/tarotCardImages";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { tarotMemory } from "@/lib/tarotMemory";
@@ -15,11 +15,10 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
-import { useCardName } from "@/hooks/useCardName";
+import { useReadingContext } from "@/contexts/ReadingContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
-import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -143,7 +142,7 @@ async function streamTarotReading(
 const TarotModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
-  const cardName = useCardName();
+  const localizedName = (card: ReadingCard) => card.name[language] || card.name.en;
   const { setActiveReading } = useReadingContext();
   const SPREAD_OPTIONS = getSpreadOptions(t);
   const SPREAD_LABELS = getSpreadLabels(t);
@@ -151,14 +150,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const isMobileTarot = useIsMobile();
   const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
-  const [cards, setCards] = useState<MajorArcanaCard[] | null>(null);
+  const [cards, setCards] = useState<ReadingCard[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isTablePhase, setIsTablePhase] = useState(false);
   const [isShufflePhase, setIsShufflePhase] = useState(false);
   const [isQuestionPhase, setIsQuestionPhase] = useState(false);
   const [isAnalysisPhase, setIsAnalysisPhase] = useState(false);
   const [userQuestion, setUserQuestion] = useState("");
-  const [tableCards, setTableCards] = useState<MajorArcanaCard[]>([]);
+  const [tableCards, setTableCards] = useState<ReadingCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
@@ -201,7 +200,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleShuffleComplete = () => {
-    const drawn = drawMajorArcana(selectedSpread.cardCount);
+    const drawn = drawReadingCards(selectedSpread.cardCount);
     setTableCards(drawn);
     setFlippedIndices(new Set());
     setIsShufflePhase(false);
@@ -233,7 +232,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             readingsStorage.save({
               type: "tarot",
               title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
-              subtitle: tableCards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
+              subtitle: tableCards.map(c => localizedName(c)).join(" • "),
               symbol: "🔮",
               data: { spread: selectedSpread.key, cards: tableCards },
             });
@@ -244,7 +243,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
 
-  const startAIReading = (drawnCards: MajorArcanaCard[]) => {
+  const startAIReading = (drawnCards: ReadingCard[]) => {
     setAiLoading(true);
     aiTextRef.current = "";
     setAiText("");
@@ -309,13 +308,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!cards) return;
-    const text = `🔮 ${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}:\n${cards.map(c => `${c.symbol} ${cardName(c.name.en, c.name.he)}`).join("\n")}\n\n✨ ${window.location.origin}`;
+    const text = `🔮 ${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}:\n${cards.map(c => `${c.symbol} ${localizedName(c)}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!cards) return;
-    const textToCopy = aiText || cards.map(c => `${c.symbol} ${cardName(c.name.en, c.name.he)}`).join(" • ");
+    const textToCopy = aiText || cards.map(c => `${c.symbol} ${localizedName(c)}`).join(" • ");
     await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
@@ -778,10 +777,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                     boxShadow: "0 10px 40px hsl(0 0% 0% / 0.5), 0 0 25px hsl(var(--gold) / 0.2)",
                                   }}
                                 >
-                                  {tarotCardImages[card.name.en]
-                                    ? <img src={tarotCardImages[card.name.en]} alt={cardName(card.name.en, card.name.he)} className="w-[85%] h-[68%] object-contain rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
+                                  {card.image
+                                    ? <img src={card.image} alt={localizedName(card)} className="w-[85%] h-[68%] object-contain rounded-lg" style={{ border: "1px solid hsl(var(--gold) / 0.25)", imageRendering: "auto" }} />
                                     : <span className="text-5xl mb-1">{card.symbol}</span>}
-                                  <span className="font-heading text-xs md:text-sm text-gold text-center leading-tight mt-1.5">{cardName(card.name.en, card.name.he)}</span>
+                                  <span className="font-heading text-xs md:text-sm text-gold text-center leading-tight mt-1.5">{localizedName(card)}</span>
                                   <span className="text-[10px] text-muted-foreground/60 font-body">{selectedSpread.positionLabels[i]}</span>
                                 </div>
                               </motion.div>
@@ -822,7 +821,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                               transition={{ delay: 0.2 }}
                             >
                               <span className="text-sm">{card.symbol}</span>
-                              <span className="font-heading text-xs text-gold">{cardName(card.name.en, card.name.he)}</span>
+                              <span className="font-heading text-xs text-gold">{localizedName(card)}</span>
                             </motion.div>
                           )
                         ))}
@@ -863,10 +862,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 + i * 0.2 }}
                           >
-                            {tarotCardImages[card.name.en]
-                              ? <img src={tarotCardImages[card.name.en]} alt={cardName(card.name.en, card.name.he)} className="rounded-lg shadow-lg object-contain" style={{ border: "1px solid hsl(var(--gold) / 0.2)", width: "min(6rem, 15vw)", height: "min(8.5rem, 22vh)", aspectRatio: "2/3" }} />
+                            {card.image
+                              ? <img src={card.image} alt={localizedName(card)} className="rounded-lg shadow-lg object-contain" style={{ border: "1px solid hsl(var(--gold) / 0.2)", width: "min(6rem, 15vw)", height: "min(8.5rem, 22vh)", aspectRatio: "2/3" }} />
                               : <span className="text-4xl">{card.symbol}</span>}
-                            <span className="font-body text-sm text-gold mt-1">{cardName(card.name.en, card.name.he)}</span>
+                            <span className="font-body text-sm text-gold mt-1">{localizedName(card)}</span>
                             <span className="text-xs text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
                           </motion.div>
                         ))}
@@ -898,10 +897,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <div className="flex items-center justify-center gap-3 mb-6 flex-wrap max-w-full overflow-hidden px-2">
                       {cards.map((card, i) => (
                         <div key={i} className="flex flex-col items-center gap-1.5 shrink-0">
-                          {tarotCardImages[card.name.en]
-                            ? <img src={tarotCardImages[card.name.en]} alt={cardName(card.name.en, card.name.he)} className="w-14 h-20 md:w-16 md:h-22 object-contain rounded-md" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
+                          {card.image
+                            ? <img src={card.image} alt={localizedName(card)} className="w-14 h-20 md:w-16 md:h-22 object-contain rounded-md" style={{ border: "1px solid hsl(var(--gold) / 0.2)" }} />
                             : <span className="text-xl">{card.symbol}</span>}
-                          <span className="text-xs text-gold/60 font-body">{cardName(card.name.en, card.name.he)}</span>
+                          <span className="text-xs text-gold/60 font-body">{localizedName(card)}</span>
                         </div>
                       ))}
                     </div>
@@ -923,7 +922,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     )}
                   </motion.div>
 
-                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => cardName(c.name.en, c.name.he)).join(" • ")} subtitle={t.readings_type_tarot} />
+                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => localizedName(c)).join(" • ")} subtitle={t.readings_type_tarot} />
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
