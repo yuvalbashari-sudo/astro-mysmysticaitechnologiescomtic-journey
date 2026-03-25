@@ -201,7 +201,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleShuffleComplete = () => {
-    const drawn = drawMajorArcana(selectedSpread.cardCount);
+    const drawn = drawReadingCards(selectedSpread.cardCount);
     setTableCards(drawn);
     setFlippedIndices(new Set());
     setIsShufflePhase(false);
