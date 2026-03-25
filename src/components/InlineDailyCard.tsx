@@ -278,7 +278,7 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
         >
-          {majorArcanaWorld.find(w => w.name === card.name.en)?.meanings.daily || ""}
+          {card.suit !== "major" ? (card.name[language] || card.name.en) : ""}
         </motion.p>
 
         {/* CTA button */}
