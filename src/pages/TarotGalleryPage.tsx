@@ -67,7 +67,7 @@ export default function TarotGalleryPage() {
                     : "bg-muted/40 text-muted-foreground border-border/30 hover:bg-muted hover:text-foreground"
                 }`}
               >
-                {suitFilterLabels[f][language]}
+                {tarotGalleryTranslations.filterLabel[f][language]}
               </button>
             ))}
           </div>
