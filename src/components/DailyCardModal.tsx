@@ -687,7 +687,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         {/* Card FRONT — always present, guaranteed visible */}
                         <div className="absolute inset-0">
                           {cardImage ? (
-                            <img src={cardImage} alt={cardName(card.name, card.hebrewName)} className="w-full h-full object-cover" />
+                            <img src={cardImage} alt={card.name[language] || card.name.en} className="w-full h-full object-cover" />
                           ) : (
                             <div
                               className="w-full h-full flex items-center justify-center"
