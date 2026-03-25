@@ -132,11 +132,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             <AnimatePresence>
               {langOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                  initial={{ y: -6, scale: 0.98 }}
+                  animate={{ y: 0, scale: 1 }}
+                  exit={{ y: -6, scale: 0.98 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute overflow-hidden rounded-2xl p-1.5 text-foreground shadow-2xl"
+                  className="absolute isolate overflow-hidden rounded-2xl p-1.5 text-foreground shadow-2xl"
                   style={{
                     top: "calc(100% + 0.35rem)",
                     insetInlineEnd: 0,
@@ -144,9 +144,14 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                     minWidth: "11rem",
                     maxWidth: "min(18rem, calc(100vw - 1rem))",
                     maxHeight: "min(70vh, 20rem)",
-                    boxShadow: "0 24px 60px hsl(0 0% 0% / 0.92), 0 0 0 1px hsl(var(--gold) / 0.18)",
-                    background: "hsl(var(--deep-blue))",
-                    border: "1px solid hsl(var(--gold) / 0.28)",
+                    overflowY: "auto",
+                    opacity: 1,
+                    background: "hsl(224 39% 9%)",
+                    backgroundImage: "none",
+                    border: "1px solid hsl(var(--gold) / 0.3)",
+                    boxShadow: "0 28px 80px hsl(0 0% 0% / 0.94), 0 0 0 1px hsl(224 20% 16%)",
+                    backdropFilter: "none",
+                    WebkitBackdropFilter: "none",
                     transformOrigin: dir === "rtl" ? "top left" : "top right",
                   }}
                   role="listbox"
@@ -168,23 +173,27 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                           : "text-foreground hover:text-foreground"
                       }`}
                       style={{
+                        opacity: 1,
                         background: lang === language
-                          ? "hsl(var(--deep-blue-light))"
-                          : "hsl(var(--card))",
+                          ? "hsl(223 32% 16%)"
+                          : "hsl(224 31% 12%)",
+                        backgroundImage: "none",
+                        backdropFilter: "none",
+                        WebkitBackdropFilter: "none",
                         border: lang === language
                           ? "1px solid hsl(var(--gold) / 0.28)"
-                          : "1px solid hsl(var(--border))",
+                          : "1px solid hsl(224 20% 18%)",
                       }}
                       onMouseEnter={(event) => {
                         if (lang !== language) {
-                          event.currentTarget.style.background = "hsl(var(--muted))";
+                          event.currentTarget.style.background = "hsl(223 28% 14%)";
                           event.currentTarget.style.borderColor = "hsl(var(--gold) / 0.18)";
                         }
                       }}
                       onMouseLeave={(event) => {
                         if (lang !== language) {
-                          event.currentTarget.style.background = "hsl(var(--card))";
-                          event.currentTarget.style.borderColor = "hsl(var(--border))";
+                          event.currentTarget.style.background = "hsl(224 31% 12%)";
+                          event.currentTarget.style.borderColor = "hsl(224 20% 18%)";
                         }
                       }}
                       aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
