@@ -404,7 +404,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("question");
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
-  const [drawnCards, setDrawnCards] = useState<MajorArcanaCard[]>([]);
+  const [drawnCards, setDrawnCards] = useState<ReadingCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [revealedCard, setRevealedCard] = useState<MajorArcanaCard | null>(null);
