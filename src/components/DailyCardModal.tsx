@@ -872,10 +872,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
 
                         <div className="flex flex-col items-center gap-1.5">
                           <h2 className="font-heading text-[36px] leading-none gold-gradient-text md:text-[44px]">
-                            {cardName(card.name, card.hebrewName)}
+                            {card.name[language] || card.name.en}
                           </h2>
                           <p className="font-body text-base md:text-lg" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
-                            {t.daily_arcana_label} {card.number}
+                            {card.symbol} {card.suit !== "major" ? card.suit : t.daily_arcana_label}
                           </p>
                         </div>
 
