@@ -391,9 +391,11 @@ function toReadingCard(card: UnifiedTarotCard): ReadingCard {
 /** All cards as ReadingCard[] — cached for daily card and reading flows. */
 export const allReadingCards: ReadingCard[] = allTarotCards.map(toReadingCard);
 
-/** Draw N random cards from the full 78-card deck (Fisher-Yates shuffle). No duplicates. */
+/** Draw N random cards from the validated deck (Fisher-Yates shuffle). No duplicates, no broken cards. */
 export function drawReadingCards(count: number = 7): ReadingCard[] {
-  const deck = [...allReadingCards];
+  // Double-check: only cards with valid images
+  const deck = allReadingCards.filter((c) => isValidImage(c.image));
+  if (deck.length === 0) return [];
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
