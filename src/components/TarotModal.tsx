@@ -850,10 +850,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 />
                               )}
 
-                              {/* Active reveal: intensified particle swirl */}
+                              {/* Active reveal: particle swirl — simplified on mobile */}
                               {isActive && (
                                 <>
-                                  {[...Array(10)].map((_, pi) => (
+                                  {[...Array(isMobileTarot ? 3 : 10)].map((_, pi) => (
                                     <motion.div
                                       key={`swirl-${pi}`}
                                       className="absolute rounded-full pointer-events-none"
@@ -870,15 +870,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                         opacity: [0, 1, 0],
                                         scale: [0, 1.5, 0],
                                       }}
-                                      transition={{ duration: 1.2, delay: pi * 0.06, ease: "easeOut" }}
+                                      transition={{ duration: isMobileTarot ? 0.8 : 1.2, delay: pi * (isMobileTarot ? 0.1 : 0.06), ease: "easeOut" }}
                                     />
                                   ))}
                                   <motion.div
                                     className="absolute -inset-4 rounded-2xl pointer-events-none"
-                                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 60%)" }}
+                                    style={{ background: `radial-gradient(circle, hsl(var(--gold) / ${isMobileTarot ? "0.12" : "0.2"}), transparent 60%)` }}
                                     initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: [0, 0.8, 0.5], scale: [0.8, 1.3, 1.1] }}
-                                    transition={{ duration: 0.8 }}
+                                    animate={{ opacity: [0, isMobileTarot ? 0.5 : 0.8, isMobileTarot ? 0.3 : 0.5], scale: [0.8, 1.3, 1.1] }}
+                                    transition={{ duration: isMobileTarot ? 0.5 : 0.8 }}
                                   />
                                 </>
                               )}
