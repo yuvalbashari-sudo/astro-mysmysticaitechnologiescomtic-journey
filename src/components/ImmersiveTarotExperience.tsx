@@ -18,6 +18,8 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
+import PaymentGatingModal from "@/components/PaymentGatingModal";
+import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props {
   isOpen: boolean;
@@ -417,7 +419,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
-
+  const [gatingOpen, setGatingOpen] = useState(false);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -453,6 +456,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   ], [language, t]);
 
   const handleQuestionSelect = useCallback((key: string) => {
+    // Check entitlements before starting
+    const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingOpen(true);
+      return;
+    }
     setSelectedQuestion(key);
     setTimeout(() => {
       setDrawnCards(drawReadingCards(7));
@@ -525,6 +536,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           spreadType
         );
+        entitlements.recordFeatureUse("tarot_reading", "free"); // TODO: use actual user tier
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
@@ -1532,7 +1544,20 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     </AnimatePresence>
   );
 
-  return typeof document !== "undefined" ? createPortal(overlay, document.body) : null;
+  return typeof document !== "undefined" ? createPortal(
+    <>
+      {overlay}
+      <PaymentGatingModal
+        isOpen={gatingOpen}
+        onClose={() => setGatingOpen(false)}
+        gatingMessage={gatingMsg}
+        onPayPerUse={() => {
+          setGatingOpen(false);
+        }}
+      />
+    </>,
+    document.body
+  ) : null;
 };
 
 export default ImmersiveTarotExperience;

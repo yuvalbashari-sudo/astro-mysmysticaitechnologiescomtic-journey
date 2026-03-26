@@ -19,6 +19,8 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import TarotShufflePhase from "@/components/TarotShufflePhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
+import PaymentGatingModal from "@/components/PaymentGatingModal";
+import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -162,7 +164,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [tableCards, setTableCards] = useState<ReadingCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
+   const [copied, setCopied] = useState(false);
 
   // AI state
   const [aiText, setAiText] = useState("");
@@ -171,9 +173,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
 
+  // Entitlements gating state
+  const [gatingOpen, setGatingOpen] = useState(false);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+
   const needsQuestion = selectedSpreadKey !== "daily";
 
   const handleDraw = () => {
+    const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingOpen(true);
+      return;
+    }
     if (needsQuestion) {
       setIsQuestionPhase(true);
     } else {
@@ -272,6 +285,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
+        // Record usage for entitlements
+        entitlements.recordFeatureUse("tarot_reading", "free"); // TODO: use actual user tier
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
@@ -332,6 +347,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // No pre-calculated vars needed — cards sized via CSS in the container
 
   return (
+    <>
     <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
             <MysticalReadingAtmosphere theme="tarot" />
 
@@ -1066,6 +1082,21 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : null}
             </AnimatePresence>
     </CinematicModalShell>
+    <PaymentGatingModal
+      isOpen={gatingOpen}
+      onClose={() => setGatingOpen(false)}
+      gatingMessage={gatingMsg}
+      onPayPerUse={() => {
+        // Placeholder: allow access after "payment"
+        setGatingOpen(false);
+        if (needsQuestion) {
+          setIsQuestionPhase(true);
+        } else {
+          setIsLoading(true);
+        }
+      }}
+    />
+    </>
   );
 };
 
