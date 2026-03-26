@@ -327,6 +327,9 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     // Pre-load standby at a safe point (skip potential dark first frame)
     vB.currentTime = 0.15;
 
+    // On mobile, skip crossfade logic — single video loop is enough
+    if (isMobile) return;
+
     // Crossfade near end of whichever copy is active
     const crossfade = () => {
       const active = activeRef.current === "a" ? vA : vB;
@@ -343,14 +346,14 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
     const interval = setInterval(crossfade, 200);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
-    transition: "opacity 1.8s ease-in-out",
+    transition: isMobile ? "none" : "opacity 1.8s ease-in-out",
     transform: `scale(${isMobile ? 1.35 : 1.22}) translateZ(0)`,
     transformOrigin: "center center",
-    willChange: "opacity",
+    willChange: isMobile ? "auto" : "opacity",
   };
 
   return (
@@ -373,11 +376,13 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      {/* Pure media only — dual videos for seamless crossfade */}
+      {/* Single video on mobile, dual crossfade on desktop */}
       <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: isMobile ? 1 : opacity.a }} />
+      {!isMobile && (
+        <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+          className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+      )}
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{
