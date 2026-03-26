@@ -148,10 +148,66 @@ const SECTION_HEADERS: Record<string, Record<string, string>> = {
   },
 };
 
+// ── Server-side rate limiting ──────────────
+const RATE_LIMIT_WINDOW_MS = 3600000; // 1 hour
+const RATE_LIMIT_MAX = 15; // max requests per IP per hour
+
+async function checkServerRateLimit(clientIp: string, action: string): Promise<{ allowed: boolean; remaining: number }> {
+  try {
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceKey);
+
+    const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+    const { count } = await supabase
+      .from("rate_limits")
+      .select("*", { count: "exact", head: true })
+      .eq("client_ip", clientIp)
+      .eq("action", action)
+      .gte("created_at", windowStart);
+
+    const current = count || 0;
+    if (current >= RATE_LIMIT_MAX) {
+      // Log abuse
+      await supabase.from("abuse_logs").insert({
+        client_ip: clientIp,
+        action,
+        reason: "rate_limit_exceeded",
+        metadata: { count: current, limit: RATE_LIMIT_MAX },
+      });
+      return { allowed: false, remaining: 0 };
+    }
+
+    // Record this request
+    await supabase.from("rate_limits").insert({ client_ip: clientIp, action });
+    return { allowed: true, remaining: RATE_LIMIT_MAX - current - 1 };
+  } catch (e) {
+    console.error("Rate limit check failed, allowing request:", e);
+    return { allowed: true, remaining: -1 }; // fail-open
+  }
+}
+
+function getClientIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || req.headers.get("x-real-ip")
+    || "unknown";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Server-side rate limiting
+    const clientIp = getClientIp(req);
+    const rateCheck = await checkServerRateLimit(clientIp, "tarot_reading");
+    if (!rateCheck.allowed) {
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
+      });
+    }
+
     const { spreadType, cards, context, language: rawLang, userName: reqUserName } = await req.json();
     const language = (rawLang && ["he", "en", "ru", "ar"].includes(rawLang)) ? rawLang : "he";
     

@@ -116,6 +116,9 @@ export const en: TranslationKeys = {
   lead_whatsapp: "💬 Chat with us on WhatsApp",
   lead_error_required: "Please fill in name and email",
   lead_error_submit: "Error submitting, please try again later",
+  lead_error_wait: "Please wait a moment before trying again",
+  lead_error_rate_limit: "Too many submissions. Please try again later.",
+  lead_error_duplicate: "This submission was already sent",
 
   testimonials_title: "What people experienced with ASTROLOGAI",
   testimonials_subtitle: "Real experiences of people who opened a gateway to their inner world",

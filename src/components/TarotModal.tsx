@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { antiAbuse } from "@/lib/antiAbuse";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
@@ -180,6 +181,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const needsQuestion = selectedSpreadKey !== "daily";
 
   const handleDraw = () => {
+    // Anti-abuse check
+    const abuseCheck = antiAbuse.fullCheck("tarot_reading");
+    if (!abuseCheck.allowed) {
+      if (abuseCheck.reason === "rate_limit") {
+        toast(t.lead_error_rate_limit);
+        return;
+      }
+      if (abuseCheck.reason === "cooldown") {
+        toast(t.lead_error_wait);
+        return;
+      }
+      return;
+    }
+
     const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
@@ -285,8 +300,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
-        // Record usage for entitlements
-        entitlements.recordFeatureUse("tarot_reading", "free"); // TODO: use actual user tier
+        // Record usage for entitlements and anti-abuse
+        entitlements.recordFeatureUse("tarot_reading", "free");
+        antiAbuse.recordSuccessfulAction("tarot_reading");
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,

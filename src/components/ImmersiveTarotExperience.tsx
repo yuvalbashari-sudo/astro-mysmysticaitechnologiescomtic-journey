@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { antiAbuse } from "@/lib/antiAbuse";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
@@ -456,6 +457,20 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   ], [language, t]);
 
   const handleQuestionSelect = useCallback((key: string) => {
+    // Anti-abuse cooldown check
+    const abuseCheck = antiAbuse.fullCheck("tarot_reading");
+    if (!abuseCheck.allowed) {
+      if (abuseCheck.reason === "rate_limit") {
+        toast(t.lead_error_rate_limit || "Too many requests. Please try again later.");
+        return;
+      }
+      if (abuseCheck.reason === "cooldown") {
+        toast(t.lead_error_wait || "Please wait a moment before trying again");
+        return;
+      }
+      return;
+    }
+
     // Check entitlements before starting
     const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
     if (!access.allowed && 'promptKey' in access) {
@@ -469,7 +484,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       setDrawnCards(drawReadingCards(7));
       setPhase("drawing");
     }, 600);
-  }, []);
+  }, [t]);
 
   const [burstIndices, setBurstIndices] = useState<Set<number>>(new Set());
 
@@ -536,7 +551,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           spreadType
         );
-        entitlements.recordFeatureUse("tarot_reading", "free"); // TODO: use actual user tier
+        entitlements.recordFeatureUse("tarot_reading", "free");
+        antiAbuse.recordSuccessfulAction("tarot_reading");
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,

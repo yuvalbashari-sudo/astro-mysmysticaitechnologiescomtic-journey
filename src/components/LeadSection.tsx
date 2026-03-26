@@ -1,18 +1,55 @@
 import { motion } from "framer-motion";
 import { Send, CheckCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/i18n";
+import { antiAbuse } from "@/lib/antiAbuse";
 
 const LeadSection = () => {
   const t = useT();
   const [formData, setFormData] = useState({ name: "", birthDate: "", email: "", phone: "", interest: "", message: "" });
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const timingRef = useRef(antiAbuse.createTimingCheck(2000));
+
+  useEffect(() => { timingRef.current.markStart(); }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Anti-abuse checks
+    const check = antiAbuse.fullCheck("lead_form", honeypot);
+    if (!check.allowed) {
+      if (check.reason === "honeypot") {
+        // Silently pretend success for bots
+        setIsSubmitted(true);
+        return;
+      }
+      if (check.reason === "cooldown") {
+        toast.error(t.lead_error_wait || "Please wait a moment before trying again");
+        return;
+      }
+      if (check.reason === "rate_limit") {
+        toast.error(t.lead_error_rate_limit || "Too many submissions. Please try again later.");
+        return;
+      }
+      return;
+    }
+
+    // Timing check — bots submit too fast
+    if (timingRef.current.isTooFast()) {
+      setIsSubmitted(true); // fake success for bots
+      return;
+    }
+
+    // Duplicate check
+    const content = `${formData.name}|${formData.email}|${formData.message}`;
+    if (antiAbuse.isDuplicateSubmission(content)) {
+      toast.error(t.lead_error_duplicate || "This submission was already sent");
+      return;
+    }
 
     if (!formData.name.trim() || !formData.email.trim()) {
       toast.error(t.lead_error_required);
@@ -32,6 +69,7 @@ const LeadSection = () => {
 
       if (error) throw error;
 
+      antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true);
       toast.success("✦");
     } catch {
@@ -155,6 +193,19 @@ const LeadSection = () => {
                 placeholder={t.lead_message_placeholder}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              />
+            </div>
+
+            {/* Honeypot field — hidden from real users */}
+            <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+              <label>Leave empty</label>
+              <input
+                type="text"
+                name="website_url"
+                autoComplete="off"
+                tabIndex={-1}
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
               />
             </div>
 

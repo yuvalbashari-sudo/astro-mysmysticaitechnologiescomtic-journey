@@ -132,6 +132,9 @@ export type TranslationKeys = {
   lead_whatsapp: string;
   lead_error_required: string;
   lead_error_submit: string;
+  lead_error_wait: string;
+  lead_error_rate_limit: string;
+  lead_error_duplicate: string;
 
   // Testimonials
   testimonials_title: string;

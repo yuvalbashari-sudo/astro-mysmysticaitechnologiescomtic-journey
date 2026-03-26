@@ -116,6 +116,9 @@ export const ru: TranslationKeys = {
   lead_whatsapp: "💬 Напишите нам в WhatsApp",
   lead_error_required: "Пожалуйста, заполните имя и email",
   lead_error_submit: "Ошибка отправки, попробуйте позже",
+  lead_error_wait: "Подождите немного перед повторной попыткой",
+  lead_error_rate_limit: "Слишком много запросов. Попробуйте позже.",
+  lead_error_duplicate: "Это сообщение уже было отправлено",
 
   testimonials_title: "Что люди пережили с ASTROLOGAI",
   testimonials_subtitle: "Реальный опыт людей, открывших врата в свой внутренний мир",
