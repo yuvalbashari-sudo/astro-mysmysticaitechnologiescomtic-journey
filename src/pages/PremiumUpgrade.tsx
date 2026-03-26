@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Crown, Sparkles, Star, Shield, Zap, Eye, Heart, Moon, Sun, Hand, Lock, Check, ArrowLeft } from "lucide-react";
+import { Crown, Star, Shield, Zap, Lock, Check, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useT } from "@/i18n";
 
@@ -8,71 +8,74 @@ const plans = [
     id: "free",
     icon: Star,
     popular: false,
-    priceLabel: "Free",
-    priceSubtext: "Forever",
-    features: [
-      { text: "1 daily card per day", included: true },
-      { text: "1 tarot reading per week", included: true },
-      { text: "Basic zodiac insight", included: true },
-      { text: "Compatibility readings", included: false },
-      { text: "Palm reading analysis", included: false },
-      { text: "Monthly forecast", included: false },
-      { text: "Deep advisor insights", included: false },
-      { text: "Priority experiences", included: false },
-    ],
+    priceLabel: { he: "חינם", en: "Free" },
+    priceSubtext: { he: "לתמיד", en: "Forever" },
+    features: {
+      he: [
+        { text: "קלף יומי — תמיד בחינם", included: true },
+        { text: "הורוסקופ חודשי ואישי — בחינם", included: true },
+        { text: "קריאת טארוט אחת ביום בחינם", included: true },
+        { text: "התאמה זוגית אחת בחודש (סיכום קצר)", included: true },
+        { text: "קריאת כף יד — 29 ₪", included: false },
+        { text: "קריאות טארוט נוספות — 9 ₪ כל אחת", included: false },
+        { text: "התאמה זוגית מלאה — 9 ₪", included: false },
+      ],
+      en: [
+        { text: "Daily Card — always free", included: true },
+        { text: "Monthly & personal horoscope — free", included: true },
+        { text: "1 free tarot reading per day", included: true },
+        { text: "1 short compatibility reading per month", included: true },
+        { text: "Palm reading — ₪29 each", included: false },
+        { text: "Additional tarot readings — ₪9 each", included: false },
+        { text: "Full compatibility reading — ₪9", included: false },
+      ],
+    },
   },
   {
-    id: "premium",
+    id: "subscriber",
     icon: Crown,
     popular: true,
-    priceLabel: "₪29",
-    priceSubtext: "/month",
-    features: [
-      { text: "Unlimited daily cards", included: true },
-      { text: "Unlimited tarot readings", included: true },
-      { text: "Full zodiac profiles", included: true },
-      { text: "Compatibility readings", included: true },
-      { text: "Palm reading analysis", included: true },
-      { text: "Monthly forecast", included: true },
-      { text: "Deep advisor insights", included: false },
-      { text: "Priority experiences", included: false },
-    ],
-  },
-  {
-    id: "vip",
-    icon: Sparkles,
-    popular: false,
-    priceLabel: "₪59",
-    priceSubtext: "/month",
-    features: [
-      { text: "Everything in Premium", included: true },
-      { text: "Deep advisor insights", included: true },
-      { text: "Priority experiences", included: true },
-      { text: "Exclusive VIP readings", included: true },
-      { text: "Advanced birth chart", included: true },
-      { text: "Personal cosmic guidance", included: true },
-      { text: "Early access to features", included: true },
-      { text: "Dedicated support", included: true },
-    ],
+    priceLabel: { he: "₪39", en: "₪39" },
+    priceSubtext: { he: "/חודש", en: "/month" },
+    yearlyNote: { he: "או ₪29/חודש בתשלום שנתי", en: "or ₪29/mo billed annually" },
+    features: {
+      he: [
+        { text: "קלף יומי — תמיד בחינם", included: true },
+        { text: "הורוסקופ חודשי ואישי — בחינם", included: true },
+        { text: "3 קריאות טארוט ביום כלולות", included: true },
+        { text: "5 קריאות התאמה מלאות בחודש", included: true },
+        { text: "קריאת כף יד — רק 9 ₪ (עד 3 בחודש)", included: true },
+        { text: "חוויה מעמיקה ומפורטת יותר", included: true },
+        { text: "קריאות טארוט נוספות — 5 ₪ בלבד", included: true },
+        { text: "התאמות נוספות — 7 ₪ כל אחת", included: true },
+      ],
+      en: [
+        { text: "Daily Card — always free", included: true },
+        { text: "Monthly & personal horoscope — free", included: true },
+        { text: "3 tarot readings per day included", included: true },
+        { text: "5 full compatibility readings per month", included: true },
+        { text: "Palm reading — only ₪9 (up to 3/month)", included: true },
+        { text: "Deeper, more detailed experience", included: true },
+        { text: "Additional tarot readings — only ₪5", included: true },
+        { text: "Additional compatibility — ₪7 each", included: true },
+      ],
+    },
   },
 ];
 
 const planNames: Record<string, { he: string; en: string }> = {
   free: { he: "חינם", en: "Free" },
-  premium: { he: "פרימיום", en: "Premium" },
-  vip: { he: "VIP", en: "VIP" },
+  subscriber: { he: "מנוי פרימיום", en: "Premium" },
 };
 
 const planDescriptions: Record<string, { he: string; en: string }> = {
   free: { he: "התחלה מיסטית בחינם", en: "Start your mystical journey" },
-  premium: { he: "חוויה מלאה ועמוקה", en: "Full mystical experience" },
-  vip: { he: "חוויה בלעדית ברמה הגבוהה ביותר", en: "The ultimate exclusive experience" },
+  subscriber: { he: "חוויה מלאה, מעמיקה ומפורטת יותר", en: "Full, deeper, more detailed experience" },
 };
 
 const ctaLabels: Record<string, { he: string; en: string }> = {
   free: { he: "המשיכו בחינם", en: "Continue Free" },
-  premium: { he: "שדרגו לפרימיום", en: "Upgrade to Premium" },
-  vip: { he: "פתחו גישת VIP", en: "Unlock VIP Access" },
+  subscriber: { he: "שדרגו לפרימיום", en: "Upgrade to Premium" },
 };
 
 const trustItems = [
@@ -213,21 +216,26 @@ const PremiumUpgrade = () => {
               </p>
 
               {/* Price */}
-              <div className="text-center mb-7">
+              <div className="text-center mb-2">
                 <span className="font-heading text-4xl md:text-5xl gold-gradient-text">
-                  {plan.priceLabel}
+                  {plan.priceLabel[lang]}
                 </span>
                 <span className="font-body text-sm text-foreground/40 ms-1">
-                  {plan.priceSubtext}
+                  {plan.priceSubtext[lang]}
                 </span>
               </div>
+              {(plan as any).yearlyNote && (
+                <p className="text-center font-body text-xs text-gold/60 mb-5">
+                  {(plan as any).yearlyNote[lang]}
+                </p>
+              )}
 
               {/* Divider */}
               <div className="h-px w-full bg-gold/10 mb-6" />
 
               {/* Features */}
               <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((f, fi) => (
+                {plan.features[lang].map((f, fi) => (
                   <li key={fi} className="flex items-center gap-3 font-body text-sm">
                     {f.included ? (
                       <Check className="w-4 h-4 text-gold flex-shrink-0" />
@@ -246,8 +254,6 @@ const PremiumUpgrade = () => {
                 className={`w-full py-3.5 rounded-lg font-body font-bold text-sm tracking-wider transition-all duration-300 ${
                   plan.popular
                     ? "btn-gold"
-                    : plan.id === "vip"
-                    ? "btn-outline-gold hover:bg-gold/10"
                     : "border border-foreground/15 text-foreground/60 hover:border-gold/30 hover:text-gold"
                 }`}
               >
