@@ -141,7 +141,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   } : undefined;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
                 isDesktopInput ? (
@@ -211,7 +211,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   /* ── Mobile: centered form ── */
-                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 py-6 md:p-12 text-center" style={{ direction: dir }}>
+                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="absolute inset-0 overflow-y-auto scrollbar-hide px-4 pt-16 pb-10 md:p-12 text-center" style={{ direction: dir }}>
                     <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
                       <Heart className="w-7 h-7 text-crimson-light" />
                     </motion.div>
@@ -362,7 +362,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   /* ── Mobile: stacked layout ── */
-                  <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="px-4 py-6 md:p-12 lg:p-14" style={{ direction: dir }}>
+                  <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 overflow-y-auto scrollbar-hide px-4 pt-16 pb-10 md:p-12 lg:p-14" style={{ direction: dir }}>
                     <div className="text-center mb-10">
                       <motion.div className="text-5xl mb-4 flex items-center justify-center gap-3" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
                         <span>{matchInfo.sign1Symbol}</span><span className="text-gold">💕</span><span>{matchInfo.sign2Symbol}</span>
