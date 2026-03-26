@@ -335,7 +335,7 @@ export const he: TranslationKeys = {
   daily_name_label: "השם שלך",
   daily_name_placeholder: "הכניסו את שמכם הפרטי...",
   daily_name_greeting: "✦ נעים להכיר, {{name}}",
-  daily_cta: "חשפו את הקלף היומי",
+  daily_cta: "✨ גלו מה הקלף היומי חושף עליכם",
   daily_shuffle: "הקלפים נערבבים...",
   daily_shuffle_focus: "התרכזו ברגע הזה ✦",
   daily_card_chosen: "הקלף שנבחר עבורכם להיום",
