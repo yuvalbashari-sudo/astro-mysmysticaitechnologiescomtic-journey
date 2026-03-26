@@ -2510,7 +2510,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}>
+      <div className={`absolute inset-0 flex ${isMobile ? "items-center" : "items-start"} justify-center pointer-events-none z-[12]`} style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -2556,7 +2556,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "340px", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginLeft: "10px" }}
           >
             {/* Internal glow — contained inside ball, reacts to teaser hover */}
             <motion.div
@@ -2796,15 +2796,15 @@ const HeroSection = () => {
       {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
       {entranceComplete && (
         <div
-          className="absolute inset-0 pointer-events-none z-[18]"
-          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}
+          className={`absolute inset-0 pointer-events-none z-[18] flex ${isMobile ? "items-center" : "items-start"} justify-center`}
+          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}
         >
-          <div className="w-full h-full flex items-center justify-center">
+          <div className={`w-full h-full flex ${isMobile ? "items-center" : "items-start"} justify-center`}>
             <div
               className="relative"
               style={isMobile
                 ? { width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }
-                : { marginTop: "340px", marginLeft: "10px" }
+                : { marginLeft: "10px" }
               }
             >
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={() => setForecastOpen(true)} />
@@ -2815,9 +2815,9 @@ const HeroSection = () => {
 
       <div
         className="absolute inset-0 pointer-events-none z-[26]"
-        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}
+        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}
       >
-        <div className="flex h-full w-full items-center justify-center">
+        <div className={`flex h-full w-full ${isMobile ? "items-center" : "items-start"} justify-center`}>
           {isMobile ? (
             <div
               className="relative flex items-center justify-center"
@@ -2839,7 +2839,7 @@ const HeroSection = () => {
           ) : (
             <motion.div
               className="relative flex items-center justify-center"
-              style={{ x: crystalX, y: crystalY, marginTop: "340px", marginLeft: "10px" }}
+              style={{ x: crystalX, y: crystalY, marginLeft: "10px" }}
             >
               <div className="relative pointer-events-none" style={{ width: "490px", height: "490px" }}>
                 <AnimatePresence>
