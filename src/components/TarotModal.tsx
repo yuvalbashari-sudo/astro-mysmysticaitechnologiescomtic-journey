@@ -258,7 +258,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const handleCardFlip = (index: number) => {
     if (flippedIndices.has(index) || activeRevealIndex !== null) return;
     
-    // Phase 1: Focus/lift (0.6s)
+    // Mobile: faster, lighter timing sequence
+    const liftDelay = isMobileTarot ? 400 : 800;
+    const settleDelay = isMobileTarot ? 700 : 1200;
+    const transitionDelay = isMobileTarot ? 1200 : 1800;
+    
+    // Phase 1: Focus/lift
     setActiveRevealIndex(index);
     
     // Phase 2: Flip after lift
@@ -284,10 +289,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               symbol: "🔮",
               data: { spread: selectedSpread.key, cards: tableCards },
             });
-          }, 1800);
+          }, transitionDelay);
         }
-      }, 1200);
-    }, 800);
+      }, settleDelay);
+    }, liftDelay);
   };
 
 
