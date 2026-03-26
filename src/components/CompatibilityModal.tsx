@@ -211,7 +211,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   /* ── Mobile: centered form ── */
-                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 md:p-12 text-center">
+                  <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="px-4 py-6 md:p-12 text-center" style={{ direction: dir }}>
                     <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
                       <Heart className="w-7 h-7 text-crimson-light" />
                     </motion.div>
