@@ -2244,7 +2244,7 @@ const HeroSection = () => {
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       className="fixed inset-0 z-0 isolate"
-      style={{ contain: "style" }}
+      style={{}}
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
