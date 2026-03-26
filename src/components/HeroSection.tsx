@@ -3100,7 +3100,7 @@ const HeroSection = () => {
                       aria-label={item.label}
                     >
                       <div
-                        className={`relative flex items-center gap-2.5 transition-all duration-300 backdrop-blur-md px-3 py-3 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
+                        className={`relative flex items-center gap-2.5 transition-all duration-300 px-3 py-3 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
                           borderColor: isNeonPanel
