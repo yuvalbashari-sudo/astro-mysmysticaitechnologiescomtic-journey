@@ -867,9 +867,17 @@ const ZodiacWheel = ({
                 width: rulingIconSize,
                 height: rulingIconSize,
               }}
-              onMouseEnter={() => { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); }}
-              onMouseLeave={() => { setHoveredSign(null); onHoveredElement?.(null); }}
-              onClick={() => onSignClick?.(i)}
+              onMouseEnter={() => { if (!isMobile) { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); } }}
+              onMouseLeave={() => { if (!isMobile) { setHoveredSign(null); onHoveredElement?.(null); } }}
+              onTouchStart={() => {
+                if (hoveredSign === i) {
+                  onSignClick?.(i);
+                } else {
+                  setHoveredSign(i);
+                  onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]);
+                }
+              }}
+              onClick={(e) => { if (isMobile) { e.preventDefault(); } else { onSignClick?.(i); } }}
               // Counter-rotate to keep symbols upright — slow down when hovered
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
