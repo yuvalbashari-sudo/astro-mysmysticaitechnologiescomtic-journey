@@ -392,7 +392,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Title */}
                   <motion.h2
-                    className="relative z-10 font-heading text-xl gold-gradient-text mb-2 text-center"
+                    className="relative z-10 font-heading text-4xl gold-gradient-text mb-2 text-center"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
