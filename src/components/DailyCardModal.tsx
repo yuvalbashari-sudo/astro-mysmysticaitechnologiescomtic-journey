@@ -275,6 +275,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     };
   }, [phase, card]);
 
+  // Mobile-reveal: quick card flip animation before showing locked state
+  useEffect(() => {
+    if (phase !== "mobile-reveal" || !card) return;
+    const step1 = setTimeout(() => setRitualStep(1), 400);
+    const step2 = setTimeout(() => { setShowCardOverlay(true); setRitualStep(2); }, 1000);
+    const step3 = setTimeout(() => setRitualStep(3), 1800);
+    const finish = setTimeout(() => setPhase("locked"), 2400);
+    return () => { clearTimeout(step1); clearTimeout(step2); clearTimeout(step3); clearTimeout(finish); };
+  }, [phase, card]);
+
   const startAiReading = (selectedCard: ReadingCard) => {
     setAiLoading(true);
     setAiError(null);
