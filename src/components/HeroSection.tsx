@@ -2491,15 +2491,14 @@ const HeroSection = () => {
             className="relative flex items-center justify-center pointer-events-auto"
             style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
           >
-            {/* Aura glow — tighter spread for realism */}
-            <motion.div
+            {/* Aura glow — static on mobile for performance */}
+            <div
               className="absolute rounded-full"
               style={{
                 width: "332px", height: "332px",
                 background: "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 45%, transparent 60%)",
+                opacity: 0.55,
               }}
-              animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
             {/* Contact shadow — where hands meet ball edges */}
             <div
