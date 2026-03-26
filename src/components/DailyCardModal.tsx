@@ -92,7 +92,7 @@ function getTimeUntilMidnight(format: string): string {
 
 // Cinematic particle field — cosmic dust with varied sizes, colors, drift
 const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }) => {
-  const count = Math.round(24 * intensity);
+  const count = Math.round(12 * intensity);
   const particles = React.useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
       id: i,
@@ -111,12 +111,12 @@ const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }
     [count],
   );
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ contain: "strict" }}>
       {particles.map((p) => (
         <motion.div
           key={p.id}
           className="absolute rounded-full"
-          style={{ width: p.size, height: p.size, background: p.color, left: `${p.x}%`, top: `${p.y}%` }}
+          style={{ width: p.size, height: p.size, background: p.color, left: `${p.x}%`, top: `${p.y}%`, willChange: "transform, opacity" }}
           animate={{ y: [0, p.drift, 0], opacity: [0, 0.85, 0], scale: [0.6, 1.4, 0.6] }}
           transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: "easeInOut" }}
         />
