@@ -13,6 +13,7 @@ const MOBILE_ACTIONS = [
   { key: "tarot", icon: Eye, color: "hsl(var(--crimson))" },
   { key: "compatibility", icon: Sparkles, color: "hsl(var(--gold))" },
   { key: "palm", icon: Hand, color: "hsl(var(--gold-dark))" },
+  { key: "forecast", icon: Star, color: "hsl(var(--gold))" },
 ] as const;
 
 const HeroScrollContent = ({
