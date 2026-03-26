@@ -3519,7 +3519,7 @@ const HeroSection = () => {
           boxShadow: isMobile
             ? "0 -4px 20px hsl(var(--gold) / 0.08)"
             : "0 0 22px hsl(var(--gold) / 0.06), 0 3px 14px hsl(0 0% 0% / 0.25)",
-          backdropFilter: "blur(8px)",
+          backdropFilter: isMobile ? "none" : "blur(8px)",
           textAlign: "center" as const,
         }}
         initial={{ opacity: 0 }}
