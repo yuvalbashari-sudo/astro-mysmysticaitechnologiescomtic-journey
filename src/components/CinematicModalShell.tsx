@@ -179,13 +179,20 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             <AvatarHoverTeaser
               disabled={isMobile}
               className="absolute z-[106]"
-              style={avatarStyle ?? {
-                bottom: isMobile ? 58 : 32,
-                right: isMobile ? 20 : 40,
+              style={avatarStyle ?? (isMobile ? {
+                top: 50,
+                right: 20,
+                bottom: "auto",
                 left: "auto",
-                width: isMobile ? 120 : 168,
-                height: isMobile ? 120 : 168,
-              }}
+                width: 120,
+                height: 120,
+              } : {
+                bottom: 32,
+                right: 40,
+                left: "auto",
+                width: 168,
+                height: 168,
+              })}
             >
               <motion.button
                 className="w-full h-full rounded-full overflow-hidden cursor-pointer group"
