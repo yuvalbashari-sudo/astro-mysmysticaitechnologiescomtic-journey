@@ -35,6 +35,16 @@ const TarotCardPage = () => {
       author: { "@type": "Organization", name: "ASTROLOGAI" },
     });
     document.head.appendChild(jsonLd);
+
+    // Canonical link
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = `https://astro-mysmysticaitechnologiescomtic-journey.lovable.app/tarot/${slug}`;
+
     return () => { document.getElementById("tarot-jsonld")?.remove(); };
   }, [card, cardImage]);
 

@@ -139,9 +139,9 @@ const HeroScrollContent = ({
             transition={{ duration: 1, delay: 1 }}
             className="mb-2 text-center"
           >
-            <h2 className="font-body text-2xl font-light leading-relaxed text-foreground/90 lg:text-3xl">
+            <h1 className="font-body text-2xl font-light leading-relaxed text-foreground/90 lg:text-3xl">
               {t.hero_headline}
-            </h2>
+            </h1>
           </motion.div>
 
           <motion.p
