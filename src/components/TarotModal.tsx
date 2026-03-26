@@ -164,7 +164,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [tableCards, setTableCards] = useState<ReadingCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
-   const [copied, setCopied] = false);
+   const [copied, setCopied] = useState(false);
 
   // AI state
   const [aiText, setAiText] = useState("");
