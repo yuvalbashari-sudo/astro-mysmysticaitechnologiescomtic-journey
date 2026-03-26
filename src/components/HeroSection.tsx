@@ -2243,8 +2243,8 @@ const HeroSection = () => {
     <div
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="fixed inset-0 z-0 isolate"
-      style={{}}
+      className="fixed inset-0 z-0 isolate will-change-transform"
+      style={{ contain: "layout style paint" }}
     >
       {/* ── Cinematic entrance overlay ── */}
       <motion.div
@@ -2269,6 +2269,8 @@ const HeroSection = () => {
         <img
           src={heroFigure}
           alt=""
+          width="1920"
+          height="1080"
           className="w-full h-full object-cover scale-110"
           style={{ objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)" }}
         />
@@ -2727,6 +2729,8 @@ const HeroSection = () => {
           <img
             src={heroFigure}
             alt=""
+            width="1920"
+            height="1080"
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
@@ -2753,6 +2757,8 @@ const HeroSection = () => {
           <img
             src={heroFigure}
             alt=""
+            width="1920"
+            height="1080"
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 100px)",
