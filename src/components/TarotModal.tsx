@@ -69,6 +69,7 @@ async function streamTarotReading(
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
+  const userName = mysticalProfile.getUserName() || undefined;
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -76,7 +77,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he" }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he", userName }),
     });
 
     if (!resp.ok) {
