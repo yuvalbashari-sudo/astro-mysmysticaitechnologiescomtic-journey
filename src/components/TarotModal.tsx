@@ -392,7 +392,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Title */}
                   <motion.h2
-                    className="relative z-10 font-heading text-xl gold-gradient-text mb-2 text-center"
+                    className="relative z-10 font-heading text-4xl gold-gradient-text mb-2 text-center"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15 }}
@@ -400,7 +400,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {t.tarot_title}
                   </motion.h2>
                   <motion.p
-                    className="relative z-10 text-foreground/50 font-body text-xs mb-8 text-center max-w-[280px]"
+                    className="relative z-10 text-foreground/50 font-body text-lg mb-8 text-center max-w-[320px]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
@@ -443,8 +443,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           <span className="text-gold/80">{spread.icon}</span>
                         </span>
                         <div className="flex-1 min-w-0">
-                          <span className="font-heading text-sm text-gold/90 block">{SPREAD_LABELS[spread.key]}</span>
-                          <span className="text-[10px] text-foreground/40 font-body">
+                          <span className="font-heading text-xl text-gold/90 block">{SPREAD_LABELS[spread.key]}</span>
+                          <span className="text-base text-foreground/40 font-body">
                             {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
                           </span>
                         </div>
