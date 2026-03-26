@@ -75,13 +75,13 @@ const HeroScrollContent = ({
             ✦ {t.hero_social_proof} ✦
           </motion.p>
 
-          <div className="mt-1 grid w-full max-w-xs grid-cols-2 gap-3">
+          <div className="mt-1 grid w-full max-w-xs grid-cols-2 gap-2.5">
             {mobileActions.map((item, i) => (
               <motion.button
                 key={item.key}
                 initial={{ opacity: 0, y: 20, scale: 0.85 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, delay: 2 + i * 0.15, ease: "easeOut" }}
+                transition={{ duration: 0.5, delay: 2 + i * 0.12, ease: "easeOut" }}
                 onClick={item.action}
                 whileTap={{ scale: 0.95 }}
                 className="min-h-[52px] rounded-2xl border border-gold/15 bg-muted/15 px-2 py-3 backdrop-blur-md"
@@ -93,18 +93,6 @@ const HeroScrollContent = ({
               </motion.button>
             ))}
           </div>
-
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.2 }}
-            onClick={onOpenForecast}
-            whileTap={{ scale: 0.97 }}
-            className="flex min-h-[48px] w-full max-w-xs items-center justify-center gap-2 rounded-full border border-gold/10 bg-muted/12 py-2.5 backdrop-blur-md"
-          >
-            <Star className="h-4 w-4 text-gold" />
-            <span className="font-body text-xs text-foreground/70">{t.hero_menu_forecast}</span>
-          </motion.button>
 
           <motion.div
             initial={{ opacity: 0, y: 15 }}
