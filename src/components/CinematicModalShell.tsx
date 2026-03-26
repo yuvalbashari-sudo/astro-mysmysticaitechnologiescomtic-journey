@@ -180,7 +180,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               disabled={isMobile}
               className="absolute z-[106]"
               style={avatarStyle ?? {
-                bottom: isMobile ? 28 : 32,
+                bottom: isMobile ? 58 : 32,
                 right: isMobile ? 20 : 40,
                 left: "auto",
                 width: isMobile ? 120 : 168,
