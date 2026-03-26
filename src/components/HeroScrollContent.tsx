@@ -28,6 +28,7 @@ const HeroScrollContent = ({
     { ...MOBILE_ACTIONS[0], label: t.hero_menu_tarot, action: onOpenTarot },
     { ...MOBILE_ACTIONS[1], label: t.hero_menu_compatibility, action: onOpenCompatibility },
     { ...MOBILE_ACTIONS[2], label: t.hero_menu_palm, action: onOpenPalm },
+    { ...MOBILE_ACTIONS[3], label: t.hero_menu_forecast, action: onOpenForecast },
   ];
 
   return (
