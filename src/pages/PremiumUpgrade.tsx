@@ -218,14 +218,19 @@ const PremiumUpgrade = () => {
               </p>
 
               {/* Price */}
-              <div className="text-center mb-7">
+              <div className="text-center mb-2">
                 <span className="font-heading text-4xl md:text-5xl gold-gradient-text">
-                  {plan.priceLabel}
+                  {plan.priceLabel[lang]}
                 </span>
                 <span className="font-body text-sm text-foreground/40 ms-1">
-                  {plan.priceSubtext}
+                  {plan.priceSubtext[lang]}
                 </span>
               </div>
+              {(plan as any).yearlyNote && (
+                <p className="text-center font-body text-xs text-gold/60 mb-5">
+                  {(plan as any).yearlyNote[lang]}
+                </p>
+              )}
 
               {/* Divider */}
               <div className="h-px w-full bg-gold/10 mb-6" />
