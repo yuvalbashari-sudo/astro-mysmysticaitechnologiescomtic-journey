@@ -65,19 +65,18 @@ const plans = [
 
 const planNames: Record<string, { he: string; en: string }> = {
   free: { he: "חינם", en: "Free" },
-  premium: { he: "פרימיום", en: "Premium" },
-  vip: { he: "VIP", en: "VIP" },
+  subscriber: { he: "מנוי פרימיום", en: "Premium" },
 };
 
 const planDescriptions: Record<string, { he: string; en: string }> = {
   free: { he: "התחלה מיסטית בחינם", en: "Start your mystical journey" },
-  premium: { he: "חוויה מלאה ועמוקה", en: "Full mystical experience" },
-  vip: { he: "חוויה בלעדית ברמה הגבוהה ביותר", en: "The ultimate exclusive experience" },
+  subscriber: { he: "חוויה מלאה, מעמיקה ומפורטת יותר", en: "Full, deeper, more detailed experience" },
 };
 
 const ctaLabels: Record<string, { he: string; en: string }> = {
   free: { he: "המשיכו בחינם", en: "Continue Free" },
-  premium: { he: "שדרגו לפרימיום", en: "Upgrade to Premium" },
+  subscriber: { he: "שדרגו לפרימיום", en: "Upgrade to Premium" },
+};
   vip: { he: "פתחו גישת VIP", en: "Unlock VIP Access" },
 };
 
