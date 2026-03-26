@@ -11,7 +11,7 @@ import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
-import PalmReadingModal from "./PalmReadingModal";
+import PalmComingSoonModal from "./PalmComingSoonModal";
 import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
