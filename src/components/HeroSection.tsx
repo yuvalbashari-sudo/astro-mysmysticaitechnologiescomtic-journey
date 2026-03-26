@@ -3529,7 +3529,7 @@ const HeroSection = () => {
         whileTap={{ scale: 0.95 }}
       >
         <span className={`text-gold/80 font-body font-medium ${isMobile ? "text-base" : "text-2xl"} tracking-wide`}>
-          ✦ {t.hero_crystal_hint} ✦
+          {t.hero_crystal_hint}
         </span>
       </motion.button>
     )}
