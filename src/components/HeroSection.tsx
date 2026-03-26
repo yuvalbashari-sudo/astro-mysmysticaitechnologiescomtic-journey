@@ -2292,7 +2292,7 @@ const HeroSection = () => {
             top: "55%",
             width: isMobile ? "220px" : "400px",
             height: isMobile ? "170px" : "280px",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%) translateZ(0)",
             background: hoveredTeaser === "right"
               ? "radial-gradient(ellipse, hsl(270 55% 50% / 0.2) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 70%)"
               : hoveredTeaser === "left"
@@ -2300,8 +2300,8 @@ const HeroSection = () => {
                 : activeColor
                   ? `radial-gradient(ellipse, ${activeColor}44 0%, ${activeColor}18 40%, transparent 70%)`
                   : "radial-gradient(ellipse, hsl(var(--gold) / 0.22) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
-            filter: "blur(25px)",
             transition: "background 0.6s ease-out",
+            willChange: "transform, opacity",
           }}
           animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.2, 1] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
