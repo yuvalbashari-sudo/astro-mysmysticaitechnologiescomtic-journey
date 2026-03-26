@@ -883,7 +883,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 </>
                               )}
 
-                              {/* Energy pulse ring on flip */}
+                              {/* Energy pulse ring on flip — single ring on mobile */}
                               {isFlipped && (
                                 <>
                                   <motion.div
@@ -892,30 +892,32 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                       left: "50%", top: "50%",
                                       width: 20, height: 20,
                                       marginLeft: -10, marginTop: -10,
-                                      border: "2px solid hsl(var(--gold) / 0.6)",
+                                      border: `${isMobileTarot ? "1px" : "2px"} solid hsl(var(--gold) / ${isMobileTarot ? "0.4" : "0.6"})`,
                                     }}
                                     initial={{ scale: 0, opacity: 1 }}
-                                    animate={{ scale: [0, 8], opacity: [0.8, 0] }}
-                                    transition={{ duration: 1.2, ease: "easeOut" }}
+                                    animate={{ scale: [0, isMobileTarot ? 5 : 8], opacity: [isMobileTarot ? 0.5 : 0.8, 0] }}
+                                    transition={{ duration: isMobileTarot ? 0.8 : 1.2, ease: "easeOut" }}
                                   />
-                                  <motion.div
-                                    className="absolute pointer-events-none rounded-full"
-                                    style={{
-                                      left: "50%", top: "50%",
-                                      width: 14, height: 14,
-                                      marginLeft: -7, marginTop: -7,
-                                      border: "1px solid hsl(var(--gold) / 0.4)",
-                                    }}
-                                    initial={{ scale: 0, opacity: 1 }}
-                                    animate={{ scale: [0, 10], opacity: [0.5, 0] }}
-                                    transition={{ duration: 1.5, delay: 0.15, ease: "easeOut" }}
-                                  />
+                                  {!isMobileTarot && (
+                                    <motion.div
+                                      className="absolute pointer-events-none rounded-full"
+                                      style={{
+                                        left: "50%", top: "50%",
+                                        width: 14, height: 14,
+                                        marginLeft: -7, marginTop: -7,
+                                        border: "1px solid hsl(var(--gold) / 0.4)",
+                                      }}
+                                      initial={{ scale: 0, opacity: 1 }}
+                                      animate={{ scale: [0, 10], opacity: [0.5, 0] }}
+                                      transition={{ duration: 1.5, delay: 0.15, ease: "easeOut" }}
+                                    />
+                                  )}
                                   <motion.div
                                     className="absolute -inset-6 pointer-events-none"
-                                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.35), transparent 50%)" }}
+                                    style={{ background: `radial-gradient(circle, hsl(var(--gold) / ${isMobileTarot ? "0.15" : "0.35"}), transparent 50%)` }}
                                     initial={{ opacity: 0, scale: 0.5 }}
-                                    animate={{ opacity: [0, 1, 0.3], scale: [0.5, 1.5, 1] }}
-                                    transition={{ duration: 0.8 }}
+                                    animate={{ opacity: [0, isMobileTarot ? 0.5 : 1, isMobileTarot ? 0.15 : 0.3], scale: [0.5, isMobileTarot ? 1.2 : 1.5, 1] }}
+                                    transition={{ duration: isMobileTarot ? 0.5 : 0.8 }}
                                   />
                                 </>
                               )}
