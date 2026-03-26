@@ -78,13 +78,20 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
     }
   }, []);
 
+  const [buildUp, setBuildUp] = useState(false);
+
   const handleDraw = useCallback(() => {
     if (drawn) return;
     const idx = getDailyCardIndex(allReadingCards.length);
     const selectedCard = allReadingCards[idx];
     setCard(selectedCard);
     setDrawn(true);
-    setTimeout(() => setFlipped(true), 600);
+    setBuildUp(true);
+    // Build-up phase: 1.2s of anticipation before reveal
+    setTimeout(() => {
+      setBuildUp(false);
+      setFlipped(true);
+    }, 1200);
   }, [drawn]);
 
   const cardImage = card ? card.image : null;
