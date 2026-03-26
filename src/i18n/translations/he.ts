@@ -273,7 +273,7 @@ export const he: TranslationKeys = {
   tarot_mystical_interp: "פירוש מיסטי",
   tarot_premium_title: "רוצים קריאה מלאה?",
   tarot_premium_desc: "הזמינו קריאת טארוט אישית מלאה עם 10 קלפים, פירוש מפורט ותשובות לשאלות שלכם",
-  tarot_premium_cta: "הזמינו קריאה פרימיום",
+  tarot_premium_cta: "✦ הזמינו קריאת טארוט מלאה",
 
   tarot_world_title: "עולם הטארוט",
   tarot_world_desc: "הקלפים מחכים לכם. בחרו את סוג הקריאה וקבלו הדרכה אינטואיטיבית, מסרים נסתרים ותובנות סמליות עמוקות מהארקנה הגדולה",
