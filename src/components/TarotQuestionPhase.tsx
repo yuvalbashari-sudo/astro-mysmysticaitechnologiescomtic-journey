@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Eye } from "lucide-react";
 import { useLanguage, type Language } from "@/i18n";
+import { mysticalProfile } from "@/lib/mysticalProfile";
+import MysticalNameInput from "@/components/MysticalNameInput";
 
 interface Props {
   spreadType: string;
