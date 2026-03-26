@@ -360,10 +360,11 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         top: "50%",
         left: "50%",
-        transform: isMobile ? "translate(-50%, calc(-50% - 5px))" : "translate(-50%, -50%)",
+        transform: isMobile ? "translate(-50%, calc(-50% - 5px)) translateZ(0)" : "translate(-50%, -50%) translateZ(0)",
         borderRadius: "50%",
         overflow: "hidden",
         background: "transparent",
+        contain: "strict",
         maskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
