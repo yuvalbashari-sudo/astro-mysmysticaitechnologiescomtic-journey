@@ -59,6 +59,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     setAttempted(true);
     if (!gender || !birthDate) return;
     if (mode === "rising" && !birthTime) return;
+    if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     setIsLoading(true);
   };
 

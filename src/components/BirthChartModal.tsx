@@ -227,6 +227,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       toast.error(t.birth_chart_error_required);
       return;
     }
+    if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
 
     const dateObj = new Date(birthDate);
     const [hour, minute] = birthTime.split(":").map(Number);

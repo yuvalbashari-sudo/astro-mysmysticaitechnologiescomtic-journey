@@ -48,7 +48,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const handleSubmit = () => { if (!birthTime || !birthDate) return; setIsLoading(true); };
+  const handleSubmit = () => { if (!birthTime || !birthDate) return; if (userName.trim()) mysticalProfile.recordUserName(userName.trim()); setIsLoading(true); };
 
   const handleOnboardingComplete = () => {
     const [h, m] = birthTime.split(":").map(Number);
