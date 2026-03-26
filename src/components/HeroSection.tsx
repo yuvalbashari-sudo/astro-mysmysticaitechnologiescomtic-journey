@@ -2799,12 +2799,12 @@ const HeroSection = () => {
           className={`absolute inset-0 pointer-events-none z-[18] flex ${isMobile ? "items-center" : "items-start"} justify-center`}
           style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}
         >
-          <div className="w-full h-full flex items-center justify-center">
+          <div className={`w-full h-full flex ${isMobile ? "items-center" : "items-start"} justify-center`}>
             <div
               className="relative"
               style={isMobile
                 ? { width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }
-                : { marginTop: "340px", marginLeft: "10px" }
+                : { marginLeft: "10px" }
               }
             >
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={() => setForecastOpen(true)} />
