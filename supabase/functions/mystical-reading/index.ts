@@ -562,7 +562,7 @@ const RATE_LIMIT_MAX: Record<string, number> = {
   forecast: 10,
   rising: 10,
   compatibility: 8,
-  palm: 8,
+  palm: 3,       // strict: 3 per hour per IP (expensive AI + vision)
   dailyCard: 20,
   birthChart: 10,
   tarotSpread: 15,

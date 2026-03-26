@@ -89,7 +89,7 @@ const COOLDOWN_MS: Record<string, number> = {
   lead_form: 10000,       // 10 seconds between submissions
   tarot_reading: 3000,    // 3 seconds between readings
   compatibility: 3000,
-  palm_reading: 5000,
+  palm_reading: 45000,    // 45 seconds between palm readings (expensive)
   ai_advisor: 2000,
   generic: 2000,
 };
