@@ -125,7 +125,7 @@ const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }
   );
 });
 
-type Phase = "ready" | "ritual" | "result" | "locked";
+type Phase = "ready" | "ritual" | "result" | "locked" | "mobile-reveal";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -166,13 +166,26 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         if (saved.aiText && saved.language === language) {
           setAiText(saved.aiText);
           aiTextRef.current = saved.aiText;
-          setPhase("locked");
+          // On mobile, show a brief card reveal before jumping to locked
+          if (isMobileViewport) {
+            setShowCardOverlay(false);
+            setRitualStep(0);
+            setPhase("mobile-reveal");
+          } else {
+            setPhase("locked");
+          }
         } else if (saved.aiText && saved.language !== language) {
           // Language changed — re-generate AI text
           setPhase("result");
           startAiReading(saved.card);
         } else {
-          setPhase("locked");
+          if (isMobileViewport) {
+            setShowCardOverlay(false);
+            setRitualStep(0);
+            setPhase("mobile-reveal");
+          } else {
+            setPhase("locked");
+          }
         }
       } else {
         setPhase("ready");
@@ -260,6 +273,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       clearTimeout(step4);
       clearTimeout(fallback);
     };
+  }, [phase, card]);
+
+  // Mobile-reveal: quick card flip animation before showing locked state
+  useEffect(() => {
+    if (phase !== "mobile-reveal" || !card) return;
+    const step1 = setTimeout(() => setRitualStep(1), 400);
+    const step2 = setTimeout(() => { setShowCardOverlay(true); setRitualStep(2); }, 1000);
+    const step3 = setTimeout(() => setRitualStep(3), 1800);
+    const finish = setTimeout(() => setPhase("locked"), 2400);
+    return () => { clearTimeout(step1); clearTimeout(step2); clearTimeout(step3); clearTimeout(finish); };
   }, [phase, card]);
 
   const startAiReading = (selectedCard: ReadingCard) => {
@@ -596,7 +619,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {phase === "ritual" && card && (
+              {(phase === "ritual" || phase === "mobile-reveal") && card && (
                 <motion.div
                   key="ritual"
                   initial={{ opacity: 0 }}
