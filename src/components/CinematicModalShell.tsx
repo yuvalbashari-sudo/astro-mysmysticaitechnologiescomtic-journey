@@ -33,18 +33,11 @@ interface Props {
  * text legibility without hiding the figure.
  */
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle }: Props) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
   
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   useEffect(() => {
     if (isOpen) {
