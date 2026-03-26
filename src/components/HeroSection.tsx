@@ -2251,8 +2251,8 @@ const HeroSection = () => {
         transition={{ duration: 2, ease: "easeInOut" }}
       />
 
-      {/* ── Nebula clouds ── */}
-      <NebulaLayer isMobile={isMobile} />
+      {/* ── Nebula clouds — desktop only for performance ── */}
+      {!isMobile && <NebulaLayer isMobile={isMobile} />}
 
       {/* ── Layer 1: Mystical figure as full background ── */}
       <motion.div
