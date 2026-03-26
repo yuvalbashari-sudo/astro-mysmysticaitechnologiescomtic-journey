@@ -152,21 +152,21 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
         /* ── MOBILE: two rows ── */
         <div className="flex flex-col items-center gap-1.5">
           {/* Row 1: left icons – LOGO – right icons */}
-          <div className="flex items-center justify-between w-full">
+           <div className="flex items-center justify-between w-full">
             {/* Left group */}
-            <nav className="flex items-center gap-1.5" aria-label={t.a11y_main_navigation}>
+            <nav className="flex items-center gap-1 shrink-0" aria-label={t.a11y_main_navigation}>
               <MysticalLanguageDropdown />
               {a11yLink}
             </nav>
 
             {/* Centre logo */}
-            <div className="shrink pointer-events-none select-none mx-0.5 min-w-0 overflow-hidden">
+            <div className="shrink min-w-0 pointer-events-none select-none mx-1 text-center">
               <motion.h1
-                className="font-heading uppercase whitespace-nowrap"
+                className="font-heading uppercase whitespace-nowrap truncate"
                 style={{
-                  fontSize: "clamp(12px, 4vw, 20px)",
+                  fontSize: "clamp(11px, 3.5vw, 18px)",
                   fontWeight: 700,
-                  letterSpacing: "0.12em",
+                  letterSpacing: "0.08em",
                   lineHeight: 1,
                   color: "hsl(var(--gold))",
                   background:
@@ -185,7 +185,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </div>
 
             {/* Right group */}
-            <nav className="flex items-center gap-1.5">
+            <nav className="flex items-center gap-1 shrink-0">
               {dashboardBtn}
               {historyBtn}
               {whatsappBtn}
