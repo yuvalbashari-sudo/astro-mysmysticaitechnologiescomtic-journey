@@ -241,11 +241,11 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
             width: expandedCardW,
             height: expandedCardH,
             border: "2px solid hsl(var(--gold) / 0.3)",
-            boxShadow: "0 0 20px hsl(var(--gold) / 0.12), 0 8px 30px hsl(var(--deep-blue) / 0.5)",
+            boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 0 60px hsl(280 50% 50% / 0.06), 0 8px 30px hsl(var(--deep-blue) / 0.5)",
           }}
-          initial={{ rotateY: 90, opacity: 0 }}
-          animate={{ rotateY: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          initial={{ rotateY: 90, opacity: 0, scale: 0.8 }}
+          animate={{ rotateY: 0, opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
         >
           {cardImage ? (
             <img
@@ -262,6 +262,16 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
               <span className="text-3xl">{card.symbol}</span>
             </div>
           )}
+          {/* Reveal burst */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.25), transparent 60%)",
+            }}
+            initial={{ opacity: 0.8 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          />
           {/* Shimmer */}
           <motion.div
             className="absolute inset-0 pointer-events-none"

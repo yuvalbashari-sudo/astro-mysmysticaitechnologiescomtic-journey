@@ -601,181 +601,299 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   key="ritual"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.5 }}
+                  exit={{ opacity: 0, scale: 0.97 }}
+                  transition={{ duration: 0.6 }}
                   className="relative flex flex-col items-center justify-center"
-                  style={{ minHeight: "70vh" }}
+                  style={{ minHeight: "80vh" }}
                 >
-                  {/* ── Crystal ball glow — energy gathering ── */}
+                  {/* ── Stage 1: Cosmic atmosphere — ambient glow + particles ── */}
+                  <CinematicParticles intensity={ritualStep < 2 ? 1 : 0.3} />
+
+                  {/* Deep ambient radial glow — builds with ritual */}
                   <motion.div
-                    className="absolute pointer-events-none rounded-full"
+                    className="absolute pointer-events-none"
                     style={{
-                      width: isMobileViewport ? 180 : 260,
-                      height: isMobileViewport ? 180 : 260,
-                      background: "radial-gradient(circle, hsl(var(--gold) / 0.2), hsl(var(--celestial) / 0.1), transparent 70%)",
-                      filter: "blur(30px)",
+                      width: isMobileViewport ? 320 : 500,
+                      height: isMobileViewport ? 320 : 500,
+                      background: "radial-gradient(circle, hsl(var(--gold) / 0.12), hsl(280 50% 50% / 0.06), hsl(var(--celestial) / 0.04), transparent 70%)",
+                      filter: "blur(50px)",
                     }}
                     animate={{
-                      scale: ritualStep >= 2 ? [1, 0.3] : [0.3, 1.2, 0.3],
-                      opacity: ritualStep >= 2 ? [0.7, 0] : [0, 0.7, 0],
+                      scale: ritualStep < 1 ? [0.6, 1, 0.6] : ritualStep < 2 ? [1, 1.3, 1] : [1.3, 0.4],
+                      opacity: ritualStep < 1 ? [0.2, 0.5, 0.2] : ritualStep < 2 ? [0.5, 0.9, 0.5] : [0.9, 0],
                     }}
                     transition={{
-                      duration: ritualStep >= 2 ? 0.8 : 2,
-                      repeat: ritualStep >= 2 ? 0 : Infinity,
+                      duration: ritualStep < 2 ? 3 : 1,
+                      repeat: ritualStep < 2 ? Infinity : 0,
                       ease: "easeInOut",
                     }}
                   />
 
-                  {/* ── Pulsing rings ── */}
+                  {/* Secondary violet-blue aura — subtle energy field */}
+                  <motion.div
+                    className="absolute pointer-events-none rounded-full"
+                    style={{
+                      width: isMobileViewport ? 200 : 320,
+                      height: isMobileViewport ? 200 : 320,
+                      background: "radial-gradient(circle, hsl(260 55% 55% / 0.08), hsl(220 60% 50% / 0.04), transparent 70%)",
+                      filter: "blur(40px)",
+                    }}
+                    animate={{
+                      scale: [0.8, 1.2, 0.8],
+                      opacity: ritualStep < 2 ? [0.1, 0.4, 0.1] : 0,
+                      rotate: [0, 180],
+                    }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                  />
+
+                  {/* ── Stage 2: Build-up — pulsing rings that intensify ── */}
                   {[0, 1, 2].map((i) => (
                     <motion.div
                       key={`ring-${i}`}
                       className="absolute rounded-full pointer-events-none"
                       style={{
-                        width: isMobileViewport ? 120 + i * 50 : 180 + i * 70,
-                        height: isMobileViewport ? 120 + i * 50 : 180 + i * 70,
-                        border: `1px solid hsl(var(--gold) / ${0.15 - i * 0.04})`,
+                        width: isMobileViewport ? 100 + i * 55 : 160 + i * 75,
+                        height: isMobileViewport ? 100 + i * 55 : 160 + i * 75,
+                        border: `1px solid hsl(var(--gold) / ${0.12 - i * 0.03})`,
                       }}
-                      initial={{ scale: 0.5, opacity: 0 }}
+                      initial={{ scale: 0.4, opacity: 0 }}
                       animate={ritualStep < 2
-                        ? { scale: [0.5, 1.5 + i * 0.3], opacity: [0.4, 0] }
-                        : { scale: 2 + i, opacity: 0 }
+                        ? { scale: [0.4, 1.6 + i * 0.3], opacity: [0.5, 0] }
+                        : { scale: [1, 3 + i], opacity: [0.3, 0] }
                       }
                       transition={{
-                        duration: 2,
+                        duration: ritualStep < 2 ? 2.5 : 0.8,
                         repeat: ritualStep < 2 ? Infinity : 0,
-                        delay: i * 0.4,
+                        delay: i * 0.5,
                         ease: "easeOut",
                       }}
                     />
                   ))}
 
-                  {/* ── Golden sparks converging ── */}
-                  {ritualStep >= 1 && [...Array(12)].map((_, i) => {
-                    const angle = (i / 12) * Math.PI * 2;
-                    const dist = 100 + (i % 3) * 25;
+                  {/* Golden-violet pulse — build-up crescendo */}
+                  {ritualStep >= 1 && ritualStep < 3 && (
+                    <motion.div
+                      className="absolute pointer-events-none rounded-full"
+                      style={{
+                        width: isMobileViewport ? 240 : 360,
+                        height: isMobileViewport ? 240 : 360,
+                        background: "radial-gradient(circle, hsl(var(--gold) / 0.18), hsl(270 60% 50% / 0.12), transparent 60%)",
+                        filter: "blur(25px)",
+                      }}
+                      animate={{ scale: [0.5, 1.1, 0.5], opacity: [0, 0.7, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  )}
+
+                  {/* ── Converging sparks — energy drawn to center ── */}
+                  {ritualStep >= 1 && [...Array(16)].map((_, i) => {
+                    const angle = (i / 16) * Math.PI * 2;
+                    const dist = 90 + (i % 4) * 30;
                     return (
                       <motion.div
                         key={`spark-${i}`}
                         className="absolute rounded-full pointer-events-none"
                         style={{
-                          width: 2 + (i % 3),
-                          height: 2 + (i % 3),
-                          background: i % 2 === 0 ? "hsl(var(--gold))" : "hsl(var(--celestial) / 0.7)",
+                          width: 1.5 + (i % 3),
+                          height: 1.5 + (i % 3),
+                          background: i % 3 === 0
+                            ? "hsl(var(--gold))"
+                            : i % 3 === 1
+                            ? "hsl(var(--celestial) / 0.8)"
+                            : "hsl(280 70% 70% / 0.7)",
                         }}
                         initial={{ x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, opacity: 0 }}
-                        animate={{ x: 0, y: 0, opacity: [0, 0.9, 0], scale: [0, 1.5, 0] }}
-                        transition={{ duration: 1, delay: 0.04 * i, ease: "easeIn" }}
+                        animate={{ x: 0, y: 0, opacity: [0, 1, 0], scale: [0, 1.8, 0] }}
+                        transition={{ duration: 1.2, delay: 0.05 * i, ease: "easeIn" }}
                       />
                     );
                   })}
 
-                  {/* ── The card — RELIABLE APPROACH: back cross-fades to front ── */}
+                  {/* ── Stage 3: Card reveal — cinematic emergence ── */}
                   {showCardOverlay && (
                     <motion.div
                       className="relative z-10 flex flex-col items-center"
-                      initial={{ opacity: 0, scale: 0.3, y: 60 }}
+                      initial={{ opacity: 0, scale: 0.2, y: 80 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      {/* Card container */}
+                      {/* Card container with perspective flip */}
                       <div
-                        className="relative rounded-xl overflow-hidden"
+                        className="relative"
                         style={{
-                          width: isMobileViewport ? 160 : 200,
-                          height: isMobileViewport ? 240 : 300,
-                          border: "2px solid hsl(var(--gold) / 0.4)",
-                          boxShadow: ritualStep >= 3
-                            ? "0 0 60px hsl(var(--gold) / 0.25), 0 0 80px hsl(280 50% 50% / 0.1), 0 20px 60px hsl(0 0% 0% / 0.5)"
-                            : "0 8px 30px hsl(0 0% 0% / 0.4)",
+                          width: isMobileViewport ? 170 : 220,
+                          height: isMobileViewport ? 255 : 330,
+                          perspective: "800px",
                         }}
                       >
-                        {/* Card FRONT — always present, guaranteed visible */}
-                        <div className="absolute inset-0">
-                          {cardImage ? (
-                            <img src={cardImage} alt={card.name[language] || card.name.en} className="w-full h-full object-cover" />
-                          ) : (
-                            <div
-                              className="w-full h-full flex items-center justify-center"
-                              style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}
-                            >
-                              <span className="text-5xl">{card.symbol}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Card BACK — overlays front, fades out to reveal */}
                         <motion.div
-                          className="absolute inset-0 z-10"
-                          initial={{ opacity: 1 }}
-                          animate={{ opacity: ritualStep >= 3 ? 0 : 1 }}
-                          transition={{ duration: 0.8, ease: "easeInOut" }}
+                          className="absolute inset-0 rounded-xl overflow-hidden"
+                          style={{
+                            transformStyle: "preserve-3d",
+                            border: "2px solid hsl(var(--gold) / 0.4)",
+                            boxShadow: ritualStep >= 3
+                              ? "0 0 50px hsl(var(--gold) / 0.2), 0 0 100px hsl(280 50% 50% / 0.08), 0 25px 60px hsl(0 0% 0% / 0.5)"
+                              : "0 12px 40px hsl(0 0% 0% / 0.5)",
+                          }}
+                          initial={{ rotateY: 0 }}
+                          animate={{ rotateY: ritualStep >= 3 ? 180 : 0 }}
+                          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
                         >
-                          <img src={cardBack} alt="" className="w-full h-full object-cover" />
+                          {/* Card BACK face */}
+                          <div
+                            className="absolute inset-0"
+                            style={{ backfaceVisibility: "hidden" }}
+                          >
+                            <img src={cardBack} alt="" className="w-full h-full object-cover" />
+                            {/* Pre-reveal shimmer across back */}
+                            {ritualStep >= 1 && ritualStep < 3 && (
+                              <motion.div
+                                className="absolute inset-0 pointer-events-none"
+                                style={{
+                                  background: "linear-gradient(105deg, transparent 25%, hsl(var(--gold) / 0.2) 45%, hsl(280 60% 70% / 0.1) 55%, transparent 75%)",
+                                }}
+                                animate={{ x: ["-120%", "220%"] }}
+                                transition={{ duration: 2, repeat: Infinity, repeatDelay: 0.5, ease: "easeInOut" }}
+                              />
+                            )}
+                            {/* Breathing glow on unrevealed card */}
+                            <motion.div
+                              className="absolute inset-0 pointer-events-none"
+                              style={{ background: "radial-gradient(circle at 50% 50%, hsl(var(--gold) / 0.06), transparent 60%)" }}
+                              animate={{ opacity: [0.3, 0.7, 0.3] }}
+                              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            />
+                          </div>
+
+                          {/* Card FRONT face */}
+                          <div
+                            className="absolute inset-0"
+                            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+                          >
+                            {cardImage ? (
+                              <img src={cardImage} alt={card.name[language] || card.name.en} className="w-full h-full object-cover" />
+                            ) : (
+                              <div
+                                className="w-full h-full flex items-center justify-center"
+                                style={{ background: "linear-gradient(135deg, hsl(222 30% 12%), hsl(0 20% 10%))" }}
+                              >
+                                <span className="text-5xl">{card.symbol}</span>
+                              </div>
+                            )}
+                          </div>
                         </motion.div>
 
-                        {/* Shimmer sweep after reveal */}
+                        {/* Post-reveal shimmer sweep */}
                         {ritualStep >= 3 && (
                           <motion.div
-                            className="absolute inset-0 pointer-events-none z-20"
-                            style={{
-                              background: "linear-gradient(105deg, transparent 30%, hsl(var(--gold) / 0.2) 50%, transparent 70%)",
-                            }}
-                            initial={{ x: "-100%" }}
-                            animate={{ x: "200%" }}
-                            transition={{ duration: 1.2, delay: 0.3, ease: "easeInOut" }}
-                          />
+                            className="absolute inset-0 pointer-events-none z-20 rounded-xl overflow-hidden"
+                          >
+                            <motion.div
+                              className="absolute inset-0"
+                              style={{
+                                background: "linear-gradient(105deg, transparent 25%, hsl(var(--gold) / 0.25) 45%, hsl(280 60% 70% / 0.1) 55%, transparent 75%)",
+                              }}
+                              initial={{ x: "-120%" }}
+                              animate={{ x: "220%" }}
+                              transition={{ duration: 1.5, delay: 0.4, ease: "easeInOut" }}
+                            />
+                          </motion.div>
                         )}
 
-                        {/* Glowing edge aura */}
+                        {/* Glowing border aura */}
                         <motion.div
                           className="absolute -inset-px rounded-xl pointer-events-none z-20"
                           animate={{
                             boxShadow: ritualStep >= 3
                               ? [
-                                  "inset 0 0 15px hsl(var(--gold) / 0.15)",
-                                  "inset 0 0 25px hsl(var(--gold) / 0.25)",
-                                  "inset 0 0 15px hsl(var(--gold) / 0.15)",
+                                  "inset 0 0 12px hsl(var(--gold) / 0.1), 0 0 20px hsl(var(--gold) / 0.08)",
+                                  "inset 0 0 20px hsl(var(--gold) / 0.2), 0 0 35px hsl(var(--gold) / 0.15)",
+                                  "inset 0 0 12px hsl(var(--gold) / 0.1), 0 0 20px hsl(var(--gold) / 0.08)",
                                 ]
-                              : "inset 0 0 10px hsl(var(--gold) / 0.08)",
+                              : "inset 0 0 8px hsl(var(--gold) / 0.06)",
                           }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                         />
                       </div>
 
-                      {/* Glow burst on final reveal */}
+                      {/* ── Stage 4: Post-reveal — halo burst + floating settle ── */}
                       {ritualStep >= 3 && (
-                        <motion.div
-                          className="absolute pointer-events-none rounded-full"
-                          style={{
-                            width: isMobileViewport ? 300 : 400,
-                            height: isMobileViewport ? 300 : 400,
-                            background: "radial-gradient(circle, hsl(var(--gold) / 0.18), hsl(280 50% 50% / 0.06), transparent 70%)",
-                            filter: "blur(30px)",
-                          }}
-                          initial={{ scale: 0.3, opacity: 0 }}
-                          animate={{ scale: [0.3, 1.2, 0.9], opacity: [0, 0.8, 0.3] }}
-                          transition={{ duration: 1.5, ease: "easeOut" }}
-                        />
+                        <>
+                          {/* Soft radial burst */}
+                          <motion.div
+                            className="absolute pointer-events-none rounded-full"
+                            style={{
+                              width: isMobileViewport ? 350 : 480,
+                              height: isMobileViewport ? 350 : 480,
+                              background: "radial-gradient(circle, hsl(var(--gold) / 0.15), hsl(270 50% 55% / 0.06), transparent 65%)",
+                              filter: "blur(35px)",
+                            }}
+                            initial={{ scale: 0.2, opacity: 0 }}
+                            animate={{ scale: [0.2, 1.3, 1], opacity: [0, 0.85, 0.25] }}
+                            transition={{ duration: 1.8, ease: "easeOut" }}
+                          />
+                          {/* Sparkle accents */}
+                          {[...Array(8)].map((_, i) => {
+                            const a = (i / 8) * Math.PI * 2;
+                            const r = 70 + (i % 3) * 30;
+                            return (
+                              <motion.div
+                                key={`post-spark-${i}`}
+                                className="absolute pointer-events-none"
+                                style={{
+                                  width: 3,
+                                  height: 3,
+                                  borderRadius: "50%",
+                                  background: i % 2 === 0 ? "hsl(var(--gold))" : "hsl(var(--celestial))",
+                                  boxShadow: `0 0 6px ${i % 2 === 0 ? "hsl(var(--gold) / 0.6)" : "hsl(var(--celestial) / 0.5)"}`,
+                                }}
+                                initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
+                                animate={{
+                                  x: Math.cos(a) * r,
+                                  y: Math.sin(a) * r,
+                                  opacity: [0, 1, 0],
+                                  scale: [0, 1.5, 0],
+                                }}
+                                transition={{ duration: 1, delay: 0.1 + i * 0.06, ease: "easeOut" }}
+                              />
+                            );
+                          })}
+                        </>
                       )}
 
-                      {/* Card name */}
+                      {/* Card name — elegant fade-in */}
                       <motion.h2
-                        className="font-heading text-2xl md:text-3xl gold-gradient-text mt-5 relative z-10"
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: ritualStep >= 3 ? 1 : 0, y: ritualStep >= 3 ? 0 : 15 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="font-heading text-2xl md:text-3xl gold-gradient-text mt-6 relative z-10"
+                        style={{ textShadow: "0 0 30px hsl(var(--gold) / 0.2)" }}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: ritualStep >= 3 ? 1 : 0, y: ritualStep >= 3 ? 0 : 20 }}
+                        transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {card.symbol} {card.name[language] || card.name.en}
                       </motion.h2>
                       <motion.p
-                        className="text-foreground/50 font-body text-sm relative z-10 mt-1"
+                        className="font-body text-sm relative z-10 mt-1.5"
+                        style={{ color: "hsl(var(--foreground) / 0.45)" }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: ritualStep >= 3 ? 1 : 0 }}
-                        transition={{ delay: 0.3 }}
+                        transition={{ delay: 0.6, duration: 0.6 }}
                       >
                         {t.daily_card_chosen}
                       </motion.p>
+
+                      {/* Gentle floating settle on revealed card */}
+                      {ritualStep >= 3 && (
+                        <motion.div
+                          className="absolute pointer-events-none"
+                          style={{
+                            width: isMobileViewport ? 170 : 220,
+                            height: isMobileViewport ? 255 : 330,
+                            top: 0,
+                          }}
+                          animate={{ y: [0, -4, 0] }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        />
+                      )}
                     </motion.div>
                   )}
 
@@ -788,25 +906,24 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       exit={{ opacity: 0 }}
                     >
                       <motion.p
-                        className="font-body text-lg"
-                        style={{ color: "hsl(var(--gold) / 0.85)" }}
-                        animate={{ opacity: [0.4, 1, 0.4] }}
-                        transition={{ duration: 2, repeat: Infinity }}
+                        className="font-heading text-xl md:text-2xl"
+                        style={{ color: "hsl(var(--gold) / 0.9)", textShadow: "0 0 20px hsl(var(--gold) / 0.15)" }}
+                        animate={{ opacity: [0.3, 1, 0.3] }}
+                        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                       >
                         {t.daily_shuffle}
                       </motion.p>
                       <motion.p
-                        className="font-body text-xs mt-1.5"
-                        style={{ color: "hsl(var(--foreground) / 0.35)" }}
+                        className="font-body text-xs mt-2"
+                        style={{ color: "hsl(var(--foreground) / 0.3)" }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
+                        transition={{ delay: 0.6 }}
                       >
                         {t.daily_shuffle_focus}
                       </motion.p>
                     </motion.div>
-                   )}
-
+                  )}
                 </motion.div>
               )}
 
