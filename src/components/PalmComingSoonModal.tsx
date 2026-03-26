@@ -71,7 +71,7 @@ const PalmComingSoonModal = ({ isOpen, onClose }: Props) => {
           transition={{ delay: 0.2 }}
           className="font-heading text-2xl md:text-3xl gold-gradient-text mb-4"
         >
-          {t.palm_coming_soon_title || "Palm Reading – Coming Soon"}
+          {t.palm_coming_soon_title}
         </motion.h2>
 
         {/* Description */}
