@@ -315,12 +315,18 @@ function sortCards(a: TarotGalleryCardRecord, b: TarotGalleryCardRecord): number
   return a.slug.localeCompare(b.slug);
 }
 
+function isValidImage(image: unknown): image is string {
+  return typeof image === "string" && image.length > 0;
+}
+
 function buildTarotAssetInventory(): TarotAssetInventory {
   const inventory = createEmptyInventory();
 
   Object.entries(tarotAssetModules)
     .sort(([left], [right]) => left.localeCompare(right))
     .forEach(([filePath, image]) => {
+      // Skip entries with missing/empty image URLs
+      if (!isValidImage(image)) return;
       const identity = parseAssetIdentity(filePath);
       if (!identity) return;
       inventory[identity.suit].push(createCardRecord(filePath, image, identity));
@@ -334,9 +340,12 @@ function buildTarotAssetInventory(): TarotAssetInventory {
 }
 
 export const tarotAssetInventory = buildTarotAssetInventory();
+
+// Only include cards that have a valid image asset
 export const allTarotCards: UnifiedTarotCard[] = FILTER_ORDER
   .filter((filter): filter is TarotSuit => filter !== "all")
-  .flatMap((suit) => tarotAssetInventory[suit]);
+  .flatMap((suit) => tarotAssetInventory[suit])
+  .filter((card) => isValidImage(card.image));
 
 export function filterBySuit(suit: TarotSuitFilter): UnifiedTarotCard[] {
   if (suit === "all") return allTarotCards;
