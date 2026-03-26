@@ -384,6 +384,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-5"
             >
+              {/* Name input */}
+              <MysticalNameInput value={userName} onChange={setUserName} delay={0.1} />
+
               {/* Birth Date */}
               <div>
                 <label className="block text-gold font-heading text-sm mb-2">
