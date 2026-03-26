@@ -754,6 +754,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           className="absolute inset-0 rounded-xl overflow-hidden"
                           style={{
                             transformStyle: "preserve-3d",
+                            willChange: "transform",
                             border: "2px solid hsl(var(--gold) / 0.4)",
                             boxShadow: ritualStep >= 3
                               ? "0 0 50px hsl(var(--gold) / 0.2), 0 0 100px hsl(280 50% 50% / 0.08), 0 25px 60px hsl(0 0% 0% / 0.5)"
