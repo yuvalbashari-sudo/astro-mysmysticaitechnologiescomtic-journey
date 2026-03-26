@@ -970,8 +970,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 </div>
                               </motion.div>
 
-                              {/* Persistent breathing glow for revealed cards */}
-                              {isFlipped && !isActive && (
+                              {/* Persistent breathing glow for revealed cards — disabled on mobile for perf */}
+                              {isFlipped && !isActive && !isMobileTarot && (
                                 <motion.div
                                   className="absolute -inset-2 rounded-xl pointer-events-none"
                                   style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 60%)" }}
