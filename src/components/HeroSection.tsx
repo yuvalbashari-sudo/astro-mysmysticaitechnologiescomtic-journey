@@ -1937,8 +1937,8 @@ const TarotCardReveal = ({
             animate={{ y: isMobile ? -30 : -50, scale: 1.15 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* Burst particles */}
-            {[...Array(16)].map((_, i) => {
+            {/* Burst particles — desktop only */}
+            {!isMobile && [...Array(16)].map((_, i) => {
               const angle = (i / 16) * Math.PI * 2;
               return (
                 <motion.div
