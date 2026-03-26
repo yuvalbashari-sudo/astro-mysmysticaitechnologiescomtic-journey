@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import { useLanguage } from "@/i18n";
 
 const CollapsibleSeoPanel = () => {
@@ -15,36 +15,36 @@ const CollapsibleSeoPanel = () => {
   const fullContent = isHe ? [
     {
       title: "קריאת טארוט אונליין",
-      text: "קריאת הטארוט שלנו מבוססת על 78 קלפי טארוט — 22 קלפי ארקנה מאז'ורית ו-56 קלפי ארקנה מינורית. שאלו שאלה, בחרו קלפים וקבלו פירוש מעמיק המשלב מסורת עתיקה עם בינה מלאכותית מתקדמת. כל קריאה מותאמת אישית לשם, לתאריך הלידה ולשאלה שלכם.",
+      text: "קריאת הטארוט שלנו מבוססת על 78 קלפי טארוט — 22 קלפי ארקנה מאז'ורית ו-56 קלפי ארקנה מינורית. שאלו שאלה, בחרו קלפים וקבלו פירוש מעמיק המשלב מסורת עתיקה עם בינה מלאכותית מתקדמת.",
     },
     {
       title: "קריאת כף יד בבינה מלאכותית",
-      text: "העלו תמונות של כפות הידיים וקבלו ניתוח מפורט של קווי החיים, הלב, הגורל והאינטואיציה. מערכת ה-AI מנתחת צורת יד, אצבעות ותילים לתובנות אישיות מדויקות על עבר, הווה ועתיד.",
+      text: "העלו תמונות של כפות הידיים וקבלו ניתוח מפורט של קווי החיים, הלב, הגורל והאינטואיציה. מערכת ה-AI מנתחת צורת יד, אצבעות ותילים לתובנות אישיות מדויקות.",
     },
     {
       title: "בדיקת התאמה זוגית לפי מזלות",
-      text: "בדקו את הכימיה הקוסמית בינכם לבין בן או בת הזוג. ניתוח מקיף של תאימות רגשית, רומנטית, תקשורתית ורוחנית בין כל 12 המזלות — מטלה ועד דגים.",
+      text: "בדקו את הכימיה הקוסמית בינכם לבין בן או בת הזוג. ניתוח מקיף של תאימות רגשית, רומנטית, תקשורתית ורוחנית בין כל 12 המזלות.",
     },
     {
       title: "הדרכה רוחנית מותאמת אישית",
-      text: "ASTROLOGAI משלבת מסורות רוחניות עתיקות עם טכנולוגיית AI מתקדמת כדי להעניק לכם חוויה מיסטית פרימיום. קלף יומי חינמי, הורוסקופ חודשי, מפת לידה מפורטת — כל הכלים להבנת עצמכם והיקום.",
+      text: "ASTROLOGAI משלבת מסורות רוחניות עתיקות עם טכנולוגיית AI מתקדמת כדי להעניק לכם חוויה מיסטית פרימיום. קלף יומי חינמי, הורוסקופ חודשי, מפת לידה מפורטת.",
     },
   ] : [
     {
       title: "Online Tarot Reading",
-      text: "Our tarot reading uses all 78 tarot cards — 22 Major Arcana and 56 Minor Arcana. Ask a question, select your cards, and receive a deep interpretation that combines ancient tradition with advanced artificial intelligence. Every reading is personalized to your name, birth date, and question.",
+      text: "Our tarot reading uses all 78 tarot cards — 22 Major Arcana and 56 Minor Arcana. Ask a question, select your cards, and receive a deep interpretation combining ancient tradition with advanced AI.",
     },
     {
       title: "AI Palm Reading Analysis",
-      text: "Upload photos of your palms and receive a detailed analysis of your life line, heart line, fate line, and intuition line. Our AI system examines hand shape, fingers, and mounts for precise personal insights about your past, present, and future.",
+      text: "Upload photos of your palms and receive a detailed analysis of your life line, heart line, fate line, and intuition line. Our AI examines hand shape, fingers, and mounts for precise personal insights.",
     },
     {
       title: "Zodiac Compatibility Test",
-      text: "Discover the cosmic chemistry between you and your partner. A comprehensive analysis of emotional, romantic, communicative, and spiritual compatibility across all 12 zodiac signs — from Aries to Pisces.",
+      text: "Discover the cosmic chemistry between you and your partner. A comprehensive analysis of emotional, romantic, communicative, and spiritual compatibility across all 12 zodiac signs.",
     },
     {
       title: "Personalized Spiritual Guidance",
-      text: "ASTROLOGAI combines ancient spiritual traditions with advanced AI technology to deliver a premium mystical experience. Free daily card, monthly horoscope, detailed birth chart — all the tools for understanding yourself and the universe.",
+      text: "ASTROLOGAI combines ancient spiritual traditions with advanced AI technology to deliver a premium mystical experience. Free daily card, monthly horoscope, and detailed birth chart.",
     },
   ];
 
@@ -54,19 +54,49 @@ const CollapsibleSeoPanel = () => {
 
   return (
     <section
-      className="relative z-10 w-full px-4 py-6"
+      className="relative w-full max-w-2xl px-4 pointer-events-none"
       aria-label={isHe ? "תוכן נוסף" : "Additional content"}
     >
-      <div className="mx-auto max-w-2xl">
-        {/* Teaser - always visible & indexable */}
-        <p className="text-center font-body text-xs leading-relaxed text-muted-foreground/60">
+      {/* Expanded content appears ABOVE the teaser (grows upward) */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="seo-expanded"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="overflow-hidden rounded-xl mb-3"
+            style={{
+              background: "hsl(var(--background) / 0.92)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid hsl(var(--gold) / 0.1)",
+            }}
+          >
+            <div className="p-5 space-y-4 max-h-[50vh] overflow-y-auto">
+              {fullContent.map((block, i) => (
+                <article key={i} className="text-center">
+                  <h3 className="mb-1 font-heading text-xs tracking-wide text-gold/70">
+                    {block.title}
+                  </h3>
+                  <p className="font-body text-[11px] leading-[1.8] text-foreground/40">
+                    {block.text}
+                  </p>
+                </article>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Teaser + toggle - always visible */}
+      <div className="text-center">
+        <p className="font-body text-[11px] leading-relaxed text-muted-foreground/50 mb-2">
           {teaser}
         </p>
-
-        {/* Toggle button */}
         <button
-          onClick={() => setExpanded(!expanded)}
-          className="mx-auto mt-3 flex items-center gap-1.5 rounded-full border px-4 py-1.5 font-body text-[11px] tracking-wide transition-colors duration-300"
+          onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+          className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 font-body text-[11px] tracking-wide transition-all duration-300 hover:bg-gold/5"
           style={{
             borderColor: "hsl(var(--gold) / 0.15)",
             color: "hsl(var(--gold) / 0.6)",
@@ -80,49 +110,22 @@ const CollapsibleSeoPanel = () => {
             transition={{ duration: 0.3 }}
             className="inline-flex"
           >
-            <ChevronDown className="h-3 w-3" />
+            <ChevronUp className="h-3 w-3" />
           </motion.span>
         </button>
-
-        {/* Expanded content - in DOM for SEO, animated for UX */}
-        <AnimatePresence initial={false}>
-          {expanded && (
-            <motion.div
-              key="seo-expanded"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="mt-6 space-y-5">
-                {fullContent.map((block, i) => (
-                  <article key={i} className="text-center">
-                    <h3 className="mb-1.5 font-heading text-xs tracking-wide text-gold/70">
-                      {block.title}
-                    </h3>
-                    <p className="font-body text-[11px] leading-[1.8] text-foreground/40">
-                      {block.text}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Fallback: hidden noscript block ensures full content is always in DOM for crawlers */}
-        <noscript>
-          <div className="mt-6 space-y-4">
-            {fullContent.map((block, i) => (
-              <div key={i} className="text-center">
-                <h3 className="mb-1 text-xs text-gold/70">{block.title}</h3>
-                <p className="text-[11px] text-foreground/40">{block.text}</p>
-              </div>
-            ))}
-          </div>
-        </noscript>
       </div>
+
+      {/* Fallback for crawlers with JS disabled */}
+      <noscript>
+        <div className="mt-4 space-y-3">
+          {fullContent.map((block, i) => (
+            <div key={i} className="text-center">
+              <h3 className="mb-1 text-xs text-gold/70">{block.title}</h3>
+              <p className="text-[11px] text-foreground/40">{block.text}</p>
+            </div>
+          ))}
+        </div>
+      </noscript>
     </section>
   );
 };
