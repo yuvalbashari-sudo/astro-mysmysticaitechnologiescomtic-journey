@@ -334,6 +334,7 @@ export const ar: TranslationKeys = {
   daily_note: "✦ يمكنكم فتح ورقة يومية واحدة كل 24 ساعة ✦",
   daily_name_label: "اسمك",
   daily_name_placeholder: "أدخل اسمك الأول...",
+  daily_name_greeting: "✦ تشرفنا بمعرفتك، {{name}}",
   daily_cta: "اكشفوا ورقتكم اليومية",
   daily_shuffle: "الأوراق تُخلط...",
   daily_shuffle_focus: "ركزوا على هذه اللحظة ✦",

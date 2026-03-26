@@ -88,7 +88,7 @@ const MysticalNameInput = ({ value, onChange, delay = 0.28, className = "" }: Pr
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.4 }}
           >
-            ✦ Nice to meet you, {greeting}
+            {t.daily_name_greeting.replace("{{name}}", greeting)}
           </motion.p>
         )}
       </AnimatePresence>
