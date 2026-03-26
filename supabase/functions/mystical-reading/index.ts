@@ -556,11 +556,71 @@ ${data.planetPositions}
   }),
 };
 
+// ── Server-side rate limiting ──────────────
+const RATE_LIMIT_WINDOW_MS = 3600000;
+const RATE_LIMIT_MAX: Record<string, number> = {
+  forecast: 10,
+  rising: 10,
+  compatibility: 8,
+  palm: 8,
+  dailyCard: 20,
+  birthChart: 10,
+  tarotSpread: 15,
+};
+
+async function checkServerRateLimit(clientIp: string, action: string): Promise<{ allowed: boolean }> {
+  try {
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceKey);
+
+    const maxReqs = RATE_LIMIT_MAX[action] || 15;
+    const windowStart = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+    const { count } = await supabase
+      .from("rate_limits")
+      .select("*", { count: "exact", head: true })
+      .eq("client_ip", clientIp)
+      .eq("action", action)
+      .gte("created_at", windowStart);
+
+    if ((count || 0) >= maxReqs) {
+      await supabase.from("abuse_logs").insert({
+        client_ip: clientIp, action, reason: "rate_limit_exceeded",
+        metadata: { count, limit: maxReqs },
+      });
+      return { allowed: false };
+    }
+
+    await supabase.from("rate_limits").insert({ client_ip: clientIp, action });
+    return { allowed: true };
+  } catch (e) {
+    console.error("Rate limit check failed:", e);
+    return { allowed: true }; // fail-open
+  }
+}
+
+function getClientIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || req.headers.get("x-real-ip")
+    || "unknown";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
     const { type, data, profileContext, language, userName: reqUserName } = await req.json();
+
+    // Server-side rate limiting
+    const clientIp = getClientIp(req);
+    const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
+    if (!rateCheck.allowed) {
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
+      });
+    }
     // Resolve userName: explicit param > data.userName > extract from profileContext
     const userName = reqUserName || data?.userName || null;
     
