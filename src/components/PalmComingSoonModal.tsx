@@ -88,7 +88,7 @@ const PalmComingSoonModal = ({ isOpen, onClose }: Props) => {
         {submitted ? (
           <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="space-y-3">
             <CheckCircle className="w-10 h-10 text-gold mx-auto" />
-            <p className="text-gold font-body text-sm">{t.palm_coming_soon_subscribed || "You're on the list! We'll notify you."}</p>
+            <p className="text-gold font-body text-sm">{t.palm_coming_soon_subscribed}</p>
             <button onClick={handleClose} className="btn-outline-gold font-body text-sm mt-4">
               {t.lead_modal_close || "Close"}
             </button>
