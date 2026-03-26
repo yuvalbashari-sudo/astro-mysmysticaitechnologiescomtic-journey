@@ -327,7 +327,7 @@ export const he: TranslationKeys = {
   tarot_question_desc: "כתבו שאלה אישית, והקלפים ייחשפו כדי לתת לכם תשובה סמלית ועמוקה",
   tarot_question_label: "מה השאלה שמעסיקה אותך?",
   tarot_question_placeholder: "שאלו שאלה שחשובה לכם כרגע...",
-  tarot_question_cta: "פתחו את הקלפים",
+  tarot_question_cta: "🔮 קבלו תשובה מהקלפים עכשיו",
 
   daily_title: "הקלף היומי",
   daily_desc: "קלף אחד שנבחר עבורכם מהארקנה הגדולה — מסר מיסטי שמאיר את היום שלכם באור חדש",
