@@ -2313,9 +2313,9 @@ const HeroSection = () => {
             top: "55%",
             width: isMobile ? "300px" : "520px",
             height: isMobile ? "220px" : "360px",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%) translateZ(0)",
             background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.1) 0%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
-            filter: "blur(45px)",
+            willChange: "transform, opacity",
           }}
           animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
