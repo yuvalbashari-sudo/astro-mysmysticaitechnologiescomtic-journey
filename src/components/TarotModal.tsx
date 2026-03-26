@@ -486,17 +486,19 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                   </span>
                                 </div>
 
-                                {/* Card name — appears on hover */}
-                                <div className="absolute bottom-0 inset-x-0 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0"
+                                {/* Card name — always visible on mobile, hover-reveal on desktop */}
+                                <div className={`absolute bottom-0 inset-x-0 z-10 transition-all duration-300 ${isMob ? "opacity-100 translate-y-0" : "opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0"}`}
                                   style={{
-                                    background: "linear-gradient(transparent, rgba(0,0,0,0.85) 40%)",
-                                    padding: isMob ? "6px 4px 5px" : "10px 6px 8px",
+                                    background: isMob
+                                      ? "linear-gradient(transparent 0%, rgba(0,0,0,0.9) 30%)"
+                                      : "linear-gradient(transparent, rgba(0,0,0,0.85) 40%)",
+                                    padding: isMob ? "8px 4px 6px" : "10px 6px 8px",
                                   }}
                                 >
-                                  <span className="font-heading text-[8px] md:text-[10px] text-gold/90 leading-tight block text-center">
+                                  <span className={`font-heading text-gold/90 leading-tight block text-center ${isMob ? "text-[9px]" : "text-[10px]"}`}>
                                     {SPREAD_LABELS[spread.key]}
                                   </span>
-                                  <span className="text-[6px] md:text-[7px] text-gold/40 font-body block text-center mt-0.5">
+                                  <span className={`text-gold/40 font-body block text-center mt-0.5 ${isMob ? "text-[7px]" : "text-[7px]"}`}>
                                     {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
                                   </span>
                                 </div>
