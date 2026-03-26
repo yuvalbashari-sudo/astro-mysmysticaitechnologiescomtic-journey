@@ -18,6 +18,8 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
+import PaymentGatingModal from "@/components/PaymentGatingModal";
+import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props {
   isOpen: boolean;
