@@ -1864,8 +1864,8 @@ const TarotCardReveal = ({
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Swirling particles around card */}
-            {[...Array(8)].map((_, i) => {
+            {/* Swirling particles around card — desktop only */}
+            {!isMobile && [...Array(8)].map((_, i) => {
               const angle = (i / 8) * Math.PI * 2;
               return (
                 <motion.div
