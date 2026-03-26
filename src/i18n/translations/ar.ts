@@ -116,6 +116,9 @@ export const ar: TranslationKeys = {
   lead_whatsapp: "💬 تحدثوا معنا عبر واتساب",
   lead_error_required: "يرجى ملء الاسم والبريد الإلكتروني",
   lead_error_submit: "خطأ في الإرسال، حاولوا لاحقاً",
+  lead_error_wait: "يرجى الانتظار لحظة قبل المحاولة مرة أخرى",
+  lead_error_rate_limit: "عدد كبير من الطلبات. حاولوا لاحقاً.",
+  lead_error_duplicate: "تم إرسال هذا الطلب بالفعل",
 
   testimonials_title: "ما عاشه الناس مع ASTROLOGAI",
   testimonials_subtitle: "تجارب حقيقية لأشخاص فتحوا بوابة لعالمهم الداخلي",

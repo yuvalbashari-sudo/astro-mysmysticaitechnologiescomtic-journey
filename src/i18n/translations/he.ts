@@ -116,6 +116,9 @@ export const he: TranslationKeys = {
   lead_whatsapp: "💬 דברו איתנו בוואטסאפ",
   lead_error_required: "אנא מלאו שם ואימייל",
   lead_error_submit: "שגיאה בשליחה, נסו שוב מאוחר יותר",
+  lead_error_wait: "אנא המתינו רגע לפני ניסיון נוסף",
+  lead_error_rate_limit: "יותר מדי פניות. נסו שוב מאוחר יותר",
+  lead_error_duplicate: "הפנייה הזו כבר נשלחה",
 
   testimonials_title: "מה אנשים חוו עם ASTROLOGAI",
   testimonials_subtitle: "חוויות אמיתיות של אנשים שפתחו שער לעולם הפנימי שלהם",
