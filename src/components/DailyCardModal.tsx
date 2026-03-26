@@ -125,7 +125,7 @@ const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }
   );
 });
 
-type Phase = "ready" | "ritual" | "result" | "locked";
+type Phase = "ready" | "ritual" | "result" | "locked" | "mobile-reveal";
 
 const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
