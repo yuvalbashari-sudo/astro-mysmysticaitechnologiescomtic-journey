@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { antiAbuse } from "@/lib/antiAbuse";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
