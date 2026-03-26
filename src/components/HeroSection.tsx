@@ -2762,7 +2762,7 @@ const HeroSection = () => {
           />
         </div>
       )}
-    </div>
+
 
       {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
       {entranceComplete && (
