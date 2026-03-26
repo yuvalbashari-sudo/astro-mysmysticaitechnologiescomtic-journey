@@ -1081,6 +1081,21 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : null}
             </AnimatePresence>
     </CinematicModalShell>
+    <PaymentGatingModal
+      isOpen={gatingOpen}
+      onClose={() => setGatingOpen(false)}
+      gatingMessage={gatingMsg}
+      onPayPerUse={() => {
+        // Placeholder: allow access after "payment"
+        setGatingOpen(false);
+        if (needsQuestion) {
+          setIsQuestionPhase(true);
+        } else {
+          setIsLoading(true);
+        }
+      }}
+    />
+    </>
   );
 };
 
