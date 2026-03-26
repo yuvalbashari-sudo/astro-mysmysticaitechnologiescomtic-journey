@@ -31,6 +31,7 @@ const App = () => (
                 <Route path="/tarot/:slug" element={<TarotCardPage />} />
                 <Route path="/zodiac/:slug" element={<ZodiacSignPage />} />
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
+                <Route path="/upgrade" element={<PremiumUpgrade />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
