@@ -12,6 +12,8 @@ import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import { antiAbuse } from "@/lib/antiAbuse";
+import { compressImage } from "@/lib/imageCompression";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -55,10 +57,41 @@ const PalmReadingModal = ({ isOpen, onClose }: Props) => {
     reader.readAsDataURL(file);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!name.trim()) return;
     if (!rightPalmImage || !leftPalmImage) { toast(t.palm_both_required); return; }
+
+    // Anti-abuse checks
+    const abuseCheck = antiAbuse.fullCheck("palm_reading");
+    if (!abuseCheck.allowed) {
+      if (abuseCheck.reason === "cooldown") {
+        const secs = Math.ceil((abuseCheck.retryAfterMs || 30000) / 1000);
+        toast(language === "he"
+          ? `אנא המתינו ${secs} שניות לפני ניסיון נוסף`
+          : `Please wait ${secs} seconds before trying again`);
+      } else if (abuseCheck.reason === "rate_limit") {
+        toast(language === "he"
+          ? "יותר מדי ניסיונות. נסו שוב מאוחר יותר"
+          : "Too many attempts. Please try again later.");
+      }
+      return;
+    }
+
     setIsLoading(true);
+
+    // Compress images before sending
+    try {
+      const [compRight, compLeft] = await Promise.all([
+        compressImage(rightPalmImage),
+        compressImage(leftPalmImage),
+      ]);
+      setRightPalmImage(compRight);
+      setLeftPalmImage(compLeft);
+    } catch {
+      // Continue with originals if compression fails
+    }
+
+    antiAbuse.recordSuccessfulAction("palm_reading");
   };
 
   const handleOnboardingComplete = () => {
