@@ -362,7 +362,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   /* ── Mobile: stacked layout ── */
-                  <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="px-4 py-6 md:p-12 lg:p-14" style={{ direction: dir }}>
+                  <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 overflow-y-auto scrollbar-hide px-4 pt-16 pb-10 md:p-12 lg:p-14" style={{ direction: dir }}>
                     <div className="text-center mb-10">
                       <motion.div className="text-5xl mb-4 flex items-center justify-center gap-3" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
                         <span>{matchInfo.sign1Symbol}</span><span className="text-gold">💕</span><span>{matchInfo.sign2Symbol}</span>
