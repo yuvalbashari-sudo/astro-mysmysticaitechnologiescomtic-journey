@@ -2219,8 +2219,9 @@ const HeroSection = () => {
   const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
   const particles = useMemo(() => {
+    if (isMobile) return []; // Skip particles on mobile for performance
     const types: Array<"dust" | "spark" | "orb"> = ["dust", "spark", "orb"];
-    return [...Array(isMobile ? 20 : 45)].map((_, i) => ({
+    return [...Array(45)].map((_, i) => ({
       type: types[i % 3],
       delay: Math.random() * 6,
       x: `${Math.random() * 100}%`,
