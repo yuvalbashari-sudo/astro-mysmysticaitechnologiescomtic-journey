@@ -3407,6 +3407,7 @@ const HeroSection = () => {
         </>
       )}
     </div>
+    </div>
 
 
     {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
