@@ -709,6 +709,10 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
+      // Log failed AI call
+      if (logCostFn && getFeatureCostsFn) {
+        await logCostFn({ clientIp, feature: type || "generic", status: "failed", userTier: "unknown", aiCost: 0, imageCost: 0, metadata: { httpStatus: response.status } });
+      }
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "יותר מדי בקשות, נסו שוב בעוד רגע" }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -724,6 +728,12 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "שגיאה בשירות ה-AI" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Log successful cost estimate (non-blocking)
+    if (logCostFn && getFeatureCostsFn) {
+      const costs = getFeatureCostsFn(type || "generic");
+      logCostFn({ clientIp, feature: type || "generic", status: "success", userTier: "free", aiCost: costs.aiCost, imageCost: costs.imageCost, model }).catch(() => {});
     }
 
     return new Response(response.body, {
