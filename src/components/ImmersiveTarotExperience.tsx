@@ -456,6 +456,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   ], [language, t]);
 
   const handleQuestionSelect = useCallback((key: string) => {
+    // Check entitlements before starting
+    const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingOpen(true);
+      return;
+    }
     setSelectedQuestion(key);
     setTimeout(() => {
       setDrawnCards(drawReadingCards(7));
