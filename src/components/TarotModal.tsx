@@ -178,7 +178,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
 
-  const needsQuestion = selectedSpreadKey !== "daily";
+  const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
 
   const handleDraw = () => {
     // Anti-abuse check
