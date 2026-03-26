@@ -2307,13 +2307,29 @@ const HeroSection = () => {
 
       {/* ── Layer 1.5: Aura glow from hands area ── */}
       <div className="absolute inset-0 pointer-events-none z-[2]">
+        {isMobile ? (
+          /* Static aura on mobile — no animation for performance */
+          <div
+            className="absolute"
+            style={{
+              left: "50%",
+              top: "55%",
+              width: "220px",
+              height: "170px",
+              transform: "translate(-50%, -50%) translateZ(0)",
+              background: "radial-gradient(ellipse, hsl(var(--gold) / 0.15) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
+              opacity: 0.6,
+            }}
+          />
+        ) : (
+          <>
         <motion.div
           className="absolute"
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "220px" : "400px",
-            height: isMobile ? "170px" : "280px",
+            width: "400px",
+            height: "280px",
             transform: "translate(-50%, -50%) translateZ(0)",
             background: hoveredTeaser === "right"
               ? "radial-gradient(ellipse, hsl(270 55% 50% / 0.2) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 70%)"
@@ -2333,8 +2349,8 @@ const HeroSection = () => {
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "300px" : "520px",
-            height: isMobile ? "220px" : "360px",
+            width: "520px",
+            height: "360px",
             transform: "translate(-50%, -50%) translateZ(0)",
             background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.1) 0%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
             willChange: "transform, opacity",
@@ -2342,6 +2358,8 @@ const HeroSection = () => {
           animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
+          </>
+        )}
         {/* Dynamic light streaks & hand sparks — desktop only */}
         {!isMobile && (
           <>
