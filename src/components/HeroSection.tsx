@@ -355,7 +355,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
   return (
     <div
-      className="absolute z-[21] pointer-events-none"
+      className="absolute z-[15] pointer-events-none"
       style={{
         width: s, height: s,
         top: "50%",
