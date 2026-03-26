@@ -747,6 +747,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           width: isMobileViewport ? 170 : 220,
                           height: isMobileViewport ? 255 : 330,
                           perspective: "800px",
+                          contain: "layout style",
                         }}
                       >
                         <motion.div
