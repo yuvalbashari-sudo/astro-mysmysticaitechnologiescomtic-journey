@@ -95,8 +95,8 @@ const CollapsibleSeoPanel = () => {
           {teaser}
         </p>
         <button
-          onClick={() => setExpanded(!expanded)}
-          className="inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 font-body text-[11px] tracking-wide transition-all duration-300 hover:bg-gold/5"
+          onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}
+          className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 font-body text-[11px] tracking-wide transition-all duration-300 hover:bg-gold/5"
           style={{
             borderColor: "hsl(var(--gold) / 0.15)",
             color: "hsl(var(--gold) / 0.6)",
