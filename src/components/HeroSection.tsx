@@ -327,6 +327,9 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     // Pre-load standby at a safe point (skip potential dark first frame)
     vB.currentTime = 0.15;
 
+    // On mobile, skip crossfade logic — single video loop is enough
+    if (isMobile) return;
+
     // Crossfade near end of whichever copy is active
     const crossfade = () => {
       const active = activeRef.current === "a" ? vA : vB;
@@ -343,14 +346,14 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
     const interval = setInterval(crossfade, 200);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
-    transition: "opacity 1.8s ease-in-out",
+    transition: isMobile ? "none" : "opacity 1.8s ease-in-out",
     transform: `scale(${isMobile ? 1.35 : 1.22}) translateZ(0)`,
     transformOrigin: "center center",
-    willChange: "opacity",
+    willChange: isMobile ? "auto" : "opacity",
   };
 
   return (
@@ -373,11 +376,13 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      {/* Pure media only — dual videos for seamless crossfade */}
+      {/* Single video on mobile, dual crossfade on desktop */}
       <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: isMobile ? 1 : opacity.a }} />
+      {!isMobile && (
+        <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+          className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+      )}
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{
@@ -892,28 +897,51 @@ const ZodiacWheel = ({
                 }
               }}
               onClick={(e) => { if (isMobile) { e.preventDefault(); } else { onSignClick?.(i); } }}
-              // Counter-rotate to keep symbols upright — slow down when hovered
-              animate={{ rotate: -360 }}
-              transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
+              // Counter-rotate to keep symbols upright — CSS on mobile, framer on desktop
+              animate={isMobile ? undefined : { rotate: -360 }}
+              transition={isMobile ? undefined : { duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
+              {...(isMobile ? { style: { ...{ left: x - rulingIconSize / 2, top: y - rulingIconSize / 2, width: rulingIconSize, height: rulingIconSize }, animation: "spin 120s linear infinite reverse" } } : {})}
             >
-              {/* Anchor aura — subtle golden ring connecting icon to the orbit */}
+              {/* Anchor aura — static on mobile, animated on desktop */}
               {!isRuling && (
-                <motion.div
-                  className="absolute rounded-full pointer-events-none"
-                  style={{
-                    inset: -4,
-                    border: "1px solid hsl(43 80% 55% / 0.1)",
-                    background: "radial-gradient(circle, hsl(43 80% 55% / 0.05) 0%, transparent 70%)",
-                    boxShadow: "0 0 8px hsl(43 80% 55% / 0.06), inset 0 0 6px hsl(43 80% 55% / 0.03)",
-                  }}
-                  animate={{
-                    opacity: [0.5, 0.8, 0.5],
-                  }}
-                  transition={{ duration: 4 + i * 0.2, repeat: Infinity, ease: "easeInOut" }}
-                />
+                isMobile ? (
+                  <div
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      inset: -4,
+                      border: "1px solid hsl(43 80% 55% / 0.1)",
+                      background: "radial-gradient(circle, hsl(43 80% 55% / 0.05) 0%, transparent 70%)",
+                      opacity: 0.6,
+                    }}
+                  />
+                ) : (
+                  <motion.div
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      inset: -4,
+                      border: "1px solid hsl(43 80% 55% / 0.1)",
+                      background: "radial-gradient(circle, hsl(43 80% 55% / 0.05) 0%, transparent 70%)",
+                      boxShadow: "0 0 8px hsl(43 80% 55% / 0.06), inset 0 0 6px hsl(43 80% 55% / 0.03)",
+                    }}
+                    animate={{ opacity: [0.5, 0.8, 0.5] }}
+                    transition={{ duration: 4 + i * 0.2, repeat: Infinity, ease: "easeInOut" }}
+                  />
+                )
               )}
               {/* Permanent planetary influence aura */}
               {isRuling && (
+                isMobile ? (
+                  /* Static ruling aura on mobile — no particles, no pulse */
+                  <div
+                    className="absolute rounded-full pointer-events-none"
+                    style={{
+                      inset: -8,
+                      border: `1px solid hsl(${planetColor} / 0.25)`,
+                      background: `radial-gradient(circle, hsl(${planetColor} / 0.08), transparent 70%)`,
+                      boxShadow: `0 0 18px hsl(${planetColor} / 0.15)`,
+                    }}
+                  />
+                ) : (
                 <>
                   <motion.div
                     className="absolute rounded-full pointer-events-none"
@@ -932,72 +960,37 @@ const ZodiacWheel = ({
                     }}
                     transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
                   />
-                  {/* Outer ring pulse */}
                   <motion.div
                     className="absolute rounded-full pointer-events-none"
-                    style={{
-                      inset: -18,
-                      border: `1px solid hsl(${planetColor} / 0.12)`,
-                    }}
-                    animate={{
-                      opacity: [0.3, 0.7, 0.3],
-                      scale: [0.95, 1.05, 0.95],
-                    }}
+                    style={{ inset: -18, border: `1px solid hsl(${planetColor} / 0.12)` }}
+                    animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.95, 1.05, 0.95] }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
                   />
-                  {/* Planet symbol indicator */}
                   <motion.div
                     className="absolute pointer-events-none flex items-center justify-center"
                     style={{
-                      width: isMobile ? 20 : 26,
-                      height: isMobile ? 20 : 26,
-                      right: isMobile ? -6 : -8,
-                      top: isMobile ? -6 : -8,
+                      width: 26, height: 26, right: -8, top: -8,
                       borderRadius: "50%",
                       background: `linear-gradient(135deg, hsl(${planetColor} / 0.25), hsl(${planetColor} / 0.1))`,
                       border: `1px solid hsl(${planetColor} / 0.4)`,
-                      fontSize: isMobile ? 10 : 13,
-                      color: `hsl(${planetColor})`,
-                      zIndex: 10,
+                      fontSize: 13, color: `hsl(${planetColor})`, zIndex: 10,
                     }}
-                    animate={{
-                      boxShadow: [
-                        `0 0 6px hsl(${planetColor} / 0.2)`,
-                        `0 0 14px hsl(${planetColor} / 0.4)`,
-                        `0 0 6px hsl(${planetColor} / 0.2)`,
-                      ],
-                    }}
+                    animate={{ boxShadow: [`0 0 6px hsl(${planetColor} / 0.2)`, `0 0 14px hsl(${planetColor} / 0.4)`, `0 0 6px hsl(${planetColor} / 0.2)`] }}
                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                   >
                     {planetaryInfluence.planet_symbol}
                   </motion.div>
-                  {/* Rising particles */}
                   {[0, 1, 2].map((pi) => (
                     <motion.div
                       key={pi}
                       className="absolute rounded-full pointer-events-none"
-                      style={{
-                        width: 3,
-                        height: 3,
-                        left: "50%",
-                        top: "50%",
-                        background: `hsl(${planetColor})`,
-                      }}
-                      animate={{
-                        y: [0, -20, -35],
-                        x: [0, (pi - 1) * 8, (pi - 1) * 12],
-                        opacity: [0, 0.8, 0],
-                        scale: [0, 1.2, 0],
-                      }}
-                      transition={{
-                        duration: 2.5,
-                        repeat: Infinity,
-                        delay: pi * 0.8,
-                        ease: "easeOut",
-                      }}
+                      style={{ width: 3, height: 3, left: "50%", top: "50%", background: `hsl(${planetColor})` }}
+                      animate={{ y: [0, -20, -35], x: [0, (pi - 1) * 8, (pi - 1) * 12], opacity: [0, 0.8, 0], scale: [0, 1.2, 0] }}
+                      transition={{ duration: 2.5, repeat: Infinity, delay: pi * 0.8, ease: "easeOut" }}
                     />
                   ))}
                 </>
+                )
               )}
 
               {/* Zodiac illustration */}
@@ -1552,6 +1545,54 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
   const symbolRadius = ringSize / 2 - 12;
   const glowColor = activeColor || "hsl(var(--gold) / 0.15)";
 
+  // On mobile: simplified static ring — no per-symbol animations
+  if (isMobile) {
+    return (
+      <div
+        className="absolute z-[14] pointer-events-none"
+        style={{ width: ringSize, height: ringSize, opacity: 0.7 }}
+      >
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            border: "1px solid hsl(var(--gold) / 0.08)",
+            boxShadow: `0 0 15px ${glowColor}`,
+            animation: "spin 120s linear infinite",
+          }}
+        >
+          {ARCANE_SYMBOLS.map((sym, i) => {
+            const angle = (i / ARCANE_SYMBOLS.length) * Math.PI * 2 - Math.PI / 2;
+            const x = Math.cos(angle) * symbolRadius + ringSize / 2;
+            const y = Math.sin(angle) * symbolRadius + ringSize / 2;
+            return (
+              <span
+                key={`arcane-${i}`}
+                className="absolute font-heading select-none"
+                style={{
+                  left: x - 6,
+                  top: y - 7,
+                  fontSize: "9px",
+                  color: "hsl(var(--gold) / 0.2)",
+                  opacity: 0.3,
+                }}
+              >
+                {sym}
+              </span>
+            );
+          })}
+        </div>
+        <div
+          className="absolute rounded-full"
+          style={{
+            inset: 20,
+            border: "1px solid hsl(var(--gold) / 0.05)",
+            animation: "spin 70s linear infinite reverse",
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <motion.div
       className="absolute z-[14] pointer-events-none"
@@ -1592,7 +1633,7 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
               style={{
                 left: x - 6,
                 top: y - 7,
-                fontSize: isMobile ? "9px" : "12px",
+                fontSize: "12px",
                 color: "hsl(var(--gold) / 0.2)",
                 textShadow: "0 0 6px hsl(var(--gold) / 0.15)",
               }}
@@ -1621,7 +1662,7 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
       <motion.div
         className="absolute rounded-full"
         style={{
-          inset: isMobile ? 20 : 30,
+          inset: 30,
           border: "1px solid hsl(var(--gold) / 0.05)",
         }}
         animate={{ rotate: 360 }}
@@ -2307,13 +2348,29 @@ const HeroSection = () => {
 
       {/* ── Layer 1.5: Aura glow from hands area ── */}
       <div className="absolute inset-0 pointer-events-none z-[2]">
+        {isMobile ? (
+          /* Static aura on mobile — no animation for performance */
+          <div
+            className="absolute"
+            style={{
+              left: "50%",
+              top: "55%",
+              width: "220px",
+              height: "170px",
+              transform: "translate(-50%, -50%) translateZ(0)",
+              background: "radial-gradient(ellipse, hsl(var(--gold) / 0.15) 0%, hsl(var(--gold) / 0.06) 40%, transparent 70%)",
+              opacity: 0.6,
+            }}
+          />
+        ) : (
+          <>
         <motion.div
           className="absolute"
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "220px" : "400px",
-            height: isMobile ? "170px" : "280px",
+            width: "400px",
+            height: "280px",
             transform: "translate(-50%, -50%) translateZ(0)",
             background: hoveredTeaser === "right"
               ? "radial-gradient(ellipse, hsl(270 55% 50% / 0.2) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 70%)"
@@ -2333,8 +2390,8 @@ const HeroSection = () => {
           style={{
             left: "50%",
             top: "55%",
-            width: isMobile ? "300px" : "520px",
-            height: isMobile ? "220px" : "360px",
+            width: "520px",
+            height: "360px",
             transform: "translate(-50%, -50%) translateZ(0)",
             background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.1) 0%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
             willChange: "transform, opacity",
@@ -2342,6 +2399,8 @@ const HeroSection = () => {
           animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
+          </>
+        )}
         {/* Dynamic light streaks & hand sparks — desktop only */}
         {!isMobile && (
           <>
@@ -3041,7 +3100,7 @@ const HeroSection = () => {
                       aria-label={item.label}
                     >
                       <div
-                        className={`relative flex items-center gap-2.5 transition-all duration-300 backdrop-blur-md px-3 py-3 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
+                        className={`relative flex items-center gap-2.5 transition-all duration-300 px-3 py-3 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
                           borderColor: isNeonPanel
@@ -3460,7 +3519,7 @@ const HeroSection = () => {
           boxShadow: isMobile
             ? "0 -4px 20px hsl(var(--gold) / 0.08)"
             : "0 0 22px hsl(var(--gold) / 0.06), 0 3px 14px hsl(0 0% 0% / 0.25)",
-          backdropFilter: "blur(8px)",
+          backdropFilter: isMobile ? "none" : "blur(8px)",
           textAlign: "center" as const,
         }}
         initial={{ opacity: 0 }}
