@@ -187,7 +187,7 @@ export const he: TranslationKeys = {
   forecast_copied: "הועתק!",
   forecast_premium_title: "רוצים לצלול עמוק יותר?",
   forecast_premium_desc: "הזמינו קריאה אישית מלאה הכוללת מפת לידה מפורטת, התאמה זוגית, קריאת טארוט ועוד",
-  forecast_premium_cta: "הזמינו קריאה פרימיום",
+  forecast_premium_cta: "✦ רוצים עוד? הזמינו קריאה מלאה",
 
   compat_title: "התאמה זוגית",
   compat_desc: "גלו את רמת ההתאמה הקוסמית ביניכם. הזינו את תאריכי הלידה של שניכם וקבלו ניתוח מעמיק על הקשר, הרגש, התשוקה והצמיחה המשותפת.",
