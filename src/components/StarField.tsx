@@ -4,7 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 const StarField = () => {
   const isMobile = useIsMobile();
-  const count = isMobile ? 20 : 60;
+  const count = isMobile ? 12 : 60;
 
   const stars = useMemo(() => 
     Array.from({ length: count }, (_, i) => ({
