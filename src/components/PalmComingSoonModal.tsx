@@ -112,7 +112,7 @@ const PalmComingSoonModal = ({ isOpen, onClose }: Props) => {
               </button>
             </form>
             <button onClick={handleClose} className="btn-outline-gold font-body text-sm w-full">
-              {t.palm_coming_soon_close || "Got it"}
+              {t.palm_coming_soon_close}
             </button>
           </motion.div>
         )}
