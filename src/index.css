@@ -328,3 +328,19 @@
 }
 .advisor-text-2x h3 { font-size: 2rem; }
 .advisor-text-2x p, .advisor-text-2x span, .advisor-text-2x button, .advisor-text-2x input { font-size: 1.75rem; }
+
+/* Ensure date inputs are visible on dark backgrounds in all browsers */
+input[type="date"],
+input[type="time"] {
+  color-scheme: dark;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 48px;
+  opacity: 1;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7) sepia(1) saturate(3) hue-rotate(15deg);
+  cursor: pointer;
+  opacity: 1;
+}
