@@ -318,16 +318,14 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const [opacity, setOpacity] = useState<{ a: number; b: number }>({ a: 1, b: 0 });
 
   useEffect(() => {
+    if (!isMobile) return; // Video only on mobile
     const vA = videoARef.current;
     const vB = videoBRef.current;
     if (!vA || !vB) return;
     vA.playbackRate = 0.65;
     vB.playbackRate = 0.65;
-
-    // Pre-load standby at a safe point (skip potential dark first frame)
     vB.currentTime = 0.15;
 
-    // Crossfade near end of whichever copy is active
     const crossfade = () => {
       const active = activeRef.current === "a" ? vA : vB;
       const standby = activeRef.current === "a" ? vB : vA;
@@ -343,12 +341,12 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
     const interval = setInterval(crossfade, 200);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
     transition: "opacity 1.8s ease-in-out",
-    transform: `scale(${isMobile ? 1.35 : 1.22}) translateZ(0)`,
+    transform: "scale(1.35) translateZ(0)",
     transformOrigin: "center center",
     willChange: "opacity",
   };
@@ -373,11 +371,74 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      {/* Pure media only — dual videos for seamless crossfade */}
-      <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+      {isMobile ? (
+        <>
+          {/* Mobile: dual videos for seamless crossfade */}
+          <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+            className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
+          <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+            className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+        </>
+      ) : (
+        <>
+          {/* Desktop: stable static cosmic orb — no video, no masking drift */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(circle at 42% 38%, hsl(230 60% 18%) 0%, hsl(240 50% 12%) 30%, hsl(250 45% 8%) 60%, hsl(222 47% 5%) 100%)",
+          }} />
+          {/* Nebula swirl */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background: "radial-gradient(ellipse 70% 50% at 55% 45%, hsl(270 50% 30% / 0.35) 0%, hsl(220 60% 25% / 0.2) 30%, transparent 65%)",
+            }}
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
+          />
+          {/* Star cluster core */}
+          <div className="absolute inset-0" style={{
+            background: "radial-gradient(circle at 48% 46%, hsl(210 70% 65% / 0.2) 0%, hsl(230 60% 50% / 0.08) 20%, transparent 45%)",
+          }} />
+          {/* Warm golden energy wisps */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background: "conic-gradient(from 30deg at 50% 50%, transparent 0%, hsl(43 80% 55% / 0.06) 10%, transparent 20%, hsl(270 50% 50% / 0.05) 35%, transparent 45%, hsl(210 60% 55% / 0.04) 60%, transparent 70%, hsl(43 80% 55% / 0.06) 85%, transparent 100%)",
+            }}
+            animate={{ rotate: [0, -360] }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          />
+          {/* Bright central star */}
+          <div className="absolute" style={{
+            width: "30%", height: "30%", top: "35%", left: "35%",
+            background: "radial-gradient(circle, hsl(210 70% 75% / 0.25) 0%, hsl(230 60% 60% / 0.1) 40%, transparent 70%)",
+            borderRadius: "50%",
+            filter: "blur(8px)",
+          }} />
+          {/* Scattered stars */}
+          {[
+            { x: "22%", y: "28%", size: 2, delay: 0 },
+            { x: "65%", y: "35%", size: 1.5, delay: 1.2 },
+            { x: "40%", y: "68%", size: 2.5, delay: 0.5 },
+            { x: "75%", y: "60%", size: 1.5, delay: 2 },
+            { x: "30%", y: "55%", size: 2, delay: 1.5 },
+            { x: "58%", y: "25%", size: 1.5, delay: 0.8 },
+            { x: "50%", y: "50%", size: 3, delay: 0.3 },
+          ].map((star, i) => (
+            <motion.div
+              key={`star-${i}`}
+              className="absolute rounded-full"
+              style={{
+                left: star.x, top: star.y,
+                width: star.size, height: star.size,
+                background: "hsl(210 80% 85%)",
+                boxShadow: `0 0 ${star.size * 3}px hsl(210 80% 75% / 0.6)`,
+              }}
+              animate={{ opacity: [0.3, 0.9, 0.3], scale: [0.8, 1.2, 0.8] }}
+              transition={{ duration: 2.5 + i * 0.3, repeat: Infinity, delay: star.delay, ease: "easeInOut" }}
+            />
+          ))}
+        </>
+      )}
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{
