@@ -341,7 +341,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       }
     };
 
-    const interval = setInterval(crossfade, 80);
+    const interval = setInterval(crossfade, 200);
     return () => clearInterval(interval);
   }, []);
 
