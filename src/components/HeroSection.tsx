@@ -358,6 +358,9 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       className="absolute z-[21] pointer-events-none"
       style={{
         width: s, height: s,
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
         borderRadius: "50%",
         overflow: "hidden",
         background: "transparent",
