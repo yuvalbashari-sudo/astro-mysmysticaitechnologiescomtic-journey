@@ -765,6 +765,16 @@ const ZodiacWheel = ({
     return () => clearInterval(id);
   }, [influenceKey]);
 
+  // Dismiss teaser on touch outside (mobile)
+  useEffect(() => {
+    if (!isMobile || hoveredSign === null) return;
+    const dismiss = () => { setHoveredSign(null); onHoveredElement?.(null); };
+    const timer = setTimeout(() => {
+      document.addEventListener("touchstart", dismiss, { once: true });
+    }, 100);
+    return () => { clearTimeout(timer); document.removeEventListener("touchstart", dismiss); };
+  }, [isMobile, hoveredSign, onHoveredElement]);
+
   const influencedIndex = planetaryInfluence.zodiac_sign_index;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
@@ -867,9 +877,17 @@ const ZodiacWheel = ({
                 width: rulingIconSize,
                 height: rulingIconSize,
               }}
-              onMouseEnter={() => { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); }}
-              onMouseLeave={() => { setHoveredSign(null); onHoveredElement?.(null); }}
-              onClick={() => onSignClick?.(i)}
+              onMouseEnter={() => { if (!isMobile) { setHoveredSign(i); onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]); } }}
+              onMouseLeave={() => { if (!isMobile) { setHoveredSign(null); onHoveredElement?.(null); } }}
+              onTouchStart={() => {
+                if (hoveredSign === i) {
+                  onSignClick?.(i);
+                } else {
+                  setHoveredSign(i);
+                  onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]);
+                }
+              }}
+              onClick={(e) => { if (isMobile) { e.preventDefault(); } else { onSignClick?.(i); } }}
               // Counter-rotate to keep symbols upright — slow down when hovered
               animate={{ rotate: -360 }}
               transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
