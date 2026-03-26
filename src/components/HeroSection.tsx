@@ -2804,7 +2804,7 @@ const HeroSection = () => {
               className="relative"
               style={isMobile
                 ? { width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }
-                : { marginTop: "min(352px, 38vh)", marginLeft: "10px" }
+                : { marginTop: "340px", marginLeft: "10px" }
               }
             >
               <ZodiacWheel isMobile={isMobile} hoveredMenuItem={hoveredItem} onHoveredElement={setHoveredZodiacColor} onSignClick={() => setForecastOpen(true)} />
