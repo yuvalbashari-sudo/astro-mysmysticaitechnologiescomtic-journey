@@ -139,8 +139,8 @@ export const he: TranslationKeys = {
 
   footer_title: "הכוכבים מחכים לכם",
   footer_subtitle: "כל רגע הוא הזדמנות לגלות משהו חדש על עצמכם. התחילו את המסע הרוחני שלכם עוד היום.",
-  footer_cta_free: "התחילו בחינם",
-  footer_cta_premium: "הזמינו קריאה פרימיום",
+  footer_cta_free: "✨ התחילו את המסע שלכם — בחינם",
+  footer_cta_premium: "✦ הזמינו קריאה אישית עכשיו",
   footer_whatsapp: "💬 דברו איתנו בוואטסאפ",
   footer_copyright: `© ${new Date().getFullYear()} ASTROLOGAI — כל הזכויות שמורות`,
 
