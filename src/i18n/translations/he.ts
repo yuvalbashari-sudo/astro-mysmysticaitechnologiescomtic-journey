@@ -63,7 +63,7 @@ export const he: TranslationKeys = {
   launch_all_included: "הכל כלול. הכל פתוח. הכל מחכה לכם.",
   launch_days_remaining_prefix: "נותרו",
   launch_days_remaining_suffix: "ימים להצעת ההשקה",
-  launch_cta: "חקרו את החוויה המיסטית המלאה",
+  launch_cta: "🚀 חקרו הכל עכשיו — בחינם",
 
   free_title: "התחילו בחינם",
   free_subtitle: "טעימה מיסטית — ללא עלות, ללא התחייבות",
@@ -73,7 +73,7 @@ export const he: TranslationKeys = {
   free_taste_desc: "בדיקת התאמה ראשונית בין שני מזלות",
   free_tarot_title: "קלף טארוט יומי",
   free_tarot_desc: "שאלו שאלה וקבלו קלף אחד עם מסר מהיקום",
-  free_cta: "קבלו בחינם",
+  free_cta: "✨ קבלו בחינם עכשיו",
   premium_label: "✦ פרימיום ✦",
   premium_launch_label: "✦ פתוח בחינם לרגל ההשקה ✦",
   premium_title: "קריאות אישיות מעמיקות",
