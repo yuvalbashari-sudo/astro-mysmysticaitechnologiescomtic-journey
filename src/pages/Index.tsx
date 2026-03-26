@@ -3,6 +3,8 @@ import HeroSection from "@/components/HeroSection";
 import MysticalDashboard from "@/components/MysticalDashboard";
 import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
+import SeoStructuredData from "@/components/SeoStructuredData";
+import SeoContentSection from "@/components/SeoContentSection";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
