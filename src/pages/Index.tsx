@@ -5,6 +5,7 @@ import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
+import CollapsibleSeoPanel from "@/components/CollapsibleSeoPanel";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -40,10 +41,14 @@ const Index = () => {
           onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
+        {/* Desktop: collapsible SEO panel pinned at bottom */}
+        <div className="hidden md:flex items-end justify-center pb-4 pointer-events-auto" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 11 }}>
+          <CollapsibleSeoPanel />
+        </div>
         {/* Spacer + below-hero content: mobile only */}
         <div className="md:hidden">
           <div className="h-screen pointer-events-none" aria-hidden="true" />
-          {/* SEO content visible on mobile scroll */}
+          <CollapsibleSeoPanel />
           <SeoContentSection />
         </div>
       </div>
