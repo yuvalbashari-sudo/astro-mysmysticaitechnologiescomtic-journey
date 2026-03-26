@@ -68,7 +68,7 @@ const MysticalLanguageDropdown = () => {
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center justify-center shrink-0 rounded-full backdrop-blur-md transition-all w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12"
+        className="flex items-center justify-center shrink-0 rounded-full backdrop-blur-md transition-all w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12"
         style={{
           background: "hsl(var(--deep-blue-light) / 0.6)",
           border: "1px solid hsl(var(--gold) / 0.18)",
