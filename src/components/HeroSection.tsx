@@ -2881,6 +2881,51 @@ const HeroSection = () => {
         </div>
       </div>
 
+      {/* ── Daily Card Teaser — subtle hint below crystal ball ── */}
+      {entranceComplete && !isUniverseMessageOpen && !dailyCardOpen && (
+        <motion.div
+          className="absolute z-[27] pointer-events-auto cursor-pointer"
+          style={{
+            left: "50%",
+            transform: "translateX(-50%)",
+            bottom: isMobile ? "calc(12% + 10px)" : "calc(14% + 20px)",
+          }}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.5, duration: 1.2, ease: "easeOut" }}
+          onClick={() => setDailyCardOpen(true)}
+        >
+          <motion.div
+            className="flex flex-col items-center gap-1"
+            animate={{ y: [0, -3, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* Subtle downward arrow */}
+            <motion.div
+              animate={{ opacity: [0.3, 0.7, 0.3] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <svg width="18" height="10" viewBox="0 0 18 10" fill="none" className="opacity-60">
+                <path d="M1 1L9 8L17 1" stroke="hsl(var(--gold))" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.div>
+            {/* Teaser text */}
+            <motion.span
+              className="font-body text-gold/50 select-none"
+              style={{
+                fontSize: isMobile ? 11 : 13,
+                letterSpacing: "0.06em",
+                textShadow: "0 0 12px hsl(var(--gold) / 0.15)",
+              }}
+              animate={{ opacity: [0.35, 0.6, 0.35] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            >
+              {language === "he" ? "לחצו לקלף היומי ✦" : language === "ar" ? "✦ اضغط لكشف بطاقتك اليومية" : language === "ru" ? "✦ Нажмите, чтобы открыть карту дня" : "✦ Tap to reveal your daily card"}
+            </motion.span>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* ── Astrologer Avatar — desktop only ── */}
       {!isMobile && entranceComplete && (
         <motion.div
