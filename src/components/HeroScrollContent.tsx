@@ -93,7 +93,7 @@ const HeroScrollContent = ({
                   >
                     <div className="flex flex-col items-center gap-1.5">
                       <item.icon className="h-5 w-5" style={{ color: item.color }} />
-                      <span className="text-center font-body text-[11px] leading-tight text-foreground/75">{item.label}</span>
+                      <span className="text-center font-body text-[16px] leading-tight text-foreground/75">{item.label}</span>
                     </div>
                   </motion.button>
                 ))}
