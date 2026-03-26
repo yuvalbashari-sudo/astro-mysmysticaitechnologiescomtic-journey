@@ -6,10 +6,8 @@ const WhatsAppFloatingButton = () => {
   const t = useT();
 
   return (
-    <motion.a
-      href="https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI"
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.button
+      onClick={() => window.open("https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI", "_blank", "noopener,noreferrer")}
       className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition-all"
       style={{
         background: "linear-gradient(135deg, hsl(142 70% 40%), hsl(142 70% 32%))",
@@ -29,7 +27,7 @@ const WhatsAppFloatingButton = () => {
         transition={{ duration: 2, repeat: Infinity }}
         aria-hidden="true"
       />
-    </motion.a>
+    </motion.button>
   );
 };
 
