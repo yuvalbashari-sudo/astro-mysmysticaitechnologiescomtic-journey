@@ -181,6 +181,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
   const { language, dir } = useLanguage();
   const copy = UI_COPY[language];
   const [question, setQuestion] = useState("");
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [validationMsg, setValidationMsg] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
