@@ -12,6 +12,7 @@ import TarotCardPage from "./pages/TarotCardPage";
 import ZodiacSignPage from "./pages/ZodiacSignPage";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import TarotGalleryPage from "./pages/TarotGalleryPage";
+import PremiumUpgrade from "./pages/PremiumUpgrade";
 
 const queryClient = new QueryClient();
 
