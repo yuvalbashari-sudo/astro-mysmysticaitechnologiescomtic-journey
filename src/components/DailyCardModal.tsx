@@ -659,7 +659,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       width: isMobileViewport ? 200 : 320,
                       height: isMobileViewport ? 200 : 320,
                       background: "radial-gradient(circle, hsl(260 55% 55% / 0.08), hsl(220 60% 50% / 0.04), transparent 70%)",
-                      filter: "blur(40px)",
+                      willChange: "transform, opacity",
                     }}
                     animate={{
                       scale: [0.8, 1.2, 0.8],
