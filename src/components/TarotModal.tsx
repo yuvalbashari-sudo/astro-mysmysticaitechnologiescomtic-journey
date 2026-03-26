@@ -164,7 +164,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [tableCards, setTableCards] = useState<ReadingCard[]>([]);
   const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
   const [activeRevealIndex, setActiveRevealIndex] = useState<number | null>(null);
-  const [copied, setCopied] = useState(false);
+   const [copied, setCopied] = false);
 
   // AI state
   const [aiText, setAiText] = useState("");
@@ -173,9 +173,21 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
 
+  // Entitlements gating state
+  const [gatingOpen, setGatingOpen] = useState(false);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+
   const needsQuestion = selectedSpreadKey !== "daily";
 
   const handleDraw = () => {
+    // Check entitlements before starting
+    const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
+    if (!access.allowed) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingOpen(true);
+      return;
+    }
     if (needsQuestion) {
       setIsQuestionPhase(true);
     } else {
