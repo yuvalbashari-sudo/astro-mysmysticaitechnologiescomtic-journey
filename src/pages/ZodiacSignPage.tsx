@@ -29,6 +29,16 @@ const ZodiacSignPage = () => {
       author: { "@type": "Organization", name: "ASTROLOGAI" },
     });
     document.head.appendChild(jsonLd);
+
+    // Canonical link
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.rel = "canonical";
+      document.head.appendChild(canonical);
+    }
+    canonical.href = `https://astro-mysmysticaitechnologiescomtic-journey.lovable.app/zodiac/${slug}`;
+
     return () => { document.getElementById("zodiac-jsonld")?.remove(); };
   }, [sign]);
 
