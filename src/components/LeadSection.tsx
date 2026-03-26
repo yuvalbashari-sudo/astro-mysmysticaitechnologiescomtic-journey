@@ -196,6 +196,19 @@ const LeadSection = () => {
               />
             </div>
 
+            {/* Honeypot field — hidden from real users */}
+            <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+              <label>Leave empty</label>
+              <input
+                type="text"
+                name="website_url"
+                autoComplete="off"
+                tabIndex={-1}
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
+
             <button
               type="submit"
               disabled={isSubmitting}
