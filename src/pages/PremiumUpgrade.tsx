@@ -77,8 +77,6 @@ const ctaLabels: Record<string, { he: string; en: string }> = {
   free: { he: "המשיכו בחינם", en: "Continue Free" },
   subscriber: { he: "שדרגו לפרימיום", en: "Upgrade to Premium" },
 };
-  vip: { he: "פתחו גישת VIP", en: "Unlock VIP Access" },
-};
 
 const trustItems = [
   { icon: Shield, he: "תשלום מאובטח", en: "Secure payment" },
