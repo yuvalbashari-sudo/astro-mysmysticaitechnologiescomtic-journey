@@ -12,6 +12,8 @@ import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import { antiAbuse } from "@/lib/antiAbuse";
+import { compressImage } from "@/lib/imageCompression";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
