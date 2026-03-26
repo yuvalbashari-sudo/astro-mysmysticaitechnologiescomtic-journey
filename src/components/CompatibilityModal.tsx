@@ -138,7 +138,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   const isLtr = dir === "ltr";
   const compatAvatarStyle = isLtr ? {
-    top: isMobile ? 72 : 80,
+    top: isMobile ? 90 : 80,
     left: isMobile ? 160 : 260,
     right: "auto" as const,
     bottom: "auto" as const,
