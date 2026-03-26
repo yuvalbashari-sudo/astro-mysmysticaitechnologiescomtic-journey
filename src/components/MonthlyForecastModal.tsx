@@ -200,7 +200,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <div style={{ padding: "0 24px" }}>
+                        <div style={{ padding: "0 24px" }}>
+                        {/* Name input */}
+                        <div style={{ marginBottom: "20px" }}>
+                          <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
+                        </div>
+
                         {/* Mode toggle */}
                         <div className="flex justify-center mb-8">
                           <ModeToggle size="large" />
