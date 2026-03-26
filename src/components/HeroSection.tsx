@@ -2815,7 +2815,7 @@ const HeroSection = () => {
 
       <div
         className="absolute inset-0 pointer-events-none z-[26]"
-        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "max(260px, 24vh)" }}
+        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}
       >
         <div className="flex h-full w-full items-center justify-center">
           {isMobile ? (
