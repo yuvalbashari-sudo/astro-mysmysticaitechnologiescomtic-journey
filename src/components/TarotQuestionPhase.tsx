@@ -205,6 +205,9 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
       return;
     }
     setValidationMsg("");
+    if (userName.trim()) {
+      mysticalProfile.recordUserName(userName.trim());
+    }
     onSubmit(question);
   };
 
