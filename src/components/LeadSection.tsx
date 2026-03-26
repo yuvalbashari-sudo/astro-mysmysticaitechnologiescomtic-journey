@@ -142,6 +142,13 @@ const LeadSection = () => {
                 className="mystical-input font-body"
                 value={formData.birthDate}
                 onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+                style={{
+                  direction: "ltr",
+                  colorScheme: "dark",
+                  WebkitAppearance: "none",
+                  minHeight: "48px",
+                  opacity: 1,
+                }}
               />
             </div>
             <div>
