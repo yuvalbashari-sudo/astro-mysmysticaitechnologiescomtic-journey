@@ -2523,7 +2523,7 @@ const HeroSection = () => {
                 )}
               </div>
             </motion.div>
-            <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
+            {/* EnergyPulse skipped on mobile for performance */}
 
           </motion.div>
         ) : (

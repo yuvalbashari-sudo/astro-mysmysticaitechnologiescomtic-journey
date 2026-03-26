@@ -73,6 +73,13 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Mobile: use stable dvh */
+  @media (max-width: 767px) {
+    .h-screen {
+      height: 100dvh;
+    }
+  }
+
   /* Desktop: lock viewport — zero scroll */
   @media (min-width: 768px) {
     html, body {

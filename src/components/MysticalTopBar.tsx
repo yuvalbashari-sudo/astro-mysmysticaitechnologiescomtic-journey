@@ -13,7 +13,7 @@ interface Props {
 }
 
 const iconBtn =
-  "flex items-center justify-center shrink-0 rounded-full backdrop-blur-md transition-all";
+  "flex items-center justify-center shrink-0 rounded-full transition-all";
 
 const iconStyle = {
   background: "hsl(var(--deep-blue-light) / 0.6)",
