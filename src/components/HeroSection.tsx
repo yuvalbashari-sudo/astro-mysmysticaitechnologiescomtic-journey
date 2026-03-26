@@ -3400,15 +3400,22 @@ const HeroSection = () => {
         aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
         className="fixed z-[90] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
         style={{
-          bottom: isMobile ? 5 : 15,
-          left: "50%",
-          transform: "translateX(-50%)",
-          padding: isMobile ? "10px 22px" : "14px 34px",
-          background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--gold) / 0.02))",
-          border: "1px solid hsl(var(--gold) / 0.12)",
-          borderRadius: "9999px",
-          boxShadow: "0 0 22px hsl(var(--gold) / 0.06), 0 3px 14px hsl(0 0% 0% / 0.25)",
+          bottom: isMobile ? 0 : 15,
+          left: isMobile ? 0 : "50%",
+          right: isMobile ? 0 : "auto",
+          transform: isMobile ? "none" : "translateX(-50%)",
+          width: isMobile ? "100%" : "auto",
+          padding: isMobile ? "14px 20px" : "14px 34px",
+          background: isMobile
+            ? "linear-gradient(180deg, transparent 0%, hsl(var(--deep-blue) / 0.85) 30%, hsl(var(--deep-blue) / 0.95) 100%)"
+            : "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--gold) / 0.02))",
+          border: isMobile ? "none" : "1px solid hsl(var(--gold) / 0.12)",
+          borderRadius: isMobile ? 0 : "9999px",
+          boxShadow: isMobile
+            ? "0 -4px 20px hsl(var(--gold) / 0.08)"
+            : "0 0 22px hsl(var(--gold) / 0.06), 0 3px 14px hsl(0 0% 0% / 0.25)",
           backdropFilter: "blur(8px)",
+          textAlign: "center" as const,
         }}
         initial={{ opacity: 0 }}
         animate={{ opacity: [0.6, 1, 0.6] }}
