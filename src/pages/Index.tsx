@@ -27,7 +27,7 @@ const Index = () => {
       <HeroSection />
 
       {/* ── Layer 2: Scrolling page content ── */}
-      <div className="relative z-10 md:h-screen md:overflow-hidden" dir={dir} style={{ background: "transparent" }}>
+      <div className="relative z-10 md:h-screen md:overflow-hidden pointer-events-none" dir={dir} style={{ background: "transparent" }}>
         {/* Skip to content link */}
         <a
           href="#main-content"
