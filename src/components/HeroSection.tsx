@@ -341,16 +341,16 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       }
     };
 
-    const interval = setInterval(crossfade, 80);
+    const interval = setInterval(crossfade, 200);
     return () => clearInterval(interval);
   }, []);
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
     transition: "opacity 1.8s ease-in-out",
-    transform: "scale(1.22)",
+    transform: "scale(1.22) translateZ(0)",
     transformOrigin: "center center",
-    filter: "brightness(1.06)",
+    willChange: "opacity",
   };
 
   return (
@@ -360,10 +360,11 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         top: "50%",
         left: "50%",
-        transform: isMobile ? "translate(-50%, calc(-50% - 5px))" : "translate(-50%, -50%)",
+        transform: isMobile ? "translate(-50%, calc(-50% - 5px)) translateZ(0)" : "translate(-50%, -50%) translateZ(0)",
         borderRadius: "50%",
         overflow: "hidden",
         background: "transparent",
+        contain: "strict",
         maskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
@@ -2291,7 +2292,7 @@ const HeroSection = () => {
             top: "55%",
             width: isMobile ? "220px" : "400px",
             height: isMobile ? "170px" : "280px",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%) translateZ(0)",
             background: hoveredTeaser === "right"
               ? "radial-gradient(ellipse, hsl(270 55% 50% / 0.2) 0%, hsl(260 50% 40% / 0.08) 40%, transparent 70%)"
               : hoveredTeaser === "left"
@@ -2299,8 +2300,8 @@ const HeroSection = () => {
                 : activeColor
                   ? `radial-gradient(ellipse, ${activeColor}44 0%, ${activeColor}18 40%, transparent 70%)`
                   : "radial-gradient(ellipse, hsl(var(--gold) / 0.22) 0%, hsl(var(--gold) / 0.08) 40%, transparent 70%)",
-            filter: "blur(25px)",
             transition: "background 0.6s ease-out",
+            willChange: "transform, opacity",
           }}
           animate={{ opacity: [0.5, 0.9, 0.5], scale: [1, 1.2, 1] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
@@ -2312,9 +2313,9 @@ const HeroSection = () => {
             top: "55%",
             width: isMobile ? "300px" : "520px",
             height: isMobile ? "220px" : "360px",
-            transform: "translate(-50%, -50%)",
+            transform: "translate(-50%, -50%) translateZ(0)",
             background: "radial-gradient(ellipse, hsl(var(--celestial) / 0.1) 0%, hsl(var(--gold) / 0.05) 50%, transparent 70%)",
-            filter: "blur(45px)",
+            willChange: "transform, opacity",
           }}
           animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}

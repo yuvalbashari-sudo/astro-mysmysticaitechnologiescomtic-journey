@@ -92,7 +92,7 @@ function getTimeUntilMidnight(format: string): string {
 
 // Cinematic particle field — cosmic dust with varied sizes, colors, drift
 const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }) => {
-  const count = Math.round(24 * intensity);
+  const count = Math.round(12 * intensity);
   const particles = React.useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
       id: i,
@@ -111,12 +111,12 @@ const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }
     [count],
   );
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ contain: "strict" }}>
       {particles.map((p) => (
         <motion.div
           key={p.id}
           className="absolute rounded-full"
-          style={{ width: p.size, height: p.size, background: p.color, left: `${p.x}%`, top: `${p.y}%` }}
+          style={{ width: p.size, height: p.size, background: p.color, left: `${p.x}%`, top: `${p.y}%`, willChange: "transform, opacity" }}
           animate={{ y: [0, p.drift, 0], opacity: [0, 0.85, 0], scale: [0.6, 1.4, 0.6] }}
           transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: "easeInOut" }}
         />
@@ -639,7 +639,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       width: isMobileViewport ? 320 : 500,
                       height: isMobileViewport ? 320 : 500,
                       background: "radial-gradient(circle, hsl(var(--gold) / 0.12), hsl(280 50% 50% / 0.06), hsl(var(--celestial) / 0.04), transparent 70%)",
-                      filter: "blur(50px)",
+                      willChange: "transform, opacity",
                     }}
                     animate={{
                       scale: ritualStep < 1 ? [0.6, 1, 0.6] : ritualStep < 2 ? [1, 1.3, 1] : [1.3, 0.4],
@@ -659,7 +659,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       width: isMobileViewport ? 200 : 320,
                       height: isMobileViewport ? 200 : 320,
                       background: "radial-gradient(circle, hsl(260 55% 55% / 0.08), hsl(220 60% 50% / 0.04), transparent 70%)",
-                      filter: "blur(40px)",
+                      willChange: "transform, opacity",
                     }}
                     animate={{
                       scale: [0.8, 1.2, 0.8],
@@ -701,7 +701,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                         width: isMobileViewport ? 240 : 360,
                         height: isMobileViewport ? 240 : 360,
                         background: "radial-gradient(circle, hsl(var(--gold) / 0.18), hsl(270 60% 50% / 0.12), transparent 60%)",
-                        filter: "blur(25px)",
+                        willChange: "transform, opacity",
                       }}
                       animate={{ scale: [0.5, 1.1, 0.5], opacity: [0, 0.7, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
@@ -709,8 +709,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   )}
 
                   {/* ── Converging sparks — energy drawn to center ── */}
-                  {ritualStep >= 1 && [...Array(16)].map((_, i) => {
-                    const angle = (i / 16) * Math.PI * 2;
+                  {ritualStep >= 1 && [...Array(8)].map((_, i) => {
+                    const angle = (i / 8) * Math.PI * 2;
                     const dist = 90 + (i % 4) * 30;
                     return (
                       <motion.div
@@ -747,12 +747,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           width: isMobileViewport ? 170 : 220,
                           height: isMobileViewport ? 255 : 330,
                           perspective: "800px",
+                          contain: "layout style",
                         }}
                       >
                         <motion.div
                           className="absolute inset-0 rounded-xl overflow-hidden"
                           style={{
                             transformStyle: "preserve-3d",
+                            willChange: "transform",
                             border: "2px solid hsl(var(--gold) / 0.4)",
                             boxShadow: ritualStep >= 3
                               ? "0 0 50px hsl(var(--gold) / 0.2), 0 0 100px hsl(280 50% 50% / 0.08), 0 25px 60px hsl(0 0% 0% / 0.5)"
@@ -849,7 +851,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                               width: isMobileViewport ? 350 : 480,
                               height: isMobileViewport ? 350 : 480,
                               background: "radial-gradient(circle, hsl(var(--gold) / 0.15), hsl(270 50% 55% / 0.06), transparent 65%)",
-                              filter: "blur(35px)",
+                              willChange: "transform, opacity",
                             }}
                             initial={{ scale: 0.2, opacity: 0 }}
                             animate={{ scale: [0.2, 1.3, 1], opacity: [0, 0.85, 0.25] }}
