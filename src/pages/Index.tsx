@@ -5,7 +5,6 @@ import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
-import CollapsibleSeoPanel from "@/components/CollapsibleSeoPanel";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -41,15 +40,10 @@ const Index = () => {
           onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
-        {/* Desktop: SEO teaser text only (no interactive button — crystal ball CTA occupies bottom z-layer) */}
-        <div className="hidden md:block pointer-events-none" style={{ position: "fixed", bottom: 56, left: 0, right: 0, zIndex: 5 }}>
-          <p className="text-center font-body text-[11px] leading-relaxed text-muted-foreground/30 max-w-2xl mx-auto px-4">
-            Discover powerful AI tarot readings, palm analysis, zodiac compatibility insights, and personalized spiritual guidance...
-          </p>
-        </div>
         {/* Spacer + below-hero content: mobile only */}
         <div className="md:hidden">
           <div className="h-screen pointer-events-none" aria-hidden="true" />
+          {/* SEO content visible on mobile scroll */}
           <SeoContentSection />
         </div>
       </div>
