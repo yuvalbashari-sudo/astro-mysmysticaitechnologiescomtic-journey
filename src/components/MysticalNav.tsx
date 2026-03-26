@@ -261,7 +261,7 @@ const MysticalNav = () => {
       <TarotWorldModal isOpen={tarotWorldOpen} onClose={() => setTarotWorldOpen(false)} />
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
-      <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <PalmComingSoonModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
     </>
   );

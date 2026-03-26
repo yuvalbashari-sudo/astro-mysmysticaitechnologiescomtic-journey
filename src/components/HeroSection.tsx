@@ -3649,7 +3649,7 @@ const HeroSection = () => {
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
-      <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <PalmComingSoonModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />

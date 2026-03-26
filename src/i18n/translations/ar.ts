@@ -406,6 +406,12 @@ export const ar: TranslationKeys = {
   lead_modal_interest_tarot: "قراءة التاروت",
   lead_modal_interest_palm: "قراءة الكف",
 
+  palm_coming_soon_title: "قراءة الكف – قريبًا",
+  palm_coming_soon_desc: "هذه الميزة قيد التطوير لتقديم رؤى دقيقة وقوية للغاية. ترقبوا الإطلاق.",
+  palm_coming_soon_subscribed: "تم التسجيل بنجاح! سنبلغك عند الإطلاق.",
+  palm_coming_soon_notify: "أبلغوني",
+  palm_coming_soon_close: "فهمت",
+
   whatsapp_aria: "تواصلوا معنا عبر واتساب",
 
   not_found_title: "404",
