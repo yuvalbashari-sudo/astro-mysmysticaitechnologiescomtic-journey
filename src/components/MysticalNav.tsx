@@ -4,7 +4,7 @@ import { Sun, Heart, Layers, Hand, Globe } from "lucide-react";
 import TarotWorldModal from "@/components/TarotWorldModal";
 import MonthlyForecastModal from "@/components/MonthlyForecastModal";
 import CompatibilityModal from "@/components/CompatibilityModal";
-import PalmReadingModal from "@/components/PalmReadingModal";
+import PalmComingSoonModal from "@/components/PalmComingSoonModal";
 import BirthChartModal from "@/components/BirthChartModal";
 import { useT } from "@/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
