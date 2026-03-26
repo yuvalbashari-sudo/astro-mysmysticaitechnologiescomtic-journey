@@ -73,6 +73,13 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Mobile: use stable dvh */
+  @media (max-width: 767px) {
+    .h-screen {
+      height: 100dvh;
+    }
+  }
+
   /* Desktop: lock viewport — zero scroll */
   @media (min-width: 768px) {
     html, body {
@@ -262,6 +269,17 @@
   0% { background-position: -150% 0; }
   50% { background-position: 250% 0; }
   100% { background-position: 250% 0; }
+}
+
+/* Mobile performance: disable expensive effects */
+@media (max-width: 767px) {
+  .backdrop-blur-md,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
 /* Reduced motion support */

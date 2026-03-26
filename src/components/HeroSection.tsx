@@ -1864,8 +1864,8 @@ const TarotCardReveal = ({
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            {/* Swirling particles around card */}
-            {[...Array(8)].map((_, i) => {
+            {/* Swirling particles around card — desktop only */}
+            {!isMobile && [...Array(8)].map((_, i) => {
               const angle = (i / 8) * Math.PI * 2;
               return (
                 <motion.div
@@ -1937,8 +1937,8 @@ const TarotCardReveal = ({
             animate={{ y: isMobile ? -30 : -50, scale: 1.15 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            {/* Burst particles */}
-            {[...Array(16)].map((_, i) => {
+            {/* Burst particles — desktop only */}
+            {!isMobile && [...Array(16)].map((_, i) => {
               const angle = (i / 16) * Math.PI * 2;
               return (
                 <motion.div
@@ -2219,8 +2219,9 @@ const HeroSection = () => {
   const orbRadius = isMobile ? 190 : 360; // kept for zodiac wheel reference
 
   const particles = useMemo(() => {
+    if (isMobile) return []; // Skip particles on mobile for performance
     const types: Array<"dust" | "spark" | "orb"> = ["dust", "spark", "orb"];
-    return [...Array(isMobile ? 20 : 45)].map((_, i) => ({
+    return [...Array(45)].map((_, i) => ({
       type: types[i % 3],
       delay: Math.random() * 6,
       x: `${Math.random() * 100}%`,
@@ -2251,8 +2252,8 @@ const HeroSection = () => {
         transition={{ duration: 2, ease: "easeInOut" }}
       />
 
-      {/* ── Nebula clouds ── */}
-      <NebulaLayer isMobile={isMobile} />
+      {/* ── Nebula clouds — desktop only for performance ── */}
+      {!isMobile && <NebulaLayer isMobile={isMobile} />}
 
       {/* ── Layer 1: Mystical figure as full background ── */}
       <motion.div
@@ -2313,124 +2314,137 @@ const HeroSection = () => {
           animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
-        {/* Dynamic light streaks radiating from sphere */}
-        {[...Array(4)].map((_, i) => {
-          const angle = (i / 4) * Math.PI * 2 + Math.PI / 8;
-          const dx = Math.cos(angle);
-          const dy = Math.sin(angle);
-          return (
-            <motion.div
-              key={`streak-${i}`}
-              className="absolute"
-              style={{
-                left: "50%",
-                top: "55%",
-                width: isMobile ? "120px" : "200px",
-                height: "2px",
-                transform: `translate(-50%, -50%) rotate(${angle * (180 / Math.PI)}deg)`,
-                background: `linear-gradient(90deg, hsl(var(--gold) / 0.15), transparent)`,
-                filter: "blur(2px)",
-                transformOrigin: "left center",
-              }}
-              animate={{
-                opacity: [0, 0.4, 0],
-                scaleX: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                repeat: Infinity,
-                delay: i * 1.5,
-                ease: "easeInOut",
-              }}
-            />
-          );
-        })}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`hand-spark-${i}`}
-            className="absolute rounded-full bg-gold/60"
-            style={{
-              left: `${48 + (Math.random() - 0.5) * 8}%`,
-              top: `${53 + (Math.random() - 0.5) * 6}%`,
-              width: "3px",
-              height: "3px",
-            }}
-            animate={{
-              opacity: [0, 0.9, 0],
-              y: [0, -(15 + Math.random() * 40)],
-              x: [(Math.random() - 0.5) * 25],
-              scale: [0, 1.8, 0],
-            }}
-            transition={{
-              duration: 2.5 + Math.random() * 1.5,
-              repeat: Infinity,
-              delay: i * 0.6,
-              ease: "easeOut",
-            }}
-          />
-        ))}
+        {/* Dynamic light streaks & hand sparks — desktop only */}
+        {!isMobile && (
+          <>
+            {[...Array(4)].map((_, i) => {
+              const angle = (i / 4) * Math.PI * 2 + Math.PI / 8;
+              return (
+                <motion.div
+                  key={`streak-${i}`}
+                  className="absolute"
+                  style={{
+                    left: "50%",
+                    top: "55%",
+                    width: "200px",
+                    height: "2px",
+                    transform: `translate(-50%, -50%) rotate(${angle * (180 / Math.PI)}deg)`,
+                    background: `linear-gradient(90deg, hsl(var(--gold) / 0.15), transparent)`,
+                    filter: "blur(2px)",
+                    transformOrigin: "left center",
+                  }}
+                  animate={{
+                    opacity: [0, 0.4, 0],
+                    scaleX: [0.3, 1, 0.3],
+                  }}
+                  transition={{
+                    duration: 4 + i * 0.5,
+                    repeat: Infinity,
+                    delay: i * 1.5,
+                    ease: "easeInOut",
+                  }}
+                />
+              );
+            })}
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={`hand-spark-${i}`}
+                className="absolute rounded-full bg-gold/60"
+                style={{
+                  left: `${48 + (Math.random() - 0.5) * 8}%`,
+                  top: `${53 + (Math.random() - 0.5) * 6}%`,
+                  width: "3px",
+                  height: "3px",
+                }}
+                animate={{
+                  opacity: [0, 0.9, 0],
+                  y: [0, -(15 + Math.random() * 40)],
+                  x: [(Math.random() - 0.5) * 25],
+                  scale: [0, 1.8, 0],
+                }}
+                transition={{
+                  duration: 2.5 + Math.random() * 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.6,
+                  ease: "easeOut",
+                }}
+              />
+            ))}
+          </>
+        )}
       </div>
 
-      {/* ── Layer 2: Constellation map (enhanced) ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={isMobile ? {} : { x: constellationX, y: constellationY }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 3, delay: 0.8 }}
-      >
-        {constellations.map((c, i) => (
-          <Constellation key={i} stars={c.stars} baseDelay={i * 2.5} />
-        ))}
-      </motion.div>
+      {/* ── Layer 2: Constellation map — desktop only for performance ── */}
+      {!isMobile && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ x: constellationX, y: constellationY }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 3, delay: 0.8 }}
+        >
+          {constellations.map((c, i) => (
+            <Constellation key={i} stars={c.stars} baseDelay={i * 2.5} />
+          ))}
+        </motion.div>
+      )}
 
-      {/* ── Layer 3: Smoke / mist (parallax) ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={isMobile ? {} : { x: smokeX, y: smokeY }}
-      >
+      {/* ── Layer 3: Smoke / mist — simplified on mobile ── */}
+      {isMobile ? (
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)", opacity: 0.5 }}
+          />
+        </div>
+      ) : (
         <motion.div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)" }}
-          animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.05, 1], x: [0, 15, -10, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 40% 70%, hsl(var(--crimson) / 0.04) 0%, transparent 40%)" }}
-          animate={{ opacity: [0.2, 0.5, 0.2], x: [-10, 20, -10], y: [0, -8, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 60% 50%, hsl(var(--celestial) / 0.04) 0%, transparent 45%)" }}
-          animate={{ opacity: [0.2, 0.4, 0.2], x: [10, -15, 10], y: [5, -5, 5] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-        />
-        <motion.div
-          className="absolute"
-          style={{
-            top: "40%", left: "-10%", width: "120%", height: "30%",
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.03) 30%, hsl(var(--gold) / 0.05) 50%, hsl(var(--gold) / 0.03) 70%, transparent 100%)",
-            filter: "blur(40px)",
-          }}
-          animate={{ x: [-50, 50, -50], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute"
-          style={{
-            top: "55%", left: "-5%", width: "110%", height: "20%",
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--crimson) / 0.02) 40%, hsl(var(--crimson) / 0.04) 60%, transparent 100%)",
-            filter: "blur(50px)",
-          }}
-          animate={{ x: [30, -40, 30], opacity: [0.2, 0.45, 0.2] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        />
-      </motion.div>
+          className="absolute inset-0 pointer-events-none"
+          style={{ x: smokeX, y: smokeY }}
+        >
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)" }}
+            animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.05, 1], x: [0, 15, -10, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 40% 70%, hsl(var(--crimson) / 0.04) 0%, transparent 40%)" }}
+            animate={{ opacity: [0.2, 0.5, 0.2], x: [-10, 20, -10], y: [0, -8, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 60% 50%, hsl(var(--celestial) / 0.04) 0%, transparent 45%)" }}
+            animate={{ opacity: [0.2, 0.4, 0.2], x: [10, -15, 10], y: [5, -5, 5] }}
+            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          />
+          <motion.div
+            className="absolute"
+            style={{
+              top: "40%", left: "-10%", width: "120%", height: "30%",
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.03) 30%, hsl(var(--gold) / 0.05) 50%, hsl(var(--gold) / 0.03) 70%, transparent 100%)",
+              filter: "blur(40px)",
+            }}
+            animate={{ x: [-50, 50, -50], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute"
+            style={{
+              top: "55%", left: "-5%", width: "110%", height: "20%",
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--crimson) / 0.02) 40%, hsl(var(--crimson) / 0.04) 60%, transparent 100%)",
+              filter: "blur(50px)",
+            }}
+            animate={{ x: [30, -40, 30], opacity: [0.2, 0.45, 0.2] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          />
+        </motion.div>
+      )}
 
-      {/* ── Layer 4: Ambient particles ── */}
-      {particles.map((p, i) => (
+      {/* ── Layer 4: Ambient particles — reduced on mobile ── */}
+      {!isMobile && particles.map((p, i) => (
         <AmbientParticle key={i} {...p} />
       ))}
 
@@ -2477,15 +2491,14 @@ const HeroSection = () => {
             className="relative flex items-center justify-center pointer-events-auto"
             style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
           >
-            {/* Aura glow — tighter spread for realism */}
-            <motion.div
+            {/* Aura glow — static on mobile for performance */}
+            <div
               className="absolute rounded-full"
               style={{
                 width: "332px", height: "332px",
                 background: "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 45%, transparent 60%)",
+                opacity: 0.55,
               }}
-              animate={{ scale: [1, 1.1, 1], opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
             />
             {/* Contact shadow — where hands meet ball edges */}
             <div
@@ -2509,7 +2522,7 @@ const HeroSection = () => {
                 )}
               </div>
             </motion.div>
-            <EnergyPulse isMobile={isMobile} activeColor={activeColor} isNearBall={isNearBall} clickBurst={clickBurst} />
+            {/* EnergyPulse skipped on mobile for performance */}
 
           </motion.div>
         ) : (
