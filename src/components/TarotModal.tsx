@@ -722,17 +722,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {activeRevealIndex !== null && (
                       <motion.div
                         className="absolute inset-0 z-20 pointer-events-none"
-                        style={{ background: "hsl(222 45% 4% / 0.6)", backdropFilter: "blur(2px)" }}
+                        style={{
+                          background: "hsl(222 45% 4% / 0.6)",
+                          ...(isMobileTarot ? {} : { backdropFilter: "blur(2px)" }),
+                        }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4 }}
+                        transition={{ duration: isMobileTarot ? 0.25 : 0.4 }}
                       />
                     )}
                   </AnimatePresence>
 
-                  {/* Floating particles */}
-                  {[...Array(15)].map((_, i) => (
+                  {/* Floating particles — reduced on mobile */}
+                  {[...Array(isMobileTarot ? 5 : 15)].map((_, i) => (
                     <motion.div
                       key={`tp-${i}`}
                       className="absolute rounded-full pointer-events-none"
