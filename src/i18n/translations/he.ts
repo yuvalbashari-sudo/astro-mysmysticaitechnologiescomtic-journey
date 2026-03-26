@@ -344,7 +344,7 @@ export const he: TranslationKeys = {
   daily_loading: "מפענחים את המסר היומי שלכם...",
   daily_premium_title: "רוצים קריאה מעמיקה יותר?",
   daily_premium_desc: "נסו קריאת טארוט מלאה עם מספר קלפים ופירוש אישי מפורט",
-  daily_premium_cta: "חזרו לעולם הטארוט",
+  daily_premium_cta: "🔮 נסו קריאה מלאה עכשיו",
   daily_already_drawn: "הקלף היומי שלך כבר נחשף ✦",
   daily_time_format: "{hours} שעות ו-{minutes} דקות",
   daily_section_summary: "✨ מסר היום",
