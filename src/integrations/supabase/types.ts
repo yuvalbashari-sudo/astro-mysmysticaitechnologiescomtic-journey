@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      abuse_logs: {
+        Row: {
+          action: string
+          client_ip: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          reason: string
+        }
+        Insert: {
+          action: string
+          client_ip?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reason: string
+        }
+        Update: {
+          action?: string
+          client_ip?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          reason?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           birth_date: string | null
@@ -47,12 +74,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          action: string
+          client_ip: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          action: string
+          client_ip: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          client_ip?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_old_rate_limits: { Args: never; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
