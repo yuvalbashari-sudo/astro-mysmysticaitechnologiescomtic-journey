@@ -148,43 +148,39 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
       role="banner"
       aria-label={t.a11y_main_navigation}
     >
-      {isMobile ? (
+       {isMobile ? (
         /* ── MOBILE: two rows ── */
-        <div className="flex flex-col items-center gap-1.5">
-          {/* Row 1: left icons – LOGO – right icons */}
+        <div className="flex flex-col items-center gap-1">
+          {/* Row 1: all icons in a single row */}
           <div className="flex items-center justify-between w-full">
-            {/* Left group */}
             <nav className="flex items-center gap-1.5" aria-label={t.a11y_main_navigation}>
               <MysticalLanguageDropdown />
               {a11yLink}
             </nav>
 
-            {/* Centre logo */}
-            <div className="flex-shrink-0 pointer-events-none select-none mx-1">
-              <motion.h1
-                className="font-heading uppercase"
-                style={{
-                  fontSize: "clamp(16px, 5vw, 24px)",
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  lineHeight: 1,
-                  color: "hsl(var(--gold))",
-                  background:
-                    "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
-                  backgroundSize: "200% 200%",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  textShadow: "none",
-                }}
-                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              >
-                ASTROLOGAI
-              </motion.h1>
-            </div>
+            {/* Centered logo */}
+            <motion.h1
+              className="font-heading uppercase pointer-events-none select-none"
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                lineHeight: 1,
+                color: "hsl(var(--gold))",
+                background:
+                  "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
+                backgroundSize: "200% 200%",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                textShadow: "none",
+              }}
+              animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              ASTROLOGAI
+            </motion.h1>
 
-            {/* Right group */}
             <nav className="flex items-center gap-1.5">
               {dashboardBtn}
               {historyBtn}
