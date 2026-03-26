@@ -2313,62 +2313,64 @@ const HeroSection = () => {
           animate={{ opacity: [0.4, 0.7, 0.4], scale: [1.05, 0.95, 1.05] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
-        {/* Dynamic light streaks radiating from sphere */}
-        {[...Array(4)].map((_, i) => {
-          const angle = (i / 4) * Math.PI * 2 + Math.PI / 8;
-          const dx = Math.cos(angle);
-          const dy = Math.sin(angle);
-          return (
-            <motion.div
-              key={`streak-${i}`}
-              className="absolute"
-              style={{
-                left: "50%",
-                top: "55%",
-                width: isMobile ? "120px" : "200px",
-                height: "2px",
-                transform: `translate(-50%, -50%) rotate(${angle * (180 / Math.PI)}deg)`,
-                background: `linear-gradient(90deg, hsl(var(--gold) / 0.15), transparent)`,
-                filter: "blur(2px)",
-                transformOrigin: "left center",
-              }}
-              animate={{
-                opacity: [0, 0.4, 0],
-                scaleX: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 4 + i * 0.5,
-                repeat: Infinity,
-                delay: i * 1.5,
-                ease: "easeInOut",
-              }}
-            />
-          );
-        })}
-        {[...Array(8)].map((_, i) => (
-          <motion.div
-            key={`hand-spark-${i}`}
-            className="absolute rounded-full bg-gold/60"
-            style={{
-              left: `${48 + (Math.random() - 0.5) * 8}%`,
-              top: `${53 + (Math.random() - 0.5) * 6}%`,
-              width: "3px",
-              height: "3px",
-            }}
-            animate={{
-              opacity: [0, 0.9, 0],
-              y: [0, -(15 + Math.random() * 40)],
-              x: [(Math.random() - 0.5) * 25],
-              scale: [0, 1.8, 0],
-            }}
-            transition={{
-              duration: 2.5 + Math.random() * 1.5,
-              repeat: Infinity,
-              delay: i * 0.6,
-              ease: "easeOut",
-            }}
-          />
-        ))}
+        {/* Dynamic light streaks & hand sparks — desktop only */}
+        {!isMobile && (
+          <>
+            {[...Array(4)].map((_, i) => {
+              const angle = (i / 4) * Math.PI * 2 + Math.PI / 8;
+              return (
+                <motion.div
+                  key={`streak-${i}`}
+                  className="absolute"
+                  style={{
+                    left: "50%",
+                    top: "55%",
+                    width: "200px",
+                    height: "2px",
+                    transform: `translate(-50%, -50%) rotate(${angle * (180 / Math.PI)}deg)`,
+                    background: `linear-gradient(90deg, hsl(var(--gold) / 0.15), transparent)`,
+                    filter: "blur(2px)",
+                    transformOrigin: "left center",
+                  }}
+                  animate={{
+                    opacity: [0, 0.4, 0],
+                    scaleX: [0.3, 1, 0.3],
+                  }}
+                  transition={{
+                    duration: 4 + i * 0.5,
+                    repeat: Infinity,
+                    delay: i * 1.5,
+                    ease: "easeInOut",
+                  }}
+                />
+              );
+            })}
+            {[...Array(8)].map((_, i) => (
+              <motion.div
+                key={`hand-spark-${i}`}
+                className="absolute rounded-full bg-gold/60"
+                style={{
+                  left: `${48 + (Math.random() - 0.5) * 8}%`,
+                  top: `${53 + (Math.random() - 0.5) * 6}%`,
+                  width: "3px",
+                  height: "3px",
+                }}
+                animate={{
+                  opacity: [0, 0.9, 0],
+                  y: [0, -(15 + Math.random() * 40)],
+                  x: [(Math.random() - 0.5) * 25],
+                  scale: [0, 1.8, 0],
+                }}
+                transition={{
+                  duration: 2.5 + Math.random() * 1.5,
+                  repeat: Infinity,
+                  delay: i * 0.6,
+                  ease: "easeOut",
+                }}
+              />
+            ))}
+          </>
+        )}
       </div>
 
       {/* ── Layer 2: Constellation map — desktop only for performance ── */}
