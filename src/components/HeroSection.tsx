@@ -2952,13 +2952,13 @@ const HeroSection = () => {
 
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
+    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "auto" : "0", bottom: isMobile ? "0" : "0" }}>
       {isMobile ? (
-        /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
+        /* ── Mobile: two vertical columns at bottom — below crystal ball & hands ── */
         <motion.div
           className="pointer-events-auto px-3 mx-auto"
-          style={{ maxWidth: 370 }}
-          initial={{ opacity: 0, y: -15 }}
+          style={{ maxWidth: 370, paddingBottom: "max(12px, env(safe-area-inset-bottom))" }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
