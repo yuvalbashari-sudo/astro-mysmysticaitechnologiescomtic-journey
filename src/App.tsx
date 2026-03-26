@@ -33,6 +33,7 @@ const App = () => (
                 <Route path="/zodiac/:slug" element={<ZodiacSignPage />} />
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/upgrade" element={<PremiumUpgrade />} />
+                <Route path="/admin/costs" element={<AdminCostAnalytics />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
