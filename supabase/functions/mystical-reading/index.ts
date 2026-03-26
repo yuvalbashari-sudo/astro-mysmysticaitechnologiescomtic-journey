@@ -609,6 +609,15 @@ function getClientIp(req: Request): string {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  // Dynamic import cost logger (same directory)
+  let logCostFn: typeof import("./costLogger.ts").logCost | null = null;
+  let getFeatureCostsFn: typeof import("./costLogger.ts").getFeatureCosts | null = null;
+  try {
+    const mod = await import("./costLogger.ts");
+    logCostFn = mod.logCost;
+    getFeatureCostsFn = mod.getFeatureCosts;
+  } catch (e) { console.error("Cost logger import failed:", e); }
+
   try {
     const { type, data, profileContext, language, userName: reqUserName } = await req.json();
 
@@ -616,6 +625,10 @@ serve(async (req) => {
     const clientIp = getClientIp(req);
     const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
     if (!rateCheck.allowed) {
+      // Log blocked request at zero cost
+      if (logCostFn && getFeatureCostsFn) {
+        await logCostFn({ clientIp, feature: type || "generic", status: "rate_limited", userTier: "unknown", aiCost: 0, imageCost: 0 });
+      }
       return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
         status: 429,
         headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
@@ -696,6 +709,10 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
+      // Log failed AI call
+      if (logCostFn && getFeatureCostsFn) {
+        await logCostFn({ clientIp, feature: type || "generic", status: "failed", userTier: "unknown", aiCost: 0, imageCost: 0, metadata: { httpStatus: response.status } });
+      }
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "יותר מדי בקשות, נסו שוב בעוד רגע" }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -711,6 +728,12 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "שגיאה בשירות ה-AI" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Log successful cost estimate (non-blocking)
+    if (logCostFn && getFeatureCostsFn) {
+      const costs = getFeatureCostsFn(type || "generic");
+      logCostFn({ clientIp, feature: type || "generic", status: "success", userTier: "free", aiCost: costs.aiCost, imageCost: costs.imageCost, model }).catch(() => {});
     }
 
     return new Response(response.body, {
