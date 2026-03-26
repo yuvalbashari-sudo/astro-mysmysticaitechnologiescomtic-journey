@@ -304,7 +304,11 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                      </div>
 
                      <h2 className="font-heading text-2xl gold-gradient-text mb-3">{mode === "forecast" ? t.forecast_title : t.rising_title}</h2>
-                     <p className="text-foreground/70 font-body text-sm mb-8 max-w-md mx-auto leading-relaxed">{mode === "forecast" ? t.forecast_desc : t.rising_desc}</p>
+                     <p className="text-foreground/70 font-body text-sm mb-6 max-w-md mx-auto leading-relaxed">{mode === "forecast" ? t.forecast_desc : t.rising_desc}</p>
+                     {/* Name input */}
+                     <div className="max-w-xs mx-auto mb-5">
+                       <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
+                     </div>
                      <div className="max-w-xs mx-auto mb-6">
                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_gender_label}</label>
                        <div className="flex gap-2">
