@@ -5,9 +5,12 @@ import { Sparkles, Heart, ArrowRight, MessageCircle } from "lucide-react";
 import { ZODIAC_SLUG_MAP, zodiacSeoMeta } from "@/data/seoData";
 import { zodiacData, getZodiacSign } from "@/data/zodiacData";
 import StarField from "@/components/StarField";
+import { useT, useLanguage } from "@/i18n";
 
 const ZodiacSignPage = () => {
   const { slug } = useParams<{ slug: string }>();
+  const t = useT();
+  const { language, dir } = useLanguage();
 
   const sign = slug && zodiacData[slug] ? zodiacData[slug] : undefined;
 
@@ -30,7 +33,6 @@ const ZodiacSignPage = () => {
     });
     document.head.appendChild(jsonLd);
 
-    // Canonical link
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
     if (!canonical) {
       canonical = document.createElement("link");
@@ -44,23 +46,23 @@ const ZodiacSignPage = () => {
 
   if (!sign) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center" dir={dir}>
         <div className="text-center">
-          <h1 className="font-heading text-2xl text-gold mb-4">Sign not found</h1>
-          <Link to="/" className="text-gold/70 hover:text-gold transition-colors">← Back to ASTROLOGAI</Link>
+          <h1 className="font-heading text-2xl text-gold mb-4">{t.seo_sign_not_found}</h1>
+          <Link to="/" className="text-gold/70 hover:text-gold transition-colors">{t.seo_back_home}</Link>
         </div>
       </div>
     );
   }
 
   const sections = [
-    { emoji: "🌟", title: "אישיות", titleEn: "Personality", content: sign.personality },
-    { emoji: "❤️", title: "אהבה", titleEn: "Love", content: sign.love },
-    { emoji: "💼", title: "קריירה", titleEn: "Career", content: sign.career },
-    { emoji: "💰", title: "כסף ושפע", titleEn: "Money & Abundance", content: sign.money },
-    { emoji: "🏥", title: "בריאות", titleEn: "Health", content: sign.health },
-    { emoji: "✨", title: "מסר רוחני", titleEn: "Spiritual Message", content: sign.spiritual },
-    { emoji: "🔥", title: "אנרגיה סנסואלית", titleEn: "Sensual Energy", content: sign.sensual },
+    { emoji: "🌟", label: t.seo_section_personality, content: sign.personality },
+    { emoji: "❤️", label: t.seo_section_love, content: sign.love },
+    { emoji: "💼", label: t.seo_section_career, content: sign.career },
+    { emoji: "💰", label: t.seo_section_money, content: sign.money },
+    { emoji: "🏥", label: t.seo_section_health, content: sign.health },
+    { emoji: "✨", label: t.seo_section_spiritual, content: sign.spiritual },
+    { emoji: "🔥", label: t.seo_section_sensual, content: sign.sensual },
   ];
 
   const allSlugs = Object.keys(ZODIAC_SLUG_MAP);
@@ -69,7 +71,7 @@ const ZodiacSignPage = () => {
   const nextSlug = currentIdx < allSlugs.length - 1 ? allSlugs[currentIdx + 1] : null;
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden" dir={dir}>
       <StarField />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-12 md:py-20">
@@ -77,7 +79,7 @@ const ZodiacSignPage = () => {
         <nav className="mb-8 flex items-center gap-2 text-foreground/40 font-body text-xs">
           <Link to="/" className="hover:text-gold transition-colors">ASTROLOGAI</Link>
           <span>/</span>
-          <span className="text-gold/60">Zodiac</span>
+          <span className="text-gold/60">{t.seo_breadcrumb_zodiac}</span>
           <span>/</span>
           <span className="text-gold">{sign.hebrewName}</span>
         </nav>
@@ -115,7 +117,7 @@ const ZodiacSignPage = () => {
         <div className="space-y-8">
           {sections.map((section, i) => (
             <motion.div
-              key={section.titleEn}
+              key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + i * 0.08 }}
@@ -129,10 +131,7 @@ const ZodiacSignPage = () => {
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)" }}>
                   <span className="text-lg">{section.emoji}</span>
                 </div>
-                <div>
-                  <h2 className="font-heading text-lg text-gold">{section.title}</h2>
-                  <p className="font-body text-foreground/30 text-xs">{section.titleEn}</p>
-                </div>
+                <h2 className="font-heading text-lg text-gold">{section.label}</h2>
               </div>
               <p className="text-foreground/70 font-body text-sm leading-[1.9] text-start">{section.content}</p>
             </motion.div>
@@ -163,8 +162,8 @@ const ZodiacSignPage = () => {
             style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.06))", border: "1px solid hsl(var(--gold) / 0.15)" }}
           >
             <Heart className="w-6 h-6 text-gold mx-auto mb-3" />
-            <h3 className="font-heading text-sm text-gold mb-2">בדקו התאמה זוגית</h3>
-            <p className="text-foreground/40 font-body text-xs">גלו את הכימיה הרוחנית שלכם</p>
+            <h3 className="font-heading text-sm text-gold mb-2">{t.seo_zodiac_compat_title}</h3>
+            <p className="text-foreground/40 font-body text-xs">{t.seo_zodiac_compat_desc}</p>
           </Link>
           <Link
             to="/"
@@ -172,14 +171,14 @@ const ZodiacSignPage = () => {
             style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.06), hsl(var(--deep-blue-light) / 0.3))", border: "1px solid hsl(var(--gold) / 0.15)" }}
           >
             <Sparkles className="w-6 h-6 text-gold mx-auto mb-3" />
-            <h3 className="font-heading text-sm text-gold mb-2">קריאת טארוט אישית</h3>
-            <p className="text-foreground/40 font-body text-xs">קבלו מסר מהקלפים</p>
+            <h3 className="font-heading text-sm text-gold mb-2">{t.seo_zodiac_tarot_title}</h3>
+            <p className="text-foreground/40 font-body text-xs">{t.seo_zodiac_tarot_desc}</p>
           </Link>
         </motion.div>
 
         {/* All Signs Grid */}
         <div className="mt-12">
-          <h2 className="font-heading text-xl text-gold text-center mb-8">כל המזלות</h2>
+          <h2 className="font-heading text-xl text-gold text-center mb-8">{t.seo_all_zodiac_signs}</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {allSlugs.map((s) => {
               const sd = zodiacData[s];

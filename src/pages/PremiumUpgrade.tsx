@@ -1,15 +1,27 @@
 import { motion } from "framer-motion";
 import { Crown, Star, Shield, Zap, Lock, Check, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useT } from "@/i18n";
+import { useT, useLanguage } from "@/i18n";
+import type { Language } from "@/i18n";
 
-const plans = [
+type LangText = Record<Language, string>;
+type LangFeatures = Record<Language, { text: string; included: boolean }[]>;
+
+const plans: {
+  id: string;
+  icon: typeof Star;
+  popular: boolean;
+  priceLabel: LangText;
+  priceSubtext: LangText;
+  yearlyNote?: LangText;
+  features: LangFeatures;
+}[] = [
   {
     id: "free",
     icon: Star,
     popular: false,
-    priceLabel: { he: "חינם", en: "Free" },
-    priceSubtext: { he: "לתמיד", en: "Forever" },
+    priceLabel: { he: "חינם", en: "Free", ar: "مجاني", ru: "Бесплатно" },
+    priceSubtext: { he: "לתמיד", en: "Forever", ar: "للأبد", ru: "Навсегда" },
     features: {
       he: [
         { text: "קלף יומי — תמיד בחינם", included: true },
@@ -29,15 +41,33 @@ const plans = [
         { text: "Additional tarot readings — ₪9 each", included: false },
         { text: "Full compatibility reading — ₪9", included: false },
       ],
+      ar: [
+        { text: "بطاقة يومية — مجانية دائماً", included: true },
+        { text: "توقعات شهرية وشخصية — مجاناً", included: true },
+        { text: "قراءة تاروت واحدة يومياً مجاناً", included: true },
+        { text: "قراءة توافق واحدة شهرياً (ملخص قصير)", included: true },
+        { text: "قراءة الكف — 29 ₪", included: false },
+        { text: "قراءات تاروت إضافية — 9 ₪ لكل واحدة", included: false },
+        { text: "قراءة توافق كاملة — 9 ₪", included: false },
+      ],
+      ru: [
+        { text: "Ежедневная карта — всегда бесплатно", included: true },
+        { text: "Месячный и личный гороскоп — бесплатно", included: true },
+        { text: "1 бесплатное чтение Таро в день", included: true },
+        { text: "1 краткое чтение совместимости в месяц", included: true },
+        { text: "Чтение по ладони — ₪29", included: false },
+        { text: "Дополнительные чтения Таро — ₪9 каждое", included: false },
+        { text: "Полное чтение совместимости — ₪9", included: false },
+      ],
     },
   },
   {
     id: "subscriber",
     icon: Crown,
     popular: true,
-    priceLabel: { he: "₪39", en: "₪39" },
-    priceSubtext: { he: "/חודש", en: "/month" },
-    yearlyNote: { he: "או ₪29/חודש בתשלום שנתי", en: "or ₪29/mo billed annually" },
+    priceLabel: { he: "₪39", en: "₪39", ar: "₪39", ru: "₪39" },
+    priceSubtext: { he: "/חודש", en: "/month", ar: "/شهر", ru: "/месяц" },
+    yearlyNote: { he: "או ₪29/חודש בתשלום שנתי", en: "or ₪29/mo billed annually", ar: "أو ₪29/شهر بالدفع السنوي", ru: "или ₪29/мес при годовой оплате" },
     features: {
       he: [
         { text: "קלף יומי — תמיד בחינם", included: true },
@@ -59,29 +89,28 @@ const plans = [
         { text: "Additional tarot readings — only ₪5", included: true },
         { text: "Additional compatibility — ₪7 each", included: true },
       ],
+      ar: [
+        { text: "بطاقة يومية — مجانية دائماً", included: true },
+        { text: "توقعات شهرية وشخصية — مجاناً", included: true },
+        { text: "3 قراءات تاروت يومياً", included: true },
+        { text: "5 قراءات توافق كاملة شهرياً", included: true },
+        { text: "قراءة الكف — فقط 9 ₪ (حتى 3 شهرياً)", included: true },
+        { text: "تجربة أعمق وأكثر تفصيلاً", included: true },
+        { text: "قراءات تاروت إضافية — فقط 5 ₪", included: true },
+        { text: "توافقات إضافية — 7 ₪ لكل واحدة", included: true },
+      ],
+      ru: [
+        { text: "Ежедневная карта — всегда бесплатно", included: true },
+        { text: "Месячный и личный гороскоп — бесплатно", included: true },
+        { text: "3 чтения Таро в день включены", included: true },
+        { text: "5 полных чтений совместимости в месяц", included: true },
+        { text: "Чтение по ладони — только ₪9 (до 3/мес)", included: true },
+        { text: "Более глубокий и детальный опыт", included: true },
+        { text: "Дополнительные чтения Таро — только ₪5", included: true },
+        { text: "Дополнительная совместимость — ₪7 каждая", included: true },
+      ],
     },
   },
-];
-
-const planNames: Record<string, { he: string; en: string }> = {
-  free: { he: "חינם", en: "Free" },
-  subscriber: { he: "מנוי פרימיום", en: "Premium" },
-};
-
-const planDescriptions: Record<string, { he: string; en: string }> = {
-  free: { he: "התחלה מיסטית בחינם", en: "Start your mystical journey" },
-  subscriber: { he: "חוויה מלאה, מעמיקה ומפורטת יותר", en: "Full, deeper, more detailed experience" },
-};
-
-const ctaLabels: Record<string, { he: string; en: string }> = {
-  free: { he: "המשיכו בחינם", en: "Continue Free" },
-  subscriber: { he: "שדרגו לפרימיום", en: "Upgrade to Premium" },
-};
-
-const trustItems = [
-  { icon: Shield, he: "תשלום מאובטח", en: "Secure payment" },
-  { icon: Zap, he: "גישה מיידית לאחר שדרוג", en: "Instant access after upgrade" },
-  { icon: Lock, he: "ביטול בכל עת", en: "Cancel anytime" },
 ];
 
 const FloatingParticles = () => (
@@ -118,9 +147,7 @@ const FloatingParticles = () => (
 const PremiumUpgrade = () => {
   const navigate = useNavigate();
   const t = useT();
-  const isHe = (t as any).meta_title?.includes("ASTROLOGAI") && (t as any).hero_headline?.includes("כוכבים");
-  const lang = isHe ? "he" : "en";
-  const dir = isHe ? "rtl" : "ltr";
+  const { language, dir } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background overflow-y-auto" dir={dir}>
@@ -139,7 +166,7 @@ const PremiumUpgrade = () => {
           className="flex items-center gap-2 text-foreground/50 hover:text-gold transition-colors font-body text-sm"
         >
           <ArrowLeft className="w-4 h-4" />
-          {isHe ? "חזרה" : "Back"}
+          {t.premium_back}
         </button>
       </div>
 
@@ -159,12 +186,10 @@ const PremiumUpgrade = () => {
           </motion.div>
         </div>
         <h1 className="font-heading text-3xl md:text-5xl lg:text-6xl gold-gradient-text mb-5 leading-tight">
-          {isHe ? "פתחו את החוויה המלאה" : "Unlock Your Full Reading Experience"}
+          {t.premium_unlock_title}
         </h1>
         <p className="font-body text-foreground/60 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-          {isHe
-            ? "שדרגו לגישה מלאה — קריאות מעמיקות, תובנות מתקדמות וחוויה מיסטית ברמה הגבוהה ביותר"
-            : "Upgrade to unlock deeper guidance, unlimited readings, and advanced mystical features"}
+          {t.premium_unlock_desc}
         </p>
       </motion.div>
 
@@ -187,7 +212,7 @@ const PremiumUpgrade = () => {
               {plan.popular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                   <span className="btn-gold !py-1.5 !px-5 !text-[11px] !tracking-[0.15em] !rounded-full !shadow-[0_0_25px_hsl(var(--gold)/0.3)]">
-                    {isHe ? "✦ מומלץ ✦" : "✦ Most Popular ✦"}
+                    {t.premium_most_popular}
                   </span>
                 </div>
               )}
@@ -209,24 +234,24 @@ const PremiumUpgrade = () => {
 
               {/* Plan name */}
               <h3 className="font-heading text-xl md:text-2xl text-foreground text-center mb-1">
-                {planNames[plan.id][lang]}
+                {plan.id === "free" ? t.premium_plan_free_name : t.premium_plan_sub_name}
               </h3>
               <p className="font-body text-sm text-foreground/50 text-center mb-6">
-                {planDescriptions[plan.id][lang]}
+                {plan.id === "free" ? t.premium_plan_free_desc : t.premium_plan_sub_desc}
               </p>
 
               {/* Price */}
               <div className="text-center mb-2">
                 <span className="font-heading text-4xl md:text-5xl gold-gradient-text">
-                  {plan.priceLabel[lang]}
+                  {plan.priceLabel[language]}
                 </span>
                 <span className="font-body text-sm text-foreground/40 ms-1">
-                  {plan.priceSubtext[lang]}
+                  {plan.priceSubtext[language]}
                 </span>
               </div>
-              {(plan as any).yearlyNote && (
+              {plan.yearlyNote && (
                 <p className="text-center font-body text-xs text-gold/60 mb-5">
-                  {(plan as any).yearlyNote[lang]}
+                  {plan.yearlyNote[language]}
                 </p>
               )}
 
@@ -235,7 +260,7 @@ const PremiumUpgrade = () => {
 
               {/* Features */}
               <ul className="space-y-3 mb-8 flex-1">
-                {plan.features[lang].map((f, fi) => (
+                {plan.features[language].map((f, fi) => (
                   <li key={fi} className="flex items-center gap-3 font-body text-sm">
                     {f.included ? (
                       <Check className="w-4 h-4 text-gold flex-shrink-0" />
@@ -257,7 +282,7 @@ const PremiumUpgrade = () => {
                     : "border border-foreground/15 text-foreground/60 hover:border-gold/30 hover:text-gold"
                 }`}
               >
-                {ctaLabels[plan.id][lang]}
+                {plan.id === "free" ? t.premium_plan_free_cta : t.premium_plan_sub_cta}
               </button>
             </motion.div>
           ))}
@@ -272,10 +297,14 @@ const PremiumUpgrade = () => {
         className="relative z-10 max-w-3xl mx-auto px-4 pb-16 md:pb-24"
       >
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
-          {trustItems.map((item, i) => (
+          {[
+            { icon: Shield, label: t.premium_trust_secure },
+            { icon: Zap, label: t.premium_trust_instant },
+            { icon: Lock, label: t.premium_trust_cancel },
+          ].map((item, i) => (
             <div key={i} className="flex items-center gap-2.5 text-foreground/40">
               <item.icon className="w-4 h-4 text-gold/50" />
-              <span className="font-body text-xs tracking-wide">{item[lang]}</span>
+              <span className="font-body text-xs tracking-wide">{item.label}</span>
             </div>
           ))}
         </div>

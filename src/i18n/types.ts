@@ -635,4 +635,45 @@ export type TranslationKeys = {
   advisor_error: string;
   advisor_open: string;
   advisor_close: string;
+
+  // Premium Upgrade page
+  premium_back: string;
+  premium_unlock_title: string;
+  premium_unlock_desc: string;
+  premium_most_popular: string;
+  premium_plan_free_name: string;
+  premium_plan_free_desc: string;
+  premium_plan_sub_name: string;
+  premium_plan_sub_desc: string;
+  premium_plan_free_cta: string;
+  premium_plan_sub_cta: string;
+  premium_trust_secure: string;
+  premium_trust_instant: string;
+  premium_trust_cancel: string;
+
+  // SEO pages
+  seo_card_not_found: string;
+  seo_sign_not_found: string;
+  seo_back_home: string;
+  seo_breadcrumb_tarot: string;
+  seo_breadcrumb_zodiac: string;
+  seo_section_general: string;
+  seo_section_love: string;
+  seo_section_career: string;
+  seo_section_spiritual: string;
+  seo_section_advice: string;
+  seo_section_personality: string;
+  seo_section_money: string;
+  seo_section_health: string;
+  seo_section_sensual: string;
+  seo_tarot_cta_title: string;
+  seo_tarot_cta_desc: string;
+  seo_tarot_cta_button: string;
+  seo_all_tarot_cards: string;
+  seo_zodiac_compat_title: string;
+  seo_zodiac_compat_desc: string;
+  seo_zodiac_tarot_title: string;
+  seo_zodiac_tarot_desc: string;
+  seo_all_zodiac_signs: string;
+  seo_arcana_number: string;
 };
