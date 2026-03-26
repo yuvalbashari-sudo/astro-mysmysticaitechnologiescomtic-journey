@@ -2556,7 +2556,7 @@ const HeroSection = () => {
         ) : (
           <motion.div
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ x: crystalX, y: crystalY, marginTop: "min(352px, 38vh)", marginLeft: "10px" }}
+            style={{ x: crystalX, y: crystalY, marginTop: "340px", marginLeft: "10px" }}
           >
             {/* Internal glow — contained inside ball, reacts to teaser hover */}
             <motion.div
