@@ -1,26 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { useT } from "@/i18n/LanguageContext";
+import { antiAbuse } from "@/lib/antiAbuse";
 
 interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: string; }
 
 const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
   const t = useT();
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" });
+  const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const timingRef = useRef(antiAbuse.createTimingCheck(2000));
+
+  useEffect(() => { timingRef.current.markStart(); }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const check = antiAbuse.fullCheck("lead_form", honeypot);
+    if (!check.allowed) {
+      if (check.reason === "honeypot") { setIsSubmitted(true); return; }
+      if (check.reason === "cooldown") { toast(t.lead_error_wait); return; }
+      if (check.reason === "rate_limit") { toast(t.lead_error_rate_limit); return; }
+      return;
+    }
+    if (timingRef.current.isTooFast()) { setIsSubmitted(true); return; }
+
+    const content = `${formData.name}|${formData.email}|${formData.message}`;
+    if (antiAbuse.isDuplicateSubmission(content)) { toast(t.lead_error_duplicate); return; }
+
     if (!formData.name.trim() || !formData.email.trim()) { toast(t.lead_error_required); return; }
     setIsSubmitting(true);
     try {
       const { error } = await supabase.from("leads").insert({ full_name: formData.name.trim().slice(0, 100), email: formData.email.trim().slice(0, 255), phone: formData.phone.trim().slice(0, 20) || null, interest: formData.interest || null, message: formData.message.trim().slice(0, 1000) || null });
       if (error) throw error;
+      antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true); toast(`${t.lead_success_title}`);
     } catch { toast(t.lead_error_submit); } finally { setIsSubmitting(false); }
   };
