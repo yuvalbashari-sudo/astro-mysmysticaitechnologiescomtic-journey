@@ -360,7 +360,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         top: "50%",
         left: "50%",
-        transform: isMobile ? "translate(-50%, calc(-50% - 10px))" : "translate(-50%, -50%)",
+        transform: isMobile ? "translate(-50%, calc(-50% - 5px))" : "translate(-50%, -50%)",
         borderRadius: "50%",
         overflow: "hidden",
         background: "transparent",
