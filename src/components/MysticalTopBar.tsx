@@ -118,11 +118,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     </Link>
   );
 
+  const whatsappUrl = "https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI";
+
   const whatsappBtn = (
-    <motion.a
-      href="https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI"
-      target="_blank"
-      rel="noopener noreferrer"
+    <motion.button
+      onClick={() => window.open(whatsappUrl, "_blank", "noopener,noreferrer")}
       className={`${iconBtn} w-9 h-9 md:w-12 md:h-12`}
       style={{
         background:
@@ -134,7 +134,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
       aria-label={t.a11y_whatsapp_contact}
     >
       <MessageCircle className="w-[18px] h-[18px] md:w-6 md:h-6 text-white" aria-hidden="true" />
-    </motion.a>
+    </motion.button>
   );
 
   return (
