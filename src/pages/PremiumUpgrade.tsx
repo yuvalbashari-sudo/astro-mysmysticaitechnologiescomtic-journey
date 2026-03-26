@@ -237,7 +237,7 @@ const PremiumUpgrade = () => {
 
               {/* Features */}
               <ul className="space-y-3 mb-8 flex-1">
-                {plan.features.map((f, fi) => (
+                {plan.features[lang].map((f, fi) => (
                   <li key={fi} className="flex items-center gap-3 font-body text-sm">
                     {f.included ? (
                       <Check className="w-4 h-4 text-gold flex-shrink-0" />
