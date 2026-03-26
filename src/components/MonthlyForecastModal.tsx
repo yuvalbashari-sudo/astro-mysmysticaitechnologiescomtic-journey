@@ -43,15 +43,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
