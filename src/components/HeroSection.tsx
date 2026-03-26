@@ -2954,10 +2954,10 @@ const HeroSection = () => {
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
     <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "88px" : "0", bottom: isMobile ? "auto" : "0" }}>
       {isMobile ? (
-        /* ── Mobile: two vertical columns ── */
+        /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
-          className="pointer-events-auto px-4 mx-auto"
-          style={{ maxWidth: 360 }}
+          className="pointer-events-auto px-3 mx-auto"
+          style={{ maxWidth: 370 }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
@@ -2976,7 +2976,7 @@ const HeroSection = () => {
                       type="button"
                       className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none w-full"
                       initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      animate={{ opacity: isHovered ? 1 : 0.88, y: 0 }}
                       transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
                       onMouseEnter={() => setHoveredItem(i)}
                       onMouseLeave={() => setHoveredItem(null)}
@@ -2987,7 +2987,7 @@ const HeroSection = () => {
                       aria-label={item.label}
                     >
                       <div
-                        className="relative flex flex-col items-center gap-1.5 rounded-2xl transition-all duration-300 backdrop-blur-md px-2 py-3 min-h-[52px]"
+                        className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-4 py-3.5"
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
                           borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -2998,18 +2998,38 @@ const HeroSection = () => {
                         }}
                       >
                         <item.icon
-                          className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                          className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                           style={{
                             color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                             filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                           }}
                         />
                         <span
-                          className="font-body transition-colors duration-300 text-[11px] font-medium leading-tight text-center"
+                          className="font-body transition-colors duration-300 text-[13px] font-semibold leading-tight"
                           style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                         >
                           {item.label}
                         </span>
+                        {/* Tap glow aura — matches desktop hover aura */}
+                        {isHovered && (
+                          <motion.div
+                            className="absolute -inset-1.5 rounded-full pointer-events-none"
+                            style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: [0, 0.6, 0.3] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          />
+                        )}
+                        {/* Bottom accent line — matches desktop */}
+                        {isHovered && (
+                          <motion.div
+                            className="absolute bottom-0 left-[15%] right-[15%] h-[1.5px] rounded-full pointer-events-none"
+                            style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                            initial={{ opacity: 0, scaleX: 0 }}
+                            animate={{ opacity: 0.8, scaleX: 1 }}
+                            transition={{ duration: 0.3 }}
+                          />
+                        )}
                       </div>
                     </motion.button>
                   );
