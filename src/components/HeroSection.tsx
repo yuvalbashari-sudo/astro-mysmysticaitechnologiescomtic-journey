@@ -2797,7 +2797,7 @@ const HeroSection = () => {
       {entranceComplete && (
         <div
           className="absolute inset-0 pointer-events-none z-[18]"
-          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "max(260px, 24vh)" }}
+          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}
         >
           <div className="w-full h-full flex items-center justify-center">
             <div
