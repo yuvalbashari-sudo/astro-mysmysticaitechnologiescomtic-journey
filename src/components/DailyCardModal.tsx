@@ -354,6 +354,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current = "";
         setAiLoading(false);
         setAiError(null);
+        setUserName("");
+        setGender("");
+        setRitualStep(0);
       }
       setShowCardOverlay(false);
       setCopied(false);

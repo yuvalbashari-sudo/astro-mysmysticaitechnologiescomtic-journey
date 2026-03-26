@@ -219,6 +219,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       setBirthDate("");
       setBirthTime("");
       setBirthCity("");
+      setUserName("");
     }, 300);
   }, [onClose]);
 

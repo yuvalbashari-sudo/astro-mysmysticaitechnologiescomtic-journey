@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, type ReactNode } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -32,18 +33,11 @@ interface Props {
  * text legibility without hiding the figure.
  */
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle }: Props) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
   
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -180,12 +174,12 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               disabled={isMobile}
               className="absolute z-[106]"
               style={avatarStyle ?? (isMobile ? {
-                top: 50,
-                right: 20,
-                bottom: "auto",
+                bottom: 16,
+                right: 12,
+                top: "auto",
                 left: "auto",
-                width: 120,
-                height: 120,
+                width: 64,
+                height: 64,
               } : {
                 bottom: 32,
                 right: 40,
