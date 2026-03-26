@@ -2816,7 +2816,7 @@ const HeroSection = () => {
           ) : (
             <motion.div
               className="relative flex items-center justify-center"
-              style={{ x: crystalX, y: crystalY, marginTop: "352px", marginLeft: "10px" }}
+              style={{ x: crystalX, y: crystalY, marginTop: "min(352px, 38vh)", marginLeft: "10px" }}
             >
               <div className="relative pointer-events-none" style={{ width: "490px", height: "490px" }}>
                 <AnimatePresence>
