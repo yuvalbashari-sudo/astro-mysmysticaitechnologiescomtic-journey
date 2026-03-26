@@ -181,6 +181,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const needsQuestion = selectedSpreadKey !== "daily";
 
   const handleDraw = () => {
+    // Anti-abuse check
+    const abuseCheck = antiAbuse.fullCheck("tarot_reading");
+    if (!abuseCheck.allowed) {
+      if (abuseCheck.reason === "rate_limit") {
+        toast(t.lead_error_rate_limit);
+        return;
+      }
+      if (abuseCheck.reason === "cooldown") {
+        toast(t.lead_error_wait);
+        return;
+      }
+      return;
+    }
+
     const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
