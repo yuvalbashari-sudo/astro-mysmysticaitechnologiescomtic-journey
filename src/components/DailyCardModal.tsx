@@ -709,8 +709,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                   )}
 
                   {/* ── Converging sparks — energy drawn to center ── */}
-                  {ritualStep >= 1 && [...Array(16)].map((_, i) => {
-                    const angle = (i / 16) * Math.PI * 2;
+                  {ritualStep >= 1 && [...Array(8)].map((_, i) => {
+                    const angle = (i / 8) * Math.PI * 2;
                     const dist = 90 + (i % 4) * 30;
                     return (
                       <motion.div
