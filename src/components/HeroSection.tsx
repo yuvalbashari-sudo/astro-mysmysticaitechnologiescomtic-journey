@@ -897,9 +897,10 @@ const ZodiacWheel = ({
                 }
               }}
               onClick={(e) => { if (isMobile) { e.preventDefault(); } else { onSignClick?.(i); } }}
-              // Counter-rotate to keep symbols upright — slow down when hovered
-              animate={{ rotate: -360 }}
-              transition={{ duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
+              // Counter-rotate to keep symbols upright — CSS on mobile, framer on desktop
+              animate={isMobile ? undefined : { rotate: -360 }}
+              transition={isMobile ? undefined : { duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
+              {...(isMobile ? { style: { ...{ left: x - rulingIconSize / 2, top: y - rulingIconSize / 2, width: rulingIconSize, height: rulingIconSize }, animation: "spin 120s linear infinite reverse" } } : {})}
             >
               {/* Anchor aura — subtle golden ring connecting icon to the orbit */}
               {!isRuling && (
