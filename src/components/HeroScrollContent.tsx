@@ -24,11 +24,14 @@ const HeroScrollContent = ({
 }: HeroScrollContentProps) => {
   const t = useT();
 
-  const mobileActions = [
-    { ...MOBILE_ACTIONS[0], label: t.hero_menu_tarot, action: onOpenTarot },
+  // 2-column layout: left col (compatibility, forecast), right col (tarot, palm)
+  const leftCol = [
     { ...MOBILE_ACTIONS[1], label: t.hero_menu_compatibility, action: onOpenCompatibility },
-    { ...MOBILE_ACTIONS[2], label: t.hero_menu_palm, action: onOpenPalm },
     { ...MOBILE_ACTIONS[3], label: t.hero_menu_forecast, action: onOpenForecast },
+  ];
+  const rightCol = [
+    { ...MOBILE_ACTIONS[0], label: t.hero_menu_tarot, action: onOpenTarot },
+    { ...MOBILE_ACTIONS[2], label: t.hero_menu_palm, action: onOpenPalm },
   ];
 
   return (
