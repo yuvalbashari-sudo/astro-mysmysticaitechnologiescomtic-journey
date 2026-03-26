@@ -64,7 +64,7 @@ const HeroScrollContent = ({
             {t.hero_services_line}
           </motion.p>
 
-          <div className="pointer-events-none h-[32vh] max-h-[280px]" />
+          <div className="pointer-events-none h-[24vh] max-h-[200px]" />
 
           <motion.p
             initial={{ opacity: 0 }}
