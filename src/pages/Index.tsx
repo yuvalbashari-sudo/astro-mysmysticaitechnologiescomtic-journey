@@ -42,7 +42,7 @@ const Index = () => {
           hasHistory={hasHistory}
         />
         {/* Desktop: collapsible SEO panel pinned at bottom */}
-        <div className="hidden md:flex items-end justify-center pb-4 pointer-events-auto" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 11 }}>
+        <div className="hidden md:flex flex-col items-center justify-end pointer-events-auto" style={{ position: "fixed", bottom: 12, left: 0, right: 0, zIndex: 11 }}>
           <CollapsibleSeoPanel />
         </div>
         {/* Spacer + below-hero content: mobile only */}
