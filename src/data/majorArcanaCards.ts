@@ -43,7 +43,7 @@ export const majorArcanaCards: MajorArcanaCard[] = [
   { id: "the-high-priestess", number: 2, name: { he: "הכוהנת הגדולה", en: "The High Priestess", ru: "Верховная Жрица", ar: "الكاهنة العظمى" }, image: highPriestessImg, arcana: "major", symbol: "🌙" },
   { id: "the-empress", number: 3, name: { he: "הקיסרית", en: "The Empress", ru: "Императрица", ar: "الإمبراطورة" }, image: empressImg, arcana: "major", symbol: "👑" },
   { id: "the-emperor", number: 4, name: { he: "הקיסר", en: "The Emperor", ru: "Император", ar: "الإمبراطور" }, image: emperorImg, arcana: "major", symbol: "🏛️" },
-  { id: "the-hierophant", number: 5, name: { he: "ההירופנט", en: "The Hierophant", ru: "Иерофант", ar: "الكاهن الأعلى" }, image: hierophantImg, arcana: "major", symbol: "🔑" },
+  { id: "the-hierophant", number: 5, name: { he: "כהן הגדול", en: "The Hierophant", ru: "Иерофант", ar: "الكاهن الأعلى" }, image: hierophantImg, arcana: "major", symbol: "🔑" },
   { id: "the-lovers", number: 6, name: { he: "האוהבים", en: "The Lovers", ru: "Влюблённые", ar: "العشّاق" }, image: loversImg, arcana: "major", symbol: "💕" },
   { id: "the-chariot", number: 7, name: { he: "המרכבה", en: "The Chariot", ru: "Колесница", ar: "العربة" }, image: chariotImg, arcana: "major", symbol: "🏇" },
   { id: "strength", number: 8, name: { he: "הכוח", en: "Strength", ru: "Сила", ar: "القوة" }, image: strengthImg, arcana: "major", symbol: "🦁" },
