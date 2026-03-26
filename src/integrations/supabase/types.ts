@@ -41,6 +41,51 @@ export type Database = {
         }
         Relationships: []
       }
+      cost_logs: {
+        Row: {
+          ai_cost_estimate: number
+          client_ip: string | null
+          created_at: string
+          feature: string
+          id: string
+          image_cost_estimate: number
+          metadata: Json | null
+          model_used: string | null
+          status: string
+          total_cost_estimate: number
+          user_identifier: string | null
+          user_tier: string
+        }
+        Insert: {
+          ai_cost_estimate?: number
+          client_ip?: string | null
+          created_at?: string
+          feature: string
+          id?: string
+          image_cost_estimate?: number
+          metadata?: Json | null
+          model_used?: string | null
+          status?: string
+          total_cost_estimate?: number
+          user_identifier?: string | null
+          user_tier?: string
+        }
+        Update: {
+          ai_cost_estimate?: number
+          client_ip?: string | null
+          created_at?: string
+          feature?: string
+          id?: string
+          image_cost_estimate?: number
+          metadata?: Json | null
+          model_used?: string | null
+          status?: string
+          total_cost_estimate?: number
+          user_identifier?: string | null
+          user_tier?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           birth_date: string | null
