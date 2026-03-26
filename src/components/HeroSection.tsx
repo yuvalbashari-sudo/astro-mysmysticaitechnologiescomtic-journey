@@ -2987,7 +2987,7 @@ const HeroSection = () => {
                       aria-label={item.label}
                     >
                       <div
-                        className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-4 py-3.5"
+                        className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 backdrop-blur-md px-3 py-3"
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
                           borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3005,7 +3005,7 @@ const HeroSection = () => {
                           }}
                         />
                         <span
-                          className="font-body transition-colors duration-300 text-[13px] font-semibold leading-tight"
+                          className="font-body transition-colors duration-300 text-[12px] font-semibold leading-tight"
                           style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                         >
                           {item.label}
