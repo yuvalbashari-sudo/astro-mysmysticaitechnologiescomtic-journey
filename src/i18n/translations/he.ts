@@ -334,6 +334,7 @@ export const he: TranslationKeys = {
   daily_note: "✦ ניתן לפתוח קלף יומי אחד כל 24 שעות ✦",
   daily_name_label: "השם שלך",
   daily_name_placeholder: "הכניסו את שמכם הפרטי...",
+  daily_name_greeting: "✦ נעים להכיר, {{name}}",
   daily_cta: "חשפו את הקלף היומי",
   daily_shuffle: "הקלפים נערבבים...",
   daily_shuffle_focus: "התרכזו ברגע הזה ✦",
