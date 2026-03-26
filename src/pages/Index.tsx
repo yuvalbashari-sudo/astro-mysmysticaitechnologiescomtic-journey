@@ -50,7 +50,6 @@ const Index = () => {
         {/* Spacer + below-hero content: mobile only */}
         <div className="md:hidden">
           <div className="h-screen pointer-events-none" aria-hidden="true" />
-          <CollapsibleSeoPanel />
           <SeoContentSection />
         </div>
       </div>
