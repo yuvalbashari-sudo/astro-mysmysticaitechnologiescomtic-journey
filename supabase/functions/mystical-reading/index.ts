@@ -586,8 +586,28 @@ serve(async (req) => {
 
     let languageInstruction = LANG_NATIVE_TONE[lang] || LANG_NATIVE_TONE["he"];
 
-    // Inject language + profile context into system prompt
-    let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction;
+    // Build name personalization block (universal for all reading types)
+    let namePersonalization = "";
+    if (userName) {
+      const NAME_GUIDES: Record<string, (n: string) => string> = {
+        he: (n) => `\n\nהנחיית פנייה אישית — חשוב מאוד:\nשם הקורא/ת: "${n}".\n- פנה אליו/ה בשמו/ה בפתיחת הפירוש וברגעים רגשיים מרכזיים.\n- אל תחזור על השם בכל משפט — השתמש בו באופן טבעי וחם.\n- אל תשתמש בביטויים כמו "בן מזל X", "בת מזל Y", "לבני מזל..." — דבר ישירות ואישית אל ${n}.`,
+        en: (n) => `\n\nPERSONALIZATION — CRITICAL:\nThe reader's name is "${n}".\n- Address them by name in the opening and at key emotional moments.\n- Do NOT overuse the name — weave it in naturally.\n- Never use generic zodiac phrasing like "for Virgos" or "for your sign" — speak directly and personally to ${n}.`,
+        ru: (n) => `\n\nПЕРСОНАЛИЗАЦИЯ — КРИТИЧНО:\nИмя читателя: "${n}".\n- Обращайся по имени в начале ответа и в ключевые эмоциональные моменты.\n- Не повторяй имя в каждом предложении — используй его естественно и тепло.\n- Никогда не используй обобщённые зодиакальные фразы вроде "для Дев" — говори лично к ${n}.`,
+        ar: (n) => `\n\nالتخصيص — مهم جداً:\nاسم القارئ: "${n}".\n- خاطبه/ها بالاسم في بداية الرد وفي اللحظات العاطفية المهمة.\n- لا تكرر الاسم في كل جملة — استخدمه بشكل طبيعي ودافئ.\n- لا تستخدم عبارات عامة مثل "لبرج العذراء" — تحدث بشكل شخصي ومباشر إلى ${n}.`,
+      };
+      namePersonalization = (NAME_GUIDES[lang] || NAME_GUIDES["he"])(userName);
+    } else {
+      const NO_NAME_GUIDES: Record<string, string> = {
+        he: `\n\nהנחיית פנייה:\n- לא ידוע שם הקורא/ת. פנה אליו/ה בגוף שני באופן אישי וחם.\n- אל תשתמש בביטויים כמו "בן מזל X", "בת מזל Y" — דבר ישירות.`,
+        en: `\n\nADDRESSING:\n- The reader's name is unknown. Use warm, direct second-person address.\n- Never use generic zodiac phrasing like "for Virgos" — speak directly.`,
+        ru: `\n\nОБРАЩЕНИЕ:\n- Имя читателя неизвестно. Используй тёплое, прямое обращение на "ты".\n- Никогда не используй обобщённые зодиакальные фразы.`,
+        ar: `\n\nالمخاطبة:\n- اسم القارئ غير معروف. استخدم مخاطبة مباشرة ودافئة.\n- لا تستخدم عبارات عامة مثل "لبرج العذراء".`,
+      };
+      namePersonalization = NO_NAME_GUIDES[lang] || NO_NAME_GUIDES["he"];
+    }
+
+    // Inject language + name personalization + profile context into system prompt
+    let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization;
     if (profileContext) enrichedSystem += `\n\n${profileContext}`;
 
     // For palm with image, use a vision-capable model
