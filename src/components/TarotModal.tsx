@@ -926,7 +926,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 className="relative w-full h-full"
                                 style={{ transformStyle: "preserve-3d" }}
                                 animate={{ rotateY: isFlipped ? 180 : 0 }}
-                                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+                                transition={{ duration: isMobileTarot ? 0.6 : 1, ease: [0.25, 0.1, 0.25, 1] }}
                               >
                                 {/* Card back */}
                                 <div
