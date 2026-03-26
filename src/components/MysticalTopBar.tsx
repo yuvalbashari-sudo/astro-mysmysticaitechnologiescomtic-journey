@@ -160,7 +160,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </nav>
 
             {/* Centre logo */}
-            <div className="shrink min-w-0 pointer-events-none select-none mx-1 text-center">
+            <div className="flex-1 min-w-0 overflow-hidden pointer-events-none select-none mx-1 text-center">
               <motion.h1
                 className="font-heading uppercase whitespace-nowrap truncate"
                 style={{
