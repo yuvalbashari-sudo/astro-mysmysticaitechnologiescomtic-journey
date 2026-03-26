@@ -90,6 +90,10 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
                     <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}</label>
                     <textarea maxLength={1000} rows={3} className="mystical-input font-body resize-none" placeholder={t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
+                  {/* Honeypot */}
+                  <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                    <input type="text" name="website_url" autoComplete="off" tabIndex={-1} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                  </div>
                   <button type="submit" disabled={isSubmitting} className="btn-gold font-body w-full flex items-center justify-center gap-2 disabled:opacity-50 mt-6"><Send className="w-4 h-4" />{isSubmitting ? t.lead_submitting : t.lead_submit}</button>
                   <p className="text-center text-[11px] text-muted-foreground font-body mt-3">{t.lead_secure}</p>
                 </form>
