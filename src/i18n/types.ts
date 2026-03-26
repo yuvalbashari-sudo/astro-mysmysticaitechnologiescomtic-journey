@@ -436,6 +436,13 @@ export type TranslationKeys = {
   lead_modal_interest_tarot: string;
   lead_modal_interest_palm: string;
 
+  // Palm Coming Soon
+  palm_coming_soon_title: string;
+  palm_coming_soon_desc: string;
+  palm_coming_soon_subscribed: string;
+  palm_coming_soon_notify: string;
+  palm_coming_soon_close: string;
+
   // WhatsApp
   whatsapp_aria: string;
 

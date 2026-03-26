@@ -406,6 +406,12 @@ export const ru: TranslationKeys = {
   lead_modal_interest_tarot: "Расклад Таро",
   lead_modal_interest_palm: "Хиромантия",
 
+  palm_coming_soon_title: "Хиромантия – Скоро",
+  palm_coming_soon_desc: "Эта функция дорабатывается для максимально точных и мощных предсказаний. Следите за обновлениями.",
+  palm_coming_soon_subscribed: "Вы в списке! Мы уведомим вас о запуске.",
+  palm_coming_soon_notify: "Уведомить меня",
+  palm_coming_soon_close: "Понятно",
+
   whatsapp_aria: "Свяжитесь с нами в WhatsApp",
 
   not_found_title: "404",

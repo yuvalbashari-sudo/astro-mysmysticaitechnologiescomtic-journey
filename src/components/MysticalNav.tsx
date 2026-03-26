@@ -4,7 +4,7 @@ import { Sun, Heart, Layers, Hand, Globe } from "lucide-react";
 import TarotWorldModal from "@/components/TarotWorldModal";
 import MonthlyForecastModal from "@/components/MonthlyForecastModal";
 import CompatibilityModal from "@/components/CompatibilityModal";
-import PalmReadingModal from "@/components/PalmReadingModal";
+import PalmComingSoonModal from "@/components/PalmComingSoonModal";
 import BirthChartModal from "@/components/BirthChartModal";
 import { useT } from "@/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -261,7 +261,7 @@ const MysticalNav = () => {
       <TarotWorldModal isOpen={tarotWorldOpen} onClose={() => setTarotWorldOpen(false)} />
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
-      <PalmReadingModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <PalmComingSoonModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
     </>
   );

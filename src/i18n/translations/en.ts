@@ -406,6 +406,12 @@ export const en: TranslationKeys = {
   lead_modal_interest_tarot: "Tarot Reading",
   lead_modal_interest_palm: "Palm Reading",
 
+  palm_coming_soon_title: "Palm Reading – Coming Soon",
+  palm_coming_soon_desc: "This feature is currently being refined to deliver highly accurate and powerful insights. Stay tuned for launch.",
+  palm_coming_soon_subscribed: "You're on the list! We'll notify you when it launches.",
+  palm_coming_soon_notify: "Notify Me",
+  palm_coming_soon_close: "Got it",
+
   whatsapp_aria: "Contact us on WhatsApp",
 
   not_found_title: "404",

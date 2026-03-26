@@ -406,6 +406,12 @@ export const he: TranslationKeys = {
   lead_modal_interest_tarot: "קריאת טארוט",
   lead_modal_interest_palm: "קריאת כף יד",
 
+  palm_coming_soon_title: "קריאת כף יד – בקרוב",
+  palm_coming_soon_desc: "הפיצ'ר הזה עובר כרגע שדרוג כדי להעניק תובנות מדויקות ועוצמתיות במיוחד. הישארו מעודכנים!",
+  palm_coming_soon_subscribed: "נרשמת בהצלחה! נעדכן אותך כשהפיצ'ר יעלה.",
+  palm_coming_soon_notify: "עדכנו אותי",
+  palm_coming_soon_close: "הבנתי",
+
   whatsapp_aria: "צרו קשר בוואטסאפ",
 
   not_found_title: "404",
