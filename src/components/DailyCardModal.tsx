@@ -166,13 +166,26 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         if (saved.aiText && saved.language === language) {
           setAiText(saved.aiText);
           aiTextRef.current = saved.aiText;
-          setPhase("locked");
+          // On mobile, show a brief card reveal before jumping to locked
+          if (isMobileViewport) {
+            setShowCardOverlay(false);
+            setRitualStep(0);
+            setPhase("mobile-reveal");
+          } else {
+            setPhase("locked");
+          }
         } else if (saved.aiText && saved.language !== language) {
           // Language changed — re-generate AI text
           setPhase("result");
           startAiReading(saved.card);
         } else {
-          setPhase("locked");
+          if (isMobileViewport) {
+            setShowCardOverlay(false);
+            setRitualStep(0);
+            setPhase("mobile-reveal");
+          } else {
+            setPhase("locked");
+          }
         }
       } else {
         setPhase("ready");
