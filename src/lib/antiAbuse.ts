@@ -48,7 +48,7 @@ const RATE_LIMITS: Record<string, RateLimitRule> = {
   lead_form: { maxActions: 3, windowMs: 3600000 },       // 3 per hour
   tarot_reading: { maxActions: 8, windowMs: 3600000 },    // 8 per hour
   compatibility: { maxActions: 5, windowMs: 3600000 },    // 5 per hour
-  palm_reading: { maxActions: 5, windowMs: 3600000 },     // 5 per hour
+  palm_reading: { maxActions: 3, windowMs: 3600000 },     // 3 per hour (strict)
   ai_advisor: { maxActions: 15, windowMs: 3600000 },      // 15 per hour
   generic: { maxActions: 20, windowMs: 3600000 },
 };
