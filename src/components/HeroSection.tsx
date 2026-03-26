@@ -2962,14 +2962,23 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
-          <div className="flex gap-2.5">
-            {/* Left column: Compatibility (i=1), Forecast (i=0) */}
+        <div className="flex gap-2.5">
+            {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-1 flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
-                  const itemColor = ITEM_COLORS[i];
+                  // Neon color map matching desktop: blue for Compatibility, red for Tarot, gold for others
+                  const MOBILE_NEON: Record<number, { neon: string; neonLight: string; iconColor: string }> = {
+                    0: { neon: ITEM_COLORS[0].glow, neonLight: ITEM_COLORS[0].glow, iconColor: ITEM_COLORS[0].glow },
+                    1: { neon: "rgba(0, 150, 255, 0.85)", neonLight: "rgba(0, 150, 255, 0.5)", iconColor: "rgba(0, 170, 255, 0.85)" },
+                    2: { neon: "rgba(220, 50, 50, 0.85)", neonLight: "rgba(220, 50, 50, 0.5)", iconColor: "rgba(255, 80, 80, 0.85)" },
+                    3: { neon: ITEM_COLORS[3].glow, neonLight: ITEM_COLORS[3].glow, iconColor: ITEM_COLORS[3].glow },
+                  };
+                  const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
+                  // Neon panels (Compatibility=1, Tarot=2) get special treatment matching desktop CTA teasers
+                  const isNeonPanel = i === 1 || i === 2;
                   return (
                     <motion.button
                       key={i}
@@ -2987,49 +2996,72 @@ const HeroSection = () => {
                       aria-label={item.label}
                     >
                       <div
-                        className="relative flex items-center gap-2.5 rounded-full transition-all duration-300 backdrop-blur-md px-3 py-3"
+                        className={`relative flex items-center gap-2.5 transition-all duration-300 backdrop-blur-md px-3 py-3 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
-                          borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
-                          background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
-                          boxShadow: isHovered
-                            ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
-                            : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                          borderColor: isNeonPanel
+                            ? (isHovered ? neon.neonLight : `${i === 1 ? "rgba(0, 150, 255, 0.25)" : "rgba(220, 50, 50, 0.25)"}`)
+                            : (isHovered ? `${neon.neon}bb` : "hsl(var(--gold) / 0.12)"),
+                          background: isNeonPanel
+                            ? "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))"
+                            : (isHovered ? `${neon.neon}1a` : "hsl(var(--deep-blue) / 0.5)"),
+                          boxShadow: isNeonPanel
+                            ? (isHovered
+                              ? `0 0 28px ${i === 1 ? "rgba(0, 150, 255, 0.22)" : "rgba(220, 50, 50, 0.22)"}, 0 0 56px ${i === 1 ? "rgba(0, 150, 255, 0.1)" : "rgba(220, 50, 50, 0.1)"}, 0 8px 24px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)`
+                              : `0 0 18px ${i === 1 ? "rgba(0, 150, 255, 0.12)" : "rgba(220, 50, 50, 0.12)"}, 0 0 36px ${i === 1 ? "rgba(0, 150, 255, 0.06)" : "rgba(220, 50, 50, 0.06)"}, 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)`)
+                            : (isHovered
+                              ? `0 0 28px ${neon.neon}55, 0 0 56px ${neon.neon}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                              : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)"),
                         }}
                       >
                         <item.icon
                           className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                           style={{
-                            color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
-                            filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                            color: isNeonPanel
+                              ? neon.iconColor
+                              : (isHovered ? neon.neon : "hsl(var(--gold) / 0.7)"),
+                            filter: isNeonPanel
+                              ? `drop-shadow(0 0 4px ${neon.neonLight})`
+                              : (isHovered ? `drop-shadow(0 0 6px ${neon.neon})` : "none"),
                           }}
                         />
                         <span
                           className="font-body transition-colors duration-300 text-[12px] font-semibold leading-tight"
-                          style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                          style={{
+                            color: isNeonPanel
+                              ? "#fff"
+                              : (isHovered ? neon.neon : "hsl(var(--foreground) / 0.88)"),
+                            textShadow: isNeonPanel
+                              ? `0 0 8px ${neon.neonLight}, 0 0 16px ${i === 1 ? "rgba(0, 150, 255, 0.15)" : "rgba(220, 50, 50, 0.15)"}`
+                              : "none",
+                          }}
                         >
                           {item.label}
                         </span>
-                        {/* Tap glow aura — matches desktop hover aura */}
+                        {/* Glow aura */}
                         {isHovered && (
                           <motion.div
-                            className="absolute -inset-1.5 rounded-full pointer-events-none"
-                            style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                            className={`absolute -inset-1.5 pointer-events-none ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
+                            style={{ background: isNeonPanel
+                              ? `radial-gradient(circle, ${i === 1 ? "rgba(0, 150, 255, 0.08)" : "rgba(220, 50, 50, 0.08)"}, transparent 70%)`
+                              : `radial-gradient(circle, ${neon.neon}12, transparent 70%)` }}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: [0, 0.6, 0.3] }}
                             transition={{ duration: 1.5, repeat: Infinity }}
                           />
                         )}
-                        {/* Bottom accent line — matches desktop */}
-                        {isHovered && (
-                          <motion.div
-                            className="absolute bottom-0 left-[15%] right-[15%] h-[1.5px] rounded-full pointer-events-none"
-                            style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
-                            initial={{ opacity: 0, scaleX: 0 }}
-                            animate={{ opacity: 0.8, scaleX: 1 }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        )}
+                        {/* Bottom accent line */}
+                        <motion.div
+                          className="absolute bottom-0 left-[15%] right-[15%] h-[1.5px] rounded-full pointer-events-none"
+                          style={{
+                            background: isNeonPanel
+                              ? `linear-gradient(90deg, transparent, ${i === 1 ? "rgba(0, 150, 255, 0.55)" : "rgba(220, 50, 50, 0.55)"}, transparent)`
+                              : `linear-gradient(90deg, transparent, ${neon.neon}, transparent)`,
+                            boxShadow: isNeonPanel ? `0 0 6px ${i === 1 ? "rgba(0, 150, 255, 0.3)" : "rgba(220, 50, 50, 0.3)"}` : "none",
+                          }}
+                          animate={{ opacity: isNeonPanel ? [0.3, 0.7, 0.3] : (isHovered ? 0.8 : 0), scaleX: isNeonPanel ? 1 : (isHovered ? 1 : 0) }}
+                          transition={isNeonPanel ? { duration: 2.5, repeat: Infinity, ease: "easeInOut" } : { duration: 0.3 }}
+                        />
                       </div>
                     </motion.button>
                   );
