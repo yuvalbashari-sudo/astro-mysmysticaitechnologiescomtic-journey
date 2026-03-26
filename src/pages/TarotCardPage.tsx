@@ -7,10 +7,13 @@ import { majorArcana } from "@/data/tarotWorldData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import StarField from "@/components/StarField";
 import { useCardName } from "@/hooks/useCardName";
+import { useT, useLanguage } from "@/i18n";
 
 const TarotCardPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const localizeCardName = useCardName();
+  const t = useT();
+  const { language, dir } = useLanguage();
 
   const cardEnglishName = slug ? TAROT_SLUG_MAP[slug] : undefined;
   const card = cardEnglishName ? majorArcana.find(c => c.name === cardEnglishName) : undefined;
@@ -36,7 +39,6 @@ const TarotCardPage = () => {
     });
     document.head.appendChild(jsonLd);
 
-    // Canonical link
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
     if (!canonical) {
       canonical = document.createElement("link");
@@ -50,10 +52,10 @@ const TarotCardPage = () => {
 
   if (!card) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center" dir={dir}>
         <div className="text-center">
-          <h1 className="font-heading text-2xl text-gold mb-4">Card not found</h1>
-          <Link to="/" className="text-gold/70 hover:text-gold transition-colors">← Back to ASTROLOGAI</Link>
+          <h1 className="font-heading text-2xl text-gold mb-4">{t.seo_card_not_found}</h1>
+          <Link to="/" className="text-gold/70 hover:text-gold transition-colors">{t.seo_back_home}</Link>
         </div>
       </div>
     );
@@ -61,11 +63,11 @@ const TarotCardPage = () => {
 
   const m = card.meanings;
   const sections = [
-    { emoji: "🔮", title: "משמעות כללית", titleEn: "General Meaning", content: m.general },
-    { emoji: "❤️", title: "אהבה", titleEn: "Love", content: m.love },
-    { emoji: "💼", title: "קריירה", titleEn: "Career", content: m.career },
-    { emoji: "✨", title: "מסר רוחני", titleEn: "Spiritual Message", content: m.spiritual },
-    { emoji: "🌟", title: "עצה", titleEn: "Advice", content: m.advice },
+    { emoji: "🔮", label: t.seo_section_general, content: m.general },
+    { emoji: "❤️", label: t.seo_section_love, content: m.love },
+    { emoji: "💼", label: t.seo_section_career, content: m.career },
+    { emoji: "✨", label: t.seo_section_spiritual, content: m.spiritual },
+    { emoji: "🌟", label: t.seo_section_advice, content: m.advice },
   ];
 
   const allSlugs = Object.keys(TAROT_SLUG_MAP);
@@ -74,7 +76,7 @@ const TarotCardPage = () => {
   const nextSlug = currentIdx < allSlugs.length - 1 ? allSlugs[currentIdx + 1] : null;
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden" dir={dir}>
       <StarField />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-12 md:py-20">
@@ -82,7 +84,7 @@ const TarotCardPage = () => {
         <nav className="mb-8 flex items-center gap-2 text-foreground/40 font-body text-xs">
           <Link to="/" className="hover:text-gold transition-colors">ASTROLOGAI</Link>
           <span>/</span>
-          <span className="text-gold/60">Tarot</span>
+          <span className="text-gold/60">{t.seo_breadcrumb_tarot}</span>
           <span>/</span>
           <span className="text-gold">{localizeCardName(card.name, card.hebrewName)}</span>
         </nav>
@@ -107,7 +109,7 @@ const TarotCardPage = () => {
           <span className="text-4xl block mb-3">{card.symbol}</span>
           <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{localizeCardName(card.name, card.hebrewName)}</h1>
           <p className="font-body text-foreground/50 text-lg mb-1">{card.name}</p>
-          <p className="font-body text-foreground/30 text-sm">Arcana #{card.number}</p>
+          <p className="font-body text-foreground/30 text-sm">{t.seo_arcana_number} {card.number}</p>
         </motion.div>
 
         <div className="section-divider max-w-[100px] mx-auto mb-12" />
@@ -116,7 +118,7 @@ const TarotCardPage = () => {
         <div className="space-y-8">
           {sections.map((section, i) => (
             <motion.div
-              key={section.titleEn}
+              key={i}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 + i * 0.1 }}
@@ -130,10 +132,7 @@ const TarotCardPage = () => {
                 <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: "hsl(var(--gold) / 0.08)", border: "1px solid hsl(var(--gold) / 0.15)" }}>
                   <span className="text-lg">{section.emoji}</span>
                 </div>
-                <div>
-                  <h2 className="font-heading text-lg text-gold">{section.title}</h2>
-                  <p className="font-body text-foreground/30 text-xs">{section.titleEn}</p>
-                </div>
+                <h2 className="font-heading text-lg text-gold">{section.label}</h2>
               </div>
               <p className="text-foreground/70 font-body text-sm leading-[1.9] text-start">{section.content}</p>
             </motion.div>
@@ -146,12 +145,12 @@ const TarotCardPage = () => {
         <div className="flex justify-between items-center mb-12">
           {prevSlug ? (
             <Link to={`/tarot/${prevSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              <ArrowRight className="w-4 h-4 rotate-180" /> {TAROT_SLUG_MAP[prevSlug]}
+              <ArrowRight className="w-4 h-4 rotate-180" /> {localizeCardName(TAROT_SLUG_MAP[prevSlug])}
             </Link>
           ) : <div />}
           {nextSlug ? (
             <Link to={`/tarot/${nextSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              {TAROT_SLUG_MAP[nextSlug]} <ArrowRight className="w-4 h-4" />
+              {localizeCardName(TAROT_SLUG_MAP[nextSlug])} <ArrowRight className="w-4 h-4" />
             </Link>
           ) : <div />}
         </div>
@@ -169,9 +168,9 @@ const TarotCardPage = () => {
           }}
         >
           <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
-          <h2 className="font-heading text-2xl gold-gradient-text mb-3">גלו מה הקלפים אומרים לכם</h2>
+          <h2 className="font-heading text-2xl gold-gradient-text mb-3">{t.seo_tarot_cta_title}</h2>
           <p className="text-foreground/50 font-body text-sm mb-6 max-w-md mx-auto">
-            קבלו קריאת טארוט אישית ומיסטית — הקלפים מחכים לחשוף את המסר שנועד רק לכם
+            {t.seo_tarot_cta_desc}
           </p>
           <Link
             to="/"
@@ -184,13 +183,13 @@ const TarotCardPage = () => {
             }}
           >
             <MessageCircle className="w-4 h-4" />
-            <span>פתחו קריאת טארוט חינם</span>
+            <span>{t.seo_tarot_cta_button}</span>
           </Link>
         </motion.div>
 
         {/* All Cards Grid */}
         <div className="mt-16">
-          <h2 className="font-heading text-xl text-gold text-center mb-8">כל קלפי הטארוט</h2>
+          <h2 className="font-heading text-xl text-gold text-center mb-8">{t.seo_all_tarot_cards}</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {Object.entries(TAROT_SLUG_MAP).map(([s, name]) => (
               <Link
@@ -205,7 +204,7 @@ const TarotCardPage = () => {
                 {tarotCardImages[name] && (
                   <img src={tarotCardImages[name]} alt={name} className="w-full aspect-[2/3] object-cover rounded-md mb-1" loading="lazy" />
                 )}
-                <p className="font-body text-[10px] text-foreground/50 truncate">{name}</p>
+                <p className="font-body text-[10px] text-foreground/50 truncate">{localizeCardName(name)}</p>
               </Link>
             ))}
           </div>
