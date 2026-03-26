@@ -16,7 +16,7 @@ export const he: TranslationKeys = {
   hero_how_step1: "בחרו עולם מיסטי",
   hero_how_step2: "הזינו פרטים",
   hero_how_step3: "קבלו מסר אישי",
-  hero_crystal_hint: "הקלפים רוצים לספר לכם משהו היום...",
+  hero_crystal_hint: "✨ לחצו על הכדור כדי לגלות את המסר היומי שלכם",
   hero_menu_forecast: "תחזית חודשית לפי תאריך לידה",
   hero_menu_rising: "המזל העולה לפי שעת לידה",
   hero_menu_compatibility: "התאמה זוגית לפי המזלות",
