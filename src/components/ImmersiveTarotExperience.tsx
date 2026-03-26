@@ -1544,7 +1544,20 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     </AnimatePresence>
   );
 
-  return typeof document !== "undefined" ? createPortal(overlay, document.body) : null;
+  return typeof document !== "undefined" ? createPortal(
+    <>
+      {overlay}
+      <PaymentGatingModal
+        isOpen={gatingOpen}
+        onClose={() => setGatingOpen(false)}
+        gatingMessage={gatingMsg}
+        onPayPerUse={() => {
+          setGatingOpen(false);
+        }}
+      />
+    </>,
+    document.body
+  ) : null;
 };
 
 export default ImmersiveTarotExperience;
