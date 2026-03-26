@@ -81,7 +81,7 @@ const PalmComingSoonModal = ({ isOpen, onClose }: Props) => {
           transition={{ delay: 0.35 }}
           className="text-foreground/70 font-body text-sm md:text-base leading-relaxed mb-8"
         >
-          {t.palm_coming_soon_desc || "This feature is currently being refined to deliver highly accurate and powerful insights. Stay tuned for launch."}
+          {t.palm_coming_soon_desc}
         </motion.p>
 
         {/* Waitlist / Got it */}
