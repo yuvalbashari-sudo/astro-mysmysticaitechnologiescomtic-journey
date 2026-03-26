@@ -2371,18 +2371,20 @@ const HeroSection = () => {
         ))}
       </div>
 
-      {/* ── Layer 2: Constellation map (enhanced) ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={isMobile ? {} : { x: constellationX, y: constellationY }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 3, delay: 0.8 }}
-      >
-        {constellations.map((c, i) => (
-          <Constellation key={i} stars={c.stars} baseDelay={i * 2.5} />
-        ))}
-      </motion.div>
+      {/* ── Layer 2: Constellation map — desktop only for performance ── */}
+      {!isMobile && (
+        <motion.div
+          className="absolute inset-0 pointer-events-none"
+          style={{ x: constellationX, y: constellationY }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 3, delay: 0.8 }}
+        >
+          {constellations.map((c, i) => (
+            <Constellation key={i} stars={c.stars} baseDelay={i * 2.5} />
+          ))}
+        </motion.div>
+      )}
 
       {/* ── Layer 3: Smoke / mist (parallax) ── */}
       <motion.div
