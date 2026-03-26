@@ -108,7 +108,7 @@ const PalmComingSoonModal = ({ isOpen, onClose }: Props) => {
               />
               <button type="submit" disabled={submitting} className="btn-gold font-body text-sm whitespace-nowrap flex items-center gap-2 disabled:opacity-50">
                 <Bell className="w-4 h-4" />
-                {t.palm_coming_soon_notify || "Notify Me"}
+                {t.palm_coming_soon_notify}
               </button>
             </form>
             <button onClick={handleClose} className="btn-outline-gold font-body text-sm w-full">
