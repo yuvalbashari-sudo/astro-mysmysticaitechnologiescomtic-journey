@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, type ReactNode } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
