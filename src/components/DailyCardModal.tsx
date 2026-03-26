@@ -971,12 +971,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                             width: "clamp(200px, 30vw, 280px)",
                             aspectRatio: "2 / 3",
                             border: "2px solid hsl(var(--gold) / 0.28)",
-                            boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 18px 40px hsl(0 0% 0% / 0.35)",
+                            boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 0 60px hsl(280 50% 50% / 0.05), 0 18px 40px hsl(0 0% 0% / 0.35)",
                             background: "hsl(var(--deep-blue))",
                           }}
                           initial={{ scale: 0.92, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                          animate={{ scale: 1, opacity: 1, y: [0, -3, 0] }}
+                          transition={{
+                            scale: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+                            opacity: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+                            y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.6 },
+                          }}
                         >
                           {cardImage ? (
                             <img src={cardImage} alt={card.name[language] || card.name.en} className="h-full w-full object-contain" />
