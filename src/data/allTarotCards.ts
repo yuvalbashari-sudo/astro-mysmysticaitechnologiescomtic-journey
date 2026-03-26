@@ -403,8 +403,10 @@ export function drawReadingCards(count: number = 7): ReadingCard[] {
   return deck.slice(0, Math.min(count, deck.length));
 }
 
-/** Get a deterministic daily card index based on a seed and date string. */
+/** Get a deterministic daily card index based on a seed and date string. Only valid cards. */
 export function getDailyCardFromFullDeck(seed: string, date: string): ReadingCard {
+  const validDeck = allReadingCards.filter((c) => isValidImage(c.image));
+  if (validDeck.length === 0) throw new Error("No valid tarot cards available");
   let hash = 0;
   const str = `${seed}-${date}`;
   for (let i = 0; i < str.length; i++) {
@@ -412,6 +414,6 @@ export function getDailyCardFromFullDeck(seed: string, date: string): ReadingCar
     hash = ((hash << 5) - hash) + c;
     hash = hash & hash;
   }
-  const index = Math.abs(hash) % allReadingCards.length;
-  return allReadingCards[index];
+  const index = Math.abs(hash) % validDeck.length;
+  return validDeck[index];
 }
