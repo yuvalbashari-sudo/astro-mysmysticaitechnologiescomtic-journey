@@ -2485,7 +2485,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "calc(5vh + 202px)" }}>
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -2768,7 +2768,7 @@ const HeroSection = () => {
       {entranceComplete && (
         <div
           className="absolute inset-0 pointer-events-none z-[18]"
-          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "calc(5vh + 202px)" }}
+          style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}
         >
           <div className="w-full h-full flex items-center justify-center">
             <div
@@ -2786,7 +2786,7 @@ const HeroSection = () => {
 
       <div
         className="absolute inset-0 pointer-events-none z-[26]"
-        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "calc(5vh + 202px)" }}
+        style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}
       >
         <div className="flex h-full w-full items-center justify-center">
           {isMobile ? (
