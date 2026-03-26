@@ -315,12 +315,18 @@ function sortCards(a: TarotGalleryCardRecord, b: TarotGalleryCardRecord): number
   return a.slug.localeCompare(b.slug);
 }
 
+function isValidImage(image: unknown): image is string {
+  return typeof image === "string" && image.length > 0;
+}
+
 function buildTarotAssetInventory(): TarotAssetInventory {
   const inventory = createEmptyInventory();
 
   Object.entries(tarotAssetModules)
     .sort(([left], [right]) => left.localeCompare(right))
     .forEach(([filePath, image]) => {
+      // Skip entries with missing/empty image URLs
+      if (!isValidImage(image)) return;
       const identity = parseAssetIdentity(filePath);
       if (!identity) return;
       inventory[identity.suit].push(createCardRecord(filePath, image, identity));
@@ -334,9 +340,12 @@ function buildTarotAssetInventory(): TarotAssetInventory {
 }
 
 export const tarotAssetInventory = buildTarotAssetInventory();
+
+// Only include cards that have a valid image asset
 export const allTarotCards: UnifiedTarotCard[] = FILTER_ORDER
   .filter((filter): filter is TarotSuit => filter !== "all")
-  .flatMap((suit) => tarotAssetInventory[suit]);
+  .flatMap((suit) => tarotAssetInventory[suit])
+  .filter((card) => isValidImage(card.image));
 
 export function filterBySuit(suit: TarotSuitFilter): UnifiedTarotCard[] {
   if (suit === "all") return allTarotCards;
@@ -382,9 +391,11 @@ function toReadingCard(card: UnifiedTarotCard): ReadingCard {
 /** All cards as ReadingCard[] — cached for daily card and reading flows. */
 export const allReadingCards: ReadingCard[] = allTarotCards.map(toReadingCard);
 
-/** Draw N random cards from the full 78-card deck (Fisher-Yates shuffle). No duplicates. */
+/** Draw N random cards from the validated deck (Fisher-Yates shuffle). No duplicates, no broken cards. */
 export function drawReadingCards(count: number = 7): ReadingCard[] {
-  const deck = [...allReadingCards];
+  // Double-check: only cards with valid images
+  const deck = allReadingCards.filter((c) => isValidImage(c.image));
+  if (deck.length === 0) return [];
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -392,8 +403,10 @@ export function drawReadingCards(count: number = 7): ReadingCard[] {
   return deck.slice(0, Math.min(count, deck.length));
 }
 
-/** Get a deterministic daily card index based on a seed and date string. */
+/** Get a deterministic daily card index based on a seed and date string. Only valid cards. */
 export function getDailyCardFromFullDeck(seed: string, date: string): ReadingCard {
+  const validDeck = allReadingCards.filter((c) => isValidImage(c.image));
+  if (validDeck.length === 0) throw new Error("No valid tarot cards available");
   let hash = 0;
   const str = `${seed}-${date}`;
   for (let i = 0; i < str.length; i++) {
@@ -401,6 +414,6 @@ export function getDailyCardFromFullDeck(seed: string, date: string): ReadingCar
     hash = ((hash << 5) - hash) + c;
     hash = hash & hash;
   }
-  const index = Math.abs(hash) % allReadingCards.length;
-  return allReadingCards[index];
+  const index = Math.abs(hash) % validDeck.length;
+  return validDeck[index];
 }
