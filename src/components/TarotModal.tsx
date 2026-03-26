@@ -180,9 +180,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const needsQuestion = selectedSpreadKey !== "daily";
 
   const handleDraw = () => {
-    // Check entitlements before starting
     const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
-    if (!access.allowed) {
+    if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
       setGatingOpen(true);
