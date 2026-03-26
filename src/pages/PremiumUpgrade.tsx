@@ -254,8 +254,6 @@ const PremiumUpgrade = () => {
                 className={`w-full py-3.5 rounded-lg font-body font-bold text-sm tracking-wider transition-all duration-300 ${
                   plan.popular
                     ? "btn-gold"
-                    : plan.id === "vip"
-                    ? "btn-outline-gold hover:bg-gold/10"
                     : "border border-foreground/15 text-foreground/60 hover:border-gold/30 hover:text-gold"
                 }`}
               >
