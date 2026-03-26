@@ -41,9 +41,11 @@ const Index = () => {
           onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
-        {/* Desktop: collapsible SEO panel pinned above the crystal ball CTA */}
-        <div className="hidden md:flex flex-col items-center justify-end pointer-events-auto" style={{ position: "fixed", bottom: 60, left: 0, right: 0, zIndex: 91 }}>
-          <CollapsibleSeoPanel />
+        {/* Desktop: SEO teaser text only (no interactive button — crystal ball CTA occupies bottom z-layer) */}
+        <div className="hidden md:block pointer-events-none" style={{ position: "fixed", bottom: 56, left: 0, right: 0, zIndex: 5 }}>
+          <p className="text-center font-body text-[11px] leading-relaxed text-muted-foreground/30 max-w-2xl mx-auto px-4">
+            Discover powerful AI tarot readings, palm analysis, zodiac compatibility insights, and personalized spiritual guidance...
+          </p>
         </div>
         {/* Spacer + below-hero content: mobile only */}
         <div className="md:hidden">
