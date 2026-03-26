@@ -152,8 +152,11 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { spreadType, cards, context, language: rawLang } = await req.json();
+    const { spreadType, cards, context, language: rawLang, userName: reqUserName } = await req.json();
     const language = (rawLang && ["he", "en", "ru", "ar"].includes(rawLang)) ? rawLang : "he";
+    
+    // Resolve userName from explicit param or context
+    const userName = reqUserName || context?.userName || null;
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
