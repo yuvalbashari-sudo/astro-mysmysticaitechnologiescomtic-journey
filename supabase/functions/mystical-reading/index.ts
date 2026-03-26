@@ -609,6 +609,15 @@ function getClientIp(req: Request): string {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  // Dynamic import cost logger (same directory)
+  let logCostFn: typeof import("./costLogger.ts").logCost | null = null;
+  let getFeatureCostsFn: typeof import("./costLogger.ts").getFeatureCosts | null = null;
+  try {
+    const mod = await import("./costLogger.ts");
+    logCostFn = mod.logCost;
+    getFeatureCostsFn = mod.getFeatureCosts;
+  } catch (e) { console.error("Cost logger import failed:", e); }
+
   try {
     const { type, data, profileContext, language, userName: reqUserName } = await req.json();
 
@@ -616,6 +625,10 @@ serve(async (req) => {
     const clientIp = getClientIp(req);
     const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
     if (!rateCheck.allowed) {
+      // Log blocked request at zero cost
+      if (logCostFn && getFeatureCostsFn) {
+        await logCostFn({ clientIp, feature: type || "generic", status: "rate_limited", userTier: "unknown", aiCost: 0, imageCost: 0 });
+      }
       return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
         status: 429,
         headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
