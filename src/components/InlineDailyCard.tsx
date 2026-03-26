@@ -78,13 +78,20 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
     }
   }, []);
 
+  const [buildUp, setBuildUp] = useState(false);
+
   const handleDraw = useCallback(() => {
     if (drawn) return;
     const idx = getDailyCardIndex(allReadingCards.length);
     const selectedCard = allReadingCards[idx];
     setCard(selectedCard);
     setDrawn(true);
-    setTimeout(() => setFlipped(true), 600);
+    setBuildUp(true);
+    // Build-up phase: 1.2s of anticipation before reveal
+    setTimeout(() => {
+      setBuildUp(false);
+      setFlipped(true);
+    }, 1200);
   }, [drawn]);
 
   const cardImage = card ? card.image : null;
@@ -114,17 +121,39 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
         whileTap={{ scale: 0.98 }}
       >
         <div className="flex items-center gap-3">
-          {/* Card back thumbnail */}
+          {/* Card back thumbnail with build-up effects */}
           <div
             className="relative flex-shrink-0 rounded-lg overflow-hidden"
             style={{
               width: cardW,
               height: cardH,
               border: "1px solid hsl(var(--gold) / 0.25)",
-              boxShadow: "0 2px 10px hsl(var(--deep-blue) / 0.4)",
+              boxShadow: buildUp
+                ? "0 0 20px hsl(var(--gold) / 0.2), 0 2px 10px hsl(var(--deep-blue) / 0.4)"
+                : "0 2px 10px hsl(var(--deep-blue) / 0.4)",
+              transition: "box-shadow 0.6s ease",
             }}
           >
             <img src={cardBack} alt="" className="w-full h-full object-cover" />
+            {/* Breathing glow */}
+            {drawn && buildUp && (
+              <>
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: "linear-gradient(105deg, transparent 25%, hsl(var(--gold) / 0.2) 45%, hsl(280 60% 70% / 0.1) 55%, transparent 75%)",
+                  }}
+                  animate={{ x: ["-120%", "220%"] }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 60%)" }}
+                  animate={{ opacity: [0.2, 0.6, 0.2] }}
+                  transition={{ duration: 0.8, repeat: Infinity }}
+                />
+              </>
+            )}
           </div>
 
           {/* Text */}
@@ -212,11 +241,11 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
             width: expandedCardW,
             height: expandedCardH,
             border: "2px solid hsl(var(--gold) / 0.3)",
-            boxShadow: "0 0 20px hsl(var(--gold) / 0.12), 0 8px 30px hsl(var(--deep-blue) / 0.5)",
+            boxShadow: "0 0 30px hsl(var(--gold) / 0.12), 0 0 60px hsl(280 50% 50% / 0.06), 0 8px 30px hsl(var(--deep-blue) / 0.5)",
           }}
-          initial={{ rotateY: 90, opacity: 0 }}
-          animate={{ rotateY: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+          initial={{ rotateY: 90, opacity: 0, scale: 0.8 }}
+          animate={{ rotateY: 0, opacity: 1, scale: 1 }}
+          transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
         >
           {cardImage ? (
             <img
@@ -233,6 +262,16 @@ const InlineDailyCard = ({ isMobile, onOpenFullReading, onAvatarClick }: Props) 
               <span className="text-3xl">{card.symbol}</span>
             </div>
           )}
+          {/* Reveal burst */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(circle, hsl(var(--gold) / 0.25), transparent 60%)",
+            }}
+            initial={{ opacity: 0.8 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          />
           {/* Shimmer */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
