@@ -304,8 +304,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setAiLoading(false);
       aiTextRef.current = "";
       setSelectedSpreadKey("timeline");
+      setMobileTopicPhase(false);
     }, 300);
   };
+
+  // On mobile, auto-enter topic phase when modal opens
+  useEffect(() => {
+    if (isOpen && isMobileTarot) {
+      setMobileTopicPhase(true);
+    }
+  }, [isOpen, isMobileTarot]);
 
   const handleShare = () => {
     if (!cards) return;
