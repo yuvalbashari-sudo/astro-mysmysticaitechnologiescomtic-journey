@@ -147,7 +147,7 @@ const MAJOR_ARCANA: Record<string, MajorArcanaDefinition> = {
   "high-priestess": { number: 2, names: { he: "הכוהנת הגדולה", en: "The High Priestess", ru: "Верховная Жрица", ar: "الكاهنة العظمى" } },
   empress: { number: 3, names: { he: "הקיסרית", en: "The Empress", ru: "Императрица", ar: "الإمبراطورة" } },
   emperor: { number: 4, names: { he: "הקיסר", en: "The Emperor", ru: "Император", ar: "الإمبراطور" } },
-  hierophant: { number: 5, names: { he: "ההירופנט", en: "The Hierophant", ru: "Иерофант", ar: "الكاهن الأعلى" } },
+  hierophant: { number: 5, names: { he: "כהן הגדול", en: "The Hierophant", ru: "Иерофант", ar: "الكاهن الأعلى" } },
   lovers: { number: 6, names: { he: "האוהבים", en: "The Lovers", ru: "Влюблённые", ar: "العشّاق" } },
   chariot: { number: 7, names: { he: "המרכבה", en: "The Chariot", ru: "Колесница", ar: "العربة" } },
   strength: { number: 8, names: { he: "הכוח", en: "Strength", ru: "Сила", ar: "القوة" } },
