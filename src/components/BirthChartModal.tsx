@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from "react";
+import MysticalNameInput from "@/components/MysticalNameInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
@@ -194,6 +195,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthCity, setBirthCity] = useState("");
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [resultText, setResultText] = useState("");
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -225,6 +227,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       toast.error(t.birth_chart_error_required);
       return;
     }
+    if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
 
     const dateObj = new Date(birthDate);
     const [hour, minute] = birthTime.split(":").map(Number);
@@ -381,6 +384,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-5"
             >
+              {/* Name input */}
+              <MysticalNameInput value={userName} onChange={setUserName} delay={0.1} />
+
               {/* Birth Date */}
               <div>
                 <label className="block text-gold font-heading text-sm mb-2">

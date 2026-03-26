@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import MysticalNameInput from "@/components/MysticalNameInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,6 +29,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const [birthTime, setBirthTime] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "">(""); 
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<SignInfoState | null>(null);
@@ -46,7 +48,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const handleSubmit = () => { if (!birthTime || !birthDate) return; setIsLoading(true); };
+  const handleSubmit = () => { if (!birthTime || !birthDate) return; if (userName.trim()) mysticalProfile.recordUserName(userName.trim()); setIsLoading(true); };
 
   const handleOnboardingComplete = () => {
     const [h, m] = birthTime.split(":").map(Number);
@@ -105,6 +107,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                         <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.rising_title}</h2>
                         <p className="text-foreground/70 font-body text-sm mb-6 leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.rising_desc}</p>
                         <div className="space-y-4 mb-6">
+                          <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
                           <div>
                             <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
                             <div className="flex gap-2">
@@ -150,6 +153,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                     <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.rising_title}</h2>
                     <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.rising_desc}</p>
                     <div className="max-w-xs mx-auto space-y-5 mb-8">
+                      <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
                       <div>
                         <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
                         <div className="flex gap-2">

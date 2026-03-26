@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import MysticalNameInput from "@/components/MysticalNameInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +30,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "">("");
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [attempted, setAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -57,6 +59,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     setAttempted(true);
     if (!gender || !birthDate) return;
     if (mode === "rising" && !birthTime) return;
+    if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     setIsLoading(true);
   };
 
@@ -197,7 +200,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <div style={{ padding: "0 24px" }}>
+                        <div style={{ padding: "0 24px" }}>
+                        {/* Name input */}
+                        <div style={{ marginBottom: "20px" }}>
+                          <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
+                        </div>
+
                         {/* Mode toggle */}
                         <div className="flex justify-center mb-8">
                           <ModeToggle size="large" />
@@ -296,7 +304,11 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                      </div>
 
                      <h2 className="font-heading text-2xl gold-gradient-text mb-3">{mode === "forecast" ? t.forecast_title : t.rising_title}</h2>
-                     <p className="text-foreground/70 font-body text-sm mb-8 max-w-md mx-auto leading-relaxed">{mode === "forecast" ? t.forecast_desc : t.rising_desc}</p>
+                     <p className="text-foreground/70 font-body text-sm mb-6 max-w-md mx-auto leading-relaxed">{mode === "forecast" ? t.forecast_desc : t.rising_desc}</p>
+                     {/* Name input */}
+                     <div className="max-w-xs mx-auto mb-5">
+                       <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
+                     </div>
                      <div className="max-w-xs mx-auto mb-6">
                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_gender_label}</label>
                        <div className="flex gap-2">

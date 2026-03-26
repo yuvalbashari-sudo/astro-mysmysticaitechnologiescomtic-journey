@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Eye } from "lucide-react";
 import { useLanguage, type Language } from "@/i18n";
+import { mysticalProfile } from "@/lib/mysticalProfile";
+import MysticalNameInput from "@/components/MysticalNameInput";
 
 interface Props {
   spreadType: string;
@@ -179,6 +181,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
   const { language, dir } = useLanguage();
   const copy = UI_COPY[language];
   const [question, setQuestion] = useState("");
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [validationMsg, setValidationMsg] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
@@ -202,6 +205,9 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
       return;
     }
     setValidationMsg("");
+    if (userName.trim()) {
+      mysticalProfile.recordUserName(userName.trim());
+    }
     onSubmit(question);
   };
 
@@ -347,6 +353,14 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         <span className="text-gold/30 text-[10px]">✦</span>
         <div className="w-12 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--gold) / 0.25), transparent)" }} />
       </motion.div>
+
+      {/* Name input */}
+      <MysticalNameInput
+        value={userName}
+        onChange={setUserName}
+        delay={0.35}
+        className="max-w-md mx-auto mb-5"
+      />
 
       {/* Question input area */}
       <motion.div
