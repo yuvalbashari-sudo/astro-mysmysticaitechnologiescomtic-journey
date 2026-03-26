@@ -1552,6 +1552,54 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
   const symbolRadius = ringSize / 2 - 12;
   const glowColor = activeColor || "hsl(var(--gold) / 0.15)";
 
+  // On mobile: simplified static ring — no per-symbol animations
+  if (isMobile) {
+    return (
+      <div
+        className="absolute z-[14] pointer-events-none"
+        style={{ width: ringSize, height: ringSize, opacity: 0.7 }}
+      >
+        <div
+          className="absolute inset-0 rounded-full"
+          style={{
+            border: "1px solid hsl(var(--gold) / 0.08)",
+            boxShadow: `0 0 15px ${glowColor}`,
+            animation: "spin 120s linear infinite",
+          }}
+        >
+          {ARCANE_SYMBOLS.map((sym, i) => {
+            const angle = (i / ARCANE_SYMBOLS.length) * Math.PI * 2 - Math.PI / 2;
+            const x = Math.cos(angle) * symbolRadius + ringSize / 2;
+            const y = Math.sin(angle) * symbolRadius + ringSize / 2;
+            return (
+              <span
+                key={`arcane-${i}`}
+                className="absolute font-heading select-none"
+                style={{
+                  left: x - 6,
+                  top: y - 7,
+                  fontSize: "9px",
+                  color: "hsl(var(--gold) / 0.2)",
+                  opacity: 0.3,
+                }}
+              >
+                {sym}
+              </span>
+            );
+          })}
+        </div>
+        <div
+          className="absolute rounded-full"
+          style={{
+            inset: 20,
+            border: "1px solid hsl(var(--gold) / 0.05)",
+            animation: "spin 70s linear infinite reverse",
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <motion.div
       className="absolute z-[14] pointer-events-none"
@@ -1592,7 +1640,7 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
               style={{
                 left: x - 6,
                 top: y - 7,
-                fontSize: isMobile ? "9px" : "12px",
+                fontSize: "12px",
                 color: "hsl(var(--gold) / 0.2)",
                 textShadow: "0 0 6px hsl(var(--gold) / 0.15)",
               }}
@@ -1621,7 +1669,7 @@ const ArcanePortalRing = ({ isMobile, activeColor }: { isMobile: boolean; active
       <motion.div
         className="absolute rounded-full"
         style={{
-          inset: isMobile ? 20 : 30,
+          inset: 30,
           border: "1px solid hsl(var(--gold) / 0.05)",
         }}
         animate={{ rotate: 360 }}
