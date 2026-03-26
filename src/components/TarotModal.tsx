@@ -400,7 +400,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {t.tarot_title}
                   </motion.h2>
                   <motion.p
-                    className="relative z-10 text-foreground/50 font-body text-xs mb-8 text-center max-w-[280px]"
+                    className="relative z-10 text-foreground/50 font-body text-lg mb-8 text-center max-w-[320px]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
