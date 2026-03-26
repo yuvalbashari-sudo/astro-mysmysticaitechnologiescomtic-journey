@@ -348,7 +348,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
     transition: "opacity 1.8s ease-in-out",
-    transform: "scale(1.22) translateZ(0)",
+    transform: `scale(${isMobile ? 1.35 : 1.22}) translateZ(0)`,
     transformOrigin: "center center",
     willChange: "opacity",
   };
@@ -365,8 +365,12 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         overflow: "hidden",
         background: "transparent",
         contain: "strict",
-        maskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
-        WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
+        maskImage: isMobile
+          ? "radial-gradient(circle, white 50%, white 50.5%, transparent 51%)"
+          : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
+        WebkitMaskImage: isMobile
+          ? "radial-gradient(circle, white 50%, white 50.5%, transparent 51%)"
+          : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
       {/* Pure media only — dual videos for seamless crossfade */}
