@@ -78,22 +78,26 @@ const HeroScrollContent = ({
             ✦ {t.hero_social_proof} ✦
           </motion.p>
 
-          <div className="mt-1 grid w-full max-w-xs grid-cols-2 gap-2.5">
-            {mobileActions.map((item, i) => (
-              <motion.button
-                key={item.key}
-                initial={{ opacity: 0, y: 20, scale: 0.85 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.5, delay: 2 + i * 0.12, ease: "easeOut" }}
-                onClick={item.action}
-                whileTap={{ scale: 0.95 }}
-                className="min-h-[52px] rounded-2xl border border-gold/15 bg-muted/15 px-2 py-3 backdrop-blur-md"
-              >
-                <div className="flex flex-col items-center gap-1.5">
-                  <item.icon className="h-5 w-5" style={{ color: item.color }} />
-                  <span className="text-center font-body text-[11px] leading-tight text-foreground/75">{item.label}</span>
-                </div>
-              </motion.button>
+          <div className="mt-1 flex w-full max-w-xs gap-2.5">
+            {[leftCol, rightCol].map((col, ci) => (
+              <div key={ci} className="flex flex-1 flex-col gap-2.5">
+                {col.map((item, i) => (
+                  <motion.button
+                    key={item.key}
+                    initial={{ opacity: 0, y: 20, scale: 0.85 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 2 + (ci * 2 + i) * 0.12, ease: "easeOut" }}
+                    onClick={item.action}
+                    whileTap={{ scale: 0.95 }}
+                    className="min-h-[52px] rounded-2xl border border-gold/15 bg-muted/15 px-2 py-3 backdrop-blur-md"
+                  >
+                    <div className="flex flex-col items-center gap-1.5">
+                      <item.icon className="h-5 w-5" style={{ color: item.color }} />
+                      <span className="text-center font-body text-[11px] leading-tight text-foreground/75">{item.label}</span>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
             ))}
           </div>
 
