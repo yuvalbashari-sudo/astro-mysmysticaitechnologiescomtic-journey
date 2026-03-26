@@ -619,7 +619,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {phase === "ritual" && card && (
+              {(phase === "ritual" || phase === "mobile-reveal") && card && (
                 <motion.div
                   key="ritual"
                   initial={{ opacity: 0 }}
