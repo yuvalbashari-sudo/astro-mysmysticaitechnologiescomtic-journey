@@ -3121,7 +3121,7 @@ const HeroSection = () => {
           {/* Left column */}
           <motion.div
             className="absolute pointer-events-auto flex flex-col gap-[14px]"
-            style={{ left: "max(16px, 1.5vw)", top: "max(110px, 12vh)" }}
+            style={{ left: "max(16px, 1.5vw)", top: "120px" }}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
