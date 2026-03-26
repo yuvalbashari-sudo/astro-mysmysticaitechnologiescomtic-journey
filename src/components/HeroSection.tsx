@@ -3416,7 +3416,7 @@ const HeroSection = () => {
         aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
         className="fixed z-[90] cursor-pointer bg-transparent border-0 outline-none appearance-none pointer-events-auto"
         style={{
-          bottom: isMobile ? 0 : 15,
+          bottom: isMobile ? 0 : 8,
           left: isMobile ? 0 : "50%",
           right: isMobile ? 0 : "auto",
           transform: isMobile ? "none" : "translateX(-50%)",
