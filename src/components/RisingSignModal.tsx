@@ -152,7 +152,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                     <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.rising_title}</h2>
                     <p className="text-foreground/70 font-body text-sm md:text-base mb-8 max-w-md mx-auto leading-relaxed">{t.rising_desc}</p>
                     <div className="max-w-xs mx-auto space-y-5 mb-8">
-                      <div>
+                      <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
                         <label className="block text-sm text-gold/70 font-body mb-2">{t.forecast_gender_label}</label>
                         <div className="flex gap-2">
                           <motion.button type="button" onClick={() => setGender("male")}
