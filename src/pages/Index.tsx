@@ -41,8 +41,8 @@ const Index = () => {
           onOpenDashboard={() => setDashboardOpen(true)}
           hasHistory={hasHistory}
         />
-        {/* Desktop: collapsible SEO panel pinned at bottom */}
-        <div className="hidden md:flex flex-col items-center justify-end pointer-events-auto" style={{ position: "fixed", bottom: 12, left: 0, right: 0, zIndex: 11 }}>
+        {/* Desktop: collapsible SEO panel pinned above the crystal ball CTA */}
+        <div className="hidden md:flex flex-col items-center justify-end pointer-events-auto" style={{ position: "fixed", bottom: 60, left: 0, right: 0, zIndex: 91 }}>
           <CollapsibleSeoPanel />
         </div>
         {/* Spacer + below-hero content: mobile only */}
