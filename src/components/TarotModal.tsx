@@ -410,7 +410,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Topic buttons */}
                   <div className="relative z-10 w-full max-w-[300px] flex flex-col gap-3">
-                    {SPREAD_OPTIONS.map((spread, idx) => (
+                    {SPREAD_OPTIONS.filter(s => s.key !== "daily" && s.key !== "universe").map((spread, idx) => (
                       <motion.button
                         key={spread.key}
                         type="button"
