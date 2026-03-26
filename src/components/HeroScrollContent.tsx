@@ -38,7 +38,7 @@ const HeroScrollContent = ({
     <section className="relative z-10 min-h-screen overflow-x-hidden bg-transparent">
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-col items-center justify-center px-4 pt-8 md:pt-16 pointer-events-auto">
         <div className="flex w-full flex-col items-center gap-3 md:hidden">
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -46,7 +46,7 @@ const HeroScrollContent = ({
             style={{ fontSize: "22px" }}
           >
             {t.hero_headline}
-          </motion.h2>
+          </motion.h1>
 
           <motion.p
             initial={{ opacity: 0 }}
