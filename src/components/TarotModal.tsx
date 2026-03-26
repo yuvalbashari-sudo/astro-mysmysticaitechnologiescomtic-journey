@@ -300,8 +300,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
-        // Record usage for entitlements
-        entitlements.recordFeatureUse("tarot_reading", "free"); // TODO: use actual user tier
+        // Record usage for entitlements and anti-abuse
+        entitlements.recordFeatureUse("tarot_reading", "free");
+        antiAbuse.recordSuccessfulAction("tarot_reading");
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
