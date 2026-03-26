@@ -41,10 +41,12 @@ const Index = () => {
           hasHistory={hasHistory}
         />
         {/* Spacer + below-hero content: mobile only */}
-        <div className="md:hidden">
-          <div className="pointer-events-none" style={{ height: "100dvh" }} aria-hidden="true" />
+        <div className="md:hidden pointer-events-none">
+          <div style={{ height: "100dvh" }} aria-hidden="true" />
           {/* SEO content visible on mobile scroll */}
-          <SeoContentSection />
+          <div className="pointer-events-auto">
+            <SeoContentSection />
+          </div>
         </div>
       </div>
       <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
