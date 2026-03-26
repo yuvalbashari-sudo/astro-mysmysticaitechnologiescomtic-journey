@@ -765,6 +765,16 @@ const ZodiacWheel = ({
     return () => clearInterval(id);
   }, [influenceKey]);
 
+  // Dismiss teaser on touch outside (mobile)
+  useEffect(() => {
+    if (!isMobile || hoveredSign === null) return;
+    const dismiss = () => { setHoveredSign(null); onHoveredElement?.(null); };
+    const timer = setTimeout(() => {
+      document.addEventListener("touchstart", dismiss, { once: true });
+    }, 100);
+    return () => { clearTimeout(timer); document.removeEventListener("touchstart", dismiss); };
+  }, [isMobile, hoveredSign, onHoveredElement]);
+
   const influencedIndex = planetaryInfluence.zodiac_sign_index;
 
   // Compatibility mode: highlight two signs when compatibility tab hovered
