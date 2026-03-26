@@ -54,7 +54,7 @@ const CollapsibleSeoPanel = () => {
 
   return (
     <section
-      className="relative w-full max-w-2xl px-4"
+      className="relative w-full max-w-2xl px-4 pointer-events-none"
       aria-label={isHe ? "תוכן נוסף" : "Additional content"}
     >
       {/* Expanded content appears ABOVE the teaser (grows upward) */}
