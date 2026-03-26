@@ -152,8 +152,11 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { spreadType, cards, context, language: rawLang } = await req.json();
+    const { spreadType, cards, context, language: rawLang, userName: reqUserName } = await req.json();
     const language = (rawLang && ["he", "en", "ru", "ar"].includes(rawLang)) ? rawLang : "he";
+    
+    // Resolve userName from explicit param or context
+    const userName = reqUserName || context?.userName || null;
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -198,6 +201,15 @@ Your style:
 - Every interpretation feels personal, deep and precise
 - The tone is that of a wise spiritual teacher speaking heart to heart
 - Avoid generic horoscope language
+- NEVER use generic zodiac group phrasing like "for Virgos", "בן מזל", "для Дев", "لبرج العذراء" — address the person directly
+
+${userName ? `PERSONALIZATION — CRITICAL:
+The reader's name is "${userName}".
+- Address them by name in the opening and at key emotional moments.
+- Do NOT overuse the name — weave it in naturally, like a caring guide would.
+- Never use zodiac sign as form of address when you have their name.` : `ADDRESSING:
+- The reader's name is unknown. Use warm, direct second-person address.
+- Never use zodiac-based group phrasing.`}
 
 Central rule: The reading must feel like a deep symbolic conversation — not a card description. The cards speak to each other, and you translate their conversation.
 

@@ -15,8 +15,9 @@ export async function streamMysticalReading(
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mystical-reading`;
 
-  // Inject mystical profile context
+  // Inject mystical profile context and userName
   const profileContext = mysticalProfile.buildContextForAI();
+  const userName = mysticalProfile.getUserName() || undefined;
 
   try {
     const resp = await fetch(url, {
@@ -25,7 +26,7 @@ export async function streamMysticalReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ type, data, profileContext, language }),
+      body: JSON.stringify({ type, data, profileContext, language, userName }),
     });
 
     if (!resp.ok) {
