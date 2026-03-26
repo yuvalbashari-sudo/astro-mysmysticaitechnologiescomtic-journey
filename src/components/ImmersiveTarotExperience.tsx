@@ -551,7 +551,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           spreadType
         );
-        entitlements.recordFeatureUse("tarot_reading", "free"); // TODO: use actual user tier
+        entitlements.recordFeatureUse("tarot_reading", "free");
+        antiAbuse.recordSuccessfulAction("tarot_reading");
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
