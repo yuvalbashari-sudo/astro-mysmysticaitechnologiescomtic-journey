@@ -148,6 +148,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const SPREAD_LABELS = getSpreadLabels(t);
 
   const isMobileTarot = useIsMobile();
+  const [mobileTopicPhase, setMobileTopicPhase] = useState(false);
   const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
   const [cards, setCards] = useState<ReadingCard[] | null>(null);
@@ -303,8 +304,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setAiLoading(false);
       aiTextRef.current = "";
       setSelectedSpreadKey("timeline");
+      setMobileTopicPhase(false);
     }, 300);
   };
+
+  // On mobile, auto-enter topic phase when modal opens
+  useEffect(() => {
+    if (isOpen && isMobileTarot) {
+      setMobileTopicPhase(true);
+    }
+  }, [isOpen, isMobileTarot]);
 
   const handleShare = () => {
     if (!cards) return;
@@ -326,7 +335,125 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
-              {!cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
+              {/* ── Mobile Topic Selection Phase ── */}
+              {mobileTopicPhase && isMobileTarot && !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
+                <motion.div
+                  key="mobile-topic"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="relative min-h-screen flex flex-col items-center justify-center px-6 py-16"
+                >
+                  {/* Background */}
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    background: "radial-gradient(ellipse at 50% 30%, hsl(222 35% 14%), hsl(222 50% 4%))",
+                  }} />
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    background: "radial-gradient(circle at 30% 70%, hsl(var(--gold) / 0.03), transparent 50%)",
+                  }} />
+
+                  {/* Floating particles */}
+                  {[...Array(12)].map((_, i) => (
+                    <motion.div
+                      key={`tp-${i}`}
+                      className="absolute rounded-full pointer-events-none"
+                      style={{
+                        width: 1 + Math.random() * 2,
+                        height: 1 + Math.random() * 2,
+                        left: `${5 + Math.random() * 90}%`,
+                        top: `${5 + Math.random() * 90}%`,
+                        background: i % 2 === 0 ? "hsl(var(--gold) / 0.4)" : "hsl(var(--celestial) / 0.25)",
+                      }}
+                      animate={{ opacity: [0, 0.6, 0], y: [0, -(10 + Math.random() * 20)] }}
+                      transition={{ duration: 4 + Math.random() * 3, repeat: Infinity, delay: i * 0.3 }}
+                    />
+                  ))}
+
+                  {/* Eye icon */}
+                  <motion.div
+                    className="relative z-10 w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center"
+                    style={{
+                      background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 70%)",
+                      border: "1px solid hsl(var(--gold) / 0.18)",
+                    }}
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px hsl(43 80% 55% / 0.08)",
+                        "0 0 40px hsl(43 80% 55% / 0.18)",
+                        "0 0 20px hsl(43 80% 55% / 0.08)",
+                      ],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity }}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                  >
+                    <Eye className="w-6 h-6 text-gold/80" />
+                  </motion.div>
+
+                  {/* Title */}
+                  <motion.h2
+                    className="relative z-10 font-heading text-xl gold-gradient-text mb-2 text-center"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                  >
+                    {t.tarot_title}
+                  </motion.h2>
+                  <motion.p
+                    className="relative z-10 text-foreground/50 font-body text-xs mb-8 text-center max-w-[280px]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    {t.tarot_spread_choose}
+                  </motion.p>
+
+                  {/* Topic buttons */}
+                  <div className="relative z-10 w-full max-w-[300px] flex flex-col gap-3">
+                    {SPREAD_OPTIONS.map((spread, idx) => (
+                      <motion.button
+                        key={spread.key}
+                        type="button"
+                        className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-start"
+                        style={{
+                          background: "linear-gradient(135deg, hsl(222 32% 13% / 0.95), hsl(222 42% 9% / 0.98))",
+                          border: "1px solid hsl(var(--gold) / 0.12)",
+                          boxShadow: "0 2px 12px hsl(222 47% 3% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.04)",
+                        }}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 + idx * 0.08 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => {
+                          setSelectedSpreadKey(spread.key);
+                          setMobileTopicPhase(false);
+                          setTimeout(() => {
+                            if (spread.key !== "daily") {
+                              setIsQuestionPhase(true);
+                            } else {
+                              setIsLoading(true);
+                            }
+                          }, 250);
+                        }}
+                      >
+                        <span className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{
+                          background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 70%)",
+                          border: "1px solid hsl(var(--gold) / 0.15)",
+                        }}>
+                          <span className="text-gold/80">{spread.icon}</span>
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-heading text-sm text-gold/90 block">{SPREAD_LABELS[spread.key]}</span>
+                          <span className="text-[10px] text-foreground/40 font-body">
+                            {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
+                          </span>
+                        </div>
+                        <Sparkles className="w-4 h-4 text-gold/30 flex-shrink-0" />
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase && !mobileTopicPhase ? (
                 <motion.div key="input" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="relative overflow-hidden min-h-screen flex flex-col items-end justify-end">
 
                   {/* Subtle readability vignette — no box */}
