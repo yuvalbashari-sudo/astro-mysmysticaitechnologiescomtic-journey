@@ -40,14 +40,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  const isMobile = useIsMobile();
 
   const handleSubmit = () => {
     if (!date1 || !date2) return;
