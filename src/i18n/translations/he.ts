@@ -221,7 +221,7 @@ export const he: TranslationKeys = {
   rising_desc: "הזינו את תאריך ושעת הלידה שלכם לקבלת ניתוח משולב — מזל השמש שלכם (המהות הפנימית) יחד עם המזל העולה (הפנים שאתם מציגים לעולם).",
   rising_birthdate_label: "תאריך לידה",
   rising_birthtime_label: "שעת לידה",
-  rising_cta: "גלו את הניתוח המשולב שלי",
+  rising_cta: "⭐ חשפו את המזל העולה שלכם עכשיו",
   rising_loading: "מנתחים את מזל השמש והמזל העולה שלכם...",
   rising_sun_label: "מזל שמש",
   rising_asc_label: "מזל עולה",
