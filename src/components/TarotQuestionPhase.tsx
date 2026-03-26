@@ -354,6 +354,14 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         <div className="w-12 h-px" style={{ background: "linear-gradient(90deg, hsl(var(--gold) / 0.25), transparent)" }} />
       </motion.div>
 
+      {/* Name input */}
+      <MysticalNameInput
+        value={userName}
+        onChange={setUserName}
+        delay={0.35}
+        className="max-w-md mx-auto mb-5"
+      />
+
       {/* Question input area */}
       <motion.div
         className="relative z-10 w-full max-w-md mx-auto mb-4"
