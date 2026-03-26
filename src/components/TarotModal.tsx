@@ -234,7 +234,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setTableCards(drawn);
     setFlippedIndices(new Set());
     setIsShufflePhase(false);
-    setIsTablePhase(true);
+
+    // Preload card images on mobile before showing table
+    if (isMobileTarot) {
+      const imageUrls = drawn.map(c => c.image).filter(Boolean) as string[];
+      if (imageUrls.length > 0) {
+        Promise.all(imageUrls.map(src => {
+          return new Promise<void>((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            img.src = src;
+          });
+        })).then(() => setIsTablePhase(true));
+      } else {
+        setIsTablePhase(true);
+      }
+    } else {
+      setIsTablePhase(true);
+    }
   };
 
   const handleCardFlip = (index: number) => {
