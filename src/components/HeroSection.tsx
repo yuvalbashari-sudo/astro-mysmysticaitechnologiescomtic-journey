@@ -2386,50 +2386,59 @@ const HeroSection = () => {
         </motion.div>
       )}
 
-      {/* ── Layer 3: Smoke / mist (parallax) ── */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none"
-        style={isMobile ? {} : { x: smokeX, y: smokeY }}
-      >
+      {/* ── Layer 3: Smoke / mist — simplified on mobile ── */}
+      {isMobile ? (
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)", opacity: 0.5 }}
+          />
+        </div>
+      ) : (
         <motion.div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)" }}
-          animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.05, 1], x: [0, 15, -10, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 40% 70%, hsl(var(--crimson) / 0.04) 0%, transparent 40%)" }}
-          animate={{ opacity: [0.2, 0.5, 0.2], x: [-10, 20, -10], y: [0, -8, 0] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
-        <motion.div
-          className="absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 60% 50%, hsl(var(--celestial) / 0.04) 0%, transparent 45%)" }}
-          animate={{ opacity: [0.2, 0.4, 0.2], x: [10, -15, 10], y: [5, -5, 5] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-        />
-        <motion.div
-          className="absolute"
-          style={{
-            top: "40%", left: "-10%", width: "120%", height: "30%",
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.03) 30%, hsl(var(--gold) / 0.05) 50%, hsl(var(--gold) / 0.03) 70%, transparent 100%)",
-            filter: "blur(40px)",
-          }}
-          animate={{ x: [-50, 50, -50], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute"
-          style={{
-            top: "55%", left: "-5%", width: "110%", height: "20%",
-            background: "linear-gradient(90deg, transparent 0%, hsl(var(--crimson) / 0.02) 40%, hsl(var(--crimson) / 0.04) 60%, transparent 100%)",
-            filter: "blur(50px)",
-          }}
-          animate={{ x: [30, -40, 30], opacity: [0.2, 0.45, 0.2] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        />
-      </motion.div>
+          className="absolute inset-0 pointer-events-none"
+          style={{ x: smokeX, y: smokeY }}
+        >
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 50% 60%, hsl(var(--gold) / 0.06) 0%, transparent 50%)" }}
+            animate={{ opacity: [0.3, 0.7, 0.3], scale: [1, 1.05, 1], x: [0, 15, -10, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 40% 70%, hsl(var(--crimson) / 0.04) 0%, transparent 40%)" }}
+            animate={{ opacity: [0.2, 0.5, 0.2], x: [-10, 20, -10], y: [0, -8, 0] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          />
+          <motion.div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse at 60% 50%, hsl(var(--celestial) / 0.04) 0%, transparent 45%)" }}
+            animate={{ opacity: [0.2, 0.4, 0.2], x: [10, -15, 10], y: [5, -5, 5] }}
+            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+          />
+          <motion.div
+            className="absolute"
+            style={{
+              top: "40%", left: "-10%", width: "120%", height: "30%",
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.03) 30%, hsl(var(--gold) / 0.05) 50%, hsl(var(--gold) / 0.03) 70%, transparent 100%)",
+              filter: "blur(40px)",
+            }}
+            animate={{ x: [-50, 50, -50], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute"
+            style={{
+              top: "55%", left: "-5%", width: "110%", height: "20%",
+              background: "linear-gradient(90deg, transparent 0%, hsl(var(--crimson) / 0.02) 40%, hsl(var(--crimson) / 0.04) 60%, transparent 100%)",
+              filter: "blur(50px)",
+            }}
+            animate={{ x: [30, -40, 30], opacity: [0.2, 0.45, 0.2] }}
+            transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          />
+        </motion.div>
+      )}
 
       {/* ── Layer 4: Ambient particles ── */}
       {particles.map((p, i) => (
