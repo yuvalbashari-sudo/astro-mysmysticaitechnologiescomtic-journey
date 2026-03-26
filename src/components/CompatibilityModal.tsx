@@ -141,7 +141,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   } : undefined;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={isDesktopResult || isDesktopInput} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
                 isDesktopInput ? (
