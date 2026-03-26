@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Crown, Sparkles, Star, Shield, Zap, Eye, Heart, Moon, Sun, Hand, Lock, Check, ArrowLeft } from "lucide-react";
+import { Crown, Star, Shield, Zap, Lock, Check, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useT } from "@/i18n";
 
