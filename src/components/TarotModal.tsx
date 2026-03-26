@@ -443,8 +443,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           <span className="text-gold/80">{spread.icon}</span>
                         </span>
                         <div className="flex-1 min-w-0">
-                          <span className="font-heading text-sm text-gold/90 block">{SPREAD_LABELS[spread.key]}</span>
-                          <span className="text-[10px] text-foreground/40 font-body">
+                          <span className="font-heading text-xl text-gold/90 block">{SPREAD_LABELS[spread.key]}</span>
+                          <span className="text-base text-foreground/40 font-body">
                             {spread.cardCount === 1 ? t.tarot_one_card : `${spread.cardCount} ${t.tarot_n_cards}`}
                           </span>
                         </div>
