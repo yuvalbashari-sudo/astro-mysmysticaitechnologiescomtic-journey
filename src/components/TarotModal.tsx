@@ -347,6 +347,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // No pre-calculated vars needed — cards sized via CSS in the container
 
   return (
+    <>
     <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
             <MysticalReadingAtmosphere theme="tarot" />
 
