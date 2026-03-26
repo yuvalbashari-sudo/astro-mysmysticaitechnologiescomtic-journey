@@ -2440,8 +2440,8 @@ const HeroSection = () => {
         </motion.div>
       )}
 
-      {/* ── Layer 4: Ambient particles ── */}
-      {particles.map((p, i) => (
+      {/* ── Layer 4: Ambient particles — reduced on mobile ── */}
+      {!isMobile && particles.map((p, i) => (
         <AmbientParticle key={i} {...p} />
       ))}
 
