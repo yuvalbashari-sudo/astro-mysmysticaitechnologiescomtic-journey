@@ -2510,7 +2510,7 @@ const HeroSection = () => {
         </>
       )}
       {/* ── Crystal ball + zodiac scene (floating, no container) ── */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[12]" style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "260px" }}>
+      <div className={`absolute inset-0 flex ${isMobile ? "items-center" : "items-start"} justify-center pointer-events-none z-[12]`} style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}>
         {isMobile ? (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
