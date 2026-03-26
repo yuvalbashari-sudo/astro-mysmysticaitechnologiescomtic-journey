@@ -90,33 +90,40 @@ function getTimeUntilMidnight(format: string): string {
   return format.replace("{hours}", String(hours)).replace("{minutes}", String(minutes));
 }
 
-const Particles = React.memo(() => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {Array.from({ length: 15 }).map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute rounded-full"
-        style={{
-          width: Math.random() * 3 + 1,
-          height: Math.random() * 3 + 1,
-          background: `hsl(var(--gold) / ${Math.random() * 0.4 + 0.1})`,
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-        }}
-        animate={{
-          y: [0, -30 - Math.random() * 40, 0],
-          opacity: [0.2, 0.8, 0.2],
-          scale: [1, 1.5, 1],
-        }}
-        transition={{
-          duration: 3 + Math.random() * 4,
-          repeat: Infinity,
-          delay: Math.random() * 3,
-        }}
-      />
-    ))}
-  </div>
-));
+// Cinematic particle field — cosmic dust with varied sizes, colors, drift
+const CinematicParticles = React.memo(({ intensity = 1 }: { intensity?: number }) => {
+  const count = Math.round(24 * intensity);
+  const particles = React.useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      size: 1 + Math.random() * 2.5,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      dur: 4 + Math.random() * 6,
+      delay: Math.random() * 4,
+      drift: -20 - Math.random() * 50,
+      color: i % 3 === 0
+        ? `hsl(var(--gold) / ${0.15 + Math.random() * 0.35})`
+        : i % 3 === 1
+        ? `hsl(var(--celestial) / ${0.1 + Math.random() * 0.25})`
+        : `hsl(280 60% 70% / ${0.08 + Math.random() * 0.2})`,
+    })),
+    [count],
+  );
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{ width: p.size, height: p.size, background: p.color, left: `${p.x}%`, top: `${p.y}%` }}
+          animate={{ y: [0, p.drift, 0], opacity: [0, 0.85, 0], scale: [0.6, 1.4, 0.6] }}
+          transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: "easeInOut" }}
+        />
+      ))}
+    </div>
+  );
+});
 
 type Phase = "ready" | "ritual" | "result" | "locked";
 
