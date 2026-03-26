@@ -234,13 +234,36 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setTableCards(drawn);
     setFlippedIndices(new Set());
     setIsShufflePhase(false);
-    setIsTablePhase(true);
+
+    // Preload card images on mobile before showing table
+    if (isMobileTarot) {
+      const imageUrls = drawn.map(c => c.image).filter(Boolean) as string[];
+      if (imageUrls.length > 0) {
+        Promise.all(imageUrls.map(src => {
+          return new Promise<void>((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            img.src = src;
+          });
+        })).then(() => setIsTablePhase(true));
+      } else {
+        setIsTablePhase(true);
+      }
+    } else {
+      setIsTablePhase(true);
+    }
   };
 
   const handleCardFlip = (index: number) => {
     if (flippedIndices.has(index) || activeRevealIndex !== null) return;
     
-    // Phase 1: Focus/lift (0.6s)
+    // Mobile: faster, lighter timing sequence
+    const liftDelay = isMobileTarot ? 400 : 800;
+    const settleDelay = isMobileTarot ? 700 : 1200;
+    const transitionDelay = isMobileTarot ? 1200 : 1800;
+    
+    // Phase 1: Focus/lift
     setActiveRevealIndex(index);
     
     // Phase 2: Flip after lift
@@ -266,10 +289,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               symbol: "🔮",
               data: { spread: selectedSpread.key, cards: tableCards },
             });
-          }, 1800);
+          }, transitionDelay);
         }
-      }, 1200);
-    }, 800);
+      }, settleDelay);
+    }, liftDelay);
   };
 
 
@@ -704,17 +727,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {activeRevealIndex !== null && (
                       <motion.div
                         className="absolute inset-0 z-20 pointer-events-none"
-                        style={{ background: "hsl(222 45% 4% / 0.6)", backdropFilter: "blur(2px)" }}
+                        style={{
+                          background: "hsl(222 45% 4% / 0.6)",
+                          ...(isMobileTarot ? {} : { backdropFilter: "blur(2px)" }),
+                        }}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4 }}
+                        transition={{ duration: isMobileTarot ? 0.25 : 0.4 }}
                       />
                     )}
                   </AnimatePresence>
 
-                  {/* Floating particles */}
-                  {[...Array(15)].map((_, i) => (
+                  {/* Floating particles — reduced on mobile */}
+                  {[...Array(isMobileTarot ? 5 : 15)].map((_, i) => (
                     <motion.div
                       key={`tp-${i}`}
                       className="absolute rounded-full pointer-events-none"
@@ -829,10 +855,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 />
                               )}
 
-                              {/* Active reveal: intensified particle swirl */}
+                              {/* Active reveal: particle swirl — simplified on mobile */}
                               {isActive && (
                                 <>
-                                  {[...Array(10)].map((_, pi) => (
+                                  {[...Array(isMobileTarot ? 3 : 10)].map((_, pi) => (
                                     <motion.div
                                       key={`swirl-${pi}`}
                                       className="absolute rounded-full pointer-events-none"
@@ -849,20 +875,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                         opacity: [0, 1, 0],
                                         scale: [0, 1.5, 0],
                                       }}
-                                      transition={{ duration: 1.2, delay: pi * 0.06, ease: "easeOut" }}
+                                      transition={{ duration: isMobileTarot ? 0.8 : 1.2, delay: pi * (isMobileTarot ? 0.1 : 0.06), ease: "easeOut" }}
                                     />
                                   ))}
                                   <motion.div
                                     className="absolute -inset-4 rounded-2xl pointer-events-none"
-                                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.2), transparent 60%)" }}
+                                    style={{ background: `radial-gradient(circle, hsl(var(--gold) / ${isMobileTarot ? "0.12" : "0.2"}), transparent 60%)` }}
                                     initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: [0, 0.8, 0.5], scale: [0.8, 1.3, 1.1] }}
-                                    transition={{ duration: 0.8 }}
+                                    animate={{ opacity: [0, isMobileTarot ? 0.5 : 0.8, isMobileTarot ? 0.3 : 0.5], scale: [0.8, 1.3, 1.1] }}
+                                    transition={{ duration: isMobileTarot ? 0.5 : 0.8 }}
                                   />
                                 </>
                               )}
 
-                              {/* Energy pulse ring on flip */}
+                              {/* Energy pulse ring on flip — single ring on mobile */}
                               {isFlipped && (
                                 <>
                                   <motion.div
@@ -871,30 +897,32 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                       left: "50%", top: "50%",
                                       width: 20, height: 20,
                                       marginLeft: -10, marginTop: -10,
-                                      border: "2px solid hsl(var(--gold) / 0.6)",
+                                      border: `${isMobileTarot ? "1px" : "2px"} solid hsl(var(--gold) / ${isMobileTarot ? "0.4" : "0.6"})`,
                                     }}
                                     initial={{ scale: 0, opacity: 1 }}
-                                    animate={{ scale: [0, 8], opacity: [0.8, 0] }}
-                                    transition={{ duration: 1.2, ease: "easeOut" }}
+                                    animate={{ scale: [0, isMobileTarot ? 5 : 8], opacity: [isMobileTarot ? 0.5 : 0.8, 0] }}
+                                    transition={{ duration: isMobileTarot ? 0.8 : 1.2, ease: "easeOut" }}
                                   />
-                                  <motion.div
-                                    className="absolute pointer-events-none rounded-full"
-                                    style={{
-                                      left: "50%", top: "50%",
-                                      width: 14, height: 14,
-                                      marginLeft: -7, marginTop: -7,
-                                      border: "1px solid hsl(var(--gold) / 0.4)",
-                                    }}
-                                    initial={{ scale: 0, opacity: 1 }}
-                                    animate={{ scale: [0, 10], opacity: [0.5, 0] }}
-                                    transition={{ duration: 1.5, delay: 0.15, ease: "easeOut" }}
-                                  />
+                                  {!isMobileTarot && (
+                                    <motion.div
+                                      className="absolute pointer-events-none rounded-full"
+                                      style={{
+                                        left: "50%", top: "50%",
+                                        width: 14, height: 14,
+                                        marginLeft: -7, marginTop: -7,
+                                        border: "1px solid hsl(var(--gold) / 0.4)",
+                                      }}
+                                      initial={{ scale: 0, opacity: 1 }}
+                                      animate={{ scale: [0, 10], opacity: [0.5, 0] }}
+                                      transition={{ duration: 1.5, delay: 0.15, ease: "easeOut" }}
+                                    />
+                                  )}
                                   <motion.div
                                     className="absolute -inset-6 pointer-events-none"
-                                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.35), transparent 50%)" }}
+                                    style={{ background: `radial-gradient(circle, hsl(var(--gold) / ${isMobileTarot ? "0.15" : "0.35"}), transparent 50%)` }}
                                     initial={{ opacity: 0, scale: 0.5 }}
-                                    animate={{ opacity: [0, 1, 0.3], scale: [0.5, 1.5, 1] }}
-                                    transition={{ duration: 0.8 }}
+                                    animate={{ opacity: [0, isMobileTarot ? 0.5 : 1, isMobileTarot ? 0.15 : 0.3], scale: [0.5, isMobileTarot ? 1.2 : 1.5, 1] }}
+                                    transition={{ duration: isMobileTarot ? 0.5 : 0.8 }}
                                   />
                                 </>
                               )}
@@ -903,7 +931,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 className="relative w-full h-full"
                                 style={{ transformStyle: "preserve-3d" }}
                                 animate={{ rotateY: isFlipped ? 180 : 0 }}
-                                transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+                                transition={{ duration: isMobileTarot ? 0.6 : 1, ease: [0.25, 0.1, 0.25, 1] }}
                               >
                                 {/* Card back */}
                                 <div
@@ -947,8 +975,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 </div>
                               </motion.div>
 
-                              {/* Persistent breathing glow for revealed cards */}
-                              {isFlipped && !isActive && (
+                              {/* Persistent breathing glow for revealed cards — disabled on mobile for perf */}
+                              {isFlipped && !isActive && !isMobileTarot && (
                                 <motion.div
                                   className="absolute -inset-2 rounded-xl pointer-events-none"
                                   style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.1), transparent 60%)" }}
