@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MysticalNameInput from "@/components/MysticalNameInput";
+import MysticalDateInput from "@/components/MysticalDateInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -227,7 +228,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
                         <div style={{ marginBottom: mode === "rising" ? "20px" : "32px" }}>
                           <label className="block font-body" style={{ fontSize: "20px", marginBottom: "14px", color: "hsl(var(--gold) / 0.7)" }}>{t.forecast_birthdate_label}</label>
-                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr", fontSize: "20px", padding: "14px", height: "56px" }} />
+                          <MysticalDateInput value={birthDate} onChange={setBirthDate} style={{ fontSize: "20px", padding: "14px", height: "56px" }} />
                           {attempted && !birthDate && <p className="font-body" style={{ fontSize: "14px", marginTop: "8px", color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                         </div>
 
@@ -313,7 +314,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                      </div>
                      <div className="max-w-xs mx-auto mb-6">
                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_birthdate_label}</label>
-                       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                       <MysticalDateInput value={birthDate} onChange={setBirthDate} />
                        {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                      </div>
 

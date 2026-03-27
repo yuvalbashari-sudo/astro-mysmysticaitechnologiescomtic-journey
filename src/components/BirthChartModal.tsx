@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import MysticalNameInput from "@/components/MysticalNameInput";
+import MysticalDateInput from "@/components/MysticalDateInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
@@ -393,12 +394,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 <label className="block text-gold font-heading text-sm mb-2">
                   {t.birth_chart_date_label}
                 </label>
-                <input
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="mystical-input"
-                />
+                <MysticalDateInput value={birthDate} onChange={setBirthDate} />
               </div>
 
               {/* Birth Time */}
