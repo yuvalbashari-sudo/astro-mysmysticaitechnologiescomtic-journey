@@ -2165,6 +2165,7 @@ const HeroSection = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobilePlanetaryInfluence] = useState(() => getDailyInfluence());
   const [forecastOpen, setForecastOpen] = useState(false);
   
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
