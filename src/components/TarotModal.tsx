@@ -733,7 +733,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                         whileTap={{ scale: 0.95 }}
                         onClick={() => {
                           setIsQuestionPhase(false);
-                          setIsLoading(true);
+                          setIsShufflePhase(true);
                         }}
                       >
                         {t.tarot_skip_to_reading} ›
@@ -758,7 +758,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1 }}
                       transition={{ delay: 2 }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={handleAnalysisComplete}
+                      onClick={() => {
+                        setIsAnalysisPhase(false);
+                        setIsShufflePhase(true);
+                      }}
                     >
                       {t.tarot_skip_to_reading} ›
                     </motion.button>
