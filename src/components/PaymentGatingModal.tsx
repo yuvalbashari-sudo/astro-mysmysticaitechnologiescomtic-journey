@@ -106,7 +106,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
               {/* Divider */}
               <div className="flex items-center gap-3 w-full my-2">
                 <div className="flex-1 h-px bg-gold/10" />
-                <span className="text-xs text-foreground/30 font-body">{copy.orLabel}</span>
+                <span className="text-xs text-foreground/30 font-body">{t.gating_or_label}</span>
                 <div className="flex-1 h-px bg-gold/10" />
               </div>
 
