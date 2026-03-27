@@ -100,7 +100,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider mb-3 flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
-                {copy.payLabel} ₪{gatingMessage.priceILS}
+                {t.gating_pay_label} ₪{gatingMessage.priceILS}
               </button>
 
               {/* Divider */}
