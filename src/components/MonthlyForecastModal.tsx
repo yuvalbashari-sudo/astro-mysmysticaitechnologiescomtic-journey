@@ -226,9 +226,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                         <div className="mx-auto mb-7" style={{ width: 60, height: 1, background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }} />
 
                         <div style={{ marginBottom: mode === "rising" ? "20px" : "32px" }}>
-                          <label className="block font-body" style={{ fontSize: "20px", marginBottom: "14px", color: "hsl(var(--gold) / 0.7)" }}>{t.forecast_birthdate_label}</label>
-                          <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr", fontSize: "20px", padding: "14px", height: "56px" }} />
-                          {attempted && !birthDate && <p className="font-body" style={{ fontSize: "14px", marginTop: "8px", color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
+                          <MysticalDateInput label={t.forecast_birthdate_label} value={birthDate} onChange={setBirthDate} error={attempted && !birthDate ? t.forecast_birthdate_required : undefined} />
                         </div>
 
                         {/* Birth time — only in rising mode */}
