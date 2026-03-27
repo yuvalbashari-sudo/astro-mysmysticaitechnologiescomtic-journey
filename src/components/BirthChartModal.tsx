@@ -358,7 +358,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       }
       toast.success(t.toast_pdf_ready);
     } catch {
-      toast.error("שגיאה ביצירת PDF");
+      toast.error(t.toast_pdf_error);
     }
     setDownloading(false);
   }, []);
