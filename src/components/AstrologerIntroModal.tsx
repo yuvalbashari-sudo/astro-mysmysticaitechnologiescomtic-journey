@@ -230,7 +230,6 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
           <p className="text-foreground/50 font-body text-lg leading-relaxed mb-10">
             {t.astrologer_chat_desc}
           </p>
-          </p>
 
           {/* Suggestion chips */}
           <div className="flex flex-col gap-4">
