@@ -317,9 +317,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       link.download = `astrologai-birth-chart-${birthDate}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      toast.success("התמונה הורדה בהצלחה ✦");
+      toast.success(t.toast_image_download_success);
     } catch {
-      toast.error("שגיאה בהורדת התמונה");
+      toast.error(t.toast_image_download_error);
     }
     setDownloading(false);
   }, [birthDate]);
@@ -341,7 +341,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           <!DOCTYPE html>
           <html dir="${dir}">
           <head>
-            <title>ASTROLOGAI — מפת לידה</title>
+            <title>${t.birth_chart_pdf_title}</title>
             <style>
               body { margin: 0; padding: 20px; background: #0a0f1e; display: flex; justify-content: center; }
               img { max-width: 100%; height: auto; }
@@ -356,9 +356,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         `);
         printWindow.document.close();
       }
-      toast.success("PDF מוכן להורדה ✦");
+      toast.success(t.toast_pdf_ready);
     } catch {
-      toast.error("שגיאה ביצירת PDF");
+      toast.error(t.toast_pdf_error);
     }
     setDownloading(false);
   }, []);

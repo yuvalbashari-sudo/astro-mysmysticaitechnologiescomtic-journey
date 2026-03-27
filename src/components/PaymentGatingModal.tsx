@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Lock, X, Sparkles } from "lucide-react";
-import { useLanguage } from "@/i18n/LanguageContext";
+import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import type { GatingMessage } from "@/lib/entitlements";
 
@@ -12,28 +12,10 @@ interface Props {
   onPayPerUse?: () => void;
 }
 
-const UI: Record<string, { upgradeLabel: string; payLabel: string; orLabel: string; subscribeLabel: string; cancelLabel: string }> = {
-  he: {
-    upgradeLabel: "שדרגו למנוי פרימיום",
-    payLabel: "שלמו",
-    orLabel: "או",
-    subscribeLabel: "עברו לפרימיום וקבלו יותר",
-    cancelLabel: "חזרה",
-  },
-  en: {
-    upgradeLabel: "Upgrade to Premium",
-    payLabel: "Pay",
-    orLabel: "or",
-    subscribeLabel: "Go Premium and get more",
-    cancelLabel: "Go Back",
-  },
-};
-
 const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Props) => {
   const { language, dir } = useLanguage();
+  const t = useT();
   const navigate = useNavigate();
-  const lang = language === "he" || language === "ar" || language === "ru" ? "he" : "en";
-  const copy = UI[lang] || UI.en;
 
   if (!gatingMessage) return null;
 
@@ -106,7 +88,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
 
               {/* Message */}
               <p className="font-body text-foreground/80 text-sm leading-relaxed mb-7 max-w-xs">
-                {lang === "he" ? gatingMessage.he : gatingMessage.en}
+                {(language === "he" || language === "ar" || language === "ru") ? gatingMessage.he : gatingMessage.en}
               </p>
 
               {/* Pay-per-use CTA */}
@@ -118,13 +100,13 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider mb-3 flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
-                {copy.payLabel} ₪{gatingMessage.priceILS}
+                {t.gating_pay_label} ₪{gatingMessage.priceILS}
               </button>
 
               {/* Divider */}
               <div className="flex items-center gap-3 w-full my-2">
                 <div className="flex-1 h-px bg-gold/10" />
-                <span className="text-xs text-foreground/30 font-body">{copy.orLabel}</span>
+                <span className="text-xs text-foreground/30 font-body">{t.gating_or_label}</span>
                 <div className="flex-1 h-px bg-gold/10" />
               </div>
 
@@ -141,7 +123,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 }}
               >
                 <Crown className="w-4 h-4" />
-                {copy.subscribeLabel}
+                {t.gating_subscribe_label}
               </button>
 
               {/* Cancel */}
@@ -149,7 +131,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 onClick={onClose}
                 className="mt-4 text-xs text-foreground/30 hover:text-foreground/50 transition-colors font-body"
               >
-                {copy.cancelLabel}
+                {t.gating_cancel_label}
               </button>
             </div>
           </motion.div>

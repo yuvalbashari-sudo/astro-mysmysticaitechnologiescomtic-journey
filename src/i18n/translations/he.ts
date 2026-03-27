@@ -636,4 +636,16 @@ export const he: TranslationKeys = {
   astrologer_chat_summary: "קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית",
   astrologer_personal_guidance: "הכוונה אישית",
   astrologer_aria_label: "התייעצות עם האסטרולוגית",
+
+  toast_image_download_success: "התמונה הורדה בהצלחה ✦",
+  toast_image_download_error: "שגיאה בהורדת התמונה",
+  toast_pdf_ready: "PDF מוכן להורדה ✦",
+  toast_pdf_error: "שגיאה ביצירת PDF",
+  birth_chart_pdf_title: "ASTROLOGAI — מפת לידה",
+
+  gating_upgrade_label: "שדרגו למנוי פרימיום",
+  gating_pay_label: "שלמו",
+  gating_or_label: "או",
+  gating_subscribe_label: "עברו לפרימיום וקבלו יותר",
+  gating_cancel_label: "חזרה",
 };

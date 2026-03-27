@@ -5,7 +5,26 @@ import { ar } from "./translations/ar";
 import { ru } from "./translations/ru";
 import { en } from "./translations/en";
 
-const translations: Record<Language, TranslationKeys> = { he, ar, ru, en };
+const rawTranslations: Record<Language, TranslationKeys> = { he, ar, ru, en };
+
+/** Returns a Proxy that falls back to English when a key is missing or empty */
+function withFallback(lang: Language): TranslationKeys {
+  if (lang === "en") return rawTranslations.en;
+  return new Proxy(rawTranslations[lang], {
+    get(target, prop: string) {
+      const val = (target as any)[prop];
+      if (val !== undefined && val !== "") return val;
+      return (rawTranslations.en as any)[prop] ?? prop;
+    },
+  }) as TranslationKeys;
+}
+
+const translations: Record<Language, TranslationKeys> = {
+  he: withFallback("he"),
+  ar: withFallback("ar"),
+  ru: withFallback("ru"),
+  en: rawTranslations.en,
+};
 
 const STORAGE_KEY = "astrologai_lang";
 
