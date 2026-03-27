@@ -37,10 +37,8 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
     if (isOpen) {
       setActiveReading({
         type: "astrologer",
-        label: language === "he" ? "שיחה עם האסטרולוגית" : "Chat with the Astrologer",
-        summary: language === "he"
-          ? "קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית"
-          : "Get personalized guidance based on astrology and AI",
+        label: t.astrologer_chat_label,
+        summary: t.astrologer_chat_summary,
       });
     }
   }, [isOpen, language]);
