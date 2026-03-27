@@ -813,20 +813,23 @@ function getDailyInfluence(): PlanetaryInfluence {
   // Get REAL astronomical constellation position
   const signIdx = getAstroPosition(planet.name, now);
   const key = `${planet.name}-${signIdx}`;
+  const fallbackText: Record<Language, string> = { he: "", en: "", ru: "", ar: "" };
+  const signName = SIGN_NAMES_EN[signIdx] || "Unknown";
+  const fallbackTitle: Record<Language, string> = { he: `${planet.name} ב${signName}`, en: `${planet.name} in ${signName}`, ru: `${planet.name} в ${signName}`, ar: `${planet.name} في ${signName}` };
 
   return {
     planet: planet.name,
     planet_symbol: planet.symbol,
     zodiac_sign_index: signIdx,
     influence_area: planet.area,
-    title: INFLUENCE_TITLES[key],
-    description: INFLUENCE_DESCRIPTIONS[key],
-    life_area: INFLUENCE_LIFE_AREAS[planet.name],
-    collapsed_summary: COLLAPSED_SUMMARIES[planet.name],
-    planet_label: PLANET_LABELS[planet.name],
-    affected_signs: AFFECTED_SIGNS_DATA[planet.name],
-    practical_advice: PRACTICAL_ADVICE_DATA[planet.name],
-    caution: CAUTION_DATA[planet.name],
+    title: INFLUENCE_TITLES[key] || fallbackTitle,
+    description: INFLUENCE_DESCRIPTIONS[key] || fallbackText,
+    life_area: INFLUENCE_LIFE_AREAS[planet.name] || fallbackText,
+    collapsed_summary: COLLAPSED_SUMMARIES[planet.name] || fallbackText,
+    planet_label: PLANET_LABELS[planet.name] || fallbackText,
+    affected_signs: AFFECTED_SIGNS_DATA[planet.name] || fallbackText,
+    practical_advice: PRACTICAL_ADVICE_DATA[planet.name] || fallbackText,
+    caution: CAUTION_DATA[planet.name] || fallbackText,
   };
 }
 
