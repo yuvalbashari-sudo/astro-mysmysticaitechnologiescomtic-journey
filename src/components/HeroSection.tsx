@@ -3186,7 +3186,7 @@ const HeroSection = () => {
           return (
             <motion.div
               className="pointer-events-auto cursor-pointer"
-              style={{ width: planetaryExpanded ? 270 : 240, marginTop: 10, marginLeft: "auto", marginRight: 12 }}
+              style={{ width: "100%", maxWidth: 370, paddingLeft: 16, paddingRight: 12, boxSizing: "border-box", marginTop: 2.5 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
