@@ -188,10 +188,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </nav>
           </div>
 
-          {/* Row 2: font-size control centred */}
-          <div className="flex justify-center">
-            {fontSizeControl}
-          </div>
         </div>
       ) : (
         /* ── DESKTOP / TABLET: original single-row layout ── */
