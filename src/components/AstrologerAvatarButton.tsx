@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
+import { useT } from "@/i18n";
 
 interface AstrologerAvatarButtonProps {
   size: number;
@@ -17,6 +18,7 @@ const AstrologerAvatarButton = ({
   className = "",
   entranceDelay = 1.1,
 }: AstrologerAvatarButtonProps) => {
+  const t = useT();
   return (
     <motion.button
       type="button"
@@ -28,7 +30,7 @@ const AstrologerAvatarButton = ({
       }}
       whileHover={{ filter: "brightness(1.15)", scale: 1.08 }}
       whileTap={{ scale: 0.95 }}
-      aria-label="שיחה עם האסטרולוגית"
+      aria-label={t.astrologer_aria_label}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: entranceDelay }}
@@ -47,7 +49,7 @@ const AstrologerAvatarButton = ({
       >
         <img
           src={astrologerAvatarCta}
-          alt="שיחה עם האסטרולוגית"
+          alt={t.astrologer_chat_title}
           className="w-full h-full object-cover scale-105"
           style={{ objectPosition: "center 42%" }}
           draggable={false}

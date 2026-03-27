@@ -37,10 +37,8 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
     if (isOpen) {
       setActiveReading({
         type: "astrologer",
-        label: language === "he" ? "שיחה עם האסטרולוגית" : "Chat with the Astrologer",
-        summary: language === "he"
-          ? "קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית"
-          : "Get personalized guidance based on astrology and AI",
+        label: t.astrologer_chat_label,
+        summary: t.astrologer_chat_summary,
       });
     }
   }, [isOpen, language]);
@@ -227,12 +225,10 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
           </motion.div>
 
           <h2 className="font-heading text-3xl gold-gradient-text mb-5 leading-tight">
-            {language === "he" ? "שיחה עם האסטרולוגית" : "Chat with the Astrologer"}
+            {t.astrologer_chat_title}
           </h2>
           <p className="text-foreground/50 font-body text-lg leading-relaxed mb-10">
-            {language === "he"
-              ? "שאלו כל שאלה — על מזל, אהבה, קריירה, או החלטות חשובות. האסטרולוגית תעניק לכם הכוונה אישית."
-              : "Ask any question — about fortune, love, career, or important decisions. The astrologer will give you personal guidance."}
+            {t.astrologer_chat_desc}
           </p>
 
           {/* Suggestion chips */}
@@ -289,7 +285,7 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
             <div>
               <h3 className="font-heading text-base text-gold">{t.advisor_title}</h3>
               <p className="text-sm text-foreground/40 font-body mt-0.5">
-                {language === "he" ? "הכוונה אישית" : "Personal guidance"}
+                {t.astrologer_personal_guidance}
               </p>
             </div>
           </div>

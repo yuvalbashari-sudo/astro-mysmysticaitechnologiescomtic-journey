@@ -628,4 +628,12 @@ export const ru: TranslationKeys = {
   seo_zodiac_tarot_desc: "Получите послание от карт",
   seo_all_zodiac_signs: "Все знаки зодиака",
   seo_arcana_number: "Аркан №",
+
+  free_badge_label: "✦ Бесплатно",
+  astrologer_chat_title: "Беседа с астрологом",
+  astrologer_chat_desc: "Задайте любой вопрос — о судьбе, любви, карьере или важных решениях. Астролог даст вам личное руководство.",
+  astrologer_chat_label: "Беседа с астрологом",
+  astrologer_chat_summary: "Получите персональное руководство на основе астрологии и ИИ",
+  astrologer_personal_guidance: "Личное руководство",
+  astrologer_aria_label: "Консультация с астрологом",
 };

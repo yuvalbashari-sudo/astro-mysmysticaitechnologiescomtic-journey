@@ -628,4 +628,12 @@ export const ar: TranslationKeys = {
   seo_zodiac_tarot_desc: "احصلوا على رسالة من البطاقات",
   seo_all_zodiac_signs: "جميع الأبراج",
   seo_arcana_number: "أركانا رقم",
+
+  free_badge_label: "✦ مجاني",
+  astrologer_chat_title: "محادثة مع المنجّمة",
+  astrologer_chat_desc: "اسألوا أي سؤال — عن الحظ، الحب، المهنة، أو القرارات المهمة. المنجّمة ستمنحكم توجيهاً شخصياً.",
+  astrologer_chat_label: "محادثة مع المنجّمة",
+  astrologer_chat_summary: "احصلوا على توجيه شخصي مبني على الفلك والذكاء الاصطناعي",
+  astrologer_personal_guidance: "توجيه شخصي",
+  astrologer_aria_label: "استشارة المنجّمة",
 };

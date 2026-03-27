@@ -7,6 +7,7 @@ import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
+import { useT } from "@/i18n";
 
 interface Props {
   isOpen: boolean;
@@ -34,6 +35,7 @@ interface Props {
  */
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle }: Props) => {
   const isMobile = useIsMobile();
+  const t = useT();
   const [advisorOpen, setAdvisorOpen] = useState(false);
   
   const internalScrollRef = useRef<HTMLDivElement>(null);
@@ -165,7 +167,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 color: "hsl(var(--gold))",
               }}
             >
-              ✦ חינם
+              {t.free_badge_label}
             </span>
           </div>
 
@@ -197,11 +199,11 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 onClick={() => setAdvisorOpen(true)}
                 whileHover={{ filter: "brightness(1.15)" }}
                 whileTap={{ filter: "brightness(0.9)" }}
-                aria-label="התייעצות עם האסטרולוגית"
+                aria-label={t.astrologer_aria_label}
               >
                 <img
                   src={astrologerAvatar}
-                  alt="האסטרולוגית"
+                  alt={t.astrologer_chat_title}
                   className="w-full h-full object-cover scale-105"
                   style={{ objectPosition: "center 42%" }}
                   draggable={false}
