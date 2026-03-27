@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
+import { useT } from "@/i18n";
 
 interface AstrologerAvatarButtonProps {
   size: number;
