@@ -53,20 +53,25 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
   }
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    let raw = e.target.value.replace(/[^0-9/]/g, "");
+    // Strip everything except digits
+    let digits = e.target.value.replace(/[^0-9]/g, "");
+    if (digits.length > 8) digits = digits.slice(0, 8);
     
-    // Auto-insert slashes
-    if (raw.length === 2 && !raw.includes("/")) raw += "/";
-    if (raw.length === 5 && raw.charAt(2) === "/" && raw.indexOf("/", 3) === -1) raw += "/";
+    // Auto-format with slashes: DD/MM/YYYY
+    let formatted = "";
+    if (digits.length <= 2) {
+      formatted = digits;
+    } else if (digits.length <= 4) {
+      formatted = digits.slice(0, 2) + "/" + digits.slice(2);
+    } else {
+      formatted = digits.slice(0, 2) + "/" + digits.slice(2, 4) + "/" + digits.slice(4);
+    }
     
-    // Limit length
-    if (raw.length > 10) raw = raw.slice(0, 10);
-    
-    setDisplayValue(raw);
-    const iso = toIso(raw);
+    setDisplayValue(formatted);
+    const iso = toIso(formatted);
     if (iso) {
       onChange(iso);
-    } else if (raw === "") {
+    } else if (formatted === "") {
       onChange("");
     }
   }, [onChange]);
