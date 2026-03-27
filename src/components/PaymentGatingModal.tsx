@@ -123,7 +123,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 }}
               >
                 <Crown className="w-4 h-4" />
-                {copy.subscribeLabel}
+                {t.gating_subscribe_label}
               </button>
 
               {/* Cancel */}
