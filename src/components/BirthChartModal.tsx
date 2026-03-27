@@ -390,17 +390,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               <MysticalNameInput value={userName} onChange={setUserName} delay={0.1} />
 
               {/* Birth Date */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_date_label}
-                </label>
-                <input
-                  type="date"
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="mystical-input"
-                />
-              </div>
+              <MysticalDateInput label={t.birth_chart_date_label} value={birthDate} onChange={setBirthDate} />
 
               {/* Birth Time */}
               <div>

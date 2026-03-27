@@ -5,6 +5,7 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Clock, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
+import MysticalDateInput from "@/components/MysticalDateInput";
 import { getZodiacSign } from "@/data/zodiacData";
 import { getRisingSign } from "@/data/risingSignData";
 import { toast } from "@/components/ui/sonner";
