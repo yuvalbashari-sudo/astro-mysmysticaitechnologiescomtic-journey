@@ -685,4 +685,18 @@ export type TranslationKeys = {
   astrologer_chat_summary: string;
   astrologer_personal_guidance: string;
   astrologer_aria_label: string;
+
+  // Toast messages
+  toast_image_download_success: string;
+  toast_image_download_error: string;
+  toast_pdf_ready: string;
+  toast_pdf_error: string;
+  birth_chart_pdf_title: string;
+
+  // Payment gating
+  gating_upgrade_label: string;
+  gating_pay_label: string;
+  gating_or_label: string;
+  gating_subscribe_label: string;
+  gating_cancel_label: string;
 };
