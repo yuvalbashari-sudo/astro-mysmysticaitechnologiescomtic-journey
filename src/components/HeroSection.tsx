@@ -3232,6 +3232,7 @@ const HeroSection = () => {
             </motion.div>
           );
         })()}
+        </>
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
         <>
