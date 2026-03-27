@@ -555,6 +555,12 @@ type PlanetaryInfluence = {
   title: Record<Language, string>;
   description: Record<Language, string>;
   life_area: Record<Language, string>;
+  // User-focused content
+  collapsed_summary: Record<Language, string>;
+  planet_label: Record<Language, string>;
+  affected_signs: Record<Language, string>;
+  practical_advice: Record<Language, string>;
+  caution: Record<Language, string>;
 };
 
 const PLANET_COLORS: Record<string, string> = {
@@ -696,6 +702,42 @@ const INFLUENCE_LIFE_AREAS: Record<string, Record<Language, string>> = {
   Saturn: { he: "משמעת, מבנה ואחריות", en: "Discipline, structure, and responsibility", ru: "Дисциплина, структура и ответственность", ar: "الانضباط والهيكل والمسؤولية" },
 };
 
+// ── User-focused content per planet ──
+const PLANET_LABELS: Record<string, Record<Language, string>> = {
+  Venus: { he: "נוגה (ונוס)", en: "Venus", ru: "Венера", ar: "الزهرة" },
+  Mars: { he: "מאדים", en: "Mars", ru: "Марс", ar: "المريخ" },
+  Jupiter: { he: "צדק (יופיטר)", en: "Jupiter", ru: "Юпитер", ar: "المشتري" },
+  Saturn: { he: "שבתאי", en: "Saturn", ru: "Сатурн", ar: "زحل" },
+};
+
+const COLLAPSED_SUMMARIES: Record<string, Record<Language, string>> = {
+  Venus: { he: "אהבה, יופי והרמוניה", en: "Love, beauty & harmony", ru: "Любовь, красота и гармония", ar: "حب، جمال وانسجام" },
+  Mars: { he: "אנרגיה, פעולה ומוטיבציה", en: "Energy, action & motivation", ru: "Энергия, действие и мотивация", ar: "طاقة، عمل وتحفيز" },
+  Jupiter: { he: "תקשורת, צמיחה והזדמנויות", en: "Communication, growth & opportunities", ru: "Общение, рост и возможности", ar: "تواصل، نمو وفرص" },
+  Saturn: { he: "משמעת, מבנה ואחריות", en: "Discipline, structure & responsibility", ru: "Дисциплина, структура и ответственность", ar: "انضباط، هيكل ومسؤولية" },
+};
+
+const AFFECTED_SIGNS_DATA: Record<string, Record<Language, string>> = {
+  Venus: { he: "שור, מאזניים ודגים", en: "Taurus, Libra & Pisces", ru: "Телец, Весы и Рыбы", ar: "الثور، الميزان والحوت" },
+  Mars: { he: "טלה, עקרב ואריה", en: "Aries, Scorpio & Leo", ru: "Овен, Скорпион и Лев", ar: "الحمل، العقرب والأسد" },
+  Jupiter: { he: "קשת, דגים ותאומים", en: "Sagittarius, Pisces & Gemini", ru: "Стрелец, Рыбы и Близнецы", ar: "القوس، الحوت والجوزاء" },
+  Saturn: { he: "גדי, דלי ומאזניים", en: "Capricorn, Aquarius & Libra", ru: "Козерог, Водолей и Весы", ar: "الجدي، الدلو والميزان" },
+};
+
+const PRACTICAL_ADVICE_DATA: Record<string, Record<Language, string>> = {
+  Venus: { he: "זה זמן טוב לשיחות לב, חיבורים חדשים או טיפוח מערכות יחסים", en: "A good time for heartfelt conversations, new connections, or nurturing relationships", ru: "Хорошее время для душевных разговоров, новых связей или укрепления отношений", ar: "وقت جيد للمحادثات الصادقة والروابط الجديدة أو رعاية العلاقات" },
+  Mars: { he: "זה זמן טוב ליוזמות, לפעולה נחושה או להתחלת פרויקטים חדשים", en: "A good time for initiatives, determined action, or starting new projects", ru: "Хорошее время для инициатив, решительных действий или начала новых проектов", ar: "وقت جيد للمبادرات والعمل الحازم أو بدء مشاريع جديدة" },
+  Jupiter: { he: "זה זמן טוב לשיחות חשובות, למידה או פתיחת כיוון חדש", en: "A good time for important conversations, learning, or exploring a new direction", ru: "Хорошее время для важных разговоров, обучения или нового направления", ar: "وقت جيد للمحادثات المهمة أو التعلم أو استكشاف اتجاه جديد" },
+  Saturn: { he: "זה זמן טוב לסדר, תכנון ארוך טווח וחיזוק מבנים קיימים", en: "A good time for planning, long-term structure, and strengthening existing foundations", ru: "Хорошее время для планирования, долгосрочной структуры и укрепления существующих основ", ar: "وقت جيد للتخطيط والهيكل طويل الأمد وتعزيز الأسس القائمة" },
+};
+
+const CAUTION_DATA: Record<string, Record<Language, string>> = {
+  Venus: { he: "כדאי להימנע מאידיאליזציה יתרה או התעלמות מגבולות אישיים", en: "Avoid over-idealizing or ignoring personal boundaries", ru: "Избегайте чрезмерной идеализации или игнорирования личных границ", ar: "تجنب المثالية المفرطة أو تجاهل الحدود الشخصية" },
+  Mars: { he: "כדאי להימנע מפעולות אימפולסיביות או עימותים מיותרים", en: "Avoid impulsive actions or unnecessary confrontations", ru: "Избегайте импульсивных действий или ненужных конфронтаций", ar: "تجنب التصرفات الاندفاعية أو المواجهات غير الضرورية" },
+  Jupiter: { he: "כדאי להימנע מפיזור יתר או החלטות פזיזות", en: "Avoid over-spreading yourself or hasty decisions", ru: "Избегайте распыления или поспешных решений", ar: "تجنب التشتت أو القرارات المتسرعة" },
+  Saturn: { he: "כדאי להימנע מנוקשות יתרה או ביקורת עצמית מוגזמת", en: "Avoid excessive rigidity or over-criticizing yourself", ru: "Избегайте чрезмерной жёсткости или чрезмерной самокритики", ar: "تجنب الجمود المفرط أو النقد الذاتي المبالغ فيه" },
+};
+
 // ── Astronomical (sidereal / IAU constellation) planetary positions ──
 // Based on real ephemeris data. Each entry: [startDate, constellationIndex]
 // Constellation indices match SIGN_NAMES_EN (0=Aries..11=Pisces)
@@ -780,6 +822,11 @@ function getDailyInfluence(): PlanetaryInfluence {
     title: INFLUENCE_TITLES[key],
     description: INFLUENCE_DESCRIPTIONS[key],
     life_area: INFLUENCE_LIFE_AREAS[planet.name],
+    collapsed_summary: COLLAPSED_SUMMARIES[planet.name],
+    planet_label: PLANET_LABELS[planet.name],
+    affected_signs: AFFECTED_SIGNS_DATA[planet.name],
+    practical_advice: PRACTICAL_ADVICE_DATA[planet.name],
+    caution: CAUTION_DATA[planet.name],
   };
 }
 
@@ -3250,24 +3297,29 @@ const HeroSection = () => {
                         }}
                       >
                         <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.5), transparent 90%)` }} />
-                        <div className="px-2.5 py-2 flex items-center gap-1.5">
-                          <motion.span
-                            className="text-sm flex-shrink-0"
-                            animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
-                            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                          >
-                            {mobilePlanetaryInfluence.planet_symbol}
-                          </motion.span>
-                          <span className="font-bold tracking-[0.04em] uppercase text-[10px] flex-1 leading-tight" style={{ color: `hsl(${pColor})` }}>
-                            {mobilePlanetaryInfluence.title[language]}
+                        <div className="px-2.5 py-2 flex flex-col gap-0.5">
+                          <div className="flex items-center gap-1.5">
+                            <motion.span
+                              className="text-sm flex-shrink-0"
+                              animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
+                              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              {mobilePlanetaryInfluence.planet_symbol}
+                            </motion.span>
+                            <span className="font-bold tracking-[0.04em] text-[10px] flex-1 leading-tight" style={{ color: `hsl(${pColor})` }}>
+                              {language === "he" ? "ההשפעה הדומיננטית עכשיו" : language === "ar" ? "التأثير المهيمن الآن" : language === "ru" ? "Главное влияние сейчас" : "Dominant influence now"}
+                            </span>
+                            <motion.span
+                              className="flex-shrink-0"
+                              animate={{ rotate: planetaryExpanded ? 180 : 0 }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              <ChevronDown size={12} style={{ color: `hsl(${pColor} / 0.6)` }} />
+                            </motion.span>
+                          </div>
+                          <span className="text-[9px] leading-tight" style={{ color: "hsl(var(--foreground) / 0.5)" }}>
+                            {mobilePlanetaryInfluence.collapsed_summary[language]}
                           </span>
-                          <motion.span
-                            className="flex-shrink-0"
-                            animate={{ rotate: planetaryExpanded ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <ChevronDown size={12} style={{ color: `hsl(${pColor} / 0.6)` }} />
-                          </motion.span>
                         </div>
                         <AnimatePresence>
                           {planetaryExpanded && (
@@ -3278,18 +3330,36 @@ const HeroSection = () => {
                               transition={{ duration: 0.3, ease: "easeInOut" }}
                               className="overflow-hidden"
                             >
-                              <div className="px-2.5 pb-2.5 pt-0.5 space-y-1.5">
-                                <div className="flex items-center">
-                                  <span
-                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
-                                    style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
-                                  >
-                                    <span className="text-[9px]">{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
-                                    {mobilePlanetaryInfluence.life_area[language]}
+                              <div className="px-2.5 pb-2.5 pt-0.5 space-y-2">
+                                {/* Leading planet */}
+                                <div className="flex items-center gap-1">
+                                  <span className="text-[9px] font-medium" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
+                                    {language === "he" ? "כוכב מוביל:" : language === "ar" ? "الكوكب المؤثر:" : language === "ru" ? "Ведущая планета:" : "Leading planet:"}
+                                  </span>
+                                  <span className="text-[9px] font-bold" style={{ color: `hsl(${pColor})` }}>
+                                    {mobilePlanetaryInfluence.planet_label[language]}
                                   </span>
                                 </div>
-                                <div className="leading-snug text-[10px]" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                                {/* Core meaning */}
+                                <div className="leading-snug text-[10px]" style={{ color: "hsl(var(--foreground) / 0.65)" }}>
                                   {mobilePlanetaryInfluence.description[language]}
+                                </div>
+                                {/* Affected signs */}
+                                <div className="flex items-start gap-1">
+                                  <span className="text-[9px] flex-shrink-0" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
+                                    {language === "he" ? "מורגש במיוחד אצל:" : language === "ar" ? "يؤثر بشكل خاص على:" : language === "ru" ? "Особенно ощутимо у:" : "Especially felt by:"}
+                                  </span>
+                                  <span className="text-[9px] font-medium" style={{ color: `hsl(${pColor} / 0.85)` }}>
+                                    {mobilePlanetaryInfluence.affected_signs[language]}
+                                  </span>
+                                </div>
+                                {/* Practical advice */}
+                                <div className="leading-snug text-[10px]" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                                  ✨ {mobilePlanetaryInfluence.practical_advice[language]}
+                                </div>
+                                {/* Caution */}
+                                <div className="leading-snug text-[9px] italic" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
+                                  ⚖️ {mobilePlanetaryInfluence.caution[language]}
                                 </div>
                               </div>
                             </motion.div>
