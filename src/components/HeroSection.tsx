@@ -822,6 +822,11 @@ function getDailyInfluence(): PlanetaryInfluence {
     title: INFLUENCE_TITLES[key],
     description: INFLUENCE_DESCRIPTIONS[key],
     life_area: INFLUENCE_LIFE_AREAS[planet.name],
+    collapsed_summary: COLLAPSED_SUMMARIES[planet.name],
+    planet_label: PLANET_LABELS[planet.name],
+    affected_signs: AFFECTED_SIGNS_DATA[planet.name],
+    practical_advice: PRACTICAL_ADVICE_DATA[planet.name],
+    caution: CAUTION_DATA[planet.name],
   };
 }
 
