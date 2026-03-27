@@ -7,6 +7,7 @@ import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
+import { useT } from "@/i18n";
 
 interface Props {
   isOpen: boolean;
