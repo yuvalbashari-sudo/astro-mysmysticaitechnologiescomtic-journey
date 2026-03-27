@@ -317,7 +317,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       link.download = `astrologai-birth-chart-${birthDate}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      toast.success("התמונה הורדה בהצלחה ✦");
+      toast.success(t.toast_image_download_success);
     } catch {
       toast.error("שגיאה בהורדת התמונה");
     }
