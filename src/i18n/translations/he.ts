@@ -475,6 +475,7 @@ export const he: TranslationKeys = {
   tarot_error_unexpected: "שגיאה לא צפויה",
   tarot_error_service: "שגיאה בשירות",
   tarot_error_connection: "שגיאה בחיבור",
+  tarot_skip_to_reading: "דלגו לקריאה",
   hero_open_full_reading: "פתחו קריאה מלאה",
   hero_tarot_fallback_message: "מופיע עבורך — סימן מיסטי מהיקום.",
   daily_ritual_label: "טקס יומי",
