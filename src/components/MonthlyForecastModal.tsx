@@ -312,9 +312,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                        {attempted && !gender && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
                      </div>
                      <div className="max-w-xs mx-auto mb-6">
-                       <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_birthdate_label}</label>
-                       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
-                       {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
+                       <MysticalDateInput label={t.forecast_birthdate_label} value={birthDate} onChange={setBirthDate} error={attempted && !birthDate ? t.forecast_birthdate_required : undefined} />
                      </div>
 
                      {/* Birth time — rising mode only */}
