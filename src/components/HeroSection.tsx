@@ -3176,6 +3176,61 @@ const HeroSection = () => {
             ))}
           </div>
         </motion.div>
+        {/* ── Mobile Planetary Influence Panel — below selection cards ── */}
+        {(() => {
+          const pColor = PLANET_COLORS[mobilePlanetaryInfluence.planet] || "43 80% 55%";
+          const now = new Date();
+          const influenceKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+          return (
+            <motion.div
+              className="pointer-events-auto"
+              style={{ width: "100%", maxWidth: 370, paddingLeft: 16, paddingRight: 12, boxSizing: "border-box", marginTop: 10 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
+            >
+              <div
+                className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden text-center"
+                style={{
+                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
+                  border: `1px solid hsl(${pColor} / 0.3)`,
+                  boxShadow: `0 0 35px hsl(${pColor} / 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${pColor} / 0.1)`,
+                }}
+              >
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.6), transparent 90%)` }} />
+                <div className="px-4 py-3.5 space-y-2">
+                  <div className="tracking-[0.2em] uppercase font-medium text-[9px]" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
+                    {t.zodiac_planetary_influence}
+                  </div>
+                  <div className="flex items-center justify-center gap-2.5">
+                    <motion.span
+                      className="text-xl"
+                      animate={{ textShadow: [`0 0 8px hsl(${pColor} / 0.3)`, `0 0 20px hsl(${pColor} / 0.6)`, `0 0 8px hsl(${pColor} / 0.3)`] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      {mobilePlanetaryInfluence.planet_symbol}
+                    </motion.span>
+                    <span className="font-bold tracking-[0.1em] uppercase text-sm" style={{ color: `hsl(${pColor})` }}>
+                      {mobilePlanetaryInfluence.title[language]}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-center">
+                    <span
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full tracking-[0.15em] uppercase font-medium text-[9px]"
+                      style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.2)`, color: `hsl(${pColor} / 0.85)` }}
+                    >
+                      <span>{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
+                      {mobilePlanetaryInfluence.life_area[language]}
+                    </span>
+                  </div>
+                  <div className="leading-relaxed text-[11px]" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                    {mobilePlanetaryInfluence.description[language]}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })()}
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
         <>
