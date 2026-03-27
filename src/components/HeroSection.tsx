@@ -3186,14 +3186,14 @@ const HeroSection = () => {
           return (
             <motion.div
               className="pointer-events-auto cursor-pointer"
-              style={{ maxWidth: planetaryExpanded ? 260 : 220, marginTop: 8, marginLeft: "auto", marginRight: "auto" }}
+              style={{ width: planetaryExpanded ? 270 : 240, marginTop: 10, marginLeft: "auto", marginRight: 12 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
               onClick={() => setPlanetaryExpanded(prev => !prev)}
             >
               <div
-                className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden text-center"
+                className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden"
                 style={{
                   background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.95))",
                   border: `1px solid hsl(${pColor} / 0.25)`,
@@ -3201,23 +3201,24 @@ const HeroSection = () => {
                 }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.5), transparent 90%)` }} />
-                {/* Collapsed: compact single row */}
-                <div className="px-3 py-1.5 flex items-center justify-center gap-1.5">
+                {/* Collapsed: compact row */}
+                <div className="px-3 py-2 flex items-center gap-2">
                   <motion.span
-                    className="text-sm"
+                    className="text-base flex-shrink-0"
                     animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
                     transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                   >
                     {mobilePlanetaryInfluence.planet_symbol}
                   </motion.span>
-                  <span className="font-bold tracking-[0.06em] uppercase text-[10px]" style={{ color: `hsl(${pColor})` }}>
+                  <span className="font-bold tracking-[0.06em] uppercase text-[11px] flex-1" style={{ color: `hsl(${pColor})` }}>
                     {mobilePlanetaryInfluence.title[language]}
                   </span>
                   <motion.span
+                    className="flex-shrink-0"
                     animate={{ rotate: planetaryExpanded ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <ChevronDown size={12} style={{ color: `hsl(${pColor} / 0.6)` }} />
+                    <ChevronDown size={14} style={{ color: `hsl(${pColor} / 0.6)` }} />
                   </motion.span>
                 </div>
                 {/* Expanded: full details */}
@@ -3230,8 +3231,8 @@ const HeroSection = () => {
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <div className="px-3 pb-2.5 pt-0.5 space-y-1.5">
-                        <div className="flex items-center justify-center">
+                      <div className="px-3 pb-3 pt-0.5 space-y-1.5">
+                        <div className="flex items-center">
                           <span
                             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
                             style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
@@ -3240,7 +3241,7 @@ const HeroSection = () => {
                             {mobilePlanetaryInfluence.life_area[language]}
                           </span>
                         </div>
-                        <div className="leading-snug text-[10px]" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                        <div className="leading-snug text-[11px]" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                           {mobilePlanetaryInfluence.description[language]}
                         </div>
                       </div>
