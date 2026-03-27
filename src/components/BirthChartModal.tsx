@@ -319,7 +319,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       link.click();
       toast.success(t.toast_image_download_success);
     } catch {
-      toast.error("שגיאה בהורדת התמונה");
+      toast.error(t.toast_image_download_error);
     }
     setDownloading(false);
   }, [birthDate]);
