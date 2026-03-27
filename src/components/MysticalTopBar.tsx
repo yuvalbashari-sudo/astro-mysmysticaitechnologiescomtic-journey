@@ -150,7 +150,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     >
        {isMobile ? (
         /* ── MOBILE: two rows ── */
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-0 pb-[15px]">
           {/* Row 1: all icons in a single row */}
           <div className="flex items-center justify-between w-full">
             <nav className="flex items-center gap-1.5" aria-label={t.a11y_main_navigation}>
