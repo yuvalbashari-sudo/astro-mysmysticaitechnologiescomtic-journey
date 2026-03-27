@@ -181,9 +181,12 @@ const MysticalNav = () => {
                     </motion.div>
 
                     <h3
-                      className="font-heading text-center leading-tight transition-colors duration-500"
+                      className="font-heading text-center transition-colors duration-500"
                       style={{
-                        fontSize: isMobile ? 11 : 14,
+                        fontSize: isMobile ? 12.5 : 14,
+                        lineHeight: isMobile ? 1.35 : undefined,
+                        fontWeight: isMobile ? 500 : undefined,
+                        letterSpacing: isMobile ? "0.02em" : undefined,
                         color: isHovered ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.85)",
                       }}
                     >
