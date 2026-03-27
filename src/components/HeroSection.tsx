@@ -3185,7 +3185,7 @@ const HeroSection = () => {
           return (
             <motion.div
               className="pointer-events-auto"
-              style={{ width: "100%", maxWidth: 260, paddingLeft: 10, paddingRight: 8, boxSizing: "border-box", marginTop: 8 }}
+              style={{ maxWidth: 220, marginTop: 8, marginLeft: "auto", marginRight: "auto" }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
