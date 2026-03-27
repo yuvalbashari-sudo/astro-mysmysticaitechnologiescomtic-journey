@@ -3194,6 +3194,7 @@ const HeroSection = () => {
             >
               <div
                 className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden"
+                style={{ width: 310 }}>
                 style={{
                   background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.95))",
                   border: `1px solid hsl(${pColor} / 0.25)`,
