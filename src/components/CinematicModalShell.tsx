@@ -263,11 +263,17 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 <div
                   className="absolute inset-x-0 -top-24 bottom-0 pointer-events-none"
                   style={{
-                    background: `linear-gradient(to bottom, 
-                      transparent 0%, 
-                      hsl(var(--deep-blue) / 0.25) 60px, 
-                      hsl(var(--deep-blue) / 0.55) 180px, 
-                      hsl(var(--deep-blue) / 0.75) 100%)`,
+                    background: isMobile
+                      ? `linear-gradient(to bottom, 
+                          hsl(var(--deep-blue) / 0.3) 0%, 
+                          hsl(var(--deep-blue) / 0.6) 60px, 
+                          hsl(var(--deep-blue) / 0.82) 180px, 
+                          hsl(var(--deep-blue) / 0.92) 100%)`
+                      : `linear-gradient(to bottom, 
+                          transparent 0%, 
+                          hsl(var(--deep-blue) / 0.25) 60px, 
+                          hsl(var(--deep-blue) / 0.55) 180px, 
+                          hsl(var(--deep-blue) / 0.75) 100%)`,
                   }}
                 />
 

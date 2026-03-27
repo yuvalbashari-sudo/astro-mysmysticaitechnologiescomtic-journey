@@ -271,7 +271,7 @@
   100% { background-position: 250% 0; }
 }
 
-/* Mobile performance: disable expensive effects */
+/* Mobile readability: darker overlays + stronger input backgrounds */
 @media (max-width: 767px) {
   .backdrop-blur-md,
   .backdrop-blur-xl,
@@ -279,6 +279,19 @@
   .backdrop-blur-3xl {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+  }
+
+  .mystical-card {
+    background: linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.96)) !important;
+  }
+
+  .mystical-card-elevated {
+    background: linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98)) !important;
+  }
+
+  .mystical-input {
+    background: hsl(var(--deep-blue-light) / 0.85) !important;
+    border-color: hsl(var(--gold) / 0.2) !important;
   }
 }
 
