@@ -3066,6 +3066,28 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
+          {/* ── Teaser text above cards ── */}
+          <motion.div
+            className="text-center mb-2.5"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.6, ease: "easeOut" }}
+          >
+            <motion.p
+              className="font-heading text-[14px] font-semibold leading-snug"
+              style={{ color: "hsl(var(--gold))", textShadow: "0 0 18px hsl(var(--gold) / 0.3)" }}
+              animate={{ opacity: [0.85, 1, 0.85] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            >
+              {t.hero_teaser_main}
+            </motion.p>
+            <p
+              className="font-body text-[11px] mt-0.5 tracking-wide"
+              style={{ color: "hsl(var(--muted-foreground))" }}
+            >
+              {t.hero_teaser_sub}
+            </p>
+          </motion.div>
         <div className="flex gap-2.5">
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3]].map((colIndices, colIdx) => (
