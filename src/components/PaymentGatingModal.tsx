@@ -131,7 +131,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 onClick={onClose}
                 className="mt-4 text-xs text-foreground/30 hover:text-foreground/50 transition-colors font-body"
               >
-                {copy.cancelLabel}
+                {t.gating_cancel_label}
               </button>
             </div>
           </motion.div>
