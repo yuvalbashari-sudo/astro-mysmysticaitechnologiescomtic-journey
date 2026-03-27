@@ -49,7 +49,7 @@ const AstrologerAvatarButton = ({
       >
         <img
           src={astrologerAvatarCta}
-          alt="שיחה עם האסטרולוגית"
+          alt={t.astrologer_chat_title}
           className="w-full h-full object-cover scale-105"
           style={{ objectPosition: "center 42%" }}
           draggable={false}
