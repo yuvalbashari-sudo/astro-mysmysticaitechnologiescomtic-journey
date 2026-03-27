@@ -225,12 +225,11 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
           </motion.div>
 
           <h2 className="font-heading text-3xl gold-gradient-text mb-5 leading-tight">
-            {language === "he" ? "שיחה עם האסטרולוגית" : "Chat with the Astrologer"}
+            {t.astrologer_chat_title}
           </h2>
           <p className="text-foreground/50 font-body text-lg leading-relaxed mb-10">
-            {language === "he"
-              ? "שאלו כל שאלה — על מזל, אהבה, קריירה, או החלטות חשובות. האסטרולוגית תעניק לכם הכוונה אישית."
-              : "Ask any question — about fortune, love, career, or important decisions. The astrologer will give you personal guidance."}
+            {t.astrologer_chat_desc}
+          </p>
           </p>
 
           {/* Suggestion chips */}
