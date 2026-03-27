@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Eye, Hand, ChevronDown } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -2166,6 +2166,7 @@ const HeroSection = () => {
   const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [mobilePlanetaryInfluence] = useState(() => getDailyInfluence());
+  const [planetaryExpanded, setPlanetaryExpanded] = useState(false);
   const [forecastOpen, setForecastOpen] = useState(false);
   
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
@@ -3184,11 +3185,12 @@ const HeroSection = () => {
           const influenceKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
           return (
             <motion.div
-              className="pointer-events-auto"
-              style={{ maxWidth: 220, marginTop: 8, marginLeft: "auto", marginRight: "auto" }}
+              className="pointer-events-auto cursor-pointer"
+              style={{ maxWidth: planetaryExpanded ? 260 : 220, marginTop: 8, marginLeft: "auto", marginRight: "auto" }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
+              onClick={() => setPlanetaryExpanded(prev => !prev)}
             >
               <div
                 className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden text-center"
@@ -3199,30 +3201,52 @@ const HeroSection = () => {
                 }}
               >
                 <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.5), transparent 90%)` }} />
-                <div className="px-3 py-2 space-y-1">
-                  <div className="flex items-center justify-center gap-2">
-                    <motion.span
-                      className="text-base"
-                      animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
-                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      {mobilePlanetaryInfluence.planet_symbol}
-                    </motion.span>
-                    <span className="font-bold tracking-[0.08em] uppercase text-xs" style={{ color: `hsl(${pColor})` }}>
-                      {mobilePlanetaryInfluence.title[language]}
-                    </span>
-                    <span
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
-                      style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
-                    >
-                      <span className="text-[9px]">{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
-                      {mobilePlanetaryInfluence.life_area[language]}
-                    </span>
-                  </div>
-                  <div className="leading-snug text-[10px] line-clamp-2" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
-                    {mobilePlanetaryInfluence.description[language]}
-                  </div>
+                {/* Collapsed: compact single row */}
+                <div className="px-3 py-1.5 flex items-center justify-center gap-1.5">
+                  <motion.span
+                    className="text-sm"
+                    animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {mobilePlanetaryInfluence.planet_symbol}
+                  </motion.span>
+                  <span className="font-bold tracking-[0.06em] uppercase text-[10px]" style={{ color: `hsl(${pColor})` }}>
+                    {mobilePlanetaryInfluence.title[language]}
+                  </span>
+                  <motion.span
+                    animate={{ rotate: planetaryExpanded ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ChevronDown size={12} style={{ color: `hsl(${pColor} / 0.6)` }} />
+                  </motion.span>
                 </div>
+                {/* Expanded: full details */}
+                <AnimatePresence>
+                  {planetaryExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-3 pb-2.5 pt-0.5 space-y-1.5">
+                        <div className="flex items-center justify-center">
+                          <span
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
+                            style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
+                          >
+                            <span className="text-[9px]">{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
+                            {mobilePlanetaryInfluence.life_area[language]}
+                          </span>
+                        </div>
+                        <div className="leading-snug text-[10px]" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
+                          {mobilePlanetaryInfluence.description[language]}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           );
