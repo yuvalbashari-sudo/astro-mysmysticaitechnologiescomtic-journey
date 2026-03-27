@@ -3056,12 +3056,12 @@ const HeroSection = () => {
 
 
     {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "72px" : "0", bottom: isMobile ? "auto" : "0", display: isMobile ? "flex" : undefined, justifyContent: isMobile ? "center" : undefined }}>
+    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "72px" : "0", bottom: isMobile ? "auto" : "0" }}>
       {isMobile ? (
         /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
-          className="pointer-events-auto"
-          style={{ width: "100%", maxWidth: 370, paddingLeft: 12, paddingRight: 12 }}
+          className="pointer-events-auto mx-auto"
+          style={{ width: "calc(100% - 24px)", maxWidth: 370 }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
