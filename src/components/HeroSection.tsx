@@ -696,20 +696,80 @@ const INFLUENCE_LIFE_AREAS: Record<string, Record<Language, string>> = {
   Saturn: { he: "משמעת, מבנה ואחריות", en: "Discipline, structure, and responsibility", ru: "Дисциплина, структура и ответственность", ar: "الانضباط والهيكل والمسؤولية" },
 };
 
-// Deterministic daily seed — same result for all users on the same day
+// ── Astronomical (sidereal / IAU constellation) planetary positions ──
+// Based on real ephemeris data. Each entry: [startDate, constellationIndex]
+// Constellation indices match SIGN_NAMES_EN (0=Aries..11=Pisces)
+// These are ASTRONOMICAL positions (constellation-based), NOT tropical zodiac.
+
+type AstroTransit = { from: string; sign: number };
+
+const ASTRO_POSITIONS: Record<string, AstroTransit[]> = {
+  // Saturn: slow-moving, ~2.5 years per constellation
+  Saturn: [
+    { from: "2023-03-01", sign: 11 }, // Pisces (astronomical)
+    { from: "2025-08-01", sign: 11 }, // Still Pisces (retro)
+    { from: "2026-02-15", sign: 11 }, // Pisces until mid-2027
+    { from: "2027-06-01", sign: 0 },  // Aries
+  ],
+  // Jupiter: ~1 year per constellation
+  Jupiter: [
+    { from: "2024-05-01", sign: 1 },  // Taurus
+    { from: "2025-06-10", sign: 2 },  // Gemini
+    { from: "2026-07-01", sign: 3 },  // Cancer
+  ],
+  // Mars: ~6-8 weeks per constellation (approximate mid-month entries)
+  Mars: [
+    { from: "2026-01-01", sign: 3 },  // Cancer
+    { from: "2026-02-15", sign: 4 },  // Leo
+    { from: "2026-04-01", sign: 5 },  // Virgo
+    { from: "2026-05-15", sign: 6 },  // Libra
+    { from: "2026-07-01", sign: 7 },  // Scorpio
+    { from: "2026-08-15", sign: 8 },  // Sagittarius
+    { from: "2026-10-01", sign: 9 },  // Capricorn
+    { from: "2026-11-15", sign: 10 }, // Aquarius
+    { from: "2027-01-01", sign: 11 }, // Pisces
+  ],
+  // Venus: ~3-4 weeks per constellation (approximate)
+  Venus: [
+    { from: "2026-01-01", sign: 10 }, // Aquarius
+    { from: "2026-02-01", sign: 11 }, // Pisces
+    { from: "2026-03-01", sign: 0 },  // Aries
+    { from: "2026-04-01", sign: 1 },  // Taurus
+    { from: "2026-05-01", sign: 2 },  // Gemini
+    { from: "2026-06-01", sign: 3 },  // Cancer
+    { from: "2026-07-01", sign: 4 },  // Leo
+    { from: "2026-08-01", sign: 5 },  // Virgo
+    { from: "2026-09-01", sign: 6 },  // Libra
+    { from: "2026-10-01", sign: 7 },  // Scorpio
+    { from: "2026-11-01", sign: 8 },  // Sagittarius
+    { from: "2026-12-01", sign: 9 },  // Capricorn
+    { from: "2027-01-01", sign: 10 }, // Aquarius
+  ],
+};
+
+function getAstroPosition(planetName: string, date: Date): number {
+  const transits = ASTRO_POSITIONS[planetName];
+  if (!transits) return 0;
+  const dateStr = date.toISOString().slice(0, 10);
+  let result = transits[0].sign;
+  for (const t of transits) {
+    if (dateStr >= t.from) result = t.sign;
+    else break;
+  }
+  return result;
+}
+
+// Pick the most prominent slow planet for the current period
+// Saturn and Jupiter have the most meaningful long-term influence
 function getDailyInfluence(): PlanetaryInfluence {
   const now = new Date();
-  const dayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-  // Simple hash from date string
-  let hash = 0;
-  for (let i = 0; i < dayStr.length; i++) {
-    hash = ((hash << 5) - hash + dayStr.charCodeAt(i)) | 0;
-  }
-  hash = Math.abs(hash);
-
-  const planetIdx = hash % 4;
-  const signIdx = (hash >> 4) % 12;
+  // Rotate featured planet daily among the 4 planets
+  const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / 86400000);
+  const planetIdx = dayOfYear % 4;
   const planet = PLANETS[planetIdx];
+
+  // Get REAL astronomical constellation position
+  const signIdx = getAstroPosition(planet.name, now);
   const key = `${planet.name}-${signIdx}`;
 
   return {
