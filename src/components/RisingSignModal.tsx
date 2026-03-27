@@ -135,7 +135,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                           </div>
                           <div>
                             <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Calendar className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthdate_label}</label>
-                            <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                            <MysticalDateInput value={birthDate} onChange={setBirthDate} />
                           </div>
                           <div>
                             <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
