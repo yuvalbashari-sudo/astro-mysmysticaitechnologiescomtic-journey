@@ -628,4 +628,12 @@ export const he: TranslationKeys = {
   seo_zodiac_tarot_desc: "קבלו מסר מהקלפים",
   seo_all_zodiac_signs: "כל המזלות",
   seo_arcana_number: "ארקנה מספר",
+
+  free_badge_label: "✦ חינם",
+  astrologer_chat_title: "שיחה עם האסטרולוגית",
+  astrologer_chat_desc: "שאלו כל שאלה — על מזל, אהבה, קריירה, או החלטות חשובות. האסטרולוגית תעניק לכם הכוונה אישית.",
+  astrologer_chat_label: "שיחה עם האסטרולוגית",
+  astrologer_chat_summary: "קבלו הכוונה אישית מבוססת אסטרולוגיה ובינה מלאכותית",
+  astrologer_personal_guidance: "הכוונה אישית",
+  astrologer_aria_label: "התייעצות עם האסטרולוגית",
 };

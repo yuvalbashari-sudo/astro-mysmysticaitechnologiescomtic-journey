@@ -676,4 +676,13 @@ export type TranslationKeys = {
   seo_zodiac_tarot_desc: string;
   seo_all_zodiac_signs: string;
   seo_arcana_number: string;
+
+  // Common UI
+  free_badge_label: string;
+  astrologer_chat_title: string;
+  astrologer_chat_desc: string;
+  astrologer_chat_label: string;
+  astrologer_chat_summary: string;
+  astrologer_personal_guidance: string;
+  astrologer_aria_label: string;
 };

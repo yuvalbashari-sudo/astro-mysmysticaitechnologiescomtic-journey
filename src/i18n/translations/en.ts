@@ -628,4 +628,12 @@ export const en: TranslationKeys = {
   seo_zodiac_tarot_desc: "Receive a message from the cards",
   seo_all_zodiac_signs: "All Zodiac Signs",
   seo_arcana_number: "Arcana #",
+
+  free_badge_label: "✦ Free",
+  astrologer_chat_title: "Chat with the Astrologer",
+  astrologer_chat_desc: "Ask any question — about fortune, love, career, or important decisions. The astrologer will give you personal guidance.",
+  astrologer_chat_label: "Chat with the Astrologer",
+  astrologer_chat_summary: "Get personalized guidance based on astrology and AI",
+  astrologer_personal_guidance: "Personal guidance",
+  astrologer_aria_label: "Consult the astrologer",
 };
