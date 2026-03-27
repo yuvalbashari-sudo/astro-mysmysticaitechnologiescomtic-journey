@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
 import { getSignFromDate, getSignHebrew, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
 import { Clock } from "lucide-react";
-import MysticalDateInput from "@/components/MysticalDateInput";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
@@ -172,7 +171,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                             </select>
                           </div>
                           <div className="flex gap-2">
-                            <MysticalDateInput value={date1} onChange={setDate1} showHelper={false} className="flex-1" />
+                            <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                             <div className="relative">
                               <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
                               <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
@@ -194,7 +193,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                             </select>
                           </div>
                           <div className="flex gap-2">
-                            <MysticalDateInput value={date2} onChange={setDate2} showHelper={false} className="flex-1" />
+                            <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                             <div className="relative">
                               <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center w-[110px]" style={{ direction: "ltr" }} />
                               <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
@@ -229,7 +228,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         </select>
                       </div>
                       <div className="flex flex-col sm:flex-row gap-2">
-                        <MysticalDateInput value={date1} onChange={setDate1} showHelper={false} className="flex-1" />
+                        <input type="date" value={date1} onChange={(e) => setDate1(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                         <div className="relative">
                           <input type="time" value={time1} onChange={(e) => setTime1(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
                           <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
@@ -253,7 +252,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         </select>
                       </div>
                       <div className="flex flex-col sm:flex-row gap-2">
-                        <MysticalDateInput value={date2} onChange={setDate2} showHelper={false} className="flex-1" />
+                        <input type="date" value={date2} onChange={(e) => setDate2(e.target.value)} className="mystical-input font-body text-center flex-1" style={{ direction: "ltr" }} />
                         <div className="relative">
                           <input type="time" value={time2} onChange={(e) => setTime2(e.target.value)} className="mystical-input font-body text-center sm:w-[110px]" style={{ direction: "ltr" }} />
                           <Clock className="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gold/40 pointer-events-none" />
