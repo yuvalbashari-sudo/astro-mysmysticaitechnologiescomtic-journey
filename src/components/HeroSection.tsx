@@ -555,6 +555,12 @@ type PlanetaryInfluence = {
   title: Record<Language, string>;
   description: Record<Language, string>;
   life_area: Record<Language, string>;
+  // User-focused content
+  collapsed_summary: Record<Language, string>;
+  planet_label: Record<Language, string>;
+  affected_signs: Record<Language, string>;
+  practical_advice: Record<Language, string>;
+  caution: Record<Language, string>;
 };
 
 const PLANET_COLORS: Record<string, string> = {
