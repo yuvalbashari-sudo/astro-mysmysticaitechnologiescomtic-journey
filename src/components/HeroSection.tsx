@@ -702,6 +702,42 @@ const INFLUENCE_LIFE_AREAS: Record<string, Record<Language, string>> = {
   Saturn: { he: "משמעת, מבנה ואחריות", en: "Discipline, structure, and responsibility", ru: "Дисциплина, структура и ответственность", ar: "الانضباط والهيكل والمسؤولية" },
 };
 
+// ── User-focused content per planet ──
+const PLANET_LABELS: Record<string, Record<Language, string>> = {
+  Venus: { he: "נוגה (ונוס)", en: "Venus", ru: "Венера", ar: "الزهرة" },
+  Mars: { he: "מאדים", en: "Mars", ru: "Марс", ar: "المريخ" },
+  Jupiter: { he: "צדק (יופיטר)", en: "Jupiter", ru: "Юпитер", ar: "المشتري" },
+  Saturn: { he: "שבתאי", en: "Saturn", ru: "Сатурн", ar: "زحل" },
+};
+
+const COLLAPSED_SUMMARIES: Record<string, Record<Language, string>> = {
+  Venus: { he: "אהבה, יופי והרמוניה", en: "Love, beauty & harmony", ru: "Любовь, красота и гармония", ar: "حب، جمال وانسجام" },
+  Mars: { he: "אנרגיה, פעולה ומוטיבציה", en: "Energy, action & motivation", ru: "Энергия, действие и мотивация", ar: "طاقة، عمل وتحفيز" },
+  Jupiter: { he: "תקשורת, צמיחה והזדמנויות", en: "Communication, growth & opportunities", ru: "Общение, рост и возможности", ar: "تواصل، نمو وفرص" },
+  Saturn: { he: "משמעת, מבנה ואחריות", en: "Discipline, structure & responsibility", ru: "Дисциплина, структура и ответственность", ar: "انضباط، هيكل ومسؤولية" },
+};
+
+const AFFECTED_SIGNS_DATA: Record<string, Record<Language, string>> = {
+  Venus: { he: "שור, מאזניים ודגים", en: "Taurus, Libra & Pisces", ru: "Телец, Весы и Рыбы", ar: "الثور، الميزان والحوت" },
+  Mars: { he: "טלה, עקרב ואריה", en: "Aries, Scorpio & Leo", ru: "Овен, Скорпион и Лев", ar: "الحمل، العقرب والأسد" },
+  Jupiter: { he: "קשת, דגים ותאומים", en: "Sagittarius, Pisces & Gemini", ru: "Стрелец, Рыбы и Близнецы", ar: "القوس، الحوت والجوزاء" },
+  Saturn: { he: "גדי, דלי ומאזניים", en: "Capricorn, Aquarius & Libra", ru: "Козерог, Водолей и Весы", ar: "الجدي، الدلو والميزان" },
+};
+
+const PRACTICAL_ADVICE_DATA: Record<string, Record<Language, string>> = {
+  Venus: { he: "זה זמן טוב לשיחות לב, חיבורים חדשים או טיפוח מערכות יחסים", en: "A good time for heartfelt conversations, new connections, or nurturing relationships", ru: "Хорошее время для душевных разговоров, новых связей или укрепления отношений", ar: "وقت جيد للمحادثات الصادقة والروابط الجديدة أو رعاية العلاقات" },
+  Mars: { he: "זה זמן טוב ליוזמות, לפעולה נחושה או להתחלת פרויקטים חדשים", en: "A good time for initiatives, determined action, or starting new projects", ru: "Хорошее время для инициатив, решительных действий или начала новых проектов", ar: "وقت جيد للمبادرات والعمل الحازم أو بدء مشاريع جديدة" },
+  Jupiter: { he: "זה זמן טוב לשיחות חשובות, למידה או פתיחת כיוון חדש", en: "A good time for important conversations, learning, or exploring a new direction", ru: "Хорошее время для важных разговоров, обучения или нового направления", ar: "وقت جيد للمحادثات المهمة أو التعلم أو استكشاف اتجاه جديد" },
+  Saturn: { he: "זה זמן טוב לסדר, תכנון ארוך טווח וחיזוק מבנים קיימים", en: "A good time for planning, long-term structure, and strengthening existing foundations", ru: "Хорошее время для планирования, долгосрочной структуры и укрепления существующих основ", ar: "وقت جيد للتخطيط والهيكل طويل الأمد وتعزيز الأسس القائمة" },
+};
+
+const CAUTION_DATA: Record<string, Record<Language, string>> = {
+  Venus: { he: "כדאי להימנע מאידיאליזציה יתרה או התעלמות מגבולות אישיים", en: "Avoid over-idealizing or ignoring personal boundaries", ru: "Избегайте чрезмерной идеализации или игнорирования личных границ", ar: "تجنب المثالية المفرطة أو تجاهل الحدود الشخصية" },
+  Mars: { he: "כדאי להימנע מפעולות אימפולסיביות או עימותים מיותרים", en: "Avoid impulsive actions or unnecessary confrontations", ru: "Избегайте импульсивных действий или ненужных конфронтаций", ar: "تجنب التصرفات الاندفاعية أو المواجهات غير الضرورية" },
+  Jupiter: { he: "כדאי להימנע מפיזור יתר או החלטות פזיזות", en: "Avoid over-spreading yourself or hasty decisions", ru: "Избегайте распыления или поспешных решений", ar: "تجنب التشتت أو القرارات المتسرعة" },
+  Saturn: { he: "כדאי להימנע מנוקשות יתרה או ביקורת עצמית מוגזמת", en: "Avoid excessive rigidity or over-criticizing yourself", ru: "Избегайте чрезмерной жёсткости или чрезмерной самокритики", ar: "تجنب الجمود المفرط أو النقد الذاتي المبالغ فيه" },
+};
+
 // ── Astronomical (sidereal / IAU constellation) planetary positions ──
 // Based on real ephemeris data. Each entry: [startDate, constellationIndex]
 // Constellation indices match SIGN_NAMES_EN (0=Aries..11=Pisces)
