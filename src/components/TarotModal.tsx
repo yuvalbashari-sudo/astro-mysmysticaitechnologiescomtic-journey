@@ -482,14 +482,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                         whileTap={{ scale: 0.97 }}
                         onClick={() => {
                           setSelectedSpreadKey(spread.key);
+                          // Set next phase BEFORE clearing topic phase to prevent fan layout flash
+                          if (spread.key !== "daily") {
+                            setIsQuestionPhase(true);
+                          } else {
+                            setIsLoading(true);
+                          }
                           setMobileTopicPhase(false);
-                          setTimeout(() => {
-                            if (spread.key !== "daily") {
-                              setIsQuestionPhase(true);
-                            } else {
-                              setIsLoading(true);
-                            }
-                          }, 250);
                         }}
                       >
                         <span className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{
