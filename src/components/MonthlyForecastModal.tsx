@@ -313,7 +313,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                      </div>
                      <div className="max-w-xs mx-auto mb-6">
                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_birthdate_label}</label>
-                       <input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                       <MysticalDateInput value={birthDate} onChange={setBirthDate} />
                        {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
                      </div>
 

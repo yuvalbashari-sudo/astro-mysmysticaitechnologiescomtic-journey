@@ -137,19 +137,7 @@ const LeadSection = () => {
             </div>
             <div>
               <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_birthdate}</label>
-              <input
-                type="date"
-                className="mystical-input font-body"
-                value={formData.birthDate}
-                onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                style={{
-                  direction: "ltr",
-                  colorScheme: "dark",
-                  WebkitAppearance: "none",
-                  minHeight: "48px",
-                  opacity: 1,
-                }}
-              />
+              <MysticalDateInput value={formData.birthDate} onChange={(v) => setFormData({ ...formData, birthDate: v })} style={{ minHeight: "48px" }} />
             </div>
             <div>
               <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
