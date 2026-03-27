@@ -203,7 +203,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               >
                 <img
                   src={astrologerAvatar}
-                  alt="האסטרולוגית"
+                  alt={t.astrologer_chat_title}
                   className="w-full h-full object-cover scale-105"
                   style={{ objectPosition: "center 42%" }}
                   draggable={false}
