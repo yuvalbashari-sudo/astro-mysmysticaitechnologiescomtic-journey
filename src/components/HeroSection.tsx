@@ -2389,7 +2389,7 @@ const HeroSection = () => {
         : "Open message from the universe";
 
   const crystalBallTeaserText = language === "he"
-    ? "לחצו לקבלת מסר מהיקום"
+    ? "לחצו על הכדור"
     : language === "ar"
       ? "اضغطوا للحصول على رسالة من الكون"
       : language === "ru"
