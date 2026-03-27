@@ -89,7 +89,9 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
+                    background: isMobile
+                      ? "radial-gradient(ellipse 90% 80% at 50% 40%, hsl(var(--deep-blue) / 0.35) 30%, hsl(var(--deep-blue) / 0.8) 100%)"
+                      : "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
                   }}
                 />
                 <div
