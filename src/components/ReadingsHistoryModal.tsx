@@ -87,7 +87,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
             onClick={() => setAdvisorOpen(true)}
             whileHover={{ filter: "brightness(1.15)" }}
             whileTap={{ filter: "brightness(0.9)" }}
-            aria-label="התייעצות עם האסטרולוגית"
+            aria-label={t.astrologer_aria_label}
           >
             <img
               src={astrologerAvatar}
