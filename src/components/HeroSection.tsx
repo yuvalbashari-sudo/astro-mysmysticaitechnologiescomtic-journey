@@ -3107,8 +3107,8 @@ const HeroSection = () => {
                             ? (isHovered ? neon.neonLight : `${i === 1 ? "rgba(0, 150, 255, 0.25)" : "rgba(220, 50, 50, 0.25)"}`)
                             : (isHovered ? `${neon.neon}bb` : "hsl(var(--gold) / 0.12)"),
                           background: isNeonPanel
-                            ? "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))"
-                            : (isHovered ? `${neon.neon}1a` : "hsl(var(--deep-blue) / 0.5)"),
+                            ? "linear-gradient(135deg, hsl(var(--deep-blue) / 0.75), hsl(var(--deep-blue) / 0.6))"
+                            : (isHovered ? `${neon.neon}2a` : "hsl(var(--deep-blue) / 0.7)"),
                           boxShadow: isNeonPanel
                             ? (isHovered
                               ? `0 0 28px ${i === 1 ? "rgba(0, 150, 255, 0.22)" : "rgba(220, 50, 50, 0.22)"}, 0 0 56px ${i === 1 ? "rgba(0, 150, 255, 0.1)" : "rgba(220, 50, 50, 0.1)"}, 0 8px 24px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)`
