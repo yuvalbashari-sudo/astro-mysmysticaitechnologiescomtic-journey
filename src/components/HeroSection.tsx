@@ -3060,8 +3060,8 @@ const HeroSection = () => {
       {isMobile ? (
         /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
-          className="pointer-events-auto px-3 mx-auto"
-          style={{ maxWidth: 370 }}
+          className="pointer-events-auto mx-auto"
+          style={{ maxWidth: 370, paddingLeft: 12, paddingRight: 12 }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
