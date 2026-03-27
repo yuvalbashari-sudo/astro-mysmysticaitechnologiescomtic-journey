@@ -717,26 +717,28 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
                   <TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} />
                   {isMobileTarot && (
-                    <motion.button
-                      type="button"
-                      className="absolute top-5 left-1/2 -translate-x-1/2 z-30 px-5 py-2 rounded-full font-body text-sm tracking-wide"
-                      style={{
-                        background: "hsl(222 32% 12% / 0.7)",
-                        border: "1px solid hsl(var(--gold) / 0.15)",
-                        color: "hsl(var(--gold) / 0.6)",
-                        backdropFilter: "blur(8px)",
-                      }}
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setIsQuestionPhase(false);
-                        setIsLoading(true);
-                      }}
-                    >
-                      {t.tarot_skip_to_reading} ›
-                    </motion.button>
+                    <motion.div className="flex justify-center -mt-4 pb-6">
+                      <motion.button
+                        type="button"
+                        className="px-5 py-2 rounded-full font-body text-sm tracking-wide"
+                        style={{
+                          background: "hsl(222 32% 12% / 0.7)",
+                          border: "1px solid hsl(var(--gold) / 0.15)",
+                          color: "hsl(var(--gold) / 0.55)",
+                          backdropFilter: "blur(8px)",
+                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 1.5 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          setIsQuestionPhase(false);
+                          setIsLoading(true);
+                        }}
+                      >
+                        {t.tarot_skip_to_reading} ›
+                      </motion.button>
+                    </motion.div>
                   )}
                 </motion.div>
               ) : isAnalysisPhase ? (
