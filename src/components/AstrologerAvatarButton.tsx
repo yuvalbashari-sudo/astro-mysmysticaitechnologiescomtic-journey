@@ -18,6 +18,7 @@ const AstrologerAvatarButton = ({
   className = "",
   entranceDelay = 1.1,
 }: AstrologerAvatarButtonProps) => {
+  const t = useT();
   return (
     <motion.button
       type="button"
