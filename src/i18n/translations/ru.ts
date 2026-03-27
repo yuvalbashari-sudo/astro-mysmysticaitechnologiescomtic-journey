@@ -475,6 +475,7 @@ export const ru: TranslationKeys = {
   tarot_error_unexpected: "Непредвиденная ошибка",
   tarot_error_service: "Ошибка сервиса",
   tarot_error_connection: "Ошибка соединения",
+  tarot_skip_to_reading: "Перейти к чтению",
   hero_open_full_reading: "Открыть полное чтение",
   hero_tarot_fallback_message: "появляется для вас — мистический знак вселенной.",
   daily_ritual_label: "Ежедневный ритуал",
