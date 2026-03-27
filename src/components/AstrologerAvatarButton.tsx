@@ -28,7 +28,7 @@ const AstrologerAvatarButton = ({
       }}
       whileHover={{ filter: "brightness(1.15)", scale: 1.08 }}
       whileTap={{ scale: 0.95 }}
-      aria-label="שיחה עם האסטרולוגית"
+      aria-label={t.astrologer_aria_label}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: entranceDelay }}
