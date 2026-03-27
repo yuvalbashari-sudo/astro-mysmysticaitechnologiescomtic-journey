@@ -3130,7 +3130,7 @@ const HeroSection = () => {
                           }}
                         />
                         <span
-                          className="font-body transition-colors duration-300 text-[12px] font-semibold leading-tight"
+                          className="font-body transition-colors duration-300 text-[13.5px] font-medium leading-snug tracking-[0.01em]"
                           style={{
                             color: isNeonPanel
                               ? "#fff"
