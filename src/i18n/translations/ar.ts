@@ -636,4 +636,16 @@ export const ar: TranslationKeys = {
   astrologer_chat_summary: "احصلوا على توجيه شخصي مبني على الفلك والذكاء الاصطناعي",
   astrologer_personal_guidance: "توجيه شخصي",
   astrologer_aria_label: "استشارة المنجّمة",
+
+  toast_image_download_success: "تم تحميل الصورة بنجاح ✦",
+  toast_image_download_error: "خطأ في تحميل الصورة",
+  toast_pdf_ready: "ملف PDF جاهز للتحميل ✦",
+  toast_pdf_error: "خطأ في إنشاء PDF",
+  birth_chart_pdf_title: "ASTROLOGAI — خريطة الميلاد",
+
+  gating_upgrade_label: "الترقية إلى بريميوم",
+  gating_pay_label: "ادفع",
+  gating_or_label: "أو",
+  gating_subscribe_label: "انتقل إلى بريميوم واحصل على المزيد",
+  gating_cancel_label: "رجوع",
 };

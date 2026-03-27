@@ -636,4 +636,16 @@ export const ru: TranslationKeys = {
   astrologer_chat_summary: "Получите персональное руководство на основе астрологии и ИИ",
   astrologer_personal_guidance: "Личное руководство",
   astrologer_aria_label: "Консультация с астрологом",
+
+  toast_image_download_success: "Изображение успешно загружено ✦",
+  toast_image_download_error: "Ошибка при загрузке изображения",
+  toast_pdf_ready: "PDF готов к загрузке ✦",
+  toast_pdf_error: "Ошибка при создании PDF",
+  birth_chart_pdf_title: "ASTROLOGAI — Карта рождения",
+
+  gating_upgrade_label: "Перейти на Премиум",
+  gating_pay_label: "Оплатить",
+  gating_or_label: "или",
+  gating_subscribe_label: "Перейдите на Премиум и получите больше",
+  gating_cancel_label: "Назад",
 };

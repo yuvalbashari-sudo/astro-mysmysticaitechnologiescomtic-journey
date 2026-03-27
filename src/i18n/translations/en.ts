@@ -636,4 +636,16 @@ export const en: TranslationKeys = {
   astrologer_chat_summary: "Get personalized guidance based on astrology and AI",
   astrologer_personal_guidance: "Personal guidance",
   astrologer_aria_label: "Consult the astrologer",
+
+  toast_image_download_success: "Image downloaded successfully ✦",
+  toast_image_download_error: "Error downloading image",
+  toast_pdf_ready: "PDF ready to download ✦",
+  toast_pdf_error: "Error creating PDF",
+  birth_chart_pdf_title: "ASTROLOGAI — Birth Chart",
+
+  gating_upgrade_label: "Upgrade to Premium",
+  gating_pay_label: "Pay",
+  gating_or_label: "or",
+  gating_subscribe_label: "Go Premium and get more",
+  gating_cancel_label: "Go Back",
 };
