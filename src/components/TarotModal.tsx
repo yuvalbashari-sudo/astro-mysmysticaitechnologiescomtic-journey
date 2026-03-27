@@ -233,9 +233,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     const drawn = drawReadingCards(selectedSpread.cardCount);
     setTableCards(drawn);
     setFlippedIndices(new Set());
-    setIsShufflePhase(false);
 
     // Preload card images on mobile before showing table
+    // IMPORTANT: Keep isShufflePhase true until isTablePhase is set to prevent fan layout flash
     if (isMobileTarot) {
       const imageUrls = drawn.map(c => c.image).filter(Boolean) as string[];
       if (imageUrls.length > 0) {
@@ -246,11 +246,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             img.onerror = () => resolve();
             img.src = src;
           });
-        })).then(() => setIsTablePhase(true));
+        })).then(() => {
+          setIsTablePhase(true);
+          setIsShufflePhase(false);
+        });
       } else {
         setIsTablePhase(true);
+        setIsShufflePhase(false);
       }
     } else {
+      setIsShufflePhase(false);
       setIsTablePhase(true);
     }
   };
