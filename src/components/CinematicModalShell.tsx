@@ -167,7 +167,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 color: "hsl(var(--gold))",
               }}
             >
-              ✦ חינם
+              {t.free_badge_label}
             </span>
           </div>
 
