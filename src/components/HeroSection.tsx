@@ -1442,6 +1442,7 @@ const ZodiacWheel = ({
       {/* Planetary Influence Info Card */}
       <motion.div
         className="absolute pointer-events-none z-20"
+        style={isMobile ? { display: "none" } : undefined}
         style={{
           bottom: isMobile ? -100 : -130,
           left: "50%",
