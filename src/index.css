@@ -271,7 +271,7 @@
   100% { background-position: 250% 0; }
 }
 
-/* Mobile readability: darker overlays + stronger input backgrounds */
+/* Mobile readability: darker overlays + stronger input backgrounds + text scaling */
 @media (max-width: 767px) {
   .backdrop-blur-md,
   .backdrop-blur-xl,
@@ -292,6 +292,67 @@
   .mystical-input {
     background: hsl(var(--deep-blue-light) / 0.85) !important;
     border-color: hsl(var(--gold) / 0.2) !important;
+  }
+
+  /* ── Mobile overlay text readability boost ── */
+
+  /* Headings inside overlays (+20%) */
+  [class*="z-[100]"] h1,
+  [class*="z-[100]"] h2,
+  [class*="z-[100]"] h3,
+  [class*="z-[100]"] h4,
+  [role="dialog"] h1,
+  [role="dialog"] h2,
+  [role="dialog"] h3,
+  [role="dialog"] h4 {
+    font-size: 120% !important;
+    line-height: 1.35 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Body text, labels, spans inside overlays (+15%) */
+  [class*="z-[100]"] p,
+  [class*="z-[100]"] label,
+  [class*="z-[100]"] span:not([class*="sr-only"]),
+  [role="dialog"] p,
+  [role="dialog"] label,
+  [role="dialog"] span:not([class*="sr-only"]) {
+    font-size: 115% !important;
+    line-height: 1.7 !important;
+  }
+
+  /* Buttons inside overlays (+15%) */
+  [class*="z-[100]"] button,
+  [role="dialog"] button {
+    font-size: 115% !important;
+    font-weight: 500 !important;
+  }
+
+  /* Inputs and textareas inside overlays (+15%) */
+  [class*="z-[100]"] input,
+  [class*="z-[100]"] textarea,
+  [class*="z-[100]"] select,
+  [role="dialog"] input,
+  [role="dialog"] textarea,
+  [role="dialog"] select {
+    font-size: 115% !important;
+    font-weight: 500 !important;
+  }
+
+  /* Helper / muted text inside overlays — readable but smaller than body */
+  [class*="z-[100]"] .text-muted-foreground,
+  [role="dialog"] .text-muted-foreground {
+    font-size: 108% !important;
+    line-height: 1.6 !important;
+  }
+
+  /* Placeholders */
+  [class*="z-[100]"] input::placeholder,
+  [class*="z-[100]"] textarea::placeholder,
+  [role="dialog"] input::placeholder,
+  [role="dialog"] textarea::placeholder {
+    font-size: inherit !important;
+    font-weight: 400 !important;
   }
 }
 
