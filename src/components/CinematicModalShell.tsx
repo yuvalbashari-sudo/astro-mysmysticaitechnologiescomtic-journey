@@ -62,7 +62,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
             /* Subtle dark backdrop — hero shows through */
             <div
               className="absolute inset-0"
-              style={{ background: "hsl(222 47% 3% / 0.55)" }}
+              style={{ background: isMobile ? "hsl(222 47% 3% / 0.75)" : "hsl(222 47% 3% / 0.55)" }}
             />
           ) : (
             <>
@@ -79,7 +79,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                   className="w-full h-full object-cover"
                   style={{
                     objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                    filter: "brightness(0.5) saturate(1.15)",
+                    filter: isMobile ? "brightness(0.32) saturate(1.1)" : "brightness(0.5) saturate(1.15)",
                   }}
                 />
               </motion.div>
@@ -89,7 +89,9 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 <div
                   className="absolute inset-0"
                   style={{
-                    background: "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
+                    background: isMobile
+                      ? "radial-gradient(ellipse 90% 80% at 50% 40%, hsl(var(--deep-blue) / 0.35) 30%, hsl(var(--deep-blue) / 0.8) 100%)"
+                      : "radial-gradient(ellipse 90% 80% at 50% 40%, transparent 50%, hsl(var(--deep-blue) / 0.65) 100%)",
                   }}
                 />
                 <div
@@ -261,11 +263,17 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 <div
                   className="absolute inset-x-0 -top-24 bottom-0 pointer-events-none"
                   style={{
-                    background: `linear-gradient(to bottom, 
-                      transparent 0%, 
-                      hsl(var(--deep-blue) / 0.25) 60px, 
-                      hsl(var(--deep-blue) / 0.55) 180px, 
-                      hsl(var(--deep-blue) / 0.75) 100%)`,
+                    background: isMobile
+                      ? `linear-gradient(to bottom, 
+                          hsl(var(--deep-blue) / 0.3) 0%, 
+                          hsl(var(--deep-blue) / 0.6) 60px, 
+                          hsl(var(--deep-blue) / 0.82) 180px, 
+                          hsl(var(--deep-blue) / 0.92) 100%)`
+                      : `linear-gradient(to bottom, 
+                          transparent 0%, 
+                          hsl(var(--deep-blue) / 0.25) 60px, 
+                          hsl(var(--deep-blue) / 0.55) 180px, 
+                          hsl(var(--deep-blue) / 0.75) 100%)`,
                   }}
                 />
 
