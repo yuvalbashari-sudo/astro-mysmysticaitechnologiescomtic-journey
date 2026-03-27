@@ -22,8 +22,6 @@ export const en: TranslationKeys = {
   hero_menu_compatibility: "Zodiac compatibility",
   hero_menu_tarot: "Tarot reading",
   hero_menu_palm: "Palm reading",
-  hero_teaser_main: "Tap to receive your personal guidance ✨",
-  hero_teaser_sub: "Choose a topic to begin",
 
   nav_title: "Mystical Gates",
   nav_subtitle: "Choose your gateway to the spiritual realm",

@@ -22,8 +22,6 @@ export const he: TranslationKeys = {
   hero_menu_compatibility: "💖 בדקו מה באמת קורה ביניכם",
   hero_menu_tarot: "🔮 קבלו תשובה ברורה מהקלפים",
   hero_menu_palm: "✋ חשפו מה כתוב לכם בגורל",
-  hero_teaser_main: "לחצו לקבלת הכוונה אישית ✨",
-  hero_teaser_sub: "בחרו נושא כדי להתחיל",
 
   nav_title: "שערים מיסטיים",
   nav_subtitle: "בחרו את השער שלכם לעולם הרוחני",
