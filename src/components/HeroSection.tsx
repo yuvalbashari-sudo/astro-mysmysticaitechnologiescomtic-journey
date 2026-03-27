@@ -3185,46 +3185,41 @@ const HeroSection = () => {
           return (
             <motion.div
               className="pointer-events-auto"
-              style={{ width: "100%", maxWidth: 370, paddingLeft: 16, paddingRight: 12, boxSizing: "border-box", marginTop: 10 }}
+              style={{ width: "100%", maxWidth: 260, paddingLeft: 10, paddingRight: 8, boxSizing: "border-box", marginTop: 8 }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
             >
               <div
-                className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden text-center"
+                className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden text-center"
                 style={{
-                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
-                  border: `1px solid hsl(${pColor} / 0.3)`,
-                  boxShadow: `0 0 35px hsl(${pColor} / 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${pColor} / 0.1)`,
+                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.95))",
+                  border: `1px solid hsl(${pColor} / 0.25)`,
+                  boxShadow: `0 0 20px hsl(${pColor} / 0.08), 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(${pColor} / 0.08)`,
                 }}
               >
-                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.6), transparent 90%)` }} />
-                <div className="px-4 py-3.5 space-y-2">
-                  <div className="tracking-[0.2em] uppercase font-medium text-[9px]" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
-                    {t.zodiac_planetary_influence}
-                  </div>
-                  <div className="flex items-center justify-center gap-2.5">
+                <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.5), transparent 90%)` }} />
+                <div className="px-3 py-2 space-y-1">
+                  <div className="flex items-center justify-center gap-2">
                     <motion.span
-                      className="text-xl"
-                      animate={{ textShadow: [`0 0 8px hsl(${pColor} / 0.3)`, `0 0 20px hsl(${pColor} / 0.6)`, `0 0 8px hsl(${pColor} / 0.3)`] }}
+                      className="text-base"
+                      animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
                       transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                     >
                       {mobilePlanetaryInfluence.planet_symbol}
                     </motion.span>
-                    <span className="font-bold tracking-[0.1em] uppercase text-sm" style={{ color: `hsl(${pColor})` }}>
+                    <span className="font-bold tracking-[0.08em] uppercase text-xs" style={{ color: `hsl(${pColor})` }}>
                       {mobilePlanetaryInfluence.title[language]}
                     </span>
-                  </div>
-                  <div className="flex items-center justify-center">
                     <span
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full tracking-[0.15em] uppercase font-medium text-[9px]"
-                      style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.2)`, color: `hsl(${pColor} / 0.85)` }}
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
+                      style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
                     >
-                      <span>{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
+                      <span className="text-[9px]">{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
                       {mobilePlanetaryInfluence.life_area[language]}
                     </span>
                   </div>
-                  <div className="leading-relaxed text-[11px]" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                  <div className="leading-snug text-[10px] line-clamp-2" style={{ color: "hsl(var(--foreground) / 0.55)" }}>
                     {mobilePlanetaryInfluence.description[language]}
                   </div>
                 </div>
