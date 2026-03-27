@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import MysticalNameInput from "@/components/MysticalNameInput";
+import MysticalDateInput from "@/components/MysticalDateInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";

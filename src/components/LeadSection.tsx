@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useT } from "@/i18n";
 import { antiAbuse } from "@/lib/antiAbuse";
+import MysticalDateInput from "@/components/MysticalDateInput";
 
 const LeadSection = () => {
   const t = useT();
