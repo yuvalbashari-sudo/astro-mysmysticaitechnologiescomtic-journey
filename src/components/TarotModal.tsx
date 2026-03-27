@@ -733,7 +733,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                         whileTap={{ scale: 0.95 }}
                         onClick={() => {
                           setIsQuestionPhase(false);
-                          setIsLoading(true);
+                          setIsShufflePhase(true);
                         }}
                       >
                         {t.tarot_skip_to_reading} ›
