@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Lock, X, Sparkles } from "lucide-react";
-import { useLanguage } from "@/i18n/LanguageContext";
+import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import type { GatingMessage } from "@/lib/entitlements";
 
@@ -12,28 +12,10 @@ interface Props {
   onPayPerUse?: () => void;
 }
 
-const UI: Record<string, { upgradeLabel: string; payLabel: string; orLabel: string; subscribeLabel: string; cancelLabel: string }> = {
-  he: {
-    upgradeLabel: "שדרגו למנוי פרימיום",
-    payLabel: "שלמו",
-    orLabel: "או",
-    subscribeLabel: "עברו לפרימיום וקבלו יותר",
-    cancelLabel: "חזרה",
-  },
-  en: {
-    upgradeLabel: "Upgrade to Premium",
-    payLabel: "Pay",
-    orLabel: "or",
-    subscribeLabel: "Go Premium and get more",
-    cancelLabel: "Go Back",
-  },
-};
-
 const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Props) => {
   const { language, dir } = useLanguage();
+  const t = useT();
   const navigate = useNavigate();
-  const lang = language === "he" || language === "ar" || language === "ru" ? "he" : "en";
-  const copy = UI[lang] || UI.en;
 
   if (!gatingMessage) return null;
 
