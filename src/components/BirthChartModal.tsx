@@ -341,7 +341,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           <!DOCTYPE html>
           <html dir="${dir}">
           <head>
-            <title>ASTROLOGAI — מפת לידה</title>
+            <title>${t.birth_chart_pdf_title}</title>
             <style>
               body { margin: 0; padding: 20px; background: #0a0f1e; display: flex; justify-content: center; }
               img { max-width: 100%; height: auto; }
