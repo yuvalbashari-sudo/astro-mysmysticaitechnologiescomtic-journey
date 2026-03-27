@@ -88,7 +88,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
 
               {/* Message */}
               <p className="font-body text-foreground/80 text-sm leading-relaxed mb-7 max-w-xs">
-                {lang === "he" ? gatingMessage.he : gatingMessage.en}
+                {(language === "he" || language === "ar" || language === "ru") ? gatingMessage.he : gatingMessage.en}
               </p>
 
               {/* Pay-per-use CTA */}
