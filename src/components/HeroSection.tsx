@@ -3076,7 +3076,6 @@ const HeroSection = () => {
               <div key={colIdx} className="flex flex-1 flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
-                  // Neon color map matching desktop: blue for Compatibility, red for Tarot, gold for others
                   const MOBILE_NEON: Record<number, { neon: string; neonLight: string; iconColor: string }> = {
                     0: { neon: ITEM_COLORS[0].glow, neonLight: ITEM_COLORS[0].glow, iconColor: ITEM_COLORS[0].glow },
                     1: { neon: "rgba(0, 150, 255, 0.85)", neonLight: "rgba(0, 150, 255, 0.5)", iconColor: "rgba(0, 170, 255, 0.85)" },
@@ -3085,7 +3084,6 @@ const HeroSection = () => {
                   };
                   const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
-                  // Neon panels (Compatibility=1, Tarot=2) get special treatment matching desktop CTA teasers
                   const isNeonPanel = i === 1 || i === 2;
                   return (
                     <motion.button
@@ -3146,7 +3144,6 @@ const HeroSection = () => {
                         >
                           {item.label}
                         </span>
-                        {/* Glow aura */}
                         {isHovered && (
                           <motion.div
                             className={`absolute -inset-1.5 pointer-events-none ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
@@ -3158,7 +3155,6 @@ const HeroSection = () => {
                             transition={{ duration: 1.5, repeat: Infinity }}
                           />
                         )}
-                        {/* Bottom accent line */}
                         <motion.div
                           className="absolute bottom-0 left-[15%] right-[15%] h-[1.5px] rounded-full pointer-events-none"
                           style={{
@@ -3174,85 +3170,79 @@ const HeroSection = () => {
                     </motion.button>
                   );
                 })}
+                {/* Planetary influence panel — left column only, under Forecast */}
+                {colIdx === 0 && (() => {
+                  const pColor = PLANET_COLORS[mobilePlanetaryInfluence.planet] || "43 80% 55%";
+                  return (
+                    <motion.div
+                      className="cursor-pointer w-full"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 0.88, y: 0 }}
+                      transition={{ delay: 2.2, duration: 0.7, ease: "easeOut" }}
+                      onClick={() => setPlanetaryExpanded(prev => !prev)}
+                    >
+                      <div
+                        className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden"
+                        style={{
+                          background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.95))",
+                          border: `1px solid hsl(${pColor} / 0.25)`,
+                          boxShadow: `0 0 20px hsl(${pColor} / 0.08), 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(${pColor} / 0.08)`,
+                        }}
+                      >
+                        <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.5), transparent 90%)` }} />
+                        <div className="px-2.5 py-2 flex items-center gap-1.5">
+                          <motion.span
+                            className="text-sm flex-shrink-0"
+                            animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                          >
+                            {mobilePlanetaryInfluence.planet_symbol}
+                          </motion.span>
+                          <span className="font-bold tracking-[0.04em] uppercase text-[10px] flex-1 leading-tight" style={{ color: `hsl(${pColor})` }}>
+                            {mobilePlanetaryInfluence.title[language]}
+                          </span>
+                          <motion.span
+                            className="flex-shrink-0"
+                            animate={{ rotate: planetaryExpanded ? 180 : 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <ChevronDown size={12} style={{ color: `hsl(${pColor} / 0.6)` }} />
+                          </motion.span>
+                        </div>
+                        <AnimatePresence>
+                          {planetaryExpanded && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="px-2.5 pb-2.5 pt-0.5 space-y-1.5">
+                                <div className="flex items-center">
+                                  <span
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
+                                    style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
+                                  >
+                                    <span className="text-[9px]">{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
+                                    {mobilePlanetaryInfluence.life_area[language]}
+                                  </span>
+                                </div>
+                                <div className="leading-snug text-[10px]" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                                  {mobilePlanetaryInfluence.description[language]}
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </motion.div>
+                  );
+                })()}
               </div>
             ))}
           </div>
         </motion.div>
-        {/* ── Mobile Planetary Influence Panel — below selection cards ── */}
-        {(() => {
-          const pColor = PLANET_COLORS[mobilePlanetaryInfluence.planet] || "43 80% 55%";
-          const now = new Date();
-          const influenceKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-          return (
-            <motion.div
-              className="pointer-events-auto cursor-pointer"
-              style={{ width: "100%", maxWidth: 370, paddingLeft: 16, paddingRight: 12, boxSizing: "border-box", marginTop: 6 }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2.2, duration: 0.8, ease: "easeOut" }}
-              onClick={() => setPlanetaryExpanded(prev => !prev)}
-            >
-              <div
-                className="relative rounded-lg font-heading backdrop-blur-2xl overflow-hidden"
-                style={{
-                  width: 310,
-                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.92), hsl(var(--deep-blue) / 0.95))",
-                  border: `1px solid hsl(${pColor} / 0.25)`,
-                  boxShadow: `0 0 20px hsl(${pColor} / 0.08), 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(${pColor} / 0.08)`,
-                }}
-              >
-                <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.5), transparent 90%)` }} />
-                {/* Collapsed: compact row */}
-                <div className="px-3 py-2 flex items-center gap-2">
-                  <motion.span
-                    className="text-base flex-shrink-0"
-                    animate={{ textShadow: [`0 0 6px hsl(${pColor} / 0.3)`, `0 0 14px hsl(${pColor} / 0.5)`, `0 0 6px hsl(${pColor} / 0.3)`] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    {mobilePlanetaryInfluence.planet_symbol}
-                  </motion.span>
-                  <span className="font-bold tracking-[0.06em] uppercase text-[11px] flex-1" style={{ color: `hsl(${pColor})` }}>
-                    {mobilePlanetaryInfluence.title[language]}
-                  </span>
-                  <motion.span
-                    className="flex-shrink-0"
-                    animate={{ rotate: planetaryExpanded ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ChevronDown size={14} style={{ color: `hsl(${pColor} / 0.6)` }} />
-                  </motion.span>
-                </div>
-                {/* Expanded: full details */}
-                <AnimatePresence>
-                  {planetaryExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-3 pb-3 pt-0.5 space-y-1.5">
-                        <div className="flex items-center">
-                          <span
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full tracking-[0.1em] uppercase font-medium text-[8px]"
-                            style={{ background: `hsl(${pColor} / 0.08)`, border: `1px solid hsl(${pColor} / 0.18)`, color: `hsl(${pColor} / 0.8)` }}
-                          >
-                            <span className="text-[9px]">{INFLUENCE_AREA_ICONS[mobilePlanetaryInfluence.influence_area] || "✦"}</span>
-                            {mobilePlanetaryInfluence.life_area[language]}
-                          </span>
-                        </div>
-                        <div className="leading-snug text-[11px]" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
-                          {mobilePlanetaryInfluence.description[language]}
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          );
-        })()}
         </>
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
