@@ -79,7 +79,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                   className="w-full h-full object-cover"
                   style={{
                     objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                    filter: "brightness(0.5) saturate(1.15)",
+                    filter: isMobile ? "brightness(0.32) saturate(1.1)" : "brightness(0.5) saturate(1.15)",
                   }}
                 />
               </motion.div>
