@@ -2335,8 +2335,8 @@ const HeroSection = () => {
           alt=""
           width="1920"
           height="1080"
-          className="w-full h-full object-cover scale-110"
-          style={{ objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)" }}
+          className={`w-full h-full object-cover ${isMobile ? "scale-[0.97]" : "scale-110"}`}
+          style={{ objectPosition: isMobile ? "center calc(0% + 55px)" : "center calc(0% + 100px)" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" />
