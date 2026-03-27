@@ -3,6 +3,7 @@ import MysticalNameInput from "@/components/MysticalNameInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
+import MysticalDateInput from "@/components/MysticalDateInput";
 import html2canvas from "html2canvas";
 import { getZodiacSign } from "@/data/zodiacData";
 import { getRisingSign } from "@/data/risingSignData";
