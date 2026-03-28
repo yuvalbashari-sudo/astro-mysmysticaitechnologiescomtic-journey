@@ -113,10 +113,25 @@ async function initiateUpgrade(_targetTier: "pro" | "vip"): Promise<boolean> {
 }
 
 /**
+ * Set the email for admin detection. Call once (e.g., from console or onboarding).
+ */
+function setUserEmail(email: string): void {
+  localStorage.setItem(ADMIN_EMAIL_KEY, email.trim().toLowerCase());
+}
+
+/**
+ * Get stored user email.
+ */
+function getUserEmail(): string | null {
+  return localStorage.getItem(ADMIN_EMAIL_KEY);
+}
+
+/**
  * Clear plan data (for testing or logout).
  */
 function clearPlan(): void {
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(ADMIN_EMAIL_KEY);
 }
 
 export const subscriptionManager = {
@@ -127,4 +142,6 @@ export const subscriptionManager = {
   isPaidTier,
   initiateUpgrade,
   clearPlan,
+  setUserEmail,
+  getUserEmail,
 };
