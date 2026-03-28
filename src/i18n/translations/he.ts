@@ -649,4 +649,8 @@ export const he: TranslationKeys = {
   gating_or_label: "או",
   gating_subscribe_label: "עברו לפרימיום וקבלו יותר",
   gating_cancel_label: "חזרה",
+  gating_limit_reached: "השתמשת בקריאות החינמיות שלך לעת עתה",
+  gating_resets_in: "מתאפס בעוד {time}",
+  gating_resets_in_days: "מתאפס בעוד {days} ימים ו-{hours} שעות",
+  gating_or_pay_now: "צריכים קריאה עכשיו?",
 };

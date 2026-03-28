@@ -649,4 +649,8 @@ export const en: TranslationKeys = {
   gating_or_label: "or",
   gating_subscribe_label: "Go Premium and get more",
   gating_cancel_label: "Go Back",
+  gating_limit_reached: "You've used your free readings for now",
+  gating_resets_in: "Resets in {time}",
+  gating_resets_in_days: "Resets in {days}d {hours}h",
+  gating_or_pay_now: "Need a reading now?",
 };

@@ -649,4 +649,8 @@ export const ar: TranslationKeys = {
   gating_or_label: "أو",
   gating_subscribe_label: "انتقل إلى بريميوم واحصل على المزيد",
   gating_cancel_label: "رجوع",
+  gating_limit_reached: "لقد استخدمت قراءاتك المجانية حالياً",
+  gating_resets_in: "يتجدد خلال {time}",
+  gating_resets_in_days: "يتجدد خلال {days} يوم و{hours} ساعة",
+  gating_or_pay_now: "تحتاج قراءة الآن؟",
 };

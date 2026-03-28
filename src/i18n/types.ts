@@ -700,4 +700,8 @@ export type TranslationKeys = {
   gating_or_label: string;
   gating_subscribe_label: string;
   gating_cancel_label: string;
+  gating_limit_reached: string;
+  gating_resets_in: string;
+  gating_resets_in_days: string;
+  gating_or_pay_now: string;
 };
