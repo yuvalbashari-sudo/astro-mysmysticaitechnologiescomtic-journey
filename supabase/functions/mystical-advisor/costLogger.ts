@@ -24,6 +24,7 @@ const COST_PROFILES: Record<string, { aiCost: number; imageCost: number }> = {
   rising:        { aiCost: 0.008, imageCost: 0 },
   birthChart:    { aiCost: 0.010, imageCost: 0 },
   dailyCard:     { aiCost: 0.005, imageCost: 0 },
+  advisor:       { aiCost: 0.005, imageCost: 0 },
 };
 
 export function getFeatureCosts(feature: string) {
