@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { CalendarDays } from "lucide-react";
 
 interface Props {
@@ -9,13 +9,32 @@ interface Props {
   placeholder?: string;
 }
 
+/** Get today as YYYY-MM-DD in the user's local timezone */
+function getTodayISO(): string {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+/** Check if an ISO date string is in the future */
+function isFutureDate(iso: string): boolean {
+  if (!iso) return false;
+  return iso > getTodayISO();
+}
+
 /**
  * A mobile-friendly date input that shows a visible text field with DD/MM/YYYY
  * format. Users can type manually OR tap the calendar icon to use native picker.
  * Outputs YYYY-MM-DD for internal consistency.
+ * Future dates are blocked.
  */
 const MysticalDateInput = ({ value, onChange, className = "", style, placeholder }: Props) => {
   const hiddenRef = useRef<HTMLInputElement>(null);
+  const [futureError, setFutureError] = useState(false);
+
+  const todayISO = useMemo(() => getTodayISO(), []);
 
   // Convert YYYY-MM-DD → DD/MM/YYYY for display
   const toDisplay = (iso: string) => {
@@ -50,6 +69,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
   if (value !== prevValueRef.current) {
     prevValueRef.current = value;
     setDisplayValue(toDisplay(value));
+    setFutureError(false);
   }
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,8 +90,15 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
     setDisplayValue(formatted);
     const iso = toIso(formatted);
     if (iso) {
+      if (isFutureDate(iso)) {
+        setFutureError(true);
+        onChange(""); // Clear the value — don't allow future dates
+        return;
+      }
+      setFutureError(false);
       onChange(iso);
     } else if (formatted === "") {
+      setFutureError(false);
       onChange("");
     }
   }, [onChange]);
@@ -84,6 +111,12 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
 
   const handleNativeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value;
+    if (isFutureDate(v)) {
+      setFutureError(true);
+      onChange("");
+      return;
+    }
+    setFutureError(false);
     onChange(v);
     setDisplayValue(toDisplay(v));
   }, [onChange]);
@@ -96,7 +129,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
         value={displayValue}
         onChange={handleTextChange}
         placeholder={placeholder || "DD / MM / YYYY"}
-        className={`mystical-input font-body text-center w-full ${className}`}
+        className={`mystical-input font-body text-center w-full ${className} ${futureError ? "ring-1 ring-crimson/60" : ""}`}
         style={{ direction: "ltr", paddingRight: 36, ...style }}
         autoComplete="off"
       />
@@ -110,17 +143,23 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       >
         <CalendarDays className="w-4 h-4" />
       </button>
-      {/* Hidden native date input for calendar picker */}
+      {/* Hidden native date input for calendar picker — max set to today */}
       <input
         ref={hiddenRef}
         type="date"
         value={value}
+        max={todayISO}
         onChange={handleNativeChange}
         className="absolute inset-0 opacity-0 pointer-events-none"
         tabIndex={-1}
         aria-hidden="true"
         style={{ width: 0, height: 0, overflow: "hidden", position: "absolute" }}
       />
+      {futureError && (
+        <p className="text-xs mt-1 font-body" style={{ color: "hsl(var(--crimson))" }}>
+          ✦ Future dates are not allowed
+        </p>
+      )}
     </div>
   );
 };
