@@ -3143,6 +3143,10 @@ const HeroSection = () => {
                         >
                           {item.label}
                         </span>
+                        {/* Remaining readings badge for Tarot */}
+                        {i === 2 && (
+                          <RemainingReadingsBadge feature="tarot_reading" className="ms-auto" />
+                        )}
                         {/* Glow aura */}
                         {isHovered && (
                           <motion.div
