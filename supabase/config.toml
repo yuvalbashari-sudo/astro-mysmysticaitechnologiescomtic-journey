@@ -1,13 +1,13 @@
 project_id = "itowaiysuwaipcfirzmp"
 
-[functions.tarot-reading]
-verify_jwt = false
-
-[functions.mystical-reading]
-verify_jwt = false
-
-[functions.cost-analytics]
-verify_jwt = false
-
-[functions.process-email-queue]
-verify_jwt = true
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.cost-analytics]
+    verify_jwt = false
+  [functions.mystical-reading]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
+  [functions.tarot-reading]
+    verify_jwt = false
