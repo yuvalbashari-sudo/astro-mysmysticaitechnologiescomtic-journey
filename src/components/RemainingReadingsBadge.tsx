@@ -10,7 +10,10 @@ interface Props {
 // Global event emitter for usage changes
 const listeners = new Set<() => void>();
 export function notifyUsageChanged() {
-  listeners.forEach((fn) => fn());
+  // Use setTimeout to ensure localStorage write has completed before reading
+  setTimeout(() => {
+    listeners.forEach((fn) => fn());
+  }, 0);
 }
 
 const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
@@ -19,16 +22,27 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
   );
 
   const refresh = useCallback(() => {
-    setRemaining(entitlements.getRemainingFreeUses(feature, "free"));
+    const val = entitlements.getRemainingFreeUses(feature, "free");
+    setRemaining(prev => prev === val ? prev : val);
   }, [feature]);
 
   useEffect(() => {
     listeners.add(refresh);
-    // Also poll every 2s for safety (handles external usage changes)
-    const interval = setInterval(refresh, 2000);
+    // Poll every 1s for safety (handles external usage changes)
+    const interval = setInterval(refresh, 1000);
+    // Also refresh on visibility change (returning from modal/tab)
+    const onVisChange = () => { if (document.visibilityState === "visible") refresh(); };
+    document.addEventListener("visibilitychange", onVisChange);
+    // Listen for storage events (cross-tab sync)
+    const onStorage = (e: StorageEvent) => { if (e.key === "astrologai_usage") refresh(); };
+    window.addEventListener("storage", onStorage);
+    // Refresh immediately on mount
+    refresh();
     return () => {
       listeners.delete(refresh);
       clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisChange);
+      window.removeEventListener("storage", onStorage);
     };
   }, [refresh]);
 
