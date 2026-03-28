@@ -545,6 +545,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             setMobileTopicPhase(false);
                             return;
                           }
+                          // Record usage NOW — before any reading UI starts
+                          entitlements.recordFeatureUse("tarot_reading", "free");
+                          notifyUsageChanged();
+                          antiAbuse.recordSuccessfulAction("tarot_reading");
                           // Set next phase BEFORE clearing topic phase to prevent fan layout flash
                           if (spread.key !== "daily") {
                             setIsQuestionPhase(true);
