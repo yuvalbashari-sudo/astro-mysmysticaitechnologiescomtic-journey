@@ -214,8 +214,8 @@ serve(async (req) => {
     // Resolve userName from explicit param or context
     const userName = reqUserName || context?.userName || null;
     
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const spreadData = SPREAD_CONTEXT[spreadType] || SPREAD_CONTEXT.daily;
     const spreadLabel = spreadData.label[language] || spreadData.label.he;
