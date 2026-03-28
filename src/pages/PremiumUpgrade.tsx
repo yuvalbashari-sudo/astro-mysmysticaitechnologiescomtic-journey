@@ -64,7 +64,7 @@ const plans: {
     },
   },
   {
-    id: "subscriber",
+    id: "pro",
     icon: Crown,
     popular: true,
     priceLabel: { he: "₪39", en: "₪39", ar: "₪39", ru: "₪39" },
