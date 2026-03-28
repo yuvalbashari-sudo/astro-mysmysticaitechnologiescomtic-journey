@@ -177,6 +177,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // Entitlements gating state
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
 
   const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
 

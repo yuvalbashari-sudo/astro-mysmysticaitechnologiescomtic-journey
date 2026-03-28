@@ -422,6 +422,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
