@@ -177,6 +177,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // Entitlements gating state
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
 
   const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
 
@@ -199,6 +200,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
       setGatingOpen(true);
       return;
     }
@@ -221,6 +223,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
       setGatingOpen(true);
       setIsQuestionPhase(false);
       return;
@@ -511,9 +514,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             return;
                           }
                           const access = entitlements.checkAccess("tarot_reading", "free");
-                          if (!access.allowed && 'promptKey' in access) {
+                            if (!access.allowed && 'promptKey' in access) {
                             const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
                             setGatingMsg(msg);
+                            setGatingResetCycle(access.resetCycle);
                             setGatingOpen(true);
                             setMobileTopicPhase(false);
                             return;
@@ -640,6 +644,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 if (!access.allowed && 'promptKey' in access) {
                                   const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
                                   setGatingMsg(msg);
+                                  setGatingResetCycle(access.resetCycle);
                                   setGatingOpen(true);
                                   return;
                                 }
@@ -1229,6 +1234,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       isOpen={gatingOpen}
       onClose={() => setGatingOpen(false)}
       gatingMessage={gatingMsg}
+      resetCycle={gatingResetCycle}
       onPayPerUse={() => {
         // Placeholder: allow access after "payment"
         setGatingOpen(false);

@@ -422,6 +422,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [advisorOpen, setAdvisorOpen] = useState(false);
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -476,6 +477,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
       setGatingOpen(true);
       return;
     }
@@ -1567,6 +1569,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         isOpen={gatingOpen}
         onClose={() => setGatingOpen(false)}
         gatingMessage={gatingMsg}
+        resetCycle={gatingResetCycle}
         onPayPerUse={() => {
           setGatingOpen(false);
         }}
