@@ -685,17 +685,17 @@ serve(async (req) => {
 
     // For palm with image, use a vision-capable model
     const isPalmWithImage = type === "palm" && !!data.palmImage;
-    const model = isPalmWithImage ? "google/gemini-3-flash-preview" : "google/gemini-3-flash-preview";
+    const model = isPalmWithImage ? "gpt-4o-mini" : "gpt-4o-mini";
 
     // Build messages — user content can be string or array (multimodal)
     const userMessage = Array.isArray(user) 
       ? { role: "user", content: user }
       : { role: "user", content: user };
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
