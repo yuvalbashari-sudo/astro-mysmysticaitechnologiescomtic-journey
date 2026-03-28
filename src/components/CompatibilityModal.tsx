@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import MysticalDateInput from "@/components/MysticalDateInput";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CinematicModalShell from "@/components/CinematicModalShell";
