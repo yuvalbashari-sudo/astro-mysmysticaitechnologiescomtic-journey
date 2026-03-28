@@ -164,28 +164,17 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setCard(saved.card);
         setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
         if (saved.aiText && saved.language === language) {
+          // Restore stored interpretation — always go straight to locked/result
           setAiText(saved.aiText);
           aiTextRef.current = saved.aiText;
-          // On mobile, show a brief card reveal before jumping to locked
-          if (isMobileViewport) {
-            setShowCardOverlay(false);
-            setRitualStep(0);
-            setPhase("mobile-reveal");
-          } else {
-            setPhase("locked");
-          }
+          setPhase("locked");
         } else if (saved.aiText && saved.language !== language) {
           // Language changed — re-generate AI text
           setPhase("result");
           startAiReading(saved.card);
         } else {
-          if (isMobileViewport) {
-            setShowCardOverlay(false);
-            setRitualStep(0);
-            setPhase("mobile-reveal");
-          } else {
-            setPhase("locked");
-          }
+          // Card exists but no AI text yet — show locked (no interpretation available)
+          setPhase("locked");
         }
       } else {
         setPhase("ready");
