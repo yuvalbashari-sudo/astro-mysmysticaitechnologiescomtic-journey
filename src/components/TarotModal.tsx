@@ -514,9 +514,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             return;
                           }
                           const access = entitlements.checkAccess("tarot_reading", "free");
-                          if (!access.allowed && 'promptKey' in access) {
+                            if (!access.allowed && 'promptKey' in access) {
                             const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
                             setGatingMsg(msg);
+                            setGatingResetCycle(access.resetCycle);
                             setGatingOpen(true);
                             setMobileTopicPhase(false);
                             return;
