@@ -420,9 +420,18 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
-  const [gatingOpen, setGatingOpen] = useState(false);
-  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
-  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
+  // Entitlements gating state — check synchronously to prevent any flash of tarot UI
+  const initialAccess = entitlements.checkAccess("tarot_reading", "free");
+  const isInitiallyLocked = !initialAccess.allowed && 'promptKey' in initialAccess;
+  const [gatingOpen, setGatingOpen] = useState(isOpen && isInitiallyLocked);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(
+    isOpen && isInitiallyLocked && 'promptKey' in initialAccess
+      ? entitlements.getGatingMessage(initialAccess.promptKey, initialAccess.priceILS)
+      : null
+  );
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>(
+    isOpen && isInitiallyLocked && 'resetCycle' in initialAccess ? initialAccess.resetCycle : "daily"
+  );
   // Pre-check entitlements when modal opens — block before any UI renders
   useEffect(() => {
     if (!isOpen) return;
