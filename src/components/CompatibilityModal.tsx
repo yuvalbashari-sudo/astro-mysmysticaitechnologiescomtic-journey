@@ -15,6 +15,8 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
+import PaymentGatingModal from "@/components/PaymentGatingModal";
+import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -43,8 +45,34 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const isMobile = useIsMobile();
 
+  // Entitlements gating state
+  const [gatingOpen, setGatingOpen] = useState(false);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
+
+  // Pre-check entitlements when modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+    const access = entitlements.checkAccess("compatibility_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
+      setGatingOpen(true);
+    }
+  }, [isOpen]);
+
   const handleSubmit = () => {
     if (!date1 || !date2) return;
+    // Check entitlements before starting reading
+    const access = entitlements.checkAccess("compatibility_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
+      setGatingOpen(true);
+      return;
+    }
     setIsLoading(true);
   };
 
@@ -62,6 +90,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
     mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
     mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
+    entitlements.recordFeatureUse("compatibility_reading", "free");
 
     streamMysticalReading(
       "compatibility",
@@ -142,7 +171,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   } : undefined;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
+    <>
+    <CinematicModalShell isOpen={isOpen && !gatingOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
                 isDesktopInput ? (
@@ -419,6 +449,19 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
               ) : null}
             </AnimatePresence>
     </CinematicModalShell>
+    <PaymentGatingModal
+      isOpen={gatingOpen}
+      onClose={() => {
+        setGatingOpen(false);
+        handleClose();
+      }}
+      gatingMessage={gatingMsg}
+      resetCycle={gatingResetCycle}
+      onPayPerUse={() => {
+        setGatingOpen(false);
+      }}
+    />
+    </>
   );
 };
 
