@@ -10,11 +10,11 @@ const SeoStructuredData = () => {
     // Set meta title/description
     const isHe = language === "he";
     const title = isHe
-      ? "ASTROLOGAI — קריאת טארוט, קריאת כף יד, התאמה זוגית והדרכה רוחנית"
-      : "ASTROLOGAI — Tarot Reading, Palm Reading, Zodiac Compatibility & Spiritual Guidance";
+      ? "ASTROLOGAI | פתיחת טארוט אונליין עם AI"
+      : "ASTROLOGAI | AI Tarot Reading Online";
     const description = isHe
-      ? "קבלו קריאת טארוט אישית, קריאת כף יד מבוססת AI, בדיקת התאמה זוגית לפי מזלות, מפת לידה והורוסקופ חודשי — בחינם. חוויה מיסטית פרימיום מבית ASTROLOGAI."
-      : "Get a personalized AI tarot reading, palm reading analysis, zodiac compatibility test, birth chart and monthly horoscope — free. Premium mystical experience by ASTROLOGAI.";
+      ? "ASTROLOGAI היא פלטפורמה לפתיחת טארוט, התאמה זוגית ותובנות אישיות בעזרת AI. חוויה מיסטית, מדויקת ונגישה אונליין."
+      : "ASTROLOGAI is an AI-powered platform for tarot reading, zodiac compatibility and personal insights. A mystical, accurate and accessible online experience.";
 
     document.title = title;
     const metaDesc = document.querySelector('meta[name="description"]');

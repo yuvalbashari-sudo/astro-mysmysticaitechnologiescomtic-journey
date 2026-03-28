@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://astro-mysmysticaitechnologiescomtic-journey.lovable.app/sitemap.xml
+Sitemap: https://mysticaitechnologies.com/sitemap.xml

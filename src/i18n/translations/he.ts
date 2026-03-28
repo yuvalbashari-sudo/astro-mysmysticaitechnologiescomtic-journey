@@ -1,8 +1,8 @@
 import { TranslationKeys } from "../types";
 
 export const he: TranslationKeys = {
-  meta_title: "ASTROLOGAI — אסטרולוגיה, טארוט והתאמה זוגית",
-  meta_description: "גלו את סודות הכוכבים עם ASTROLOGAI — אסטרולוגיה, התאמה זוגית, טארוט וקריאת כף היד בחוויה פרימיום מותאמת אישית.",
+  meta_title: "ASTROLOGAI | פתיחת טארוט אונליין עם AI",
+  meta_description: "ASTROLOGAI היא פלטפורמה לפתיחת טארוט, התאמה זוגית ותובנות אישיות בעזרת AI. חוויה מיסטית, מדויקת ונגישה אונליין.",
 
   hero_headline: "מה הכוכבים, הקלפים וכף היד שלכם מגלים עליכם?",
   hero_subheadline: "גלו את המסר שהיקום שולח לכם היום",
