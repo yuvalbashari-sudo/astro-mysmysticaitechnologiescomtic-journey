@@ -174,18 +174,18 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
 
-  // Entitlements gating state — check synchronously to prevent any flash of tarot UI
-  const initialAccess = entitlements.checkAccess("tarot_reading", "free");
-  const isInitiallyLocked = !initialAccess.allowed && 'promptKey' in initialAccess;
-  const [gatingOpen, setGatingOpen] = useState(isOpen && isInitiallyLocked);
-  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(
-    isOpen && isInitiallyLocked && 'promptKey' in initialAccess
-      ? entitlements.getGatingMessage(initialAccess.promptKey, initialAccess.priceILS)
-      : null
-  );
-  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>(
-    isOpen && isInitiallyLocked && 'resetCycle' in initialAccess ? initialAccess.resetCycle : "daily"
-  );
+  // Entitlements gating state
+  const [gatingOpen, setGatingOpen] = useState(false);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
+
+  // Live entitlement check — used to block render even before useEffect fires
+  const liveAccess = entitlements.checkAccess("tarot_reading", "free");
+  const isLiveBlocked = isOpen && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
+    ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
+    : null;
+  const liveResetCycle = isLiveBlocked && 'resetCycle' in liveAccess ? liveAccess.resetCycle : "daily";
 
   const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
 
@@ -430,7 +430,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
+    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
@@ -1251,13 +1251,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             </AnimatePresence>
     </CinematicModalShell>
     <PaymentGatingModal
-      isOpen={gatingOpen}
+      isOpen={gatingOpen || isLiveBlocked}
       onClose={() => {
         setGatingOpen(false);
         handleClose();
       }}
-      gatingMessage={gatingMsg}
-      resetCycle={gatingResetCycle}
+      gatingMessage={gatingMsg || liveGatingMsg}
+      resetCycle={gatingOpen ? gatingResetCycle : liveResetCycle}
       onPayPerUse={() => {
         setGatingOpen(false);
         if (needsQuestion) {
