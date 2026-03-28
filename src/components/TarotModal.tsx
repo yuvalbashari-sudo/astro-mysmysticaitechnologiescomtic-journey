@@ -1234,6 +1234,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       isOpen={gatingOpen}
       onClose={() => setGatingOpen(false)}
       gatingMessage={gatingMsg}
+      resetCycle={gatingResetCycle}
       onPayPerUse={() => {
         // Placeholder: allow access after "payment"
         setGatingOpen(false);
