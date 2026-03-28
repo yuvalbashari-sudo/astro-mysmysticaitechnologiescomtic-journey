@@ -1594,8 +1594,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           setGatingOpen(false);
           handleClose();
         }}
-        gatingMessage={gatingMsg}
-        resetCycle={gatingResetCycle}
+        gatingMessage={gatingMsg || liveGatingMsg}
+        resetCycle={gatingOpen ? gatingResetCycle : liveResetCycle}
         onPayPerUse={() => {
           setGatingOpen(false);
         }}
