@@ -18,7 +18,7 @@ import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
-import TarotShufflePhase from "@/components/TarotShufflePhase";
+import TarotFanSelectionPhase from "@/components/TarotFanSelectionPhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
@@ -260,15 +260,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setIsShufflePhase(true);
   };
 
-  const handleShuffleComplete = () => {
-    const drawn = drawReadingCards(selectedSpread.cardCount);
-    setTableCards(drawn);
+  const handleFanSelectionComplete = (selectedCards: ReadingCard[]) => {
+    setTableCards(selectedCards);
     setFlippedIndices(new Set());
 
     // Preload card images on mobile before showing table
-    // IMPORTANT: Keep isShufflePhase true until isTablePhase is set to prevent fan layout flash
     if (isMobileTarot) {
-      const imageUrls = drawn.map(c => c.image).filter(Boolean) as string[];
+      const imageUrls = selectedCards.map(c => c.image).filter(Boolean) as string[];
       if (imageUrls.length > 0) {
         Promise.all(imageUrls.map(src => {
           return new Promise<void>((resolve) => {
@@ -847,7 +845,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isShufflePhase ? (
-                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotShufflePhase onComplete={handleShuffleComplete} /></motion.div>
+                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotFanSelectionPhase cardCount={selectedSpread.cardCount} onComplete={handleFanSelectionComplete} /></motion.div>
               ) : isTablePhase ? (
                 <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle center vignette */}
