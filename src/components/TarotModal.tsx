@@ -487,6 +487,22 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                         whileTap={{ scale: 0.97 }}
                         onClick={() => {
                           setSelectedSpreadKey(spread.key);
+                          // Check entitlements before proceeding
+                          const abuseCheck = antiAbuse.fullCheck("tarot_reading");
+                          if (!abuseCheck.allowed) {
+                            if (abuseCheck.reason === "rate_limit") toast(t.lead_error_rate_limit);
+                            else if (abuseCheck.reason === "cooldown") toast(t.lead_error_wait);
+                            setMobileTopicPhase(false);
+                            return;
+                          }
+                          const access = entitlements.checkAccess("tarot_reading", "free");
+                          if (!access.allowed && 'promptKey' in access) {
+                            const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+                            setGatingMsg(msg);
+                            setGatingOpen(true);
+                            setMobileTopicPhase(false);
+                            return;
+                          }
                           // Set next phase BEFORE clearing topic phase to prevent fan layout flash
                           if (spread.key !== "daily") {
                             setIsQuestionPhase(true);
