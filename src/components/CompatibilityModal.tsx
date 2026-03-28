@@ -45,8 +45,34 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const isMobile = useIsMobile();
 
+  // Entitlements gating state
+  const [gatingOpen, setGatingOpen] = useState(false);
+  const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
+  const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
+
+  // Pre-check entitlements when modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+    const access = entitlements.checkAccess("compatibility_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
+      setGatingOpen(true);
+    }
+  }, [isOpen]);
+
   const handleSubmit = () => {
     if (!date1 || !date2) return;
+    // Check entitlements before starting reading
+    const access = entitlements.checkAccess("compatibility_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
+      setGatingOpen(true);
+      return;
+    }
     setIsLoading(true);
   };
 
