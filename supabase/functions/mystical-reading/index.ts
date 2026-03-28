@@ -637,8 +637,8 @@ serve(async (req) => {
     // Resolve userName: explicit param > data.userName > extract from profileContext
     const userName = reqUserName || data?.userName || null;
     
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const promptBuilder = READING_PROMPTS[type];
     if (!promptBuilder) throw new Error(`Unknown reading type: ${type}`);
