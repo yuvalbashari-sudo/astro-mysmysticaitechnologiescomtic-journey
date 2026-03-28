@@ -10,7 +10,10 @@ interface Props {
 // Global event emitter for usage changes
 const listeners = new Set<() => void>();
 export function notifyUsageChanged() {
-  listeners.forEach((fn) => fn());
+  // Use setTimeout to ensure localStorage write has completed before reading
+  setTimeout(() => {
+    listeners.forEach((fn) => fn());
+  }, 0);
 }
 
 const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
