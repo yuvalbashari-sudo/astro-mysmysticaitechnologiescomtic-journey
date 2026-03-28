@@ -15,6 +15,7 @@ import PalmComingSoonModal from "./PalmComingSoonModal";
 import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
+import RemainingReadingsBadge from "./RemainingReadingsBadge";
 import { useT, useLanguage } from "@/i18n";
 import { useCardName } from "@/hooks/useCardName";
 import type { Language } from "@/i18n";
