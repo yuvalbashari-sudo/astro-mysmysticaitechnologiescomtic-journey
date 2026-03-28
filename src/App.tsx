@@ -14,6 +14,7 @@ import AccessibilityStatement from "./pages/AccessibilityStatement";
 import TarotGalleryPage from "./pages/TarotGalleryPage";
 import PremiumUpgrade from "./pages/PremiumUpgrade";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
+import Unsubscribe from "./pages/Unsubscribe";
 
 const queryClient = new QueryClient();
 
