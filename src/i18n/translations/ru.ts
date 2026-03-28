@@ -649,4 +649,8 @@ export const ru: TranslationKeys = {
   gating_or_label: "или",
   gating_subscribe_label: "Перейдите на Премиум и получите больше",
   gating_cancel_label: "Назад",
+  gating_limit_reached: "Вы использовали бесплатные чтения на сегодня",
+  gating_resets_in: "Обновится через {time}",
+  gating_resets_in_days: "Обновится через {days}д {hours}ч",
+  gating_or_pay_now: "Нужно чтение прямо сейчас?",
 };
