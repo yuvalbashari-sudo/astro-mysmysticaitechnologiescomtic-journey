@@ -626,7 +626,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
   const overlay = (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && !gatingOpen && (
         <motion.div
           className="fixed inset-0 z-[140] pointer-events-none"
           initial={{ opacity: 0 }}
