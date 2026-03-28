@@ -127,10 +127,17 @@ Rules:
 - Do NOT provide random palmistry information unrelated to the visible result`,
 };
 
+function getClientIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || req.headers.get("x-real-ip")
+    || "unknown";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const clientIp = getClientIp(req);
     const { messages, readingContext, readingsHistory, language, userName } = await req.json();
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
