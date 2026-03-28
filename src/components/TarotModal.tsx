@@ -391,6 +391,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       aiTextRef.current = "";
       setSelectedSpreadKey("timeline");
       setMobileTopicPhase(false);
+      setGatingOpen(false);
+      setGatingMsg(null);
     }, 300);
   };
 

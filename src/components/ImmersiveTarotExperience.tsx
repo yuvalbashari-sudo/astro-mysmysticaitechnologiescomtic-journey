@@ -611,6 +611,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       setAiText("");
       setAiLoading(false);
       aiTextRef.current = "";
+      setGatingOpen(false);
+      setGatingMsg(null);
     }, 500);
   }, [onClose]);
 
