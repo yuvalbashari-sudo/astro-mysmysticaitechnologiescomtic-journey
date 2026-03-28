@@ -685,7 +685,7 @@ serve(async (req) => {
 
     // For palm with image, use a vision-capable model
     const isPalmWithImage = type === "palm" && !!data.palmImage;
-    const model = isPalmWithImage ? "google/gemini-2.5-flash" : "google/gemini-3-flash-preview";
+    const model = isPalmWithImage ? "google/gemini-2.5-flash" : "google/gemini-2.5-flash";
 
     // Build messages — user content can be string or array (multimodal)
     const userMessage = Array.isArray(user) 
