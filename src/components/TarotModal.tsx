@@ -181,7 +181,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
 
   // Live entitlement check — used to block render even before useEffect fires
-  const liveAccess = entitlements.checkAccess("tarot_reading", "free");
+  const liveAccess = entitlements.checkAccess("tarot_reading");
   const isLiveBlocked = isOpen && !liveAccess.allowed && 'promptKey' in liveAccess;
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
@@ -205,7 +205,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    const access = entitlements.checkAccess("tarot_reading", "free"); // TODO: use actual user tier
+    const access = entitlements.checkAccess("tarot_reading"); // TODO: use actual user tier
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
@@ -214,7 +214,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       return;
     }
     // Record usage NOW — before any reading UI starts — so the quota is consumed immediately
-    entitlements.recordFeatureUse("tarot_reading", "free");
+    entitlements.recordFeatureUse("tarot_reading");
     notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
     if (needsQuestion) {
@@ -232,7 +232,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       else if (abuseCheck.reason === "cooldown") toast(t.lead_error_wait);
       return;
     }
-    const access = entitlements.checkAccess("tarot_reading", "free");
+    const access = entitlements.checkAccess("tarot_reading");
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
@@ -400,7 +400,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // Pre-check entitlements when modal opens — block before any UI renders
   useEffect(() => {
     if (!isOpen) return;
-    const access = entitlements.checkAccess("tarot_reading", "free");
+    const access = entitlements.checkAccess("tarot_reading");
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
@@ -534,7 +534,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             setMobileTopicPhase(false);
                             return;
                           }
-                          const access = entitlements.checkAccess("tarot_reading", "free");
+                          const access = entitlements.checkAccess("tarot_reading");
                             if (!access.allowed && 'promptKey' in access) {
                             const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
                             setGatingMsg(msg);
@@ -544,7 +544,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                             return;
                           }
                           // Record usage NOW — before any reading UI starts
-                          entitlements.recordFeatureUse("tarot_reading", "free");
+                          entitlements.recordFeatureUse("tarot_reading");
                           notifyUsageChanged();
                           antiAbuse.recordSuccessfulAction("tarot_reading");
                           // Set next phase BEFORE clearing topic phase to prevent fan layout flash
@@ -665,7 +665,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                   else if (abuseCheck.reason === "cooldown") toast(t.lead_error_wait);
                                   return;
                                 }
-                                const access = entitlements.checkAccess("tarot_reading", "free");
+                                const access = entitlements.checkAccess("tarot_reading");
                                 if (!access.allowed && 'promptKey' in access) {
                                   const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
                                   setGatingMsg(msg);
