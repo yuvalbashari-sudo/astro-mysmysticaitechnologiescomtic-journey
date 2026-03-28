@@ -644,6 +644,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 if (!access.allowed && 'promptKey' in access) {
                                   const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
                                   setGatingMsg(msg);
+                                  setGatingResetCycle(access.resetCycle);
                                   setGatingOpen(true);
                                   return;
                                 }
