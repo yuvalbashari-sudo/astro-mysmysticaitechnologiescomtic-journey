@@ -3,6 +3,8 @@ import { Crown, Lock, X, Sparkles } from "lucide-react";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import type { GatingMessage } from "@/lib/entitlements";
+import type { ResetCycle } from "@/lib/pricingConfig";
+import UsageCountdown from "./UsageCountdown";
 
 interface Props {
   isOpen: boolean;
@@ -10,9 +12,11 @@ interface Props {
   gatingMessage: GatingMessage | null;
   /** Called when user confirms pay-per-use (placeholder until Stripe) */
   onPayPerUse?: () => void;
+  /** Reset cycle for countdown timer display */
+  resetCycle?: ResetCycle;
 }
 
-const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Props) => {
+const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, resetCycle = "daily" }: Props) => {
   const { language, dir } = useLanguage();
   const t = useT();
   const navigate = useNavigate();
@@ -69,7 +73,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
             <div className="p-7 pt-10 flex flex-col items-center text-center">
               {/* Icon */}
               <motion.div
-                className="w-16 h-16 rounded-full flex items-center justify-center mb-5"
+                className="w-16 h-16 rounded-full flex items-center justify-center mb-4"
                 style={{
                   background: "radial-gradient(circle, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.04) 70%)",
                   border: "1px solid hsl(var(--gold) / 0.2)",
@@ -86,10 +90,38 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse }: Pro
                 <Lock className="w-6 h-6 text-gold/80" />
               </motion.div>
 
+              {/* Limit reached heading */}
+              <p
+                className="font-body text-sm font-semibold mb-1"
+                style={{ color: "hsl(var(--gold) / 0.75)" }}
+              >
+                {t.gating_limit_reached}
+              </p>
+
+              {/* Countdown timer */}
+              {resetCycle && resetCycle !== "none" && (
+                <div
+                  className="rounded-xl px-4 py-2.5 mb-4 mt-2"
+                  style={{
+                    background: "hsl(var(--gold) / 0.04)",
+                    border: "1px solid hsl(var(--gold) / 0.1)",
+                  }}
+                >
+                  <UsageCountdown resetCycle={resetCycle} />
+                </div>
+              )}
+
               {/* Message */}
-              <p className="font-body text-foreground/80 text-sm leading-relaxed mb-7 max-w-xs">
+              <p className="font-body text-foreground/80 text-sm leading-relaxed mb-5 max-w-xs">
                 {(language === "he" || language === "ar" || language === "ru") ? gatingMessage.he : gatingMessage.en}
               </p>
+
+              {/* Divider with "need now?" label */}
+              <div className="flex items-center gap-3 w-full mb-3">
+                <div className="flex-1 h-px bg-gold/10" />
+                <span className="text-xs text-foreground/30 font-body">{t.gating_or_pay_now}</span>
+                <div className="flex-1 h-px bg-gold/10" />
+              </div>
 
               {/* Pay-per-use CTA */}
               <button
