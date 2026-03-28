@@ -210,6 +210,21 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleQuestionSubmit = (question: string) => {
+    // Check entitlements before proceeding to reading
+    const abuseCheck = antiAbuse.fullCheck("tarot_reading");
+    if (!abuseCheck.allowed) {
+      if (abuseCheck.reason === "rate_limit") toast(t.lead_error_rate_limit);
+      else if (abuseCheck.reason === "cooldown") toast(t.lead_error_wait);
+      return;
+    }
+    const access = entitlements.checkAccess("tarot_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingOpen(true);
+      setIsQuestionPhase(false);
+      return;
+    }
     setUserQuestion(question);
     setIsQuestionPhase(false);
     if (question.trim()) {
