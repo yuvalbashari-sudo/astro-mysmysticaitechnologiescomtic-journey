@@ -507,6 +507,9 @@ export type TranslationKeys = {
   tarot_table_title: string;
   tarot_table_hint: string;
   tarot_table_all_revealed: string;
+  tarot_fan_title: string;
+  tarot_fan_hint: string;
+  tarot_fan_done: string;
   tarot_table_progress: string;
   tarot_open_cards_cta: string;
   tarot_error_unexpected: string;
