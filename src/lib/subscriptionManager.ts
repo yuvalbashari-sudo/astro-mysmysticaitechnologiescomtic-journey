@@ -51,6 +51,7 @@ function savePlan(data: PlanData): void {
  * Get the current user tier. All entitlement checks should use this.
  */
 function getCurrentTier(): UserTier {
+  if (isAdminEmail()) return "admin";
   return loadPlan().tier;
 }
 
