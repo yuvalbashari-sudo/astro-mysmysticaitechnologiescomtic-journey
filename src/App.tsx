@@ -35,6 +35,7 @@ const App = () => (
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/upgrade" element={<PremiumUpgrade />} />
                 <Route path="/admin/costs" element={<AdminCostAnalytics />} />
+                <Route path="/unsubscribe" element={<Unsubscribe />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
