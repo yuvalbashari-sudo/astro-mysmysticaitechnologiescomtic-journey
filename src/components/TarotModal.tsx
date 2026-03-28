@@ -357,9 +357,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
-        // Record usage for entitlements and anti-abuse
-        entitlements.recordFeatureUse("tarot_reading", "free");
-        antiAbuse.recordSuccessfulAction("tarot_reading");
+        // Usage already recorded in handleDraw — no duplicate recording needed
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
