@@ -81,6 +81,7 @@ const AdminCostAnalytics = () => {
   const featureNames: Record<string, string> = {
     palm: "Palm Reading", tarotSpread: "Tarot Reading", compatibility: "Compatibility",
     forecast: "Horoscope", rising: "Rising Sign", birthChart: "Birth Chart", dailyCard: "Daily Card",
+    advisor: "Mystical Advisor",
   };
 
   return (

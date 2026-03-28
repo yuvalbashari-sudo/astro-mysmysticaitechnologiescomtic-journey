@@ -127,10 +127,17 @@ Rules:
 - Do NOT provide random palmistry information unrelated to the visible result`,
 };
 
+function getClientIp(req: Request): string {
+  return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+    || req.headers.get("x-real-ip")
+    || "unknown";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const clientIp = getClientIp(req);
     const { messages, readingContext, readingsHistory, language, userName } = await req.json();
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -259,9 +266,19 @@ If the user asks about something completely unrelated to their reading or spirit
       }),
     });
 
+    // Dynamic import cost logger
+    let logCostFn: typeof import("./costLogger.ts").logCost | null = null;
+    try {
+      const mod = await import("./costLogger.ts");
+      logCostFn = mod.logCost;
+    } catch (e) { console.error("Cost logger import failed:", e); }
+
     if (!response.ok) {
       const errorBody = await response.text();
       console.error("OpenAI error:", response.status, errorBody);
+      if (logCostFn) {
+        await logCostFn({ clientIp, feature: "advisor", status: "failed", userTier: "free", aiCost: 0, imageCost: 0, model: "gpt-4o-mini", metadata: { httpStatus: response.status } });
+      }
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited, try again shortly" }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -275,6 +292,11 @@ If the user asks about something completely unrelated to their reading or spirit
       return new Response(JSON.stringify({ error: "AI service error" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Log successful cost estimate (non-blocking)
+    if (logCostFn) {
+      logCostFn({ clientIp, feature: "advisor", status: "success", userTier: "free", aiCost: 0.005, imageCost: 0, model: "gpt-4o-mini" }).catch(() => {});
     }
 
     return new Response(response.body, {

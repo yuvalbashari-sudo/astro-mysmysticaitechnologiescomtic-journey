@@ -46,7 +46,12 @@ export const COST_PROFILES: Record<string, FeatureCostProfile> = {
   dailyCard: {
     aiCost: 0.005,
     imageCost: 0,
-    defaultModel: "google/gemini-3-flash-preview",
+    defaultModel: "gpt-4o-mini",
+  },
+  advisor: {
+    aiCost: 0.005,
+    imageCost: 0,
+    defaultModel: "gpt-4o-mini",
   },
 };
 
