@@ -577,8 +577,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           spreadType
         );
-        entitlements.recordFeatureUse("tarot_reading", "free");
-        antiAbuse.recordSuccessfulAction("tarot_reading");
+        // Usage already recorded in handleSelectQuestion — no duplicate recording needed
         readingsStorage.save({
           type: "tarot",
           title: `${t.readings_type_tarot}`,
