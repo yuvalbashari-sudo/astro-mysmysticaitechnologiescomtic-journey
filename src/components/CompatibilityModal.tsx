@@ -15,6 +15,8 @@ import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
+import PaymentGatingModal from "@/components/PaymentGatingModal";
+import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
