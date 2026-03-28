@@ -328,7 +328,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               backdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
               WebkitBackdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
               border: forceRightAnchor ? "1px solid hsl(var(--gold) / 0.2)" : "1px solid hsl(var(--gold) / 0.14)",
-              borderRadius: "1.25rem",
+              
               boxShadow: forceRightAnchor
                 ? "0 8px 32px hsl(0 0% 0% / 0.3), 0 0 16px hsl(var(--gold) / 0.04)"
                 : "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 24px hsl(var(--gold) / 0.05), inset 0 1px 0 hsl(var(--gold) / 0.07)",
