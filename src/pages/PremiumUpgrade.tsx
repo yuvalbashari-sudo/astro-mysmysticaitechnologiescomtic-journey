@@ -3,6 +3,8 @@ import { Crown, Star, Shield, Zap, Lock, Check, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
+import { subscriptionManager } from "@/lib/subscriptionManager";
+import { toast } from "@/components/ui/sonner";
 
 type LangText = Record<Language, string>;
 type LangFeatures = Record<Language, { text: string; included: boolean }[]>;
@@ -62,7 +64,7 @@ const plans: {
     },
   },
   {
-    id: "subscriber",
+    id: "pro",
     icon: Crown,
     popular: true,
     priceLabel: { he: "₪39", en: "₪39", ar: "₪39", ru: "₪39" },
@@ -276,6 +278,14 @@ const PremiumUpgrade = () => {
 
               {/* CTA */}
               <button
+                onClick={() => {
+                  if (plan.id === "free") {
+                    navigate("/");
+                  } else {
+                    // Placeholder — billing not connected yet
+                    toast.info(language === "he" ? "שירות התשלום יהיה זמין בקרוב" : "Payment service coming soon");
+                  }
+                }}
                 className={`w-full py-3.5 rounded-lg font-body font-bold text-sm tracking-wider transition-all duration-300 ${
                   plan.popular
                     ? "btn-gold"

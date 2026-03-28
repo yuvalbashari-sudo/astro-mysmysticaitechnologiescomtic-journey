@@ -18,11 +18,11 @@ export function notifyUsageChanged() {
 
 const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
   const [remaining, setRemaining] = useState(() =>
-    entitlements.getRemainingFreeUses(feature, "free")
+    entitlements.getRemainingFreeUses(feature)
   );
 
   const refresh = useCallback(() => {
-    const val = entitlements.getRemainingFreeUses(feature, "free");
+    const val = entitlements.getRemainingFreeUses(feature);
     setRemaining(prev => prev === val ? prev : val);
   }, [feature]);
 
@@ -34,7 +34,7 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
     const onVisChange = () => { if (document.visibilityState === "visible") refresh(); };
     document.addEventListener("visibilitychange", onVisChange);
     // Listen for storage events (cross-tab sync)
-    const onStorage = (e: StorageEvent) => { if (e.key === "astrologai_usage") refresh(); };
+    const onStorage = (e: StorageEvent) => { if (e.key === "astrologai_usage" || e.key === "astrologai_user_plan") refresh(); };
     window.addEventListener("storage", onStorage);
     // Refresh immediately on mount
     refresh();

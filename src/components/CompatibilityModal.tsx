@@ -54,7 +54,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   // Pre-check entitlements when modal opens
   useEffect(() => {
     if (!isOpen) return;
-    const access = entitlements.checkAccess("compatibility_reading", "free");
+    const access = entitlements.checkAccess("compatibility_reading");
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
@@ -66,7 +66,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const handleSubmit = () => {
     if (!date1 || !date2) return;
     // Check entitlements before starting reading
-    const access = entitlements.checkAccess("compatibility_reading", "free");
+    const access = entitlements.checkAccess("compatibility_reading");
     if (!access.allowed && 'promptKey' in access) {
       const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
       setGatingMsg(msg);
@@ -91,7 +91,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
     mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
     mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
-    entitlements.recordFeatureUse("compatibility_reading", "free");
+    entitlements.recordFeatureUse("compatibility_reading");
     notifyUsageChanged();
 
     streamMysticalReading(

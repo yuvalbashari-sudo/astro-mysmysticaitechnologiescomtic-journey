@@ -12,6 +12,7 @@ import {
   type ResetCycle,
 } from "./pricingConfig";
 import { usageTracker } from "./usageTracker";
+import { subscriptionManager } from "./subscriptionManager";
 
 export type AccessResult =
   | { allowed: true; isFree: true; limitedDepth: boolean }
@@ -29,17 +30,24 @@ export type GatingPromptKey =
 
 /**
  * Check whether a user can access a feature and at what cost.
+ * If no tier is provided, uses the current tier from subscriptionManager.
  */
-function checkAccess(feature: FeatureKey, tier: UserTier): AccessResult {
-  const rule = FEATURE_RULES[tier][feature];
+function checkAccess(feature: FeatureKey, tier?: UserTier): AccessResult {
+  const resolvedTier = tier ?? subscriptionManager.getCurrentTier();
+  const rule = FEATURE_RULES[resolvedTier][feature];
+
+  // Admin always has unlimited access
+  if (resolvedTier === "admin") {
+    return { allowed: true, isFree: true, limitedDepth: false };
+  }
 
   // Always-free features
   if (rule.freeUses === Infinity) {
     return { allowed: true, isFree: true, limitedDepth: rule.limitedDepth };
   }
 
-  // Special palm reading logic for subscribers
-  if (feature === "palm_reading" && tier === "subscriber") {
+  // Special palm reading logic for paid tiers
+  if (feature === "palm_reading" && (resolvedTier === "pro" || resolvedTier === "vip")) {
     const monthlyPalmUsage = usageTracker.getMonthlyPalmUsage();
     if (monthlyPalmUsage < SUBSCRIBER_PALM_DISCOUNTED_LIMIT) {
       return { allowed: true, isFree: false, priceILS: SUBSCRIBER_PALM_DISCOUNT_PRICE };
@@ -48,7 +56,7 @@ function checkAccess(feature: FeatureKey, tier: UserTier): AccessResult {
   }
 
   // Palm reading for free users — always paid
-  if (feature === "palm_reading" && tier === "free") {
+  if (feature === "palm_reading" && resolvedTier === "free") {
     return { allowed: true, isFree: false, priceILS: rule.payPerUsePrice };
   }
 
@@ -60,16 +68,17 @@ function checkAccess(feature: FeatureKey, tier: UserTier): AccessResult {
   }
 
   // Quota exhausted — pay-per-use
-  const promptKey = getPromptKey(feature, tier);
+  const promptKey = getPromptKey(feature, resolvedTier);
   return { allowed: false, priceILS: rule.payPerUsePrice, promptKey, resetCycle: rule.resetCycle };
 }
 
 function getPromptKey(feature: FeatureKey, tier: UserTier): GatingPromptKey {
+  const isPaid = tier === "pro" || tier === "vip";
   switch (feature) {
     case "tarot_reading":
-      return tier === "free" ? "tarot_free_exhausted" : "tarot_sub_exhausted";
+      return isPaid ? "tarot_sub_exhausted" : "tarot_free_exhausted";
     case "compatibility_reading":
-      return tier === "free" ? "compatibility_free_exhausted" : "compatibility_sub_exhausted";
+      return isPaid ? "compatibility_sub_exhausted" : "compatibility_free_exhausted";
     case "palm_reading":
       if (tier === "free") return "palm_free";
       const used = usageTracker.getMonthlyPalmUsage();
@@ -81,17 +90,25 @@ function getPromptKey(feature: FeatureKey, tier: UserTier): GatingPromptKey {
 
 /**
  * Record that a feature was used (call after successful access / payment).
+ * If no tier is provided, uses the current tier from subscriptionManager.
  */
-function recordFeatureUse(feature: FeatureKey, tier: UserTier): void {
-  const rule = FEATURE_RULES[tier][feature];
+function recordFeatureUse(feature: FeatureKey, tier?: UserTier): void {
+  const resolvedTier = tier ?? subscriptionManager.getCurrentTier();
+  // Admin usage is not tracked
+  if (resolvedTier === "admin") return;
+  const rule = FEATURE_RULES[resolvedTier][feature];
   usageTracker.recordUsage(feature, rule.resetCycle);
 }
 
 /**
  * Get remaining free uses for a feature.
+ * If no tier is provided, uses the current tier from subscriptionManager.
  */
-function getRemainingFreeUses(feature: FeatureKey, tier: UserTier): number {
-  const rule = FEATURE_RULES[tier][feature];
+function getRemainingFreeUses(feature: FeatureKey, tier?: UserTier): number {
+  const resolvedTier = tier ?? subscriptionManager.getCurrentTier();
+  // Admin has unlimited
+  if (resolvedTier === "admin") return Infinity;
+  const rule = FEATURE_RULES[resolvedTier][feature];
   if (rule.freeUses === Infinity) return Infinity;
   if (rule.freeUses === 0) return 0;
   const used = usageTracker.getUsageCount(feature, rule.resetCycle);
@@ -117,10 +134,10 @@ const GATING_MESSAGES: Record<GatingPromptKey, (priceILS: number) => GatingMessa
     priceILS: p,
   }),
   tarot_sub_exhausted: (p) => ({
-    he: `השתמשת ב-3 קריאות הטארוט הכלולות להיום. קריאות נוספות ב-${p} ₪ כל אחת.`,
-    en: `You've used your 3 included tarot readings for today. Additional readings are ₪${p} each.`,
-    ar: `لقد استخدمت 3 قراءات تارو المضمنة لليوم. قراءات إضافية بسعر ${p} ₪ لكل واحدة.`,
-    ru: `Вы использовали 3 включённых чтения Таро на сегодня. Дополнительные — по ₪${p}.`,
+    he: `השתמשת בקריאות הטארוט הכלולות להיום. קריאות נוספות ב-${p} ₪ כל אחת.`,
+    en: `You've used your included tarot readings for today. Additional readings are ₪${p} each.`,
+    ar: `لقد استخدمت قراءات تارو المضمنة لليوم. قراءات إضافية بسعر ${p} ₪ لكل واحدة.`,
+    ru: `Вы использовали включённые чтения Таро на сегодня. Дополнительные — по ₪${p}.`,
     priceILS: p,
   }),
   compatibility_free_exhausted: (p) => ({
@@ -131,10 +148,10 @@ const GATING_MESSAGES: Record<GatingPromptKey, (priceILS: number) => GatingMessa
     priceILS: p,
   }),
   compatibility_sub_exhausted: (p) => ({
-    he: `השתמשת ב-5 קריאות ההתאמה הכלולות החודש. קריאות נוספות ב-${p} ₪ כל אחת.`,
-    en: `You've used your 5 included compatibility readings this month. Additional readings are ₪${p} each.`,
-    ar: `لقد استخدمت 5 قراءات التوافق المضمنة هذا الشهر. قراءات إضافية بسعر ${p} ₪ لكل واحدة.`,
-    ru: `Вы использовали 5 включённых чтений совместимости в этом месяце. Дополнительные — по ₪${p}.`,
+    he: `השתמשת בקריאות ההתאמה הכלולות החודש. קריאות נוספות ב-${p} ₪ כל אחת.`,
+    en: `You've used your included compatibility readings this month. Additional readings are ₪${p} each.`,
+    ar: `لقد استخدمت قراءات التوافق المضمنة هذا الشهر. قراءات إضافية بسعر ${p} ₪ لكل واحدة.`,
+    ru: `Вы использовали включённые чтений совместимости в этом месяце. Дополнительные — по ₪${p}.`,
     priceILS: p,
   }),
   palm_free: (p) => ({
