@@ -260,6 +260,8 @@ If the user asks about something completely unrelated to their reading or spirit
     });
 
     if (!response.ok) {
+      const errorBody = await response.text();
+      console.error("OpenAI error:", response.status, errorBody);
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited, try again shortly" }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -270,8 +272,6 @@ If the user asks about something completely unrelated to their reading or spirit
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const t = await response.text();
-      console.error("AI gateway error:", response.status, t);
       return new Response(JSON.stringify({ error: "AI service error" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
