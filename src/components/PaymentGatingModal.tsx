@@ -113,7 +113,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
 
               {/* Message */}
               <p className="font-body text-foreground/80 text-sm leading-relaxed mb-5 max-w-xs">
-                {(language === "he" || language === "ar" || language === "ru") ? gatingMessage.he : gatingMessage.en}
+                {language === "ar" ? gatingMessage.ar : language === "ru" ? gatingMessage.ru : language === "he" ? gatingMessage.he : gatingMessage.en}
               </p>
 
               {/* Divider with "need now?" label */}
