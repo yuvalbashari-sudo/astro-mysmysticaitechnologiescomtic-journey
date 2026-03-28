@@ -3143,7 +3143,10 @@ const HeroSection = () => {
                         >
                           {item.label}
                         </span>
-                        {/* Remaining readings badge for Tarot */}
+                        {/* Remaining readings badges */}
+                        {i === 1 && (
+                          <RemainingReadingsBadge feature="compatibility_reading" className="ms-auto" />
+                        )}
                         {i === 2 && (
                           <RemainingReadingsBadge feature="tarot_reading" className="ms-auto" />
                         )}
