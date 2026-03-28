@@ -212,6 +212,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setGatingOpen(true);
       return;
     }
+    // Record usage NOW — before any reading UI starts — so the quota is consumed immediately
+    entitlements.recordFeatureUse("tarot_reading", "free");
+    antiAbuse.recordSuccessfulAction("tarot_reading");
     if (needsQuestion) {
       setIsQuestionPhase(true);
     } else {
