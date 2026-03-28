@@ -18,7 +18,7 @@ import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
-import TarotShufflePhase from "@/components/TarotShufflePhase";
+import TarotFanSelectionPhase from "@/components/TarotFanSelectionPhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
