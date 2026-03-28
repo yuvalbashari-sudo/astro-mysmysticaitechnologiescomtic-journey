@@ -9,6 +9,10 @@
 import type { UserTier } from "./pricingConfig";
 
 const STORAGE_KEY = "astrologai_user_plan";
+const ADMIN_EMAIL_KEY = "astrologai_admin_email";
+
+// Internal admin accounts — bypass all limits
+const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 
 interface PlanData {
   tier: UserTier;
