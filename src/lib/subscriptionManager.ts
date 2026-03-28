@@ -9,6 +9,10 @@
 import type { UserTier } from "./pricingConfig";
 
 const STORAGE_KEY = "astrologai_user_plan";
+const ADMIN_EMAIL_KEY = "astrologai_admin_email";
+
+// Internal admin accounts — bypass all limits
+const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 
 interface PlanData {
   tier: UserTier;
@@ -16,6 +20,17 @@ interface PlanData {
   activatedAt: string;
   /** ISO date string when the plan expires (null = never for free/admin) */
   expiresAt: string | null;
+}
+
+/**
+ * Check if the stored email matches an admin account.
+ */
+function isAdminEmail(): boolean {
+  try {
+    const email = localStorage.getItem(ADMIN_EMAIL_KEY);
+    if (!email) return false;
+    return (ADMIN_EMAILS as readonly string[]).includes(email.trim().toLowerCase());
+  } catch { return false; }
 }
 
 function loadPlan(): PlanData {
@@ -47,6 +62,7 @@ function savePlan(data: PlanData): void {
  * Get the current user tier. All entitlement checks should use this.
  */
 function getCurrentTier(): UserTier {
+  if (isAdminEmail()) return "admin";
   return loadPlan().tier;
 }
 
@@ -97,10 +113,25 @@ async function initiateUpgrade(_targetTier: "pro" | "vip"): Promise<boolean> {
 }
 
 /**
+ * Set the email for admin detection. Call once (e.g., from console or onboarding).
+ */
+function setUserEmail(email: string): void {
+  localStorage.setItem(ADMIN_EMAIL_KEY, email.trim().toLowerCase());
+}
+
+/**
+ * Get stored user email.
+ */
+function getUserEmail(): string | null {
+  return localStorage.getItem(ADMIN_EMAIL_KEY);
+}
+
+/**
  * Clear plan data (for testing or logout).
  */
 function clearPlan(): void {
   localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(ADMIN_EMAIL_KEY);
 }
 
 export const subscriptionManager = {
@@ -111,4 +142,6 @@ export const subscriptionManager = {
   isPaidTier,
   initiateUpgrade,
   clearPlan,
+  setUserEmail,
+  getUserEmail,
 };
