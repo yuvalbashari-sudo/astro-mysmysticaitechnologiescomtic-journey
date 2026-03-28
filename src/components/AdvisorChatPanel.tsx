@@ -316,11 +316,12 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
           <motion.div
             className={`fixed ${forceRightAnchor ? "z-[206]" : "z-[106]"} flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
             style={{
-              bottom: forceRightAnchor ? "60px" : "5.5rem",
-              right: forceRightAnchor ? "5px" : dir === "rtl" ? "auto" : "1.25rem",
-              left: forceRightAnchor ? "auto" : dir === "rtl" ? "1.25rem" : "auto",
-              width: forceRightAnchor ? "min(685px, calc(100vw - 2rem - 80px))" : "min(765px, calc(100vw - 2rem))",
-              maxHeight: forceRightAnchor ? "min(600px, calc(100vh - 200px))" : "min(1080px, calc(100vh - 7rem))",
+              bottom: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "60px") : "5.5rem",
+              right: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "5px") : dir === "rtl" ? "auto" : "1.25rem",
+              left: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "auto") : dir === "rtl" ? "1.25rem" : "auto",
+              width: forceRightAnchor ? (window.innerWidth < 768 ? "100vw" : "min(685px, calc(100vw - 2rem - 80px))") : "min(765px, calc(100vw - 2rem))",
+              maxHeight: forceRightAnchor ? (window.innerWidth < 768 ? "calc(100vh - 60px)" : "min(600px, calc(100vh - 200px))") : "min(1080px, calc(100vh - 7rem))",
+              borderRadius: forceRightAnchor && window.innerWidth < 768 ? "1.25rem 1.25rem 0 0" : "1.25rem",
               background: forceRightAnchor
                 ? "linear-gradient(170deg, hsl(222 47% 9% / 0.55), hsl(222 47% 5% / 0.60))"
                 : "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
