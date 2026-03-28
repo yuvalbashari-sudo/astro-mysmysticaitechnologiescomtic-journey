@@ -1247,7 +1247,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             </AnimatePresence>
     </CinematicModalShell>
     <PaymentGatingModal
-      isOpen={gatingOpen}
+      isOpen={gatingOpen || isLiveBlocked}
       onClose={() => {
         setGatingOpen(false);
         handleClose();

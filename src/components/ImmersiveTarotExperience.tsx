@@ -1585,7 +1585,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     <>
       {overlay}
       <PaymentGatingModal
-        isOpen={gatingOpen}
+        isOpen={gatingOpen || isLiveBlocked}
         onClose={() => {
           setGatingOpen(false);
           handleClose();
