@@ -260,15 +260,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setIsShufflePhase(true);
   };
 
-  const handleShuffleComplete = () => {
-    const drawn = drawReadingCards(selectedSpread.cardCount);
-    setTableCards(drawn);
+  const handleFanSelectionComplete = (selectedCards: ReadingCard[]) => {
+    setTableCards(selectedCards);
     setFlippedIndices(new Set());
 
     // Preload card images on mobile before showing table
-    // IMPORTANT: Keep isShufflePhase true until isTablePhase is set to prevent fan layout flash
     if (isMobileTarot) {
-      const imageUrls = drawn.map(c => c.image).filter(Boolean) as string[];
+      const imageUrls = selectedCards.map(c => c.image).filter(Boolean) as string[];
       if (imageUrls.length > 0) {
         Promise.all(imageUrls.map(src => {
           return new Promise<void>((resolve) => {
