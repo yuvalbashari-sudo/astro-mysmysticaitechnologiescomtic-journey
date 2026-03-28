@@ -637,8 +637,8 @@ serve(async (req) => {
     // Resolve userName: explicit param > data.userName > extract from profileContext
     const userName = reqUserName || data?.userName || null;
     
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const promptBuilder = READING_PROMPTS[type];
     if (!promptBuilder) throw new Error(`Unknown reading type: ${type}`);
@@ -685,17 +685,17 @@ serve(async (req) => {
 
     // For palm with image, use a vision-capable model
     const isPalmWithImage = type === "palm" && !!data.palmImage;
-    const model = isPalmWithImage ? "google/gemini-3-flash-preview" : "google/gemini-3-flash-preview";
+    const model = isPalmWithImage ? "gpt-4o-mini" : "gpt-4o-mini";
 
     // Build messages — user content can be string or array (multimodal)
     const userMessage = Array.isArray(user) 
       ? { role: "user", content: user }
       : { role: "user", content: user };
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
