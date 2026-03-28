@@ -337,7 +337,9 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      if (phase !== "locked" && phase !== "result") {
+      // Only reset state if no saved result exists — preserve stored interpretation
+      const saved = getSavedDailyCard();
+      if (!saved || !saved.aiText) {
         setCard(null);
         setAiText("");
         aiTextRef.current = "";
