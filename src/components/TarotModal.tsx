@@ -845,7 +845,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isLoading ? (
                 <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isShufflePhase ? (
-                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotShufflePhase onComplete={handleShuffleComplete} /></motion.div>
+                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotFanSelectionPhase cardCount={selectedSpread.cardCount} onComplete={handleFanSelectionComplete} /></motion.div>
               ) : isTablePhase ? (
                 <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle center vignette */}
