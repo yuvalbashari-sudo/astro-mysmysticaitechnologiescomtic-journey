@@ -386,9 +386,19 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }, 300);
   };
 
-  // On mobile, auto-enter topic phase when modal opens
+  // Pre-check entitlements when modal opens — block before any UI renders
   useEffect(() => {
-    if (isOpen && isMobileTarot) {
+    if (!isOpen) return;
+    const access = entitlements.checkAccess("tarot_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
+      setGatingOpen(true);
+      return;
+    }
+    // On mobile, auto-enter topic phase when modal opens
+    if (isMobileTarot) {
       setMobileTopicPhase(true);
     }
   }, [isOpen, isMobileTarot]);
