@@ -59,10 +59,10 @@ export const FEATURE_RULES: Record<UserTier, Record<FeatureKey, FeatureRule>> = 
       limitedDepth: true,
     },
     compatibility_reading: {
-      freeUses: 1,
-      resetCycle: "monthly",
+      freeUses: 2,
+      resetCycle: "daily",
       payPerUsePrice: 9,
-      limitedDepth: true, // short summary only
+      limitedDepth: false,
     },
     palm_reading: {
       freeUses: 0,
