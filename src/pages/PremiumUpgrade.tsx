@@ -278,6 +278,14 @@ const PremiumUpgrade = () => {
 
               {/* CTA */}
               <button
+                onClick={() => {
+                  if (plan.id === "free") {
+                    navigate("/");
+                  } else {
+                    // Placeholder — billing not connected yet
+                    toast.info(language === "he" ? "שירות התשלום יהיה זמין בקרוב" : "Payment service coming soon");
+                  }
+                }}
                 className={`w-full py-3.5 rounded-lg font-body font-bold text-sm tracking-wider transition-all duration-300 ${
                   plan.popular
                     ? "btn-gold"
