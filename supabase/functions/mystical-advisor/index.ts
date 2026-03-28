@@ -272,8 +272,7 @@ If the user asks about something completely unrelated to their reading or spirit
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      return new Response(JSON.stringify({ error: "AI service error" }), {
-      return new Response(JSON.stringify({ error: "AI service error" }), {
+      return new Response(JSON.stringify({ error: "AI service error: " + errorBody }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
