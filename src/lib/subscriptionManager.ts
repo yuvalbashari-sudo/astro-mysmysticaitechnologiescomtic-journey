@@ -22,6 +22,17 @@ interface PlanData {
   expiresAt: string | null;
 }
 
+/**
+ * Check if the stored email matches an admin account.
+ */
+function isAdminEmail(): boolean {
+  try {
+    const email = localStorage.getItem(ADMIN_EMAIL_KEY);
+    if (!email) return false;
+    return (ADMIN_EMAILS as readonly string[]).includes(email.trim().toLowerCase());
+  } catch { return false; }
+}
+
 function loadPlan(): PlanData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
