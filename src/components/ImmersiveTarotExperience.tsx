@@ -504,6 +504,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     }
     // Record usage NOW — before any reading UI starts — so the quota is consumed immediately
     entitlements.recordFeatureUse("tarot_reading", "free");
+    notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
     setSelectedQuestion(key);
     setTimeout(() => {
