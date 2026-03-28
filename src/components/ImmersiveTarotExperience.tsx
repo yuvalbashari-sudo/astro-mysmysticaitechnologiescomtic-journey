@@ -428,6 +428,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   // Live entitlement check — used to block render even before useEffect fires
   const liveAccess = entitlements.checkAccess("tarot_reading", "free");
   const isLiveBlocked = isOpen && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
+    ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
+    : null;
+  const liveResetCycle = isLiveBlocked && 'resetCycle' in liveAccess ? liveAccess.resetCycle : "daily";
   // Pre-check entitlements when modal opens — block before any UI renders
   useEffect(() => {
     if (!isOpen) return;
