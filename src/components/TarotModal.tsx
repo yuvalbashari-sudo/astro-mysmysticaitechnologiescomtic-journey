@@ -1242,11 +1242,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     </CinematicModalShell>
     <PaymentGatingModal
       isOpen={gatingOpen}
-      onClose={() => setGatingOpen(false)}
+      onClose={() => {
+        setGatingOpen(false);
+        handleClose();
+      }}
       gatingMessage={gatingMsg}
       resetCycle={gatingResetCycle}
       onPayPerUse={() => {
-        // Placeholder: allow access after "payment"
         setGatingOpen(false);
         if (needsQuestion) {
           setIsQuestionPhase(true);
