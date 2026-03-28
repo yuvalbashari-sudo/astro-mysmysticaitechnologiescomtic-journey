@@ -448,6 +448,19 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
               ) : null}
             </AnimatePresence>
     </CinematicModalShell>
+    <PaymentGatingModal
+      isOpen={gatingOpen}
+      onClose={() => {
+        setGatingOpen(false);
+        handleClose();
+      }}
+      gatingMessage={gatingMsg}
+      resetCycle={gatingResetCycle}
+      onPayPerUse={() => {
+        setGatingOpen(false);
+      }}
+    />
+    </>
   );
 };
 
