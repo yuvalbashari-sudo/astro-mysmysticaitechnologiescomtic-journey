@@ -2,7 +2,7 @@
  * Pricing Configuration — Single source of truth for all pricing, limits, and tiers.
  */
 
-export type UserTier = "free" | "subscriber";
+export type UserTier = "admin" | "free" | "pro" | "vip";
 
 export type FeatureKey =
   | "daily_card"
@@ -31,14 +31,33 @@ export interface SubscriptionPlan {
 
 // ─── Subscription pricing ───────────────────────────────
 
-export const SUBSCRIPTION: SubscriptionPlan = {
-  monthlyPriceILS: 39,
-  yearlyPricePerMonthILS: 29,
+export const SUBSCRIPTION_PLANS: Record<"pro" | "vip", SubscriptionPlan> = {
+  pro: { monthlyPriceILS: 39, yearlyPricePerMonthILS: 29 },
+  vip: { monthlyPriceILS: 69, yearlyPricePerMonthILS: 49 },
+};
+
+/** @deprecated Use SUBSCRIPTION_PLANS.pro instead */
+export const SUBSCRIPTION: SubscriptionPlan = SUBSCRIPTION_PLANS.pro;
+
+// ─── Unlimited rule (used by admin) ─────────────────────
+
+const UNLIMITED_RULE: FeatureRule = {
+  freeUses: Infinity,
+  resetCycle: "none",
+  payPerUsePrice: 0,
+  limitedDepth: false,
 };
 
 // ─── Feature rules per tier ─────────────────────────────
 
 export const FEATURE_RULES: Record<UserTier, Record<FeatureKey, FeatureRule>> = {
+  admin: {
+    daily_card: { ...UNLIMITED_RULE },
+    monthly_horoscope: { ...UNLIMITED_RULE },
+    tarot_reading: { ...UNLIMITED_RULE },
+    compatibility_reading: { ...UNLIMITED_RULE },
+    palm_reading: { ...UNLIMITED_RULE },
+  },
   free: {
     daily_card: {
       freeUses: Infinity,
@@ -71,7 +90,7 @@ export const FEATURE_RULES: Record<UserTier, Record<FeatureKey, FeatureRule>> = 
       limitedDepth: false,
     },
   },
-  subscriber: {
+  pro: {
     daily_card: {
       freeUses: Infinity,
       resetCycle: "none",
@@ -97,10 +116,41 @@ export const FEATURE_RULES: Record<UserTier, Record<FeatureKey, FeatureRule>> = 
       limitedDepth: false,
     },
     palm_reading: {
-      // 3 discounted per month, then reverts to full price
       freeUses: 0,
       resetCycle: "monthly",
-      payPerUsePrice: 9, // discounted price for first 3
+      payPerUsePrice: 9,
+      limitedDepth: false,
+    },
+  },
+  vip: {
+    daily_card: {
+      freeUses: Infinity,
+      resetCycle: "none",
+      payPerUsePrice: 0,
+      limitedDepth: false,
+    },
+    monthly_horoscope: {
+      freeUses: Infinity,
+      resetCycle: "none",
+      payPerUsePrice: 0,
+      limitedDepth: false,
+    },
+    tarot_reading: {
+      freeUses: 10,
+      resetCycle: "daily",
+      payPerUsePrice: 3,
+      limitedDepth: false,
+    },
+    compatibility_reading: {
+      freeUses: Infinity,
+      resetCycle: "none",
+      payPerUsePrice: 0,
+      limitedDepth: false,
+    },
+    palm_reading: {
+      freeUses: 3,
+      resetCycle: "monthly",
+      payPerUsePrice: 9,
       limitedDepth: false,
     },
   },
