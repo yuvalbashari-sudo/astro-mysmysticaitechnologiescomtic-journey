@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLanguage } from "@/i18n";
 
-const SITE_URL = "https://astro-mysmysticaitechnologiescomtic-journey.lovable.app";
+const SITE_URL = "https://mysticaitechnologies.com";
 
 const SeoStructuredData = () => {
   const { language } = useLanguage();
