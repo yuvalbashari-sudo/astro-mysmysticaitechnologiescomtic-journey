@@ -124,10 +124,10 @@ const GATING_MESSAGES: Record<GatingPromptKey, (priceILS: number) => GatingMessa
     priceILS: p,
   }),
   compatibility_free_exhausted: (p) => ({
-    he: `סיכום ההתאמה החינמי שלך זמין. פתח קריאת התאמה מלאה ומעמיקה תמורת ${p} ₪.`,
-    en: `Your free compatibility summary is available. Unlock the full in-depth compatibility reading for ₪${p}.`,
-    ar: `ملخص التوافق المجاني متاح. افتح قراءة التوافق الكاملة مقابل ${p} ₪.`,
-    ru: `Ваш бесплатный обзор совместимости доступен. Разблокируйте полное чтение за ₪${p}.`,
+    he: `השתמשת ב-2 קריאות ההתאמה החינמיות להיום. פתח קריאה נוספת תמורת ${p} ₪.`,
+    en: `You've used your 2 free compatibility readings for today. Unlock another reading for ₪${p}.`,
+    ar: `لقد استخدمت قراءتي التوافق المجانيتين لليوم. افتح قراءة أخرى مقابل ${p} ₪.`,
+    ru: `Вы использовали 2 бесплатных чтения совместимости на сегодня. Разблокируйте ещё одно за ₪${p}.`,
     priceILS: p,
   }),
   compatibility_sub_exhausted: (p) => ({
