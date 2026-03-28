@@ -423,6 +423,18 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
+  // Pre-check entitlements when modal opens — block before any UI renders
+  useEffect(() => {
+    if (!isOpen) return;
+    const access = entitlements.checkAccess("tarot_reading", "free");
+    if (!access.allowed && 'promptKey' in access) {
+      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+      setGatingMsg(msg);
+      setGatingResetCycle(access.resetCycle);
+      setGatingOpen(true);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -1567,7 +1579,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       {overlay}
       <PaymentGatingModal
         isOpen={gatingOpen}
-        onClose={() => setGatingOpen(false)}
+        onClose={() => {
+          setGatingOpen(false);
+          handleClose();
+        }}
         gatingMessage={gatingMsg}
         resetCycle={gatingResetCycle}
         onPayPerUse={() => {
