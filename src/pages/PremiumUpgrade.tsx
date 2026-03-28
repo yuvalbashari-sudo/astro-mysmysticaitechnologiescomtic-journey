@@ -3,6 +3,8 @@ import { Crown, Star, Shield, Zap, Lock, Check, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
+import { subscriptionManager } from "@/lib/subscriptionManager";
+import { toast } from "@/components/ui/sonner";
 
 type LangText = Record<Language, string>;
 type LangFeatures = Record<Language, { text: string; included: boolean }[]>;
