@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
+import { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
@@ -214,6 +215,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }
     // Record usage NOW — before any reading UI starts — so the quota is consumed immediately
     entitlements.recordFeatureUse("tarot_reading", "free");
+    notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
     if (needsQuestion) {
       setIsQuestionPhase(true);

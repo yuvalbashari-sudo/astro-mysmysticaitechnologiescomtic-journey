@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
+import { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
@@ -504,6 +505,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     }
     // Record usage NOW — before any reading UI starts — so the quota is consumed immediately
     entitlements.recordFeatureUse("tarot_reading", "free");
+    notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
     setSelectedQuestion(key);
     setTimeout(() => {

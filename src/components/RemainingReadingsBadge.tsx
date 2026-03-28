@@ -1,15 +1,36 @@
+import { useState, useEffect, useCallback } from "react";
 import { entitlements } from "@/lib/entitlements";
 import type { FeatureKey } from "@/lib/pricingConfig";
-import { useT } from "@/i18n/LanguageContext";
 
 interface Props {
   feature: FeatureKey;
   className?: string;
 }
 
+// Global event emitter for usage changes
+const listeners = new Set<() => void>();
+export function notifyUsageChanged() {
+  listeners.forEach((fn) => fn());
+}
+
 const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
-  const t = useT();
-  const remaining = entitlements.getRemainingFreeUses(feature, "free");
+  const [remaining, setRemaining] = useState(() =>
+    entitlements.getRemainingFreeUses(feature, "free")
+  );
+
+  const refresh = useCallback(() => {
+    setRemaining(entitlements.getRemainingFreeUses(feature, "free"));
+  }, [feature]);
+
+  useEffect(() => {
+    listeners.add(refresh);
+    // Also poll every 2s for safety (handles external usage changes)
+    const interval = setInterval(refresh, 2000);
+    return () => {
+      listeners.delete(refresh);
+      clearInterval(interval);
+    };
+  }, [refresh]);
 
   // Don't show badge if unlimited or no free tier
   if (remaining === Infinity || remaining === undefined) return null;

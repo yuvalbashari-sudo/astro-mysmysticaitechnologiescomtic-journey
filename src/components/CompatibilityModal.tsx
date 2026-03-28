@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import MysticalDateInput from "@/components/MysticalDateInput";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CinematicModalShell from "@/components/CinematicModalShell";
@@ -91,6 +92,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
     mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
     entitlements.recordFeatureUse("compatibility_reading", "free");
+    notifyUsageChanged();
 
     streamMysticalReading(
       "compatibility",
