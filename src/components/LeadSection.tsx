@@ -73,6 +73,16 @@ const LeadSection = () => {
       antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true);
       toast.success("✦");
+
+      // Send confirmation email
+      supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'contact-confirmation',
+          recipientEmail: formData.email.trim(),
+          idempotencyKey: `contact-confirm-${Date.now()}`,
+          templateData: { name: formData.name.trim() },
+        },
+      }).catch(() => { /* non-critical */ });
     } catch {
       toast.error(t.lead_error_submit);
     } finally {

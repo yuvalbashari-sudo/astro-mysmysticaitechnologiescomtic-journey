@@ -41,6 +41,16 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
       if (error) throw error;
       antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true); toast(`${t.lead_success_title}`);
+
+      // Send confirmation email
+      supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'contact-confirmation',
+          recipientEmail: formData.email.trim(),
+          idempotencyKey: `contact-confirm-${Date.now()}`,
+          templateData: { name: formData.name.trim() },
+        },
+      }).catch(() => { /* non-critical */ });
     } catch { toast(t.lead_error_submit); } finally { setIsSubmitting(false); }
   };
 
