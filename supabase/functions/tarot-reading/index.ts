@@ -330,7 +330,19 @@ Write a mystical, personal and deep tarot reading. Important:
       }),
     });
 
+    // Dynamic import cost logger
+    let logCostFn: typeof import("./costLogger.ts").logCost | null = null;
+    let getFeatureCostsFn: typeof import("./costLogger.ts").getFeatureCosts | null = null;
+    try {
+      const mod = await import("./costLogger.ts");
+      logCostFn = mod.logCost;
+      getFeatureCostsFn = mod.getFeatureCosts;
+    } catch (e) { console.error("Cost logger import failed:", e); }
+
     if (!response.ok) {
+      if (logCostFn) {
+        await logCostFn({ clientIp, feature: "tarotSpread", status: "failed", userTier: "free", aiCost: 0, imageCost: 0, model: "gpt-4o-mini", metadata: { httpStatus: response.status } });
+      }
       if (response.status === 429) {
         return new Response(JSON.stringify({ error: "Too many requests, try again in a moment" }), {
           status: 429,
@@ -349,6 +361,12 @@ Write a mystical, personal and deep tarot reading. Important:
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // Log successful cost estimate (non-blocking)
+    if (logCostFn && getFeatureCostsFn) {
+      const costs = getFeatureCostsFn("tarotSpread");
+      logCostFn({ clientIp, feature: "tarotSpread", status: "success", userTier: "free", aiCost: costs.aiCost, imageCost: costs.imageCost, model: "gpt-4o-mini" }).catch(() => {});
     }
 
     return new Response(response.body, {
