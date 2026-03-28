@@ -316,18 +316,19 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
           <motion.div
             className={`fixed ${forceRightAnchor ? "z-[206]" : "z-[106]"} flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
             style={{
-              bottom: forceRightAnchor ? "60px" : "5.5rem",
-              right: forceRightAnchor ? "5px" : dir === "rtl" ? "auto" : "1.25rem",
-              left: forceRightAnchor ? "auto" : dir === "rtl" ? "1.25rem" : "auto",
-              width: forceRightAnchor ? "min(685px, calc(100vw - 2rem - 80px))" : "min(765px, calc(100vw - 2rem))",
-              maxHeight: forceRightAnchor ? "min(600px, calc(100vh - 200px))" : "min(1080px, calc(100vh - 7rem))",
+              bottom: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "60px") : "5.5rem",
+              right: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "5px") : dir === "rtl" ? "auto" : "1.25rem",
+              left: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "auto") : dir === "rtl" ? "1.25rem" : "auto",
+              width: forceRightAnchor ? (window.innerWidth < 768 ? "100vw" : "min(685px, calc(100vw - 2rem - 80px))") : "min(765px, calc(100vw - 2rem))",
+              maxHeight: forceRightAnchor ? (window.innerWidth < 768 ? "calc(100vh - 60px)" : "min(600px, calc(100vh - 200px))") : "min(1080px, calc(100vh - 7rem))",
+              borderRadius: forceRightAnchor && window.innerWidth < 768 ? "1.25rem 1.25rem 0 0" : "1.25rem",
               background: forceRightAnchor
                 ? "linear-gradient(170deg, hsl(222 47% 9% / 0.55), hsl(222 47% 5% / 0.60))"
                 : "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
               backdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
               WebkitBackdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
               border: forceRightAnchor ? "1px solid hsl(var(--gold) / 0.2)" : "1px solid hsl(var(--gold) / 0.14)",
-              borderRadius: "1.25rem",
+              
               boxShadow: forceRightAnchor
                 ? "0 8px 32px hsl(0 0% 0% / 0.3), 0 0 16px hsl(var(--gold) / 0.04)"
                 : "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 24px hsl(var(--gold) / 0.05), inset 0 1px 0 hsl(var(--gold) / 0.07)",
@@ -394,7 +395,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   >
                     <Sparkles className="w-9 h-9 text-gold/50" />
                   </div>
-                  <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[500px] mx-auto">
+                  <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[500px] md:max-w-[500px] max-md:max-w-none mx-auto">
                     {welcomeMessage}
                   </p>
                   {activeReading && suggestions.length > 0 && (
