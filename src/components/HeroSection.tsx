@@ -752,7 +752,7 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 170 : 610;
+  const radius = isMobile ? 195 : 610;
   const iconSize = isMobile ? 36 : 90;
   const rulingIndex = getRulingSignIndex();
 
@@ -2823,8 +2823,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 250px 230px at 51% calc(50% + 205px), transparent 46%, transparent 54%, black 70%, black 82%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 250px 230px at 51% calc(50% + 205px), transparent 46%, transparent 54%, black 70%, black 82%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 205px), transparent 38%, black 56%, black 78%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 205px), transparent 38%, black 56%, black 78%, transparent 100%)",
             }}
           />
           <div
