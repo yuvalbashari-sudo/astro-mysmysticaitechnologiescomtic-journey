@@ -148,6 +148,21 @@ function clearPlan(): void {
   localStorage.removeItem(STORAGE_KEY);
 }
 
+/**
+ * Whether auth state has been resolved at least once.
+ */
+function isAuthReady(): boolean {
+  return _authReady;
+}
+
+/**
+ * Register a callback that fires once auth is ready (or immediately if already ready).
+ */
+function onAuthReady(cb: () => void): void {
+  if (_authReady) { cb(); return; }
+  _authReadyCallbacks.push(cb);
+}
+
 export const subscriptionManager = {
   getCurrentTier,
   getPlanDetails,
@@ -157,4 +172,6 @@ export const subscriptionManager = {
   initiateUpgrade,
   clearPlan,
   getUserEmail,
+  isAuthReady,
+  onAuthReady,
 };
