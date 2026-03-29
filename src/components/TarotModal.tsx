@@ -541,7 +541,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </motion.div>
               ) : isQuestionPhase ? (
-                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
+                <motion.div key="question" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="relative">
                   <TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} />
                   {isMobileTarot && (
                     <motion.div className="flex justify-center -mt-4 pb-6">
