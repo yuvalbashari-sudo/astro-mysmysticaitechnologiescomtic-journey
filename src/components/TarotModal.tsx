@@ -177,9 +177,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
 
-  // Live entitlement check — used to block render even before useEffect fires
-  // Skip blocking if auth hasn't loaded yet (prevents false blocks on mobile)
-  const authReady = subscriptionManager.isAuthReady();
+  // Track auth state reactively so admin detection works on mobile
+  const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
+  useEffect(() => {
+    if (!authReady) {
+      subscriptionManager.onAuthReady(() => setAuthReady(true));
+    }
+    return subscriptionManager.onAuthChange(() => setAuthReady(true));
+  }, []);
+
   const liveAccess = entitlements.checkAccess("tarot_reading");
   const isLiveBlocked = isOpen && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
