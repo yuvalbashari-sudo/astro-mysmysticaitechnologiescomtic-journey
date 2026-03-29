@@ -912,9 +912,10 @@ const ZodiacWheel = ({
                     className="absolute rounded-full pointer-events-none"
                     style={{
                       inset: -4,
-                      border: "1px solid hsl(43 80% 55% / 0.1)",
-                      background: "radial-gradient(circle, hsl(43 80% 55% / 0.05) 0%, transparent 70%)",
-                      opacity: 0.6,
+                      border: "1px solid hsl(43 80% 55% / 0.18)",
+                      background: "radial-gradient(circle, hsl(43 80% 55% / 0.1) 0%, transparent 70%)",
+                      boxShadow: "0 0 10px hsl(43 80% 55% / 0.1)",
+                      opacity: 0.8,
                     }}
                   />
                 ) : (
@@ -1009,14 +1010,16 @@ const ZodiacWheel = ({
                   alt={sign.name}
                   className="w-full h-full object-contain transition-all duration-500"
                   style={{
-                    opacity: isHovered || isHighlighted || isRuling ? 1 : 0.8,
+                    opacity: isHovered || isHighlighted || isRuling ? 1 : (isMobile ? 0.95 : 0.8),
                     filter: isHovered
                       ? `drop-shadow(0 0 18px hsl(${planetColor} / 0.9)) drop-shadow(0 0 8px hsl(${planetColor} / 0.6)) drop-shadow(0 0 35px hsl(${planetColor} / 0.3))`
                       : isRuling
                         ? `drop-shadow(0 0 14px hsl(${planetColor} / 0.7)) drop-shadow(0 0 6px hsl(${planetColor} / 0.4)) drop-shadow(0 0 25px hsl(${planetColor} / 0.2))`
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
-                          : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
+                          : isMobile
+                            ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 3px hsl(43 80% 55% / 0.5)) brightness(1.25) contrast(1.1)"
+                            : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
                   }}
                 />
               </motion.div>
