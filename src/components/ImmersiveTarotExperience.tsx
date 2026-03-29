@@ -22,6 +22,7 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props {
   isOpen: boolean;
