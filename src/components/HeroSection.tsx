@@ -2811,7 +2811,7 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
-        <div className="absolute inset-0 pointer-events-none z-[14]">
+        <div className="absolute inset-0 pointer-events-none z-[22]">
           <img
             src={heroFigure}
             alt=""
@@ -2820,8 +2820,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 160px 140px at 52% calc(50% + 228px), transparent 48%, black 66%, black 80%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 160px 140px at 52% calc(50% + 228px), transparent 48%, black 66%, black 80%, transparent 100%)",
             }}
           />
           <div
