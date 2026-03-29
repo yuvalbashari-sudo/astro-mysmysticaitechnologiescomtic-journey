@@ -2342,8 +2342,8 @@ const HeroSection = () => {
           style={{
             objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
             ...(isMobile ? {
-              maskImage: "radial-gradient(ellipse 140px 140px at 51% calc(50% + 228px), transparent 60%, black 75%)",
-              WebkitMaskImage: "radial-gradient(ellipse 140px 140px at 51% calc(50% + 228px), transparent 60%, black 75%)",
+              maskImage: "radial-gradient(ellipse 170px 170px at 51% calc(50% + 228px), transparent 55%, black 72%)",
+              WebkitMaskImage: "radial-gradient(ellipse 170px 170px at 51% calc(50% + 228px), transparent 55%, black 72%)",
             } : {}),
           }}
         />
@@ -2811,7 +2811,7 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
-        <div className="absolute inset-0 pointer-events-none z-[14]">
+        <div className="absolute inset-0 pointer-events-none z-[22]">
           <img
             src={heroFigure}
             alt=""
@@ -2820,8 +2820,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 150px 130px at 52% calc(50% + 228px), transparent 50%, black 68%, black 82%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 160px 140px at 52% calc(50% + 228px), transparent 48%, black 66%, black 80%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 160px 140px at 52% calc(50% + 228px), transparent 48%, black 66%, black 80%, transparent 100%)",
             }}
           />
           <div
