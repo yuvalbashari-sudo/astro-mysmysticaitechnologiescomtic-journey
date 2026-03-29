@@ -184,7 +184,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     : null;
   const liveResetCycle = isLiveBlocked && 'resetCycle' in liveAccess ? liveAccess.resetCycle : "daily";
 
-  const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
+  const needsQuestion = selectedSpreadKey !== "timeline";
 
   // handleDraw logic is now inline in the topic selection phase
 
