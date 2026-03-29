@@ -35,6 +35,12 @@ function isAdminEmail(): boolean {
   return (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail);
 }
 
+interface PlanData {
+  tier: UserTier;
+  activatedAt: string;
+  expiresAt: string | null;
+}
+
 function loadPlan(): PlanData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
