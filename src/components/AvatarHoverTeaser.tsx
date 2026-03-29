@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { assistantName } from "@/lib/assistantConfig";
 
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ interface AvatarHoverTeaserProps {
  */
 const AvatarHoverTeaser = ({
   children,
-  text = "רוצים הכוונה?",
+  text = `${assistantName} – רוצים הכוונה?`,
   highlightText = "לחצו לשיחה",
   disabled = false,
   anchor = "auto",

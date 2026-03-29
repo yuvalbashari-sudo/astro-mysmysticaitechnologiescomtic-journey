@@ -412,9 +412,9 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
               >
                 <Sparkles className="w-9 h-9 text-gold/50" />
               </div>
-              <p className="text-foreground/40 font-body text-xl leading-relaxed max-w-[500px] mx-auto">
-                {t.advisor_welcome_tarot || "שאלו אותי על הקלף שלכם ואפרש לכם את המסר הנסתר"}
-              </p>
+               <p className="text-foreground/40 font-body text-xl leading-relaxed max-w-[500px] mx-auto whitespace-pre-line">
+                 {t.advisor_welcome_tarot || t.advisor_welcome_general}
+               </p>
             </div>
           )}
 

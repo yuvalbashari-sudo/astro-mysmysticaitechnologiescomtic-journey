@@ -309,7 +309,7 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
                 >
                   <Sparkles className="w-8 h-8 text-gold/60" />
                 </div>
-                <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[360px] mx-auto">
+                <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[360px] mx-auto whitespace-pre-line">
                   {t.advisor_welcome_astrology || t.advisor_welcome_general}
                 </p>
                 {/* Mobile suggestions */}
