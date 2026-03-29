@@ -234,32 +234,17 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
   const handleFanSelectionComplete = (selectedCards: ReadingCard[]) => {
-    setTableCards(selectedCards);
-    setFlippedIndices(new Set());
-
-    // Preload card images on mobile before showing table
-    if (isMobileTarot) {
-      const imageUrls = selectedCards.map(c => c.image).filter(Boolean) as string[];
-      if (imageUrls.length > 0) {
-        Promise.all(imageUrls.map(src => {
-          return new Promise<void>((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve();
-            img.onerror = () => resolve();
-            img.src = src;
-          });
-        })).then(() => {
-          setIsTablePhase(true);
-          setIsShufflePhase(false);
-        });
-      } else {
-        setIsTablePhase(true);
-        setIsShufflePhase(false);
-      }
-    } else {
-      setIsShufflePhase(false);
-      setIsTablePhase(true);
-    }
+    // Flow B: fan spreads skip table phase, go directly to results
+    setIsShufflePhase(false);
+    setCards(selectedCards);
+    startAIReading(selectedCards);
+    readingsStorage.save({
+      type: "tarot",
+      title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpreadKey]}`,
+      subtitle: selectedCards.map(c => localizedName(c)).join(" • "),
+      symbol: "🔮",
+      data: { spread: selectedSpreadKey, cards: selectedCards },
+    });
   };
 
   const handleCardFlip = (index: number) => {

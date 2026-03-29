@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { cardBack } from "@/data/tarotCardImages";
 import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Props {
@@ -15,9 +15,9 @@ const POOL_SIZE = 15;
 
 const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const isMobile = useIsMobile();
 
-  // Pre-draw a pool; user's tap order determines which are "chosen"
   const [pool] = useState<ReadingCard[]>(() => drawReadingCards(POOL_SIZE));
   const [selected, setSelected] = useState<number[]>([]);
   const [done, setDone] = useState(false);
@@ -29,10 +29,9 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
       setSelected(next);
       if (next.length >= cardCount) {
         setDone(true);
-        // Short pause for the last selection to register visually
         setTimeout(() => {
           onComplete(next.map((i) => pool[i]));
-        }, 700);
+        }, 1200);
       }
     },
     [selected, done, cardCount, onComplete, pool],
@@ -44,6 +43,9 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
   const cardW = isMobile ? 52 : 80;
   const cardH = isMobile ? 80 : 124;
   const containerH = isMobile ? 300 : 400;
+
+  // Revealed cards shown above the fan
+  const revealedCards = selected.map((i) => pool[i]);
 
   return (
     <motion.div
@@ -85,13 +87,67 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
         {t.tarot_fan_title || "Choose your cards"}
       </motion.h3>
       <motion.p
-        className="relative z-10 text-foreground/50 font-body text-xs mb-6"
+        className="relative z-10 text-foreground/50 font-body text-xs mb-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.35 }}
       >
         {(t.tarot_fan_hint || "Select {n} cards from the spread").replace("{n}", String(cardCount))}
       </motion.p>
+
+      {/* Revealed cards row — shows face-up cards as they're selected */}
+      <div className="relative z-20 flex items-center justify-center gap-3 mb-4 min-h-[100px] md:min-h-[140px]">
+        <AnimatePresence>
+          {revealedCards.map((card, i) => (
+            <motion.div
+              key={`revealed-${selected[i]}`}
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, scale: 0.5, rotateY: 180 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              <div
+                className="rounded-lg overflow-hidden"
+                style={{
+                  width: isMobile ? 56 : 80,
+                  height: isMobile ? 84 : 120,
+                  border: "1.5px solid hsl(var(--gold) / 0.4)",
+                  boxShadow: "0 0 20px hsl(var(--gold) / 0.2), 0 8px 24px hsl(0 0% 0% / 0.5)",
+                }}
+              >
+                {card.image ? (
+                  <img
+                    src={card.image}
+                    alt={card.name[language] || card.name.en}
+                    className="w-full h-full object-cover"
+                    draggable={false}
+                  />
+                ) : (
+                  <div
+                    className="w-full h-full flex flex-col items-center justify-center gap-1"
+                    style={{
+                      background: "linear-gradient(145deg, hsl(222 30% 16%), hsl(222 40% 10%))",
+                    }}
+                  >
+                    <span className="text-2xl">{card.symbol}</span>
+                    <span className="text-[9px] font-heading text-gold/80 text-center px-1 leading-tight">
+                      {card.name[language] || card.name.en}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <motion.span
+                className="font-heading text-[10px] md:text-xs text-gold/80 mt-1.5 text-center max-w-[70px] leading-tight"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                {card.name[language] || card.name.en}
+              </motion.span>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
 
       {/* Selection counter */}
       <motion.div
@@ -159,11 +215,11 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
               }}
               initial={{ opacity: 0, y: 120, rotate: 0, scale: 0.5 }}
               animate={{
-                opacity: isSelected ? 0.4 : 1,
+                opacity: isSelected ? 0.3 : 1,
                 y: isSelected ? -20 : 0,
                 x: tx,
                 rotate: angle,
-                scale: isSelected ? 0.9 : 1,
+                scale: isSelected ? 0.85 : 1,
                 translateY: ty,
               }}
               transition={
