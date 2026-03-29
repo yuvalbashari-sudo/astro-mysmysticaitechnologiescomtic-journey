@@ -256,6 +256,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_lead_rate_limit: {
+        Args: { submitter_ip: string }
+        Returns: boolean
+      }
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
       delete_email: {
         Args: { message_id: number; queue_name: string }
