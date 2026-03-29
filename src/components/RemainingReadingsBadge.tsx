@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { entitlements } from "@/lib/entitlements";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 import type { FeatureKey } from "@/lib/pricingConfig";
 
 interface Props {
