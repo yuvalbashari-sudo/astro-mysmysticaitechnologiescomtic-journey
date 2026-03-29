@@ -25,7 +25,7 @@ interface AvatarHoverTeaserProps {
  */
 const AvatarHoverTeaser = ({
   children,
-  text = "רוצים הכוונה?",
+  text = `${assistantName} – רוצים הכוונה?`,
   highlightText = "לחצו לשיחה",
   disabled = false,
   anchor = "auto",
