@@ -408,10 +408,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setGatingOpen(true);
       return;
     }
-    // On mobile, auto-enter topic phase when modal opens
-    if (isMobileTarot) {
-      setMobileTopicPhase(true);
-    }
+    // Auto-enter topic phase when modal opens
+    setMobileTopicPhase(true);
   }, [isOpen, isMobileTarot]);
 
   const handleShare = () => {
