@@ -7,30 +7,32 @@
  */
 
 import type { UserTier } from "./pricingConfig";
+import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "astrologai_user_plan";
-const ADMIN_EMAIL_KEY = "astrologai_admin_email";
 
 // Internal admin accounts — bypass all limits
 const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 
-interface PlanData {
-  tier: UserTier;
-  /** ISO date string when the plan was set */
-  activatedAt: string;
-  /** ISO date string when the plan expires (null = never for free/admin) */
-  expiresAt: string | null;
-}
+// Cached auth email — updated via listener
+let _cachedAuthEmail: string | null = null;
+
+// Initialize: read current session + listen for changes
+(async () => {
+  const { data } = await supabase.auth.getSession();
+  _cachedAuthEmail = data?.session?.user?.email?.trim().toLowerCase() ?? null;
+})();
+
+supabase.auth.onAuthStateChange((_event, session) => {
+  _cachedAuthEmail = session?.user?.email?.trim().toLowerCase() ?? null;
+});
 
 /**
- * Check if the stored email matches an admin account.
+ * Check if the authenticated user is an admin.
  */
 function isAdminEmail(): boolean {
-  try {
-    const email = localStorage.getItem(ADMIN_EMAIL_KEY);
-    if (!email) return false;
-    return (ADMIN_EMAILS as readonly string[]).includes(email.trim().toLowerCase());
-  } catch { return false; }
+  if (!_cachedAuthEmail) return false;
+  return (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail);
 }
 
 function loadPlan(): PlanData {
