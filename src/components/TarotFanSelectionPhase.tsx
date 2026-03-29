@@ -159,16 +159,17 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
               }}
               initial={{ opacity: 0, y: 120, rotate: 0, scale: 0.5 }}
               animate={{
-                opacity: isSelected ? 0.4 : 1,
-                y: isSelected ? -20 : 0,
+                opacity: isSelected ? 0.35 : 1,
+                y: isSelected ? -35 : 0,
                 x: tx,
-                rotate: angle,
-                scale: isSelected ? 0.9 : 1,
+                rotate: isSelected ? angle * 0.3 : angle,
+                scale: isSelected ? 0.85 : 1,
                 translateY: ty,
+                filter: isSelected ? "brightness(1.3)" : "brightness(1)",
               }}
               transition={
                 isSelected
-                  ? { duration: 0.4, ease: "easeOut" }
+                  ? { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
                   : { delay: 0.3 + idx * 0.06, type: "spring", stiffness: 80, damping: 14 }
               }
               whileHover={
