@@ -18,6 +18,8 @@ const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 let _cachedAuthEmail: string | null = null;
 let _authReady = false;
 const _authReadyCallbacks: Array<() => void> = [];
+// Subscribers that fire on EVERY auth state change (not just the first)
+const _authChangeListeners = new Set<() => void>();
 
 function _setAuthReady(email: string | null) {
   _cachedAuthEmail = email;
@@ -26,6 +28,8 @@ function _setAuthReady(email: string | null) {
     _authReadyCallbacks.forEach((cb) => cb());
     _authReadyCallbacks.length = 0;
   }
+  // Notify all persistent listeners on every auth change
+  _authChangeListeners.forEach((cb) => cb());
 }
 
 // Set up listener FIRST (fires INITIAL_SESSION before getSession resolves)
@@ -163,6 +167,15 @@ function onAuthReady(cb: () => void): void {
   _authReadyCallbacks.push(cb);
 }
 
+/**
+ * Subscribe to auth state changes. Returns an unsubscribe function.
+ * Fires on every auth change (login, logout, token refresh).
+ */
+function onAuthChange(cb: () => void): () => void {
+  _authChangeListeners.add(cb);
+  return () => { _authChangeListeners.delete(cb); };
+}
+
 export const subscriptionManager = {
   getCurrentTier,
   getPlanDetails,
@@ -174,4 +187,5 @@ export const subscriptionManager = {
   getUserEmail,
   isAuthReady,
   onAuthReady,
+  onAuthChange,
 };
