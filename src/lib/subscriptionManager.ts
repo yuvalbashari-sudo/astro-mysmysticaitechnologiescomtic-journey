@@ -167,6 +167,15 @@ function onAuthReady(cb: () => void): void {
   _authReadyCallbacks.push(cb);
 }
 
+/**
+ * Subscribe to auth state changes. Returns an unsubscribe function.
+ * Fires on every auth change (login, logout, token refresh).
+ */
+function onAuthChange(cb: () => void): () => void {
+  _authChangeListeners.add(cb);
+  return () => { _authChangeListeners.delete(cb); };
+}
+
 export const subscriptionManager = {
   getCurrentTier,
   getPlanDetails,
@@ -178,4 +187,5 @@ export const subscriptionManager = {
   getUserEmail,
   isAuthReady,
   onAuthReady,
+  onAuthChange,
 };
