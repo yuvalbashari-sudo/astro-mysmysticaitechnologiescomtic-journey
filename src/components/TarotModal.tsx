@@ -52,8 +52,6 @@ function getSpreadLabels(t: ReturnType<typeof useT>): Record<SpreadType, string>
     love: t.tarot_spread_love,
     career: t.tarot_spread_career,
     decision: t.tarot_spread_decision,
-    daily: t.tarot_spread_daily,
-    universe: t.tarot_spread_universe,
   };
 }
 
