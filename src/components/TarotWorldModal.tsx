@@ -449,7 +449,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--crimson) / 0.15)", border: "1px solid hsl(var(--crimson) / 0.25)", color: "hsl(var(--crimson-light))" }}>{t.tarot_world_premium}</span>
                               )}
                             </div>
-                            <p className="text-foreground/50 font-body text-xs leading-relaxed">{descMap[spread.key] || spread.description}</p>
+                            <p className="text-foreground/50 font-body text-sm leading-relaxed">{descMap[spread.key] || spread.description}</p>
                           </div>
                           <ChevronRight className="w-4 h-4 text-gold/30 group-hover:text-gold/60 transition-colors flex-shrink-0 mt-1 rotate-180" />
                         </div>
