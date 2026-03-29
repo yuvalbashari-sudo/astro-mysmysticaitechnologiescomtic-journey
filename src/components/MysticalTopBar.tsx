@@ -162,7 +162,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             <motion.h1
               className="font-heading uppercase pointer-events-none select-none"
               style={{
-                fontSize: 16,
+                fontSize: 19,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 lineHeight: 1,
@@ -198,7 +198,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             <motion.h1
               className="font-heading uppercase"
               style={{
-                fontSize: "clamp(18px, 4vw, 78px)",
+                fontSize: "clamp(22px, 4.8vw, 94px)",
                 fontWeight: 700,
                 letterSpacing: "clamp(0.08em, 1vw, 0.5em)",
                 lineHeight: 1,
