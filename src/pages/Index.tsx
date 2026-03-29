@@ -56,6 +56,7 @@ const Index = () => {
         isOpen={historyOpen}
         onClose={() => setHistoryOpen(false)}
       />
+      <AdminDebugBadge />
       
     </>
   );
