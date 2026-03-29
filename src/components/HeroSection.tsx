@@ -366,26 +366,28 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         left: "50%",
         transform: isMobile ? "translate(-50%, calc(-50% - 12px)) translateZ(0)" : "translate(-50%, calc(-50% + 8px)) translateZ(0)",
         borderRadius: "50%",
-        overflow: "hidden",
+        overflow: isMobile ? "visible" : "hidden",
         background: "transparent",
-        contain: "strict",
-        maskImage: isMobile
-          ? "radial-gradient(circle, white 54%, transparent 55%)"
-          : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
-        WebkitMaskImage: isMobile
-          ? "radial-gradient(circle, white 54%, transparent 55%)"
-          : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
+        contain: isMobile ? "layout" : "strict",
+        ...(isMobile ? {} : {
+          maskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
+          WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
+        }),
       }}
     >
       {/* Single video on mobile, dual crossfade on desktop */}
       <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: isMobile ? 1 : opacity.a }} />
+        className="absolute inset-0 w-full h-full" style={{
+          ...vidBase,
+          opacity: isMobile ? 1 : opacity.a,
+          ...(isMobile ? { clipPath: "circle(35% at 50% 50%)", borderRadius: "50%" } : {}),
+        }} />
       {!isMobile && (
         <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
           className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
       )}
 
-      {/* Soft curved glass highlight — upper left (desktop only; too distracting on mobile) */}
+      {/* Soft curved glass highlight — upper left (desktop only) */}
       {!isMobile && (
         <div className="absolute pointer-events-none" style={{
           width: "45%", height: "35%", top: "7%", left: "8%",
