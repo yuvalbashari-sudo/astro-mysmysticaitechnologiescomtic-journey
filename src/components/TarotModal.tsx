@@ -401,13 +401,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
-              {/* ── Mobile Topic Selection Phase ── */}
+              {/* ── Topic Selection Phase ── */}
               {mobileTopicPhase && !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
                 <motion.div
                   key="mobile-topic"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.25 } }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   className="relative min-h-screen flex flex-col items-center justify-center px-6 py-16"
                 >
                   {/* Background */}
