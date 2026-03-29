@@ -475,7 +475,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
 
                   {/* Topic buttons */}
-                  <div className="relative z-10 w-full max-w-[300px] flex flex-col gap-3">
+                  <div className="relative z-10 w-full max-w-[300px] md:max-w-[360px] flex flex-col gap-3">
                     {SPREAD_OPTIONS.map((spread, idx) => (
                       <motion.button
                         key={spread.key}
