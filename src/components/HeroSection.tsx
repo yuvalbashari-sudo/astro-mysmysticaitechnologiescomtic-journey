@@ -385,13 +385,15 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
       )}
 
-      {/* Soft curved glass highlight — upper left */}
-      <div className="absolute pointer-events-none" style={{
-        width: "45%", height: "35%", top: "7%", left: "8%",
-        borderRadius: "50%",
-        background: "radial-gradient(ellipse at 45% 35%, rgba(255,254,250,0.14) 0%, rgba(255,254,250,0.04) 55%, transparent 100%)",
-        zIndex: 6,
-      }} />
+      {/* Soft curved glass highlight — upper left (desktop only; too distracting on mobile) */}
+      {!isMobile && (
+        <div className="absolute pointer-events-none" style={{
+          width: "45%", height: "35%", top: "7%", left: "8%",
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse at 45% 35%, rgba(255,254,250,0.14) 0%, rgba(255,254,250,0.04) 55%, transparent 100%)",
+          zIndex: 6,
+        }} />
+      )}
 
     </div>
   );
