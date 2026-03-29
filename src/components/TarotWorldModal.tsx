@@ -442,7 +442,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-heading text-sm text-gold group-hover:text-gold-light transition-colors">{nameMap[spread.key] || spread.hebrewName}</h3>
+                              <h3 className="font-heading text-base text-gold group-hover:text-gold-light transition-colors">{nameMap[spread.key] || spread.hebrewName}</h3>
                               {spread.isFree ? (
                                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--gold) / 0.15)", border: "1px solid hsl(var(--gold) / 0.25)", color: "hsl(var(--gold))" }}>{t.tarot_world_free}</span>
                               ) : (
