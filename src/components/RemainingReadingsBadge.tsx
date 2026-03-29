@@ -31,6 +31,8 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
     listeners.add(refresh);
     // Refresh when auth becomes ready (fixes mobile race condition)
     subscriptionManager.onAuthReady(refresh);
+    // Re-check on every auth state change (admin login/logout)
+    const unsub = subscriptionManager.onAuthChange(refresh);
     // Poll every 1s for safety (handles external usage changes)
     const interval = setInterval(refresh, 1000);
     // Also refresh on visibility change (returning from modal/tab)
@@ -43,6 +45,7 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
     refresh();
     return () => {
       listeners.delete(refresh);
+      unsub();
       clearInterval(interval);
       document.removeEventListener("visibilitychange", onVisChange);
       window.removeEventListener("storage", onStorage);
