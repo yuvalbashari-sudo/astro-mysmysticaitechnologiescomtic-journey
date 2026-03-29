@@ -716,15 +716,19 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 perspective: 1000,
                                 cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default",
                               }}
-                              initial={{ opacity: 0, y: 24 }}
+                              initial={{ opacity: 0, y: 40, scale: 0.85 }}
                               animate={{
                                 opacity: 1,
                                 y: isActive ? -12 : 0,
+                                scale: isActive ? 1.02 : 1,
                               }}
-                              transition={isActive ? { duration: 0.6, ease: "easeOut" } : { delay: 0.6 + i * 0.2, type: "spring", stiffness: 200 }}
+                              transition={isActive
+                                ? { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+                                : { delay: 0.4 + i * 0.25, type: "spring", stiffness: 150, damping: 18 }
+                              }
                               onClick={() => handleCardFlip(i)}
-                              whileHover={!isFlipped && activeRevealIndex === null ? { y: -6 } : {}}
-                              whileTap={!isFlipped && activeRevealIndex === null ? { y: -2 } : {}}
+                              whileHover={!isFlipped && activeRevealIndex === null ? { y: -8, scale: 1.02, transition: { duration: 0.25 } } : {}}
+                              whileTap={!isFlipped && activeRevealIndex === null ? { scale: 0.97, transition: { duration: 0.1 } } : {}}
                             >
                               {/* Pre-flip hover glow */}
                               {!isFlipped && !isActive && (
