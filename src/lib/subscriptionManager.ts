@@ -10,13 +10,15 @@ import type { UserTier } from "./pricingConfig";
 import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "astrologai_user_plan";
+const ADMIN_EMAIL_KEY = "astrologai_admin_email";
 
 // Internal admin accounts — bypass all limits
 const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 
 // Cached auth email — updated via listener
-let _cachedAuthEmail: string | null = null;
-let _authReady = false;
+// On startup, seed from localStorage so admin persists across refreshes
+let _cachedAuthEmail: string | null = localStorage.getItem(ADMIN_EMAIL_KEY);
+let _authReady = _cachedAuthEmail !== null; // If we have a stored admin email, consider auth "ready"
 const _authReadyCallbacks: Array<() => void> = [];
 // Subscribers that fire on EVERY auth state change (not just the first)
 const _authChangeListeners = new Set<() => void>();
