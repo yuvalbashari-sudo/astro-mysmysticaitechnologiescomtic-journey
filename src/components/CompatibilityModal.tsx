@@ -18,6 +18,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -51,15 +52,22 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
 
-  // Pre-check entitlements when modal opens
+  // Pre-check entitlements when modal opens — wait for auth before blocking
   useEffect(() => {
     if (!isOpen) return;
-    const access = entitlements.checkAccess("compatibility_reading");
-    if (!access.allowed && 'promptKey' in access) {
-      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-      setGatingMsg(msg);
-      setGatingResetCycle(access.resetCycle);
-      setGatingOpen(true);
+    const doCheck = () => {
+      const access = entitlements.checkAccess("compatibility_reading");
+      if (!access.allowed && 'promptKey' in access) {
+        const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+        setGatingMsg(msg);
+        setGatingResetCycle(access.resetCycle);
+        setGatingOpen(true);
+      }
+    };
+    if (subscriptionManager.isAuthReady()) {
+      doCheck();
+    } else {
+      subscriptionManager.onAuthReady(doCheck);
     }
   }, [isOpen]);
 

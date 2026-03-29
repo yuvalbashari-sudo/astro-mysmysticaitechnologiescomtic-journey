@@ -23,6 +23,7 @@ import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -177,8 +178,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
 
   // Live entitlement check — used to block render even before useEffect fires
+  // Skip blocking if auth hasn't loaded yet (prevents false blocks on mobile)
+  const authReady = subscriptionManager.isAuthReady();
   const liveAccess = entitlements.checkAccess("tarot_reading");
-  const isLiveBlocked = isOpen && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const isLiveBlocked = isOpen && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
     : null;
@@ -355,19 +358,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }, 300);
   };
 
-  // Pre-check entitlements when modal opens — block before any UI renders
+  // Pre-check entitlements when modal opens — wait for auth before blocking
   useEffect(() => {
     if (!isOpen) return;
-    const access = entitlements.checkAccess("tarot_reading");
-    if (!access.allowed && 'promptKey' in access) {
-      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-      setGatingMsg(msg);
-      setGatingResetCycle(access.resetCycle);
-      setGatingOpen(true);
-      return;
+    const doCheck = () => {
+      const access = entitlements.checkAccess("tarot_reading");
+      if (!access.allowed && 'promptKey' in access) {
+        const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+        setGatingMsg(msg);
+        setGatingResetCycle(access.resetCycle);
+        setGatingOpen(true);
+        return;
+      }
+      setMobileTopicPhase(true);
+    };
+    if (subscriptionManager.isAuthReady()) {
+      doCheck();
+    } else {
+      subscriptionManager.onAuthReady(doCheck);
     }
-    // Auto-enter topic phase when modal opens
-    setMobileTopicPhase(true);
   }, [isOpen, isMobileTarot]);
 
   const handleShare = () => {

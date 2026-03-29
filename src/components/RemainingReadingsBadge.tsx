@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { entitlements } from "@/lib/entitlements";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 import type { FeatureKey } from "@/lib/pricingConfig";
 
 interface Props {
@@ -28,6 +29,8 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
 
   useEffect(() => {
     listeners.add(refresh);
+    // Refresh when auth becomes ready (fixes mobile race condition)
+    subscriptionManager.onAuthReady(refresh);
     // Poll every 1s for safety (handles external usage changes)
     const interval = setInterval(refresh, 1000);
     // Also refresh on visibility change (returning from modal/tab)
@@ -45,6 +48,8 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
       window.removeEventListener("storage", onStorage);
     };
   }, [refresh]);
+
+
 
   // Don't show badge if unlimited or no free tier
   if (remaining === Infinity || remaining === undefined) return null;
