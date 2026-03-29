@@ -72,7 +72,7 @@ export const FEATURE_RULES: Record<UserTier, Record<FeatureKey, FeatureRule>> = 
       limitedDepth: false,
     },
     tarot_reading: {
-      freeUses: 1,
+      freeUses: 3,
       resetCycle: "daily",
       payPerUsePrice: 9,
       limitedDepth: true,
