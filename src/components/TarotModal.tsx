@@ -221,7 +221,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const handleOnboardingComplete = () => {
     setIsLoading(false);
-    setIsShufflePhase(true);
+    if (selectedSpreadKey === "timeline") {
+      // Flow A: skip fan, draw cards directly into vertical table
+      const drawn = drawReadingCards(selectedSpread.cardCount);
+      setTableCards(drawn);
+      setFlippedIndices(new Set());
+      setIsTablePhase(true);
+    } else {
+      // Flow B: fan selection for love/career/decision
+      setIsShufflePhase(true);
+    }
   };
 
   const handleFanSelectionComplete = (selectedCards: ReadingCard[]) => {
