@@ -226,10 +226,11 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
                 {/* Selection glow */}
                 {isSelected && (
                   <motion.div
-                    className="absolute inset-0 rounded-[4px] pointer-events-none"
-                    style={{ boxShadow: "inset 0 0 15px hsl(var(--gold) / 0.25), 0 0 25px hsl(var(--gold) / 0.2)" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    className="absolute -inset-1 rounded-[6px] pointer-events-none"
+                    style={{ boxShadow: "inset 0 0 20px hsl(var(--gold) / 0.3), 0 0 35px hsl(var(--gold) / 0.25), 0 0 60px hsl(var(--gold) / 0.1)" }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: [0, 1, 0.7], scale: [0.9, 1.05, 1] }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 )}
                 {/* Hover glow */}
