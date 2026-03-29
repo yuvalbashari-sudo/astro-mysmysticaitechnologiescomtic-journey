@@ -18,6 +18,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
