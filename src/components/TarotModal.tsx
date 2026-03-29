@@ -190,39 +190,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
 
-  const handleDraw = () => {
-    // Anti-abuse check
-    const abuseCheck = antiAbuse.fullCheck("tarot_reading");
-    if (!abuseCheck.allowed) {
-      if (abuseCheck.reason === "rate_limit") {
-        toast(t.lead_error_rate_limit);
-        return;
-      }
-      if (abuseCheck.reason === "cooldown") {
-        toast(t.lead_error_wait);
-        return;
-      }
-      return;
-    }
-
-    const access = entitlements.checkAccess("tarot_reading"); // TODO: use actual user tier
-    if (!access.allowed && 'promptKey' in access) {
-      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-      setGatingMsg(msg);
-      setGatingResetCycle(access.resetCycle);
-      setGatingOpen(true);
-      return;
-    }
-    // Record usage NOW — before any reading UI starts — so the quota is consumed immediately
-    entitlements.recordFeatureUse("tarot_reading");
-    notifyUsageChanged();
-    antiAbuse.recordSuccessfulAction("tarot_reading");
-    if (needsQuestion) {
-      setIsQuestionPhase(true);
-    } else {
-      setIsLoading(true);
-    }
-  };
+  // handleDraw logic is now inline in the topic selection phase
 
   const handleQuestionSubmit = (question: string) => {
     // Check entitlements before proceeding to reading
