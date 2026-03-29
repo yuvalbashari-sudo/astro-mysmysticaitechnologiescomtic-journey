@@ -5,7 +5,7 @@ import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
-import AdminDebugBadge from "@/components/AdminDebugBadge";
+
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -56,7 +56,7 @@ const Index = () => {
         isOpen={historyOpen}
         onClose={() => setHistoryOpen(false)}
       />
-      <AdminDebugBadge />
+      
       
     </>
   );
