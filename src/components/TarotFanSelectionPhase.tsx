@@ -29,10 +29,10 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
       setSelected(next);
       if (next.length >= cardCount) {
         setDone(true);
-        // Short pause for the last selection to register visually
+        // Longer anticipation pause — let the last card's glow settle
         setTimeout(() => {
           onComplete(next.map((i) => pool[i]));
-        }, 700);
+        }, 1200);
       }
     },
     [selected, done, cardCount, onComplete, pool],
