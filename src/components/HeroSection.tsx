@@ -364,7 +364,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         top: "50%",
         left: "50%",
-        transform: isMobile ? "translate(-50%, calc(-50% - 5px)) translateZ(0)" : "translate(-50%, calc(-50% + 8px)) translateZ(0)",
+        transform: isMobile ? "translate(-50%, calc(-50% - 12px)) translateZ(0)" : "translate(-50%, calc(-50% + 8px)) translateZ(0)",
         borderRadius: "50%",
         overflow: "hidden",
         background: "transparent",
@@ -2345,8 +2345,8 @@ const HeroSection = () => {
           style={{
             objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
             ...(isMobile ? {
-              maskImage: "radial-gradient(ellipse 260px 250px at 50% calc(50% + 205px), transparent 42%, transparent 50%, black 65%)",
-              WebkitMaskImage: "radial-gradient(ellipse 260px 250px at 50% calc(50% + 205px), transparent 42%, transparent 50%, black 65%)",
+              maskImage: "radial-gradient(ellipse 260px 250px at 50% calc(50% + 195px), transparent 42%, transparent 50%, black 65%)",
+              WebkitMaskImage: "radial-gradient(ellipse 260px 250px at 50% calc(50% + 195px), transparent 42%, transparent 50%, black 65%)",
             } : {}),
           }}
         />
@@ -2588,23 +2588,15 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "196px", marginLeft: "10px" }}
           >
-            {/* Aura glow — static on mobile for performance */}
+            {/* Minimal ambient glow — no extra ring */}
             <div
-              className="absolute rounded-full"
+              className="absolute rounded-full pointer-events-none"
               style={{
-                width: "332px", height: "332px",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 45%, transparent 60%)",
-                opacity: 0.55,
-              }}
-            />
-            {/* Contact shadow — where hands meet ball edges */}
-            <div
-              className="absolute rounded-full pointer-events-none z-[14]"
-              style={{
-                width: "338px", height: "338px",
-                boxShadow: "inset 0 14px 35px hsl(var(--deep-blue) / 0.55), inset 0 -10px 30px hsl(var(--deep-blue) / 0.45), inset 14px 0 24px hsl(var(--deep-blue) / 0.3), inset -14px 0 24px hsl(var(--deep-blue) / 0.3)",
+                width: "280px", height: "280px",
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
+                opacity: 0.4,
               }}
             />
             {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
@@ -2823,8 +2815,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 202px), transparent 38%, black 56%, black 78%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 202px), transparent 38%, black 56%, black 78%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 192px), transparent 38%, black 56%, black 78%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 192px), transparent 38%, black 56%, black 78%, transparent 100%)",
             }}
           />
           <div
