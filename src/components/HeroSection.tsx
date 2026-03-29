@@ -352,7 +352,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
     transition: isMobile ? "none" : "opacity 1.8s ease-in-out",
-    transform: `scale(${isMobile ? 1.45 : 1.22}) translateZ(0)`,
+    transform: `scale(${isMobile ? 1.55 : 1.22}) translateZ(0)`,
     transformOrigin: "center center",
     willChange: isMobile ? "auto" : "opacity",
   };
@@ -370,10 +370,10 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         background: "transparent",
         contain: "strict",
         maskImage: isMobile
-          ? "radial-gradient(circle, white 52%, white 52.5%, transparent 53%)"
+          ? "radial-gradient(circle, white 55%, white 55.5%, transparent 56%)"
           : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
         WebkitMaskImage: isMobile
-          ? "radial-gradient(circle, white 52%, white 52.5%, transparent 53%)"
+          ? "radial-gradient(circle, white 55%, white 55.5%, transparent 56%)"
           : "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
