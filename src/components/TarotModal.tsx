@@ -510,11 +510,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           notifyUsageChanged();
                           antiAbuse.recordSuccessfulAction("tarot_reading");
                           // Set next phase BEFORE clearing topic phase to prevent fan layout flash
-                          if (spread.key !== "daily") {
-                            setIsQuestionPhase(true);
-                          } else {
-                            setIsLoading(true);
-                          }
+                          setIsQuestionPhase(true);
                           setMobileTopicPhase(false);
                         }}
                       >
