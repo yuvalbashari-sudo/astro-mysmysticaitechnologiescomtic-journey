@@ -48,12 +48,8 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
       window.removeEventListener("storage", onStorage);
     };
   }, [refresh]);
-      listeners.delete(refresh);
-      clearInterval(interval);
-      document.removeEventListener("visibilitychange", onVisChange);
-      window.removeEventListener("storage", onStorage);
-    };
-  }, [refresh]);
+
+
 
   // Don't show badge if unlimited or no free tier
   if (remaining === Infinity || remaining === undefined) return null;
