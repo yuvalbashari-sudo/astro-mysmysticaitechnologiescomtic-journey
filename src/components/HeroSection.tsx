@@ -2603,12 +2603,7 @@ const HeroSection = () => {
               className="relative z-20 pointer-events-auto"
               style={{ width: "332px", height: "332px" }}
             >
-              {/* No overlays — pure media only */}
-              <div className="absolute inset-0 flex items-center justify-center" style={{ top: "-10%" }}>
-                {entranceComplete && (
-                  <TarotCardReveal isMobile={isMobile} onOpenTarot={() => setTarotOpen(true)} onPhaseChange={setCardPhase} />
-                )}
-              </div>
+              {/* Clean crystal ball on mobile — no card overlays */}
             </motion.div>
             {/* EnergyPulse skipped on mobile for performance */}
 
