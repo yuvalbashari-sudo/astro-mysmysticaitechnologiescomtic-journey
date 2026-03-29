@@ -401,13 +401,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
-              {/* ── Mobile Topic Selection Phase ── */}
+              {/* ── Topic Selection Phase ── */}
               {mobileTopicPhase && !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
                 <motion.div
                   key="mobile-topic"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.25 } }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                   className="relative min-h-screen flex flex-col items-center justify-center px-6 py-16"
                 >
                   {/* Background */}
@@ -540,7 +541,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </motion.div>
               ) : isQuestionPhase ? (
-                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
+                <motion.div key="question" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="relative">
                   <TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} />
                   {isMobileTarot && (
                     <motion.div className="flex justify-center -mt-4 pb-6">
@@ -568,7 +569,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   )}
                 </motion.div>
               ) : isAnalysisPhase ? (
-                <motion.div key="analysis" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
+                <motion.div key="analysis" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2 } }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} className="relative">
                   <TarotAnalysisRitual question={userQuestion} onComplete={handleAnalysisComplete} />
                   {isMobileTarot && (
                     <motion.button
@@ -594,11 +595,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   )}
                 </motion.div>
               ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+                <motion.div key="onboarding" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02, transition: { duration: 0.25 } }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isShufflePhase ? (
-                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotFanSelectionPhase cardCount={selectedSpread.cardCount} onComplete={handleFanSelectionComplete} /></motion.div>
+                <motion.div key="shuffle" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.3 } }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}><TarotFanSelectionPhase cardCount={selectedSpread.cardCount} onComplete={handleFanSelectionComplete} /></motion.div>
               ) : isTablePhase ? (
-                <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
+                <motion.div key="table" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.03, filter: "blur(4px)", transition: { duration: 0.4 } }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="p-4 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle center vignette */}
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 70% 60% at 50% 55%, hsl(222 47% 5% / 0.45) 0%, transparent 70%)" }} />
 
@@ -715,15 +716,19 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                                 perspective: 1000,
                                 cursor: !isFlipped && activeRevealIndex === null ? "pointer" : "default",
                               }}
-                              initial={{ opacity: 0, y: 24 }}
+                              initial={{ opacity: 0, y: 40, scale: 0.85 }}
                               animate={{
                                 opacity: 1,
                                 y: isActive ? -12 : 0,
+                                scale: isActive ? 1.02 : 1,
                               }}
-                              transition={isActive ? { duration: 0.6, ease: "easeOut" } : { delay: 0.6 + i * 0.2, type: "spring", stiffness: 200 }}
+                              transition={isActive
+                                ? { duration: 0.5, ease: [0.22, 1, 0.36, 1] }
+                                : { delay: 0.4 + i * 0.25, type: "spring", stiffness: 150, damping: 18 }
+                              }
                               onClick={() => handleCardFlip(i)}
-                              whileHover={!isFlipped && activeRevealIndex === null ? { y: -6 } : {}}
-                              whileTap={!isFlipped && activeRevealIndex === null ? { y: -2 } : {}}
+                              whileHover={!isFlipped && activeRevealIndex === null ? { y: -8, scale: 1.02, transition: { duration: 0.25 } } : {}}
+                              whileTap={!isFlipped && activeRevealIndex === null ? { scale: 0.97, transition: { duration: 0.1 } } : {}}
                             >
                               {/* Pre-flip hover glow */}
                               {!isFlipped && !isActive && (
@@ -912,7 +917,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
                 </motion.div>
               ) : cards ? (
-                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
+                <motion.div key="result" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="p-4 md:p-10 min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle readability vignette */}
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 40%, hsl(222 47% 5% / 0.55) 0%, transparent 75%)" }} />
                   {/* Header */}
