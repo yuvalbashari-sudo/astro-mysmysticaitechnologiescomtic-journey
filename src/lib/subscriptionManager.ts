@@ -16,16 +16,30 @@ const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 
 // Cached auth email — updated via listener
 let _cachedAuthEmail: string | null = null;
+let _authReady = false;
+const _authReadyCallbacks: Array<() => void> = [];
 
-// Initialize: read current session + listen for changes
+function _setAuthReady(email: string | null) {
+  _cachedAuthEmail = email;
+  if (!_authReady) {
+    _authReady = true;
+    _authReadyCallbacks.forEach((cb) => cb());
+    _authReadyCallbacks.length = 0;
+  }
+}
+
+// Set up listener FIRST (fires INITIAL_SESSION before getSession resolves)
+supabase.auth.onAuthStateChange((_event, session) => {
+  const email = session?.user?.email?.trim().toLowerCase() ?? null;
+  _setAuthReady(email);
+});
+
+// Fallback: if onAuthStateChange hasn't fired yet, read session directly
 (async () => {
   const { data } = await supabase.auth.getSession();
-  _cachedAuthEmail = data?.session?.user?.email?.trim().toLowerCase() ?? null;
+  const email = data?.session?.user?.email?.trim().toLowerCase() ?? null;
+  _setAuthReady(email);
 })();
-
-supabase.auth.onAuthStateChange((_event, session) => {
-  _cachedAuthEmail = session?.user?.email?.trim().toLowerCase() ?? null;
-});
 
 /**
  * Check if the authenticated user is an admin.
