@@ -434,7 +434,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
             <AnimatePresence mode="wait">
               {/* ── Mobile Topic Selection Phase ── */}
-              {mobileTopicPhase && isMobileTarot && !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
+              {mobileTopicPhase && !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
                 <motion.div
                   key="mobile-topic"
                   initial={{ opacity: 0, y: 10 }}
