@@ -595,9 +595,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   )}
                 </motion.div>
               ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+                <motion.div key="onboarding" initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02, transition: { duration: 0.25 } }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
               ) : isShufflePhase ? (
-                <motion.div key="shuffle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><TarotFanSelectionPhase cardCount={selectedSpread.cardCount} onComplete={handleFanSelectionComplete} /></motion.div>
+                <motion.div key="shuffle" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.3 } }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}><TarotFanSelectionPhase cardCount={selectedSpread.cardCount} onComplete={handleFanSelectionComplete} /></motion.div>
               ) : isTablePhase ? (
                 <motion.div key="table" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 flex flex-col items-center justify-center min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Subtle center vignette */}
