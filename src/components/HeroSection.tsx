@@ -752,7 +752,7 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 170 : 610;
+  const radius = isMobile ? 195 : 610;
   const iconSize = isMobile ? 36 : 90;
   const rulingIndex = getRulingSignIndex();
 
