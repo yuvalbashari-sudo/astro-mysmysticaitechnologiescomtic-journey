@@ -2823,8 +2823,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 205px), transparent 38%, black 56%, black 78%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 205px), transparent 38%, black 56%, black 78%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 202px), transparent 38%, black 56%, black 78%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 202px), transparent 38%, black 56%, black 78%, transparent 100%)",
             }}
           />
           <div
