@@ -2588,23 +2588,15 @@ const HeroSection = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 1 }}
             className="relative flex items-center justify-center pointer-events-auto"
-            style={{ width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }}
+            style={{ width: "100%", maxWidth: "400px", marginTop: "196px", marginLeft: "10px" }}
           >
-            {/* Aura glow — static on mobile for performance */}
+            {/* Minimal ambient glow — no extra ring */}
             <div
-              className="absolute rounded-full"
+              className="absolute rounded-full pointer-events-none"
               style={{
-                width: "332px", height: "332px",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.10) 0%, hsl(var(--celestial) / 0.05) 45%, transparent 60%)",
-                opacity: 0.55,
-              }}
-            />
-            {/* Contact shadow — where hands meet ball edges */}
-            <div
-              className="absolute rounded-full pointer-events-none z-[14]"
-              style={{
-                width: "338px", height: "338px",
-                boxShadow: "inset 0 14px 35px hsl(var(--deep-blue) / 0.55), inset 0 -10px 30px hsl(var(--deep-blue) / 0.45), inset 14px 0 24px hsl(var(--deep-blue) / 0.3), inset -14px 0 24px hsl(var(--deep-blue) / 0.3)",
+                width: "280px", height: "280px",
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
+                opacity: 0.4,
               }}
             />
             {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
