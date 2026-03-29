@@ -24,13 +24,16 @@ const _authReadyCallbacks: Array<() => void> = [];
 const _authChangeListeners = new Set<() => void>();
 
 function _setAuthReady(email: string | null) {
-  _cachedAuthEmail = email;
+  // If auth returns null but we have a stored admin email, keep using it
+  const storedAdmin = localStorage.getItem(ADMIN_EMAIL_KEY);
+  if (email === null && storedAdmin) {
+    _cachedAuthEmail = storedAdmin;
+  } else {
+    _cachedAuthEmail = email;
+  }
   // Persist admin email to localStorage so it survives app restarts
   if (email && (ADMIN_EMAILS as readonly string[]).includes(email)) {
     localStorage.setItem(ADMIN_EMAIL_KEY, email);
-  } else if (email === null) {
-    // Only clear if explicitly logged out (null), not on initial empty session
-    // Keep stored admin email if no session but was previously stored
   }
   if (!_authReady) {
     _authReady = true;
