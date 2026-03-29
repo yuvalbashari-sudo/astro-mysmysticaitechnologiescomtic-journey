@@ -26,7 +26,7 @@ import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-type SpreadType = "daily" | "love" | "career" | "decision" | "timeline" | "universe";
+type SpreadType = "love" | "career" | "decision" | "timeline";
 
 interface SpreadOption {
   key: SpreadType;
@@ -52,8 +52,6 @@ function getSpreadLabels(t: ReturnType<typeof useT>): Record<SpreadType, string>
     love: t.tarot_spread_love,
     career: t.tarot_spread_career,
     decision: t.tarot_spread_decision,
-    daily: t.tarot_spread_daily,
-    universe: t.tarot_spread_universe,
   };
 }
 
@@ -186,7 +184,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     : null;
   const liveResetCycle = isLiveBlocked && 'resetCycle' in liveAccess ? liveAccess.resetCycle : "daily";
 
-  const needsQuestion = selectedSpreadKey !== "daily" && selectedSpreadKey !== "timeline";
+  const needsQuestion = selectedSpreadKey !== "timeline";
 
   // handleDraw logic is now inline in the topic selection phase
 
@@ -512,11 +510,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           notifyUsageChanged();
                           antiAbuse.recordSuccessfulAction("tarot_reading");
                           // Set next phase BEFORE clearing topic phase to prevent fan layout flash
-                          if (spread.key !== "daily") {
-                            setIsQuestionPhase(true);
-                          } else {
-                            setIsLoading(true);
-                          }
+                          setIsQuestionPhase(true);
                           setMobileTopicPhase(false);
                         }}
                       >
