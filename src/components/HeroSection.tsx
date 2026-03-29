@@ -357,6 +357,55 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     willChange: isMobile ? "auto" : "opacity",
   };
 
+  // ── Mobile: hard override — single clean video, zero inherited effects ──
+  if (isMobile) {
+    return (
+      <div
+        className="absolute z-[15] pointer-events-none"
+        style={{
+          width: s, height: s,
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, calc(-50% - 12px))",
+          overflow: "visible",
+          borderRadius: 0,
+          background: "transparent",
+          maskImage: "none",
+          WebkitMaskImage: "none",
+          filter: "none",
+          backdropFilter: "none",
+          mixBlendMode: "normal" as const,
+          opacity: 1,
+          boxShadow: "none",
+          isolation: "isolate" as const,
+          contain: "layout paint" as const,
+        }}
+      >
+        <video
+          ref={videoARef}
+          autoPlay loop muted playsInline preload="auto"
+          src="/videos/cosmic-ball.mp4"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            clipPath: "circle(34.5% at 50% 50%)",
+            WebkitClipPath: "circle(34.5% at 50% 50%)",
+            borderRadius: 0,
+            maskImage: "none",
+            WebkitMaskImage: "none",
+            filter: "none",
+            backdropFilter: "none",
+            mixBlendMode: "normal" as const,
+            boxShadow: "none",
+            opacity: 1,
+            transform: "scale(1.55)",
+            transformOrigin: "center center",
+          }}
+        />
+      </div>
+    );
+  }
+
+  // ── Desktop: original rendering ──
   return (
     <div
       className="absolute z-[15] pointer-events-none"
@@ -364,39 +413,27 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         width: s, height: s,
         top: "50%",
         left: "50%",
-        transform: isMobile ? "translate(-50%, calc(-50% - 12px)) translateZ(0)" : "translate(-50%, calc(-50% + 8px)) translateZ(0)",
+        transform: "translate(-50%, calc(-50% + 8px)) translateZ(0)",
         borderRadius: "50%",
-        overflow: isMobile ? "visible" : "hidden",
+        overflow: "hidden",
         background: "transparent",
-        contain: isMobile ? "layout" : "strict",
-        ...(isMobile ? {} : {
-          maskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
-          WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
-        }),
+        contain: "strict",
+        maskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
+        WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      {/* Single video on mobile, dual crossfade on desktop */}
       <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{
-          ...vidBase,
-          opacity: isMobile ? 1 : opacity.a,
-          ...(isMobile ? { clipPath: "circle(35% at 50% 50%)", borderRadius: "50%" } : {}),
-        }} />
-      {!isMobile && (
-        <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-          className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
-      )}
+        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
+      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
-      {/* Soft curved glass highlight — upper left (desktop only) */}
-      {!isMobile && (
-        <div className="absolute pointer-events-none" style={{
-          width: "45%", height: "35%", top: "7%", left: "8%",
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse at 45% 35%, rgba(255,254,250,0.14) 0%, rgba(255,254,250,0.04) 55%, transparent 100%)",
-          zIndex: 6,
-        }} />
-      )}
-
+      {/* Soft curved glass highlight — upper left */}
+      <div className="absolute pointer-events-none" style={{
+        width: "45%", height: "35%", top: "7%", left: "8%",
+        borderRadius: "50%",
+        background: "radial-gradient(ellipse at 45% 35%, rgba(255,254,250,0.14) 0%, rgba(255,254,250,0.04) 55%, transparent 100%)",
+        zIndex: 6,
+      }} />
     </div>
   );
 };
