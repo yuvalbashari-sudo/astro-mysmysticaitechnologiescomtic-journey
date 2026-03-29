@@ -240,16 +240,40 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
                 />
               </div>
 
-              {/* Selection spark */}
+              {/* Selection spark burst */}
               <AnimatePresence>
                 {isSelected && (
-                  <motion.div
-                    className="absolute -inset-3 pointer-events-none"
-                    initial={{ opacity: 1 }}
-                    animate={{ opacity: 0 }}
-                    transition={{ duration: 0.6 }}
-                    style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.3), transparent 60%)" }}
-                  />
+                  <>
+                    <motion.div
+                      className="absolute -inset-4 pointer-events-none"
+                      initial={{ opacity: 1, scale: 0.8 }}
+                      animate={{ opacity: 0, scale: 1.5 }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                      style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.4), transparent 55%)" }}
+                    />
+                    {/* Tiny star particles on selection */}
+                    {[...Array(5)].map((_, si) => (
+                      <motion.div
+                        key={`spark-${si}`}
+                        className="absolute pointer-events-none"
+                        style={{
+                          width: 3, height: 3,
+                          borderRadius: "50%",
+                          left: "50%", top: "50%",
+                          background: "hsl(var(--gold) / 0.9)",
+                          boxShadow: "0 0 4px hsl(var(--gold) / 0.5)",
+                        }}
+                        initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                        animate={{
+                          x: Math.cos(si * 1.256) * (25 + si * 8),
+                          y: Math.sin(si * 1.256) * (25 + si * 8) - 10,
+                          opacity: 0,
+                          scale: 0,
+                        }}
+                        transition={{ duration: 0.6, ease: "easeOut", delay: si * 0.03 }}
+                      />
+                    ))}
+                  </>
                 )}
               </AnimatePresence>
             </motion.button>
