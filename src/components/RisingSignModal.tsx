@@ -72,7 +72,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
 
   const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setGender(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
-  useEffect(() => { if (aiLoading && scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [aiText, aiLoading]);
+  useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
   const handleShare = () => {
     if (!signInfo) return;

@@ -355,10 +355,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   };
 
   useEffect(() => {
-    if (aiLoading && scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (aiLoading && scrollRef.current && !aiTextRef.current) {
+      scrollRef.current.scrollTop = 0;
     }
-  }, [aiText, aiLoading]);
+  }, [aiLoading]);
 
   const handleShare = () => {
     if (!card) return;
