@@ -436,15 +436,22 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
     : null;
   const liveResetCycle = isLiveBlocked && 'resetCycle' in liveAccess ? liveAccess.resetCycle : "daily";
-  // Pre-check entitlements when modal opens — block before any UI renders
+  // Pre-check entitlements when modal opens — wait for auth before blocking
   useEffect(() => {
     if (!isOpen) return;
-    const access = entitlements.checkAccess("tarot_reading");
-    if (!access.allowed && 'promptKey' in access) {
-      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-      setGatingMsg(msg);
-      setGatingResetCycle(access.resetCycle);
-      setGatingOpen(true);
+    const doCheck = () => {
+      const access = entitlements.checkAccess("tarot_reading");
+      if (!access.allowed && 'promptKey' in access) {
+        const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+        setGatingMsg(msg);
+        setGatingResetCycle(access.resetCycle);
+        setGatingOpen(true);
+      }
+    };
+    if (subscriptionManager.isAuthReady()) {
+      doCheck();
+    } else {
+      subscriptionManager.onAuthReady(doCheck);
     }
   }, [isOpen]);
 

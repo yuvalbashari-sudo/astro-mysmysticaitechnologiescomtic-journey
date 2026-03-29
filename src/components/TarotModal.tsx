@@ -358,19 +358,25 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }, 300);
   };
 
-  // Pre-check entitlements when modal opens — block before any UI renders
+  // Pre-check entitlements when modal opens — wait for auth before blocking
   useEffect(() => {
     if (!isOpen) return;
-    const access = entitlements.checkAccess("tarot_reading");
-    if (!access.allowed && 'promptKey' in access) {
-      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-      setGatingMsg(msg);
-      setGatingResetCycle(access.resetCycle);
-      setGatingOpen(true);
-      return;
+    const doCheck = () => {
+      const access = entitlements.checkAccess("tarot_reading");
+      if (!access.allowed && 'promptKey' in access) {
+        const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
+        setGatingMsg(msg);
+        setGatingResetCycle(access.resetCycle);
+        setGatingOpen(true);
+        return;
+      }
+      setMobileTopicPhase(true);
+    };
+    if (subscriptionManager.isAuthReady()) {
+      doCheck();
+    } else {
+      subscriptionManager.onAuthReady(doCheck);
     }
-    // Auto-enter topic phase when modal opens
-    setMobileTopicPhase(true);
   }, [isOpen, isMobileTarot]);
 
   const handleShare = () => {
