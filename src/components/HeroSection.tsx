@@ -912,9 +912,10 @@ const ZodiacWheel = ({
                     className="absolute rounded-full pointer-events-none"
                     style={{
                       inset: -4,
-                      border: "1px solid hsl(43 80% 55% / 0.1)",
-                      background: "radial-gradient(circle, hsl(43 80% 55% / 0.05) 0%, transparent 70%)",
-                      opacity: 0.6,
+                      border: "1px solid hsl(43 80% 55% / 0.18)",
+                      background: "radial-gradient(circle, hsl(43 80% 55% / 0.1) 0%, transparent 70%)",
+                      boxShadow: "0 0 10px hsl(43 80% 55% / 0.1)",
+                      opacity: 0.8,
                     }}
                   />
                 ) : (
