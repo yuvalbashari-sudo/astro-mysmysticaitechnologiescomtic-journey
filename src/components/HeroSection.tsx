@@ -2347,8 +2347,8 @@ const HeroSection = () => {
           style={{
             objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
             ...(isMobile ? {
-              maskImage: "radial-gradient(ellipse 260px 250px at 50% calc(50% + 195px), transparent 42%, transparent 50%, black 65%)",
-              WebkitMaskImage: "radial-gradient(ellipse 260px 250px at 50% calc(50% + 195px), transparent 42%, transparent 50%, black 65%)",
+              maskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 195px), transparent 48%, black 52%)",
+              WebkitMaskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 195px), transparent 48%, black 52%)",
             } : {}),
           }}
         />
