@@ -442,14 +442,14 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-heading text-base text-gold group-hover:text-gold-light transition-colors">{nameMap[spread.key] || spread.hebrewName}</h3>
+                              <h3 className="font-heading text-gold group-hover:text-gold-light transition-colors" style={{ fontSize: "clamp(18px, 4.5vw, 21px)" }}>{nameMap[spread.key] || spread.hebrewName}</h3>
                               {spread.isFree ? (
                                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--gold) / 0.15)", border: "1px solid hsl(var(--gold) / 0.25)", color: "hsl(var(--gold))" }}>{t.tarot_world_free}</span>
                               ) : (
                                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold font-body" style={{ background: "hsl(var(--crimson) / 0.15)", border: "1px solid hsl(var(--crimson) / 0.25)", color: "hsl(var(--crimson-light))" }}>{t.tarot_world_premium}</span>
                               )}
                             </div>
-                            <p className="text-foreground/50 font-body text-sm leading-relaxed">{descMap[spread.key] || spread.description}</p>
+                            <p className="text-foreground/50 font-body leading-relaxed" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>{descMap[spread.key] || spread.description}</p>
                           </div>
                           <ChevronRight className="w-4 h-4 text-gold/30 group-hover:text-gold/60 transition-colors flex-shrink-0 mt-1 rotate-180" />
                         </div>
