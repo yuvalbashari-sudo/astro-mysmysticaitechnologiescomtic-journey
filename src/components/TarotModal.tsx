@@ -26,7 +26,7 @@ import { entitlements, type GatingMessage } from "@/lib/entitlements";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-type SpreadType = "daily" | "love" | "career" | "decision" | "timeline" | "universe";
+type SpreadType = "love" | "career" | "decision" | "timeline";
 
 interface SpreadOption {
   key: SpreadType;
