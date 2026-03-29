@@ -3131,7 +3131,7 @@ const HeroSection = () => {
                           }}
                         />
                         <span
-                          className="font-body transition-colors duration-300 text-[12px] font-semibold leading-tight"
+                          className="font-body transition-colors duration-300 text-[16px] font-semibold leading-tight"
                           style={{
                             color: isNeonPanel
                               ? "#fff"
