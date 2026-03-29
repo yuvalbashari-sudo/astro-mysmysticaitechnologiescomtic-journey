@@ -2339,7 +2339,13 @@ const HeroSection = () => {
           width="1920"
           height="1080"
           className="w-full h-full object-cover scale-110"
-          style={{ objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)" }}
+          style={{
+            objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
+            ...(isMobile ? {
+              maskImage: "radial-gradient(ellipse 140px 140px at 51% calc(50% + 228px), transparent 60%, black 75%)",
+              WebkitMaskImage: "radial-gradient(ellipse 140px 140px at 51% calc(50% + 228px), transparent 60%, black 75%)",
+            } : {}),
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-background/30 via-transparent to-transparent" />
