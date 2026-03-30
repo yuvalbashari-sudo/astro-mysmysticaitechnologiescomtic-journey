@@ -147,8 +147,8 @@ serve(async (req) => {
     const langName = LANG_NAMES[lang] || "Hebrew";
 
     const langInstruction = lang === "he"
-      ? "אתה כותב בעברית בלבד."
-      : `CRITICAL: You MUST write your ENTIRE response in ${langName}. Every word must be in ${langName}. Do NOT use Hebrew or any other language.`;
+      ? "אתה כותב בעברית בלבד. אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד."
+      : `CRITICAL LANGUAGE RULE: You MUST write your ENTIRE response in ${langName}. Every single word, heading, label, keyword, and sentence MUST be in ${langName}. Do NOT use Hebrew or any other language. No foreign-language words are allowed — not even single words like "BALANCE" or "ENERGY". If you see Hebrew text in the prompt context, translate it to ${langName} in your output. Everything must be purely in ${langName}.`;
 
     // Build feature-specific prompt section
     let featureBlock = "";
