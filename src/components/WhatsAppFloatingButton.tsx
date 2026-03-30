@@ -7,7 +7,8 @@ const WhatsAppFloatingButton = () => {
   const t = useT();
   const isMobile = useIsMobile();
 
-  if (isMobile) return null;
+  // Hidden on both mobile and desktop per cleanup requirements
+  return null;
 
   return (
     <motion.button
