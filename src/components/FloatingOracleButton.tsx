@@ -5,6 +5,7 @@ import { Sparkles, X } from "lucide-react";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT } from "@/i18n";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PORTAL_ID = "norielle-global-root";
 
