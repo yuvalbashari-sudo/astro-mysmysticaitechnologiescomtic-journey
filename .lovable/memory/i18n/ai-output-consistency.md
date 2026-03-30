@@ -12,4 +12,10 @@ Per-language tone profiles:
 - **Russian**: Deep, philosophical, introspective, literary weight
 - **Arabic**: Rich, poetic, powerful, uses Arabic rhetoric and imagery
 
-All 3 edge functions (mystical-reading, tarot-reading, mystical-advisor) enforce 100% language purity and independent creative generation.
+Reading structure follows a 4-part emotional arc:
+1. **Emotional recognition** — acknowledge energy/state, make user feel seen
+2. **Clear insight** — specific meaningful analysis (no vague generics)
+3. **Personal direction** — what this means for THEM specifically
+4. **Empowering close** — strong sentence creating clarity, hope, or curiosity
+
+Conversion quality: readings feel premium, personal, and trustworthy. Subtle invitation energy encourages deeper exploration without being salesy. All 3 edge functions (mystical-reading, tarot-reading, mystical-advisor) enforce these rules.
