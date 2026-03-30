@@ -54,10 +54,13 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
 
 
 
-  // Don't show badge if unlimited or no free tier
-  if (remaining === Infinity || remaining === undefined) return null;
+  // Don't show badge if no free tier
+  if (remaining === undefined) return null;
 
-  const isExhausted = remaining === 0;
+  // Show ∞ for unlimited (admin/always-free)
+  const displayValue = remaining === Infinity ? "∞" : remaining;
+
+  const isExhausted = remaining !== Infinity && remaining === 0;
 
   return (
     <span
@@ -73,7 +76,7 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
         boxShadow: isExhausted ? "none" : "0 0 8px hsl(var(--gold) / 0.08)",
       }}
     >
-      {remaining}
+      {displayValue}
     </span>
   );
 };
