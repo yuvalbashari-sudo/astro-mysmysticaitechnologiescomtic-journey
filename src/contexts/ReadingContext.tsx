@@ -24,8 +24,9 @@ export const useReadingContext = () => useContext(ReadingContext);
 
 export const ReadingProvider = ({ children }: { children: ReactNode }) => {
   const [activeReading, setActiveReading] = useState<ReadingContextData | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   return (
-    <ReadingContext.Provider value={{ activeReading, setActiveReading }}>
+    <ReadingContext.Provider value={{ activeReading, setActiveReading, modalOpen, setModalOpen }}>
       {children}
     </ReadingContext.Provider>
   );
