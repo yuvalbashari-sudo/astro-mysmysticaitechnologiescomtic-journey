@@ -60,7 +60,7 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
   // Show ∞ for unlimited (admin/always-free)
   const displayValue = remaining === Infinity ? "∞" : remaining;
 
-  const isExhausted = remaining === 0;
+  const isExhausted = remaining !== Infinity && remaining === 0;
 
   return (
     <span
