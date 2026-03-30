@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X } from "lucide-react";
@@ -6,10 +6,32 @@ import AdvisorChatPanel from "./AdvisorChatPanel";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT } from "@/i18n";
 
+const PORTAL_ID = "norielle-global-root";
+
 const FloatingOracleButton = () => {
   const t = useT();
   const [chatOpen, setChatOpen] = useState(false);
   const { activeReading } = useReadingContext();
+  const [host, setHost] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    let el = document.getElementById(PORTAL_ID);
+    if (!el) {
+      el = document.createElement("div");
+      el.id = PORTAL_ID;
+      el.style.position = "fixed";
+      el.style.inset = "0";
+      el.style.pointerEvents = "none";
+      el.style.zIndex = "2147483647";
+      document.body.appendChild(el);
+    }
+    setHost(el);
+    return () => {
+      // Don't remove — other instances may rely on it
+    };
+  }, []);
+
+  if (!host) return null;
 
   return createPortal(
     <>
@@ -17,10 +39,12 @@ const FloatingOracleButton = () => {
 
       {/* Main Floating Button */}
       <motion.button
-        className="fixed z-[2147483647] w-14 h-14 rounded-full flex items-center justify-center"
+        className="fixed w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           bottom: "5px",
           right: "5px",
+          zIndex: 2147483647,
+          pointerEvents: "auto",
           background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)), hsl(var(--gold-light)))",
           boxShadow: "0 4px 20px hsl(var(--gold) / 0.4)",
         }}
@@ -61,6 +85,7 @@ const FloatingOracleButton = () => {
             style={{
               background: "hsl(var(--gold))",
               boxShadow: "0 0 8px hsl(var(--gold) / 0.6)",
+              pointerEvents: "none",
             }}
             animate={{ scale: [1, 1.3, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
@@ -68,7 +93,7 @@ const FloatingOracleButton = () => {
         )}
       </motion.button>
     </>,
-    document.body
+    host
   );
 };
 
