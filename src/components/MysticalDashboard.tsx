@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Star, Flame, Droplets, Wind, Mountain, Sparkles, Eye, Heart, Zap, Sun, Moon, TrendingUp, RotateCcw } from "lucide-react";
+import { X, Star, Flame, Droplets, Wind, Mountain, Sparkles, Eye, Heart, Zap, Sun, Moon, TrendingUp, RotateCcw, BookOpen } from "lucide-react";
+import RemainingReadingsBadge from "./RemainingReadingsBadge";
 import { mysticalProfile, type MysticalProfileData } from "@/lib/mysticalProfile";
 import {
   AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
