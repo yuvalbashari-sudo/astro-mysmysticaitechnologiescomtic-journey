@@ -523,29 +523,27 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               ) : null}
             </AnimatePresence>
 
-            {/* ── Astrologer Avatar — matches Hero placement exactly ── */}
-            {!isMobile && (
-              <motion.div
-                className="fixed z-[110] pointer-events-auto"
+            {/* ── Astrologer Avatar — visible on all viewports ── */}
+            <AvatarHoverTeaser
+              disabled={isMobile}
+              anchor="left"
+              className="fixed flex items-center justify-center pointer-events-auto"
+              style={{
+                bottom: isMobile ? 5 : 10,
+                right: isMobile ? 8 : 10,
+                zIndex: 200,
+              }}
+            >
+              <AstrologerAvatarButton
+                size={isMobile ? 80 : 132}
+                onClick={() => setAdvisorOpen(true)}
+                entranceDelay={0.6}
+                className="relative"
                 style={{
-                  bottom: 10,
-                  right: 10,
                   filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
                 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 1 }}
-              >
-                <AvatarHoverTeaser anchor="left">
-                  <AstrologerAvatarButton
-                    size={132}
-                    onClick={() => setAdvisorOpen(true)}
-                    entranceDelay={0.6}
-                    className="relative"
-                  />
-                </AvatarHoverTeaser>
-              </motion.div>
-            )}
+              />
+            </AvatarHoverTeaser>
 
             <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
     </CinematicModalShell>
