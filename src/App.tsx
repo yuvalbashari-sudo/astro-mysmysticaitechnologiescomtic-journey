@@ -15,6 +15,8 @@ import TarotGalleryPage from "./pages/TarotGalleryPage";
 import PremiumUpgrade from "./pages/PremiumUpgrade";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
+import FloatingOracleButton from "./components/FloatingOracleButton";
+import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,8 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
+            <FloatingOracleButton />
+            <WhatsAppFloatingButton />
           </TooltipProvider>
         </FontScaleProvider>
       </ReadingProvider>
