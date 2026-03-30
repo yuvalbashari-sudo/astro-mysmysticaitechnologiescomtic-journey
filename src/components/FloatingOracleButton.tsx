@@ -13,6 +13,7 @@ const FloatingOracleButton = () => {
   const t = useT();
   const [chatOpen, setChatOpen] = useState(false);
   const { activeReading, modalOpen } = useReadingContext();
+  const isMobile = useIsMobile();
   const [host, setHost] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
