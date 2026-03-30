@@ -76,7 +76,7 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
         boxShadow: isExhausted ? "none" : "0 0 8px hsl(var(--gold) / 0.08)",
       }}
     >
-      {remaining}
+      {displayValue}
     </span>
   );
 };
