@@ -234,11 +234,11 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                   >
                     <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
                       <BookOpen className="w-4 h-4" />
-                      {t.dashboard_remaining_title || "קריאות נותרות היום"}
+                      {(t as any).dashboard_remaining_title || "קריאות נותרות היום"}
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
-                        <span className="text-base text-foreground font-body">{t.compatibility_title || "התאמה"}</span>
+                        <span className="text-base text-foreground font-body">{t.nav_compatibility_title}</span>
                         <RemainingReadingsBadge feature="compatibility_reading" />
                       </div>
                       <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
