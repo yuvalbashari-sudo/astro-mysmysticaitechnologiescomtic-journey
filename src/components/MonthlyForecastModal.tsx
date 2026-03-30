@@ -180,8 +180,36 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
+  /* On mobile: we render a non-scrolling avatar header + scrollable body.
+     CinematicModalShell fullscreen gives us an absolute inset-0 overflow-y-auto wrapper,
+     but we override that by making our own flex layout inside it. */
+  const mobileAvatarHeader = isMobile ? (
+    <div
+      className="flex-shrink-0 flex justify-center pointer-events-auto"
+      style={{ paddingTop: 8, paddingBottom: 4, zIndex: 10 }}
+    >
+      <AstrologerAvatarButton
+        size={56}
+        onClick={() => setAdvisorOpen(true)}
+        entranceDelay={0.6}
+        className="relative"
+        style={{
+          filter: "drop-shadow(0 0 18px hsl(270 60% 45% / 0.35)) drop-shadow(0 4px 12px hsl(222 47% 6% / 0.5))",
+        }}
+      />
+    </div>
+  ) : null;
+
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen hideAdvisor>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} scrollRef={isMobile ? undefined : scrollRef as React.RefObject<HTMLDivElement>} fullscreen hideAdvisor>
+      {isMobile ? (
+        /* ── Mobile: flex column — fixed avatar header + scrollable body ── */
+        <div className="flex flex-col h-full">
+          {mobileAvatarHeader}
+          <div
+            ref={scrollRef as React.RefObject<HTMLDivElement>}
+            className="flex-1 overflow-y-auto min-h-0"
+          >
             <AnimatePresence mode="wait">
               {!hasResult && !isLoading ? (
                 isDesktop ? (
