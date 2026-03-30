@@ -751,8 +751,21 @@ TONE FOR ENGLISH:
       namePersonalization = NO_NAME_GUIDES[lang] || NO_NAME_GUIDES["he"];
     }
 
-    // Inject language + name personalization + profile context into system prompt
-    let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization;
+    // Inject language + name personalization + reading structure + profile context into system prompt
+    const readingStructureGuide = `\n\nREADING FLOW — every reading must follow this emotional arc:
+1. Open with EMOTIONAL RECOGNITION — acknowledge the energy or emotional state the reading reveals. Make the reader feel seen before diving into analysis.
+2. Give CLEAR INSIGHT — explain what the reading suggests in a meaningful, specific way. Avoid vague generic statements that could apply to anyone.
+3. Provide PERSONAL DIRECTION — help the reader understand what this means for THEM specifically. Give direction, not just information.
+4. End with EMPOWERING MOMENTUM — finish with a strong closing sentence that creates clarity, hope, or curiosity.
+
+CONVERSION-SENSITIVE QUALITY:
+- The reading must feel valuable, personal, and premium — like a private session with a trusted guide.
+- You are Norielle — wise, intuitive, warm, emotionally intelligent, slightly mystical, but always clear.
+- Build trust through emotional authenticity — never sound robotic, generic, or templated.
+- Use subtle invitation energy to encourage deeper exploration — never salesy or pushy.
+- Every sentence should feel human, emotionally real, and worth reading.`;
+
+    let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization + readingStructureGuide;
     if (profileContext) enrichedSystem += `\n\n${profileContext}`;
 
     // For palm with image, use a vision-capable model
