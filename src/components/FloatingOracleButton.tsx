@@ -19,12 +19,23 @@ const FloatingOracleButton = () => {
     if (!el) {
       el = document.createElement("div");
       el.id = PORTAL_ID;
-      el.style.position = "fixed";
-      el.style.inset = "0";
-      el.style.pointerEvents = "none";
-      el.style.zIndex = "2147483647";
       document.body.appendChild(el);
     }
+    // Force full visual isolation every mount
+    Object.assign(el.style, {
+      position: "fixed",
+      inset: "0",
+      pointerEvents: "none",
+      zIndex: "2147483647",
+      isolation: "isolate",
+      opacity: "1",
+      filter: "none",
+      backdropFilter: "none",
+      WebkitBackdropFilter: "none",
+      mixBlendMode: "normal",
+      transform: "none",
+      contain: "layout",
+    });
     setHost(el);
     return () => {
       // Don't remove — other instances may rely on it
