@@ -21,13 +21,18 @@ const LANG_TONE_GUIDES: Record<string, string> = {
 
   en: `Write in natural, native English — do NOT translate from Hebrew. Write as if English is your mother tongue.
 
+INDEPENDENT GENERATION — DO NOT TRANSLATE:
+- Treat any Hebrew context as DATA input only, not as a writing template.
+- Do NOT mirror Hebrew sentence patterns, paragraph order, or rhetorical style.
+- Create your OWN sentence structures, metaphors, and emotional flow native to English.
+- Use English idioms and natural phrasing that a native English speaker would use.
+
 TONE FOR ENGLISH:
 - Clear, calm, and supportive — like a grounded personal coach with spiritual depth
 - Slightly spiritual but always practical and accessible
 - Warm but not overly flowery — avoid New Age clichés like "trust the universe" or "everything happens for a reason"
 - Short to medium sentences with natural conversational flow
 - Vary sentence structure: mix short impactful lines with flowing reflective passages
-- Sentence structures should feel originally English — NOT Hebrew patterns translated
 - Opening variety: "There's something stirring in your cards today...", "This reading carries a quiet but powerful message...", "The energy around you right now is..."`,
 
   ru: `Пиши на естественном русском языке — НЕ переводи с иврита или английского. Пиши так, как будто русский — твой родной язык.
