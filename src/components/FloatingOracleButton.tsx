@@ -42,7 +42,9 @@ const FloatingOracleButton = () => {
     };
   }, []);
 
-  if (!host) return null;
+  const { activeReading, modalOpen } = useReadingContext();
+
+  if (!host || modalOpen) return null;
 
   return createPortal(
     <>

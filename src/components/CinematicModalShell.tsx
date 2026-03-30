@@ -38,16 +38,21 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
   const isMobile = useIsMobile();
   const t = useT();
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const { setModalOpen } = useReadingContext();
   
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const activeScrollRef = scrollRef || internalScrollRef;
 
   useEffect(() => {
     if (isOpen) {
+      setModalOpen(true);
       document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
+      return () => {
+        setModalOpen(false);
+        document.body.style.overflow = "";
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, setModalOpen]);
 
   if (!isOpen) return null;
 
