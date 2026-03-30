@@ -529,13 +529,14 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               anchor="left"
               className="fixed flex items-center justify-center pointer-events-auto"
               style={{
-                bottom: isMobile ? 5 : 10,
-                right: isMobile ? 8 : 10,
+                ...(isMobile
+                  ? { top: 72, right: 8, bottom: "auto" }
+                  : { bottom: 10, right: 10 }),
                 zIndex: 200,
               }}
             >
               <AstrologerAvatarButton
-                size={isMobile ? 80 : 132}
+                size={isMobile ? 56 : 132}
                 onClick={() => setAdvisorOpen(true)}
                 entranceDelay={0.6}
                 className="relative"
