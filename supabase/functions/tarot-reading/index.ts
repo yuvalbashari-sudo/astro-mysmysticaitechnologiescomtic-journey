@@ -350,7 +350,7 @@ Write a mystical, personal and deep tarot reading. Important:
 3. Adapt the emotional and spiritual message to the reading type (${spreadType})
 4. The reading must feel unique — as if there has never been a reading like this
 5. Speak directly to the reader — as if you're holding their hand and looking into their eyes
-6. REMEMBER: Write EVERYTHING in ${langName}. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.`;
+6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
