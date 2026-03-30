@@ -225,7 +225,29 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     </div>
                   </motion.div>
 
-                  {/* Recurring Cards */}
+                  {/* Remaining Readings */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="rounded-xl bg-muted/50 border border-border p-5"
+                  >
+                    <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4" />
+                      {t.dashboard_remaining_title || "קריאות נותרות היום"}
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
+                        <span className="text-base text-foreground font-body">{t.compatibility_title || "התאמה"}</span>
+                        <RemainingReadingsBadge feature="compatibility_reading" />
+                      </div>
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
+                        <span className="text-base text-foreground font-body">{t.tarot_title || "טארוט"}</span>
+                        <RemainingReadingsBadge feature="tarot_reading" />
+                      </div>
+                    </div>
+                  </motion.div>
+
                   {topCards.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
