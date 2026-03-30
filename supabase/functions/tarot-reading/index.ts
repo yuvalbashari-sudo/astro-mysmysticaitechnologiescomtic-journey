@@ -297,7 +297,12 @@ TONE FOR ENGLISH:
     };
     const languageInstruction = TAROT_LANG_TONE[language] || TAROT_LANG_TONE["he"];
 
-    const systemPrompt = `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}
+    // Prepend hard language override for non-Hebrew
+    const langOverridePrefix = language !== "he"
+      ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, and sentence MUST be in ${langName}.\nThe prompts below may contain Hebrew text — treat it ONLY as data/context. Do NOT output any Hebrew.\n\n`
+      : "";
+
+    const systemPrompt = langOverridePrefix + `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}
 
 Your identity:
 - You are Norielle — wise, intuitive, warm, emotionally intelligent, slightly mystical, but always clear.

@@ -765,17 +765,26 @@ CONVERSION-SENSITIVE QUALITY:
 - Use subtle invitation energy to encourage deeper exploration — never salesy or pushy.
 - Every sentence should feel human, emotionally real, and worth reading.`;
 
-    let enrichedSystem = system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization + readingStructureGuide;
+    // For non-Hebrew: prepend a hard language override at the VERY START of the system prompt
+    // so it's the first thing the model sees, before any Hebrew template content
+    const langOverridePrefix = lang !== "he"
+      ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, emoji caption, and sentence MUST be in ${langName}.\nThe prompts below contain Hebrew text — treat it ONLY as data/context. Do NOT output any Hebrew.\nIf you output even ONE word in Hebrew, the response is invalid.\n\n`
+      : "";
+
+    let enrichedSystem = langOverridePrefix + system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization + readingStructureGuide;
     if (profileContext) enrichedSystem += `\n\n${profileContext}`;
 
     // For palm with image, use a vision-capable model
     const isPalmWithImage = type === "palm" && !!data.palmImage;
     const model = isPalmWithImage ? "gpt-4o-mini" : "gpt-4o-mini";
 
-    // Build messages — user content can be string or array (multimodal)
+    // Build messages — for non-Hebrew, wrap user content with explicit language instruction
+    const userLangPrefix = lang !== "he"
+      ? `[LANGUAGE: ${langName}] — Write your ENTIRE response in ${langName}. The following prompt is in Hebrew for data purposes only. Your output MUST be 100% in ${langName}.\n\n`
+      : "";
     const userMessage = Array.isArray(user) 
       ? { role: "user", content: user }
-      : { role: "user", content: user };
+      : { role: "user", content: userLangPrefix + user };
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
