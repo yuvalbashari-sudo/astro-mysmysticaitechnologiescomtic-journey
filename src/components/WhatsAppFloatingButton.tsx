@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
 import { useT } from "@/i18n";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const WhatsAppFloatingButton = () => {
   const t = useT();
