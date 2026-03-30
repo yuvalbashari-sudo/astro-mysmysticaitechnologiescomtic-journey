@@ -11,7 +11,7 @@ const PORTAL_ID = "norielle-global-root";
 const FloatingOracleButton = () => {
   const t = useT();
   const [chatOpen, setChatOpen] = useState(false);
-  const { activeReading } = useReadingContext();
+  const { activeReading, modalOpen } = useReadingContext();
   const [host, setHost] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const FloatingOracleButton = () => {
     };
   }, []);
 
-  if (!host) return null;
+  if (!host || modalOpen) return null;
 
   return createPortal(
     <>

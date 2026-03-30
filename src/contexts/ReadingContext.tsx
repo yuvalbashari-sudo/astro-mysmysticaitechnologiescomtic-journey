@@ -9,19 +9,24 @@ export interface ReadingContextData {
 interface ReadingContextValue {
   activeReading: ReadingContextData | null;
   setActiveReading: (data: ReadingContextData | null) => void;
+  modalOpen: boolean;
+  setModalOpen: (open: boolean) => void;
 }
 
 const ReadingContext = createContext<ReadingContextValue>({
   activeReading: null,
   setActiveReading: () => {},
+  modalOpen: false,
+  setModalOpen: () => {},
 });
 
 export const useReadingContext = () => useContext(ReadingContext);
 
 export const ReadingProvider = ({ children }: { children: ReactNode }) => {
   const [activeReading, setActiveReading] = useState<ReadingContextData | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   return (
-    <ReadingContext.Provider value={{ activeReading, setActiveReading }}>
+    <ReadingContext.Provider value={{ activeReading, setActiveReading, modalOpen, setModalOpen }}>
       {children}
     </ReadingContext.Provider>
   );
