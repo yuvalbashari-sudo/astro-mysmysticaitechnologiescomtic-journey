@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
-import { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
+import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
