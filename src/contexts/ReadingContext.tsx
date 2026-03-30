@@ -9,11 +9,15 @@ export interface ReadingContextData {
 interface ReadingContextValue {
   activeReading: ReadingContextData | null;
   setActiveReading: (data: ReadingContextData | null) => void;
+  modalOpen: boolean;
+  setModalOpen: (open: boolean) => void;
 }
 
 const ReadingContext = createContext<ReadingContextValue>({
   activeReading: null,
   setActiveReading: () => {},
+  modalOpen: false,
+  setModalOpen: () => {},
 });
 
 export const useReadingContext = () => useContext(ReadingContext);
