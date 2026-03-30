@@ -44,7 +44,8 @@ const FloatingOracleButton = () => {
     };
   }, []);
 
-  if (!host || modalOpen) return null;
+  // Hidden: removed on both mobile (original) and desktop (cleanup)
+  return null;
 
   return createPortal(
     <>
