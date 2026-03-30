@@ -199,7 +199,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
                           <Heart className="w-6 h-6 text-crimson-light" />
                         </motion.div>
-                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.compat_title}</h2>
+                        <h2 className="font-heading text-2xl gold-gradient-text mb-2" style={{ textShadow: "0 0 30px hsl(222 47% 6%)" }}>{t.compat_title} <RemainingReadingsBadge feature="compatibility_reading" className="ms-2 align-middle" /></h2>
                         <p className="text-foreground/70 font-body text-sm mb-6 max-w-sm mx-auto leading-relaxed" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.compat_desc}</p>
 
                         {/* Person 1 */}

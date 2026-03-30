@@ -469,6 +469,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     transition={{ delay: 0.15 }}
                   >
                     {t.tarot_title}
+                    <RemainingReadingsBadge feature="tarot_reading" className="ms-2 align-middle" />
                   </motion.h2>
                   <motion.p
                     className="relative z-10 text-foreground/50 font-body text-lg mb-8 text-center max-w-[320px]"
