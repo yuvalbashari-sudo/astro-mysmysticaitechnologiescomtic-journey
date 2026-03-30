@@ -5,6 +5,7 @@ import { Sparkles, X } from "lucide-react";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT } from "@/i18n";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PORTAL_ID = "norielle-global-root";
 
@@ -12,6 +13,7 @@ const FloatingOracleButton = () => {
   const t = useT();
   const [chatOpen, setChatOpen] = useState(false);
   const { activeReading, modalOpen } = useReadingContext();
+  const isMobile = useIsMobile();
   const [host, setHost] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ const FloatingOracleButton = () => {
     };
   }, []);
 
-  if (!host || modalOpen) return null;
+  if (!host || modalOpen || isMobile) return null;
 
   return createPortal(
     <>
