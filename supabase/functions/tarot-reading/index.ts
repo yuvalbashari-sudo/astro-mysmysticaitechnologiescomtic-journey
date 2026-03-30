@@ -238,8 +238,8 @@ serve(async (req) => {
     const contextBlock = contextLines.length > 0 ? `\n\nPersonal context:\n${contextLines.join("\n")}` : "";
 
     const languageInstruction = language === "he"
-      ? "אתה כותב בעברית בלבד."
-      : `CRITICAL: You MUST write your ENTIRE response in ${langName}. Every single word, heading, and sentence must be in ${langName}. Do NOT use Hebrew or any other language.`;
+      ? "אתה כותב בעברית בלבד. אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד."
+      : `CRITICAL LANGUAGE RULE: You MUST write your ENTIRE response in ${langName}. Every single word, heading, section title, label, keyword, and sentence MUST be in ${langName}. Do NOT use Hebrew, or any other language besides ${langName}. If the prompt template contains Hebrew headers or labels, you MUST translate them to ${langName}. No foreign-language words are allowed in the output — not even single words like "BALANCE", "LOVE", or "ENERGY". Everything must be in ${langName}.`;
 
     const systemPrompt = `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}
 
