@@ -8,6 +8,7 @@ import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import { useT } from "@/i18n";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
   isOpen: boolean;
