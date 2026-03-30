@@ -550,21 +550,31 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 )
               ) : null}
             </AnimatePresence>
+          </div>{/* end scrollable body */}
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
+        </div>
+      ) : (
+        /* ── Desktop/Tablet: original layout ── */
+        <>
+            <AnimatePresence mode="wait">
+              {!hasResult && !isLoading ? (
+                /* Desktop input form is rendered above — this branch won't hit on mobile */
+                null
+              ) : null}
+            </AnimatePresence>
 
-            {/* ── Astrologer Avatar — visible on all viewports ── */}
+            {/* ── Astrologer Avatar — desktop only ── */}
             <AvatarHoverTeaser
               disabled={isMobile}
               anchor="left"
               className="fixed flex items-center justify-center pointer-events-auto"
               style={{
-                ...(isMobile
-                  ? { top: 72, right: 8, bottom: "auto" }
-                  : { bottom: 10, right: 10 }),
+                bottom: 10, right: 10,
                 zIndex: 200,
               }}
             >
               <AstrologerAvatarButton
-                size={isMobile ? 56 : 132}
+                size={132}
                 onClick={() => setAdvisorOpen(true)}
                 entranceDelay={0.6}
                 className="relative"
@@ -575,6 +585,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             </AvatarHoverTeaser>
 
             <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
+        </>
+      )}
     </CinematicModalShell>
   );
 };
