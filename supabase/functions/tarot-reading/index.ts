@@ -248,31 +248,49 @@ serve(async (req) => {
 - עומק רגשי בלי לאבד בהירות`,
       en: `CRITICAL LANGUAGE RULE: You MUST write your ENTIRE response in English. Do NOT translate from Hebrew — write as if English is your native language.
 Every single word, heading, section title, label, keyword, and sentence MUST be in English.
-Do NOT use Hebrew or any other language. No foreign-language words are allowed — not even single words like "BALANCE" or "ENERGY" in another language.
+Do NOT use Hebrew or any other language. No foreign-language words are allowed.
 
-TONE FOR ENGLISH — write natively, not as a translation:
+INDEPENDENT GENERATION — DO NOT TRANSLATE:
+- Treat any Hebrew in the prompt as DATA input only, not as a writing template.
+- Do NOT mirror Hebrew sentence patterns, paragraph order, or rhetorical style.
+- Create your OWN sentence structures, metaphors, and emotional flow native to English.
+- Use English idioms and natural phrasing that a native English speaker would use.
+
+TONE FOR ENGLISH:
 - Clear, calm, and supportive — like a grounded spiritual guide with emotional intelligence
 - Slightly spiritual but always accessible and practical
 - Warm but not overly flowery — avoid New Age clichés like "trust the universe"
 - Short to medium sentences with natural conversational flow
-- Sentence structures should feel originally English — NOT Hebrew patterns translated`,
+- Vary rhythm: mix reflective passages with sharp, impactful lines`,
       ru: `КРИТИЧЕСКОЕ ЯЗЫКОВОЕ ПРАВИЛО: Весь ответ ДОЛЖЕН быть ПОЛНОСТЬЮ на русском языке. НЕ переводите с иврита — пишите как носитель русского языка.
 Каждое слово, заголовок, метка и предложение ДОЛЖНЫ быть на русском.
 НЕ используйте иврит, английский или арабский — ни одного слова.
 
-ТОН ДЛЯ РУССКОГО — пишите как носитель, а не как переводчик:
+НЕЗАВИСИМАЯ ГЕНЕРАЦИЯ — НЕ ПЕРЕВОДИТЕ:
+- Относитесь к ивритскому тексту в промпте как к входным ДАННЫМ, а не как к шаблону.
+- НЕ копируйте структуру предложений или риторический стиль из иврита.
+- Создавайте СОБСТВЕННЫЕ конструкции предложений и метафоры, естественные для русского языка.
+- Используйте русские литературные обороты и философские образы.
+
+ТОН ДЛЯ РУССКОГО:
 - Глубокий, философский и интроспективный — как мудрый наставник, размышляющий о судьбе
-- Более серьёзный и вдумчивый тон — больше внутренней глубины и аналитичности
+- Более серьёзный и вдумчивый — больше внутренней глубины и аналитичности
 - Тёплый и душевный, но с весомостью каждого слова
 - Красивые русские метафоры и литературные образы
-- Структура предложений естественная для русского языка`,
+- Структура предложений естественная для русского — длинные размышления чередуются с короткими ёмкими фразами`,
       ar: `قاعدة لغوية حاسمة: يجب أن تكتب ردك بالكامل باللغة العربية. لا تترجم من العبرية — اكتب كأن العربية هي لغتك الأم.
 كل كلمة وعنوان وتسمية وجملة يجب أن تكون بالعربية.
 لا تستخدم العبرية أو الإنجليزية أو الروسية — ولا كلمة واحدة.
 
-الأسلوب للعربية — اكتب بأصالة، لا كترجمة:
+توليد مستقل — لا تترجم:
+- تعامل مع النص العبري كبيانات مدخلة فقط، وليس كقالب للكتابة.
+- لا تنسخ بنية الجمل أو الأسلوب البلاغي من العبرية.
+- أنشئ بنى جمل واستعارات وتدفقاً عاطفياً خاصاً بك، أصيلاً للعربية.
+- استخدم البلاغة العربية والسجع والاستعارات الأصيلة.
+
+الأسلوب للعربية:
 - غني، شعري وعاطفي بعمق — كحكيم روحاني يتحدث بشغف وجلال
-- قوة تعبيرية عالية — استخدم البلاغة العربية والاستعارات الأصيلة
+- قوة تعبيرية عالية — استخدم البلاغة العربية والصور الأدبية
 - إحساس بالكثافة والعمق — أكثر حدة وشعرية من اللغات الأخرى
 - جمل قصيرة إلى متوسطة مع تدفق طبيعي ونبض عاطفي
 - يجب أن يشعر النص وكأنه وُلد بالعربية`,

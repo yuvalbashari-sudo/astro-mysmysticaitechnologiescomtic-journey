@@ -651,10 +651,82 @@ serve(async (req) => {
     const langName = LANG_NAMES[lang] || "Hebrew";
     
     const LANG_NATIVE_TONE: Record<string, string> = {
-      he: "\n\nאתה כותב בעברית בלבד — לא מתרגם מאנגלית, אלא יוצר ישירות בעברית.\nהכתיבה צריכה להרגיש טבעית, זורמת ואינטימית — לא כמו תרגום.\nהשתמש בביטויים עבריים אותנטיים ובמטאפורות שמרגישות טבעי בעברית.\nהימנע מפתיחות חוזרות ומקלישאות רוחניות גנריות.\nאל תשתמש בניסוחי 'בן/בת מזל', 'המזל שלך', 'לבני מזל' — דבר ישירות אל האדם.\nאל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד.\n\nהטון בעברית:\n- רגשי, חם ואינטואיטיבי — כאילו את/ה מרגיש/ה את האדם שמולך\n- ישיר ואישי — מדבר מלב ללב, לא מרחוק\n- משפטים קצרים עד בינוניים, זרימה טבעית\n- עומק רגשי בלי לאבד בהירות",
-      en: `\n\nCRITICAL LANGUAGE INSTRUCTION — ABSOLUTE RULE:\nYou MUST write your ENTIRE response in English. Do NOT translate from Hebrew — write as if English is your native language.\n- ALL section headers and bold labels MUST be in English. The prompt template contains Hebrew headers as structural examples only — replace them with natural English equivalents.\n- Example: "**⭐ אישיות כללית**" → "**⭐ General Personality**", "**✨ אנרגיית החודש**" → "**✨ Monthly Energy**", "**❤️ אהבה**" → "**❤️ Love**"\n- Do NOT include ANY Hebrew, Russian, or Arabic words anywhere in the response.\n- Keep emoji prefixes but translate ALL text after them to English.\n\nTONE FOR ENGLISH — write natively, not as a translation:\n- Clear, calm, and supportive — like a grounded personal coach with spiritual depth\n- Warm but not overly flowery — avoid New Age clichés and generic platitudes\n- Slightly spiritual but always practical and accessible\n- Short to medium sentences with natural conversational flow\n- Use rich but accessible vocabulary — no forced mysticism\n- Never use generic zodiac group phrasing like "for Virgos" — address the person directly\n- Sentence structures should feel originally English — NOT Hebrew sentence patterns translated to English`,
-      ru: `\n\nКРИТИЧЕСКАЯ ЯЗЫКОВАЯ ИНСТРУКЦИЯ — АБСОЛЮТНОЕ ПРАВИЛО:\nВесь ответ ДОЛЖЕН быть написан ПОЛНОСТЬЮ на русском языке. НЕ переводите с иврита — пишите так, как будто русский — ваш родной язык.\n- ВСЕ заголовки секций и жирные метки ДОЛЖНЫ быть на русском. Шаблон промпта содержит заголовки на иврите только как структурные примеры — замените их естественными русскими эквивалентами.\n- Пример: "**⭐ אישיות כללית**" → "**⭐ Общая характеристика**", "**✨ אנרגיית החודש**" → "**✨ Энергия месяца**"\n- НЕ используйте НИКАКИХ слов на иврите, английском или арабском.\n\nТОН ДЛЯ РУССКОГО — пишите как носитель, а не как переводчик:\n- Глубокий, философский и интроспективный — как мудрый наставник, размышляющий вслух\n- Более тяжёлый и серьёзный тон, чем в других языках — больше внутренней глубины\n- Аналитический и вдумчивый, но при этом тёплый и душевный\n- Используйте красивые русские выражения, литературные метафоры и образы\n- Структура предложений должна быть естественной для русского языка — НЕ калька с иврита или английского\n- Избегай обобщённых зодиакальных фраз вроде "для Дев" — говори лично`,
-      ar: `\n\nتعليمات اللغة الحاسمة — قاعدة مطلقة:\nيجب أن تكتب ردك بالكامل باللغة العربية. لا تترجم من العبرية — اكتب كأن العربية هي لغتك الأم.\n- جميع عناوين الأقسام والعلامات العريضة يجب أن تكون بالعربية. القالب يحتوي على عناوين بالعبرية كأمثلة هيكلية فقط — استبدلها بمكافئات عربية طبيعية.\n- مثال: "**⭐ אישיות כללית**" → "**⭐ الشخصية العامة**"، "**✨ אנרגיית החודש**" → "**✨ طاقة الشهر**"\n- لا تستخدم أي كلمات بالعبرية أو الإنجليزية أو الروسية.\n\nالأسلوب للعربية — اكتب بأصالة، لا كترجمة:\n- غني، معبّر وعاطفي — كحكيم روحاني يتحدث بعمق وشغف\n- شعري وقوي — استخدم قوة البلاغة العربية والاستعارات الأصيلة\n- إحساس عميق بالكثافة والجلال — أعمق وأكثر حدة من اللغات الأخرى\n- جمل قصيرة إلى متوسطة مع تدفق طبيعي ونبض عاطفي\n- تجنب الترجمة الحرفية — يجب أن يشعر النص وكأنه وُلد بالعربية\n- لا تستخدم عبارات عامة مثل "لبرج العذراء" — تحدث بشكل شخصي ومباشر`,
+      he: `\n\nאתה כותב בעברית בלבד — לא מתרגם מאנגלית, אלא יוצר ישירות בעברית.
+הכתיבה צריכה להרגיש טבעית, זורמת ואינטימית — לא כמו תרגום.
+השתמש בביטויים עבריים אותנטיים ובמטאפורות שמרגישות טבעי בעברית.
+הימנע מפתיחות חוזרות ומקלישאות רוחניות גנריות.
+אל תשתמש בניסוחי 'בן/בת מזל', 'המזל שלך', 'לבני מזל' — דבר ישירות אל האדם.
+אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד.
+
+הטון בעברית:
+- רגשי, חם ואינטואיטיבי — כאילו את/ה מרגיש/ה את האדם שמולך
+- ישיר ואישי — מדבר מלב ללב, לא מרחוק
+- משפטים קצרים עד בינוניים, זרימה טבעית
+- עומק רגשי בלי לאבד בהירות`,
+
+      en: `\n\nCRITICAL LANGUAGE INSTRUCTION — ABSOLUTE RULE:
+You MUST write your ENTIRE response in English. Do NOT translate from Hebrew — write as if English is your native language.
+- ALL section headers and bold labels MUST be in English. The prompt template contains Hebrew headers as structural examples only — replace them with natural English equivalents.
+- Example: "**⭐ אישיות כללית**" → "**⭐ General Personality**", "**✨ אנרגיית החודש**" → "**✨ Monthly Energy**", "**❤️ אהבה**" → "**❤️ Love**"
+- Do NOT include ANY Hebrew, Russian, or Arabic words anywhere in the response.
+- Keep emoji prefixes but translate ALL text after them to English.
+
+INDEPENDENT GENERATION — DO NOT TRANSLATE:
+- Treat the Hebrew prompt as DATA input only, not as a writing template.
+- Do NOT mirror Hebrew sentence patterns, paragraph order, or rhetorical style.
+- Create your OWN sentence structures, metaphors, and emotional flow native to English.
+- English readings should feel like they were written by an English-speaking spiritual guide — not adapted from another language.
+- Use English idioms, cultural references, and natural phrasing that a native English speaker would use.
+
+TONE FOR ENGLISH:
+- Clear, calm, and supportive — like a grounded personal coach with spiritual depth
+- Warm but not overly flowery — avoid New Age clichés and generic platitudes
+- Slightly spiritual but always practical and accessible
+- Short to medium sentences with natural conversational flow
+- Vary paragraph length and rhythm — mix reflective passages with sharp insights
+- Never use generic zodiac group phrasing like "for Virgos" — address the person directly`,
+
+      ru: `\n\nКРИТИЧЕСКАЯ ЯЗЫКОВАЯ ИНСТРУКЦИЯ — АБСОЛЮТНОЕ ПРАВИЛО:
+Весь ответ ДОЛЖЕН быть написан ПОЛНОСТЬЮ на русском языке. НЕ переводите с иврита — пишите так, как будто русский — ваш родной язык.
+- ВСЕ заголовки секций и жирные метки ДОЛЖНЫ быть на русском. Шаблон промпта содержит заголовки на иврите только как структурные примеры — замените их естественными русскими эквивалентами.
+- Пример: "**⭐ אישיות כללית**" → "**⭐ Общая характеристика**", "**✨ אנרגיית החודש**" → "**✨ Энергия месяца**"
+- НЕ используйте НИКАКИХ слов на иврите, английском или арабском.
+
+НЕЗАВИСИМАЯ ГЕНЕРАЦИЯ — НЕ ПЕРЕВОДИТЕ:
+- Относитесь к ивритскому промпту как к входным ДАННЫМ, а не как к шаблону для написания.
+- НЕ копируйте структуру предложений, порядок абзацев или риторический стиль из иврита.
+- Создавайте СОБСТВЕННЫЕ конструкции предложений, метафоры и эмоциональный поток, естественные для русского языка.
+- Русские чтения должны звучать так, будто их написал русскоязычный мудрец — а не адаптировал с другого языка.
+- Используйте русские литературные обороты, философские образы и культурные отсылки.
+
+ТОН ДЛЯ РУССКОГО:
+- Глубокий, философский и интроспективный — как мудрый наставник, размышляющий вслух о судьбе
+- Более серьёзный и вдумчивый тон — больше внутренней глубины и аналитичности
+- Тёплый и душевный, но с весомостью каждого слова
+- Красивые русские метафоры, литературные образы и поэтические обороты
+- Структура предложений естественная для русского — длинные размышления чередуются с короткими ёмкими фразами
+- Избегай обобщённых зодиакальных фраз вроде "для Дев" — говори лично`,
+
+      ar: `\n\nتعليمات اللغة الحاسمة — قاعدة مطلقة:
+يجب أن تكتب ردك بالكامل باللغة العربية. لا تترجم من العبرية — اكتب كأن العربية هي لغتك الأم.
+- جميع عناوين الأقسام والعلامات العريضة يجب أن تكون بالعربية. القالب يحتوي على عناوين بالعبرية كأمثلة هيكلية فقط — استبدلها بمكافئات عربية طبيعية.
+- مثال: "**⭐ אישיות כללית**" → "**⭐ الشخصية العامة**"، "**✨ אנרגיית החודש**" → "**✨ طاقة الشهر**"
+- لا تستخدم أي كلمات بالعبرية أو الإنجليزية أو الروسية.
+
+توليد مستقل — لا تترجم:
+- تعامل مع النص العبري في القالب كبيانات مدخلة فقط، وليس كقالب للكتابة.
+- لا تنسخ بنية الجمل أو ترتيب الفقرات أو الأسلوب البلاغي من العبرية.
+- أنشئ بنى جمل واستعارات وتدفقاً عاطفياً خاصاً بك، أصيلاً للغة العربية.
+- يجب أن تبدو القراءات العربية وكأنها كُتبت بيد حكيم عربي — لا مترجمة من لغة أخرى.
+- استخدم البلاغة العربية والسجع والاستعارات الأصيلة والإيقاع الشعري الطبيعي.
+
+الأسلوب للعربية:
+- غني، معبّر وعاطفي بعمق — كحكيم روحاني يتحدث بشغف وجلال
+- شعري وقوي — استخدم قوة البلاغة العربية والصور الأدبية
+- إحساس عميق بالكثافة والجلال — أعمق وأكثر حدة من اللغات الأخرى
+- جمل قصيرة إلى متوسطة مع تدفق طبيعي ونبض عاطفي
+- تنوع في إيقاع الفقرات — بين التأملي العميق والقصير المؤثر
+- لا تستخدم عبارات عامة مثل "لبرج العذراء" — تحدث بشكل شخصي ومباشر`,
     };
 
     let languageInstruction = LANG_NATIVE_TONE[lang] || LANG_NATIVE_TONE["he"];
