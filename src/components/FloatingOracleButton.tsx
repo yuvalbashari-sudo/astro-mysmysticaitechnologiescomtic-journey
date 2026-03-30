@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X } from "lucide-react";
 import AdvisorChatPanel from "./AdvisorChatPanel";
@@ -10,13 +11,13 @@ const FloatingOracleButton = () => {
   const [chatOpen, setChatOpen] = useState(false);
   const { activeReading } = useReadingContext();
 
-  return (
+  return createPortal(
     <>
       <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
 
       {/* Main Floating Button */}
       <motion.button
-        className="fixed z-[9999] w-14 h-14 rounded-full flex items-center justify-center"
+        className="fixed z-[2147483647] w-14 h-14 rounded-full flex items-center justify-center"
         style={{
           bottom: "5px",
           right: "5px",
@@ -66,7 +67,8 @@ const FloatingOracleButton = () => {
           />
         )}
       </motion.button>
-    </>
+    </>,
+    document.body
   );
 };
 
