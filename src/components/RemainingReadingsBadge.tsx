@@ -54,8 +54,11 @@ const RemainingReadingsBadge = ({ feature, className = "" }: Props) => {
 
 
 
-  // Don't show badge if unlimited or no free tier
-  if (remaining === Infinity || remaining === undefined) return null;
+  // Don't show badge if no free tier
+  if (remaining === undefined) return null;
+
+  // Show ∞ for unlimited (admin/always-free)
+  const displayValue = remaining === Infinity ? "∞" : remaining;
 
   const isExhausted = remaining === 0;
 
