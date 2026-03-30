@@ -242,7 +242,7 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                         <RemainingReadingsBadge feature="compatibility_reading" />
                       </div>
                       <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
-                        <span className="text-base text-foreground font-body">{t.tarot_title || "טארוט"}</span>
+                        <span className="text-base text-foreground font-body">{t.nav_tarot_title}</span>
                         <RemainingReadingsBadge feature="tarot_reading" />
                       </div>
                     </div>
