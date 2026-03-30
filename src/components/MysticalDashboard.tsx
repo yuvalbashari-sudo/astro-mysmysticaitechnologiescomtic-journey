@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Star, Flame, Droplets, Wind, Mountain, Sparkles, Eye, Heart, Zap, Sun, Moon, TrendingUp, RotateCcw } from "lucide-react";
+import { X, Star, Flame, Droplets, Wind, Mountain, Sparkles, Eye, Heart, Zap, Sun, Moon, TrendingUp, RotateCcw, BookOpen } from "lucide-react";
+import RemainingReadingsBadge from "./RemainingReadingsBadge";
 import { mysticalProfile, type MysticalProfileData } from "@/lib/mysticalProfile";
 import {
   AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
@@ -224,7 +225,29 @@ const MysticalDashboard = ({ isOpen: externalOpen, onClose }: MysticalDashboardP
                     </div>
                   </motion.div>
 
-                  {/* Recurring Cards */}
+                  {/* Remaining Readings */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="rounded-xl bg-muted/50 border border-border p-5"
+                  >
+                    <h3 className="font-heading text-lg text-primary mb-4 flex items-center gap-2">
+                      <BookOpen className="w-4 h-4" />
+                      {(t as any).dashboard_remaining_title || "קריאות נותרות היום"}
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
+                        <span className="text-base text-foreground font-body">{t.nav_compatibility_title}</span>
+                        <RemainingReadingsBadge feature="compatibility_reading" />
+                      </div>
+                      <div className="flex items-center justify-between p-3 rounded-lg bg-background/30">
+                        <span className="text-base text-foreground font-body">{t.nav_tarot_title}</span>
+                        <RemainingReadingsBadge feature="tarot_reading" />
+                      </div>
+                    </div>
+                  </motion.div>
+
                   {topCards.length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
