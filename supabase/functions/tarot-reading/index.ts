@@ -237,9 +237,47 @@ serve(async (req) => {
     if (context?.profileContext) contextLines.push(context.profileContext);
     const contextBlock = contextLines.length > 0 ? `\n\nPersonal context:\n${contextLines.join("\n")}` : "";
 
-    const languageInstruction = language === "he"
-      ? "אתה כותב בעברית בלבד. אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד."
-      : `CRITICAL LANGUAGE RULE: You MUST write your ENTIRE response in ${langName}. Every single word, heading, section title, label, keyword, and sentence MUST be in ${langName}. Do NOT use Hebrew, or any other language besides ${langName}. If the prompt template contains Hebrew headers or labels, you MUST translate them to ${langName}. No foreign-language words are allowed in the output — not even single words like "BALANCE", "LOVE", or "ENERGY". Everything must be in ${langName}.`;
+    const TAROT_LANG_TONE: Record<string, string> = {
+      he: `אתה כותב בעברית בלבד — לא מתרגם מאנגלית, אלא יוצר ישירות בעברית.
+אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד.
+
+הטון בעברית:
+- רגשי, חם ואינטואיטיבי — כאילו את/ה מרגיש/ה את הנשמה שמולך
+- ישיר ואישי — מדבר מלב ללב
+- משפטים קצרים עד בינוניים, זרימה טבעית
+- עומק רגשי בלי לאבד בהירות`,
+      en: `CRITICAL LANGUAGE RULE: You MUST write your ENTIRE response in English. Do NOT translate from Hebrew — write as if English is your native language.
+Every single word, heading, section title, label, keyword, and sentence MUST be in English.
+Do NOT use Hebrew or any other language. No foreign-language words are allowed — not even single words like "BALANCE" or "ENERGY" in another language.
+
+TONE FOR ENGLISH — write natively, not as a translation:
+- Clear, calm, and supportive — like a grounded spiritual guide with emotional intelligence
+- Slightly spiritual but always accessible and practical
+- Warm but not overly flowery — avoid New Age clichés like "trust the universe"
+- Short to medium sentences with natural conversational flow
+- Sentence structures should feel originally English — NOT Hebrew patterns translated`,
+      ru: `КРИТИЧЕСКОЕ ЯЗЫКОВОЕ ПРАВИЛО: Весь ответ ДОЛЖЕН быть ПОЛНОСТЬЮ на русском языке. НЕ переводите с иврита — пишите как носитель русского языка.
+Каждое слово, заголовок, метка и предложение ДОЛЖНЫ быть на русском.
+НЕ используйте иврит, английский или арабский — ни одного слова.
+
+ТОН ДЛЯ РУССКОГО — пишите как носитель, а не как переводчик:
+- Глубокий, философский и интроспективный — как мудрый наставник, размышляющий о судьбе
+- Более серьёзный и вдумчивый тон — больше внутренней глубины и аналитичности
+- Тёплый и душевный, но с весомостью каждого слова
+- Красивые русские метафоры и литературные образы
+- Структура предложений естественная для русского языка`,
+      ar: `قاعدة لغوية حاسمة: يجب أن تكتب ردك بالكامل باللغة العربية. لا تترجم من العبرية — اكتب كأن العربية هي لغتك الأم.
+كل كلمة وعنوان وتسمية وجملة يجب أن تكون بالعربية.
+لا تستخدم العبرية أو الإنجليزية أو الروسية — ولا كلمة واحدة.
+
+الأسلوب للعربية — اكتب بأصالة، لا كترجمة:
+- غني، شعري وعاطفي بعمق — كحكيم روحاني يتحدث بشغف وجلال
+- قوة تعبيرية عالية — استخدم البلاغة العربية والاستعارات الأصيلة
+- إحساس بالكثافة والعمق — أكثر حدة وشعرية من اللغات الأخرى
+- جمل قصيرة إلى متوسطة مع تدفق طبيعي ونبض عاطفي
+- يجب أن يشعر النص وكأنه وُلد بالعربية`,
+    };
+    const languageInstruction = TAROT_LANG_TONE[language] || TAROT_LANG_TONE["he"];
 
     const systemPrompt = `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}
 

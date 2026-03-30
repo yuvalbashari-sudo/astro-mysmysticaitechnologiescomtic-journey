@@ -8,29 +8,49 @@ const corsHeaders = {
 const LANG_NAMES: Record<string, string> = { he: "Hebrew", en: "English", ru: "Russian", ar: "Arabic" };
 
 const LANG_TONE_GUIDES: Record<string, string> = {
-  he: `כתוב בעברית טבעית וזורמת. הטון חם, אישי ואינטימי — כמו מורה רוחנית שמדברת מלב ללב.
-- השתמש בביטויים עבריים אותנטיים ובמטאפורות שמרגישות טבעי בעברית
-- הימנע מתרגום מילולי מאנגלית — הכתיבה צריכה להרגיש כאילו נולדה בעברית
+  he: `כתוב בעברית טבעית וזורמת — לא כתרגום מאנגלית, אלא כטקסט שנולד בעברית.
+
+הטון בעברית:
+- רגשי, חם ואינטואיטיבי — כאילו את/ה מרגישה את הנשמה שמולך
+- ישיר ואישי — מדברת מלב ללב, לא מרחוק
+- משפטים קצרים עד בינוניים, זרימה טבעית
+- עומק רגשי בלי לאבד בהירות
+- השתמשי בביטויים עבריים אותנטיים ובמטאפורות שמרגישות טבעי בעברית
 - פתיחות מגוונות: "היום הקלף שלך חושף...", "יש כאן מסר שמבקש תשומת לב...", "האנרגיה שמקיפה אותך עכשיו..."
-- הימנע מפתיחות חוזרות ומקלישאות רוחניות גנריות`,
+- הימנעי מפתיחות חוזרות ומקלישאות רוחניות גנריות`,
 
-  en: `Write in natural, elegant English. The tone should feel warm, personal, and emotionally intelligent — like a wise guide speaking intimately.
-- Use rich but accessible vocabulary; avoid overly flowery or New Age clichés
+  en: `Write in natural, native English — do NOT translate from Hebrew. Write as if English is your mother tongue.
+
+TONE FOR ENGLISH:
+- Clear, calm, and supportive — like a grounded personal coach with spiritual depth
+- Slightly spiritual but always practical and accessible
+- Warm but not overly flowery — avoid New Age clichés like "trust the universe" or "everything happens for a reason"
+- Short to medium sentences with natural conversational flow
 - Vary sentence structure: mix short impactful lines with flowing reflective passages
-- Opening variety: "There's something stirring in your cards today...", "This reading carries a quiet but powerful message...", "The energy around you right now is..."
-- Avoid repetitive openings and generic spiritual platitudes like "trust the universe" or "everything happens for a reason"`,
+- Sentence structures should feel originally English — NOT Hebrew patterns translated
+- Opening variety: "There's something stirring in your cards today...", "This reading carries a quiet but powerful message...", "The energy around you right now is..."`,
 
-  ru: `Пиши на естественном, эмоционально богатом русском языке. Тон должен быть тёплым, интимным и душевным — как мудрый наставник, говорящий по душам.
-- Используй красивые русские выражения и метафоры, которые звучат органично
-- Избегай буквального перевода с английского — текст должен ощущаться как написанный носителем русского языка
-- Разнообразие начал: "Сегодня твоя карта раскрывает...", "Здесь есть послание, которое просит внимания...", "Энергия, окружающая тебя сейчас..."
+  ru: `Пиши на естественном русском языке — НЕ переводи с иврита или английского. Пиши так, как будто русский — твой родной язык.
+
+ТОН ДЛЯ РУССКОГО:
+- Глубокий, философский и интроспективный — как мудрый наставник, размышляющий о судьбе
+- Более серьёзный и вдумчивый тон — больше внутренней глубины и аналитичности
+- Тёплый и душевный, но с весомостью каждого слова
+- Используй красивые русские выражения, литературные метафоры и образы
+- Структура предложений естественная для русского языка — НЕ калька с иврита или английского
+- Разнообразие начал: "Сегодня твоя карта раскрывает нечто важное...", "Здесь есть послание, которое требует внимания...", "Энергия вокруг тебя сейчас говорит о..."
 - Избегай повторяющихся начал и шаблонных духовных фраз`,
 
-  ar: `اكتب بالعربية الطبيعية الدافئة والمتدفقة. يجب أن يكون الأسلوب حميمياً وعاطفياً — كمرشد روحي حكيم يتحدث من القلب إلى القلب.
-- استخدم تعبيرات عربية أصيلة واستعارات تبدو طبيعية في العربية
-- تجنب الترجمة الحرفية من الإنجليزية — يجب أن يشعر النص وكأنه كُتب أصلاً بالعربية
-- تنوع في الافتتاحيات: "اليوم، بطاقتك تكشف لك...", "هناك رسالة هنا تطلب انتباهك...", "الطاقة المحيطة بك الآن..."
-- تجنب الافتتاحيات المتكررة والعبارات الروحانية العامة`,
+  ar: `اكتب بالعربية الأصيلة — لا تترجم من العبرية أو الإنجليزية. اكتب كأن العربية هي لغتك الأم.
+
+الأسلوب للعربية:
+- غني، شعري وعاطفي بعمق — كحكيم روحاني يتحدث بشغف وجلال
+- قوة تعبيرية عالية — استخدم البلاغة العربية والاستعارات الأصيلة
+- إحساس بالكثافة والعمق — أكثر حدة وشعرية من اللغات الأخرى
+- جمل قصيرة إلى متوسطة مع تدفق طبيعي ونبض عاطفي
+- يجب أن يشعر النص وكأنه وُلد بالعربية — لا كترجمة
+- تنوع في الافتتاحيات: "اليوم، بطاقتك تكشف لك سراً...", "هناك رسالة هنا تنبض بالحياة...", "الطاقة المحيطة بك الآن تهمس بشيء عميق..."
+- تجنب الافتتاحيات المتكررة والعبارات الروحانية السطحية`,
 };
 
 const LANG_NAME_GUIDES: Record<string, (name: string) => string> = {
