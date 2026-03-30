@@ -189,7 +189,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       style={{ paddingTop: 8, paddingBottom: 4, zIndex: 10 }}
     >
       <AstrologerAvatarButton
-        size={56}
+        size={73}
         onClick={() => setAdvisorOpen(true)}
         entranceDelay={0.6}
         className="relative"
