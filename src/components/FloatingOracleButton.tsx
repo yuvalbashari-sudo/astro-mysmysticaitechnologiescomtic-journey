@@ -44,7 +44,7 @@ const FloatingOracleButton = () => {
     };
   }, []);
 
-  if (!host || modalOpen) return null;
+  if (!host || modalOpen || isMobile) return null;
 
   return createPortal(
     <>
