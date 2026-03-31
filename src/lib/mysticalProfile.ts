@@ -283,6 +283,8 @@ export const mysticalProfile = {
   getProfile,
   recordUserName,
   getUserName,
+  recordGender,
+  getUserGender,
   recordZodiac,
   recordRising,
   recordCompatibility,
