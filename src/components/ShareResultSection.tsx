@@ -9,6 +9,8 @@ interface ShareResultSectionProps {
   title: string;
   subtitle?: string;
   quote?: string;
+  /** If provided, the "Copy" button copies this text (the actual reading) instead of the share message */
+  readingText?: string;
 }
 
 const ShareResultSection = ({ symbol, title, subtitle, quote }: ShareResultSectionProps) => {
