@@ -52,6 +52,7 @@ async function streamTarotReading(
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getUserName() || undefined;
+  const gender = mysticalProfile.getUserGender() || undefined;
   try {
     const resp = await fetch(url, {
       method: "POST",
@@ -65,6 +66,7 @@ async function streamTarotReading(
         context: { memoryContext, profileContext, userQuestion: userQuestion || undefined },
         language: language || "he",
         userName,
+        gender,
       }),
     });
     if (!resp.ok) {

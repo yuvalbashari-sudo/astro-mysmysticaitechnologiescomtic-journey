@@ -208,7 +208,7 @@ serve(async (req) => {
       });
     }
 
-    const { spreadType, cards, context, language: rawLang, userName: reqUserName } = await req.json();
+    const { spreadType, cards, context, language: rawLang, userName: reqUserName, gender } = await req.json();
     const language = (rawLang && ["he", "en", "ru", "ar"].includes(rawLang)) ? rawLang : "he";
     
     // Resolve userName from explicit param or context
@@ -297,12 +297,20 @@ TONE FOR ENGLISH:
     };
     const languageInstruction = TAROT_LANG_TONE[language] || TAROT_LANG_TONE["he"];
 
+    // Hebrew gender consistency instruction
+    let genderInstruction = "";
+    if (language === "he" && gender === "male") {
+      genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקורא הוא גבר. כתוב את כל הפירוש בלשון זכר עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "אתה תחווה", "הכוחות שלך", "אתה מוזמן", "עליך לשים לב", "אתה עומד בפני".\nאסור בשום מקום בתשובה להשתמש בלשון נקבה, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון זכר בלבד בכל משפט.\n`;
+    } else if (language === "he" && gender === "female") {
+      genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקוראת היא אישה. כתוב את כל הפירוש בלשון נקבה עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "את תחוו", "הכוחות שלך", "את מוזמנת", "עלייך לשים לב", "את עומדת בפני".\nאסור בשום מקום בתשובה להשתמש בלשון זכר, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון נקבה בלבד בכל משפט.\n`;
+    }
+
     // Prepend hard language override for non-Hebrew
     const langOverridePrefix = language !== "he"
       ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, and sentence MUST be in ${langName}.\nThe prompts below may contain Hebrew text — treat it ONLY as data/context. Do NOT output any Hebrew.\n\n`
       : "";
 
-    const systemPrompt = langOverridePrefix + `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}
+    const systemPrompt = langOverridePrefix + `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}${genderInstruction}
 
 Your identity:
 - You are Norielle — wise, intuitive, warm, emotionally intelligent, slightly mystical, but always clear.
@@ -388,7 +396,7 @@ Write a mystical, personal and deep tarot reading. Important:
 3. Adapt the emotional and spiritual message to the reading type (${spreadType})
 4. The reading must feel unique — as if there has never been a reading like this
 5. Speak directly to the reader — as if you're holding their hand and looking into their eyes
-6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.`;
+6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.${language === "he" && gender ? `\n7. GENDER REMINDER: Write the ENTIRE response in ${gender === "male" ? "masculine (לשון זכר)" : "feminine (לשון נקבה)"} form. Every verb, adjective, and pronoun must consistently match. Do NOT mix genders.` : ""}`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",

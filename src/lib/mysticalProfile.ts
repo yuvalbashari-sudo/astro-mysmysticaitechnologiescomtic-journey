@@ -8,6 +8,7 @@
 export interface MysticalProfileData {
   // Identity
   userName?: string;
+  gender?: "male" | "female";
   zodiacSign?: string;
   zodiacSymbol?: string;
   zodiacElement?: string;
@@ -124,6 +125,16 @@ function recordUserName(name: string): void {
 
 function getUserName(): string | undefined {
   return getProfile().userName;
+}
+
+function recordGender(gender: "male" | "female"): void {
+  const profile = getProfile();
+  profile.gender = gender;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function getUserGender(): "male" | "female" | undefined {
+  return getProfile().gender;
 }
 
 function recordZodiac(sign: string, symbol: string, element: string, birthDate: string): void {
@@ -272,6 +283,8 @@ export const mysticalProfile = {
   getProfile,
   recordUserName,
   getUserName,
+  recordGender,
+  getUserGender,
   recordZodiac,
   recordRising,
   recordCompatibility,
