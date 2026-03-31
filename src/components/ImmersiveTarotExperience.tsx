@@ -767,6 +767,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     transition={{ delay: 0.3 }}
                   >
                     {t.imm_tarot_label}
+                    <RemainingReadingsBadge feature="tarot_reading" className="ms-2 align-middle" />
                   </motion.div>
                   <motion.h2
                     className="font-heading text-4xl md:text-5xl mb-10"
