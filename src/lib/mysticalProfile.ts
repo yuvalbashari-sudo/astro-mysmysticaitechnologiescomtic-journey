@@ -8,6 +8,7 @@
 export interface MysticalProfileData {
   // Identity
   userName?: string;
+  gender?: "male" | "female";
   zodiacSign?: string;
   zodiacSymbol?: string;
   zodiacElement?: string;
