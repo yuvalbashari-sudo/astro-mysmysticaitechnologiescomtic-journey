@@ -13,7 +13,7 @@ interface ShareResultSectionProps {
   readingText?: string;
 }
 
-const ShareResultSection = ({ symbol, title, subtitle, quote }: ShareResultSectionProps) => {
+const ShareResultSection = ({ symbol, title, subtitle, quote, readingText }: ShareResultSectionProps) => {
   const t = useT();
   const [copied, setCopied] = useState(false);
   const siteUrl = window.location.origin;
@@ -27,7 +27,11 @@ const ShareResultSection = ({ symbol, title, subtitle, quote }: ShareResultSecti
   const handleWhatsApp = () => { window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank"); };
   const handleFacebook = () => { window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(siteUrl)}&quote=${encodeURIComponent(shareText)}`, "_blank"); };
   const handleInstagram = () => { navigator.clipboard.writeText(shareText); toast(t.share_instagram_toast); };
-  const handleCopyLink = async () => { await navigator.clipboard.writeText(shareText); setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000); };
+  const handleCopyLink = async () => {
+    const textToCopy = readingText || shareText;
+    await navigator.clipboard.writeText(textToCopy);
+    setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
+  };
 
   const shareButtons = [
     { label: t.share_whatsapp, icon: MessageCircle, onClick: handleWhatsApp, color: "142 70% 45%" },
