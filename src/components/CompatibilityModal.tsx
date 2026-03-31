@@ -360,7 +360,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
                         {!aiLoading && (aiText || aiError) && (
                           <>
-                            <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} />
+                            <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                           </>
                         )}
                       </div>
@@ -444,7 +444,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
                     {!aiLoading && (aiText || aiError) && (
                       <>
-                        <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} />
+                        <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                         <div className="section-divider max-w-[200px] mx-auto my-10" />
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                           <Crown className="w-7 h-7 text-gold mx-auto mb-4" />

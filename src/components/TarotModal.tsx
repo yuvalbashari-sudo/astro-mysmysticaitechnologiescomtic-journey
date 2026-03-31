@@ -994,7 +994,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     )}
                   </motion.div>
 
-                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => localizedName(c)).join(" • ")} subtitle={t.readings_type_tarot} />
+                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => localizedName(c)).join(" • ")} subtitle={t.readings_type_tarot} readingText={aiText || undefined} />
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />

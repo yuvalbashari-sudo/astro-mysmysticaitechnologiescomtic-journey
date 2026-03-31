@@ -880,6 +880,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       symbol={drawnCards[0]?.symbol || "🔮"}
                       title={nameMap[selectedSpread.key] || selectedSpread.hebrewName}
                       subtitle={`${drawnCards.length} ${t.tarot_n_cards}`}
+                      readingText={aiText || undefined}
                     />
                   )}
 

@@ -325,7 +325,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 )}
                 {!aiLoading && (aiText || aiError) && (
-                  <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} />
+                  <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
                 )}
               </div>
             </motion.div>
@@ -394,7 +394,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             )}
             {!aiLoading && (aiText || aiError) && (
               <>
-                <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} />
+                <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
                 <div className="section-divider max-w-[200px] mx-auto my-10" />
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                   <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
