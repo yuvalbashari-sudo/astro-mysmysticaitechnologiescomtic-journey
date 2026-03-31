@@ -226,7 +226,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
                         {!aiLoading && (aiText || aiError) && (
-                          <ShareResultSection symbol={signInfo.symbol} title={`${signInfo.sunSign} + ${signInfo.name}`} subtitle={`${t.rising_sun_label} + ${t.rising_asc_label}`} />
+                          <ShareResultSection symbol={signInfo.symbol} title={`${signInfo.sunSign} + ${signInfo.name}`} subtitle={`${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
                         )}
                       </div>
                     </motion.div>
