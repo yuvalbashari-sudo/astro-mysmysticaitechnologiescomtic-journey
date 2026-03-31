@@ -325,7 +325,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 )}
                 {!aiLoading && (aiText || aiError) && (
-                  <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} />
+                  <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
                 )}
               </div>
             </motion.div>
