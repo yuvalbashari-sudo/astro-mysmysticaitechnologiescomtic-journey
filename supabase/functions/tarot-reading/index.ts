@@ -208,7 +208,7 @@ serve(async (req) => {
       });
     }
 
-    const { spreadType, cards, context, language: rawLang, userName: reqUserName } = await req.json();
+    const { spreadType, cards, context, language: rawLang, userName: reqUserName, gender } = await req.json();
     const language = (rawLang && ["he", "en", "ru", "ar"].includes(rawLang)) ? rawLang : "he";
     
     // Resolve userName from explicit param or context
