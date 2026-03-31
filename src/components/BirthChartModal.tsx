@@ -544,7 +544,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     symbol="🌌"
                     title={`מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`}
                     subtitle={`☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`}
-                    readingText={aiText || undefined}
+                    readingText={resultText || undefined}
                   />
                 </motion.div>
               )}
