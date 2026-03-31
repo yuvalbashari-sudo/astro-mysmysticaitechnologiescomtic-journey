@@ -66,6 +66,7 @@ async function streamTarotReading(
         context: { memoryContext, profileContext, userQuestion: userQuestion || undefined },
         language: language || "he",
         userName,
+        gender,
       }),
     });
     if (!resp.ok) {
