@@ -360,7 +360,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
                         {!aiLoading && (aiText || aiError) && (
                           <>
-                            <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} />
+                            <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                           </>
                         )}
                       </div>
