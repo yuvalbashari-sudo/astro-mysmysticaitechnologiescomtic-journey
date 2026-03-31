@@ -297,12 +297,20 @@ TONE FOR ENGLISH:
     };
     const languageInstruction = TAROT_LANG_TONE[language] || TAROT_LANG_TONE["he"];
 
+    // Hebrew gender consistency instruction
+    let genderInstruction = "";
+    if (language === "he" && gender === "male") {
+      genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקורא הוא גבר. כתוב את כל הפירוש בלשון זכר עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "אתה תחווה", "הכוחות שלך", "אתה מוזמן", "עליך לשים לב", "אתה עומד בפני".\nאסור בשום מקום בתשובה להשתמש בלשון נקבה, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון זכר בלבד בכל משפט.\n`;
+    } else if (language === "he" && gender === "female") {
+      genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקוראת היא אישה. כתוב את כל הפירוש בלשון נקבה עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "את תחוו", "הכוחות שלך", "את מוזמנת", "עלייך לשים לב", "את עומדת בפני".\nאסור בשום מקום בתשובה להשתמש בלשון זכר, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון נקבה בלבד בכל משפט.\n`;
+    }
+
     // Prepend hard language override for non-Hebrew
     const langOverridePrefix = language !== "he"
       ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, and sentence MUST be in ${langName}.\nThe prompts below may contain Hebrew text — treat it ONLY as data/context. Do NOT output any Hebrew.\n\n`
       : "";
 
-    const systemPrompt = langOverridePrefix + `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}
+    const systemPrompt = langOverridePrefix + `You are a mystical, wise and intuitive tarot reader with decades of experience. ${languageInstruction}${genderInstruction}
 
 Your identity:
 - You are Norielle — wise, intuitive, warm, emotionally intelligent, slightly mystical, but always clear.
