@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
-import { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
+import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
