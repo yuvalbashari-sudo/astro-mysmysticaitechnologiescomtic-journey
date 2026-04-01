@@ -2842,17 +2842,18 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
+        /* Mobile hands overlay: clip to bottom portion showing only the cupped hands area */
         <div className="absolute inset-0 pointer-events-none z-[22]">
           <img
-            src={heroFigure}
+            src={heroFigureV2}
             alt=""
             width="1920"
             height="1080"
             className="w-full h-full object-cover scale-110"
             style={{
-              objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 185px 165px at 51% calc(50% + 187px), transparent 38%, transparent 42%, black 50%, black 72%, transparent 85%)",
-              WebkitMaskImage: "radial-gradient(ellipse 185px 165px at 51% calc(50% + 187px), transparent 38%, transparent 42%, black 50%, black 72%, transparent 85%)",
+              objectPosition: "center calc(0% + 40px)",
+              clipPath: "inset(72% 20% 0% 20%)",
+              WebkitClipPath: "inset(72% 20% 0% 20%)",
             }}
           />
         </div>
