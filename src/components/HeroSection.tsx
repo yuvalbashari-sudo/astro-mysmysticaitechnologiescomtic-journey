@@ -2854,21 +2854,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 184px), transparent 40%, black 54%, black 78%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 184px), transparent 40%, black 54%, black 78%, transparent 100%)",
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              left: "50%",
-              top: "calc(50% + 224px)",
-              transform: "translate(-50%, -50%)",
-              width: 220,
-              height: 180,
-              borderRadius: "50%",
-              background: "radial-gradient(ellipse, transparent 55%, hsl(var(--deep-blue) / 0.15) 70%, hsl(var(--deep-blue) / 0.08) 85%, transparent 100%)",
-              pointerEvents: "none",
+              maskImage: "radial-gradient(ellipse 200px 185px at 51% calc(50% + 184px), transparent 32%, rgba(0,0,0,0.4) 42%, black 50%, black 76%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 200px 185px at 51% calc(50% + 184px), transparent 32%, rgba(0,0,0,0.4) 42%, black 50%, black 76%, transparent 100%)",
             }}
           />
         </div>
