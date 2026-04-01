@@ -2887,7 +2887,7 @@ const HeroSection = () => {
             <div
               className="relative"
               style={isMobile
-                ? { width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }
+                ? { width: "100%", maxWidth: "400px", marginTop: "186px", marginLeft: "10px" }
                 : { marginLeft: "10px" }
               }
             >
