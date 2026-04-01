@@ -2384,8 +2384,8 @@ const HeroSection = () => {
           style={{
             objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
             ...(isMobile ? {
-              maskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 187px), transparent 48%, black 52%)",
-              WebkitMaskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 187px), transparent 48%, black 52%)",
+              maskImage: "radial-gradient(ellipse 200px 190px at 50% calc(50% + 187px), transparent 46%, black 52%)",
+              WebkitMaskImage: "radial-gradient(ellipse 200px 190px at 50% calc(50% + 187px), transparent 46%, black 52%)",
             } : {}),
           }}
         />
@@ -2854,21 +2854,8 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 184px), transparent 40%, black 54%, black 78%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 184px), transparent 40%, black 54%, black 78%, transparent 100%)",
-            }}
-          />
-          <div
-            className="absolute"
-            style={{
-              left: "50%",
-              top: "calc(50% + 224px)",
-              transform: "translate(-50%, -50%)",
-              width: 220,
-              height: 180,
-              borderRadius: "50%",
-              background: "radial-gradient(ellipse, transparent 55%, hsl(var(--deep-blue) / 0.15) 70%, hsl(var(--deep-blue) / 0.08) 85%, transparent 100%)",
-              pointerEvents: "none",
+              maskImage: "radial-gradient(ellipse 195px 180px at 51% calc(50% + 184px), transparent 36%, transparent 40%, black 48%, black 74%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 195px 180px at 51% calc(50% + 184px), transparent 36%, transparent 40%, black 48%, black 74%, transparent 100%)",
             }}
           />
         </div>
