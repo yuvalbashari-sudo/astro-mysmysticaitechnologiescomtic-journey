@@ -2,6 +2,7 @@ import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 import { Sparkles, Star, Eye, Hand } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
+import heroFigureV2 from "@/assets/hero-mystic-figure-v2.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
