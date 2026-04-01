@@ -359,17 +359,14 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     willChange: isMobile ? "auto" : "opacity",
   };
 
-  // ── Mobile: clean video sphere — no masks, just overflow:hidden circle ──
+  // ── Mobile: clean video sphere — circular container, no masks ──
   if (isMobile) {
-    const ballSize = 150;
+    const ballSize = 130;
     return (
       <div
         className="absolute z-[15] pointer-events-none"
         style={{
           width: ballSize, height: ballSize,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, calc(-50% + 100px))",
           borderRadius: "50%",
           overflow: "hidden",
           background: "transparent",
@@ -2825,16 +2822,22 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
-        /* Mobile hands: real isolated image layer — NO masks */
-        <div className="absolute inset-0 pointer-events-none z-[22] flex items-end justify-center">
+        /* Mobile hands: real isolated image — positioned to overlap base image hands */
+        <div
+          className="absolute pointer-events-none z-[22]"
+          style={{
+            left: "50%",
+            bottom: "18%",
+            transform: "translateX(-50%)",
+            width: "75%",
+            maxWidth: "320px",
+          }}
+        >
           <img
             src={heroHandsIsolated}
             alt=""
-            className="w-[85%] max-w-[340px]"
-            style={{
-              marginBottom: "12%",
-              objectFit: "contain",
-            }}
+            className="w-full"
+            style={{ objectFit: "contain" }}
             draggable={false}
           />
         </div>
