@@ -2822,16 +2822,22 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
-        /* Mobile hands: real isolated image layer — NO masks */
-        <div className="absolute inset-0 pointer-events-none z-[22] flex items-end justify-center">
+        /* Mobile hands: real isolated image — positioned to overlap base image hands */
+        <div
+          className="absolute pointer-events-none z-[22]"
+          style={{
+            left: "50%",
+            bottom: "18%",
+            transform: "translateX(-50%)",
+            width: "75%",
+            maxWidth: "320px",
+          }}
+        >
           <img
             src={heroHandsIsolated}
             alt=""
-            className="w-[85%] max-w-[340px]"
-            style={{
-              marginBottom: "12%",
-              objectFit: "contain",
-            }}
+            className="w-full"
+            style={{ objectFit: "contain" }}
             draggable={false}
           />
         </div>
