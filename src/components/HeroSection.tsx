@@ -367,7 +367,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           width: s, height: s,
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, calc(-50% - 20px))",
+          transform: "translate(-50%, calc(-50% + 80px))",
           overflow: "visible",
           borderRadius: 0,
           background: "transparent",
@@ -388,8 +388,8 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           src="/videos/cosmic-ball.mp4"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            clipPath: "circle(34.5% at 50% 50%)",
-            WebkitClipPath: "circle(34.5% at 50% 50%)",
+            clipPath: "circle(28% at 50% 50%)",
+            WebkitClipPath: "circle(28% at 50% 50%)",
             borderRadius: 0,
             maskImage: "none",
             WebkitMaskImage: "none",
