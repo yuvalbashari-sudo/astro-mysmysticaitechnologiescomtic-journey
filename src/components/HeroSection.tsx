@@ -1091,8 +1091,13 @@ const ZodiacWheel = ({
                   const elHue = elType === "fire" ? "20 80% 55%" : elType === "water" ? "210 70% 55%" : elType === "air" ? "270 60% 60%" : "85 50% 45%";
                   return (
                   <motion.div
-                    className="absolute z-50"
-                    style={{
+                    className={isMobile ? "fixed z-[100] pointer-events-none" : "absolute z-50"}
+                    style={isMobile ? {
+                      left: "50%",
+                      bottom: "12%",
+                      transform: "translateX(-50%)",
+                      width: 240,
+                    } : {
                       left: "50%",
                       bottom: "calc(100% + 22px)",
                       transform: "translateX(-50%)",
