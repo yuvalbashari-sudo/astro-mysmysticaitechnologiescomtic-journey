@@ -864,8 +864,10 @@ const ZodiacWheel = ({
             height: radius * 2,
             left: 20,
             top: 20,
-            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : 0.08})`,
-            boxShadow: `0 0 12px hsl(43 80% 55% / 0.04), inset 0 0 12px hsl(43 80% 55% / 0.03)`,
+            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : isMobile ? 0.04 : 0.08})`,
+            boxShadow: isMobile
+              ? `0 0 6px hsl(43 80% 55% / 0.02), inset 0 0 6px hsl(43 80% 55% / 0.015)`
+              : `0 0 12px hsl(43 80% 55% / 0.04), inset 0 0 12px hsl(43 80% 55% / 0.03)`,
           }}
           animate={isRisingMode ? {
             boxShadow: [
