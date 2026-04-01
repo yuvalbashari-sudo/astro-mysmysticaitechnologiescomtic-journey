@@ -2862,12 +2862,12 @@ const HeroSection = () => {
             className="absolute"
             style={{
               left: "50%",
-              top: "calc(50% + 232px)",
+              top: "calc(50% + 224px)",
               transform: "translate(-50%, -50%)",
-              width: 270,
-              height: 240,
+              width: 220,
+              height: 180,
               borderRadius: "50%",
-              background: "radial-gradient(ellipse, transparent 50%, hsl(var(--deep-blue) / 0.25) 65%, hsl(var(--deep-blue) / 0.15) 80%, transparent 100%)",
+              background: "radial-gradient(ellipse, transparent 55%, hsl(var(--deep-blue) / 0.15) 70%, hsl(var(--deep-blue) / 0.08) 85%, transparent 100%)",
               pointerEvents: "none",
             }}
           />
