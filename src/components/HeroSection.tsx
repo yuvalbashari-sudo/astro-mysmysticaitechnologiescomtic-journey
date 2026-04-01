@@ -366,7 +366,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           width: s, height: s,
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, calc(-50% - 12px))",
+          transform: "translate(-50%, calc(-50% - 20px))",
           overflow: "visible",
           borderRadius: 0,
           background: "transparent",
@@ -2384,8 +2384,8 @@ const HeroSection = () => {
           style={{
             objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
             ...(isMobile ? {
-              maskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 195px), transparent 48%, black 52%)",
-              WebkitMaskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 195px), transparent 48%, black 52%)",
+              maskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 187px), transparent 48%, black 52%)",
+              WebkitMaskImage: "radial-gradient(ellipse 230px 220px at 50% calc(50% + 187px), transparent 48%, black 52%)",
             } : {}),
           }}
         />
@@ -2854,20 +2854,20 @@ const HeroSection = () => {
             className="w-full h-full object-cover scale-110"
             style={{
               objectPosition: "center calc(0% + 70px)",
-              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 192px), transparent 38%, black 56%, black 78%, transparent 100%)",
-              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 192px), transparent 38%, black 56%, black 78%, transparent 100%)",
+              maskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 184px), transparent 40%, black 54%, black 78%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 220px 200px at 51% calc(50% + 184px), transparent 40%, black 54%, black 78%, transparent 100%)",
             }}
           />
           <div
             className="absolute"
             style={{
               left: "50%",
-              top: "calc(50% + 232px)",
+              top: "calc(50% + 224px)",
               transform: "translate(-50%, -50%)",
-              width: 270,
-              height: 240,
+              width: 220,
+              height: 180,
               borderRadius: "50%",
-              background: "radial-gradient(ellipse, transparent 50%, hsl(var(--deep-blue) / 0.25) 65%, hsl(var(--deep-blue) / 0.15) 80%, transparent 100%)",
+              background: "radial-gradient(ellipse, transparent 55%, hsl(var(--deep-blue) / 0.15) 70%, hsl(var(--deep-blue) / 0.08) 85%, transparent 100%)",
               pointerEvents: "none",
             }}
           />
