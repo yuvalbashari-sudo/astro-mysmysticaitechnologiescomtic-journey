@@ -1084,7 +1084,7 @@ const ZodiacWheel = ({
 
               {/* Mystical reveal card on hover */}
               <AnimatePresence>
-                {isHovered && !isRuling && (() => {
+                {!isMobile && isHovered && !isRuling && (() => {
                   const elType = ELEMENT_TYPES[i];
                   const elColor = ELEMENT_GLOW_COLORS[elType];
                   // Extract hue for CSS usage
