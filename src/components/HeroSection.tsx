@@ -359,17 +359,14 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     willChange: isMobile ? "auto" : "opacity",
   };
 
-  // ── Mobile: clean video sphere — no masks, just overflow:hidden circle ──
+  // ── Mobile: clean video sphere — circular container, no masks ──
   if (isMobile) {
-    const ballSize = 150;
+    const ballSize = 130;
     return (
       <div
         className="absolute z-[15] pointer-events-none"
         style={{
           width: ballSize, height: ballSize,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, calc(-50% + 100px))",
           borderRadius: "50%",
           overflow: "hidden",
           background: "transparent",
