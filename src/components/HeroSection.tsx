@@ -366,7 +366,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           width: s, height: s,
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, calc(-50% - 12px))",
+          transform: "translate(-50%, calc(-50% - 20px))",
           overflow: "visible",
           borderRadius: 0,
           background: "transparent",
