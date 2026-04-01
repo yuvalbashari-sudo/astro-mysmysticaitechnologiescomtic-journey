@@ -1051,7 +1051,7 @@ const ZodiacWheel = ({
                   alt={sign.name}
                   className="w-full h-full object-contain transition-all duration-500"
                   style={{
-                    opacity: isHovered || isHighlighted || isRuling ? 1 : (isMobile ? 0.95 : 0.8),
+                    opacity: isHovered || isHighlighted || isRuling ? 1 : (isMobile ? 1 : 0.8),
                     filter: isHovered
                       ? `drop-shadow(0 0 18px hsl(${planetColor} / 0.9)) drop-shadow(0 0 8px hsl(${planetColor} / 0.6)) drop-shadow(0 0 35px hsl(${planetColor} / 0.3))`
                       : isRuling
@@ -1059,7 +1059,7 @@ const ZodiacWheel = ({
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
                           : isMobile
-                            ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 3px hsl(43 80% 55% / 0.5)) brightness(1.25) contrast(1.1)"
+                            ? "drop-shadow(0 0 3px hsl(43 80% 55% / 0.4)) brightness(1.35) contrast(1.15) saturate(1.1)"
                             : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
                   }}
                 />
