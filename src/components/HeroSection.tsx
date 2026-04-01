@@ -359,28 +359,20 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     willChange: isMobile ? "auto" : "opacity",
   };
 
-  // ── Mobile: hard override — single clean video, zero inherited effects ──
+  // ── Mobile: clean video sphere — no masks, just overflow:hidden circle ──
   if (isMobile) {
+    const ballSize = 150;
     return (
       <div
         className="absolute z-[15] pointer-events-none"
         style={{
-          width: s, height: s,
+          width: ballSize, height: ballSize,
           top: "50%",
           left: "50%",
-          transform: "translate(-50%, calc(-50% + 80px))",
-          overflow: "visible",
-          borderRadius: 0,
+          transform: "translate(-50%, calc(-50% + 100px))",
+          borderRadius: "50%",
+          overflow: "hidden",
           background: "transparent",
-          maskImage: "none",
-          WebkitMaskImage: "none",
-          filter: "none",
-          backdropFilter: "none",
-          mixBlendMode: "normal" as const,
-          opacity: 1,
-          boxShadow: "none",
-          isolation: "isolate" as const,
-          contain: "layout paint" as const,
         }}
       >
         <video
@@ -389,17 +381,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           src="/videos/cosmic-ball.mp4"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            clipPath: "circle(28% at 50% 50%)",
-            WebkitClipPath: "circle(28% at 50% 50%)",
-            borderRadius: 0,
-            maskImage: "none",
-            WebkitMaskImage: "none",
-            filter: "none",
-            backdropFilter: "none",
-            mixBlendMode: "normal" as const,
-            boxShadow: "none",
-            opacity: 1,
-            transform: "scale(1.55)",
+            transform: "scale(1.6)",
             transformOrigin: "center center",
           }}
         />
