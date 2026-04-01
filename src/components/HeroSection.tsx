@@ -940,7 +940,7 @@ const ZodiacWheel = ({
                   onHoveredElement?.(ELEMENT_GLOW_COLORS[ELEMENT_TYPES[i]]);
                 }
               }}
-              onClick={(e) => { if (isMobile) { e.preventDefault(); } else { onSignClick?.(i); } }}
+              onClick={(e) => { if (isMobile) { e.preventDefault(); e.stopPropagation(); } else { onSignClick?.(i); } }}
               // Counter-rotate to keep symbols upright — CSS on mobile, framer on desktop
               animate={isMobile ? undefined : { rotate: -360 }}
               transition={isMobile ? undefined : { duration: isHovered ? 600 : 120, repeat: Infinity, ease: "linear" }}
