@@ -791,8 +791,8 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 160 : 610;
-  const iconSize = isMobile ? 42 : 90;
+  const radius = isMobile ? 145 : 610;
+  const iconSize = isMobile ? 48 : 90;
   const rulingIndex = getRulingSignIndex();
 
   const [planetaryInfluence, setPlanetaryInfluence] = useState(() => getDailyInfluence());
@@ -864,9 +864,9 @@ const ZodiacWheel = ({
             height: radius * 2,
             left: 20,
             top: 20,
-            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : isMobile ? 0.04 : 0.08})`,
+            border: `1px solid hsl(var(--gold) / ${isRisingMode ? 0.15 : isMobile ? 0.02 : 0.08})`,
             boxShadow: isMobile
-              ? `0 0 6px hsl(43 80% 55% / 0.02), inset 0 0 6px hsl(43 80% 55% / 0.015)`
+              ? `none`
               : `0 0 12px hsl(43 80% 55% / 0.04), inset 0 0 12px hsl(43 80% 55% / 0.03)`,
           }}
           animate={isRisingMode ? {
@@ -952,11 +952,10 @@ const ZodiacWheel = ({
                   <div
                     className="absolute rounded-full pointer-events-none"
                     style={{
-                      inset: -3,
-                      border: "1px solid hsl(43 80% 55% / 0.12)",
-                      background: "radial-gradient(circle, hsl(0 0% 5% / 0.6) 30%, hsl(0 0% 5% / 0.3) 60%, transparent 80%)",
-                      boxShadow: "0 0 4px hsl(43 80% 55% / 0.06)",
-                      opacity: 1,
+                      inset: -2,
+                      border: "none",
+                      background: "radial-gradient(circle, hsl(0 0% 3% / 0.85) 20%, hsl(0 0% 5% / 0.6) 50%, hsl(0 0% 8% / 0.3) 75%, transparent 100%)",
+                      boxShadow: "none",
                     }}
                   />
                 ) : (
@@ -1059,7 +1058,7 @@ const ZodiacWheel = ({
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
                           : isMobile
-                            ? "drop-shadow(0 0 3px hsl(43 80% 55% / 0.4)) brightness(1.35) contrast(1.15) saturate(1.1)"
+                            ? "drop-shadow(0 0 1px hsl(0 0% 0% / 0.8)) brightness(1.5) contrast(1.25) saturate(1.2)"
                             : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
                   }}
                 />
@@ -2635,9 +2634,9 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: "210px", height: "210px",
-                background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
-                opacity: 0.35,
+                width: "160px", height: "160px",
+                background: "radial-gradient(circle, hsl(var(--gold) / 0.03) 0%, transparent 60%)",
+                opacity: 0.2,
               }}
             />
             {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
