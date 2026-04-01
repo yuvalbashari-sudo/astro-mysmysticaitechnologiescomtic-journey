@@ -2633,9 +2633,9 @@ const HeroSection = () => {
             <div
               className="absolute rounded-full pointer-events-none"
               style={{
-                width: "280px", height: "280px",
+                width: "210px", height: "210px",
                 background: "radial-gradient(circle, hsl(var(--gold) / 0.06) 0%, transparent 70%)",
-                opacity: 0.4,
+                opacity: 0.35,
               }}
             />
             {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
