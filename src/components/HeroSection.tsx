@@ -1584,6 +1584,71 @@ const ZodiacWheel = ({
           </motion.div>
         </AnimatePresence>
       </motion.div>
+
+      {/* Mobile zodiac info card — rendered via portal outside rotating containers */}
+      {isMobile && hoveredSign !== null && (() => {
+        const si = hoveredSign;
+        const signData = ZODIAC_WHEEL[language][si];
+        const metaData = ZODIAC_META[language][si];
+        const isRulingSi = si === influencedIndex;
+        if (isRulingSi) return null; // Ruling sign has its own card
+        const elType = ELEMENT_TYPES[si];
+        const elHue = elType === "fire" ? "20 80% 55%" : elType === "water" ? "210 70% 55%" : elType === "air" ? "270 60% 60%" : "85 50% 45%";
+        return createPortal(
+          <AnimatePresence>
+            <motion.div
+              key={`mobile-zodiac-card-${si}`}
+              className="fixed z-[200] pointer-events-none"
+              style={{ left: "50%", bottom: "10%", transform: "translateX(-50%)", width: 260 }}
+              initial={{ opacity: 0, y: 20, scale: 0.85 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.85 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div
+                className="relative rounded-2xl overflow-hidden backdrop-blur-2xl"
+                style={{
+                  background: `linear-gradient(170deg, hsl(${elHue} / 0.08) 0%, hsl(var(--deep-blue-light) / 0.97) 30%, hsl(var(--deep-blue) / 0.99) 100%)`,
+                  border: `1px solid hsl(${elHue} / 0.25)`,
+                  boxShadow: `0 0 2px hsl(${elHue} / 0.4), 0 16px 48px hsl(var(--deep-blue) / 0.9), inset 0 1px 0 hsl(var(--gold) / 0.1)`,
+                  padding: "18px 16px 14px",
+                }}
+              >
+                <motion.div
+                  className="absolute top-0 left-[8%] right-[8%] h-[2px]"
+                  style={{ background: `linear-gradient(90deg, transparent, hsl(${elHue} / 0.5), hsl(var(--gold) / 0.4), hsl(${elHue} / 0.5), transparent)` }}
+                />
+                <motion.div
+                  className="text-center text-2xl mb-1.5 leading-none"
+                  style={{ filter: `drop-shadow(0 0 10px hsl(${elHue} / 0.5))` }}
+                >
+                  {ELEMENT_EMOJI[elType]}
+                </motion.div>
+                <div className="mx-auto mb-2" style={{ width: 36, height: 1, background: `linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)` }} />
+                <div
+                  className="font-heading text-center font-bold tracking-wider leading-none"
+                  style={{ color: "hsl(var(--gold))", fontSize: 20, textShadow: `0 0 16px hsl(var(--gold) / 0.25)` }}
+                >
+                  {signData.name}
+                </div>
+                <div
+                  className="font-body text-center mt-1.5 tracking-wide leading-snug"
+                  style={{ color: "hsl(var(--gold-light))", fontSize: 13, opacity: 0.9 }}
+                >
+                  {metaData.keyword}
+                </div>
+                <div className="flex items-center justify-center mt-2.5">
+                  <span className="font-body text-[9px] tracking-[0.18em] uppercase rounded-full px-3 py-0.5"
+                    style={{ color: `hsl(${elHue})`, background: `hsl(${elHue} / 0.08)`, border: `1px solid hsl(${elHue} / 0.18)` }}>
+                    {metaData.element}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>,
+          document.body
+        );
+      })()}
     </motion.div>
   );
 };
