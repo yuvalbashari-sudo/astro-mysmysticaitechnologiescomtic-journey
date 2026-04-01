@@ -2825,19 +2825,17 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
-        /* Mobile hands overlay: clip to bottom portion showing only the cupped hands area */
-        <div className="absolute inset-0 pointer-events-none z-[22]">
+        /* Mobile hands: real isolated image layer — NO masks */
+        <div className="absolute inset-0 pointer-events-none z-[22] flex items-end justify-center">
           <img
-            src={heroFigureV2}
+            src={heroHandsIsolated}
             alt=""
-            width="1920"
-            height="1080"
-            className="w-full h-full object-cover scale-110"
+            className="w-[85%] max-w-[340px]"
             style={{
-              objectPosition: "center calc(0% + 40px)",
-              clipPath: "inset(72% 20% 0% 20%)",
-              WebkitClipPath: "inset(72% 20% 0% 20%)",
+              marginBottom: "12%",
+              objectFit: "contain",
             }}
+            draggable={false}
           />
         </div>
       ) : (
