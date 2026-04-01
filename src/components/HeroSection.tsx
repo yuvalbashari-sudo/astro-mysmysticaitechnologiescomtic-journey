@@ -2377,17 +2377,13 @@ const HeroSection = () => {
         transition={{ duration: 2.5, ease: "easeOut" }}
       >
         <img
-          src={heroFigure}
+          src={isMobile ? heroFigureV2 : heroFigure}
           alt=""
           width="1920"
           height="1080"
           className="w-full h-full object-cover scale-110"
           style={{
-            objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-            ...(isMobile ? {
-              maskImage: "radial-gradient(ellipse 200px 190px at 50% calc(50% + 187px), transparent 46%, black 52%)",
-              WebkitMaskImage: "radial-gradient(ellipse 200px 190px at 50% calc(50% + 187px), transparent 46%, black 52%)",
-            } : {}),
+            objectPosition: isMobile ? "center calc(0% + 40px)" : "center calc(0% + 100px)",
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
