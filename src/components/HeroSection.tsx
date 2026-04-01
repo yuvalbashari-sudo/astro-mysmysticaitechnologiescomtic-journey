@@ -2,8 +2,6 @@ import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 import { Sparkles, Star, Eye, Hand } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import heroFigureV2 from "@/assets/hero-mystic-figure-v2.png";
-import heroHandsIsolated from "@/assets/hero-hands-isolated.png";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
@@ -359,17 +357,28 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
     willChange: isMobile ? "auto" : "opacity",
   };
 
-  // ── Mobile: clean video sphere — circular container, no masks ──
+  // ── Mobile: hard override — single clean video, zero inherited effects ──
   if (isMobile) {
-    const ballSize = 130;
     return (
       <div
         className="absolute z-[15] pointer-events-none"
         style={{
-          width: ballSize, height: ballSize,
-          borderRadius: "50%",
-          overflow: "hidden",
+          width: s, height: s,
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, calc(-50% - 20px))",
+          overflow: "visible",
+          borderRadius: 0,
           background: "transparent",
+          maskImage: "none",
+          WebkitMaskImage: "none",
+          filter: "none",
+          backdropFilter: "none",
+          mixBlendMode: "normal" as const,
+          opacity: 1,
+          boxShadow: "none",
+          isolation: "isolate" as const,
+          contain: "layout paint" as const,
         }}
       >
         <video
@@ -378,7 +387,17 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           src="/videos/cosmic-ball.mp4"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            transform: "scale(1.6)",
+            clipPath: "circle(34.5% at 50% 50%)",
+            WebkitClipPath: "circle(34.5% at 50% 50%)",
+            borderRadius: 0,
+            maskImage: "none",
+            WebkitMaskImage: "none",
+            filter: "none",
+            backdropFilter: "none",
+            mixBlendMode: "normal" as const,
+            boxShadow: "none",
+            opacity: 1,
+            transform: "scale(1.55)",
             transformOrigin: "center center",
           }}
         />
@@ -2357,13 +2376,17 @@ const HeroSection = () => {
         transition={{ duration: 2.5, ease: "easeOut" }}
       >
         <img
-          src={isMobile ? heroFigureV2 : heroFigure}
+          src={heroFigure}
           alt=""
           width="1920"
           height="1080"
           className="w-full h-full object-cover scale-110"
           style={{
-            objectPosition: isMobile ? "center calc(0% + 40px)" : "center calc(0% + 100px)",
+            objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
+            ...(isMobile ? {
+              maskImage: "radial-gradient(ellipse 200px 190px at 50% calc(50% + 187px), transparent 46%, black 52%)",
+              WebkitMaskImage: "radial-gradient(ellipse 200px 190px at 50% calc(50% + 187px), transparent 46%, black 52%)",
+            } : {}),
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-transparent" />
@@ -2822,23 +2845,18 @@ const HeroSection = () => {
 
       {/* ── Hands overlay — fingertips in front of the crystal ball ── */}
       {isMobile ? (
-        /* Mobile hands: real isolated image — positioned to overlap base image hands */
-        <div
-          className="absolute pointer-events-none z-[22]"
-          style={{
-            left: "50%",
-            bottom: "18%",
-            transform: "translateX(-50%)",
-            width: "75%",
-            maxWidth: "320px",
-          }}
-        >
+        <div className="absolute inset-0 pointer-events-none z-[22]">
           <img
-            src={heroHandsIsolated}
+            src={heroFigure}
             alt=""
-            className="w-full"
-            style={{ objectFit: "contain" }}
-            draggable={false}
+            width="1920"
+            height="1080"
+            className="w-full h-full object-cover scale-110"
+            style={{
+              objectPosition: "center calc(0% + 70px)",
+              maskImage: "radial-gradient(ellipse 195px 180px at 51% calc(50% + 184px), transparent 36%, transparent 40%, black 48%, black 74%, transparent 100%)",
+              WebkitMaskImage: "radial-gradient(ellipse 195px 180px at 51% calc(50% + 184px), transparent 36%, transparent 40%, black 48%, black 74%, transparent 100%)",
+            }}
           />
         </div>
       ) : (
@@ -2869,7 +2887,7 @@ const HeroSection = () => {
             <div
               className="relative"
               style={isMobile
-                ? { width: "100%", maxWidth: "400px", marginTop: "186px", marginLeft: "10px" }
+                ? { width: "100%", maxWidth: "400px", marginTop: "206px", marginLeft: "10px" }
                 : { marginLeft: "10px" }
               }
             >
