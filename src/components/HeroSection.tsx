@@ -791,13 +791,24 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 145 : 610;
+  const radius = isMobile ? 189 : 610;
+  const iconSize = isMobile ? 48 : 80;
+  const [planetaryInfluence, setPlanetaryInfluence] = useState<PlanetaryInfluence>(getDailyInfluence());
+  const [influenceKey, setInfluenceKey] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  });
+
+  // Refresh planetary influence at midnight
+  useEffect(() => {
+    const checkMidnight = () => {
+      const now = new Date();
+      const currentKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
       if (currentKey !== influenceKey) {
         setInfluenceKey(currentKey);
         setPlanetaryInfluence(getDailyInfluence());
       }
     };
-    // Check every 30 seconds near midnight
     const id = setInterval(checkMidnight, 30_000);
     return () => clearInterval(id);
   }, [influenceKey]);
@@ -2954,7 +2965,7 @@ const HeroSection = () => {
             <div
               className="relative"
               style={isMobile
-                ? { width: "100%", maxWidth: "400px", marginTop: "196px", marginLeft: "10px" }
+                ? { width: "100%", maxWidth: "440px", marginTop: "240px", marginLeft: "10px" }
                 : { marginLeft: "10px" }
               }
             >
