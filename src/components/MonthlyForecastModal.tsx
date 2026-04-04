@@ -217,36 +217,19 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <div style={{ padding: "0 24px" }}>
-                <div style={{ marginBottom: "20px" }}>
-                  <MysticalNameInput value={userName} onChange={setUserName} delay={0.25} />
-                </div>
                 <div className="flex justify-center mb-8">
                   <ModeToggle size="large" />
                 </div>
-                <div style={{ marginBottom: "28px" }}>
-                  <label className="block font-body" style={{ fontSize: "20px", marginBottom: "14px", color: "hsl(var(--gold) / 0.7)" }}>{t.forecast_gender_label}</label>
-                  <div className="flex" style={{ gap: "12px" }}>
-                    <motion.button type="button" onClick={() => setGender("male")} className="flex-1 rounded-xl font-body transition-all duration-300" style={{ fontSize: "20px", padding: "14px 0", background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.08))" : "hsl(222 47% 11% / 0.5)", border: gender === "male" ? "1px solid hsl(var(--gold) / 0.45)" : "1px solid hsl(var(--gold) / 0.1)", color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>{t.forecast_gender_male}</motion.button>
-                    <motion.button type="button" onClick={() => setGender("female")} className="flex-1 rounded-xl font-body transition-all duration-300" style={{ fontSize: "20px", padding: "14px 0", background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.08))" : "hsl(222 47% 11% / 0.5)", border: gender === "female" ? "1px solid hsl(var(--gold) / 0.45)" : "1px solid hsl(var(--gold) / 0.1)", color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>{t.forecast_gender_female}</motion.button>
-                  </div>
-                  {attempted && !gender && <p className="font-body" style={{ fontSize: "14px", marginTop: "8px", color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
+                <BirthDetailsForm
+                  values={details}
+                  onChange={updateDetails}
+                  attempted={attempted}
+                  showTime={mode === "rising"}
+                  size="large"
+                />
+                <div style={{ marginTop: "32px" }}>
+                  <motion.button onClick={handleSubmit} className="btn-gold font-body w-full flex items-center justify-center" style={{ fontSize: "20px", padding: "14px 0", gap: "10px" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-7 h-7" />{mode === "forecast" ? t.forecast_cta : t.rising_cta}</motion.button>
                 </div>
-                <div className="mx-auto mb-7" style={{ width: 60, height: 1, background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }} />
-                <div style={{ marginBottom: mode === "rising" ? "20px" : "32px" }}>
-                  <label className="block font-body" style={{ fontSize: "20px", marginBottom: "14px", color: "hsl(var(--gold) / 0.7)" }}>{t.forecast_birthdate_label}</label>
-                  <MysticalDateInput value={birthDate} onChange={setBirthDate} style={{ fontSize: "20px", padding: "14px", height: "56px" }} />
-                  {attempted && !birthDate && <p className="font-body" style={{ fontSize: "14px", marginTop: "8px", color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
-                </div>
-                <AnimatePresence>
-                  {mode === "rising" && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }} style={{ marginBottom: "32px", overflow: "hidden" }}>
-                      <label className="block font-body" style={{ fontSize: "20px", marginBottom: "14px", color: "hsl(var(--gold) / 0.7)" }}><Clock className="inline-block w-5 h-5 ml-2" />{t.rising_birthtime_label}</label>
-                      <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr", fontSize: "20px", padding: "14px", height: "56px" }} />
-                      {attempted && !birthTime && <p className="font-body" style={{ fontSize: "14px", marginTop: "8px", color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <motion.button onClick={handleSubmit} className="btn-gold font-body w-full flex items-center justify-center" style={{ fontSize: "20px", padding: "14px 0", gap: "10px" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-7 h-7" />{mode === "forecast" ? t.forecast_cta : t.rising_cta}</motion.button>
               </div>
             </motion.div>
             <div className="flex-1" />
@@ -262,36 +245,23 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
           </div>
         ) : (
           /* ── Mobile: centered form ── */
-          <motion.div key="input-mobile" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-8 text-center">
+          <motion.div key="input-mobile" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="p-6 text-center">
             <motion.div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ boxShadow: ["0 0 20px hsl(43 80% 55% / 0.1)", "0 0 40px hsl(43 80% 55% / 0.2)", "0 0 20px hsl(43 80% 55% / 0.1)"] }} transition={{ duration: 3, repeat: Infinity }}>{mode === "forecast" ? <Calendar className="w-7 h-7 text-gold" /> : <Clock className="w-7 h-7 text-gold" />}</motion.div>
             <div className="flex justify-center mb-5"><ModeToggle /></div>
             <h2 className="font-heading text-2xl gold-gradient-text mb-3">{mode === "forecast" ? t.forecast_title : t.rising_title}</h2>
             <p className="text-foreground/70 font-body text-sm mb-6 max-w-md mx-auto leading-relaxed">{mode === "forecast" ? t.forecast_desc : t.rising_desc}</p>
-            <div className="max-w-xs mx-auto mb-5"><MysticalNameInput value={userName} onChange={setUserName} delay={0.25} /></div>
-            <div className="max-w-xs mx-auto mb-6">
-              <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_gender_label}</label>
-              <div className="flex gap-2">
-                <motion.button type="button" onClick={() => setGender("male")} className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300" style={{ background: gender === "male" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "male" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "male" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>{t.forecast_gender_male}</motion.button>
-                <motion.button type="button" onClick={() => setGender("female")} className="flex-1 py-2.5 rounded-xl font-body text-sm transition-all duration-300" style={{ background: gender === "female" ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.1))" : "hsl(222 47% 11% / 0.6)", border: gender === "female" ? "1px solid hsl(var(--gold) / 0.5)" : "1px solid hsl(var(--gold) / 0.12)", color: gender === "female" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>{t.forecast_gender_female}</motion.button>
+            <div className="max-w-xs mx-auto text-start">
+              <BirthDetailsForm
+                values={details}
+                onChange={updateDetails}
+                attempted={attempted}
+                showTime={mode === "rising"}
+              />
+              <div className="mt-6 flex justify-center">
+                <motion.button onClick={handleSubmit} className="btn-gold font-body flex items-center justify-center gap-2" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{mode === "forecast" ? t.forecast_cta : t.rising_cta}</motion.button>
               </div>
-              {attempted && !gender && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_gender_required}</p>}
+              <p className="text-[11px] text-muted-foreground font-body mt-6 text-center">{t.forecast_note}</p>
             </div>
-            <div className="max-w-xs mx-auto mb-6">
-              <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.forecast_birthdate_label}</label>
-              <MysticalDateInput value={birthDate} onChange={setBirthDate} />
-              {attempted && !birthDate && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
-            </div>
-            <AnimatePresence>
-              {mode === "rising" && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="max-w-xs mx-auto mb-6 overflow-hidden">
-                  <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ml-1" />{t.rising_birthtime_label}</label>
-                  <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
-                  {attempted && !birthTime && <p className="text-xs mt-1.5 font-body" style={{ color: "hsl(var(--crimson))" }}>{t.forecast_birthdate_required}</p>}
-                </motion.div>
-              )}
-            </AnimatePresence>
-            <motion.button onClick={handleSubmit} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{mode === "forecast" ? t.forecast_cta : t.rising_cta}</motion.button>
-            <p className="text-[11px] text-muted-foreground font-body mt-6">{t.forecast_note}</p>
           </motion.div>
         )
       ) : isLoading ? (
