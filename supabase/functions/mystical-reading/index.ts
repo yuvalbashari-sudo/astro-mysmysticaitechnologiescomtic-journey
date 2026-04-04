@@ -878,6 +878,7 @@ ${l.nameLabel}: ${data.userName || l.notProvided}
 ${l.birthDateLabel}: ${data.birthDate}
 ${l.birthTimeLabel}: ${data.birthTime}
 ${l.birthCityLabel}: ${data.birthCity}
+${data.gender ? (lang === 'he' ? `מגדר: ${isMale ? 'זכר' : 'נקבה'}` : lang === 'ru' ? `Пол: ${isMale ? 'мужской' : 'женский'}` : lang === 'ar' ? `الجنس: ${isMale ? 'ذكر' : 'أنثى'}` : `Gender: ${isMale ? 'male' : 'female'}`) : ''}
 
 ${l.sunSignLabel}: ${data.sunSign} (${data.sunSymbol}) — ${l.elementLabel} ${data.sunElement}
 ${l.risingSignLabel}: ${data.risingSign} (${data.risingSymbol}) — ${l.elementLabel} ${data.risingElement}
