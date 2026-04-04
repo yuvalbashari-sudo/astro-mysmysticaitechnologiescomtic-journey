@@ -31,6 +31,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "">(""); 
   const [userName, setUserName] = useState("");
+  const [birthCity, setBirthCity] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<SignInfoState | null>(null);
@@ -70,7 +71,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setGender(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setBirthCity(""); setGender(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
@@ -142,6 +143,10 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                             <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
                             <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
                           </div>
+                          <div>
+                            <label className="block text-sm text-gold/70 font-body mb-2 text-start">מקום לידה</label>
+                            <input type="text" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} placeholder="עיר לידה..." className="mystical-input font-body text-center" />
+                          </div>
                         </div>
                         <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
                       </div>
@@ -187,6 +192,10 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                       <div>
                         <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
                         <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                      </div>
+                      <div>
+                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">מקום לידה</label>
+                        <input type="text" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} placeholder="עיר לידה..." className="mystical-input font-body text-center" />
                       </div>
                     </div>
                     <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
