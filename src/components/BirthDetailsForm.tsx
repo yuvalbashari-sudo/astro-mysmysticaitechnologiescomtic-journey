@@ -160,7 +160,7 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, size =
         />
         {attempted && !values.birthCity.trim() && (
           <p className={errorClass} style={errorStyle}>
-            {t.birth_chart_city_required || t.forecast_birthdate_required}
+            {t.birth_chart_error_required || t.forecast_birthdate_required}
           </p>
         )}
       </div>
