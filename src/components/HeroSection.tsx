@@ -424,7 +424,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       >
         <video
           ref={videoARef}
-          autoPlay loop muted playsInline preload="auto"
+          autoPlay muted playsInline preload="auto"
           src="/videos/cosmic-ball.mp4"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
