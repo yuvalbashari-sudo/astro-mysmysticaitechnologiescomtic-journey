@@ -2709,10 +2709,6 @@ const HeroSection = () => {
                 opacity: 0.2,
               }}
             />
-            {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
-            <div style={{ position: 'absolute', zIndex: 25, pointerEvents: 'none', width: 300, height: 300, top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-              <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
-            </div>
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
