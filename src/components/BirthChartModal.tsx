@@ -238,7 +238,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       return;
     }
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
-
+    if (gender) mysticalProfile.recordGender(gender);
     const dateObj = new Date(birthDate);
     const [hour, minute] = birthTime.split(":").map(Number);
 
