@@ -405,42 +405,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               {/* Name input */}
               <MysticalNameInput value={userName} onChange={setUserName} delay={0.1} />
 
-              {/* Birth Date */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_date_label}
-                </label>
-                <MysticalDateInput value={birthDate} onChange={setBirthDate} />
-              </div>
-
-              {/* Birth Time */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_time_label}
-                </label>
-                <input
-                  type="time"
-                  value={birthTime}
-                  onChange={(e) => setBirthTime(e.target.value)}
-                  className="mystical-input"
-                />
-              </div>
-
-              {/* Birth City */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_city_label}
-                </label>
-                <input
-                  type="text"
-                  value={birthCity}
-                  onChange={(e) => setBirthCity(e.target.value)}
-                  placeholder={t.birth_chart_city_placeholder}
-                  className="mystical-input"
-                  maxLength={100}
-                />
-              </div>
-
               {/* Gender */}
               <div>
                 <label className="block text-gold font-heading text-sm mb-2">
@@ -480,6 +444,43 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     {t.forecast_gender_female}
                   </button>
                 </div>
+              </div>
+
+              {/* Birth Date */}
+              <div>
+                <label className="block text-gold font-heading text-sm mb-2">
+                  {t.birth_chart_date_label}
+                </label>
+                <MysticalDateInput value={birthDate} onChange={setBirthDate} />
+              </div>
+
+              {/* Birth Time */}
+              <div>
+                <label className="block text-gold font-heading text-sm mb-2">
+                  {t.birth_chart_time_label}
+                </label>
+                <input
+                  type="time"
+                  value={birthTime}
+                  onChange={(e) => setBirthTime(e.target.value)}
+                  className="mystical-input"
+                />
+              </div>
+
+              {/* Birth City */}
+              <div>
+                <label className="block text-gold font-heading text-sm mb-2">
+                  {t.birth_chart_city_label} ✦
+                </label>
+                <input
+                  type="text"
+                  value={birthCity}
+                  onChange={(e) => setBirthCity(e.target.value)}
+                  placeholder={t.birth_chart_city_placeholder}
+                  className="mystical-input"
+                  maxLength={100}
+                  required
+                />
               </div>
 
               <motion.button
