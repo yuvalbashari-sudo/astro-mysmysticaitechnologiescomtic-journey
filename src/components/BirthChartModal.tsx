@@ -288,6 +288,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         moonSign: moonSignName,
         planetPositions: planetSignsText,
         userName: userName.trim() || undefined,
+        language,
       },
       (delta) => setResultText(prev => prev + delta),
       () => {
