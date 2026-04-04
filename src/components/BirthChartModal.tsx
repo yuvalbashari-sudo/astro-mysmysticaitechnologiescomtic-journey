@@ -267,7 +267,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
     const planetSignsText = PLANETS.map(p => {
       const angle = planetPositions[p.key];
-      return `${p.name} (${p.symbol}): ${getZodiacForAngle(angle)}`;
+      const sign = getZodiacForAngle(angle);
+      const degree = Math.floor(angle % 30);
+      const house = Math.floor(((angle - ascendantAngle + 360) % 360) / 30) + 1;
+      return `${p.name} (${p.symbol}): ${sign} ${degree}° — בית ${house}`;
     }).join("\n");
 
     streamMysticalReading(
@@ -275,7 +278,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       {
         birthDate,
         birthTime,
-        birthCity: birthCity || "לא צוינה",
+        birthCity: birthCity.trim(),
         sunSign: sunSign.hebrewName,
         sunSymbol: sunSign.symbol,
         sunElement: sunSign.element,
@@ -284,6 +287,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         risingElement: risingData.element,
         moonSign: moonSignName,
         planetPositions: planetSignsText,
+        userName: userName.trim() || undefined,
       },
       (delta) => setResultText(prev => prev + delta),
       () => {
