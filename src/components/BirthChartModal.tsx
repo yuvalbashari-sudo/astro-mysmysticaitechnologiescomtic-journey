@@ -488,13 +488,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   />
                 </div>
 
-                {/* Planet legend */}
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  {PLANETS.map(p => (
-                    <span key={p.key} className="text-xs text-muted-foreground font-body">
-                      {p.symbol} {p.name}: {getZodiacForAngle(chartData.planetPositions[p.key])}
-                    </span>
-                  ))}
+                {/* Planet positions grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+                  {PLANETS.map(p => {
+                    const angle = chartData.planetPositions[p.key];
+                    const sign = getZodiacForAngle(angle);
+                    const degree = Math.floor(angle % 30);
+                    const house = Math.floor(((angle - chartData.ascendantAngle + 360) % 360) / 30) + 1;
+                    return (
+                      <div
+                        key={p.key}
+                        className="px-3 py-2 rounded-xl text-center"
+                        style={{
+                          background: "hsl(var(--gold) / 0.04)",
+                          border: "1px solid hsl(var(--gold) / 0.1)",
+                        }}
+                      >
+                        <span className="text-base block" style={{ color: "hsl(var(--gold))" }}>{p.symbol}</span>
+                        <span className="text-xs font-body block" style={{ color: "hsl(var(--gold) / 0.8)" }}>{p.name}</span>
+                        <span className="text-xs font-body block text-muted-foreground">{sign} {degree}°</span>
+                        <span className="text-[10px] font-body block text-muted-foreground/60">בית {house}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
 
