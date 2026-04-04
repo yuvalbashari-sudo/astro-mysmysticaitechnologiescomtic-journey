@@ -2957,7 +2957,7 @@ const HeroSection = () => {
       {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
       {entranceComplete && (
         <div
-          className={`absolute inset-0 pointer-events-none z-[18] flex ${isMobile ? "items-center" : "items-start"} justify-center`}
+          className={`absolute inset-0 pointer-events-none ${isMobile ? "z-[24]" : "z-[18]"} flex ${isMobile ? "items-center" : "items-start"} justify-center`}
           style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}
         >
           <div className={`w-full h-full flex ${isMobile ? "items-center" : "items-start"} justify-center`}>
