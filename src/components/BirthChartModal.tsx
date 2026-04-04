@@ -273,6 +273,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       return `${p.name} (${p.symbol}): ${sign} ${degree}° — בית ${house}`;
     }).join("\n");
 
+    const gender = mysticalProfile.getUserGender();
+
     streamMysticalReading(
       "birthChart",
       {
@@ -289,6 +291,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         planetPositions: planetSignsText,
         userName: userName.trim() || undefined,
         language,
+        gender: gender || undefined,
       },
       (delta) => setResultText(prev => prev + delta),
       () => {
