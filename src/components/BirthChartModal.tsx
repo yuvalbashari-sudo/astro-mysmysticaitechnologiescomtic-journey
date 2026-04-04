@@ -404,96 +404,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               animate={{ opacity: 1, y: 0 }}
               className="space-y-5"
             >
-              {/* Name input */}
-              <MysticalNameInput value={userName} onChange={setUserName} delay={0.1} />
-
-              {/* Gender */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.forecast_gender_label}
-                </label>
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setGender("male")}
-                    className={`flex-1 py-2.5 rounded-xl font-body text-sm transition-all ${
-                      gender === "male"
-                        ? "border-2"
-                        : "border border-white/10 text-muted-foreground hover:border-white/20"
-                    }`}
-                    style={gender === "male" ? {
-                      borderColor: "hsl(var(--gold) / 0.6)",
-                      background: "hsl(var(--gold) / 0.08)",
-                      color: "hsl(var(--gold))",
-                    } : {}}
-                  >
-                    {t.forecast_gender_male}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setGender("female")}
-                    className={`flex-1 py-2.5 rounded-xl font-body text-sm transition-all ${
-                      gender === "female"
-                        ? "border-2"
-                        : "border border-white/10 text-muted-foreground hover:border-white/20"
-                    }`}
-                    style={gender === "female" ? {
-                      borderColor: "hsl(var(--gold) / 0.6)",
-                      background: "hsl(var(--gold) / 0.08)",
-                      color: "hsl(var(--gold))",
-                    } : {}}
-                  >
-                    {t.forecast_gender_female}
-                  </button>
-                </div>
-              </div>
-
-              {/* Birth Date */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_date_label}
-                </label>
-                <MysticalDateInput value={birthDate} onChange={setBirthDate} />
-              </div>
-
-              {/* Birth Time */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_time_label}
-                </label>
-                <input
-                  type="time"
-                  value={birthTime}
-                  onChange={(e) => setBirthTime(e.target.value)}
-                  className="mystical-input"
-                />
-              </div>
-
-              {/* Birth City — CRITICAL */}
-              <div 
-                data-testid="birth-city-field"
-                className="rounded-xl p-4"
-                style={{ 
-                  background: "hsl(var(--crimson) / 0.08)", 
-                  border: "2px solid hsl(var(--gold) / 0.4)",
-                  minHeight: "90px",
-                }}
-              >
-                <label className="block font-heading text-sm mb-2" style={{ color: "hsl(var(--gold))" }}>
-                  ✦ {t.birth_chart_city_label} ✦
-                </label>
-                <input
-                  type="text"
-                  value={birthCity}
-                  onChange={(e) => setBirthCity(e.target.value)}
-                  placeholder={t.birth_chart_city_placeholder || "City, Country..."}
-                  className="mystical-input block w-full"
-                  style={{ minHeight: "48px", fontSize: "16px" }}
-                  maxLength={100}
-                  autoComplete="off"
-                  required
-                />
-              </div>
+              <BirthDetailsForm
+                values={details}
+                onChange={(patch) => setDetails(prev => ({ ...prev, ...patch }))}
+                attempted={attempted}
+                showTime={true}
+              />
 
               <motion.button
                 whileHover={{ scale: 1.02 }}
