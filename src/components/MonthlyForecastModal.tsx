@@ -48,9 +48,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
 
+  const { userName, gender, birthDate, birthTime, birthCity } = details;
+  const updateDetails = (patch: Partial<BirthDetails>) => setDetails(prev => ({ ...prev, ...patch }));
+
   const handleSubmit = () => {
     setAttempted(true);
-    if (!gender || !birthDate) return;
+    if (!gender || !birthDate || !birthCity.trim()) return;
     if (mode === "rising" && !birthTime) return;
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     if (gender) mysticalProfile.recordGender(gender);
@@ -68,12 +71,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
       streamMysticalReading(
         "forecast",
-        { signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element, dateRange: sign.dateRange, monthName, gender },
+        { signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element, dateRange: sign.dateRange, monthName, gender, birthCity },
         (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
         () => {
           setAiLoading(false);
           setActiveReading({ type: "forecast", label: `${t.readings_type_forecast} — ${sign.hebrewName}`, summary: aiTextRef.current });
-          readingsStorage.save({ type: "forecast", title: `${t.readings_type_forecast} — ${sign.hebrewName}`, subtitle: sign.dateRange, symbol: sign.symbol, data: { signName: sign.hebrewName, birthDate, aiReading: aiTextRef.current } });
+          readingsStorage.save({ type: "forecast", title: `${t.readings_type_forecast} — ${sign.hebrewName}`, subtitle: sign.dateRange, symbol: sign.symbol, data: { signName: sign.hebrewName, birthDate, birthCity, aiReading: aiTextRef.current } });
         },
         (err) => { setAiLoading(false); setAiError(err); toast(err); },
         language,
@@ -89,12 +92,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
 
       streamMysticalReading("rising",
-        { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sign.hebrewName, sunSignSymbol: sign.symbol, sunElement: sign.element, gender },
+        { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, birthCity, sunSignName: sign.hebrewName, sunSignSymbol: sign.symbol, sunElement: sign.element, gender },
         (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
         () => {
           setAiLoading(false);
           setActiveReading({ type: "rising", label: `${t.readings_type_rising} — ${rising.hebrewName}`, summary: aiTextRef.current });
-          readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sign.hebrewName, birthTime, birthDate, aiReading: aiTextRef.current } });
+          readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sign.hebrewName, birthTime, birthDate, birthCity, aiReading: aiTextRef.current } });
         },
         (err) => { setAiLoading(false); setAiError(err); toast(err); },
         language,
@@ -102,7 +105,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     }
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setBirthDate(""); setBirthTime(""); setGender(""); setUserName(""); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; setMode("forecast"); }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; setMode("forecast"); }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
