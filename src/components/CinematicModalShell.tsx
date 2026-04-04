@@ -282,7 +282,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                   style={{
                     maxWidth: wide ? "92%" : (isMobile ? "100%" : "560px"),
                     margin: "0 auto",
-                    padding: isMobile ? "0 16px 40px" : wide ? "0 0 60px" : "0 24px 60px",
+                    padding: isMobile ? "0 16px 80px" : wide ? "0 0 60px" : "0 24px 60px",
                   }}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
