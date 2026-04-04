@@ -225,14 +225,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       setPhase("form");
       setResultText("");
       setChartData(null);
-      setBirthDate("");
-      setBirthTime("");
-      setBirthCity("");
-      setUserName("");
+      setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" });
+      setAttempted(false);
     }, 300);
   }, [onClose]);
 
+  // Destructure for convenience
+  const { userName, gender, birthDate, birthTime, birthCity } = details;
+
   const handleSubmit = useCallback(() => {
+    setAttempted(true);
     if (!birthDate || !birthTime || !birthCity.trim()) {
       toast.error(t.birth_chart_error_required);
       return;
