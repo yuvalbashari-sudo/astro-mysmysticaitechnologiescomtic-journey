@@ -441,7 +441,47 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 />
               </div>
 
-              {/* Submit button */}
+              {/* Gender */}
+              <div>
+                <label className="block text-gold font-heading text-sm mb-2">
+                  {t.forecast_gender_label}
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setGender("male")}
+                    className={`flex-1 py-2.5 rounded-xl font-body text-sm transition-all ${
+                      gender === "male"
+                        ? "border-2"
+                        : "border border-white/10 text-muted-foreground hover:border-white/20"
+                    }`}
+                    style={gender === "male" ? {
+                      borderColor: "hsl(var(--gold) / 0.6)",
+                      background: "hsl(var(--gold) / 0.08)",
+                      color: "hsl(var(--gold))",
+                    } : {}}
+                  >
+                    {t.forecast_gender_male}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGender("female")}
+                    className={`flex-1 py-2.5 rounded-xl font-body text-sm transition-all ${
+                      gender === "female"
+                        ? "border-2"
+                        : "border border-white/10 text-muted-foreground hover:border-white/20"
+                    }`}
+                    style={gender === "female" ? {
+                      borderColor: "hsl(var(--gold) / 0.6)",
+                      background: "hsl(var(--gold) / 0.08)",
+                      color: "hsl(var(--gold))",
+                    } : {}}
+                  >
+                    {t.forecast_gender_female}
+                  </button>
+                </div>
+              </div>
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
