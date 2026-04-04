@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
 import html2canvas from "html2canvas";
@@ -42,13 +43,17 @@ const PLANETS = [
   { symbol: "♂", name: "מאדים", key: "mars" },
   { symbol: "♃", name: "צדק", key: "jupiter" },
   { symbol: "♄", name: "שבתאי", key: "saturn" },
+  { symbol: "♅", name: "אורנוס", key: "uranus" },
+  { symbol: "♆", name: "נפטון", key: "neptune" },
+  { symbol: "♇", name: "פלוטו", key: "pluto" },
 ];
 
-// Approximate planet positions based on birth date (simplified)
+// Approximate planet positions based on birth date (simplified ephemeris)
 function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinute: number) {
   const dayOfYear = Math.floor((birthDate.getTime() - new Date(birthDate.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
   const yearFraction = dayOfYear / 365;
   const timeFraction = (birthHour * 60 + birthMinute) / 1440;
+  const yearsSince2000 = (birthDate.getFullYear() - 2000) + yearFraction;
 
   return {
     sun: (yearFraction * 360 + 280) % 360,
@@ -58,6 +63,9 @@ function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinut
     mars: (yearFraction * 360 * 0.524 + 320) % 360,
     jupiter: (yearFraction * 360 * 0.0843 + 150) % 360,
     saturn: (yearFraction * 360 * 0.0339 + 240) % 360,
+    uranus: ((yearsSince2000 * 360 / 84 + 310) % 360 + 360) % 360,
+    neptune: ((yearsSince2000 * 360 / 165 + 305) % 360 + 360) % 360,
+    pluto: ((yearsSince2000 * 360 / 248 + 254) % 360 + 360) % 360,
   };
 }
 
@@ -192,11 +200,13 @@ type Phase = "form" | "loading" | "result";
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
+  const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
   const [birthCity, setBirthCity] = useState("");
   const [userName, setUserName] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "">(mysticalProfile.getUserGender() || "");
   const [resultText, setResultText] = useState("");
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
@@ -225,12 +235,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   }, [onClose]);
 
   const handleSubmit = useCallback(() => {
-    if (!birthDate || !birthTime) {
+    if (!birthDate || !birthTime || !birthCity.trim()) {
       toast.error(t.birth_chart_error_required);
       return;
     }
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
-
+    if (gender) mysticalProfile.recordGender(gender);
     const dateObj = new Date(birthDate);
     const [hour, minute] = birthTime.split(":").map(Number);
 
@@ -260,15 +270,20 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
     const planetSignsText = PLANETS.map(p => {
       const angle = planetPositions[p.key];
-      return `${p.name} (${p.symbol}): ${getZodiacForAngle(angle)}`;
+      const sign = getZodiacForAngle(angle);
+      const degree = Math.floor(angle % 30);
+      const house = Math.floor(((angle - ascendantAngle + 360) % 360) / 30) + 1;
+      return `${p.name} (${p.symbol}): ${sign} ${degree}° — בית ${house}`;
     }).join("\n");
+
+    const userGender = gender || mysticalProfile.getUserGender();
 
     streamMysticalReading(
       "birthChart",
       {
         birthDate,
         birthTime,
-        birthCity: birthCity || "לא צוינה",
+        birthCity: birthCity.trim(),
         sunSign: sunSign.hebrewName,
         sunSymbol: sunSign.symbol,
         sunElement: sunSign.element,
@@ -277,6 +292,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         risingElement: risingData.element,
         moonSign: moonSignName,
         planetPositions: planetSignsText,
+        userName: userName.trim() || undefined,
+        language,
+        gender: userGender || undefined,
       },
       (delta) => setResultText(prev => prev + delta),
       () => {
@@ -366,7 +384,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} fullscreen={isMobile} hideAdvisor={isMobile}>
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="text-center mb-6">
@@ -389,6 +407,47 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               {/* Name input */}
               <MysticalNameInput value={userName} onChange={setUserName} delay={0.1} />
 
+              {/* Gender */}
+              <div>
+                <label className="block text-gold font-heading text-sm mb-2">
+                  {t.forecast_gender_label}
+                </label>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setGender("male")}
+                    className={`flex-1 py-2.5 rounded-xl font-body text-sm transition-all ${
+                      gender === "male"
+                        ? "border-2"
+                        : "border border-white/10 text-muted-foreground hover:border-white/20"
+                    }`}
+                    style={gender === "male" ? {
+                      borderColor: "hsl(var(--gold) / 0.6)",
+                      background: "hsl(var(--gold) / 0.08)",
+                      color: "hsl(var(--gold))",
+                    } : {}}
+                  >
+                    {t.forecast_gender_male}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGender("female")}
+                    className={`flex-1 py-2.5 rounded-xl font-body text-sm transition-all ${
+                      gender === "female"
+                        ? "border-2"
+                        : "border border-white/10 text-muted-foreground hover:border-white/20"
+                    }`}
+                    style={gender === "female" ? {
+                      borderColor: "hsl(var(--gold) / 0.6)",
+                      background: "hsl(var(--gold) / 0.08)",
+                      color: "hsl(var(--gold))",
+                    } : {}}
+                  >
+                    {t.forecast_gender_female}
+                  </button>
+                </div>
+              </div>
+
               {/* Birth Date */}
               <div>
                 <label className="block text-gold font-heading text-sm mb-2">
@@ -410,22 +469,32 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 />
               </div>
 
-              {/* Birth City */}
-              <div>
-                <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_city_label}
+              {/* Birth City — CRITICAL */}
+              <div 
+                data-testid="birth-city-field"
+                className="rounded-xl p-4"
+                style={{ 
+                  background: "hsl(var(--crimson) / 0.08)", 
+                  border: "2px solid hsl(var(--gold) / 0.4)",
+                  minHeight: "90px",
+                }}
+              >
+                <label className="block font-heading text-sm mb-2" style={{ color: "hsl(var(--gold))" }}>
+                  ✦ {t.birth_chart_city_label} ✦
                 </label>
                 <input
                   type="text"
                   value={birthCity}
                   onChange={(e) => setBirthCity(e.target.value)}
-                  placeholder={t.birth_chart_city_placeholder}
-                  className="mystical-input"
+                  placeholder={t.birth_chart_city_placeholder || "City, Country..."}
+                  className="mystical-input block w-full"
+                  style={{ minHeight: "48px", fontSize: "16px" }}
                   maxLength={100}
+                  autoComplete="off"
+                  required
                 />
               </div>
 
-              {/* Submit button */}
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -477,13 +546,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   />
                 </div>
 
-                {/* Planet legend */}
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  {PLANETS.map(p => (
-                    <span key={p.key} className="text-xs text-muted-foreground font-body">
-                      {p.symbol} {p.name}: {getZodiacForAngle(chartData.planetPositions[p.key])}
-                    </span>
-                  ))}
+                {/* Planet positions grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+                  {PLANETS.map(p => {
+                    const angle = chartData.planetPositions[p.key];
+                    const sign = getZodiacForAngle(angle);
+                    const degree = Math.floor(angle % 30);
+                    const house = Math.floor(((angle - chartData.ascendantAngle + 360) % 360) / 30) + 1;
+                    return (
+                      <div
+                        key={p.key}
+                        className="px-3 py-2 rounded-xl text-center"
+                        style={{
+                          background: "hsl(var(--gold) / 0.04)",
+                          border: "1px solid hsl(var(--gold) / 0.1)",
+                        }}
+                      >
+                        <span className="text-base block" style={{ color: "hsl(var(--gold))" }}>{p.symbol}</span>
+                        <span className="text-xs font-body block" style={{ color: "hsl(var(--gold) / 0.8)" }}>{p.name}</span>
+                        <span className="text-xs font-body block text-muted-foreground">{sign} {degree}°</span>
+                        <span className="text-[10px] font-body block text-muted-foreground/60">בית {house}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
 

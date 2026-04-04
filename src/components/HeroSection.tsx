@@ -312,42 +312,17 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const s = isMobile ? 332 : 490;
-  const videoARef = useRef<HTMLVideoElement>(null);
-  const videoBRef = useRef<HTMLVideoElement>(null);
-  const activeRef = useRef<"a" | "b">("a");
-  const [opacity, setOpacity] = useState<{ a: number; b: number }>({ a: 1, b: 0 });
+  const s = isMobile ? 232 : 490;
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const vA = videoARef.current;
-    const vB = videoBRef.current;
-    if (!vA || !vB) return;
-    vA.playbackRate = 0.65;
-    vB.playbackRate = 0.65;
-
-    // Pre-load standby at a safe point (skip potential dark first frame)
-    vB.currentTime = 0.15;
-
-    // On mobile, skip crossfade logic — single video loop is enough
-    if (isMobile) return;
-
-    // Crossfade near end of whichever copy is active
-    const crossfade = () => {
-      const active = activeRef.current === "a" ? vA : vB;
-      const standby = activeRef.current === "a" ? vB : vA;
-      if (!active.duration || active.paused) return;
-      const remaining = active.duration - active.currentTime;
-      if (remaining < 1.5) {
-        standby.currentTime = 0.15;
-        standby.play().catch(() => {});
-        activeRef.current = activeRef.current === "a" ? "b" : "a";
-        setOpacity(activeRef.current === "a" ? { a: 1, b: 0 } : { a: 0, b: 1 });
-      }
-    };
-
-    const interval = setInterval(crossfade, 200);
-    return () => clearInterval(interval);
-  }, [isMobile]);
+    const v = videoRef.current;
+    if (!v) return;
+    // The pre-built ping-pong video already contains forward+reverse at 0.5x speed
+    // Just play it natively with loop — no runtime manipulation needed
+    v.playbackRate = 1;
+    v.play().catch(() => {});
+  }, []);
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
@@ -381,26 +356,28 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           contain: "layout paint" as const,
         }}
       >
-        <video
-          ref={videoARef}
-          autoPlay loop muted playsInline preload="auto"
-          src="/videos/cosmic-ball.mp4"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            clipPath: "circle(34.5% at 50% 50%)",
-            WebkitClipPath: "circle(34.5% at 50% 50%)",
-            borderRadius: 0,
-            maskImage: "none",
-            WebkitMaskImage: "none",
-            filter: "none",
-            backdropFilter: "none",
-            mixBlendMode: "normal" as const,
-            boxShadow: "none",
-            opacity: 1,
-            transform: "scale(1.55)",
-            transformOrigin: "center center",
-          }}
-        />
+        <div className="absolute inset-0 w-full h-full" style={{ animation: "cosmicDrift 40s ease-in-out infinite" }}>
+          <video
+            ref={videoRef}
+            autoPlay loop muted playsInline preload="auto"
+            src="/videos/cosmic-ball-loop.mp4"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              clipPath: "circle(34.5% at 50% 50%)",
+              WebkitClipPath: "circle(34.5% at 50% 50%)",
+              borderRadius: 0,
+              maskImage: "none",
+              WebkitMaskImage: "none",
+              filter: "none",
+              backdropFilter: "none",
+              mixBlendMode: "normal" as const,
+              boxShadow: "none",
+              opacity: 1,
+              transform: "scale(1.55)",
+              transformOrigin: "center center",
+            }}
+          />
+        </div>
       </div>
     );
   }
@@ -422,10 +399,10 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+      <div className="absolute inset-0 w-full h-full" style={{ animation: "cosmicDrift 50s ease-in-out infinite" }}>
+        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
+          className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
+      </div>
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{
@@ -791,13 +768,24 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 145 : 610;
+  const radius = isMobile ? 189 : 610;
+  const iconSize = isMobile ? 48 : 80;
+  const [planetaryInfluence, setPlanetaryInfluence] = useState<PlanetaryInfluence>(getDailyInfluence());
+  const [influenceKey, setInfluenceKey] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  });
+
+  // Refresh planetary influence at midnight
+  useEffect(() => {
+    const checkMidnight = () => {
+      const now = new Date();
+      const currentKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
       if (currentKey !== influenceKey) {
         setInfluenceKey(currentKey);
         setPlanetaryInfluence(getDailyInfluence());
       }
     };
-    // Check every 30 seconds near midnight
     const id = setInterval(checkMidnight, 30_000);
     return () => clearInterval(id);
   }, [influenceKey]);
@@ -2954,7 +2942,7 @@ const HeroSection = () => {
             <div
               className="relative"
               style={isMobile
-                ? { width: "100%", maxWidth: "400px", marginTop: "196px", marginLeft: "10px" }
+                ? { width: "100%", maxWidth: "440px", marginTop: "240px", marginLeft: "10px" }
                 : { marginLeft: "10px" }
               }
             >
