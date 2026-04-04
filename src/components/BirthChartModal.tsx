@@ -201,11 +201,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const { language, dir } = useLanguage();
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
-  const [birthDate, setBirthDate] = useState("");
-  const [birthTime, setBirthTime] = useState("");
-  const [birthCity, setBirthCity] = useState("");
-  const [userName, setUserName] = useState("");
-  const [gender, setGender] = useState<"male" | "female" | "">(mysticalProfile.getUserGender() || "");
+  const [details, setDetails] = useState<BirthDetails>({
+    userName: "", gender: mysticalProfile.getUserGender() || "", birthDate: "", birthTime: "", birthCity: "",
+  });
+  const [attempted, setAttempted] = useState(false);
   const [resultText, setResultText] = useState("");
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
