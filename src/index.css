@@ -103,11 +103,18 @@
 
 @layer components {
   .mystical-glow {
-    box-shadow: 0 0 30px hsl(var(--gold) / 0.15), 0 0 60px hsl(var(--gold) / 0.05);
+    box-shadow:
+      0 0 24px hsl(var(--gold) / 0.12),
+      0 0 48px hsl(var(--gold) / 0.06),
+      0 0 80px hsl(var(--celestial) / 0.03);
   }
 
   .mystical-glow-intense {
-    box-shadow: 0 0 40px hsl(var(--gold) / 0.2), 0 0 80px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.1);
+    box-shadow:
+      0 0 30px hsl(var(--gold) / 0.18),
+      0 0 60px hsl(var(--gold) / 0.08),
+      0 0 100px hsl(var(--celestial) / 0.04),
+      inset 0 1px 0 hsl(var(--gold) / 0.1);
   }
 
   .mystical-border {
