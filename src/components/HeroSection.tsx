@@ -317,36 +317,77 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
   const [opacity, setOpacity] = useState<{ a: number; b: number }>({ a: 1, b: 0 });
+  const directionRef = useRef<1 | -1>(1); // 1 = forward, -1 = backward (ping-pong)
 
   useEffect(() => {
     const vA = videoARef.current;
     const vB = videoBRef.current;
     if (!vA || !vB) return;
-    vA.playbackRate = 0.65;
-    vB.playbackRate = 0.65;
+    vA.playbackRate = 0.5;
+    vB.playbackRate = 0.5;
 
-    // Pre-load standby at a safe point (skip potential dark first frame)
+    // Pre-load standby at a safe point
     vB.currentTime = 0.15;
 
-    // On mobile, skip crossfade logic — single video loop is enough
-    if (isMobile) return;
-
-    // Crossfade near end of whichever copy is active
-    const crossfade = () => {
-      const active = activeRef.current === "a" ? vA : vB;
-      const standby = activeRef.current === "a" ? vB : vA;
-      if (!active.duration || active.paused) return;
-      const remaining = active.duration - active.currentTime;
-      if (remaining < 1.5) {
-        standby.currentTime = 0.15;
-        standby.play().catch(() => {});
-        activeRef.current = activeRef.current === "a" ? "b" : "a";
-        setOpacity(activeRef.current === "a" ? { a: 1, b: 0 } : { a: 0, b: 1 });
+    // Ping-pong: when video nears end, reverse; when nears start, go forward
+    const pingPong = (video: HTMLVideoElement) => {
+      if (!video.duration || video.paused) return;
+      const t = video.currentTime;
+      const dur = video.duration;
+      if (directionRef.current === 1 && t >= dur - 0.15) {
+        // Reached end → reverse
+        directionRef.current = -1;
+        video.playbackRate = -0.5; // negative not supported — use manual stepping
+      } else if (directionRef.current === -1 && t <= 0.15) {
+        // Reached start → forward
+        directionRef.current = 1;
+        video.playbackRate = 0.5;
+        video.play().catch(() => {});
       }
     };
 
-    const interval = setInterval(crossfade, 200);
-    return () => clearInterval(interval);
+    // Not all browsers support negative playbackRate, so use requestAnimationFrame for reverse
+    let rafId: number;
+    let lastTime = 0;
+    const step = (timestamp: number) => {
+      const video = activeRef.current === "a" ? vA : vB;
+      if (!video.duration) { rafId = requestAnimationFrame(step); return; }
+
+      if (directionRef.current === -1) {
+        // Manual reverse: pause native playback, step backward
+        if (!video.paused) video.pause();
+        const delta = timestamp - lastTime;
+        if (delta > 0) {
+          const stepAmount = (delta / 1000) * 0.5; // 0.5x speed
+          video.currentTime = Math.max(0.05, video.currentTime - stepAmount);
+          if (video.currentTime <= 0.1) {
+            directionRef.current = 1;
+            video.playbackRate = 0.5;
+            video.currentTime = 0.05;
+            video.play().catch(() => {});
+          }
+        }
+      } else {
+        // Forward: let native playback handle it
+        if (video.paused && video.currentTime < video.duration - 0.2) {
+          video.play().catch(() => {});
+        }
+        if (video.currentTime >= video.duration - 0.15) {
+          directionRef.current = -1;
+          video.pause();
+        }
+      }
+      lastTime = timestamp;
+      rafId = requestAnimationFrame(step);
+    };
+
+    // Remove loop attribute — we handle looping manually
+    vA.loop = false;
+    vB.loop = false;
+    vA.play().catch(() => {});
+
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
   }, [isMobile]);
 
   const vidBase: React.CSSProperties = {
@@ -383,7 +424,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       >
         <video
           ref={videoARef}
-          autoPlay loop muted playsInline preload="auto"
+          autoPlay muted playsInline preload="auto"
           src="/videos/cosmic-ball.mp4"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
@@ -422,9 +463,9 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      <video ref={videoARef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+      <video ref={videoARef} autoPlay muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted loop playsInline preload="auto" src="/videos/cosmic-ball.mp4"
+      <video ref={videoBRef} muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
         className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
 
       {/* Soft curved glass highlight — upper left */}
