@@ -356,26 +356,28 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           contain: "layout paint" as const,
         }}
       >
-        <video
-          ref={videoRef}
-          autoPlay loop muted playsInline preload="auto"
-          src="/videos/cosmic-ball-loop.mp4"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            clipPath: "circle(34.5% at 50% 50%)",
-            WebkitClipPath: "circle(34.5% at 50% 50%)",
-            borderRadius: 0,
-            maskImage: "none",
-            WebkitMaskImage: "none",
-            filter: "none",
-            backdropFilter: "none",
-            mixBlendMode: "normal" as const,
-            boxShadow: "none",
-            opacity: 1,
-            transform: "scale(1.55)",
-            transformOrigin: "center center",
-          }}
-        />
+        <div className="absolute inset-0 w-full h-full" style={{ animation: "cosmicDrift 40s ease-in-out infinite" }}>
+          <video
+            ref={videoRef}
+            autoPlay loop muted playsInline preload="auto"
+            src="/videos/cosmic-ball-loop.mp4"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              clipPath: "circle(34.5% at 50% 50%)",
+              WebkitClipPath: "circle(34.5% at 50% 50%)",
+              borderRadius: 0,
+              maskImage: "none",
+              WebkitMaskImage: "none",
+              filter: "none",
+              backdropFilter: "none",
+              mixBlendMode: "normal" as const,
+              boxShadow: "none",
+              opacity: 1,
+              transform: "scale(1.55)",
+              transformOrigin: "center center",
+            }}
+          />
+        </div>
       </div>
     );
   }
@@ -397,8 +399,10 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
+      <div className="absolute inset-0 w-full h-full" style={{ animation: "cosmicDrift 50s ease-in-out infinite" }}>
+        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
+          className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
+      </div>
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{
