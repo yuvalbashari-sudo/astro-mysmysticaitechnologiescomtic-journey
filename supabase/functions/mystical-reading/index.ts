@@ -521,7 +521,7 @@ ${data.gender ? `\nתזכורת: כתוב את כל התשובה בלשון ${is
     };
     const genderInstruction = genderInstructions[lang] || genderInstructions["he"] || "";
 
-    const labels: Record<string, Record<string, string>> = {
+    const labels: Record<string, Record<string, string | ((n: string) => string)>> = {
       he: {
         intro: "אתה אסטרולוג מקצועי ברמה עולמית, בעל ידע עמוק באסטרולוגיה מערבית, מתמחה בניתוח מפות לידה מלאות. אתה כותב בעברית בלבד.",
         nameNote: (n: string) => `שם הקורא/ת: ${n}. פנה אליו/ה בשמו/ה כמה פעמים לאורך הקריאה כדי ליצור חיבור אישי.`,
