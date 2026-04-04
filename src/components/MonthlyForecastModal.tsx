@@ -28,10 +28,9 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
   const [mode, setMode] = useState<Mode>("forecast");
-  const [birthDate, setBirthDate] = useState("");
-  const [birthTime, setBirthTime] = useState("");
-  const [gender, setGender] = useState<"male" | "female" | "">("");
-  const [userName, setUserName] = useState("");
+  const [details, setDetails] = useState<BirthDetails>({
+    userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "",
+  });
   const [attempted, setAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
