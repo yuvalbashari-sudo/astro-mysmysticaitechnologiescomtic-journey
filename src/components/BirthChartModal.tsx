@@ -204,6 +204,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [birthTime, setBirthTime] = useState("");
   const [birthCity, setBirthCity] = useState("");
   const [userName, setUserName] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "">(mysticalProfile.getUserGender() || "");
   const [resultText, setResultText] = useState("");
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
