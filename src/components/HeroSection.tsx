@@ -1058,7 +1058,7 @@ const ZodiacWheel = ({
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
                           : isMobile
-                            ? "drop-shadow(0 0 6px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 12px hsl(43 80% 55% / 0.4)) brightness(1.6) contrast(1.3) saturate(1.3)"
+                            ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.9)) drop-shadow(0 0 16px hsl(43 80% 55% / 0.5)) brightness(1.8) contrast(1.4) saturate(1.4)"
                             : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
                   }}
                 />
