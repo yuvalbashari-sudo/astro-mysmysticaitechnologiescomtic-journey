@@ -1,9 +1,18 @@
 import { useState, useCallback, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
+import NatalChartWheel, {
+  PLANETS,
+  calculatePlanetPositions,
+  getZodiacForAngle,
+} from "@/components/NatalChartWheel";
+import ChartLoadingRitual from "@/components/ChartLoadingRitual";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
+import {
+  Sparkles, Loader2, Copy, Check, Download,
+  Image as ImageIcon, ChevronDown, Star,
+} from "lucide-react";
 import html2canvas from "html2canvas";
 import { getZodiacSign } from "@/data/zodiacData";
 import { getRisingSign } from "@/data/risingSignData";
@@ -11,6 +20,7 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
+import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { toast } from "@/components/ui/sonner";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 
@@ -19,182 +29,15 @@ interface Props {
   onClose: () => void;
 }
 
-const ZODIAC_SIGNS = [
-  { symbol: "♈", name: "טלה", angle: 0 },
-  { symbol: "♉", name: "שור", angle: 30 },
-  { symbol: "♊", name: "תאומים", angle: 60 },
-  { symbol: "♋", name: "סרטן", angle: 90 },
-  { symbol: "♌", name: "אריה", angle: 120 },
-  { symbol: "♍", name: "בתולה", angle: 150 },
-  { symbol: "♎", name: "מאזניים", angle: 180 },
-  { symbol: "♏", name: "עקרב", angle: 210 },
-  { symbol: "♐", name: "קשת", angle: 240 },
-  { symbol: "♑", name: "גדי", angle: 270 },
-  { symbol: "♒", name: "דלי", angle: 300 },
-  { symbol: "♓", name: "דגים", angle: 330 },
-];
+type Phase = "form" | "loading" | "chart" | "result";
 
-const PLANETS = [
-  { symbol: "☉", name: "שמש", key: "sun" },
-  { symbol: "☽", name: "ירח", key: "moon" },
-  { symbol: "☿", name: "כוכב חמה", key: "mercury" },
-  { symbol: "♀", name: "נוגה", key: "venus" },
-  { symbol: "♂", name: "מאדים", key: "mars" },
-  { symbol: "♃", name: "צדק", key: "jupiter" },
-  { symbol: "♄", name: "שבתאי", key: "saturn" },
-  { symbol: "♅", name: "אורנוס", key: "uranus" },
-  { symbol: "♆", name: "נפטון", key: "neptune" },
-  { symbol: "♇", name: "פלוטו", key: "pluto" },
-];
-
-// Approximate planet positions based on birth date (simplified ephemeris)
-function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinute: number) {
-  const dayOfYear = Math.floor((birthDate.getTime() - new Date(birthDate.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-  const yearFraction = dayOfYear / 365;
-  const timeFraction = (birthHour * 60 + birthMinute) / 1440;
-  const yearsSince2000 = (birthDate.getFullYear() - 2000) + yearFraction;
-
-  return {
-    sun: (yearFraction * 360 + 280) % 360,
-    moon: (yearFraction * 360 * 13.37 + timeFraction * 360 + 120) % 360,
-    mercury: (yearFraction * 360 * 1.24 + 200) % 360,
-    venus: (yearFraction * 360 * 0.615 + 50) % 360,
-    mars: (yearFraction * 360 * 0.524 + 320) % 360,
-    jupiter: (yearFraction * 360 * 0.0843 + 150) % 360,
-    saturn: (yearFraction * 360 * 0.0339 + 240) % 360,
-    uranus: ((yearsSince2000 * 360 / 84 + 310) % 360 + 360) % 360,
-    neptune: ((yearsSince2000 * 360 / 165 + 305) % 360 + 360) % 360,
-    pluto: ((yearsSince2000 * 360 / 248 + 254) % 360 + 360) % 360,
-  };
+interface ChartData {
+  sunSign: { hebrewName: string; symbol: string; element: string };
+  risingSign: { hebrewName: string; symbol: string; element: string };
+  moonSign: string;
+  planetPositions: Record<string, number>;
+  ascendantAngle: number;
 }
-
-function getZodiacForAngle(angle: number): string {
-  const idx = Math.floor(((angle % 360 + 360) % 360) / 30);
-  return ZODIAC_SIGNS[idx].name;
-}
-
-// Zodiac Wheel SVG
-const ZodiacWheel = ({ planetPositions, ascendantAngle }: { planetPositions: Record<string, number>; ascendantAngle: number }) => {
-  const size = 340;
-  const cx = size / 2;
-  const cy = size / 2;
-  const outerR = 155;
-  const signR = 135;
-  const innerR = 115;
-  const planetR = 85;
-
-  return (
-    <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[340px] mx-auto">
-      {/* Outer glow */}
-      <defs>
-        <radialGradient id="chartGlow">
-          <stop offset="0%" stopColor="hsl(43, 80%, 55%)" stopOpacity="0.05" />
-          <stop offset="70%" stopColor="hsl(43, 80%, 55%)" stopOpacity="0.02" />
-          <stop offset="100%" stopColor="transparent" stopOpacity="0" />
-        </radialGradient>
-        <filter id="glowFilter">
-          <feGaussianBlur stdDeviation="2" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      <circle cx={cx} cy={cy} r={outerR + 10} fill="url(#chartGlow)" />
-
-      {/* Outer circle */}
-      <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="hsl(43, 80%, 55%)" strokeOpacity="0.3" strokeWidth="1.5" />
-      <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="hsl(43, 80%, 55%)" strokeOpacity="0.15" strokeWidth="1" />
-      <circle cx={cx} cy={cy} r={planetR - 15} fill="none" stroke="hsl(43, 80%, 55%)" strokeOpacity="0.1" strokeWidth="0.5" />
-
-      {/* House lines */}
-      {Array.from({ length: 12 }).map((_, i) => {
-        const angle = (i * 30 - 90 + ascendantAngle) * (Math.PI / 180);
-        const x1 = cx + innerR * Math.cos(angle);
-        const y1 = cy + innerR * Math.sin(angle);
-        const x2 = cx + outerR * Math.cos(angle);
-        const y2 = cy + outerR * Math.sin(angle);
-        return (
-          <line
-            key={`house-${i}`}
-            x1={x1} y1={y1} x2={x2} y2={y2}
-            stroke="hsl(43, 80%, 55%)"
-            strokeOpacity={i % 3 === 0 ? "0.4" : "0.15"}
-            strokeWidth={i % 3 === 0 ? "1.5" : "0.5"}
-          />
-        );
-      })}
-
-      {/* Zodiac signs */}
-      {ZODIAC_SIGNS.map((sign, i) => {
-        const angle = ((i * 30 + 15) - 90 + ascendantAngle) * (Math.PI / 180);
-        const x = cx + signR * Math.cos(angle);
-        const y = cy + signR * Math.sin(angle);
-        return (
-          <text
-            key={sign.symbol}
-            x={x} y={y}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fontSize="14"
-            fill="hsl(43, 80%, 55%)"
-            fillOpacity="0.7"
-          >
-            {sign.symbol}
-          </text>
-        );
-      })}
-
-      {/* Planets */}
-      {PLANETS.map((planet) => {
-        const pos = planetPositions[planet.key];
-        const angle = (pos - 90 + ascendantAngle) * (Math.PI / 180);
-        const x = cx + planetR * Math.cos(angle);
-        const y = cy + planetR * Math.sin(angle);
-        return (
-          <g key={planet.key} filter="url(#glowFilter)">
-            <circle cx={x} cy={y} r="12" fill="hsl(222, 40%, 10%)" stroke="hsl(43, 80%, 55%)" strokeOpacity="0.3" strokeWidth="0.5" />
-            <text
-              x={x} y={y}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize="11"
-              fill="hsl(43, 80%, 55%)"
-            >
-              {planet.symbol}
-            </text>
-          </g>
-        );
-      })}
-
-      {/* ASC marker */}
-      {(() => {
-        const angle = (ascendantAngle - 90) * (Math.PI / 180);
-        const x = cx + (outerR + 12) * Math.cos(angle);
-        const y = cy + (outerR + 12) * Math.sin(angle);
-        return (
-          <text
-            x={x} y={y}
-            textAnchor="middle"
-            dominantBaseline="central"
-            fontSize="9"
-            fontWeight="bold"
-            fill="hsl(0, 65%, 45%)"
-            filter="url(#glowFilter)"
-          >
-            ASC
-          </text>
-        );
-      })()}
-
-      {/* Center point */}
-      <circle cx={cx} cy={cy} r="3" fill="hsl(43, 80%, 55%)" fillOpacity="0.5" />
-    </svg>
-  );
-};
-
-type Phase = "form" | "loading" | "result";
 
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -202,22 +45,23 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
   const [details, setDetails] = useState<BirthDetails>({
-    userName: "", gender: mysticalProfile.getUserGender() || "", birthDate: "", birthTime: "", birthCity: "",
+    userName: "",
+    gender: mysticalProfile.getUserGender() || "",
+    birthDate: "",
+    birthTime: "",
+    birthCity: "",
   });
   const [attempted, setAttempted] = useState(false);
   const [resultText, setResultText] = useState("");
+  const [aiStreaming, setAiStreaming] = useState(false);
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const [textSize, setTextSize] = useState<TextSize>("default");
   const chartContentRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [chartData, setChartData] = useState<ChartData | null>(null);
 
-  // Chart data
-  const [chartData, setChartData] = useState<{
-    sunSign: { hebrewName: string; symbol: string; element: string };
-    risingSign: { hebrewName: string; symbol: string; element: string };
-    moonSign: string;
-    planetPositions: Record<string, number>;
-    ascendantAngle: number;
-  } | null>(null);
+  const { userName, gender, birthDate, birthTime, birthCity } = details;
 
   const handleClose = useCallback(() => {
     onClose();
@@ -225,13 +69,17 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       setPhase("form");
       setResultText("");
       setChartData(null);
-      setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" });
+      setDetails({
+        userName: "",
+        gender: mysticalProfile.getUserGender() || "",
+        birthDate: "",
+        birthTime: "",
+        birthCity: "",
+      });
       setAttempted(false);
+      setAiStreaming(false);
     }, 300);
   }, [onClose]);
-
-  // Destructure for convenience
-  const { userName, gender, birthDate, birthTime, birthCity } = details;
 
   const handleSubmit = useCallback(() => {
     setAttempted(true);
@@ -241,34 +89,48 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     }
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     if (gender) mysticalProfile.recordGender(gender);
+
+    // Calculate chart data
     const dateObj = new Date(birthDate);
     const [hour, minute] = birthTime.split(":").map(Number);
-
-    // Calculate zodiac data
     const sunSign = getZodiacSign(dateObj);
     const risingData = getRisingSign(hour, minute);
     const planetPositions = calculatePlanetPositions(dateObj, hour, minute);
     const moonSignName = getZodiacForAngle(planetPositions.moon);
     const ascendantAngle = ((hour * 60 + minute) / 1440) * 360;
 
-    const data = {
+    setChartData({
       sunSign: { hebrewName: sunSign.hebrewName, symbol: sunSign.symbol, element: sunSign.element },
-      risingSign: { hebrewName: risingData.hebrewName.replace(" עולה", ""), symbol: risingData.symbol, element: risingData.element },
+      risingSign: {
+        hebrewName: risingData.hebrewName.replace(" עולה", ""),
+        symbol: risingData.symbol,
+        element: risingData.element,
+      },
       moonSign: moonSignName,
       planetPositions,
       ascendantAngle,
-    };
-    setChartData(data);
+    });
 
-    // Record into mystical profile
+    // Record profile
     mysticalProfile.recordZodiac(sunSign.hebrewName, sunSign.symbol, sunSign.element, birthDate);
     mysticalProfile.recordRising(risingData.hebrewName, risingData.symbol, risingData.element, birthTime);
 
-    // Start AI interpretation
+    // Enter loading phase
     setPhase("loading");
-    setResultText("");
+  }, [birthDate, birthTime, birthCity, userName, gender, t]);
 
-    const planetSignsText = PLANETS.map(p => {
+  const startAIInterpretation = useCallback(() => {
+    if (!chartData) return;
+    setPhase("chart");
+    setResultText("");
+    setAiStreaming(true);
+
+    const dateObj = new Date(birthDate);
+    const [hour, minute] = birthTime.split(":").map(Number);
+    const planetPositions = chartData.planetPositions;
+    const ascendantAngle = chartData.ascendantAngle;
+
+    const planetSignsText = PLANETS.map((p) => {
       const angle = planetPositions[p.key];
       const sign = getZodiacForAngle(angle);
       const degree = Math.floor(angle % 30);
@@ -284,36 +146,38 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         birthDate,
         birthTime,
         birthCity: birthCity.trim(),
-        sunSign: sunSign.hebrewName,
-        sunSymbol: sunSign.symbol,
-        sunElement: sunSign.element,
-        risingSign: risingData.hebrewName,
-        risingSymbol: risingData.symbol,
-        risingElement: risingData.element,
-        moonSign: moonSignName,
+        sunSign: chartData.sunSign.hebrewName,
+        sunSymbol: chartData.sunSign.symbol,
+        sunElement: chartData.sunSign.element,
+        risingSign: chartData.risingSign.hebrewName,
+        risingSymbol: chartData.risingSign.symbol,
+        risingElement: chartData.risingSign.element,
+        moonSign: chartData.moonSign,
         planetPositions: planetSignsText,
         userName: userName.trim() || undefined,
         language,
         gender: userGender || undefined,
       },
-      (delta) => setResultText(prev => prev + delta),
+      (delta) => setResultText((prev) => prev + delta),
       () => {
+        setAiStreaming(false);
         setPhase("result");
         readingsStorage.save({
           type: "birth-chart",
-          title: `מפת לידה — ${sunSign.hebrewName} ${sunSign.symbol}`,
-          subtitle: `☉ ${sunSign.hebrewName} | ⬆ ${risingData.hebrewName} | ☽ ${moonSignName}`,
+          title: `מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`,
+          subtitle: `☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`,
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity },
         });
       },
       (err) => {
         toast.error(err);
+        setAiStreaming(false);
         setPhase("form");
       },
       language,
     );
-  }, [birthDate, birthTime, birthCity, t, language]);
+  }, [chartData, birthDate, birthTime, birthCity, userName, gender, language]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(resultText);
@@ -340,218 +204,398 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       toast.error(t.toast_image_download_error);
     }
     setDownloading(false);
-  }, [birthDate]);
-
-  const handleDownloadPDF = useCallback(async () => {
-    if (!chartContentRef.current) return;
-    setDownloading(true);
-    try {
-      const canvas = await html2canvas(chartContentRef.current, {
-        backgroundColor: "#0a0f1e",
-        scale: 2,
-        useCORS: true,
-      });
-      const imgData = canvas.toDataURL("image/png");
-      // Create a printable HTML page with the image
-      const printWindow = window.open("", "_blank");
-      if (printWindow) {
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html dir="${dir}">
-          <head>
-            <title>${t.birth_chart_pdf_title}</title>
-            <style>
-              body { margin: 0; padding: 20px; background: #0a0f1e; display: flex; justify-content: center; }
-              img { max-width: 100%; height: auto; }
-              @media print { body { background: white; } }
-            </style>
-          </head>
-          <body>
-            <img src="${imgData}" />
-            <script>setTimeout(() => { window.print(); window.close(); }, 500);</script>
-          </body>
-          </html>
-        `);
-        printWindow.document.close();
-      }
-      toast.success(t.toast_pdf_ready);
-    } catch {
-      toast.error(t.toast_pdf_error);
-    }
-    setDownloading(false);
-  }, []);
+  }, [birthDate, t]);
 
   if (!isOpen) return null;
 
+  const showResult = phase === "chart" || phase === "result";
+  const wheelSize = isMobile ? 320 : 420;
+
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} fullscreen={isMobile} hideAdvisor={isMobile}>
-        <div className="p-6 md:p-8">
-          {/* Header */}
-          <div className="text-center mb-6">
-            <span className="text-3xl mb-2 block">🌌</span>
-            <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-2">
-              {t.birth_chart_title}
-            </h2>
-            <p className="text-muted-foreground font-body text-sm max-w-md mx-auto">
-              {t.birth_chart_desc}
-            </p>
-          </div>
-
-          {/* Form phase */}
-          {phase === "form" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-5"
-            >
-              <BirthDetailsForm
-                values={details}
-                onChange={(patch) => setDetails(prev => ({ ...prev, ...patch }))}
-                attempted={attempted}
-                showTime={true}
-              />
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleSubmit}
-                className="btn-gold w-full text-base font-heading"
-              >
-                <Sparkles className="w-4 h-4 inline-block ml-2" />
-                {t.birth_chart_cta}
-              </motion.button>
-
-              <p className="text-center text-muted-foreground text-xs font-body">
-                {t.birth_chart_note}
-              </p>
-            </motion.div>
-          )}
-
-          {/* Loading / Result phase — show chart + text */}
-          {(phase === "loading" || phase === "result") && chartData && (
-            <motion.div
-              ref={chartContentRef}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-6"
-            >
-              {/* Chart summary badges */}
-              <div className="flex flex-wrap justify-center gap-3">
-                <span className="px-3 py-1.5 rounded-full text-xs font-body" style={{ background: "hsl(var(--gold) / 0.1)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }}>
-                  ☉ {t.birth_chart_sun}: {chartData.sunSign.hebrewName} {chartData.sunSign.symbol}
-                </span>
-                <span className="px-3 py-1.5 rounded-full text-xs font-body" style={{ background: "hsl(var(--crimson) / 0.1)", border: "1px solid hsl(var(--crimson) / 0.2)", color: "hsl(var(--crimson-light))" }}>
-                  ⬆ {t.birth_chart_rising}: {chartData.risingSign.hebrewName} {chartData.risingSign.symbol}
-                </span>
-                <span className="px-3 py-1.5 rounded-full text-xs font-body" style={{ background: "hsl(var(--celestial) / 0.1)", border: "1px solid hsl(var(--celestial) / 0.2)", color: "hsl(215, 70%, 60%)" }}>
-                  ☽ {t.birth_chart_moon}: {chartData.moonSign}
-                </span>
-              </div>
-
-              {/* Zodiac Wheel */}
+    <CinematicModalShell
+      isOpen={isOpen}
+      onClose={handleClose}
+      fullscreen={isMobile}
+      hideAdvisor={isMobile}
+    >
+      <div
+        ref={scrollRef}
+        className={showResult ? "overflow-y-auto max-h-[90vh] scrollbar-hide" : ""}
+      >
+        <div ref={chartContentRef} className="p-4 md:p-8">
+          <AnimatePresence mode="wait">
+            {/* ════════ FORM PHASE ════════ */}
+            {phase === "form" && (
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="relative"
+                key="form"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="max-w-lg mx-auto"
               >
-                <div className="animate-pulse-glow rounded-full mx-auto" style={{ width: "fit-content" }}>
-                  <ZodiacWheel
-                    planetPositions={chartData.planetPositions}
-                    ascendantAngle={chartData.ascendantAngle}
-                  />
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <motion.div
+                    className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center"
+                    style={{
+                      background: "radial-gradient(circle, hsl(var(--gold) / 0.12), transparent)",
+                      border: "1px solid hsl(var(--gold) / 0.18)",
+                    }}
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px hsl(43 80% 55% / 0.08)",
+                        "0 0 50px hsl(43 80% 55% / 0.2)",
+                        "0 0 20px hsl(43 80% 55% / 0.08)",
+                      ],
+                    }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                  >
+                    <span className="text-3xl">🌌</span>
+                  </motion.div>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">
+                    {t.birth_chart_title}
+                  </h2>
+                  <p
+                    className="font-body text-sm max-w-md mx-auto leading-relaxed"
+                    style={{ color: "hsl(var(--foreground) / 0.6)" }}
+                  >
+                    {t.birth_chart_desc}
+                  </p>
                 </div>
 
-                {/* Planet positions grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
-                  {PLANETS.map(p => {
+                {/* Form */}
+                <div className="space-y-5">
+                  <BirthDetailsForm
+                    values={details}
+                    onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
+                    attempted={attempted}
+                    showTime={true}
+                  />
+
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleSubmit}
+                    className="btn-gold w-full text-base font-heading flex items-center justify-center gap-2"
+                  >
+                    <Sparkles className="w-5 h-5" />
+                    {t.birth_chart_cta}
+                  </motion.button>
+
+                  <p
+                    className="text-center text-xs font-body"
+                    style={{ color: "hsl(var(--foreground) / 0.35)" }}
+                  >
+                    {t.birth_chart_note}
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ════════ LOADING RITUAL ════════ */}
+            {phase === "loading" && (
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <ChartLoadingRitual
+                  userName={userName.trim() || undefined}
+                  onComplete={startAIInterpretation}
+                />
+              </motion.div>
+            )}
+
+            {/* ════════ CHART + RESULT PHASE ════════ */}
+            {showResult && chartData && (
+              <motion.div
+                key="result"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="space-y-8"
+              >
+                {/* ── Premium Header ── */}
+                <div className="text-center">
+                  {userName.trim() && (
+                    <motion.p
+                      className="font-body text-sm mb-2"
+                      style={{ color: "hsl(var(--gold) / 0.5)" }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      {language === "he"
+                        ? `מפת הלידה של ${userName.trim()}`
+                        : `${userName.trim()}'s Birth Chart`}
+                    </motion.p>
+                  )}
+                  <motion.h2
+                    className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    {t.birth_chart_title}
+                  </motion.h2>
+                  <motion.p
+                    className="font-body text-xs"
+                    style={{ color: "hsl(var(--foreground) / 0.4)" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    {birthCity} • {birthDate} • {birthTime}
+                  </motion.p>
+                </div>
+
+                {/* ── Triad badges ── */}
+                <motion.div
+                  className="flex flex-wrap justify-center gap-3"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <div
+                    className="px-4 py-2 rounded-full font-body text-xs flex items-center gap-2"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.03))",
+                      border: "1px solid hsl(var(--gold) / 0.2)",
+                      color: "hsl(var(--gold))",
+                    }}
+                  >
+                    <span>☉</span>
+                    {t.birth_chart_sun}: {chartData.sunSign.hebrewName} {chartData.sunSign.symbol}
+                  </div>
+                  <div
+                    className="px-4 py-2 rounded-full font-body text-xs flex items-center gap-2"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--crimson) / 0.02))",
+                      border: "1px solid hsl(var(--crimson) / 0.2)",
+                      color: "hsl(var(--crimson-light))",
+                    }}
+                  >
+                    <span>⬆</span>
+                    {t.birth_chart_rising}: {chartData.risingSign.hebrewName} {chartData.risingSign.symbol}
+                  </div>
+                  <div
+                    className="px-4 py-2 rounded-full font-body text-xs flex items-center gap-2"
+                    style={{
+                      background: "linear-gradient(135deg, hsl(var(--celestial) / 0.08), hsl(var(--celestial) / 0.02))",
+                      border: "1px solid hsl(var(--celestial) / 0.2)",
+                      color: "hsl(215, 70%, 60%)",
+                    }}
+                  >
+                    <span>☽</span>
+                    {t.birth_chart_moon}: {chartData.moonSign}
+                  </div>
+                </motion.div>
+
+                {/* ── Natal Chart Wheel ── */}
+                <motion.div
+                  className="flex justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <div
+                    className="rounded-full p-4"
+                    style={{
+                      background: "radial-gradient(circle, hsl(222 47% 8% / 0.8), transparent 80%)",
+                    }}
+                  >
+                    <NatalChartWheel
+                      planetPositions={chartData.planetPositions}
+                      ascendantAngle={chartData.ascendantAngle}
+                      size={wheelSize}
+                    />
+                  </div>
+                </motion.div>
+
+                {/* ── Planet positions grid ── */}
+                <motion.div
+                  className="grid grid-cols-2 sm:grid-cols-5 gap-2"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 }}
+                >
+                  {PLANETS.map((p) => {
                     const angle = chartData.planetPositions[p.key];
                     const sign = getZodiacForAngle(angle);
                     const degree = Math.floor(angle % 30);
-                    const house = Math.floor(((angle - chartData.ascendantAngle + 360) % 360) / 30) + 1;
+                    const house =
+                      Math.floor(
+                        ((angle - chartData.ascendantAngle + 360) % 360) / 30,
+                      ) + 1;
                     return (
                       <div
                         key={p.key}
-                        className="px-3 py-2 rounded-xl text-center"
+                        className="px-3 py-2.5 rounded-xl text-center transition-all duration-300 hover:scale-105"
                         style={{
-                          background: "hsl(var(--gold) / 0.04)",
-                          border: "1px solid hsl(var(--gold) / 0.1)",
+                          background: "linear-gradient(145deg, hsl(222 40% 10% / 0.6), hsl(222 47% 6% / 0.8))",
+                          border: `1px solid ${p.color}22`,
+                          backdropFilter: "blur(8px)",
                         }}
                       >
-                        <span className="text-base block" style={{ color: "hsl(var(--gold))" }}>{p.symbol}</span>
-                        <span className="text-xs font-body block" style={{ color: "hsl(var(--gold) / 0.8)" }}>{p.name}</span>
-                        <span className="text-xs font-body block text-muted-foreground">{sign} {degree}°</span>
-                        <span className="text-[10px] font-body block text-muted-foreground/60">בית {house}</span>
+                        <span
+                          className="text-lg block"
+                          style={{ color: p.color, filter: `drop-shadow(0 0 4px ${p.color}44)` }}
+                        >
+                          {p.symbol}
+                        </span>
+                        <span
+                          className="text-xs font-body block"
+                          style={{ color: p.color, opacity: 0.8 }}
+                        >
+                          {p.name}
+                        </span>
+                        <span
+                          className="text-xs font-body block"
+                          style={{ color: "hsl(var(--foreground) / 0.55)" }}
+                        >
+                          {sign} {degree}°
+                        </span>
+                        <span
+                          className="text-[10px] font-body block"
+                          style={{ color: "hsl(var(--foreground) / 0.3)" }}
+                        >
+                          {language === "he" ? `בית ${house}` : `House ${house}`}
+                        </span>
                       </div>
                     );
                   })}
+                </motion.div>
+
+                {/* ── Divider ── */}
+                <div className="flex items-center justify-center gap-3 py-4">
+                  <div
+                    className="h-px flex-1 max-w-[80px]"
+                    style={{
+                      background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2))",
+                    }}
+                  />
+                  <Star
+                    className="w-4 h-4"
+                    style={{ color: "hsl(var(--gold) / 0.25)" }}
+                  />
+                  <div
+                    className="h-px flex-1 max-w-[80px]"
+                    style={{
+                      background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.2))",
+                    }}
+                  />
                 </div>
-              </motion.div>
 
-              <div className="section-divider max-w-[120px] mx-auto" />
-
-              {/* AI Interpretation */}
-              {phase === "loading" && !resultText && (
-                <div className="text-center py-8">
-                  <Loader2 className="w-8 h-8 text-gold animate-spin mx-auto mb-3" />
-                  <p className="text-muted-foreground text-sm font-body">{t.birth_chart_loading}</p>
-                </div>
-              )}
-
-              {resultText && (
+                {/* ── Interpretation heading ── */}
                 <motion.div
+                  className="text-center"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="mystical-card p-5 md:p-6"
+                  transition={{ delay: 1.1 }}
                 >
-                  {renderMysticalText(resultText)}
+                  <h3
+                    className="font-heading text-lg md:text-xl mb-1"
+                    style={{ color: "hsl(var(--gold) / 0.8)" }}
+                  >
+                    {language === "he" ? "הפירוש האישי שלך" : "Your Personal Interpretation"}
+                  </h3>
+                  <p
+                    className="font-body text-xs"
+                    style={{ color: "hsl(var(--foreground) / 0.35)" }}
+                  >
+                    {language === "he"
+                      ? "ניתוח מעמיק של כל כוכבי הלכת במפת הלידה שלך"
+                      : "In-depth analysis of all planets in your natal chart"}
+                  </p>
                 </motion.div>
-              )}
 
-              {/* Actions */}
-              {phase === "result" && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-4"
-                >
-                  <div className="flex flex-wrap justify-center gap-3">
-                    <button
-                      onClick={handleCopy}
-                      className="btn-outline-gold flex items-center gap-3 text-base px-6 py-3"
+                {/* ── Text size control ── */}
+                <div className="flex justify-end">
+                  <TextSizeControl value={textSize} onChange={setTextSize} />
+                </div>
+
+                {/* ── AI Interpretation ── */}
+                {aiStreaming && !resultText && (
+                  <div className="text-center py-8">
+                    <Loader2
+                      className="w-8 h-8 animate-spin mx-auto mb-3"
+                      style={{ color: "hsl(var(--gold))" }}
+                    />
+                    <p
+                      className="font-body text-sm"
+                      style={{ color: "hsl(var(--foreground) / 0.5)" }}
                     >
-                      {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                      {copied ? t.forecast_copied : t.forecast_copy}
-                    </button>
-                    <button
-                      onClick={handleDownloadImage}
-                      disabled={downloading}
-                      className="btn-outline-gold flex items-center gap-3 text-base px-6 py-3"
-                    >
-                      {downloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ImageIcon className="w-5 h-5" />}
-                      {t.birth_chart_save_image}
-                    </button>
-                    <button
-                      onClick={handleDownloadPDF}
-                      disabled={downloading}
-                      className="btn-outline-gold flex items-center gap-3 text-base px-6 py-3"
-                    >
-                      {downloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
-                      {t.birth_chart_save_pdf}
-                    </button>
+                      {t.birth_chart_loading}
+                    </p>
                   </div>
+                )}
 
-                  <ShareResultSection
-                    symbol="🌌"
-                    title={`מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`}
-                    subtitle={`☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`}
-                    readingText={resultText || undefined}
-                  />
-                </motion.div>
-              )}
-            </motion.div>
-          )}
+                {resultText && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="mystical-card p-5 md:p-8"
+                    style={{
+                      boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        textShadow:
+                          "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)",
+                      }}
+                    >
+                      {renderMysticalText(resultText, textSize)}
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* ── Action buttons ── */}
+                {phase === "result" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-5 pb-8"
+                  >
+                    <div className="flex flex-wrap justify-center gap-3">
+                      <button
+                        onClick={handleCopy}
+                        className="btn-outline-gold flex items-center gap-2 text-sm px-5 py-2.5"
+                      >
+                        {copied ? (
+                          <Check className="w-4 h-4" />
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
+                        {copied ? t.forecast_copied : t.forecast_copy}
+                      </button>
+                      <button
+                        onClick={handleDownloadImage}
+                        disabled={downloading}
+                        className="btn-outline-gold flex items-center gap-2 text-sm px-5 py-2.5"
+                      >
+                        {downloading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <ImageIcon className="w-4 h-4" />
+                        )}
+                        {t.birth_chart_save_image}
+                      </button>
+                    </div>
+
+                    <ShareResultSection
+                      symbol="🌌"
+                      title={`מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`}
+                      subtitle={`☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`}
+                      readingText={resultText || undefined}
+                    />
+                  </motion.div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
+      </div>
     </CinematicModalShell>
   );
 };
