@@ -292,7 +292,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         planetPositions: planetSignsText,
         userName: userName.trim() || undefined,
         language,
-        gender: gender || undefined,
+        gender: userGender || undefined,
       },
       (delta) => setResultText(prev => prev + delta),
       () => {
