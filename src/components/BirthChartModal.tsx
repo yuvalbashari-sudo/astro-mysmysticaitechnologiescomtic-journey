@@ -468,7 +468,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </div>
 
               {/* Birth City */}
-              <div>
+              <div className="rounded-xl p-3 sm:p-0" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                 <label className="block text-gold font-heading text-sm mb-2">
                   {t.birth_chart_city_label} ✦
                 </label>
@@ -477,7 +477,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   value={birthCity}
                   onChange={(e) => setBirthCity(e.target.value)}
                   placeholder={t.birth_chart_city_placeholder}
-                  className="mystical-input"
+                  className="mystical-input block w-full"
                   maxLength={100}
                   required
                 />
