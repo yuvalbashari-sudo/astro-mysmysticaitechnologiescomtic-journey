@@ -357,9 +357,9 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         }}
       >
         <video
-          ref={videoARef}
-          autoPlay muted playsInline preload="auto"
-          src="/videos/cosmic-ball.mp4"
+          ref={videoRef}
+          autoPlay loop muted playsInline preload="auto"
+          src="/videos/cosmic-ball-loop.mp4"
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             clipPath: "circle(34.5% at 50% 50%)",
@@ -397,10 +397,8 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      <video ref={videoARef} autoPlay muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.a }} />
-      <video ref={videoBRef} muted playsInline preload="auto" src="/videos/cosmic-ball.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase, opacity: opacity.b }} />
+      <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
+        className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{
