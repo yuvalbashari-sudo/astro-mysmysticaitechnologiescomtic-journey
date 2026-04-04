@@ -467,10 +467,18 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 />
               </div>
 
-              {/* Birth City */}
-              <div className="rounded-xl p-3 sm:p-0" style={{ background: "hsl(var(--gold) / 0.04)", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+              {/* Birth City — CRITICAL: must appear between time and submit */}
+              <div 
+                data-testid="birth-city-field"
+                className="rounded-xl p-4"
+                style={{ 
+                  background: "hsl(var(--gold) / 0.06)", 
+                  border: "1px solid hsl(var(--gold) / 0.2)",
+                  minHeight: "80px",
+                }}
+              >
                 <label className="block text-gold font-heading text-sm mb-2">
-                  {t.birth_chart_city_label} ✦
+                  ✦ {t.birth_chart_city_label}
                 </label>
                 <input
                   type="text"
@@ -478,7 +486,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   onChange={(e) => setBirthCity(e.target.value)}
                   placeholder={t.birth_chart_city_placeholder}
                   className="mystical-input block w-full"
+                  style={{ minHeight: "48px", fontSize: "16px" }}
                   maxLength={100}
+                  autoComplete="off"
                   required
                 />
               </div>
