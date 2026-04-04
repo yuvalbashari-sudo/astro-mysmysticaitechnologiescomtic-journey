@@ -2709,10 +2709,6 @@ const HeroSection = () => {
                 opacity: 0.2,
               }}
             />
-            {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
-            <div style={{ position: 'absolute', zIndex: 25, pointerEvents: 'none', width: 300, height: 300, top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
-              <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
-            </div>
             <CrystalBallEnergy isMobile={isMobile} />
             <motion.div
               ref={crystalRef}
@@ -2953,6 +2949,14 @@ const HeroSection = () => {
         </div>
       )}
 
+      {/* ── ArcanePortalRing — ABOVE hands overlay on mobile ── */}
+      {isMobile && (
+        <div className="absolute inset-0 pointer-events-none z-[23] flex items-center justify-center">
+          <div style={{ width: 300, height: 300, marginTop: "196px", marginLeft: "10px" }}>
+            <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
+          </div>
+        </div>
+      )}
 
       {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
       {entranceComplete && (
