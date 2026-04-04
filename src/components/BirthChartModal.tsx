@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
 import html2canvas from "html2canvas";
@@ -199,6 +200,7 @@ type Phase = "form" | "loading" | "result";
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
+  const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
@@ -382,7 +384,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} fullscreen={isMobile} hideAdvisor={isMobile}>
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="text-center mb-6">
