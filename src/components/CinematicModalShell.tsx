@@ -258,7 +258,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
               {!wide && (
                 <div
                   className="pointer-events-none"
-                  style={{ height: isMobile ? "28vh" : "38vh" }}
+                  style={{ height: isMobile ? "18vh" : "38vh" }}
                   aria-hidden="true"
                 />
               )}
