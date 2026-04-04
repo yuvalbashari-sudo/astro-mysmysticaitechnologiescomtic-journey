@@ -313,82 +313,16 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const s = isMobile ? 232 : 490;
-  const videoARef = useRef<HTMLVideoElement>(null);
-  const videoBRef = useRef<HTMLVideoElement>(null);
-  const activeRef = useRef<"a" | "b">("a");
-  const [opacity, setOpacity] = useState<{ a: number; b: number }>({ a: 1, b: 0 });
-  const directionRef = useRef<1 | -1>(1); // 1 = forward, -1 = backward (ping-pong)
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const vA = videoARef.current;
-    const vB = videoBRef.current;
-    if (!vA || !vB) return;
-    vA.playbackRate = 0.5;
-    vB.playbackRate = 0.5;
-
-    // Pre-load standby at a safe point
-    vB.currentTime = 0.15;
-
-    // Ping-pong: when video nears end, reverse; when nears start, go forward
-    const pingPong = (video: HTMLVideoElement) => {
-      if (!video.duration || video.paused) return;
-      const t = video.currentTime;
-      const dur = video.duration;
-      if (directionRef.current === 1 && t >= dur - 0.15) {
-        // Reached end → reverse
-        directionRef.current = -1;
-        video.playbackRate = -0.5; // negative not supported — use manual stepping
-      } else if (directionRef.current === -1 && t <= 0.15) {
-        // Reached start → forward
-        directionRef.current = 1;
-        video.playbackRate = 0.5;
-        video.play().catch(() => {});
-      }
-    };
-
-    // Not all browsers support negative playbackRate, so use requestAnimationFrame for reverse
-    let rafId: number;
-    let lastTime = -1;
-    const step = (timestamp: number) => {
-      if (lastTime < 0) { lastTime = timestamp; rafId = requestAnimationFrame(step); return; }
-      const video = vA; // always use single video
-      if (!video.duration) { lastTime = timestamp; rafId = requestAnimationFrame(step); return; }
-
-      const delta = (timestamp - lastTime) / 1000; // seconds
-      lastTime = timestamp;
-
-      if (directionRef.current === 1) {
-        // Forward: native playback
-        if (video.paused) video.play().catch(() => {});
-        if (video.currentTime >= video.duration - 0.08) {
-          directionRef.current = -1;
-          video.pause();
-        }
-      } else {
-        // Reverse: manual frame stepping
-        if (!video.paused) video.pause();
-        const newTime = video.currentTime - delta * 0.5;
-        if (newTime <= 0.08) {
-          video.currentTime = 0.08;
-          directionRef.current = 1;
-          video.playbackRate = 0.5;
-          video.play().catch(() => {});
-        } else {
-          video.currentTime = newTime;
-        }
-      }
-
-      rafId = requestAnimationFrame(step);
-    };
-
-    vA.loop = false;
-    vB.loop = false;
-    vA.playbackRate = 0.5;
-    vA.play().catch(() => {});
-
-    rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
-  }, [isMobile]);
+    const v = videoRef.current;
+    if (!v) return;
+    // The pre-built ping-pong video already contains forward+reverse at 0.5x speed
+    // Just play it natively with loop — no runtime manipulation needed
+    v.playbackRate = 1;
+    v.play().catch(() => {});
+  }, []);
 
   const vidBase: React.CSSProperties = {
     objectFit: "cover",
