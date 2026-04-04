@@ -42,13 +42,17 @@ const PLANETS = [
   { symbol: "♂", name: "מאדים", key: "mars" },
   { symbol: "♃", name: "צדק", key: "jupiter" },
   { symbol: "♄", name: "שבתאי", key: "saturn" },
+  { symbol: "♅", name: "אורנוס", key: "uranus" },
+  { symbol: "♆", name: "נפטון", key: "neptune" },
+  { symbol: "♇", name: "פלוטו", key: "pluto" },
 ];
 
-// Approximate planet positions based on birth date (simplified)
+// Approximate planet positions based on birth date (simplified ephemeris)
 function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinute: number) {
   const dayOfYear = Math.floor((birthDate.getTime() - new Date(birthDate.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
   const yearFraction = dayOfYear / 365;
   const timeFraction = (birthHour * 60 + birthMinute) / 1440;
+  const yearsSince2000 = (birthDate.getFullYear() - 2000) + yearFraction;
 
   return {
     sun: (yearFraction * 360 + 280) % 360,
@@ -58,6 +62,9 @@ function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinut
     mars: (yearFraction * 360 * 0.524 + 320) % 360,
     jupiter: (yearFraction * 360 * 0.0843 + 150) % 360,
     saturn: (yearFraction * 360 * 0.0339 + 240) % 360,
+    uranus: ((yearsSince2000 * 360 / 84 + 310) % 360 + 360) % 360,
+    neptune: ((yearsSince2000 * 360 / 165 + 305) % 360 + 360) % 360,
+    pluto: ((yearsSince2000 * 360 / 248 + 254) % 360 + 360) % 360,
   };
 }
 
