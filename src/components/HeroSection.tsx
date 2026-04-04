@@ -791,16 +791,7 @@ const ZodiacWheel = ({
   const { language } = useLanguage();
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
-  const radius = isMobile ? 145 : 610;
-      if (currentKey !== influenceKey) {
-        setInfluenceKey(currentKey);
-        setPlanetaryInfluence(getDailyInfluence());
-      }
-    };
-    // Check every 30 seconds near midnight
-    const id = setInterval(checkMidnight, 30_000);
-    return () => clearInterval(id);
-  }, [influenceKey]);
+  const radius = isMobile ? 189 : 610;
 
   // Dismiss teaser on touch outside (mobile)
   useEffect(() => {
