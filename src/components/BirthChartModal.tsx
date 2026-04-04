@@ -42,13 +42,17 @@ const PLANETS = [
   { symbol: "♂", name: "מאדים", key: "mars" },
   { symbol: "♃", name: "צדק", key: "jupiter" },
   { symbol: "♄", name: "שבתאי", key: "saturn" },
+  { symbol: "♅", name: "אורנוס", key: "uranus" },
+  { symbol: "♆", name: "נפטון", key: "neptune" },
+  { symbol: "♇", name: "פלוטו", key: "pluto" },
 ];
 
-// Approximate planet positions based on birth date (simplified)
+// Approximate planet positions based on birth date (simplified ephemeris)
 function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinute: number) {
   const dayOfYear = Math.floor((birthDate.getTime() - new Date(birthDate.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
   const yearFraction = dayOfYear / 365;
   const timeFraction = (birthHour * 60 + birthMinute) / 1440;
+  const yearsSince2000 = (birthDate.getFullYear() - 2000) + yearFraction;
 
   return {
     sun: (yearFraction * 360 + 280) % 360,
@@ -58,6 +62,9 @@ function calculatePlanetPositions(birthDate: Date, birthHour: number, birthMinut
     mars: (yearFraction * 360 * 0.524 + 320) % 360,
     jupiter: (yearFraction * 360 * 0.0843 + 150) % 360,
     saturn: (yearFraction * 360 * 0.0339 + 240) % 360,
+    uranus: ((yearsSince2000 * 360 / 84 + 310) % 360 + 360) % 360,
+    neptune: ((yearsSince2000 * 360 / 165 + 305) % 360 + 360) % 360,
+    pluto: ((yearsSince2000 * 360 / 248 + 254) % 360 + 360) % 360,
   };
 }
 
@@ -225,7 +232,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   }, [onClose]);
 
   const handleSubmit = useCallback(() => {
-    if (!birthDate || !birthTime) {
+    if (!birthDate || !birthTime || !birthCity.trim()) {
       toast.error(t.birth_chart_error_required);
       return;
     }
@@ -260,7 +267,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
     const planetSignsText = PLANETS.map(p => {
       const angle = planetPositions[p.key];
-      return `${p.name} (${p.symbol}): ${getZodiacForAngle(angle)}`;
+      const sign = getZodiacForAngle(angle);
+      const degree = Math.floor(angle % 30);
+      const house = Math.floor(((angle - ascendantAngle + 360) % 360) / 30) + 1;
+      return `${p.name} (${p.symbol}): ${sign} ${degree}° — בית ${house}`;
     }).join("\n");
 
     streamMysticalReading(
@@ -268,7 +278,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       {
         birthDate,
         birthTime,
-        birthCity: birthCity || "לא צוינה",
+        birthCity: birthCity.trim(),
         sunSign: sunSign.hebrewName,
         sunSymbol: sunSign.symbol,
         sunElement: sunSign.element,
@@ -277,6 +287,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         risingElement: risingData.element,
         moonSign: moonSignName,
         planetPositions: planetSignsText,
+        userName: userName.trim() || undefined,
       },
       (delta) => setResultText(prev => prev + delta),
       () => {
@@ -477,13 +488,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   />
                 </div>
 
-                {/* Planet legend */}
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  {PLANETS.map(p => (
-                    <span key={p.key} className="text-xs text-muted-foreground font-body">
-                      {p.symbol} {p.name}: {getZodiacForAngle(chartData.planetPositions[p.key])}
-                    </span>
-                  ))}
+                {/* Planet positions grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
+                  {PLANETS.map(p => {
+                    const angle = chartData.planetPositions[p.key];
+                    const sign = getZodiacForAngle(angle);
+                    const degree = Math.floor(angle % 30);
+                    const house = Math.floor(((angle - chartData.ascendantAngle + 360) % 360) / 30) + 1;
+                    return (
+                      <div
+                        key={p.key}
+                        className="px-3 py-2 rounded-xl text-center"
+                        style={{
+                          background: "hsl(var(--gold) / 0.04)",
+                          border: "1px solid hsl(var(--gold) / 0.1)",
+                        }}
+                      >
+                        <span className="text-base block" style={{ color: "hsl(var(--gold))" }}>{p.symbol}</span>
+                        <span className="text-xs font-body block" style={{ color: "hsl(var(--gold) / 0.8)" }}>{p.name}</span>
+                        <span className="text-xs font-body block text-muted-foreground">{sign} {degree}°</span>
+                        <span className="text-[10px] font-body block text-muted-foreground/60">בית {house}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </motion.div>
 
