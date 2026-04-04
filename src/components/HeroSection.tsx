@@ -312,7 +312,7 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 
 /* ── Crystal Ball Internal Energy — Premium Video Sphere ──────────── */
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
-  const s = isMobile ? 332 : 490;
+  const s = isMobile ? 232 : 490;
   const videoARef = useRef<HTMLVideoElement>(null);
   const videoBRef = useRef<HTMLVideoElement>(null);
   const activeRef = useRef<"a" | "b">("a");
