@@ -2949,6 +2949,14 @@ const HeroSection = () => {
         </div>
       )}
 
+      {/* ── ArcanePortalRing — ABOVE hands overlay on mobile ── */}
+      {isMobile && (
+        <div className="absolute inset-0 pointer-events-none z-[23] flex items-center justify-center">
+          <div style={{ width: 300, height: 300, marginTop: "196px", marginLeft: "10px" }}>
+            <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
+          </div>
+        </div>
+      )}
 
       {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
       {entranceComplete && (
