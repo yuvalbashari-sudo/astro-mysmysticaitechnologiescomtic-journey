@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import CinematicModalShell from "@/components/CinematicModalShell";
-import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Calendar, Clock, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
