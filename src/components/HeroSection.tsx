@@ -845,7 +845,7 @@ const ZodiacWheel = ({
         transform: `translate(-50%, -50%) translateY(${isMobile ? 0 : 40}px)`,
       }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: isMobile ? 1 : 1 }}
       transition={{ duration: 2, delay: 1.5 }}
     >
       {/* Slowly rotating container — pauses on hover */}
@@ -1058,7 +1058,7 @@ const ZodiacWheel = ({
                         : isHighlighted
                           ? "drop-shadow(0 0 12px hsl(43 80% 55% / 0.8)) drop-shadow(0 0 4px hsl(43 80% 55% / 0.5))"
                           : isMobile
-                            ? "drop-shadow(0 0 6px hsl(43 80% 55% / 0.7)) drop-shadow(0 0 12px hsl(43 80% 55% / 0.4)) brightness(1.6) contrast(1.3) saturate(1.3)"
+                            ? "drop-shadow(0 0 8px hsl(43 80% 55% / 0.9)) drop-shadow(0 0 16px hsl(43 80% 55% / 0.5)) brightness(1.8) contrast(1.4) saturate(1.4)"
                             : "drop-shadow(0 0 6px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 2px hsl(43 80% 55% / 0.25))",
                   }}
                 />
@@ -2710,7 +2710,7 @@ const HeroSection = () => {
               }}
             />
             {/* ZodiacWheel moved to separate z-[18] layer for hover visibility */}
-            <div className="absolute z-[23] pointer-events-none" style={{ width: 300, height: 300, top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+            <div style={{ position: 'absolute', zIndex: 25, pointerEvents: 'none', width: 300, height: 300, top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
               <ArcanePortalRing isMobile={isMobile} activeColor={activeColor} />
             </div>
             <CrystalBallEnergy isMobile={isMobile} />
@@ -2957,7 +2957,7 @@ const HeroSection = () => {
       {/* ── Zodiac Wheel — separate layer ABOVE hero figure for hover interactivity ── */}
       {entranceComplete && (
         <div
-          className={`absolute inset-0 pointer-events-none z-[18] flex ${isMobile ? "items-center" : "items-start"} justify-center`}
+          className={`absolute inset-0 pointer-events-none ${isMobile ? "z-[24]" : "z-[18]"} flex ${isMobile ? "items-center" : "items-start"} justify-center`}
           style={{ paddingTop: isMobile ? "calc(5vh + 192px)" : "633px" }}
         >
           <div className={`w-full h-full flex ${isMobile ? "items-center" : "items-start"} justify-center`}>
