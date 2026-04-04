@@ -792,6 +792,26 @@ const ZodiacWheel = ({
   const t = useT();
   const [hoveredSign, setHoveredSign] = useState<number | null>(null);
   const radius = isMobile ? 189 : 610;
+  const iconSize = isMobile ? 48 : 80;
+  const [planetaryInfluence, setPlanetaryInfluence] = useState<PlanetaryInfluence>(getDailyInfluence());
+  const [influenceKey, setInfluenceKey] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+  });
+
+  // Refresh planetary influence at midnight
+  useEffect(() => {
+    const checkMidnight = () => {
+      const now = new Date();
+      const currentKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+      if (currentKey !== influenceKey) {
+        setInfluenceKey(currentKey);
+        setPlanetaryInfluence(getDailyInfluence());
+      }
+    };
+    const id = setInterval(checkMidnight, 30_000);
+    return () => clearInterval(id);
+  }, [influenceKey]);
 
   // Dismiss teaser on touch outside (mobile)
   useEffect(() => {
