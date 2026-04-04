@@ -348,42 +348,42 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
 
     // Not all browsers support negative playbackRate, so use requestAnimationFrame for reverse
     let rafId: number;
-    let lastTime = 0;
+    let lastTime = -1;
     const step = (timestamp: number) => {
-      const video = activeRef.current === "a" ? vA : vB;
-      if (!video.duration) { rafId = requestAnimationFrame(step); return; }
+      if (lastTime < 0) { lastTime = timestamp; rafId = requestAnimationFrame(step); return; }
+      const video = vA; // always use single video
+      if (!video.duration) { lastTime = timestamp; rafId = requestAnimationFrame(step); return; }
 
-      if (directionRef.current === -1) {
-        // Manual reverse: pause native playback, step backward
-        if (!video.paused) video.pause();
-        const delta = timestamp - lastTime;
-        if (delta > 0) {
-          const stepAmount = (delta / 1000) * 0.5; // 0.5x speed
-          video.currentTime = Math.max(0.05, video.currentTime - stepAmount);
-          if (video.currentTime <= 0.1) {
-            directionRef.current = 1;
-            video.playbackRate = 0.5;
-            video.currentTime = 0.05;
-            video.play().catch(() => {});
-          }
-        }
-      } else {
-        // Forward: let native playback handle it
-        if (video.paused && video.currentTime < video.duration - 0.2) {
-          video.play().catch(() => {});
-        }
-        if (video.currentTime >= video.duration - 0.15) {
+      const delta = (timestamp - lastTime) / 1000; // seconds
+      lastTime = timestamp;
+
+      if (directionRef.current === 1) {
+        // Forward: native playback
+        if (video.paused) video.play().catch(() => {});
+        if (video.currentTime >= video.duration - 0.08) {
           directionRef.current = -1;
           video.pause();
         }
+      } else {
+        // Reverse: manual frame stepping
+        if (!video.paused) video.pause();
+        const newTime = video.currentTime - delta * 0.5;
+        if (newTime <= 0.08) {
+          video.currentTime = 0.08;
+          directionRef.current = 1;
+          video.playbackRate = 0.5;
+          video.play().catch(() => {});
+        } else {
+          video.currentTime = newTime;
+        }
       }
-      lastTime = timestamp;
+
       rafId = requestAnimationFrame(step);
     };
 
-    // Remove loop attribute — we handle looping manually
     vA.loop = false;
     vB.loop = false;
+    vA.playbackRate = 0.5;
     vA.play().catch(() => {});
 
     rafId = requestAnimationFrame(step);
