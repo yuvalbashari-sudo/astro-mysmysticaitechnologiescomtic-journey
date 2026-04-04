@@ -845,7 +845,7 @@ const ZodiacWheel = ({
         transform: `translate(-50%, -50%) translateY(${isMobile ? 0 : 40}px)`,
       }}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: isMobile ? 1 : 1 }}
       transition={{ duration: 2, delay: 1.5 }}
     >
       {/* Slowly rotating container — pauses on hover */}
