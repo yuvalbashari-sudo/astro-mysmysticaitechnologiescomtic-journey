@@ -200,6 +200,7 @@ type Phase = "form" | "loading" | "result";
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
+  const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
