@@ -232,7 +232,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   }, [onClose]);
 
   const handleSubmit = useCallback(() => {
-    if (!birthDate || !birthTime) {
+    if (!birthDate || !birthTime || !birthCity.trim()) {
       toast.error(t.birth_chart_error_required);
       return;
     }
