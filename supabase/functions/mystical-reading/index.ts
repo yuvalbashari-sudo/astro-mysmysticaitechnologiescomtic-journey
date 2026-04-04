@@ -807,7 +807,7 @@ ${data.gender ? `\nתזכורת: כתוב את כל התשובה בלשון ${is
     const l = labels[lang] || labels["he"];
 
     return {
-      system: `${l.intro}
+      system: `${l.intro}${genderInstruction}
 ${data.userName ? (typeof l.nameNote === 'function' ? l.nameNote(data.userName) : '') : ''}
 
 ${l.guidelines}
