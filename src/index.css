@@ -236,7 +236,7 @@
   }
 
   .mystical-input {
-    @apply w-full px-4 py-3 rounded-xl text-center transition-all duration-400;
+    @apply w-full px-4 py-3 rounded-xl text-center transition-all duration-300;
     background: linear-gradient(
       145deg,
       hsl(var(--deep-blue-light) / 0.55),
