@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from "react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Loader2, Copy, Check, Download, Image as ImageIcon } from "lucide-react";
 import html2canvas from "html2canvas";
