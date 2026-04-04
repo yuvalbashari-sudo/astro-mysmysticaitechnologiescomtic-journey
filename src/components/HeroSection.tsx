@@ -399,8 +399,10 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
         WebkitMaskImage: "radial-gradient(circle, white 48%, white 48.8%, transparent 49.2%)",
       }}
     >
-      <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
-        className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
+      <div className="absolute inset-0 w-full h-full" style={{ animation: "cosmicDrift 50s ease-in-out infinite" }}>
+        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
+          className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
+      </div>
 
       {/* Soft curved glass highlight — upper left */}
       <div className="absolute pointer-events-none" style={{

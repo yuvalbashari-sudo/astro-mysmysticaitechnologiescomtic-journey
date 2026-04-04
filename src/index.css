@@ -238,6 +238,16 @@
   }
 }
 
+@keyframes cosmicDrift {
+  0%   { transform: rotate(0deg)   translate(0px, 0px)   scale(1); }
+  15%  { transform: rotate(3deg)   translate(2px, -1px)  scale(1.01); }
+  30%  { transform: rotate(1deg)   translate(-1px, 2px)  scale(1.005); }
+  50%  { transform: rotate(-2deg)  translate(-2px, -1px) scale(0.995); }
+  65%  { transform: rotate(-3deg)  translate(1px, 2px)   scale(1.01); }
+  80%  { transform: rotate(-1deg)  translate(2px, -2px)  scale(1.005); }
+  100% { transform: rotate(0deg)   translate(0px, 0px)   scale(1); }
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
