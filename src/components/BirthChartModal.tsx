@@ -384,7 +384,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} fullscreen={isMobile} hideAdvisor={isMobile}>
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="text-center mb-6">
