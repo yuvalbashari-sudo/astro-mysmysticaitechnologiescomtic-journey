@@ -230,7 +230,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       hideAdvisor={isMobile}
       wide={showResult && !isMobile}
     >
-      <div dir="rtl" className={showResult ? "overflow-y-auto max-h-[100dvh]" : ""}>
+      <div dir="rtl">
         <div ref={chartContentRef} className="p-4 md:p-8">
           <AnimatePresence mode="wait">
             {phase === "form" && (
