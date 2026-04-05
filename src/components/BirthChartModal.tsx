@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
 import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star } from "lucide-react";
@@ -44,6 +44,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [downloading, setDownloading] = useState(false);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const chartContentRef = useRef<HTMLDivElement>(null);
+  const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
   const showResult = phase === "chart" || phase === "result";
@@ -58,6 +59,18 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     () => (chartData?.dominantElements || []).slice(0, 3).map(({ element, count }) => `${element} (${count})`).join(" • "),
     [chartData],
   );
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const frame = requestAnimationFrame(() => {
+      if (modalScrollRef.current) {
+        modalScrollRef.current.scrollTop = 0;
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [isOpen, phase]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -212,6 +225,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     <CinematicModalShell
       isOpen={isOpen}
       onClose={handleClose}
+      scrollRef={modalScrollRef}
       fullscreen={isMobile}
       hideAdvisor={isMobile}
       wide={showResult && !isMobile}
@@ -299,31 +313,44 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
                 </div>
 
-                <motion.div className="grid md:grid-cols-3 gap-3" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                  <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>שמש</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {chartData.sunSign.hebrewName}</div>
-                  </div>
-                  <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>אופק / מזל עולה</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {chartData.risingSign.hebrewName}</div>
-                  </div>
-                  <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>ירח</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
-                  </div>
-                </motion.div>
-
                 <motion.div className="mystical-card-elevated rounded-[32px] p-4 md:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <div className="flex flex-col xl:flex-row items-center gap-6 xl:gap-10 justify-center">
-                    <div className="flex justify-center w-full xl:w-auto">
+                  <div className="space-y-6">
+                    <div className="text-center">
+                      <div className="font-heading text-lg md:text-2xl mb-2" style={{ color: "hsl(var(--gold) / 0.9)" }}>
+                        הגלגל האסטרולוגי האישי שלך
+                      </div>
+                      <p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--foreground) / 0.58)" }}>
+                        מפת לידה מחושבת לפי תאריך, שעה ומקום הלידה — כולל כוכבי הלכת, הבתים והאופק האישי שלך.
+                      </p>
+                    </div>
+
+                    <div
+                      className="flex justify-center items-center w-full overflow-visible"
+                      style={{ minHeight: wheelSize + (isMobile ? 24 : 48) }}
+                    >
                       <NatalChartWheel
                         planetPositions={chartData.planetPositions}
                         ascendantAngle={chartData.ascendantAngle}
                         size={wheelSize}
                       />
                     </div>
-                    <div className="w-full xl:max-w-sm space-y-4">
+
+                    <div className="grid md:grid-cols-3 gap-3 w-full">
+                      <div className="mystical-card p-4 text-center">
+                        <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>שמש</div>
+                        <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {chartData.sunSign.hebrewName}</div>
+                      </div>
+                      <div className="mystical-card p-4 text-center">
+                        <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>אופק / מזל עולה</div>
+                        <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {chartData.risingSign.hebrewName}</div>
+                      </div>
+                      <div className="mystical-card p-4 text-center">
+                        <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>ירח</div>
+                        <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
+                      </div>
+                    </div>
+
+                    <div className="grid xl:grid-cols-3 gap-4 w-full">
                       <div className="mystical-card p-4">
                         <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מיקום הלידה שחושב למפה</div>
                         <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartData.location.name}</p>
