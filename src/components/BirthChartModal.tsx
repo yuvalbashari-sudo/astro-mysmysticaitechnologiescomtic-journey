@@ -299,42 +299,40 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
             )}
 
               {showResult && (
-              <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
+              <div key="result" className="space-y-8">
                 <div className="text-center">
                   {userName.trim() && (
-                    <motion.p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
+                    <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
                       מפת הלידה של {userName.trim()}
-                    </motion.p>
+                    </p>
                   )}
-                  <motion.h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2">
+                  <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2">
                     מפת הלידה האישית שלך
-                  </motion.h2>
-                  <motion.p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
+                  </h2>
+                  <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
                       {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : "מחשבים את מיקומי הכוכבים האישיים שלך..."}
-                  </motion.p>
+                  </p>
                 </div>
 
-                <motion.div className="mystical-card-elevated rounded-[32px] p-4 md:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <div className="space-y-6">
-                    <div className="text-center">
-                      <div className="font-heading text-lg md:text-2xl mb-2" style={{ color: "hsl(var(--gold) / 0.9)" }}>
-                        הגלגל האסטרולוגי האישי שלך
-                      </div>
-                      <p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--foreground) / 0.58)" }}>
-                        מפת לידה מחושבת לפי תאריך, שעה ומקום הלידה — כולל כוכבי הלכת, הבתים והאופק האישי שלך.
-                      </p>
-                    </div>
-
-                    <div
-                      className="flex justify-center items-center w-full"
-                      style={{ minHeight: wheelSize + 40, overflow: "visible" }}
-                    >
-                      <SimpleNatalChart
-                        planetPositions={chartData?.planetPositions}
-                        ascendantAngle={chartData?.ascendantAngle}
-                        size={wheelSize}
-                      />
-                    </div>
+                {/* ── NATAL CHART — always visible, no animation wrapper ── */}
+                <div
+                  style={{
+                    width: "100%",
+                    minHeight: wheelSize + 40,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    background: "hsl(222 47% 6% / 0.7)",
+                    borderRadius: 24,
+                    padding: 16,
+                  }}
+                >
+                  <SimpleNatalChart
+                    planetPositions={chartData?.planetPositions}
+                    ascendantAngle={chartData?.ascendantAngle}
+                    size={wheelSize}
+                  />
+                </div>
 
                     {chartData && (
                     <div className="grid md:grid-cols-3 gap-3 w-full">
