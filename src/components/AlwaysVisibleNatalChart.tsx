@@ -324,10 +324,17 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
 
         {/* Inner circle with core glow */}
-        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
-          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="5s" repeatCount="indefinite" />
+        <circle cx={cx} cy={cy} r={innerR + 8} fill="url(#center-deep-core)" stroke="none">
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="6s" repeatCount="indefinite" />
         </circle>
-        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.5)" strokeWidth="1.4" />
+        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
+          <animate attributeName="opacity" values="0.5;0.9;0.5" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.55)" strokeWidth="1.5" />
+        {/* Inner ring shimmer */}
+        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(245,214,142,0.12)" strokeWidth="0.6">
+          <animate attributeName="stroke-opacity" values="0.06;0.18;0.06" dur="3.5s" repeatCount="indefinite" />
+        </circle>
 
         {/* Decorative tick marks */}
         {Array.from({ length: 72 }).map((_, i) => {
