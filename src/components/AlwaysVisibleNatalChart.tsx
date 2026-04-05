@@ -629,7 +629,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
                 fontFamily="'Cinzel', serif"
                 letterSpacing="0.15em"
               >
-                ASC
+                {labels.ascendant}
               </text>
             </g>
           );
@@ -645,7 +645,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           fontFamily="'Cinzel', serif"
           letterSpacing="0.06em"
         >
-          {chartData ? "מפת לידה" : "גלגל אסטרולוגי"}
+          {chartData ? labels.birthChart : labels.astroWheel}
         </text>
         {chartData?.sunSign && (
           <text
@@ -656,7 +656,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             fontFamily="'Heebo', sans-serif"
             letterSpacing="0.02em"
           >
-            {chartData.sunSign.symbol} {chartData.sunSign.hebrewName} • {chartData.risingSign?.symbol} {chartData.risingSign?.hebrewName} עולה
+            {chartData.sunSign.symbol} {chartData.sunSign.hebrewName} • {chartData.risingSign?.symbol} {chartData.risingSign?.hebrewName} {labels.rising}
           </text>
         )}
 
