@@ -8,7 +8,7 @@
 export interface MysticalProfileData {
   // Identity
   userName?: string;
-  gender?: "male" | "female";
+  gender?: "male" | "female" | "other" | "prefer_not_to_say";
   zodiacSign?: string;
   zodiacSymbol?: string;
   zodiacElement?: string;
@@ -133,7 +133,7 @@ function recordGender(gender: "male" | "female" | "other" | "prefer_not_to_say")
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
 }
 
-function getUserGender(): "male" | "female" | undefined {
+function getUserGender(): "male" | "female" | "other" | "prefer_not_to_say" | undefined {
   return getProfile().gender;
 }
 
