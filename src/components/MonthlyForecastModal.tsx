@@ -337,15 +337,17 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 <div className="mb-6">
                   <AlwaysVisibleNatalChart chartData={natalData} size={isMobile ? 340 : 480} />
                   {natalData && (
-                    <div dir="ltr" style={{ marginTop: 12, padding: 12, background: "rgba(0,0,0,0.6)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: 8, fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>
-                      <div style={{ color: "#F5A623", fontWeight: 700, marginBottom: 4 }}>🔧 Debug: Natal Chart Data</div>
-                      <div>📍 Place: {natalData.location.name}</div>
-                      <div>🌐 Lat: {natalData.location.latitude.toFixed(4)} | Lon: {natalData.location.longitude.toFixed(4)}</div>
-                      <div>🕐 Timezone: {natalData.location.timezone}</div>
-                      <div>⬆️ Ascendant: {natalData.ascendantAngle.toFixed(2)}°</div>
-                      <div>☉ Sun: {natalData.planetPlacements.find(p=>p.key==="sun")?.sign} {natalData.planetPlacements.find(p=>p.key==="sun")?.degree}°</div>
-                      <div>☽ Moon: {natalData.planetPlacements.find(p=>p.key==="moon")?.sign} {natalData.planetPlacements.find(p=>p.key==="moon")?.degree}°</div>
-                      <div>🏠 Houses: {natalData.houseCusps.slice(0,4).map(h=>`H${h.house}:${h.absoluteDegree.toFixed(1)}°`).join(" | ")}</div>
+                    <div dir="rtl" className="mt-4 rounded-xl p-5 text-center font-body" style={{ background: "linear-gradient(135deg, hsl(260 30% 8% / 0.85), hsl(222 47% 6% / 0.9))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)" }}>
+                      <p className="text-muted-foreground text-xs mb-4" style={{ lineHeight: 1.6 }}>מפה זו חושבה על בסיס רגע הלידה המדויק והמיקום הגיאוגרפי שלך</p>
+                      <div className="grid grid-cols-3 gap-3 mb-3">
+                        <div><span className="block text-gold/50 text-[10px] mb-0.5">☉ מזל שמש</span><span className="text-foreground text-sm font-medium">{natalData.sunSign.hebrewName} {natalData.sunSign.symbol}</span></div>
+                        <div><span className="block text-gold/50 text-[10px] mb-0.5">☽ מזל ירח</span><span className="text-foreground text-sm font-medium">{natalData.moonSign}</span></div>
+                        <div><span className="block text-gold/50 text-[10px] mb-0.5">⬆ מזל עולה</span><span className="text-foreground text-sm font-medium">{natalData.risingSign.hebrewName} {natalData.risingSign.symbol}</span></div>
+                      </div>
+                      <div className="flex items-center justify-center gap-4 text-muted-foreground text-[11px] pt-3" style={{ borderTop: "1px solid hsl(var(--gold) / 0.1)" }}>
+                        <span>📍 {natalData.location.name}</span>
+                        <span>🕐 {natalData.location.timezone}</span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -398,15 +400,17 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             <div className="mb-6">
               <AlwaysVisibleNatalChart chartData={natalData} size={320} />
               {natalData && (
-                <div dir="ltr" style={{ marginTop: 12, padding: 12, background: "rgba(0,0,0,0.6)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: 8, fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>
-                  <div style={{ color: "#F5A623", fontWeight: 700, marginBottom: 4 }}>🔧 Debug: Natal Chart Data</div>
-                  <div>📍 Place: {natalData.location.name}</div>
-                  <div>🌐 Lat: {natalData.location.latitude.toFixed(4)} | Lon: {natalData.location.longitude.toFixed(4)}</div>
-                  <div>🕐 Timezone: {natalData.location.timezone}</div>
-                  <div>⬆️ Ascendant: {natalData.ascendantAngle.toFixed(2)}°</div>
-                  <div>☉ Sun: {natalData.planetPlacements.find(p=>p.key==="sun")?.sign} {natalData.planetPlacements.find(p=>p.key==="sun")?.degree}°</div>
-                  <div>☽ Moon: {natalData.planetPlacements.find(p=>p.key==="moon")?.sign} {natalData.planetPlacements.find(p=>p.key==="moon")?.degree}°</div>
-                  <div>🏠 Houses: {natalData.houseCusps.slice(0,4).map(h=>`H${h.house}:${h.absoluteDegree.toFixed(1)}°`).join(" | ")}</div>
+                <div dir="rtl" className="mt-4 rounded-xl p-5 text-center font-body" style={{ background: "linear-gradient(135deg, hsl(260 30% 8% / 0.85), hsl(222 47% 6% / 0.9))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)" }}>
+                  <p className="text-muted-foreground text-xs mb-4" style={{ lineHeight: 1.6 }}>מפה זו חושבה על בסיס רגע הלידה המדויק והמיקום הגיאוגרפי שלך</p>
+                  <div className="grid grid-cols-3 gap-3 mb-3">
+                    <div><span className="block text-gold/50 text-[10px] mb-0.5">☉ מזל שמש</span><span className="text-foreground text-sm font-medium">{natalData.sunSign.hebrewName} {natalData.sunSign.symbol}</span></div>
+                    <div><span className="block text-gold/50 text-[10px] mb-0.5">☽ מזל ירח</span><span className="text-foreground text-sm font-medium">{natalData.moonSign}</span></div>
+                    <div><span className="block text-gold/50 text-[10px] mb-0.5">⬆ מזל עולה</span><span className="text-foreground text-sm font-medium">{natalData.risingSign.hebrewName} {natalData.risingSign.symbol}</span></div>
+                  </div>
+                  <div className="flex items-center justify-center gap-4 text-muted-foreground text-[11px] pt-3" style={{ borderTop: "1px solid hsl(var(--gold) / 0.1)" }}>
+                    <span>📍 {natalData.location.name}</span>
+                    <span>🕐 {natalData.location.timezone}</span>
+                  </div>
                 </div>
               )}
             </div>
