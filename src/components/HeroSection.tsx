@@ -12,6 +12,7 @@ import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmComingSoonModal from "./PalmComingSoonModal";
+import BirthChartModal from "./BirthChartModal";
 import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
