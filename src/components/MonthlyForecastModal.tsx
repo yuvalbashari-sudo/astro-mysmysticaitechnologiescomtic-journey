@@ -149,18 +149,15 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             >
               <div style={{ padding: "0 24px" }}>
-                <div className="flex justify-center mb-8">
-                  <ModeToggle size="large" />
-                </div>
                 <BirthDetailsForm
                   values={details}
                   onChange={updateDetails}
                   attempted={attempted}
-                  showTime={true}
+                  showTime={false}
                   size="large"
                 />
                 <div style={{ marginTop: "32px" }}>
-                  <motion.button onClick={handleSubmit} className="btn-gold font-body w-full flex items-center justify-center" style={{ fontSize: "20px", padding: "14px 0", gap: "10px" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-7 h-7" />{mode === "forecast" ? t.forecast_cta : t.rising_cta}</motion.button>
+                  <motion.button onClick={handleSubmit} className="btn-gold font-body w-full flex items-center justify-center" style={{ fontSize: "20px", padding: "14px 0", gap: "10px" }} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}><Sparkles className="w-7 h-7" />{t.forecast_cta}</motion.button>
                 </div>
               </div>
             </motion.div>
