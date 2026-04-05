@@ -66,98 +66,33 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     const date = new Date(birthDate);
     const sign = getZodiacSign(date);
 
-    if (mode === "forecast") {
-      setSignInfo({ name: sign.hebrewName, symbol: sign.symbol, dateRange: sign.dateRange, element: sign.element });
-      setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
-      mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
+    setSignInfo({ name: sign.hebrewName, symbol: sign.symbol, dateRange: sign.dateRange, element: sign.element });
+    setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
+    mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
 
-      // Calculate natal chart first, then stream AI with full planet data
-      const startForecastStream = (natalResult?: NatalChartResult | null) => {
-        const planetLines = natalResult?.planetPlacements
-          ?.map((p) => `${p.symbol} ${p.name}: ${p.sign} ${p.degree}° — בית ${p.house}`)
-          .join("\n") || "";
-        const aspectLines = natalResult?.aspects
-          ?.map((a) => `${a.label} — אורב ${a.orb}°`)
-          .join("\n") || "";
-        const houseLines = natalResult?.houseCusps
-          ?.map((h) => `בית ${h.house}: ${h.sign} ${h.degree}°`)
-          .join("\n") || "";
-        const dominantElements = natalResult?.dominantElements
-          ?.map((e) => `${e.element} (${e.count})`)
-          .join(", ") || "";
-        const dominantHouses = natalResult?.dominantHouses
-          ?.slice(0, 3)
-          .map((h) => `בית ${h.house} (${h.count})`)
-          .join(", ") || "";
-
-        streamMysticalReading(
-          "forecast",
-          {
-            signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element,
-            dateRange: sign.dateRange, monthName, gender, birthCity,
-            // Full natal chart data for deep interpretation
-            risingSign: natalResult?.risingSign?.hebrewName || "",
-            risingSymbol: natalResult?.risingSign?.symbol || "",
-            risingElement: natalResult?.risingSign?.element || "",
-            moonSign: natalResult?.moonSign || "",
-            planetPositions: planetLines,
-            majorAspects: aspectLines,
-            houseCusps: houseLines,
-            dominantElements,
-            dominantHouses,
-            ascendantAngle: natalResult?.ascendantAngle,
-            coordinates: natalResult ? `${natalResult.location.latitude.toFixed(4)}, ${natalResult.location.longitude.toFixed(4)}` : "",
-            timezone: natalResult?.location?.timezone || "",
-            hasFullChart: !!natalResult,
-          },
-          (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-          () => {
-            setAiLoading(false);
-            setActiveReading({ type: "forecast", label: `${t.readings_type_forecast} — ${sign.hebrewName}`, summary: aiTextRef.current });
-            readingsStorage.save({ type: "forecast", title: `${t.readings_type_forecast} — ${sign.hebrewName}`, subtitle: sign.dateRange, symbol: sign.symbol, data: { signName: sign.hebrewName, birthDate, birthCity, aiReading: aiTextRef.current } });
-          },
-          (err) => { setAiLoading(false); setAiError(err); toast(err); },
-          language,
-        );
-      };
-
-      if (birthTime && birthCity.trim()) {
-        calculateNatalChart({ birthDate, birthTime, birthPlace: birthCity.trim() })
-          .then((result) => { setNatalData(result); startForecastStream(result); })
-          .catch(() => startForecastStream(null));
-      } else {
-        startForecastStream(null);
-      }
-    } else {
-      // Rising sign mode
-      const [h, m] = birthTime.split(":").map(Number);
-      const rising = getRisingSign(h, m);
-      setRisingInfo({ name: rising.hebrewName, symbol: rising.symbol, element: rising.element, sunSign: sign.hebrewName, sunSymbol: sign.symbol, sunElement: sign.element });
-      setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
-
-      // Calculate natal chart in background
-      calculateNatalChart({ birthDate, birthTime, birthPlace: birthCity.trim() })
-        .then(setNatalData)
-        .catch(() => {});
-
-      mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
-      mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
-
-      streamMysticalReading("rising",
-        { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, birthCity, sunSignName: sign.hebrewName, sunSignSymbol: sign.symbol, sunElement: sign.element, gender },
-        (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-        () => {
-          setAiLoading(false);
-          setActiveReading({ type: "rising", label: `${t.readings_type_rising} — ${rising.hebrewName}`, summary: aiTextRef.current });
-          readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sign.hebrewName, birthTime, birthDate, birthCity, aiReading: aiTextRef.current } });
-        },
-        (err) => { setAiLoading(false); setAiError(err); toast(err); },
-        language,
-      );
-    }
+    streamMysticalReading(
+      "forecast",
+      {
+        signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element,
+        dateRange: sign.dateRange, monthName, gender, birthCity: "",
+        risingSign: "", risingSymbol: "", risingElement: "",
+        moonSign: "", planetPositions: "", majorAspects: "",
+        houseCusps: "", dominantElements: "", dominantHouses: "",
+        ascendantAngle: undefined, coordinates: "", timezone: "",
+        hasFullChart: false,
+      },
+      (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
+      () => {
+        setAiLoading(false);
+        setActiveReading({ type: "forecast", label: `${t.readings_type_forecast} — ${sign.hebrewName}`, summary: aiTextRef.current });
+        readingsStorage.save({ type: "forecast", title: `${t.readings_type_forecast} — ${sign.hebrewName}`, subtitle: sign.dateRange, symbol: sign.symbol, data: { signName: sign.hebrewName, birthDate, aiReading: aiTextRef.current } });
+      },
+      (err) => { setAiLoading(false); setAiError(err); toast(err); },
+      language,
+    );
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setNatalData(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; setMode("forecast"); }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setNatalData(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
