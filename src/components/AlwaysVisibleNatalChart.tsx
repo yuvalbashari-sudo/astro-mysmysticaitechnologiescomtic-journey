@@ -468,21 +468,26 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           return (
             <g filter="url(#asc-glow)">
+              {/* Subtle connecting arc */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="#E85D5D" strokeWidth="2.2"
+                stroke="rgba(232,93,93,0.7)" strokeWidth="1.8"
+              />
+              <line
+                x1={start.x} y1={start.y} x2={end.x} y2={end.y}
+                stroke="rgba(232,93,93,0.15)" strokeWidth="5"
               />
               <polygon
                 points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
-                fill="#E85D5D"
+                fill="rgba(232,93,93,0.85)"
               />
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.028} fontWeight="700"
-                fill="#E85D5D"
+                fontSize={size * 0.026} fontWeight="700"
+                fill="rgba(232,93,93,0.85)"
                 fontFamily="'Cinzel', serif"
-                letterSpacing="0.1em"
+                letterSpacing="0.12em"
               >
                 ASC
               </text>
