@@ -68,7 +68,7 @@ interface Props {
 
 const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
-  const [phase, setPhase] = useState(0); // 0=hidden, 1=reveal, 2=glow, 3=full
+  const [phase, setPhase] = useState(0);
 
   useEffect(() => {
     const t1 = setTimeout(() => setPhase(1), 80);
@@ -81,11 +81,13 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
   const cx = size / 2;
   const cy = size / 2;
 
-  const outerR   = size * 0.44;
-  const zodiacR  = size * 0.365;
-  const houseR   = size * 0.28;
-  const planetR  = size * 0.22;
-  const innerR   = size * 0.13;
+  // Expanded ring system for more depth
+  const outerR     = size * 0.46;
+  const engravingR = size * 0.42;
+  const zodiacR    = size * 0.37;
+  const houseR     = size * 0.28;
+  const planetR    = size * 0.215;
+  const innerR     = size * 0.12;
 
   const asc = chartData?.ascendantAngle != null ? normalizeAngle(chartData.ascendantAngle) : DEFAULT_ASC;
 
@@ -106,10 +108,6 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
   const handlePlanetLeave = useCallback(() => setTooltip(null), []);
 
-  // Sun/Moon for emphasis
-  const sunDeg = positions.sun;
-  const moonDeg = positions.moon;
-
   return (
     <div
       className="w-full"
@@ -127,21 +125,33 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         opacity: phase >= 1 ? 1 : 0,
         transform: phase >= 1
           ? "scale(1) rotate(0deg)"
-          : "scale(0.85) rotate(-10deg)",
-        transition: "opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.4s cubic-bezier(0.16,1,0.3,1)",
+          : "scale(0.82) rotate(-12deg)",
+        transition: "opacity 1.4s cubic-bezier(0.16,1,0.3,1), transform 1.6s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
-      {/* Ambient outer aura */}
+      {/* Multi-layer ambient aura */}
       <div
         style={{
           position: "absolute",
-          inset: "-18%",
+          inset: "-22%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(212,175,55,0.06) 35%, transparent 65%)",
+          background: "radial-gradient(circle, rgba(212,175,55,0.06) 0%, rgba(139,92,246,0.08) 25%, rgba(99,102,241,0.04) 45%, transparent 65%)",
           opacity: phase >= 2 ? 1 : 0,
-          transition: "opacity 1.8s ease-out",
+          transition: "opacity 2s ease-out",
           pointerEvents: "none",
-          animation: phase >= 3 ? "chartBreathing 7s ease-in-out infinite" : "none",
+          animation: phase >= 3 ? "chartBreathing 8s ease-in-out infinite" : "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          inset: "-12%",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(212,175,55,0.04) 0%, transparent 50%)",
+          opacity: phase >= 3 ? 1 : 0,
+          transition: "opacity 2.5s ease-out",
+          pointerEvents: "none",
+          animation: phase >= 3 ? "chartPulseGlow 5s ease-in-out infinite" : "none",
         }}
       />
 
@@ -152,21 +162,21 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           style={{
             position: "fixed",
             left: tooltip.x,
-            top: tooltip.y - 48,
+            top: tooltip.y - 52,
             transform: "translateX(-50%)",
             zIndex: 300,
             pointerEvents: "none",
-            padding: "10px 18px",
-            borderRadius: 12,
+            padding: "12px 20px",
+            borderRadius: 14,
             fontSize: 14,
             fontWeight: 600,
             color: "#F5D98E",
-            background: "linear-gradient(135deg, rgba(15,12,30,0.96), rgba(25,20,50,0.96))",
-            backdropFilter: "blur(16px)",
-            border: "1px solid rgba(212,175,55,0.35)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 20px rgba(212,175,55,0.15)",
+            background: "linear-gradient(145deg, rgba(12,10,28,0.97), rgba(22,18,45,0.97))",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(212,175,55,0.4)",
+            boxShadow: "0 12px 40px rgba(0,0,0,0.7), 0 0 24px rgba(212,175,55,0.12), inset 0 1px 0 rgba(245,214,142,0.08)",
             whiteSpace: "nowrap",
-            letterSpacing: "0.02em",
+            letterSpacing: "0.03em",
           }}
         >
           {tooltip.text}
@@ -189,103 +199,120 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         }}
       >
         <defs>
-          {/* Background gradient */}
+          {/* Deep cosmic background */}
           <radialGradient id="chart-bg-premium" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stopColor="#1a1535" />
-            <stop offset="45%" stopColor="#0f0c1e" />
-            <stop offset="100%" stopColor="#080614" />
+            <stop offset="0%" stopColor="#1e1845" />
+            <stop offset="30%" stopColor="#12102a" />
+            <stop offset="65%" stopColor="#0a0820" />
+            <stop offset="100%" stopColor="#060510" />
           </radialGradient>
 
-          {/* Outer glow */}
-          <radialGradient id="outer-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="78%" stopColor="transparent" />
-            <stop offset="90%" stopColor="rgba(212,175,55,0.07)" />
-            <stop offset="96%" stopColor="rgba(139,92,246,0.05)" />
+          {/* Multi-layer outer aura */}
+          <radialGradient id="outer-aura-1" cx="50%" cy="50%" r="52%">
+            <stop offset="75%" stopColor="transparent" />
+            <stop offset="88%" stopColor="rgba(212,175,55,0.06)" />
+            <stop offset="94%" stopColor="rgba(139,92,246,0.05)" />
             <stop offset="100%" stopColor="rgba(212,175,55,0.02)" />
           </radialGradient>
-
-          {/* Celestial ambient */}
-          <radialGradient id="celestial-ambient" cx="50%" cy="35%" r="60%">
-            <stop offset="0%" stopColor="rgba(99,102,241,0.1)" />
-            <stop offset="50%" stopColor="rgba(139,92,246,0.05)" />
+          <radialGradient id="outer-aura-2" cx="45%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="rgba(99,102,241,0.07)" />
+            <stop offset="40%" stopColor="rgba(139,92,246,0.03)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
-          {/* Inner core glow — deeper energy */}
+          {/* Inner core - deep cosmic energy */}
           <radialGradient id="inner-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.18)" />
-            <stop offset="30%" stopColor="rgba(139,92,246,0.08)" />
-            <stop offset="65%" stopColor="rgba(15,12,30,0.98)" />
+            <stop offset="0%" stopColor="rgba(212,175,55,0.22)" />
+            <stop offset="20%" stopColor="rgba(245,214,142,0.12)" />
+            <stop offset="40%" stopColor="rgba(139,92,246,0.1)" />
+            <stop offset="70%" stopColor="rgba(15,12,30,0.98)" />
             <stop offset="100%" stopColor="#0a0818" />
           </radialGradient>
 
-          {/* Center energy pulse */}
-          <radialGradient id="center-energy" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(245,214,142,0.22)">
-              <animate attributeName="stop-opacity" values="0.15;0.28;0.15" dur="4s" repeatCount="indefinite" />
+          {/* Pulsing center energy */}
+          <radialGradient id="center-energy-1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(245,214,142,0.28)">
+              <animate attributeName="stop-opacity" values="0.18;0.35;0.18" dur="4s" repeatCount="indefinite" />
             </stop>
-            <stop offset="25%" stopColor="rgba(212,175,55,0.12)" />
-            <stop offset="50%" stopColor="rgba(139,92,246,0.08)" />
+            <stop offset="30%" stopColor="rgba(212,175,55,0.15)" />
+            <stop offset="60%" stopColor="rgba(139,92,246,0.08)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          <radialGradient id="center-energy-2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(255,235,180,0.15)">
+              <animate attributeName="stop-opacity" values="0.08;0.2;0.08" dur="6s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="40%" stopColor="rgba(212,175,55,0.06)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
-          {/* Center deep core */}
-          <radialGradient id="center-deep-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.1)" />
-            <stop offset="50%" stopColor="rgba(99,102,241,0.04)" />
-            <stop offset="100%" stopColor="transparent" />
-          </radialGradient>
-
-          {/* Gold shimmer gradient for outer ring */}
+          {/* Gold shimmer for outer ring */}
           <linearGradient id="gold-shimmer" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.7)">
-              <animate attributeName="stop-opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite" />
+            <stop offset="0%" stopColor="rgba(212,175,55,0.85)">
+              <animate attributeName="stop-opacity" values="0.6;0.95;0.6" dur="5s" repeatCount="indefinite" />
             </stop>
-            <stop offset="50%" stopColor="rgba(245,214,142,0.9)">
-              <animate attributeName="stop-opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite" />
+            <stop offset="33%" stopColor="rgba(245,230,180,1)">
+              <animate attributeName="stop-opacity" values="0.8;1;0.8" dur="5s" repeatCount="indefinite" />
             </stop>
-            <stop offset="100%" stopColor="rgba(212,175,55,0.7)">
-              <animate attributeName="stop-opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite" />
+            <stop offset="66%" stopColor="rgba(200,160,40,0.85)" />
+            <stop offset="100%" stopColor="rgba(245,214,142,0.9)">
+              <animate attributeName="stop-opacity" values="0.7;0.95;0.7" dur="5s" repeatCount="indefinite" />
             </stop>
           </linearGradient>
 
-          {/* Gold line glow filter */}
-          <filter id="gold-ring-glow" x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
+          {/* Secondary gold for inner accents */}
+          <linearGradient id="gold-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.5)" />
+            <stop offset="50%" stopColor="rgba(245,214,142,0.7)" />
+            <stop offset="100%" stopColor="rgba(212,175,55,0.5)" />
+          </linearGradient>
 
-          {/* Planet glow filter */}
-          <filter id="planet-aura" x="-80%" y="-80%" width="260%" height="260%">
-            <feGaussianBlur stdDeviation="3.5" result="blur" />
+          {/* Filters */}
+          <filter id="gold-ring-glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="4" result="blur1" />
+            <feGaussianBlur stdDeviation="8" result="blur2" in="SourceGraphic" />
             <feMerge>
-              <feMergeNode in="blur" />
+              <feMergeNode in="blur2" />
+              <feMergeNode in="blur1" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
 
-          {/* Strong planet glow for Sun/Moon */}
-          <filter id="planet-aura-strong" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-
-          {/* Ascendant glow */}
-          <filter id="asc-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <filter id="planet-aura" x="-90%" y="-90%" width="280%" height="280%">
             <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="planet-aura-strong" x="-120%" y="-120%" width="340%" height="340%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
 
-          {/* Sparkle */}
-          <filter id="sparkle">
+          <filter id="asc-glow" x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="zodiac-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          <filter id="engraving-glow" x="-20%" y="-20%" width="140%" height="140%">
             <feGaussianBlur stdDeviation="1.5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -293,95 +320,142 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             </feMerge>
           </filter>
 
-          {/* Zodiac glyph enhanced glow */}
-          <filter id="zodiac-glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="2.5" result="blur" />
+          <filter id="center-core-glow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="10" result="blur" />
             <feMerge>
+              <feMergeNode in="blur" />
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
 
-        {/* === BACKGROUND LAYERS === */}
-        <circle cx={cx} cy={cy} r={outerR + 26} fill="url(#chart-bg-premium)" />
-        <circle cx={cx} cy={cy} r={outerR + 26} fill="url(#celestial-ambient)" />
-        <circle cx={cx} cy={cy} r={outerR + 26} fill="url(#outer-glow)" />
+        {/* ═══ BACKGROUND LAYERS ═══ */}
+        <circle cx={cx} cy={cy} r={outerR + 30} fill="url(#chart-bg-premium)" />
+        <circle cx={cx} cy={cy} r={outerR + 30} fill="url(#outer-aura-2)" />
+        <circle cx={cx} cy={cy} r={outerR + 30} fill="url(#outer-aura-1)" />
 
-        {/* Pulsing outer aura ring */}
-        <circle cx={cx} cy={cy} r={outerR + 18} fill="none" stroke="rgba(139,92,246,0.06)" strokeWidth="8">
-          <animate attributeName="stroke-opacity" values="0.03;0.08;0.03" dur="5s" repeatCount="indefinite" />
+        {/* Outer mist ring */}
+        <circle cx={cx} cy={cy} r={outerR + 22} fill="none" stroke="rgba(139,92,246,0.04)" strokeWidth="12">
+          <animate attributeName="stroke-opacity" values="0.02;0.06;0.02" dur="7s" repeatCount="indefinite" />
         </circle>
-        <circle cx={cx} cy={cy} r={outerR + 12} fill="none" stroke="rgba(212,175,55,0.04)" strokeWidth="0.5" />
+        <circle cx={cx} cy={cy} r={outerR + 16} fill="none" stroke="rgba(212,175,55,0.03)" strokeWidth="1" />
 
-        {/* === MAIN RINGS === */}
-        {/* Primary outer gold ring with shimmer */}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="url(#gold-shimmer)" strokeWidth="1.8" filter="url(#gold-ring-glow)" />
-        {/* Inner accent ring */}
-        <circle cx={cx} cy={cy} r={outerR - 1.5} fill="none" stroke="rgba(212,175,55,0.1)" strokeWidth="0.4" />
+        {/* ═══ PRESTIGIOUS OUTER RING SYSTEM ═══ */}
+        {/* Double outer ring with gold glow */}
+        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="url(#gold-shimmer)" strokeWidth="2.2" filter="url(#gold-ring-glow)" />
+        <circle cx={cx} cy={cy} r={outerR - 2} fill="none" stroke="rgba(245,214,142,0.12)" strokeWidth="0.5" />
 
-        {/* House boundary ring */}
-        <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
+        {/* Engraving ring — celestial filigree feel */}
+        <circle cx={cx} cy={cy} r={engravingR} fill="none" stroke="rgba(212,175,55,0.2)" strokeWidth="0.6" filter="url(#engraving-glow)" />
 
-        {/* Inner circle with core glow */}
-        <circle cx={cx} cy={cy} r={innerR + 8} fill="url(#center-deep-core)" stroke="none">
-          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="6s" repeatCount="indefinite" />
-        </circle>
-        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
-          <animate attributeName="opacity" values="0.5;0.9;0.5" dur="4s" repeatCount="indefinite" />
-        </circle>
-        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.55)" strokeWidth="1.5" />
-        {/* Inner ring shimmer */}
-        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(245,214,142,0.12)" strokeWidth="0.6">
-          <animate attributeName="stroke-opacity" values="0.06;0.18;0.06" dur="3.5s" repeatCount="indefinite" />
-        </circle>
-
-        {/* Decorative tick marks */}
-        {Array.from({ length: 72 }).map((_, i) => {
-          const angle = asc + i * 5;
-          const isMajor = i % 6 === 0;
-          const tickLen = isMajor ? 6 : 2.5;
-          const s = polar(cx, cy, outerR - tickLen, angle);
+        {/* Fine engraving tick marks between outer and zodiac rings */}
+        {Array.from({ length: 360 }).map((_, i) => {
+          if (i % 1 !== 0) return null;
+          const angle = asc + i;
+          const isMajor = i % 30 === 0;
+          const isMid = i % 10 === 0;
+          const isMinor = i % 5 === 0;
+          if (!isMajor && !isMid && !isMinor) return null;
+          const startR = isMajor ? outerR - 8 : isMid ? outerR - 5 : outerR - 3;
+          const s = polar(cx, cy, startR, angle);
           const e = polar(cx, cy, outerR, angle);
           return (
             <line
-              key={`tick-${i}`}
+              key={`eng-${i}`}
               x1={s.x} y1={s.y} x2={e.x} y2={e.y}
-              stroke={isMajor ? "rgba(212,175,55,0.45)" : "rgba(212,175,55,0.12)"}
-              strokeWidth={isMajor ? 0.9 : 0.4}
+              stroke={isMajor ? "rgba(212,175,55,0.55)" : isMid ? "rgba(212,175,55,0.2)" : "rgba(212,175,55,0.08)"}
+              strokeWidth={isMajor ? 1.2 : isMid ? 0.6 : 0.3}
             />
           );
         })}
 
-        {/* === ZODIAC SEGMENTS + HOUSE LINES === */}
+        {/* House boundary ring */}
+        <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.3)" strokeWidth="0.8" />
+        <circle cx={cx} cy={cy} r={houseR + 1} fill="none" stroke="rgba(212,175,55,0.08)" strokeWidth="0.3" />
+
+        {/* ═══ LIVING CENTER CORE ═══ */}
+        {/* Outer energy corona */}
+        <circle cx={cx} cy={cy} r={innerR + 18} fill="none" stroke="rgba(212,175,55,0.04)" strokeWidth="6" filter="url(#center-core-glow)">
+          <animate attributeName="stroke-opacity" values="0.02;0.06;0.02" dur="5s" repeatCount="indefinite" />
+        </circle>
+        {/* Deep cosmic pulse layer */}
+        <circle cx={cx} cy={cy} r={innerR + 10} fill="url(#center-energy-2)" stroke="none">
+          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="7s" repeatCount="indefinite" />
+        </circle>
+        {/* Primary energy pulse */}
+        <circle cx={cx} cy={cy} r={innerR + 5} fill="url(#center-energy-1)" stroke="none">
+          <animate attributeName="opacity" values="0.5;1;0.5" dur="4.5s" repeatCount="indefinite" />
+        </circle>
+        {/* Inner core sphere */}
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="url(#gold-accent)" strokeWidth="1.5" />
+        {/* Inner shimmer ring */}
+        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(245,214,142,0.15)" strokeWidth="0.6">
+          <animate attributeName="stroke-opacity" values="0.08;0.22;0.08" dur="3.5s" repeatCount="indefinite" />
+        </circle>
+        {/* Inner glow ring */}
+        <circle cx={cx} cy={cy} r={innerR - 2} fill="none" stroke="rgba(212,175,55,0.08)" strokeWidth="0.4">
+          <animate attributeName="stroke-opacity" values="0.04;0.12;0.04" dur="5s" repeatCount="indefinite" />
+        </circle>
+
+        {/* Decorative dots around inner circle */}
+        {Array.from({ length: 36 }).map((_, i) => {
+          const angle = i * 10;
+          const pt = polar(cx, cy, innerR + 2.5, angle);
+          return (
+            <circle key={`dot-${i}`} cx={pt.x} cy={pt.y} r={i % 3 === 0 ? 1 : 0.6}
+              fill="rgba(212,175,55,0.35)"
+            >
+              <animate attributeName="opacity" values="0.12;0.45;0.12" dur={`${3.5 + (i % 7) * 0.3}s`} repeatCount="indefinite" />
+            </circle>
+          );
+        })}
+
+        {/* ═══ ZODIAC SEGMENTS + HOUSE LINES ═══ */}
         {Array.from({ length: 12 }).map((_, i) => {
           const angle = asc + i * 30;
           const lineStart = polar(cx, cy, houseR, angle);
           const lineEnd = polar(cx, cy, outerR, angle);
           const zodiacPos = polar(cx, cy, zodiacR, angle + 15);
-          const housePos = polar(cx, cy, houseR - (size * 0.055), angle + 15);
+          const housePos = polar(cx, cy, houseR - (size * 0.05), angle + 15);
           const isCardinal = i % 3 === 0;
 
           return (
             <g key={i}>
-              {/* Colored segment arc */}
+              {/* Colored segment arc — subtle but present */}
               <path
-                d={describeArc(cx, cy, outerR - 1, angle, angle + 30)}
+                d={describeArc(cx, cy, (outerR + engravingR) / 2, angle, angle + 30)}
                 fill="none"
-                stroke={`${ZODIAC_COLORS[i]}12`}
-                strokeWidth={size * 0.07}
+                stroke={`${ZODIAC_COLORS[i]}15`}
+                strokeWidth={size * 0.06}
+              />
+              {/* Sign accent glow on segment */}
+              <path
+                d={describeArc(cx, cy, engravingR + 2, angle + 5, angle + 25)}
+                fill="none"
+                stroke={`${ZODIAC_COLORS[i]}08`}
+                strokeWidth={size * 0.02}
               />
               {/* House division line */}
               <line
                 x1={lineStart.x} y1={lineStart.y}
                 x2={lineEnd.x} y2={lineEnd.y}
-                stroke={isCardinal ? "rgba(212,175,55,0.5)" : "rgba(212,175,55,0.18)"}
-                strokeWidth={isCardinal ? 1.6 : 0.7}
-                strokeDasharray={isCardinal ? "none" : "2 3"}
+                stroke={isCardinal ? "rgba(212,175,55,0.55)" : "rgba(212,175,55,0.15)"}
+                strokeWidth={isCardinal ? 1.8 : 0.6}
+                strokeDasharray={isCardinal ? "none" : "3 4"}
               />
-              {/* Zodiac icon (matching hero style) */}
+              {/* Cardinal cross glow */}
+              {isCardinal && (
+                <line
+                  x1={lineStart.x} y1={lineStart.y}
+                  x2={lineEnd.x} y2={lineEnd.y}
+                  stroke="rgba(212,175,55,0.08)"
+                  strokeWidth="5"
+                />
+              )}
+              {/* Zodiac icon */}
               {(() => {
-                const iconSize = size * 0.078;
+                const iconSize = size * 0.082;
                 return (
                   <image
                     href={ZODIAC_ICONS[i]}
@@ -394,14 +468,15 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
                   />
                 );
               })()}
-              {/* House number */}
+              {/* House number — refined typography */}
               <text
                 x={housePos.x} y={housePos.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.024}
-                fill="rgba(212,175,55,0.35)"
-                fontWeight="500"
+                fontSize={size * 0.022}
+                fill="rgba(212,175,55,0.3)"
+                fontWeight="600"
                 fontFamily="'Cinzel', serif"
+                letterSpacing="0.05em"
               >
                 {i + 1}
               </text>
@@ -409,12 +484,34 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           );
         })}
 
-        {/* === PLANETS === */}
+        {/* ═══ PLANET CONNECTOR WEB ═══ */}
+        {/* Subtle aspect-like lines between Sun/Moon and ASC */}
+        {(() => {
+          const sunPt = polar(cx, cy, planetR, positions.sun + asc);
+          const moonPt = polar(cx, cy, planetR, positions.moon + asc);
+          return (
+            <>
+              <line x1={sunPt.x} y1={sunPt.y} x2={cx} y2={cy}
+                stroke="rgba(245,166,35,0.05)" strokeWidth="0.8" strokeDasharray="3 5"
+              >
+                <animate attributeName="stroke-opacity" values="0.02;0.07;0.02" dur="6s" repeatCount="indefinite" />
+              </line>
+              <line x1={moonPt.x} y1={moonPt.y} x2={cx} y2={cy}
+                stroke="rgba(196,196,196,0.04)" strokeWidth="0.8" strokeDasharray="3 5"
+              >
+                <animate attributeName="stroke-opacity" values="0.02;0.06;0.02" dur="7s" repeatCount="indefinite" />
+              </line>
+            </>
+          );
+        })()}
+
+        {/* ═══ PLANETS ═══ */}
         {PLANET_DEFS.map((planet) => {
           const deg = positions[planet.key] + asc;
           const pt = polar(cx, cy, planetR, deg);
-          const r = size * 0.036;
+          const r = size * 0.038;
           const isEmphasis = planet.key === "sun" || planet.key === "moon";
+          const isAsc = planet.key === "sun"; // Sun gets extra presence
 
           return (
             <g
@@ -425,100 +522,109 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             >
               {/* Outer ambient aura */}
               <circle
-                cx={pt.x} cy={pt.y} r={r + (isEmphasis ? 10 : 7)}
-                fill={`${planet.color}${isEmphasis ? "0c" : "06"}`}
+                cx={pt.x} cy={pt.y} r={r + (isEmphasis ? 13 : 8)}
+                fill={`${planet.color}${isEmphasis ? "0d" : "06"}`}
                 stroke="none"
               >
                 {isEmphasis && (
-                  <animate attributeName="r" values={`${r + 8};${r + 12};${r + 8}`} dur="3s" repeatCount="indefinite" />
+                  <animate attributeName="r" values={`${r + 10};${r + 16};${r + 10}`} dur="4s" repeatCount="indefinite" />
                 )}
               </circle>
               {/* Hit area */}
-              <circle cx={pt.x} cy={pt.y} r={r + 5} fill="transparent" />
-              {/* Planet bg */}
+              <circle cx={pt.x} cy={pt.y} r={r + 6} fill="transparent" />
+              {/* Planet background sphere */}
               <circle
                 cx={pt.x} cy={pt.y} r={r}
-                fill="rgba(12,10,25,0.95)"
+                fill="rgba(10,8,22,0.96)"
                 stroke={planet.color}
-                strokeWidth={isEmphasis ? 2 : 1.5}
+                strokeWidth={isEmphasis ? 2.2 : 1.5}
                 filter={isEmphasis ? "url(#planet-aura-strong)" : "url(#planet-aura)"}
               />
+              {/* Inner glow circle */}
+              {isEmphasis && (
+                <circle
+                  cx={pt.x} cy={pt.y} r={r - 3}
+                  fill="none"
+                  stroke={`${planet.color}18`}
+                  strokeWidth="0.8"
+                />
+              )}
               {/* Planet symbol */}
               <text
                 x={pt.x} y={pt.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * (isEmphasis ? 0.036 : 0.031)}
+                fontSize={size * (isEmphasis ? 0.038 : 0.032)}
                 fill={planet.color}
                 fontWeight="700"
               >
                 {planet.symbol}
               </text>
-              {/* Connector line */}
+              {/* Connector line to house ring */}
               <line
                 x1={pt.x} y1={pt.y}
                 x2={polar(cx, cy, houseR + 2, deg).x}
                 y2={polar(cx, cy, houseR + 2, deg).y}
-                stroke={`${planet.color}22`}
-                strokeWidth="0.5"
-                strokeDasharray="2 2"
+                stroke={`${planet.color}${isEmphasis ? "18" : "10"}`}
+                strokeWidth={isEmphasis ? 0.7 : 0.4}
+                strokeDasharray="2 3"
               />
             </g>
           );
         })}
 
-        {/* === ASCENDANT MARKER === */}
+        {/* ═══ ASCENDANT MARKER ═══ */}
         {(() => {
           const start = polar(cx, cy, outerR - 3, asc);
-          const end = polar(cx, cy, outerR + 22, asc);
-          const label = polar(cx, cy, outerR + 34, asc);
+          const end = polar(cx, cy, outerR + 24, asc);
+          const label = polar(cx, cy, outerR + 38, asc);
           const tipAngle = (asc - 90) * (Math.PI / 180);
-          const arrowLen = 7;
+          const arrowLen = 8;
           const tip = { x: end.x, y: end.y };
           const left = {
-            x: tip.x - arrowLen * Math.cos(tipAngle - 0.4),
-            y: tip.y - arrowLen * Math.sin(tipAngle - 0.4),
+            x: tip.x - arrowLen * Math.cos(tipAngle - 0.35),
+            y: tip.y - arrowLen * Math.sin(tipAngle - 0.35),
           };
           const right = {
-            x: tip.x - arrowLen * Math.cos(tipAngle + 0.4),
-            y: tip.y - arrowLen * Math.sin(tipAngle + 0.4),
+            x: tip.x - arrowLen * Math.cos(tipAngle + 0.35),
+            y: tip.y - arrowLen * Math.sin(tipAngle + 0.35),
           };
 
           return (
             <g filter="url(#asc-glow)">
-              {/* Faint energy line from ASC to center */}
+              {/* Energy line from ASC to center */}
               <line
                 x1={start.x} y1={start.y} x2={cx} y2={cy}
-                stroke="rgba(232,93,93,0.06)" strokeWidth="1"
+                stroke="rgba(232,93,93,0.06)" strokeWidth="1.2"
                 strokeDasharray="4 6"
               >
-                <animate attributeName="stroke-opacity" values="0.03;0.08;0.03" dur="4s" repeatCount="indefinite" />
+                <animate attributeName="stroke-opacity" values="0.03;0.09;0.03" dur="4.5s" repeatCount="indefinite" />
               </line>
-              {/* Soft wide glow line */}
+              {/* Wide glow line */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="rgba(232,93,93,0.12)" strokeWidth="6"
+                stroke="rgba(232,93,93,0.1)" strokeWidth="8"
               />
               {/* Main ASC line */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="rgba(232,93,93,0.75)" strokeWidth="1.8"
+                stroke="rgba(232,93,93,0.8)" strokeWidth="2"
               />
               <polygon
                 points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
-                fill="rgba(232,93,93,0.85)"
+                fill="rgba(232,93,93,0.9)"
               />
-              {/* ASC glow dot */}
-              <circle cx={end.x} cy={end.y} r="3" fill="rgba(232,93,93,0.3)">
-                <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
+              {/* ASC pulsing dot */}
+              <circle cx={end.x} cy={end.y} r="3.5" fill="rgba(232,93,93,0.3)">
+                <animate attributeName="r" values="2.5;5;2.5" dur="3.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.2;0.55;0.2" dur="3.5s" repeatCount="indefinite" />
               </circle>
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.024} fontWeight="700"
-                fill="rgba(232,93,93,0.85)"
+                fontSize={size * 0.026} fontWeight="800"
+                fill="rgba(232,93,93,0.9)"
                 fontFamily="'Cinzel', serif"
-                letterSpacing="0.12em"
+                letterSpacing="0.15em"
               >
                 ASC
               </text>
@@ -526,55 +632,60 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           );
         })()}
 
-        {/* === CENTER LABEL === */}
+        {/* ═══ CENTER LABELS ═══ */}
         <text
-          x={cx} y={cy - 6}
+          x={cx} y={cy - 8}
           textAnchor="middle"
-          fontSize={size * 0.036}
-          fill="rgba(212,175,55,0.9)"
+          fontSize={size * 0.038}
+          fill="rgba(212,175,55,0.92)"
           fontWeight="700"
           fontFamily="'Cinzel', serif"
+          letterSpacing="0.06em"
         >
           {chartData ? "מפת לידה" : "גלגל אסטרולוגי"}
         </text>
         {chartData?.sunSign && (
           <text
-            x={cx} y={cy + size * 0.035}
+            x={cx} y={cy + size * 0.038}
             textAnchor="middle"
-            fontSize={size * 0.022}
-            fill="rgba(200,190,220,0.55)"
+            fontSize={size * 0.02}
+            fill="rgba(200,190,220,0.5)"
             fontFamily="'Heebo', sans-serif"
+            letterSpacing="0.02em"
           >
             {chartData.sunSign.symbol} {chartData.sunSign.hebrewName} • {chartData.risingSign?.symbol} {chartData.risingSign?.hebrewName} עולה
           </text>
         )}
 
-        {/* Decorative dots around inner circle with shimmer */}
-        {Array.from({ length: 24 }).map((_, i) => {
-          const angle = i * 15;
-          const pt = polar(cx, cy, innerR + 2, angle);
-          return (
-            <circle
-              key={`dot-${i}`}
-              cx={pt.x} cy={pt.y} r={0.8}
-              fill="rgba(212,175,55,0.3)"
-            >
-              <animate attributeName="opacity" values="0.15;0.4;0.15" dur={`${3 + (i % 5) * 0.4}s`} repeatCount="indefinite" />
-            </circle>
-          );
-        })}
-
-        {/* Subtle rotating light sweep */}
-        <circle cx={cx} cy={cy} r={outerR - 5} fill="none" stroke="rgba(245,214,142,0.03)" strokeWidth="20" strokeDasharray={`${outerR * 0.5} ${outerR * 2.3}`}>
-          <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="30s" repeatCount="indefinite" />
+        {/* Slow rotating light sweep — luxurious motion */}
+        <circle cx={cx} cy={cy} r={outerR - 5} fill="none"
+          stroke="rgba(245,214,142,0.025)" strokeWidth="22"
+          strokeDasharray={`${outerR * 0.4} ${outerR * 2.4}`}
+        >
+          <animateTransform attributeName="transform" type="rotate"
+            from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`}
+            dur="35s" repeatCount="indefinite" />
+        </circle>
+        {/* Second counter-rotating sweep for depth */}
+        <circle cx={cx} cy={cy} r={houseR + 5} fill="none"
+          stroke="rgba(139,92,246,0.015)" strokeWidth="12"
+          strokeDasharray={`${houseR * 0.3} ${houseR * 3}`}
+        >
+          <animateTransform attributeName="transform" type="rotate"
+            from={`360 ${cx} ${cy}`} to={`0 ${cx} ${cy}`}
+            dur="50s" repeatCount="indefinite" />
         </circle>
       </svg>
 
-      {/* CSS keyframes for breathing effect */}
+      {/* CSS keyframes */}
       <style>{`
         @keyframes chartBreathing {
-          0%, 100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.04); }
+          0%, 100% { opacity: 0.45; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.03); }
+        }
+        @keyframes chartPulseGlow {
+          0%, 100% { opacity: 0.3; transform: scale(0.98); }
+          50% { opacity: 0.7; transform: scale(1.02); }
         }
       `}</style>
     </div>
