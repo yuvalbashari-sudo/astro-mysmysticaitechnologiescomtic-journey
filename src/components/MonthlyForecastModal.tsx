@@ -84,7 +84,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     );
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setNatalData(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
