@@ -9,7 +9,8 @@ import SimpleNatalChart from "@/components/SimpleNatalChart";
 import ChartLoadingRitual from "@/components/ChartLoadingRitual";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useT } from "@/i18n/LanguageContext";
+import { useLanguage, useT } from "@/i18n/LanguageContext";
+import { getChartLabels } from "@/lib/astroLocale";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
@@ -26,7 +27,9 @@ type Phase = "form" | "loading" | "chart" | "result";
 const PLANET_COLOR_BY_KEY = Object.fromEntries(PLANETS.map((planet) => [planet.key, planet.color]));
 
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
+  const { language, dir, isRTL } = useLanguage();
   const t = useT();
+  const chartLabels = getChartLabels(language);
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
   const [details, setDetails] = useState<BirthDetails>({
@@ -52,8 +55,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const wheelSize = isMobile ? 300 : 460;
 
   const houseSummary = useMemo(
-    () => (chartData?.dominantHouses || []).slice(0, 3).map(({ house, count }) => `בית ${house} (${count})`).join(" • "),
-    [chartData],
+    () => (chartData?.dominantHouses || []).slice(0, 3).map(({ house, count }) => `${chartLabels.house} ${house} (${count})`).join(" • "),
+    [chartData, chartLabels],
   );
 
   const elementSummary = useMemo(
@@ -98,7 +101,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setAttempted(true);
 
     if (!gender || !birthDate || !birthTime || !birthCity.trim()) {
-      toast.error("יש למלא מגדר, תאריך לידה, שעת לידה ומקום לידה");
+      toast.error(t.chart_form_error);
       return;
     }
 
@@ -119,7 +122,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       mysticalProfile.recordRising(`${natalChart.risingSign.hebrewName} עולה`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
       setPhase("loading");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "לא הצלחנו לחשב את מפת הלידה כרגע");
+      toast.error(error instanceof Error ? error.message : t.chart_form_error);
     } finally {
       setPreparingChart(false);
     }
