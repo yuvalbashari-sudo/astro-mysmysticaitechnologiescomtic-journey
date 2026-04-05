@@ -535,8 +535,8 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
       {/* CSS keyframes for breathing effect */}
       <style>{`
         @keyframes chartBreathing {
-          0%, 100% { opacity: 0.7; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.02); }
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.03); }
         }
       `}</style>
     </div>
