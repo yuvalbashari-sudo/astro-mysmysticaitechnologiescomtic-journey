@@ -491,7 +491,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           <text
             x={cx} y={cy + size * 0.035}
             textAnchor="middle"
-            fontSize={size * 0.019}
+            fontSize={size * 0.022}
             fill="rgba(200,190,220,0.55)"
             fontFamily="'Heebo', sans-serif"
           >
