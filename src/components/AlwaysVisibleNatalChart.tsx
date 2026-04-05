@@ -77,7 +77,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
-  const size = sizeProp || 520;
+  const size = sizeProp || 590;
   const cx = size / 2;
   const cy = size / 2;
 
