@@ -456,12 +456,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 className="max-w-prose mx-auto rounded-2xl"
                 style={{
-                  background: "linear-gradient(145deg, hsl(222 40% 10% / 0.75), hsl(222 47% 6% / 0.85))",
-                  backdropFilter: "blur(20px)",
-                  WebkitBackdropFilter: "blur(20px)",
-                  border: "1px solid hsl(var(--gold) / 0.15)",
-                  boxShadow: "0 8px 40px hsl(222 47% 3% / 0.6), 0 0 1px hsl(var(--gold) / 0.2), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-                  padding: "24px 20px",
+                  background: "linear-gradient(145deg, rgba(10, 10, 25, 0.82), rgba(8, 8, 20, 0.9))",
+                  backdropFilter: "blur(24px)",
+                  WebkitBackdropFilter: "blur(24px)",
+                  border: "1px solid hsl(var(--gold) / 0.18)",
+                  boxShadow: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px hsl(var(--gold) / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                  padding: "24px 18px",
                 }}
               >
                 <div className="flex justify-end mb-5"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
