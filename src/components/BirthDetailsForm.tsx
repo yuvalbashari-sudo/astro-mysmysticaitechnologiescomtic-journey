@@ -18,6 +18,8 @@ interface Props {
   attempted: boolean;
   /** Show birth-time field? */
   showTime?: boolean;
+  /** Show birth-city field? */
+  showCity?: boolean;
   /** Desktop large sizing */
   size?: "default" | "large";
 }
@@ -27,7 +29,7 @@ interface Props {
  * Always renders: Name → Gender → Date → Time → City.
  * Fully visible on every device — no conditional rendering, no hidden wrappers.
  */
-const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, size = "default" }: Props) => {
+const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCity = true, size = "default" }: Props) => {
   const t = useT();
   const isLarge = size === "large";
 
@@ -137,33 +139,35 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, size =
         </div>
       )}
 
-      {/* ── Birth City (always visible, always required) ── */}
-      <div>
-        <label className={labelClass} style={labelStyle}>
-          <MapPin
-            className="inline-block ml-1"
-            style={{ width: isLarge ? 18 : 14, height: isLarge ? 18 : 14 }}
+      {/* ── Birth City ── */}
+      {showCity && (
+        <div>
+          <label className={labelClass} style={labelStyle}>
+            <MapPin
+              className="inline-block ml-1"
+              style={{ width: isLarge ? 18 : 14, height: isLarge ? 18 : 14 }}
+            />
+            {" "}
+            {t.birth_chart_city_label}
+          </label>
+          <input
+            type="text"
+            value={values.birthCity}
+            onChange={(e) => onChange({ birthCity: e.target.value })}
+            placeholder={t.birth_chart_city_placeholder || "City, Country..."}
+            className="mystical-input font-body w-full"
+            style={{ direction: "ltr", textAlign: "center", ...inputSizeStyle }}
+            maxLength={100}
+            autoComplete="off"
+            required
           />
-          {" "}
-          {t.birth_chart_city_label}
-        </label>
-        <input
-          type="text"
-          value={values.birthCity}
-          onChange={(e) => onChange({ birthCity: e.target.value })}
-          placeholder={t.birth_chart_city_placeholder || "City, Country..."}
-          className="mystical-input font-body w-full"
-          style={{ direction: "ltr", textAlign: "center", ...inputSizeStyle }}
-          maxLength={100}
-          autoComplete="off"
-          required
-        />
-        {attempted && !values.birthCity.trim() && (
-          <p className={errorClass} style={errorStyle}>
-            {t.birth_chart_error_required || t.forecast_birthdate_required}
-          </p>
-        )}
-      </div>
+          {attempted && !values.birthCity.trim() && (
+            <p className={errorClass} style={errorStyle}>
+              {t.birth_chart_error_required || t.forecast_birthdate_required}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
