@@ -336,6 +336,18 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               <div className="relative" style={{ padding: "0 16px 60px" }}>
                 <div className="mb-6">
                   <AlwaysVisibleNatalChart chartData={natalData} size={isMobile ? 340 : 480} />
+                  {natalData && (
+                    <div dir="ltr" style={{ marginTop: 12, padding: 12, background: "rgba(0,0,0,0.6)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: 8, fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>
+                      <div style={{ color: "#F5A623", fontWeight: 700, marginBottom: 4 }}>🔧 Debug: Natal Chart Data</div>
+                      <div>📍 Place: {natalData.location.name}</div>
+                      <div>🌐 Lat: {natalData.location.latitude.toFixed(4)} | Lon: {natalData.location.longitude.toFixed(4)}</div>
+                      <div>🕐 Timezone: {natalData.location.timezone}</div>
+                      <div>⬆️ Ascendant: {natalData.ascendantAngle.toFixed(2)}°</div>
+                      <div>☉ Sun: {natalData.planetPlacements.find(p=>p.key==="sun")?.sign} {natalData.planetPlacements.find(p=>p.key==="sun")?.degree}°</div>
+                      <div>☽ Moon: {natalData.planetPlacements.find(p=>p.key==="moon")?.sign} {natalData.planetPlacements.find(p=>p.key==="moon")?.degree}°</div>
+                      <div>🏠 Houses: {natalData.houseCusps.slice(0,4).map(h=>`H${h.house}:${h.absoluteDegree.toFixed(1)}°`).join(" | ")}</div>
+                    </div>
+                  )}
                 </div>
                 {aiText ? (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
@@ -385,6 +397,18 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
           <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-12 lg:p-14">
             <div className="mb-6">
               <AlwaysVisibleNatalChart chartData={natalData} size={320} />
+              {natalData && (
+                <div dir="ltr" style={{ marginTop: 12, padding: 12, background: "rgba(0,0,0,0.6)", border: "1px solid rgba(212,175,55,0.3)", borderRadius: 8, fontSize: 11, color: "#aaa", fontFamily: "monospace" }}>
+                  <div style={{ color: "#F5A623", fontWeight: 700, marginBottom: 4 }}>🔧 Debug: Natal Chart Data</div>
+                  <div>📍 Place: {natalData.location.name}</div>
+                  <div>🌐 Lat: {natalData.location.latitude.toFixed(4)} | Lon: {natalData.location.longitude.toFixed(4)}</div>
+                  <div>🕐 Timezone: {natalData.location.timezone}</div>
+                  <div>⬆️ Ascendant: {natalData.ascendantAngle.toFixed(2)}°</div>
+                  <div>☉ Sun: {natalData.planetPlacements.find(p=>p.key==="sun")?.sign} {natalData.planetPlacements.find(p=>p.key==="sun")?.degree}°</div>
+                  <div>☽ Moon: {natalData.planetPlacements.find(p=>p.key==="moon")?.sign} {natalData.planetPlacements.find(p=>p.key==="moon")?.degree}°</div>
+                  <div>🏠 Houses: {natalData.houseCusps.slice(0,4).map(h=>`H${h.house}:${h.absoluteDegree.toFixed(1)}°`).join(" | ")}</div>
+                </div>
+              )}
             </div>
             <div className="text-center mb-10">
               {mode === "forecast" && signInfo ? (

@@ -143,12 +143,59 @@ export async function calculateNatalChart(input: {
   const { hour, minute } = parseBirthTime(input.birthTime);
   const location = await geocodeBirthPlace(input.birthPlace);
 
+  // Convert local birth time to UTC using the location's timezone
+  // The library expects UTC time for accurate calculations
+  const localDate = new Date(year, month - 1, day, hour, minute, 0);
+  let utcYear = year, utcMonth = month, utcDay = day, utcHour = hour, utcMinute = minute;
+
+  if (location.timezone) {
+    try {
+      // Format local date in the birth timezone to find the UTC offset
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: location.timezone,
+        year: "numeric", month: "numeric", day: "numeric",
+        hour: "numeric", minute: "numeric", hour12: false,
+      });
+      // Create a UTC date and see what local time it maps to
+      // Then reverse-engineer the offset
+      const utcRef = Date.UTC(year, month - 1, day, hour, minute, 0);
+      const localParts = new Intl.DateTimeFormat("en-US", {
+        timeZone: location.timezone,
+        year: "numeric", month: "numeric", day: "numeric",
+        hour: "numeric", minute: "numeric", second: "numeric", hour12: false,
+      }).formatToParts(new Date(utcRef));
+      
+      const getPart = (type: string) => parseInt(localParts.find(p => p.type === type)?.value || "0", 10);
+      const localFromUtc = new Date(getPart("year"), getPart("month") - 1, getPart("day"), getPart("hour") === 24 ? 0 : getPart("hour"), getPart("minute"), getPart("second"));
+      
+      // offset = local - UTC (in ms)
+      const offsetMs = localFromUtc.getTime() - new Date(utcRef).getTime();
+      // Subtract offset from local birth time to get UTC birth time
+      // If local is UTC+3, we subtract 3 hours to get UTC
+      // offsetMs tells us: when it's `hour:minute` UTC, the local time is `hour:minute + offset`
+      // So if user says "14:30 local", UTC = 14:30 - offset
+      const birthUtcMs = new Date(year, month - 1, day, hour, minute, 0).getTime() - offsetMs;
+      const birthUtc = new Date(birthUtcMs);
+      
+      utcYear = birthUtc.getFullYear();
+      utcMonth = birthUtc.getMonth() + 1;
+      utcDay = birthUtc.getDate();
+      utcHour = birthUtc.getHours();
+      utcMinute = birthUtc.getMinutes();
+    } catch (e) {
+      console.warn("Timezone conversion failed, using local time as-is:", e);
+    }
+  }
+
+  console.log(`[NatalChart] Location: ${location.name} (${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}), TZ: ${location.timezone}`);
+  console.log(`[NatalChart] Local: ${year}-${month}-${day} ${hour}:${minute} → UTC: ${utcYear}-${utcMonth}-${utcDay} ${utcHour}:${utcMinute}`);
+
   const origin = new Origin({
-    year,
-    month: month - 1,
-    date: day,
-    hour,
-    minute,
+    year: utcYear,
+    month: utcMonth - 1,
+    date: utcDay,
+    hour: utcHour,
+    minute: utcMinute,
     latitude: location.latitude,
     longitude: location.longitude,
   });
