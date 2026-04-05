@@ -235,58 +235,124 @@ const SeoContentSection = () => {
 
         {/* Knowledge gateway cards */}
         <div className="mt-10 md:mt-12 relative z-10">
-          <p className="font-body text-xs text-foreground/30 mb-5 text-center">
+          <p className="font-body text-xs text-foreground/30 mb-6 text-center">
             {isHe ? "גלו עוד:" : "Explore more:"}
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-            {[
-              {
-                to: "/tarot-gallery",
-                icon: Eye,
-                title: isHe ? "טארוט" : "Tarot",
-                subtitle: isHe
-                  ? "ספריית קלפים, פירושים ומדריכים לפתיחות"
-                  : "Card library, interpretations & reading guides",
-              },
-              {
-                to: "/zodiac/aries",
-                icon: Sun,
-                title: isHe ? "אסטרולוגיה" : "Astrology",
-                subtitle: isHe
-                  ? "מזלות, כוכבים, בתים ומדריכים למפה אישית"
-                  : "Signs, planets, houses & personal chart guides",
-              },
-            ].map((card) => (
+
+          <div className="flex flex-col gap-6 md:gap-8">
+            {/* ── Tarot Knowledge World ── */}
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+              {/* Primary: Guides */}
               <Link
-                key={card.to}
-                to={card.to}
-                className="group block rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.02]"
+                to="/tarot-gallery"
+                className="group flex-[2] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.015]"
                 style={{
-                  background: "linear-gradient(145deg, rgba(255, 215, 0, 0.06) 0%, rgba(10, 10, 20, 0.8) 60%, rgba(255, 215, 0, 0.04) 100%)",
-                  border: "1px solid hsl(var(--gold) / 0.2)",
-                  boxShadow: "0 0 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.08)",
+                  background: "linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 10, 20, 0.85) 55%, rgba(255, 215, 0, 0.04) 100%)",
+                  border: "1px solid hsl(var(--gold) / 0.25)",
+                  boxShadow: "0 0 36px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 0 60px rgba(255, 215, 0, 0.04)",
                 }}
               >
                 <div className="flex flex-col items-center text-center gap-3">
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-1"
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-1"
                     style={{
-                      background: "radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 70%)",
-                      border: "1px solid hsl(var(--gold) / 0.2)",
-                      boxShadow: "0 0 20px rgba(255, 215, 0, 0.08)",
+                      background: "radial-gradient(circle, rgba(255, 215, 0, 0.14) 0%, transparent 70%)",
+                      border: "1px solid hsl(var(--gold) / 0.25)",
+                      boxShadow: "0 0 24px rgba(255, 215, 0, 0.1)",
                     }}
                   >
-                    <card.icon className="w-7 h-7 text-gold" />
+                    <Eye className="w-8 h-8 text-gold" />
                   </div>
                   <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {card.title}
+                    {isHe ? "מדריכי טארוט" : "Tarot Guides"}
                   </h4>
-                  <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[260px]">
-                    {card.subtitle}
+                  <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
+                    {isHe
+                      ? "לימוד פתיחות, פירושי קלפים והכוונה למתחילים"
+                      : "Learn spreads, card interpretations & beginner guidance"}
                   </p>
                 </div>
               </Link>
-            ))}
+
+              {/* Secondary: Library */}
+              <Link
+                to="/tarot-gallery"
+                className="group flex-1 rounded-2xl p-5 md:p-6 transition-all duration-300 hover:scale-[1.015] flex items-center justify-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid hsl(var(--gold) / 0.12)",
+                }}
+              >
+                <div className="flex flex-col items-center text-center gap-2">
+                  <Eye className="w-5 h-5 text-gold/50 mb-1" />
+                  <h4 className="font-heading text-base text-gold/80">
+                    {isHe ? "ספריית קלפים" : "Card Library"}
+                  </h4>
+                  <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
+                    {isHe
+                      ? "עיינו בכל קלפי הטארוט והמשמעויות שלהם"
+                      : "Browse all tarot cards and their meanings"}
+                  </p>
+                </div>
+              </Link>
+            </div>
+
+            {/* ── Astrology Knowledge World ── */}
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+              {/* Primary: Guides */}
+              <Link
+                to="/zodiac/aries"
+                className="group flex-[2] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.015]"
+                style={{
+                  background: "linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 10, 20, 0.85) 55%, rgba(255, 215, 0, 0.04) 100%)",
+                  border: "1px solid hsl(var(--gold) / 0.25)",
+                  boxShadow: "0 0 36px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 0 60px rgba(255, 215, 0, 0.04)",
+                }}
+              >
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-1"
+                    style={{
+                      background: "radial-gradient(circle, rgba(255, 215, 0, 0.14) 0%, transparent 70%)",
+                      border: "1px solid hsl(var(--gold) / 0.25)",
+                      boxShadow: "0 0 24px rgba(255, 215, 0, 0.1)",
+                    }}
+                  >
+                    <Sun className="w-8 h-8 text-gold" />
+                  </div>
+                  <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
+                    {isHe ? "מדריכי אסטרולוגיה" : "Astrology Guides"}
+                  </h4>
+                  <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
+                    {isHe
+                      ? "מפת לידה, שמש, ירח, אופק והבנת המפה האישית"
+                      : "Birth chart, sun, moon, rising & personal chart understanding"}
+                  </p>
+                </div>
+              </Link>
+
+              {/* Secondary: Library */}
+              <Link
+                to="/zodiac/aries"
+                className="group flex-1 rounded-2xl p-5 md:p-6 transition-all duration-300 hover:scale-[1.015] flex items-center justify-center"
+                style={{
+                  background: "rgba(255, 255, 255, 0.03)",
+                  border: "1px solid hsl(var(--gold) / 0.12)",
+                }}
+              >
+                <div className="flex flex-col items-center text-center gap-2">
+                  <Sun className="w-5 h-5 text-gold/50 mb-1" />
+                  <h4 className="font-heading text-base text-gold/80">
+                    {isHe ? "ספריית מזלות" : "Zodiac Library"}
+                  </h4>
+                  <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
+                    {isHe
+                      ? "גלו את פירושי המזלות והמאפיינים שלהם"
+                      : "Explore zodiac sign meanings and traits"}
+                  </p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </motion.div>
