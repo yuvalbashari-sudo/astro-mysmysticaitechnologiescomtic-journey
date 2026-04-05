@@ -93,32 +93,56 @@ const SeoContentSection = () => {
   };
 
   return (
-    <section className="py-20 px-4 relative cosmic-section-bg overflow-hidden" aria-label="SEO Content">
+    <section className="py-12 md:py-20 px-3 md:px-4 relative cosmic-section-bg overflow-hidden" aria-label="SEO Content">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/3 w-64 h-64 rounded-full bg-gold/3 blur-[120px]" />
         <div className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full bg-crimson/3 blur-[100px]" />
       </div>
 
-      <div className="section-divider max-w-xl mx-auto mb-16" />
+      <div className="section-divider max-w-xl mx-auto mb-10 md:mb-16" />
 
-      <div className="max-w-5xl mx-auto relative z-10">
+      {/* ── Main glass card container ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        className="max-w-5xl mx-auto relative z-10 w-[92%] md:w-full"
+        style={{
+          background: "rgba(10, 10, 20, 0.75)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          borderRadius: 20,
+          border: "1px solid rgba(255, 215, 0, 0.2)",
+          boxShadow: "0 0 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 215, 0, 0.06), 0 0 80px rgba(10, 10, 30, 0.5)",
+          padding: "28px 20px",
+        }}
+      >
+        {/* Soft gradient fade behind card for depth */}
+        <div
+          className="absolute inset-0 pointer-events-none rounded-[20px]"
+          style={{
+            background: "radial-gradient(ellipse at 50% 0%, rgba(255, 215, 0, 0.03) 0%, transparent 60%)",
+          }}
+        />
+
         {/* Main SEO heading */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-10 md:mb-12 relative z-10"
         >
-          <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-6">
+          <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-5 md:mb-6 leading-tight">
             {content.mainTitle}
           </h2>
-          <p className="text-foreground/60 font-body text-sm md:text-base leading-[1.9] max-w-3xl mx-auto">
+          <p className="text-foreground/80 font-body text-sm md:text-base leading-[2] md:leading-[1.9] max-w-3xl mx-auto">
             {content.mainDesc}
           </p>
         </motion.div>
 
-        {/* Service descriptions with internal links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+        {/* Service descriptions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-12 md:mb-16 relative z-10">
           {content.services.map((service, i) => (
             <motion.article
               key={i}
@@ -126,7 +150,11 @@ const SeoContentSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="mystical-card p-6 md:p-8"
+              className="rounded-2xl p-5 md:p-8"
+              style={{
+                background: "rgba(255, 255, 255, 0.03)",
+                border: "1px solid rgba(255, 215, 0, 0.1)",
+              }}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="icon-glow w-10 h-10">
@@ -134,7 +162,7 @@ const SeoContentSection = () => {
                 </div>
                 <h3 className="font-heading text-base text-gold">{service.title}</h3>
               </div>
-              <p className="text-foreground/60 font-body text-sm leading-[1.9] mb-4">
+              <p className="text-foreground/70 font-body text-sm leading-[2] mb-4">
                 {service.desc}
               </p>
               {service.link && (
@@ -154,17 +182,17 @@ const SeoContentSection = () => {
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center"
+          className="text-center relative z-10"
         >
           <h3 className="font-heading text-lg text-gold mb-6">{content.trustTitle}</h3>
           <ul className="flex flex-wrap justify-center gap-3">
             {content.trustItems.map((item, i) => (
               <li
                 key={i}
-                className="flex items-center gap-2 px-4 py-2 rounded-full font-body text-xs text-foreground/60"
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-body text-xs text-foreground/70"
                 style={{
-                  background: "hsl(var(--gold) / 0.05)",
-                  border: "1px solid hsl(var(--gold) / 0.1)",
+                  background: "hsl(var(--gold) / 0.06)",
+                  border: "1px solid hsl(var(--gold) / 0.12)",
                 }}
               >
                 <Sparkles className="w-3 h-3 text-gold/50" />
@@ -175,7 +203,7 @@ const SeoContentSection = () => {
         </motion.div>
 
         {/* Internal links grid */}
-        <div className="mt-12 text-center">
+        <div className="mt-10 md:mt-12 text-center relative z-10">
           <p className="font-body text-xs text-foreground/30 mb-4">
             {isHe ? "גלו עוד:" : "Explore more:"}
           </p>
@@ -201,7 +229,7 @@ const SeoContentSection = () => {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
