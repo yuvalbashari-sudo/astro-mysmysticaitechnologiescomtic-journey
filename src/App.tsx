@@ -15,6 +15,7 @@ import TarotGalleryPage from "./pages/TarotGalleryPage";
 import PremiumUpgrade from "./pages/PremiumUpgrade";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
+import NatalTest from "./pages/NatalTest";
 import FloatingOracleButton from "./components/FloatingOracleButton";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/upgrade" element={<PremiumUpgrade />} />
                 <Route path="/admin/costs" element={<AdminCostAnalytics />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
+                <Route path="/natal-test" element={<NatalTest />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
