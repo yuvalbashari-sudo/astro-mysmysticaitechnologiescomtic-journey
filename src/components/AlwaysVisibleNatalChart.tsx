@@ -122,24 +122,26 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         justifyContent: "center",
         position: "relative",
         overflow: "visible",
+        paddingTop: "clamp(8px, 2vw, 16px)",
+        marginBottom: "clamp(8px, 2vw, 20px)",
         opacity: phase >= 1 ? 1 : 0,
         transform: phase >= 1
           ? "scale(1) rotate(0deg)"
-          : "scale(0.88) rotate(-8deg)",
-        transition: "opacity 1.6s cubic-bezier(0.16,1,0.3,1), transform 1.6s cubic-bezier(0.16,1,0.3,1)",
+          : "scale(0.85) rotate(-10deg)",
+        transition: "opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.4s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
       {/* Ambient outer aura */}
       <div
         style={{
           position: "absolute",
-          inset: "-15%",
+          inset: "-18%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(212,175,55,0.04) 40%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(212,175,55,0.06) 35%, transparent 65%)",
           opacity: phase >= 2 ? 1 : 0,
-          transition: "opacity 2s ease-out",
+          transition: "opacity 1.8s ease-out",
           pointerEvents: "none",
-          animation: phase >= 2 ? "chartBreathing 6s ease-in-out infinite" : "none",
+          animation: phase >= 3 ? "chartBreathing 7s ease-in-out infinite" : "none",
         }}
       />
 
