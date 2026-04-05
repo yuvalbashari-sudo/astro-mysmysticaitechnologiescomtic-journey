@@ -18,6 +18,7 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
+import AlwaysVisibleNatalChart from "@/components/AlwaysVisibleNatalChart";
 
 type Mode = "forecast" | "rising";
 
@@ -282,6 +283,9 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             <motion.div ref={scrollRef} className="absolute overflow-y-auto pointer-events-auto scrollbar-hide" style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(720px, 50vw)", maxHeight: "80vh" }} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}>
               <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
               <div className="relative" style={{ padding: "0 16px 60px" }}>
+                <div className="mb-6">
+                  <AlwaysVisibleNatalChart />
+                </div>
                 {aiText ? (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
                     <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
@@ -327,7 +331,10 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
           </div>
         ) : (
           /* ── Mobile: stacked result ── */
-          <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-6 md:p-12 lg:p-14">
+          <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-12 lg:p-14">
+            <div className="mb-6">
+              <AlwaysVisibleNatalChart />
+            </div>
             <div className="text-center mb-10">
               {mode === "forecast" && signInfo ? (
                 <>
