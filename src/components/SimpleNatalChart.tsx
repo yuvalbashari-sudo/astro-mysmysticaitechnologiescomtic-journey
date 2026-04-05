@@ -74,7 +74,7 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
         aria-label="גלגל מפת לידה"
         style={{ display: "block", width: size, height: size, maxWidth: "100%", overflow: "visible" }}
       >
-        <circle cx={cx} cy={cy} r={outerRadius + 10} fill="hsl(var(--deep-blue) / 0.9)" stroke="hsl(var(--destructive))" strokeWidth="2" />
+        <circle cx={cx} cy={cy} r={outerRadius + 10} fill="hsl(var(--deep-blue) / 0.9)" stroke="hsl(var(--gold) / 0.2)" strokeWidth="2" />
         <circle cx={cx} cy={cy} r={outerRadius} fill="hsl(var(--deep-blue-light) / 0.45)" stroke="hsl(var(--gold) / 0.45)" strokeWidth="1.5" />
         <circle cx={cx} cy={cy} r={zodiacRadius + 20} fill="none" stroke="hsl(var(--gold) / 0.18)" strokeWidth="1" />
         <circle cx={cx} cy={cy} r={innerRadius + 34} fill="none" stroke="hsl(var(--gold) / 0.16)" strokeWidth="1" />

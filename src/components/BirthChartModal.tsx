@@ -314,17 +314,19 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </p>
                 </div>
 
-                {/* ── NATAL CHART — always visible, no animation wrapper ── */}
+                {/* ── NATAL CHART ── */}
                 <div
+                  className="w-full rounded-3xl"
                   style={{
-                    width: "100%",
-                    minHeight: wheelSize + 40,
+                    minHeight: wheelSize + 32,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    background: "hsl(222 47% 6% / 0.7)",
-                    borderRadius: 24,
-                    padding: 16,
+                    background: "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(222 47% 10% / 0.9), hsl(222 47% 5% / 0.95))",
+                    border: "1px solid hsl(var(--gold) / 0.1)",
+                    boxShadow: "0 0 60px hsl(222 47% 6% / 0.6), inset 0 1px 0 hsl(var(--gold) / 0.05)",
+                    padding: isMobile ? 12 : 24,
+                    overflow: "visible",
                   }}
                 >
                   <SimpleNatalChart
