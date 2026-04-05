@@ -197,8 +197,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
+    setCopied(true);
     toast.success(t.chart_copied);
-    setTimeout(() => setCopied(false), 2000);
     setTimeout(() => setCopied(false), 2000);
   }, [resultText]);
 
