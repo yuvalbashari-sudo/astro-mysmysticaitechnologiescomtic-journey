@@ -3848,6 +3848,7 @@ const HeroSection = () => {
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
+      <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
     </>
   );
 };
