@@ -3529,7 +3529,7 @@ const HeroSection = () => {
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: -4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setPalmOpen(true)}
+                  onClick={() => setBirthChartOpen(true)}
                   aria-label={item.label}
                 >
                   <div
