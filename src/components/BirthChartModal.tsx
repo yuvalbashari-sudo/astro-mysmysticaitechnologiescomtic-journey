@@ -230,7 +230,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       hideAdvisor={isMobile}
       wide={showResult && !isMobile}
     >
-      <div dir="rtl" className={showResult ? "overflow-y-auto max-h-[100dvh]" : ""}>
+      <div dir="rtl">
         <div ref={chartContentRef} className="p-4 md:p-8">
           <AnimatePresence mode="wait">
             {phase === "form" && (
@@ -325,14 +325,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     </div>
 
                     <div
-                      className="flex justify-center items-center w-full overflow-visible"
-                      style={{ minHeight: wheelSize + (isMobile ? 24 : 48) }}
+                      className="flex justify-center items-center w-full"
+                      style={{ minHeight: wheelSize + 40, overflow: "visible" }}
                     >
-                      <NatalChartWheel
-                        planetPositions={chartData?.planetPositions}
-                        ascendantAngle={chartData?.ascendantAngle}
-                        size={wheelSize}
-                      />
+                      <div style={{ width: wheelSize, height: wheelSize, position: "relative" }}>
+                        <NatalChartWheel
+                          planetPositions={chartData?.planetPositions}
+                          ascendantAngle={chartData?.ascendantAngle}
+                          size={wheelSize}
+                        />
+                      </div>
                     </div>
 
                     {chartData && (
