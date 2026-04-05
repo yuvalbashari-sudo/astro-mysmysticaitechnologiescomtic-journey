@@ -210,23 +210,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             <motion.div ref={scrollRef} className="absolute overflow-y-auto pointer-events-auto scrollbar-hide" style={{ top: "calc(10vh + 56px)", left: "10px", width: "min(720px, 50vw)", maxHeight: "80vh" }} initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}>
               <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
               <div className="relative" style={{ padding: "0 16px 60px" }}>
-                <div className="mb-6">
-                  <AlwaysVisibleNatalChart chartData={natalData} size={isMobile ? 340 : 480} />
-                  {natalData && (
-                    <div dir="rtl" className="mt-4 rounded-xl p-5 text-center font-body" style={{ background: "linear-gradient(135deg, hsl(260 30% 8% / 0.85), hsl(222 47% 6% / 0.9))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)" }}>
-                      <p className="text-muted-foreground text-xs mb-4" style={{ lineHeight: 1.6 }}>מפה זו חושבה על בסיס רגע הלידה המדויק והמיקום הגיאוגרפי שלך</p>
-                      <div className="grid grid-cols-3 gap-3 mb-3">
-                        <div><span className="block text-gold/50 text-[10px] mb-0.5">☉ מזל שמש</span><span className="text-foreground text-sm font-medium">{natalData.sunSign.hebrewName} {natalData.sunSign.symbol}</span></div>
-                        <div><span className="block text-gold/50 text-[10px] mb-0.5">☽ מזל ירח</span><span className="text-foreground text-sm font-medium">{natalData.moonSign}</span></div>
-                        <div><span className="block text-gold/50 text-[10px] mb-0.5">⬆ מזל עולה</span><span className="text-foreground text-sm font-medium">{natalData.risingSign.hebrewName} {natalData.risingSign.symbol}</span></div>
-                      </div>
-                      <div className="flex items-center justify-center gap-4 text-muted-foreground text-[11px] pt-3" style={{ borderTop: "1px solid hsl(var(--gold) / 0.1)" }}>
-                        <span>📍 {natalData.location.name}</span>
-                        <span>🕐 {natalData.location.timezone}</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
                 {aiText ? (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -244,37 +227,31 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   >
                     <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
                     <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
-                    {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{mode === "forecast" ? t.forecast_loading : t.rising_loading}</span></motion.div>)}
+                    {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
                   </motion.div>
                 ) : aiError ? (
                   <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16">
                     <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                    <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{mode === "forecast" ? t.forecast_loading : t.rising_loading}</motion.p>
+                    <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.forecast_loading}</motion.p>
                   </div>
                 )}
-                {!aiLoading && (aiText || aiError) && (
-                  <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
+                {!aiLoading && (aiText || aiError) && signInfo && (
+                  <ShareResultSection symbol={signInfo.symbol} title={`${t.readings_type_forecast} — ${signInfo.name}`} subtitle={monthName} readingText={aiText || undefined} />
                 )}
               </div>
             </motion.div>
             <motion.div className="absolute pointer-events-auto flex flex-col items-center" style={{ top: "calc(8vh + 40px)", right: "36px", width: "min(560px, 38vw)" }} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
               <div className="text-center" style={{ padding: "32px 20px" }}>
-                {mode === "forecast" && signInfo ? (
+                {signInfo && (
                   <>
                     <motion.div className="mb-10" style={{ fontSize: "144px", lineHeight: 1, textShadow: "0 0 35px hsl(222 47% 6%)" }} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>{signInfo.symbol}</motion.div>
                     <motion.h2 className="font-heading gold-gradient-text mb-6" style={{ fontSize: "44px", lineHeight: 1.2, textShadow: "0 0 30px hsl(222 47% 6%)" }} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{signInfo.name}</motion.h2>
                     <motion.p className="text-muted-foreground font-body mb-2" style={{ fontSize: "22px", lineHeight: 1.6, textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{signInfo.dateRange} • {t.forecast_element_label} {signInfo.element}</motion.p>
                     <motion.p className="text-gold/60 font-body mt-6" style={{ fontSize: "22px", lineHeight: 1.6, textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>{t.forecast_month_label} {monthName}</motion.p>
                   </>
-                ) : risingInfo ? (
-                  <>
-                    <motion.div className="flex items-center justify-center gap-3 text-5xl mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}><span style={{ textShadow: "0 0 20px hsl(222 47% 6%)", fontSize: "100px" }}>{risingInfo.sunSymbol}</span><span className="text-gold/40 text-3xl" style={{ textShadow: "0 0 10px hsl(var(--gold) / 0.2)" }}>✦</span><span style={{ textShadow: "0 0 20px hsl(222 47% 6%)", fontSize: "100px" }}>{risingInfo.symbol}</span></motion.div>
-                    <motion.h2 className="font-heading gold-gradient-text mb-4" style={{ fontSize: "36px", lineHeight: 1.2, textShadow: "0 0 30px hsl(222 47% 6%)" }} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{risingInfo.sunSign} ☀️ + {risingInfo.name} ⬆️</motion.h2>
-                    <motion.p className="text-muted-foreground font-body" style={{ fontSize: "18px", textShadow: "0 2px 15px hsl(222 47% 6%)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{t.rising_sun_label}: {risingInfo.sunSign} ({risingInfo.sunElement}) · {t.rising_asc_label}: {risingInfo.name} ({risingInfo.element})</motion.p>
-                  </>
-                ) : null}
+                )}
                 <motion.div className="flex items-center justify-center gap-6 mt-12" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
                   <motion.button onClick={handleShare} className="flex items-center gap-3 rounded-full font-body" style={{ fontSize: "18px", height: "56px", padding: "0 32px", background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 style={{ width: 20, height: 20 }} />{t.forecast_share}</motion.button>
                   <motion.button onClick={handleCopy} className="flex items-center gap-3 rounded-full font-body" style={{ fontSize: "18px", height: "56px", padding: "0 32px", background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check style={{ width: 20, height: 20 }} /> : <Copy style={{ width: 20, height: 20 }} />}{copied ? t.forecast_copied : t.forecast_copy}</motion.button>
@@ -286,25 +263,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
         ) : (
           /* ── Mobile: stacked result ── */
           <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-12 lg:p-14">
-            <div className="mb-6">
-              <AlwaysVisibleNatalChart chartData={natalData} size={320} />
-              {natalData && (
-                <div dir="rtl" className="mt-4 rounded-xl p-5 text-center font-body" style={{ background: "linear-gradient(135deg, hsl(260 30% 8% / 0.85), hsl(222 47% 6% / 0.9))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 30px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)" }}>
-                  <p className="text-muted-foreground text-xs mb-4" style={{ lineHeight: 1.6 }}>מפה זו חושבה על בסיס רגע הלידה המדויק והמיקום הגיאוגרפי שלך</p>
-                  <div className="grid grid-cols-3 gap-3 mb-3">
-                    <div><span className="block text-gold/50 text-[10px] mb-0.5">☉ מזל שמש</span><span className="text-foreground text-sm font-medium">{natalData.sunSign.hebrewName} {natalData.sunSign.symbol}</span></div>
-                    <div><span className="block text-gold/50 text-[10px] mb-0.5">☽ מזל ירח</span><span className="text-foreground text-sm font-medium">{natalData.moonSign}</span></div>
-                    <div><span className="block text-gold/50 text-[10px] mb-0.5">⬆ מזל עולה</span><span className="text-foreground text-sm font-medium">{natalData.risingSign.hebrewName} {natalData.risingSign.symbol}</span></div>
-                  </div>
-                  <div className="flex items-center justify-center gap-4 text-muted-foreground text-[11px] pt-3" style={{ borderTop: "1px solid hsl(var(--gold) / 0.1)" }}>
-                    <span>📍 {natalData.location.name}</span>
-                    <span>🕐 {natalData.location.timezone}</span>
-                  </div>
-                </div>
-              )}
-            </div>
             <div className="text-center mb-10">
-              {mode === "forecast" && signInfo ? (
+              {signInfo && (
                 <>
                   <motion.div className="text-6xl mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>{signInfo.symbol}</motion.div>
                   <motion.h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{signInfo.name}</motion.h2>
@@ -312,14 +272,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   <motion.div className="section-divider max-w-[120px] mx-auto mt-5" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5 }} />
                   <motion.p className="text-gold/60 font-body text-sm mt-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>{t.forecast_month_label} {monthName}</motion.p>
                 </>
-              ) : risingInfo ? (
-                <>
-                  <motion.div className="flex items-center justify-center gap-3 text-5xl mb-4" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}><span>{risingInfo.sunSymbol}</span><span className="text-gold/40 text-2xl">✦</span><span>{risingInfo.symbol}</span></motion.div>
-                  <motion.h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>{risingInfo.sunSign} ☀️ + {risingInfo.name} ⬆️</motion.h2>
-                  <motion.p className="text-muted-foreground font-body text-sm md:text-base" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>{t.rising_sun_label}: {risingInfo.sunSign} ({risingInfo.sunElement}) · {t.rising_asc_label}: {risingInfo.name} ({risingInfo.element})</motion.p>
-                  <motion.div className="section-divider max-w-[120px] mx-auto mt-5" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.5 }} />
-                </>
-              ) : null}
+              )}
               <motion.div className="flex items-center justify-center gap-3 mt-6" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
                 <motion.button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-4 h-4" />{t.forecast_share}</motion.button>
                 <motion.button onClick={handleCopy} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}{copied ? t.forecast_copied : t.forecast_copy}</motion.button>
@@ -342,19 +295,19 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               >
                 <div className="flex justify-end mb-5"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
                 <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
-                {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{mode === "forecast" ? t.forecast_loading : t.rising_loading}</span></motion.div>)}
+                {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
               </motion.div>
             ) : aiError ? (
               <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{mode === "forecast" ? t.forecast_loading : t.rising_loading}</motion.p>
+                <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.forecast_loading}</motion.p>
               </div>
             )}
-            {!aiLoading && (aiText || aiError) && (
+            {!aiLoading && (aiText || aiError) && signInfo && (
               <>
-                <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
+                <ShareResultSection symbol={signInfo.symbol} title={`${t.readings_type_forecast} — ${signInfo.name}`} subtitle={monthName} readingText={aiText || undefined} />
                 <div className="section-divider max-w-[200px] mx-auto my-10" />
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-2xl p-8" style={{ background: "linear-gradient(145deg, hsl(222 40% 10% / 0.75), hsl(222 47% 6% / 0.85))", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid hsl(var(--gold) / 0.12)", boxShadow: "0 8px 40px hsl(222 47% 3% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
                   <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
