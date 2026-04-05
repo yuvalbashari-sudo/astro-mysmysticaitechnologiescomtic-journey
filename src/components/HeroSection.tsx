@@ -2283,7 +2283,7 @@ const HeroSection = () => {
     { icon: Star, label: t.hero_menu_forecast, side: "left" as const, index: 0 },
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
-    { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 1 },
+    { icon: Star, label: t.hero_menu_fullchart, side: "right" as const, index: 1 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
