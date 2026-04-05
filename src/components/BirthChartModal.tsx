@@ -233,7 +233,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     >
       <div dir="rtl">
         <div ref={chartContentRef} className="p-4 md:p-8">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             {phase === "form" && (
               <motion.div
                 key="form"
@@ -299,7 +299,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
             )}
 
               {showResult && (
-              <div key="result" className="space-y-8">
+              <motion.div key="result" initial={{ opacity: 1 }} animate={{ opacity: 1 }} className="space-y-8">
                 <div className="text-center">
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
@@ -477,7 +477,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   </motion.div>
                 )}
-              </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
