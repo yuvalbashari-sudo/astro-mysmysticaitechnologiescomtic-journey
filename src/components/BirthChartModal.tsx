@@ -334,60 +334,51 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   />
                 </div>
 
-                    {chartData && (
-                    <div className="grid md:grid-cols-3 gap-3 w-full">
-                      <div className="mystical-card p-4 text-center">
-                        <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>שמש</div>
-                        <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {chartData.sunSign.hebrewName}</div>
-                      </div>
-                      <div className="mystical-card p-4 text-center">
-                        <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>אופק / מזל עולה</div>
-                        <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {chartData.risingSign.hebrewName}</div>
-                      </div>
-                      <div className="mystical-card p-4 text-center">
-                        <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>ירח</div>
-                        <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
-                      </div>
-                    </div>
-                    )}
-
-                    {chartData ? (
-                    <div className="grid xl:grid-cols-3 gap-4 w-full">
-                      <div className="mystical-card p-4">
-                        <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מיקום הלידה שחושב למפה</div>
-                        <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartData.location.name}</p>
-                        <p className="font-body text-xs mt-2" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
-                          {chartData.location.latitude.toFixed(4)}°, {chartData.location.longitude.toFixed(4)}° • {chartData.location.timezone}
-                        </p>
-                      </div>
-                      <div className="mystical-card p-4">
-                        <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>דומיננטיות במפה</div>
-                        <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>יסודות: {elementSummary}</p>
-                        <p className="font-body text-sm mt-2" style={{ color: "hsl(var(--foreground) / 0.78)" }}>בתים: {houseSummary}</p>
-                      </div>
-                      {!!chartData.aspects.length && (
-                        <div className="mystical-card p-4">
-                          <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>היבטים מרכזיים</div>
-                          <div className="space-y-2">
-                            {chartData.aspects.slice(0, 4).map((aspect) => (
-                              <p key={aspect.label} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
-                                {aspect.label}
-                              </p>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    ) : (
-                      <div className="mystical-card p-5 text-center w-full">
-                        <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מפת הלידה נטענת</div>
-                        <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.7)" }}>
-                          הגלגל מוצג כבר עכשיו, והנתונים האמיתיים של הכוכבים והבתים מתחברים אליו מיד עם סיום החישוב.
-                        </p>
-                      </div>
-                    )}
+                {chartData && (
+                <div className="grid md:grid-cols-3 gap-3 w-full">
+                  <div className="mystical-card p-4 text-center">
+                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>שמש</div>
+                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {chartData.sunSign.hebrewName}</div>
                   </div>
-                </motion.div>
+                  <div className="mystical-card p-4 text-center">
+                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>אופק / מזל עולה</div>
+                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {chartData.risingSign.hebrewName}</div>
+                  </div>
+                  <div className="mystical-card p-4 text-center">
+                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>ירח</div>
+                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
+                  </div>
+                </div>
+                )}
+
+                {chartData && (
+                <div className="grid xl:grid-cols-3 gap-4 w-full">
+                  <div className="mystical-card p-4">
+                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מיקום הלידה שחושב למפה</div>
+                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartData.location.name}</p>
+                    <p className="font-body text-xs mt-2" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
+                      {chartData.location.latitude.toFixed(4)}°, {chartData.location.longitude.toFixed(4)}° • {chartData.location.timezone}
+                    </p>
+                  </div>
+                  <div className="mystical-card p-4">
+                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>דומיננטיות במפה</div>
+                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>יסודות: {elementSummary}</p>
+                    <p className="font-body text-sm mt-2" style={{ color: "hsl(var(--foreground) / 0.78)" }}>בתים: {houseSummary}</p>
+                  </div>
+                  {!!chartData.aspects.length && (
+                    <div className="mystical-card p-4">
+                      <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>היבטים מרכזיים</div>
+                      <div className="space-y-2">
+                        {chartData.aspects.slice(0, 4).map((aspect) => (
+                          <p key={aspect.label} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
+                            {aspect.label}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                )}
 
                 {chartData && (
                 <motion.div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
