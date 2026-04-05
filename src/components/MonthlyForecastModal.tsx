@@ -21,7 +21,7 @@ import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import AlwaysVisibleNatalChart from "@/components/AlwaysVisibleNatalChart";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
 
-type Mode = "forecast" | "rising";
+type Mode = "forecast";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -56,7 +56,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   const handleSubmit = () => {
     setAttempted(true);
-    if (!gender || !birthDate || !birthCity.trim() || !birthTime) return;
+    if (!gender || !birthDate) return;
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     if (gender) mysticalProfile.recordGender(gender);
     setIsLoading(true);
