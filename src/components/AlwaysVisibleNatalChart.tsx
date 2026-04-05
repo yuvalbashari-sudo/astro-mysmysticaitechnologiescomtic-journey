@@ -77,7 +77,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
-  const size = sizeProp || 520;
+  const size = sizeProp || 590;
   const cx = size / 2;
   const cy = size / 2;
 
@@ -221,8 +221,18 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           {/* Center energy pulse */}
           <radialGradient id="center-energy" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.12)" />
-            <stop offset="40%" stopColor="rgba(139,92,246,0.06)" />
+            <stop offset="0%" stopColor="rgba(245,214,142,0.22)">
+              <animate attributeName="stop-opacity" values="0.15;0.28;0.15" dur="4s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="25%" stopColor="rgba(212,175,55,0.12)" />
+            <stop offset="50%" stopColor="rgba(139,92,246,0.08)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+
+          {/* Center deep core */}
+          <radialGradient id="center-deep-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.1)" />
+            <stop offset="50%" stopColor="rgba(99,102,241,0.04)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
@@ -314,10 +324,17 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
 
         {/* Inner circle with core glow */}
-        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
-          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="5s" repeatCount="indefinite" />
+        <circle cx={cx} cy={cy} r={innerR + 8} fill="url(#center-deep-core)" stroke="none">
+          <animate attributeName="opacity" values="0.3;0.7;0.3" dur="6s" repeatCount="indefinite" />
         </circle>
-        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.5)" strokeWidth="1.4" />
+        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
+          <animate attributeName="opacity" values="0.5;0.9;0.5" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.55)" strokeWidth="1.5" />
+        {/* Inner ring shimmer */}
+        <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="rgba(245,214,142,0.12)" strokeWidth="0.6">
+          <animate attributeName="stroke-opacity" values="0.06;0.18;0.06" dur="3.5s" repeatCount="indefinite" />
+        </circle>
 
         {/* Decorative tick marks */}
         {Array.from({ length: 72 }).map((_, i) => {
@@ -468,23 +485,37 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           return (
             <g filter="url(#asc-glow)">
-              {/* Subtle connecting arc */}
+              {/* Faint energy line from ASC to center */}
+              <line
+                x1={start.x} y1={start.y} x2={cx} y2={cy}
+                stroke="rgba(232,93,93,0.06)" strokeWidth="1"
+                strokeDasharray="4 6"
+              >
+                <animate attributeName="stroke-opacity" values="0.03;0.08;0.03" dur="4s" repeatCount="indefinite" />
+              </line>
+              {/* Soft wide glow line */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="rgba(232,93,93,0.7)" strokeWidth="1.8"
+                stroke="rgba(232,93,93,0.12)" strokeWidth="6"
               />
+              {/* Main ASC line */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="rgba(232,93,93,0.15)" strokeWidth="5"
+                stroke="rgba(232,93,93,0.75)" strokeWidth="1.8"
               />
               <polygon
                 points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
                 fill="rgba(232,93,93,0.85)"
               />
+              {/* ASC glow dot */}
+              <circle cx={end.x} cy={end.y} r="3" fill="rgba(232,93,93,0.3)">
+                <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
+              </circle>
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.026} fontWeight="700"
+                fontSize={size * 0.024} fontWeight="700"
                 fill="rgba(232,93,93,0.85)"
                 fontFamily="'Cinzel', serif"
                 letterSpacing="0.12em"
@@ -518,25 +549,32 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           </text>
         )}
 
-        {/* Decorative dots around inner circle */}
+        {/* Decorative dots around inner circle with shimmer */}
         {Array.from({ length: 24 }).map((_, i) => {
           const angle = i * 15;
           const pt = polar(cx, cy, innerR + 2, angle);
           return (
             <circle
               key={`dot-${i}`}
-              cx={pt.x} cy={pt.y} r={0.7}
-              fill="rgba(212,175,55,0.25)"
-            />
+              cx={pt.x} cy={pt.y} r={0.8}
+              fill="rgba(212,175,55,0.3)"
+            >
+              <animate attributeName="opacity" values="0.15;0.4;0.15" dur={`${3 + (i % 5) * 0.4}s`} repeatCount="indefinite" />
+            </circle>
           );
         })}
+
+        {/* Subtle rotating light sweep */}
+        <circle cx={cx} cy={cy} r={outerR - 5} fill="none" stroke="rgba(245,214,142,0.03)" strokeWidth="20" strokeDasharray={`${outerR * 0.5} ${outerR * 2.3}`}>
+          <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="30s" repeatCount="indefinite" />
+        </circle>
       </svg>
 
       {/* CSS keyframes for breathing effect */}
       <style>{`
         @keyframes chartBreathing {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.03); }
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.04); }
         }
       `}</style>
     </div>
