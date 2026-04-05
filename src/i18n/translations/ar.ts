@@ -22,6 +22,7 @@ export const ar: TranslationKeys = {
   hero_menu_compatibility: "التوافق الزوجي حسب الأبراج",
   hero_menu_tarot: "قراءة التاروت",
   hero_menu_palm: "قراءة الكف",
+  hero_menu_birthchart: "خريطة الميلاد",
 
   nav_title: "البوابات الروحية",
   nav_subtitle: "اختاروا بوابتكم إلى العالم الروحي",

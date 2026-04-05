@@ -33,6 +33,7 @@ export type TranslationKeys = {
   hero_menu_compatibility: string;
   hero_menu_tarot: string;
   hero_menu_palm: string;
+  hero_menu_birthchart: string;
 
   // MysticalNav
   nav_title: string;

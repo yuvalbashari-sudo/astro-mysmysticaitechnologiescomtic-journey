@@ -22,6 +22,7 @@ export const en: TranslationKeys = {
   hero_menu_compatibility: "Zodiac compatibility",
   hero_menu_tarot: "Tarot reading",
   hero_menu_palm: "Palm reading",
+  hero_menu_birthchart: "Birth Chart",
 
   nav_title: "Mystical Gates",
   nav_subtitle: "Choose your gateway to the spiritual realm",
