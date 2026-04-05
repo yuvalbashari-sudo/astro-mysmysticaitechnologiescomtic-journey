@@ -211,11 +211,19 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
-          {/* Inner core glow */}
+          {/* Inner core glow — deeper energy */}
           <radialGradient id="inner-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.08)" />
-            <stop offset="60%" stopColor="rgba(15,12,30,0.98)" />
+            <stop offset="0%" stopColor="rgba(212,175,55,0.18)" />
+            <stop offset="30%" stopColor="rgba(139,92,246,0.08)" />
+            <stop offset="65%" stopColor="rgba(15,12,30,0.98)" />
             <stop offset="100%" stopColor="#0a0818" />
+          </radialGradient>
+
+          {/* Center energy pulse */}
+          <radialGradient id="center-energy" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.12)" />
+            <stop offset="40%" stopColor="rgba(139,92,246,0.06)" />
+            <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
           {/* Gold shimmer gradient for outer ring */}
