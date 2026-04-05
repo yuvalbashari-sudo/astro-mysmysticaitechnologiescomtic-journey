@@ -233,29 +233,58 @@ const SeoContentSection = () => {
           </ul>
         </motion.div>
 
-        {/* Internal links grid */}
-        <div className="mt-10 md:mt-12 text-center relative z-10">
-          <p className="font-body text-xs text-foreground/30 mb-4">
+        {/* Knowledge gateway cards */}
+        <div className="mt-10 md:mt-12 relative z-10">
+          <p className="font-body text-xs text-foreground/30 mb-5 text-center">
             {isHe ? "גלו עוד:" : "Explore more:"}
           </p>
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
             {[
-              { to: "/tarot/the-fool", label: isHe ? "הקלף השוטה" : "The Fool" },
-              { to: "/tarot/the-lovers", label: isHe ? "האוהבים" : "The Lovers" },
-              { to: "/tarot/the-star", label: isHe ? "הכוכב" : "The Star" },
-              { to: "/zodiac/aries", label: isHe ? "מזל טלה" : "Aries" },
-              { to: "/zodiac/leo", label: isHe ? "מזל אריה" : "Leo" },
-              { to: "/zodiac/scorpio", label: isHe ? "מזל עקרב" : "Scorpio" },
-              { to: "/zodiac/pisces", label: isHe ? "מזל דגים" : "Pisces" },
-              { to: "/tarot-gallery", label: isHe ? "כל קלפי הטארוט" : "All Tarot Cards" },
-            ].map((link) => (
+              {
+                to: "/tarot-gallery",
+                icon: Eye,
+                title: isHe ? "טארוט" : "Tarot",
+                subtitle: isHe
+                  ? "ספריית קלפים, פירושים ומדריכים לפתיחות"
+                  : "Card library, interpretations & reading guides",
+              },
+              {
+                to: "/zodiac/aries",
+                icon: Sun,
+                title: isHe ? "אסטרולוגיה" : "Astrology",
+                subtitle: isHe
+                  ? "מזלות, כוכבים, בתים ומדריכים למפה אישית"
+                  : "Signs, planets, houses & personal chart guides",
+              },
+            ].map((card) => (
               <Link
-                key={link.to}
-                to={link.to}
-                className="text-gold/40 hover:text-gold/70 font-body text-[11px] px-3 py-1.5 rounded-full transition-colors"
-                style={{ border: "1px solid hsl(var(--gold) / 0.08)" }}
+                key={card.to}
+                to={card.to}
+                className="group block rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.02]"
+                style={{
+                  background: "linear-gradient(145deg, rgba(255, 215, 0, 0.06) 0%, rgba(10, 10, 20, 0.8) 60%, rgba(255, 215, 0, 0.04) 100%)",
+                  border: "1px solid hsl(var(--gold) / 0.2)",
+                  boxShadow: "0 0 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.08)",
+                }}
               >
-                {link.label}
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-1"
+                    style={{
+                      background: "radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, transparent 70%)",
+                      border: "1px solid hsl(var(--gold) / 0.2)",
+                      boxShadow: "0 0 20px rgba(255, 215, 0, 0.08)",
+                    }}
+                  >
+                    <card.icon className="w-7 h-7 text-gold" />
+                  </div>
+                  <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
+                    {card.title}
+                  </h4>
+                  <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[260px]">
+                    {card.subtitle}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
