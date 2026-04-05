@@ -485,23 +485,37 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           return (
             <g filter="url(#asc-glow)">
-              {/* Subtle connecting arc */}
+              {/* Faint energy line from ASC to center */}
+              <line
+                x1={start.x} y1={start.y} x2={cx} y2={cy}
+                stroke="rgba(232,93,93,0.06)" strokeWidth="1"
+                strokeDasharray="4 6"
+              >
+                <animate attributeName="stroke-opacity" values="0.03;0.08;0.03" dur="4s" repeatCount="indefinite" />
+              </line>
+              {/* Soft wide glow line */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="rgba(232,93,93,0.7)" strokeWidth="1.8"
+                stroke="rgba(232,93,93,0.12)" strokeWidth="6"
               />
+              {/* Main ASC line */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="rgba(232,93,93,0.15)" strokeWidth="5"
+                stroke="rgba(232,93,93,0.75)" strokeWidth="1.8"
               />
               <polygon
                 points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
                 fill="rgba(232,93,93,0.85)"
               />
+              {/* ASC glow dot */}
+              <circle cx={end.x} cy={end.y} r="3" fill="rgba(232,93,93,0.3)">
+                <animate attributeName="r" values="2;4;2" dur="3s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.2;0.5;0.2" dur="3s" repeatCount="indefinite" />
+              </circle>
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.026} fontWeight="700"
+                fontSize={size * 0.024} fontWeight="700"
                 fill="rgba(232,93,93,0.85)"
                 fontFamily="'Cinzel', serif"
                 letterSpacing="0.12em"
