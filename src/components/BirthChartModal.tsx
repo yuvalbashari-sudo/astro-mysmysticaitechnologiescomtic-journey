@@ -4,7 +4,7 @@ import html2canvas from "html2canvas";
 import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
-import NatalChartWheel, { PLANETS } from "@/components/NatalChartWheel";
+import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
 import ChartLoadingRitual from "@/components/ChartLoadingRitual";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
@@ -299,7 +299,40 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
             )}
 
               {showResult && (
-              <motion.div key="result" initial={{ opacity: 1 }} animate={{ opacity: 1 }} className="space-y-8">
+              <div key="result" className="space-y-8">
+                <div
+                  className="w-full"
+                  style={{
+                    minHeight: wheelSize + 48,
+                    display: "block",
+                    overflow: "visible",
+                    position: "relative",
+                    zIndex: 2,
+                  }}
+                >
+                  <div
+                    className="mx-auto w-full rounded-[2rem]"
+                    style={{
+                      maxWidth: wheelSize + (isMobile ? 28 : 64),
+                      minHeight: wheelSize + 32,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      background: "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(var(--deep-blue-light) / 0.5), hsl(var(--deep-blue) / 0.96))",
+                      border: "1px solid hsl(var(--gold) / 0.14)",
+                      boxShadow: "0 0 60px hsl(var(--deep-blue) / 0.55), inset 0 1px 0 hsl(var(--gold) / 0.05)",
+                      padding: isMobile ? 10 : 24,
+                      overflow: "visible",
+                    }}
+                  >
+                    <SimpleNatalChart
+                      planetPositions={chartData?.planetPositions}
+                      ascendantAngle={chartData?.ascendantAngle}
+                      size={wheelSize}
+                    />
+                  </div>
+                </div>
+
                 <div className="text-center">
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
@@ -312,28 +345,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
                       {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : "מחשבים את מיקומי הכוכבים האישיים שלך..."}
                   </p>
-                </div>
-
-                {/* ── NATAL CHART ── */}
-                <div
-                  className="w-full rounded-3xl"
-                  style={{
-                    minHeight: wheelSize + 32,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    background: "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(222 47% 10% / 0.9), hsl(222 47% 5% / 0.95))",
-                    border: "1px solid hsl(var(--gold) / 0.1)",
-                    boxShadow: "0 0 60px hsl(222 47% 6% / 0.6), inset 0 1px 0 hsl(var(--gold) / 0.05)",
-                    padding: isMobile ? 12 : 24,
-                    overflow: "visible",
-                  }}
-                >
-                  <SimpleNatalChart
-                    planetPositions={chartData?.planetPositions}
-                    ascendantAngle={chartData?.ascendantAngle}
-                    size={wheelSize}
-                  />
                 </div>
 
                 {chartData && (
@@ -400,7 +411,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       <span className="text-[10px] font-body block" style={{ color: "hsl(var(--foreground) / 0.35)" }}>בית {planet.house}</span>
                     </div>
                   ))}
-                </motion.div>
+              </div>
                 )}
 
                 {chartData && (
