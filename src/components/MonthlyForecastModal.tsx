@@ -96,78 +96,23 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
-  const resultInfo = mode === "forecast" ? signInfo : risingInfo;
-  const hasResult = !!resultInfo;
+  const hasResult = !!signInfo;
 
   const handleShare = () => {
-    if (mode === "forecast" && signInfo) {
+    if (signInfo) {
       const text = `✨ ${t.readings_type_forecast} — ${signInfo.name} ${signInfo.symbol}\n${monthName}\n\n🔮 ${window.location.origin}`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
-    } else if (mode === "rising" && risingInfo) {
-      const text = `✨ ${t.rising_asc_label} — ${risingInfo.name} ${risingInfo.symbol}\n☀️ ${t.rising_sun_label}: ${risingInfo.sunSign} ${risingInfo.sunSymbol}\n\n🔮 ${window.location.origin}`;
       window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
     }
   };
 
   const handleCopy = async () => {
-    if (!aiText) return;
-    if (mode === "forecast" && signInfo) {
-      await navigator.clipboard.writeText(`✨ ${signInfo.name} — ${t.readings_type_forecast}\n\n${aiText}`);
-    } else if (mode === "rising" && risingInfo) {
-      await navigator.clipboard.writeText(`✨ ${t.rising_asc_label} — ${risingInfo.name} | ${t.rising_sun_label} — ${risingInfo.sunSign}\n\n${aiText}`);
-    }
+    if (!aiText || !signInfo) return;
+    await navigator.clipboard.writeText(`✨ ${signInfo.name} — ${t.readings_type_forecast}\n\n${aiText}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
   const isDesktopResult = !isMobile && hasResult;
   const isDesktop = !isMobile;
-
-  /* ── Mode toggle tabs ── */
-  const ModeToggle = ({ size = "default" }: { size?: "default" | "large" }) => {
-    const isLarge = size === "large";
-    return (
-      <div className="flex rounded-full overflow-hidden" style={{
-        background: "hsl(222 47% 8% / 0.6)",
-        border: "1px solid hsl(var(--gold) / 0.12)",
-        backdropFilter: "blur(8px)",
-      }}>
-        <motion.button
-          type="button"
-          className="font-body transition-all duration-300 flex items-center gap-1.5"
-          style={{
-            padding: isLarge ? "10px 24px" : "8px 16px",
-            fontSize: isLarge ? "16px" : "12px",
-            borderRadius: "9999px",
-            background: mode === "forecast" ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.08))" : "transparent",
-            color: mode === "forecast" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.45)",
-            border: mode === "forecast" ? "1px solid hsl(var(--gold) / 0.3)" : "1px solid transparent",
-          }}
-          onClick={() => setMode("forecast")}
-          whileTap={{ scale: 0.97 }}
-        >
-          <Calendar style={{ width: isLarge ? 16 : 12, height: isLarge ? 16 : 12 }} />
-          {t.forecast_title}
-        </motion.button>
-        <motion.button
-          type="button"
-          className="font-body transition-all duration-300 flex items-center gap-1.5"
-          style={{
-            padding: isLarge ? "10px 24px" : "8px 16px",
-            fontSize: isLarge ? "16px" : "12px",
-            borderRadius: "9999px",
-            background: mode === "rising" ? "linear-gradient(135deg, hsl(var(--gold) / 0.2), hsl(var(--gold) / 0.08))" : "transparent",
-            color: mode === "rising" ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.45)",
-            border: mode === "rising" ? "1px solid hsl(var(--gold) / 0.3)" : "1px solid transparent",
-          }}
-          onClick={() => setMode("rising")}
-          whileTap={{ scale: 0.97 }}
-        >
-          <Clock style={{ width: isLarge ? 16 : 12, height: isLarge ? 16 : 12 }} />
-          {t.rising_title}
-        </motion.button>
-      </div>
-    );
-  };
 
   /* On mobile: we render a non-scrolling avatar header + scrollable body.
      CinematicModalShell fullscreen gives us an absolute inset-0 overflow-y-auto wrapper,
