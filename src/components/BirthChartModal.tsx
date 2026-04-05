@@ -453,27 +453,3 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 };
 
 export default BirthChartModal;
-TS
-
-python3 - <<'PY'
-from pathlib import Path
-path = Path('/dev-server/src/components/NatalChartWheel.tsx')
-text = path.read_text()
-text = text.replace('                ASC\n', '                אופק\n')
-path.write_text(text)
-
-path = Path('/dev-server/src/components/ChartLoadingRitual.tsx')
-text = path.read_text()
-text = text.replace('{ icon: "🌌", text: "מחשב את מיקומי כוכבי הלכת..." },', '{ icon: "🌌", text: "מאתר את מקום הלידה ומחשב את מיקומי כוכבי הלכת..." },')
-path.write_text(text)
-
-path = Path('/dev-server/src/components/TextSizeControl.tsx')
-text = path.read_text()
-text = text.replace('{ key: "default", label: "A" },\n  { key: "large", label: "A+" },\n  { key: "xl", label: "A++" },', '{ key: "default", label: "א" },\n  { key: "large", label: "א+" },\n  { key: "xl", label: "א++" },')
-path.write_text(text)
-
-path = Path('/dev-server/src/i18n/translations/he.ts')
-text = path.read_text()
-text = text.replace('birth_chart_error_required: "יש להזין תאריך ושעת לידה",', 'birth_chart_error_required: "יש להזין תאריך לידה, שעת לידה ומקום לידה",')
-path.write_text(text)
-PY
