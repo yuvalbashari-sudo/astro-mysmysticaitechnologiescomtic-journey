@@ -221,8 +221,18 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           {/* Center energy pulse */}
           <radialGradient id="center-energy" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.12)" />
-            <stop offset="40%" stopColor="rgba(139,92,246,0.06)" />
+            <stop offset="0%" stopColor="rgba(245,214,142,0.22)">
+              <animate attributeName="stop-opacity" values="0.15;0.28;0.15" dur="4s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="25%" stopColor="rgba(212,175,55,0.12)" />
+            <stop offset="50%" stopColor="rgba(139,92,246,0.08)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+
+          {/* Center deep core */}
+          <radialGradient id="center-deep-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.1)" />
+            <stop offset="50%" stopColor="rgba(99,102,241,0.04)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
