@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
+import AlwaysVisibleNatalChart from "@/components/AlwaysVisibleNatalChart";
 import MysticalDashboard from "@/components/MysticalDashboard";
 import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
@@ -23,6 +24,7 @@ const Index = () => {
   return (
     <>
       <SeoStructuredData />
+      <AlwaysVisibleNatalChart />
       <HeroSection />
 
       <div className="relative z-10 md:h-screen md:overflow-hidden pointer-events-none" dir={dir} style={{ background: "transparent" }}>
