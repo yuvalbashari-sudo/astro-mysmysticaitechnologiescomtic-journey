@@ -5,6 +5,7 @@ import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star } from "lucide
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import NatalChartWheel, { PLANETS } from "@/components/NatalChartWheel";
+import SimpleNatalChart from "@/components/SimpleNatalChart";
 import ChartLoadingRitual from "@/components/ChartLoadingRitual";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -328,13 +329,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       className="flex justify-center items-center w-full"
                       style={{ minHeight: wheelSize + 40, overflow: "visible" }}
                     >
-                      <div style={{ width: wheelSize, height: wheelSize, position: "relative" }}>
-                        <NatalChartWheel
-                          planetPositions={chartData?.planetPositions}
-                          ascendantAngle={chartData?.ascendantAngle}
-                          size={wheelSize}
-                        />
-                      </div>
+                      <SimpleNatalChart
+                        planetPositions={chartData?.planetPositions}
+                        ascendantAngle={chartData?.ascendantAngle}
+                        size={wheelSize}
+                      />
                     </div>
 
                     {chartData && (
