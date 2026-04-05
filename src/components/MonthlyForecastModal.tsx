@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, Clock, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
+import { Calendar, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
 import { getZodiacSign } from "@/data/zodiacData";
-import { getRisingSign } from "@/data/risingSignData";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
@@ -18,10 +17,6 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
-import AlwaysVisibleNatalChart from "@/components/AlwaysVisibleNatalChart";
-import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
-
-type Mode = "forecast";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -29,7 +24,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language } = useLanguage();
   const { setActiveReading } = useReadingContext();
-  const [mode, setMode] = useState<Mode>("forecast");
   const [details, setDetails] = useState<BirthDetails>({
     userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "",
   });
@@ -37,7 +31,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<{ name: string; symbol: string; dateRange: string; element: string } | null>(null);
-  const [risingInfo, setRisingInfo] = useState<{ name: string; symbol: string; element: string; sunSign: string; sunSymbol: string; sunElement: string } | null>(null);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -46,7 +39,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
-  const [natalData, setNatalData] = useState<NatalChartResult | null>(null);
 
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
