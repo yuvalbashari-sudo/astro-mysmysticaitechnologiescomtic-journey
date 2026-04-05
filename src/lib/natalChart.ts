@@ -1,4 +1,5 @@
-import { Horoscope, Origin } from "circular-natal-horoscope-js";
+// @ts-ignore - package main field missing .js extension
+import { Horoscope, Origin } from "circular-natal-horoscope-js/dist/index.js";
 
 const SIGN_META = {
   Aries: { hebrewName: "טלה", symbol: "♈", element: "אש" },
