@@ -22,6 +22,7 @@ export const he: TranslationKeys = {
   hero_menu_compatibility: "התאמה זוגית לפי המזלות",
   hero_menu_tarot: "פתיחת טארוט",
   hero_menu_palm: "קריאת כף יד",
+  hero_menu_birthchart: "מפת לידה",
 
   nav_title: "שערים מיסטיים",
   nav_subtitle: "בחרו את השער שלכם לעולם הרוחני",
