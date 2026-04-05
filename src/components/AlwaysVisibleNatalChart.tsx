@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import type { NatalChartResult } from "@/lib/natalChart";
+import { useLanguage } from "@/i18n";
+import { getPlanetName, signFromDeg, getChartLabels } from "@/lib/astroLocale";
 
 import ariesIcon from "@/assets/zodiac-icons/aries.png";
 import taurusIcon from "@/assets/zodiac-icons/taurus.png";
@@ -22,16 +24,16 @@ const ZODIAC_COLORS = [
 ];
 
 const PLANET_DEFS = [
-  { key: "sun",     symbol: "☉", name: "שמש",     color: "#F5A623" },
-  { key: "moon",    symbol: "☽", name: "ירח",     color: "#C4C4C4" },
-  { key: "mercury", symbol: "☿", name: "מרקורי",  color: "#58C4DD" },
-  { key: "venus",   symbol: "♀", name: "ונוס",    color: "#E8A0BF" },
-  { key: "mars",    symbol: "♂", name: "מאדים",   color: "#E85D5D" },
-  { key: "jupiter", symbol: "♃", name: "יופיטר",  color: "#A855F7" },
-  { key: "saturn",  symbol: "♄", name: "שבתאי",   color: "#7B8794" },
-  { key: "uranus",  symbol: "♅", name: "אורנוס",  color: "#38BDF8" },
-  { key: "neptune", symbol: "♆", name: "נפטון",   color: "#6366F1" },
-  { key: "pluto",   symbol: "♇", name: "פלוטו",   color: "#8B5CF6" },
+  { key: "sun",     symbol: "☉", color: "#F5A623" },
+  { key: "moon",    symbol: "☽", color: "#C4C4C4" },
+  { key: "mercury", symbol: "☿", color: "#58C4DD" },
+  { key: "venus",   symbol: "♀", color: "#E8A0BF" },
+  { key: "mars",    symbol: "♂", color: "#E85D5D" },
+  { key: "jupiter", symbol: "♃", color: "#A855F7" },
+  { key: "saturn",  symbol: "♄", color: "#7B8794" },
+  { key: "uranus",  symbol: "♅", color: "#38BDF8" },
+  { key: "neptune", symbol: "♆", color: "#6366F1" },
+  { key: "pluto",   symbol: "♇", color: "#8B5CF6" },
 ] as const;
 
 const FALLBACK_POSITIONS: Record<string, number> = {
@@ -56,8 +58,6 @@ const describeArc = (cx: number, cy: number, r: number, start: number, end: numb
 };
 
 /* ── Sign name helper ── */
-const SIGN_NAMES_HE = ["טלה", "שור", "תאומים", "סרטן", "אריה", "בתולה", "מאזניים", "עקרב", "קשת", "גדי", "דלי", "דגים"];
-const signFromDeg = (deg: number) => SIGN_NAMES_HE[Math.floor(normalizeAngle(deg) / 30)];
 const degInSign = (deg: number) => Math.round(normalizeAngle(deg) % 30);
 
 /* ── Props ── */
@@ -67,6 +67,8 @@ interface Props {
 }
 
 const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
+  const { language } = useLanguage();
+  const labels = getChartLabels(language);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
   const [phase, setPhase] = useState(0);
 
@@ -99,12 +101,13 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
   const handlePlanetHover = useCallback((e: React.MouseEvent<SVGGElement>, planet: typeof PLANET_DEFS[number]) => {
     const deg = positions[planet.key];
+    const planetName = getPlanetName(planet.key, language);
     setTooltip({
       x: e.clientX,
       y: e.clientY,
-      text: `${planet.symbol} ${planet.name} — ${signFromDeg(deg)} ${degInSign(deg)}°`,
+      text: `${planet.symbol} ${planetName} — ${signFromDeg(deg, language)} ${degInSign(deg)}°`,
     });
-  }, [positions]);
+  }, [positions, language]);
 
   const handlePlanetLeave = useCallback(() => setTooltip(null), []);
 
