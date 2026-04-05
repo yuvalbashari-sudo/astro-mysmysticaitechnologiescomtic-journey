@@ -237,8 +237,9 @@ export function renderMysticalText(text: string, textSize: TextSize = "default")
         key: `p-${i}`,
         className: `font-body ${s.body}`,
         style: {
-          color: hasHighlight ? "hsl(var(--foreground) / 0.85)" : "hsl(var(--foreground) / 0.72)",
-          lineHeight: "2.15",
+          color: hasHighlight ? "hsl(var(--foreground) / 0.92)" : "hsl(var(--foreground) / 0.78)",
+          lineHeight: "2.2",
+          marginBottom: "12px",
         },
       }, content)
     );
