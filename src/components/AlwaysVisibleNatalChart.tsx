@@ -348,18 +348,21 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
                 strokeWidth={isCardinal ? 1.6 : 0.7}
                 strokeDasharray={isCardinal ? "none" : "2 3"}
               />
-              {/* Zodiac glyph */}
-              <text
-                x={zodiacPos.x} y={zodiacPos.y}
-                textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.052}
-                fill={ZODIAC_COLORS[i]}
-                style={{ opacity: 0.95 }}
-                filter="url(#zodiac-glow)"
-                fontWeight="600"
-              >
-                {ZODIAC_GLYPHS[i]}
-              </text>
+              {/* Zodiac icon (matching hero style) */}
+              {(() => {
+                const iconSize = size * 0.065;
+                return (
+                  <image
+                    href={ZODIAC_ICONS[i]}
+                    x={zodiacPos.x - iconSize / 2}
+                    y={zodiacPos.y - iconSize / 2}
+                    width={iconSize}
+                    height={iconSize}
+                    filter="url(#zodiac-glow)"
+                    style={{ opacity: 0.95 }}
+                  />
+                );
+              })()}
               {/* House number */}
               <text
                 x={housePos.x} y={housePos.y}
