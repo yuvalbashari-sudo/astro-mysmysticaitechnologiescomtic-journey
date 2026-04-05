@@ -314,7 +314,10 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
 
         {/* Inner circle with core glow */}
-        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.4)" strokeWidth="1.2" />
+        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.5)" strokeWidth="1.4" />
 
         {/* Decorative tick marks */}
         {Array.from({ length: 72 }).map((_, i) => {
