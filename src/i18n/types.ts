@@ -34,6 +34,7 @@ export type TranslationKeys = {
   hero_menu_tarot: string;
   hero_menu_palm: string;
   hero_menu_birthchart: string;
+  hero_menu_fullchart: string;
 
   // MysticalNav
   nav_title: string;

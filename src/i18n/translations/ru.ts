@@ -23,6 +23,7 @@ export const ru: TranslationKeys = {
   hero_menu_tarot: "Расклад Таро",
   hero_menu_palm: "Хиромантия",
   hero_menu_birthchart: "Натальная карта",
+  hero_menu_fullchart: "Полная астрологическая карта",
 
   nav_title: "Мистические врата",
   nav_subtitle: "Выберите свои врата в духовный мир",
