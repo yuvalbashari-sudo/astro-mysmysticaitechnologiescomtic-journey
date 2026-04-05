@@ -3178,7 +3178,7 @@ const HeroSection = () => {
                       onFocus={() => setHoveredItem(i)}
                       onBlur={() => setHoveredItem(null)}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setPalmOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); }}
                       aria-label={item.label}
                     >
                       <div
