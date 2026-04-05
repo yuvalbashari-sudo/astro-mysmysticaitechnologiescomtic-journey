@@ -19,6 +19,7 @@ import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import AlwaysVisibleNatalChart from "@/components/AlwaysVisibleNatalChart";
+import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
 
 type Mode = "forecast" | "rising";
 
@@ -45,6 +46,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [natalData, setNatalData] = useState<NatalChartResult | null>(null);
 
   const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
   const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
@@ -70,6 +72,13 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
       mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
 
+      // Calculate natal chart in background (non-blocking)
+      if (birthTime && birthCity.trim()) {
+        calculateNatalChart({ birthDate, birthTime, birthPlace: birthCity.trim() })
+          .then(setNatalData)
+          .catch(() => {/* chart is optional, don't block forecast */});
+      }
+
       streamMysticalReading(
         "forecast",
         { signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element, dateRange: sign.dateRange, monthName, gender, birthCity },
@@ -89,6 +98,11 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       setRisingInfo({ name: rising.hebrewName, symbol: rising.symbol, element: rising.element, sunSign: sign.hebrewName, sunSymbol: sign.symbol, sunElement: sign.element });
       setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
 
+      // Calculate natal chart in background
+      calculateNatalChart({ birthDate, birthTime, birthPlace: birthCity.trim() })
+        .then(setNatalData)
+        .catch(() => {});
+
       mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
       mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
 
@@ -106,7 +120,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     }
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; setMode("forecast"); }, 300); };
+  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setRisingInfo(null); setNatalData(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; setMode("forecast"); }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
@@ -284,7 +298,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
               <div className="relative" style={{ padding: "0 16px 60px" }}>
                 <div className="mb-6">
-                  <AlwaysVisibleNatalChart />
+                  <AlwaysVisibleNatalChart chartData={natalData} size={isMobile ? 340 : 480} />
                 </div>
                 {aiText ? (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
@@ -333,7 +347,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
           /* ── Mobile: stacked result ── */
           <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-12 lg:p-14">
             <div className="mb-6">
-              <AlwaysVisibleNatalChart />
+              <AlwaysVisibleNatalChart chartData={natalData} size={320} />
             </div>
             <div className="text-center mb-10">
               {mode === "forecast" && signInfo ? (
