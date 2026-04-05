@@ -176,6 +176,8 @@ export const en: TranslationKeys = {
   forecast_gender_label: "Gender",
   forecast_gender_male: "Male",
   forecast_gender_female: "Female",
+  forecast_gender_other: "Other",
+  forecast_gender_prefer_not: "Prefer not to say",
   forecast_gender_required: "Please select a gender",
   forecast_birthdate_required: "Please enter a valid date of birth",
   forecast_cta: "Reveal my forecast",

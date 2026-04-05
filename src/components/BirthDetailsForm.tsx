@@ -6,7 +6,7 @@ import { useT } from "@/i18n/LanguageContext";
 
 export interface BirthDetails {
   userName: string;
-  gender: "male" | "female" | "";
+  gender: "male" | "female" | "other" | "prefer_not_to_say" | "";
   birthDate: string;
   birthTime: string;
   birthCity: string;
@@ -78,27 +78,25 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCi
         <label className={labelClass} style={labelStyle}>
           {t.forecast_gender_label}
         </label>
-        <div className="flex gap-3">
-          <motion.button
-            type="button"
-            onClick={() => onChange({ gender: "male" })}
-            className="flex-1 rounded-xl font-body transition-all duration-300"
-            style={genderBtnStyle(values.gender === "male")}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {t.forecast_gender_male}
-          </motion.button>
-          <motion.button
-            type="button"
-            onClick={() => onChange({ gender: "female" })}
-            className="flex-1 rounded-xl font-body transition-all duration-300"
-            style={genderBtnStyle(values.gender === "female")}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {t.forecast_gender_female}
-          </motion.button>
+        <div className="grid grid-cols-2 gap-3">
+          {([
+            { value: "male" as const, label: t.forecast_gender_male },
+            { value: "female" as const, label: t.forecast_gender_female },
+            { value: "other" as const, label: t.forecast_gender_other },
+            { value: "prefer_not_to_say" as const, label: t.forecast_gender_prefer_not },
+          ]).map((opt) => (
+            <motion.button
+              key={opt.value}
+              type="button"
+              onClick={() => onChange({ gender: opt.value })}
+              className="rounded-xl font-body transition-all duration-300"
+              style={genderBtnStyle(values.gender === opt.value)}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              {opt.label}
+            </motion.button>
+          ))}
         </div>
         {attempted && !values.gender && (
           <p className={errorClass} style={errorStyle}>{t.forecast_gender_required}</p>

@@ -176,6 +176,8 @@ export const he: TranslationKeys = {
   forecast_gender_label: "מגדר",
   forecast_gender_male: "זכר",
   forecast_gender_female: "נקבה",
+  forecast_gender_other: "אחר",
+  forecast_gender_prefer_not: "מעדיף/ה לא לציין",
   forecast_gender_required: "יש לבחור מגדר",
   forecast_birthdate_required: "יש להזין תאריך לידה תקין",
   forecast_cta: "גלו את התחזית שלי",
