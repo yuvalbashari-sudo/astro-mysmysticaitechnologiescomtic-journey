@@ -228,6 +228,28 @@ const SeoContentSection = () => {
               </Link>
             ))}
           </div>
+
+          {/* Premium featured card */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-6 flex justify-center"
+          >
+            <div
+              className="flex items-center gap-3 px-6 py-3.5 rounded-2xl font-heading text-sm text-gold cursor-default select-none"
+              style={{
+                background: "rgba(255, 215, 0, 0.08)",
+                border: "1.5px solid hsl(var(--gold) / 0.3)",
+                boxShadow: "0 0 24px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 215, 0, 0.08)",
+              }}
+            >
+              <Star className="w-4 h-4 text-gold" />
+              {isHe ? "מפה אסטרולוגית מלאה" : "Full Astrological Chart"}
+            </div>
+          </motion.div>
+          </div>
         </div>
       </motion.div>
     </section>
