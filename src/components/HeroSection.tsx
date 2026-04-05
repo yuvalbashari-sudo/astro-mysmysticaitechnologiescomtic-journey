@@ -2262,6 +2262,7 @@ const HeroSection = () => {
   const [immersiveTarotOpen, setImmersiveTarotOpen] = useState(false);
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
+  const [birthChartOpen, setBirthChartOpen] = useState(false);
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
