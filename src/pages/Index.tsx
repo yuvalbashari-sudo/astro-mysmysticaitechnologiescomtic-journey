@@ -5,23 +5,9 @@ import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
-import SimpleNatalChart from "@/components/SimpleNatalChart";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
-
-const DEBUG_PLANET_POSITIONS = {
-  sun: 42,
-  moon: 118,
-  mercury: 56,
-  venus: 82,
-  mars: 196,
-  jupiter: 248,
-  saturn: 286,
-  uranus: 312,
-  neptune: 328,
-  pluto: 264,
-};
 
 const Index = () => {
   const { dir } = useLanguage();
@@ -38,27 +24,6 @@ const Index = () => {
     <>
       <SeoStructuredData />
       <HeroSection />
-
-      <div className="relative z-[220] pointer-events-auto w-full px-4 pt-4" dir={dir}>
-        <div
-          style={{
-            width: "100%",
-            minHeight: 400,
-            border: "4px solid hsl(var(--destructive))",
-            background: "hsl(var(--deep-blue) / 0.94)",
-            overflow: "visible",
-            opacity: 1,
-            display: "block",
-            position: "relative",
-            zIndex: 220,
-          }}
-        >
-          <div className="p-4 text-center font-body" style={{ color: "hsl(var(--destructive))", fontWeight: 700 }}>
-            NatalChart component is rendering
-          </div>
-          <SimpleNatalChart planetPositions={DEBUG_PLANET_POSITIONS} ascendantAngle={18} size={420} />
-        </div>
-      </div>
 
       <div className="relative z-10 md:h-screen md:overflow-hidden pointer-events-none" dir={dir} style={{ background: "transparent" }}>
         <a
