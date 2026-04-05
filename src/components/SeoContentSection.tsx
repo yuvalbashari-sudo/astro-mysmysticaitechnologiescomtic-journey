@@ -231,22 +231,31 @@ const SeoContentSection = () => {
 
           {/* Premium featured card */}
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="mt-6 flex justify-center"
+            transition={{ delay: 0.2, duration: 0.7, ease: "easeOut" }}
+            className="mt-8 flex justify-center"
           >
             <div
-              className="flex items-center gap-3 px-6 py-3.5 rounded-2xl font-heading text-sm text-gold cursor-default select-none"
+              className="relative flex items-center gap-3 px-8 py-4 rounded-2xl font-heading text-base text-gold cursor-default select-none overflow-hidden"
               style={{
-                background: "rgba(255, 215, 0, 0.08)",
-                border: "1.5px solid hsl(var(--gold) / 0.3)",
-                boxShadow: "0 0 24px rgba(255, 215, 0, 0.1), inset 0 1px 0 rgba(255, 215, 0, 0.08)",
+                background: "linear-gradient(135deg, rgba(255, 215, 0, 0.12) 0%, rgba(10, 10, 20, 0.8) 50%, rgba(255, 215, 0, 0.08) 100%)",
+                border: "1.5px solid hsl(var(--gold) / 0.4)",
+                boxShadow: "0 0 32px rgba(255, 215, 0, 0.15), 0 0 60px rgba(255, 215, 0, 0.06), inset 0 1px 0 rgba(255, 215, 0, 0.15)",
               }}
             >
-              <Star className="w-4 h-4 text-gold" />
-              {isHe ? "מפה אסטרולוגית מלאה" : "Full Astrological Chart"}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: "radial-gradient(ellipse at 30% 50%, rgba(255, 215, 0, 0.08) 0%, transparent 70%)",
+                }}
+              />
+              <Star className="w-5 h-5 text-gold relative z-10" fill="currentColor" />
+              <span className="relative z-10 tracking-wide">
+                {isHe ? "מפה אסטרולוגית מלאה" : "Full Astrological Chart"}
+              </span>
+              <Sparkles className="w-4 h-4 text-gold/60 relative z-10" />
             </div>
           </motion.div>
         </div>
