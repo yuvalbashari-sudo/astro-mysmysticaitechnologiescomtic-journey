@@ -76,7 +76,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
-  const size = sizeProp || 460;
+  const size = sizeProp || 520;
   const cx = size / 2;
   const cy = size / 2;
 
@@ -350,7 +350,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               />
               {/* Zodiac icon (matching hero style) */}
               {(() => {
-                const iconSize = size * 0.065;
+                const iconSize = size * 0.078;
                 return (
                   <image
                     href={ZODIAC_ICONS[i]}
@@ -367,7 +367,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               <text
                 x={housePos.x} y={housePos.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.021}
+                fontSize={size * 0.024}
                 fill="rgba(212,175,55,0.35)"
                 fontWeight="500"
                 fontFamily="'Cinzel', serif"
@@ -382,7 +382,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         {PLANET_DEFS.map((planet) => {
           const deg = positions[planet.key] + asc;
           const pt = polar(cx, cy, planetR, deg);
-          const r = size * 0.032;
+          const r = size * 0.036;
           const isEmphasis = planet.key === "sun" || planet.key === "moon";
 
           return (
@@ -416,7 +416,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               <text
                 x={pt.x} y={pt.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * (isEmphasis ? 0.032 : 0.027)}
+                fontSize={size * (isEmphasis ? 0.036 : 0.031)}
                 fill={planet.color}
                 fontWeight="700"
               >
@@ -465,7 +465,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.025} fontWeight="700"
+                fontSize={size * 0.028} fontWeight="700"
                 fill="#E85D5D"
                 fontFamily="'Cinzel', serif"
                 letterSpacing="0.1em"
@@ -480,7 +480,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         <text
           x={cx} y={cy - 6}
           textAnchor="middle"
-          fontSize={size * 0.032}
+          fontSize={size * 0.036}
           fill="rgba(212,175,55,0.9)"
           fontWeight="700"
           fontFamily="'Cinzel', serif"
