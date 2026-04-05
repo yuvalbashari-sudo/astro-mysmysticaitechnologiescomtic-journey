@@ -136,20 +136,20 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setAiStreaming(true);
 
     const planetLines = chartData.planetPlacements
-      .map((planet) => `${planet.symbol} ${planet.name}: ${planet.sign} ${planet.degree}° — בית ${planet.house}`)
+      .map((planet) => `${planet.symbol} ${planet.name}: ${planet.sign} ${planet.degree}° — ${chartLabels.house} ${planet.house}`)
       .join("\n");
 
     const aspectLines = chartData.aspects.length
-      ? chartData.aspects.map((aspect) => `${aspect.label} — אורב ${aspect.orb}°`).join("\n")
-      : "אין היבטים חזקים במיוחד בטווח ההדוק שהודגש לניתוח.";
+      ? chartData.aspects.map((aspect) => `${aspect.label} — orb ${aspect.orb}°`).join("\n")
+      : chartLabels.noStrongAspects;
 
     const houseLines = chartData.houseCusps
-      .map((house) => `בית ${house.house}: ${house.sign} ${house.degree}°`)
+      .map((house) => `${chartLabels.house} ${house.house}: ${house.sign} ${house.degree}°`)
       .join("\n");
 
     const dominantText = [
-      `יסודות דומיננטיים: ${elementSummary || "לא זוהו"}`,
-      `בתים דומיננטיים: ${houseSummary || "לא זוהו"}`,
+      `${chartLabels.dominantElements}: ${elementSummary || chartLabels.notDetected}`,
+      `${chartLabels.dominantHouses}: ${houseSummary || chartLabels.notDetected}`,
     ].join("\n");
 
     streamMysticalReading(
@@ -180,7 +180,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         setPhase("result");
         readingsStorage.save({
           type: "birth-chart",
-          title: `מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`,
+          title: `${chartLabels.birthChart} — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`,
           subtitle: `☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`,
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
@@ -191,9 +191,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         setAiStreaming(false);
         setPhase("form");
       },
-      "he",
+      language,
     );
-  }, [birthDate, birthTime, chartData, elementSummary, gender, houseSummary, userName]);
+  }, [birthDate, birthTime, chartData, chartLabels, elementSummary, gender, houseSummary, language, userName]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
