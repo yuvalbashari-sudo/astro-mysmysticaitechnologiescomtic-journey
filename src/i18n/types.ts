@@ -701,6 +701,53 @@ export type TranslationKeys = {
   toast_pdf_error: string;
   birth_chart_pdf_title: string;
 
+  // Chart UI
+  chart_title: string;
+  chart_subtitle: string;
+  chart_personal_title: string;
+  chart_of_name: string;
+  chart_computing: string;
+  chart_birth_location: string;
+  chart_dominance: string;
+  chart_key_aspects: string;
+  chart_house_cusps: string;
+  chart_gravity_center: string;
+  chart_full_interp_title: string;
+  chart_full_interp_desc: string;
+  chart_copied: string;
+  chart_copy_interp: string;
+  chart_save_image: string;
+  chart_asc_horizon: string;
+  chart_form_error: string;
+  chart_form_loading: string;
+  chart_form_note: string;
+
+  // Tarot Guide Page
+  guide_tarot_hero_title: string;
+  guide_tarot_hero_subtitle: string;
+  guide_tarot_intro: string;
+  guide_tarot_s1_title: string;
+  guide_tarot_s1_b1: string;
+  guide_tarot_s1_b2: string;
+  guide_tarot_s1_b3: string;
+  guide_tarot_s2_title: string;
+  guide_tarot_s2_b1: string;
+  guide_tarot_s2_b2: string;
+  guide_tarot_s2_b3: string;
+  guide_tarot_s3_title: string;
+  guide_tarot_s3_b1: string;
+  guide_tarot_s3_b2: string;
+  guide_tarot_s3_b3: string;
+  guide_tarot_s3_b4: string;
+  guide_tarot_s4_title: string;
+  guide_tarot_s4_bullet1: string;
+  guide_tarot_s4_bullet2: string;
+  guide_tarot_s4_bullet3: string;
+  guide_tarot_s4_bullet4: string;
+  guide_tarot_s4_bullet5: string;
+  guide_tarot_cta_text: string;
+  guide_tarot_cta_button: string;
+
   // Payment gating
   gating_upgrade_label: string;
   gating_pay_label: string;

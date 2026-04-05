@@ -1,55 +1,46 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Sparkles, BookOpen, Heart, AlertTriangle, Layers } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles, BookOpen, Heart, AlertTriangle, Layers } from "lucide-react";
 import StarField from "@/components/StarField";
-
-const sections = [
-  {
-    icon: BookOpen,
-    title: "מה זה טארוט?",
-    blocks: [
-      "טארוט הוא מערכת של 78 קלפים שמשמשת ככלי להתבוננות פנימית, הכוונה רוחנית וחיבור לאינטואיציה.",
-      "כל קלף נושא סמל, סיפור ומשמעות – יחד הם יוצרים מפה של החוויה האנושית: מהתחלות חדשות ועד שלמות.",
-      "טארוט לא \"מנחש את העתיד\" – הוא מאיר דפוסים, מעלה שאלות חשובות ופותח דלת להבנה עמוקה יותר של עצמכם.",
-    ],
-  },
-  {
-    icon: Heart,
-    title: "איך לבחור חפיסה",
-    blocks: [
-      "החפיסה הראשונה שלכם צריכה לדבר אליכם ויזואלית. עיצוב שמושך אתכם יעזור לכם להתחבר לקלפים באופן טבעי.",
-      "למתחילים, חפיסת Rider-Waite-Smith היא הבחירה הקלאסית – האיורים שלה עשירים בסמלים וקלים לפירוש.",
-      "אל תקנו חפיסה רק כי היא \"פופולרית\". החזיקו אותה, דפדפו בה, הרגישו אם היא מדברת אליכם. החיבור האישי הוא הדבר החשוב ביותר.",
-    ],
-  },
-  {
-    icon: Layers,
-    title: "איך להתחיל לקרוא",
-    blocks: [
-      "התחילו עם קלף אחד ביום. כל בוקר שלפו קלף, הסתכלו עליו, והקשיבו למה שהוא מעורר בכם – לפני שאתם קוראים פירושים.",
-      "למדו את 22 קלפי הארקנה הגדולה קודם. אלו הקלפים שמייצגים ארכיטיפים ומסעות חיים גדולים.",
-      "כשאתם מוכנים, נסו פריסה של 3 קלפים: עבר, הווה, עתיד. זו פריסה פשוטה אבל עוצמתית שנותנת תמונה ברורה.",
-      "כתבו יומן טארוט. רשמו מה שלפתם, מה הרגשתם, ומה קרה באותו יום. עם הזמן תראו דפוסים מדהימים.",
-    ],
-  },
-  {
-    icon: AlertTriangle,
-    title: "טעויות של מתחילים",
-    bullets: [
-      "שינון פירושים מבלי להקשיב לאינטואיציה – הקלפים מדברים אליכם באופן אישי.",
-      "פחד מקלפים \"שליליים\" – קלפים כמו המוות או המגדל מסמלים שינוי, לא אסון.",
-      "שאילת אותה שאלה שוב ושוב – אם לא אהבתם את התשובה, עבדו איתה במקום לברוח ממנה.",
-      "לקרוא לאחרים לפני שמכירים את עצמכם – קודם תרגלו על עצמכם.",
-      "ציפייה לתשובות \"כן/לא\" – הטארוט עובד עם ניואנסים, שכבות ותובנות.",
-    ],
-  },
-];
+import { useLanguage } from "@/i18n";
 
 const TarotGuidePage = () => {
   const navigate = useNavigate();
+  const { t, dir, isRTL } = useLanguage();
+
+  const sections = [
+    {
+      icon: BookOpen,
+      title: t.guide_tarot_s1_title,
+      blocks: [t.guide_tarot_s1_b1, t.guide_tarot_s1_b2, t.guide_tarot_s1_b3],
+    },
+    {
+      icon: Heart,
+      title: t.guide_tarot_s2_title,
+      blocks: [t.guide_tarot_s2_b1, t.guide_tarot_s2_b2, t.guide_tarot_s2_b3],
+    },
+    {
+      icon: Layers,
+      title: t.guide_tarot_s3_title,
+      blocks: [t.guide_tarot_s3_b1, t.guide_tarot_s3_b2, t.guide_tarot_s3_b3, t.guide_tarot_s3_b4],
+    },
+    {
+      icon: AlertTriangle,
+      title: t.guide_tarot_s4_title,
+      bullets: [
+        t.guide_tarot_s4_bullet1,
+        t.guide_tarot_s4_bullet2,
+        t.guide_tarot_s4_bullet3,
+        t.guide_tarot_s4_bullet4,
+        t.guide_tarot_s4_bullet5,
+      ],
+    },
+  ];
+
+  const ArrowIcon = isRTL ? ArrowLeft : ArrowRight;
 
   return (
-    <div className="min-h-screen bg-background text-foreground" dir="rtl">
+    <div className="min-h-screen bg-background text-foreground" dir={dir}>
       <StarField />
 
       {/* Hero */}
@@ -63,10 +54,10 @@ const TarotGuidePage = () => {
         >
           <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
           <h1 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-4 leading-tight">
-            איך להתחיל עם טארוט
+            {t.guide_tarot_hero_title}
           </h1>
           <p className="text-foreground/70 text-base md:text-lg leading-relaxed max-w-lg mx-auto">
-            המדריך המלא למתחילים – מהקלף הראשון ועד להבנה עמוקה
+            {t.guide_tarot_hero_subtitle}
           </p>
         </motion.div>
       </section>
@@ -79,9 +70,7 @@ const TarotGuidePage = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          טארוט הוא הרבה יותר מ״ניחוש עתידות״. זהו כלי עתיק לחקירה עצמית,
-          שמשלב סמלים, ארכיטיפים ואינטואיציה כדי לעזור לכם לראות את החיים בבהירות חדשה.
-          במדריך הזה תלמדו את הצעדים הראשונים – בקצב שלכם.
+          {t.guide_tarot_intro}
         </motion.p>
       </section>
 
@@ -89,7 +78,7 @@ const TarotGuidePage = () => {
       <div className="px-4 pb-12 max-w-2xl mx-auto relative z-10 space-y-5">
         {sections.map((section, i) => (
           <motion.div
-            key={section.title}
+            key={i}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 + i * 0.1, duration: 0.5 }}
@@ -126,7 +115,7 @@ const TarotGuidePage = () => {
             )}
 
             {section.bullets && (
-              <ul className="space-y-2 pr-1">
+              <ul className={`space-y-2 ${isRTL ? "pr-1" : "pl-1"}`}>
                 {section.bullets.map((bullet, j) => (
                   <li key={j} className="flex items-start gap-2 text-foreground/80 text-sm md:text-base leading-[1.9]">
                     <span className="text-gold mt-1 shrink-0">✦</span>
@@ -148,14 +137,14 @@ const TarotGuidePage = () => {
           className="max-w-md mx-auto"
         >
           <p className="text-foreground/60 text-sm mb-5">
-            רוצים להעמיק עוד? התחילו קריאה אישית עכשיו ✨
+            {t.guide_tarot_cta_text}
           </p>
           <button
             onClick={() => navigate("/")}
             className="btn-gold inline-flex items-center gap-2 font-heading text-base"
           >
-            <span>התחילו קריאה</span>
-            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
+            <span>{t.guide_tarot_cta_button}</span>
+            <ArrowIcon className="w-4 h-4" />
           </button>
         </motion.div>
       </section>

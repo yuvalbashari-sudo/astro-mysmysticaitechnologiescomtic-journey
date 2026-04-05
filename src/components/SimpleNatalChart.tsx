@@ -1,4 +1,6 @@
 import { PLANETS } from "@/components/NatalChartWheel";
+import { useLanguage } from "@/i18n";
+import { getChartLabels } from "@/lib/astroLocale";
 
 interface Props {
   planetPositions?: Record<string, number> | null;
@@ -40,6 +42,8 @@ const describeArc = (cx: number, cy: number, radius: number, startAngle: number,
 };
 
 const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props) => {
+  const { language } = useLanguage();
+  const labels = getChartLabels(language);
   const resolvedAscendant = Number.isFinite(ascendantAngle) ? normalizeAngle(ascendantAngle as number) : DEFAULT_ASCENDANT;
   const resolvedPositions = PLANETS.reduce<Record<string, number>>((acc, planet) => {
     const raw = planetPositions?.[planet.key];
@@ -169,7 +173,7 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
                 fontWeight="700"
                 fill="hsl(var(--destructive))"
               >
-                אופק
+                {labels.ascendant}
               </text>
             </g>
           );
@@ -183,7 +187,7 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
           fill="hsl(var(--gold) / 0.9)"
           fontWeight="700"
         >
-          מפת לידה
+          {labels.birthChart}
         </text>
         <text
           x={cx}
@@ -192,7 +196,7 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
           fontSize={size * 0.022}
           fill="hsl(var(--foreground) / 0.65)"
         >
-          גלגל אסטרולוגי
+          {labels.astroWheel}
         </text>
       </svg>
     </div>

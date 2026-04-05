@@ -9,7 +9,8 @@ import SimpleNatalChart from "@/components/SimpleNatalChart";
 import ChartLoadingRitual from "@/components/ChartLoadingRitual";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useT } from "@/i18n/LanguageContext";
+import { useLanguage, useT } from "@/i18n/LanguageContext";
+import { getChartLabels } from "@/lib/astroLocale";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
@@ -26,7 +27,9 @@ type Phase = "form" | "loading" | "chart" | "result";
 const PLANET_COLOR_BY_KEY = Object.fromEntries(PLANETS.map((planet) => [planet.key, planet.color]));
 
 const BirthChartModal = ({ isOpen, onClose }: Props) => {
+  const { language, dir, isRTL } = useLanguage();
   const t = useT();
+  const chartLabels = getChartLabels(language);
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
   const [details, setDetails] = useState<BirthDetails>({
@@ -52,8 +55,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const wheelSize = isMobile ? 300 : 460;
 
   const houseSummary = useMemo(
-    () => (chartData?.dominantHouses || []).slice(0, 3).map(({ house, count }) => `בית ${house} (${count})`).join(" • "),
-    [chartData],
+    () => (chartData?.dominantHouses || []).slice(0, 3).map(({ house, count }) => `${chartLabels.house} ${house} (${count})`).join(" • "),
+    [chartData, chartLabels],
   );
 
   const elementSummary = useMemo(
@@ -98,7 +101,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setAttempted(true);
 
     if (!gender || !birthDate || !birthTime || !birthCity.trim()) {
-      toast.error("יש למלא מגדר, תאריך לידה, שעת לידה ומקום לידה");
+      toast.error(t.chart_form_error);
       return;
     }
 
@@ -119,7 +122,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       mysticalProfile.recordRising(`${natalChart.risingSign.hebrewName} עולה`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
       setPhase("loading");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "לא הצלחנו לחשב את מפת הלידה כרגע");
+      toast.error(error instanceof Error ? error.message : t.chart_form_error);
     } finally {
       setPreparingChart(false);
     }
@@ -133,20 +136,20 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setAiStreaming(true);
 
     const planetLines = chartData.planetPlacements
-      .map((planet) => `${planet.symbol} ${planet.name}: ${planet.sign} ${planet.degree}° — בית ${planet.house}`)
+      .map((planet) => `${planet.symbol} ${planet.name}: ${planet.sign} ${planet.degree}° — ${chartLabels.house} ${planet.house}`)
       .join("\n");
 
     const aspectLines = chartData.aspects.length
-      ? chartData.aspects.map((aspect) => `${aspect.label} — אורב ${aspect.orb}°`).join("\n")
-      : "אין היבטים חזקים במיוחד בטווח ההדוק שהודגש לניתוח.";
+      ? chartData.aspects.map((aspect) => `${aspect.label} — orb ${aspect.orb}°`).join("\n")
+      : chartLabels.noStrongAspects;
 
     const houseLines = chartData.houseCusps
-      .map((house) => `בית ${house.house}: ${house.sign} ${house.degree}°`)
+      .map((house) => `${chartLabels.house} ${house.house}: ${house.sign} ${house.degree}°`)
       .join("\n");
 
     const dominantText = [
-      `יסודות דומיננטיים: ${elementSummary || "לא זוהו"}`,
-      `בתים דומיננטיים: ${houseSummary || "לא זוהו"}`,
+      `${chartLabels.dominantElements}: ${elementSummary || chartLabels.notDetected}`,
+      `${chartLabels.dominantHouses}: ${houseSummary || chartLabels.notDetected}`,
     ].join("\n");
 
     streamMysticalReading(
@@ -177,7 +180,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         setPhase("result");
         readingsStorage.save({
           type: "birth-chart",
-          title: `מפת לידה — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`,
+          title: `${chartLabels.birthChart} — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`,
           subtitle: `☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`,
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
@@ -188,14 +191,14 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         setAiStreaming(false);
         setPhase("form");
       },
-      "he",
+      language,
     );
-  }, [birthDate, birthTime, chartData, elementSummary, gender, houseSummary, userName]);
+  }, [birthDate, birthTime, chartData, chartLabels, elementSummary, gender, houseSummary, language, userName]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
     setCopied(true);
-    toast.success("הפירוש הועתק");
+    toast.success(t.chart_copied);
     setTimeout(() => setCopied(false), 2000);
   }, [resultText]);
 
@@ -212,9 +215,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       link.download = `birth-chart-${birthDate}.png`;
       link.href = canvas.toDataURL("image/png");
       link.click();
-      toast.success("התמונה נשמרה");
+      toast.success(t.toast_image_download_success);
     } catch {
-      toast.error("לא הצלחנו לשמור את התמונה");
+      toast.error(t.toast_image_download_error);
     } finally {
       setDownloading(false);
     }
@@ -231,7 +234,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       hideAdvisor={isMobile}
       wide={showResult && !isMobile}
     >
-      <div dir="rtl">
+      <div dir={dir}>
         <div ref={chartContentRef} className="p-4 md:p-8">
           <AnimatePresence mode="sync">
             {phase === "form" && (
@@ -260,9 +263,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   >
                     <span className="text-3xl">🌌</span>
                   </motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">מפת לידה אסטרולוגית</h2>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.chart_title}</h2>
                   <p className="font-body text-sm max-w-md mx-auto leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
-                    חשפו מפת לידה מלאה המבוססת על תאריך, שעה ומקום הלידה שלכם — עם גלגל אישי, כוכבי לכת, בתים ופירוש עמוק בעברית.
+                    {t.chart_subtitle}
                   </p>
                 </div>
 
@@ -282,11 +285,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     className="btn-gold w-full text-base font-heading flex items-center justify-center gap-2"
                   >
                     {preparingChart ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-                    {preparingChart ? "מאתרים את מקום הלידה ומחשבים את המפה..." : t.birth_chart_cta}
+                    {preparingChart ? t.chart_form_loading : t.birth_chart_cta}
                   </motion.button>
 
                   <p className="text-center text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
-                    מקום הלידה משפיע ישירות על האופק, הבתים והפירוש כולו.
+                    {t.chart_form_note}
                   </p>
                 </div>
               </motion.div>
@@ -336,29 +339,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 <div className="text-center">
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                      מפת הלידה של {userName.trim()}
+                      {t.chart_of_name} {userName.trim()}
                     </p>
                   )}
                   <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2">
-                    מפת הלידה האישית שלך
+                    {t.chart_personal_title}
                   </h2>
                   <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
-                      {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : "מחשבים את מיקומי הכוכבים האישיים שלך..."}
+                      {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : t.chart_computing}
                   </p>
                 </div>
 
                 {chartData && (
                 <div className="grid md:grid-cols-3 gap-3 w-full">
                   <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>שמש</div>
+                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.sun}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {chartData.sunSign.hebrewName}</div>
                   </div>
                   <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>אופק / מזל עולה</div>
+                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{t.chart_asc_horizon}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {chartData.risingSign.hebrewName}</div>
                   </div>
                   <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>ירח</div>
+                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.moon}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
                   </div>
                 </div>
@@ -367,20 +370,20 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 {chartData && (
                 <div className="grid xl:grid-cols-3 gap-4 w-full">
                   <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מיקום הלידה שחושב למפה</div>
+                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_birth_location}</div>
                     <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartData.location.name}</p>
                     <p className="font-body text-xs mt-2" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
                       {chartData.location.latitude.toFixed(4)}°, {chartData.location.longitude.toFixed(4)}° • {chartData.location.timezone}
                     </p>
                   </div>
                   <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>דומיננטיות במפה</div>
-                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>יסודות: {elementSummary}</p>
-                    <p className="font-body text-sm mt-2" style={{ color: "hsl(var(--foreground) / 0.78)" }}>בתים: {houseSummary}</p>
+                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_dominance}</div>
+                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartLabels.elements}: {elementSummary}</p>
+                    <p className="font-body text-sm mt-2" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartLabels.houses}: {houseSummary}</p>
                   </div>
                   {!!chartData.aspects.length && (
                     <div className="mystical-card p-4">
-                      <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>היבטים מרכזיים</div>
+                      <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_key_aspects}</div>
                       <div className="space-y-2">
                         {chartData.aspects.slice(0, 4).map((aspect) => (
                           <p key={aspect.label} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
@@ -408,7 +411,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       <span className="text-lg block" style={{ color: PLANET_COLOR_BY_KEY[planet.key] || "#E8B84B" }}>{planet.symbol}</span>
                       <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.9)" }}>{planet.name}</span>
                       <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{planet.sign} {planet.degree}°</span>
-                      <span className="text-[10px] font-body block" style={{ color: "hsl(var(--foreground) / 0.35)" }}>בית {planet.house}</span>
+                      <span className="text-[10px] font-body block" style={{ color: "hsl(var(--foreground) / 0.35)" }}>{chartLabels.house} {planet.house}</span>
                     </div>
                   ))}
                 </motion.div>
@@ -417,11 +420,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 {chartData && (
                 <motion.div className="grid md:grid-cols-2 gap-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                   <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>פתחי הבתים</div>
+                    <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_house_cusps}</div>
                     <div className="grid grid-cols-2 gap-2">
                       {chartData.houseCusps.map((house) => (
                         <div key={house.house} className="rounded-lg px-3 py-2" style={{ background: "hsl(var(--deep-blue-light) / 0.35)" }}>
-                          <div className="text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.5)" }}>בית {house.house}</div>
+                          <div className="text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.5)" }}>{chartLabels.house} {house.house}</div>
                           <div className="text-sm font-body" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{house.sign} {house.degree}°</div>
                         </div>
                       ))}
@@ -429,7 +432,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </div>
 
                   <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>מרכז הכובד של המפה</div>
+                    <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_gravity_center}</div>
                     <div className="space-y-2">
                       {(chartData.dominantElements || []).slice(0, 4).map((entry) => (
                         <div key={entry.element} className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "hsl(var(--deep-blue-light) / 0.35)" }}>
@@ -449,9 +452,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 </div>
 
                 <motion.div className="text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <h3 className="font-heading text-lg md:text-xl mb-1" style={{ color: "hsl(var(--gold) / 0.8)" }}>הפירוש המלא של מפת הלידה</h3>
+                  <h3 className="font-heading text-lg md:text-xl mb-1" style={{ color: "hsl(var(--gold) / 0.8)" }}>{t.chart_full_interp_title}</h3>
                   <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
-                    ניתוח מסונתז לפי כל כוכבי הלכת, האופק, הבתים, ההיבטים ומקום הלידה שלך.
+                    {t.chart_full_interp_desc}
                   </p>
                 </motion.div>
 
@@ -468,7 +471,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
                 {resultText && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
-                    <div dir="rtl" style={{ textAlign: "right", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
+                    <div dir={dir} style={{ textAlign: isRTL ? "right" : "left", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
                       {renderMysticalText(resultText, textSize)}
                     </div>
                   </motion.div>
@@ -479,11 +482,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     <div className="flex flex-wrap justify-center gap-3">
                       <button onClick={handleCopy} className="btn-outline-gold flex items-center gap-2 text-sm px-5 py-2.5">
                         {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                        {copied ? "הועתק" : "העתקת הפירוש"}
+                        {copied ? t.chart_copied : t.chart_copy_interp}
                       </button>
                       <button onClick={handleDownloadImage} disabled={downloading} className="btn-outline-gold flex items-center gap-2 text-sm px-5 py-2.5">
                         {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
-                        שמירה כתמונה
+                        {t.chart_save_image}
                       </button>
                     </div>
                   </motion.div>
