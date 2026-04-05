@@ -176,6 +176,8 @@ export const ru: TranslationKeys = {
   forecast_gender_label: "Пол",
   forecast_gender_male: "Мужской",
   forecast_gender_female: "Женский",
+  forecast_gender_other: "Другое",
+  forecast_gender_prefer_not: "Не указывать",
   forecast_gender_required: "Пожалуйста, выберите пол",
   forecast_birthdate_required: "Пожалуйста, введите корректную дату рождения",
   forecast_cta: "Узнать мой прогноз",

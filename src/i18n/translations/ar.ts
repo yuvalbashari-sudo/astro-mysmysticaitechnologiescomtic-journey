@@ -176,6 +176,8 @@ export const ar: TranslationKeys = {
   forecast_gender_label: "الجنس",
   forecast_gender_male: "ذكر",
   forecast_gender_female: "أنثى",
+  forecast_gender_other: "آخر",
+  forecast_gender_prefer_not: "أفضّل عدم التحديد",
   forecast_gender_required: "يرجى اختيار الجنس",
   forecast_birthdate_required: "يرجى إدخال تاريخ ميلاد صالح",
   forecast_cta: "اكتشفوا توقعاتي",

@@ -198,6 +198,8 @@ export type TranslationKeys = {
   forecast_gender_label: string;
   forecast_gender_male: string;
   forecast_gender_female: string;
+  forecast_gender_other: string;
+  forecast_gender_prefer_not: string;
   forecast_gender_required: string;
   forecast_birthdate_required: string;
   forecast_cta: string;
