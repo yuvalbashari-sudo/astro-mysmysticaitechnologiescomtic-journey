@@ -2283,7 +2283,7 @@ const HeroSection = () => {
     { icon: Star, label: t.hero_menu_forecast, side: "left" as const, index: 0 },
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
-    { icon: Hand, label: t.hero_menu_birthchart, side: "right" as const, index: 1 },
+    { icon: Hand, label: t.hero_menu_palm, side: "right" as const, index: 1 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
@@ -3178,7 +3178,7 @@ const HeroSection = () => {
                       onFocus={() => setHoveredItem(i)}
                       onBlur={() => setHoveredItem(null)}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setPalmOpen(true); }}
                       aria-label={item.label}
                     >
                       <div
@@ -3529,7 +3529,7 @@ const HeroSection = () => {
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: -4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setBirthChartOpen(true)}
+                  onClick={() => setPalmOpen(true)}
                   aria-label={item.label}
                 >
                   <div
