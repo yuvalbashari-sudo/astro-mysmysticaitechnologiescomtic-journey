@@ -68,12 +68,13 @@ interface Props {
 
 const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
-  const [phase, setPhase] = useState(0); // 0=hidden, 1=fade, 2=full
+  const [phase, setPhase] = useState(0); // 0=hidden, 1=reveal, 2=glow, 3=full
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 60);
-    const t2 = setTimeout(() => setPhase(2), 1400);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const t1 = setTimeout(() => setPhase(1), 80);
+    const t2 = setTimeout(() => setPhase(2), 1200);
+    const t3 = setTimeout(() => setPhase(3), 2200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   const size = sizeProp || 520;
