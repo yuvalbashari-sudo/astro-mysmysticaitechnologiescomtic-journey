@@ -1,5 +1,22 @@
 import { motion } from "framer-motion";
 
+const FALLBACK_PLANET_POSITIONS: Record<string, number> = {
+  sun: 42,
+  moon: 118,
+  mercury: 56,
+  venus: 82,
+  mars: 196,
+  jupiter: 248,
+  saturn: 286,
+  uranus: 312,
+  neptune: 328,
+  pluto: 264,
+};
+
+const FALLBACK_ASCENDANT_ANGLE = 18;
+
+const normalizeAngle = (angle: number) => ((angle % 360) + 360) % 360;
+
 const ZODIAC_SIGNS = [
   { symbol: "♈", name: "Aries", angle: 0 },
   { symbol: "♉", name: "Taurus", angle: 30 },
@@ -59,12 +76,24 @@ export function calculatePlanetPositions(birthDate: Date, birthHour: number, bir
 }
 
 interface Props {
-  planetPositions: Record<string, number>;
-  ascendantAngle: number;
+  planetPositions?: Record<string, number>;
+  ascendantAngle?: number;
   size?: number;
 }
 
 const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props) => {
+  const resolvedPlanetPositions = PLANETS.reduce<Record<string, number>>((acc, planet) => {
+    const rawAngle = planetPositions?.[planet.key];
+    acc[planet.key] = Number.isFinite(rawAngle)
+      ? normalizeAngle(rawAngle as number)
+      : FALLBACK_PLANET_POSITIONS[planet.key];
+    return acc;
+  }, {});
+
+  const resolvedAscendantAngle = Number.isFinite(ascendantAngle)
+    ? normalizeAngle(ascendantAngle as number)
+    : FALLBACK_ASCENDANT_ANGLE;
+
   const cx = size / 2;
   const cy = size / 2;
   const outerR = size * 0.44;
@@ -94,8 +123,8 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
       initial={{ scale: 0.7, opacity: 0, rotate: -30 }}
       animate={{ scale: 1, opacity: 1, rotate: 0 }}
       transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-      className="relative mx-auto"
-      style={{ width: size, height: size }}
+      className="relative mx-auto block shrink-0"
+      style={{ width: size, height: size, minWidth: size, minHeight: size, overflow: "visible" }}
     >
       {/* Outer cosmic glow */}
       <div
@@ -107,7 +136,12 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
         }}
       />
 
-      <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full relative z-10">
+      <svg
+        viewBox={`0 0 ${size} ${size}`}
+        className="relative z-10 block w-full h-full overflow-visible"
+        role="img"
+        aria-label="גלגל מפת הלידה"
+      >
         <defs>
           <radialGradient id="wheelBg">
             <stop offset="0%" stopColor="hsl(222, 47%, 10%)" />
@@ -131,11 +165,12 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
 
         {/* Background circle */}
         <circle cx={cx} cy={cy} r={outerR + 8} fill="url(#wheelBg)" />
+        <circle cx={cx} cy={cy} r={outerR + 14} fill="none" stroke="hsl(var(--gold) / 0.18)" strokeWidth="2" />
 
         {/* Sign band arcs */}
         {ZODIAC_SIGNS.map((sign, i) => {
-          const startAngle = (i * 30 - 90 + ascendantAngle) * (Math.PI / 180);
-          const endAngle = ((i + 1) * 30 - 90 + ascendantAngle) * (Math.PI / 180);
+          const startAngle = (i * 30 - 90 + resolvedAscendantAngle) * (Math.PI / 180);
+          const endAngle = ((i + 1) * 30 - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const x1o = cx + outerR * Math.cos(startAngle);
           const y1o = cy + outerR * Math.sin(startAngle);
           const x2o = cx + outerR * Math.cos(endAngle);
@@ -165,14 +200,14 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
 
         {/* House lines with numbers */}
         {Array.from({ length: 12 }).map((_, i) => {
-          const angle = (i * 30 - 90 + ascendantAngle) * (Math.PI / 180);
+          const angle = (i * 30 - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const x1 = cx + innerR * Math.cos(angle);
           const y1 = cy + innerR * Math.sin(angle);
           const x2 = cx + outerR * Math.cos(angle);
           const y2 = cy + outerR * Math.sin(angle);
           const isCardinal = i % 3 === 0;
           // House number placement
-          const houseAngle = ((i * 30 + 15) - 90 + ascendantAngle) * (Math.PI / 180);
+          const houseAngle = ((i * 30 + 15) - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const hx = cx + (centerR + 8) * Math.cos(houseAngle);
           const hy = cy + (centerR + 8) * Math.sin(houseAngle);
 
@@ -200,7 +235,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
 
         {/* Zodiac symbols */}
         {ZODIAC_SIGNS.map((sign, i) => {
-          const angle = ((i * 30 + 15) - 90 + ascendantAngle) * (Math.PI / 180);
+          const angle = ((i * 30 + 15) - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const x = cx + signR * Math.cos(angle);
           const y = cy + signR * Math.sin(angle);
           return (
@@ -220,9 +255,9 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
 
         {/* Planets with colored markers */}
         {PLANETS.map((planet) => {
-          const pos = planetPositions[planet.key];
+          const pos = resolvedPlanetPositions[planet.key];
           if (pos === undefined) return null;
-          const angle = (pos - 90 + ascendantAngle) * (Math.PI / 180);
+          const angle = (pos - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const x = cx + planetR * Math.cos(angle);
           const y = cy + planetR * Math.sin(angle);
           const r = size * 0.035;
@@ -259,7 +294,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
 
         {/* ASC marker */}
         {(() => {
-          const angle = (ascendantAngle - 90) * (Math.PI / 180);
+          const angle = (resolvedAscendantAngle - 90) * (Math.PI / 180);
           const x = cx + (outerR + size * 0.04) * Math.cos(angle);
           const y = cy + (outerR + size * 0.04) * Math.sin(angle);
           const arrowX = cx + outerR * Math.cos(angle);
@@ -286,6 +321,26 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
         })()}
 
         {/* Center ornament */}
+        <circle cx={cx} cy={cy} r={centerR - 2} fill="hsl(var(--deep-blue-light) / 0.9)" stroke="hsl(var(--gold) / 0.18)" strokeWidth="1" />
+        <text
+          x={cx}
+          y={cy - size * 0.018}
+          textAnchor="middle"
+          fontSize={size * 0.028}
+          fill="hsl(var(--gold) / 0.82)"
+          fontWeight="700"
+        >
+          מפת לידה
+        </text>
+        <text
+          x={cx}
+          y={cy + size * 0.028}
+          textAnchor="middle"
+          fontSize={size * 0.02}
+          fill="hsl(var(--foreground) / 0.55)"
+        >
+          גלגל אישי
+        </text>
         <circle cx={cx} cy={cy} r="4" fill="hsl(43, 80%, 55%)" fillOpacity="0.4" />
         <circle cx={cx} cy={cy} r="2" fill="hsl(43, 80%, 55%)" fillOpacity="0.7" />
       </svg>

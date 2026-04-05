@@ -297,7 +297,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {showResult && chartData && (
+              {showResult && (
               <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8">
                 <div className="text-center">
                   {userName.trim() && (
@@ -309,7 +309,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     מפת הלידה האישית שלך
                   </motion.h2>
                   <motion.p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
-                    {chartData.location.name} • {birthDate} • {birthTime}
+                      {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : "מחשבים את מיקומי הכוכבים האישיים שלך..."}
                   </motion.p>
                 </div>
 
@@ -329,12 +329,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       style={{ minHeight: wheelSize + (isMobile ? 24 : 48) }}
                     >
                       <NatalChartWheel
-                        planetPositions={chartData.planetPositions}
-                        ascendantAngle={chartData.ascendantAngle}
+                        planetPositions={chartData?.planetPositions}
+                        ascendantAngle={chartData?.ascendantAngle}
                         size={wheelSize}
                       />
                     </div>
 
+                    {chartData && (
                     <div className="grid md:grid-cols-3 gap-3 w-full">
                       <div className="mystical-card p-4 text-center">
                         <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>שמש</div>
@@ -349,7 +350,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                         <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
                       </div>
                     </div>
+                    )}
 
+                    {chartData ? (
                     <div className="grid xl:grid-cols-3 gap-4 w-full">
                       <div className="mystical-card p-4">
                         <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מיקום הלידה שחושב למפה</div>
@@ -376,9 +379,18 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                         </div>
                       )}
                     </div>
+                    ) : (
+                      <div className="mystical-card p-5 text-center w-full">
+                        <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>מפת הלידה נטענת</div>
+                        <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.7)" }}>
+                          הגלגל מוצג כבר עכשיו, והנתונים האמיתיים של הכוכבים והבתים מתחברים אליו מיד עם סיום החישוב.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
 
+                {chartData && (
                 <motion.div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                   {chartData.planetPlacements.map((planet) => (
                     <div
@@ -397,7 +409,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   ))}
                 </motion.div>
+                )}
 
+                {chartData && (
                 <motion.div className="grid md:grid-cols-2 gap-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
                   <div className="mystical-card p-4">
                     <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>פתחי הבתים</div>
@@ -423,6 +437,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   </div>
                 </motion.div>
+                )}
 
                 <div className="flex items-center justify-center gap-3 py-4">
                   <div className="h-px flex-1 max-w-[80px]" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2))" }} />
