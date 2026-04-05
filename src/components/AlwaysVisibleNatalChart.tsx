@@ -549,25 +549,32 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           </text>
         )}
 
-        {/* Decorative dots around inner circle */}
+        {/* Decorative dots around inner circle with shimmer */}
         {Array.from({ length: 24 }).map((_, i) => {
           const angle = i * 15;
           const pt = polar(cx, cy, innerR + 2, angle);
           return (
             <circle
               key={`dot-${i}`}
-              cx={pt.x} cy={pt.y} r={0.7}
-              fill="rgba(212,175,55,0.25)"
-            />
+              cx={pt.x} cy={pt.y} r={0.8}
+              fill="rgba(212,175,55,0.3)"
+            >
+              <animate attributeName="opacity" values="0.15;0.4;0.15" dur={`${3 + (i % 5) * 0.4}s`} repeatCount="indefinite" />
+            </circle>
           );
         })}
+
+        {/* Subtle rotating light sweep */}
+        <circle cx={cx} cy={cy} r={outerR - 5} fill="none" stroke="rgba(245,214,142,0.03)" strokeWidth="20" strokeDasharray={`${outerR * 0.5} ${outerR * 2.3}`}>
+          <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`360 ${cx} ${cy}`} dur="30s" repeatCount="indefinite" />
+        </circle>
       </svg>
 
       {/* CSS keyframes for breathing effect */}
       <style>{`
         @keyframes chartBreathing {
-          0%, 100% { opacity: 0.6; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.03); }
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.04); }
         }
       `}</style>
     </div>
