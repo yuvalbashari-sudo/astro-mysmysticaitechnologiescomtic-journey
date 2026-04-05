@@ -36,39 +36,22 @@ const AlwaysVisibleNatalChart = () => {
         position: "relative",
         overflow: "visible",
         background: "hsl(var(--background))",
-        borderBottom: "1px solid hsl(var(--border))",
-        zIndex: 999,
+        zIndex: 2,
       }}
     >
       <div
         className="mx-auto w-full"
         style={{
-          maxWidth: 760,
+          maxWidth: 520,
           minHeight: 400,
-          padding: "16px",
+          padding: "8px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "12px",
           overflow: "visible",
         }}
       >
-        <div
-          style={{
-            fontFamily: "monospace",
-            fontSize: 18,
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            color: "hsl(var(--destructive-foreground))",
-            background: "hsl(var(--destructive))",
-            padding: "10px 14px",
-            borderRadius: 8,
-          }}
-        >
-          CHART IS RENDERING
-        </div>
-
         <div
           className="w-full"
           style={{
@@ -150,9 +133,6 @@ const AlwaysVisibleNatalChart = () => {
 
             <text x={cx} y={cy - 8} textAnchor="middle" fontSize="22" fontWeight="700" fill="hsl(var(--primary))">
               גלגל אסטרולוגי
-            </text>
-            <text x={cx} y={cy + 18} textAnchor="middle" fontSize="13" fill="hsl(var(--muted-foreground))">
-              Visible fallback chart
             </text>
           </svg>
         </div>
