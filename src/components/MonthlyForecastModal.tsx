@@ -352,13 +352,26 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   )}
                 </div>
                 {aiText ? (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                    className="max-w-prose rounded-2xl"
+                    style={{
+                      background: "linear-gradient(145deg, hsl(222 40% 10% / 0.75), hsl(222 47% 6% / 0.85))",
+                      backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
+                      border: "1px solid hsl(var(--gold) / 0.15)",
+                      boxShadow: "0 8px 40px hsl(222 47% 3% / 0.6), 0 0 1px hsl(var(--gold) / 0.2), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                      padding: "32px 28px",
+                    }}
+                  >
                     <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                    <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>{renderMysticalText(aiText, textSize)}</div>
+                    <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
                     {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{mode === "forecast" ? t.forecast_loading : t.rising_loading}</span></motion.div>)}
                   </motion.div>
                 ) : aiError ? (
-                  <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
+                  <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16">
                     <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
@@ -437,13 +450,26 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             </div>
             {aiText ? (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                {renderMysticalText(aiText, textSize)}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="max-w-prose mx-auto rounded-2xl"
+                style={{
+                  background: "linear-gradient(145deg, hsl(222 40% 10% / 0.75), hsl(222 47% 6% / 0.85))",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                  border: "1px solid hsl(var(--gold) / 0.15)",
+                  boxShadow: "0 8px 40px hsl(222 47% 3% / 0.6), 0 0 1px hsl(var(--gold) / 0.2), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                  padding: "24px 20px",
+                }}
+              >
+                <div className="flex justify-end mb-5"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
                 {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{mode === "forecast" ? t.forecast_loading : t.rising_loading}</span></motion.div>)}
               </motion.div>
             ) : aiError ? (
-              <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
+              <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
             ) : (
               <div className="flex flex-col items-center justify-center py-16">
                 <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
@@ -454,7 +480,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               <>
                 <ShareResultSection symbol={mode === "forecast" ? signInfo!.symbol : risingInfo!.symbol} title={mode === "forecast" ? `${t.readings_type_forecast} — ${signInfo!.name}` : `${risingInfo!.sunSign} + ${risingInfo!.name}`} subtitle={mode === "forecast" ? monthName : `${t.rising_sun_label} + ${t.rising_asc_label}`} readingText={aiText || undefined} />
                 <div className="section-divider max-w-[200px] mx-auto my-10" />
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }} className="text-center rounded-2xl p-8" style={{ background: "linear-gradient(145deg, hsl(222 40% 10% / 0.75), hsl(222 47% 6% / 0.85))", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", border: "1px solid hsl(var(--gold) / 0.12)", boxShadow: "0 8px 40px hsl(222 47% 3% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
                   <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
                   <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.forecast_premium_title}</h4>
                   <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.forecast_premium_desc}</p>
