@@ -146,6 +146,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   onChange={updateDetails}
                   attempted={attempted}
                   showTime={false}
+                  showCity={false}
                   size="large"
                 />
                 <div style={{ marginTop: "32px" }}>
@@ -176,6 +177,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 onChange={updateDetails}
                 attempted={attempted}
                 showTime={false}
+                showCity={false}
               />
               <div className="mt-6 flex justify-center">
                 <motion.button onClick={handleSubmit} className="btn-gold font-body flex items-center justify-center gap-2" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.forecast_cta}</motion.button>
