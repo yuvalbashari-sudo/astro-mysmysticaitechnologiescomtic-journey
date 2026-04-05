@@ -411,7 +411,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       <span className="text-[10px] font-body block" style={{ color: "hsl(var(--foreground) / 0.35)" }}>בית {planet.house}</span>
                     </div>
                   ))}
-              </div>
+                </motion.div>
                 )}
 
                 {chartData && (
@@ -488,7 +488,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   </motion.div>
                 )}
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </div>
