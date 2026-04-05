@@ -39,7 +39,7 @@ const describeArc = (cx: number, cy: number, radius: number, startAngle: number,
   return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
 };
 
-const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 360 }: Props) => {
+const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props) => {
   const resolvedAscendant = Number.isFinite(ascendantAngle) ? normalizeAngle(ascendantAngle as number) : DEFAULT_ASCENDANT;
   const resolvedPositions = PLANETS.reduce<Record<string, number>>((acc, planet) => {
     const raw = planetPositions?.[planet.key];
@@ -56,13 +56,14 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 360 }: Props
 
   return (
     <div
-      className="mx-auto"
+      className="w-full"
       style={{
-        width: size,
-        height: size,
-        minWidth: size,
-        minHeight: size,
-        display: "block",
+        minHeight: 400,
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "visible",
       }}
     >
       <svg
@@ -71,9 +72,9 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 360 }: Props
         height={size}
         role="img"
         aria-label="גלגל מפת לידה"
-        style={{ display: "block", width: "100%", height: "100%" }}
+        style={{ display: "block", width: size, height: size, maxWidth: "100%", overflow: "visible" }}
       >
-        <circle cx={cx} cy={cy} r={outerRadius + 10} fill="hsl(var(--deep-blue) / 0.9)" stroke="hsl(var(--gold) / 0.2)" strokeWidth="2" />
+        <circle cx={cx} cy={cy} r={outerRadius + 10} fill="hsl(var(--deep-blue) / 0.9)" stroke="hsl(var(--destructive))" strokeWidth="2" />
         <circle cx={cx} cy={cy} r={outerRadius} fill="hsl(var(--deep-blue-light) / 0.45)" stroke="hsl(var(--gold) / 0.45)" strokeWidth="1.5" />
         <circle cx={cx} cy={cy} r={zodiacRadius + 20} fill="none" stroke="hsl(var(--gold) / 0.18)" strokeWidth="1" />
         <circle cx={cx} cy={cy} r={innerRadius + 34} fill="none" stroke="hsl(var(--gold) / 0.16)" strokeWidth="1" />
