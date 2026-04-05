@@ -16,6 +16,7 @@ import PremiumUpgrade from "./pages/PremiumUpgrade";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NatalTest from "./pages/NatalTest";
+import TarotGuidePage from "./pages/TarotGuidePage";
 import FloatingOracleButton from "./components/FloatingOracleButton";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 
