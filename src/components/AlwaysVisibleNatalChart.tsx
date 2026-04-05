@@ -55,11 +55,12 @@ interface Props {
 
 const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [phase, setPhase] = useState(0); // 0=hidden, 1=fade, 2=full
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 80);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setPhase(1), 60);
+    const t2 = setTimeout(() => setPhase(2), 1400);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   const size = sizeProp || 460;
@@ -91,6 +92,10 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
   const handlePlanetLeave = useCallback(() => setTooltip(null), []);
 
+  // Sun/Moon for emphasis
+  const sunDeg = positions.sun;
+  const moonDeg = positions.moon;
+
   return (
     <div
       className="w-full"
@@ -103,11 +108,27 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         justifyContent: "center",
         position: "relative",
         overflow: "visible",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "scale(1)" : "scale(0.92)",
-        transition: "opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1)",
+        opacity: phase >= 1 ? 1 : 0,
+        transform: phase >= 1
+          ? "scale(1) rotate(0deg)"
+          : "scale(0.88) rotate(-8deg)",
+        transition: "opacity 1.6s cubic-bezier(0.16,1,0.3,1), transform 1.6s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
+      {/* Ambient outer aura */}
+      <div
+        style={{
+          position: "absolute",
+          inset: "-15%",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(212,175,55,0.04) 40%, transparent 70%)",
+          opacity: phase >= 2 ? 1 : 0,
+          transition: "opacity 2s ease-out",
+          pointerEvents: "none",
+          animation: phase >= 2 ? "chartBreathing 6s ease-in-out infinite" : "none",
+        }}
+      />
+
       {/* Tooltip */}
       {tooltip && (
         <div
@@ -161,35 +182,59 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           {/* Outer glow */}
           <radialGradient id="outer-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="80%" stopColor="transparent" />
-            <stop offset="92%" stopColor="rgba(212,175,55,0.06)" />
+            <stop offset="78%" stopColor="transparent" />
+            <stop offset="90%" stopColor="rgba(212,175,55,0.07)" />
+            <stop offset="96%" stopColor="rgba(139,92,246,0.05)" />
             <stop offset="100%" stopColor="rgba(212,175,55,0.02)" />
           </radialGradient>
 
           {/* Celestial ambient */}
           <radialGradient id="celestial-ambient" cx="50%" cy="35%" r="60%">
-            <stop offset="0%" stopColor="rgba(99,102,241,0.08)" />
-            <stop offset="50%" stopColor="rgba(139,92,246,0.04)" />
+            <stop offset="0%" stopColor="rgba(99,102,241,0.1)" />
+            <stop offset="50%" stopColor="rgba(139,92,246,0.05)" />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
           {/* Inner core glow */}
           <radialGradient id="inner-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.06)" />
+            <stop offset="0%" stopColor="rgba(212,175,55,0.08)" />
             <stop offset="60%" stopColor="rgba(15,12,30,0.98)" />
             <stop offset="100%" stopColor="#0a0818" />
           </radialGradient>
 
+          {/* Gold shimmer gradient for outer ring */}
+          <linearGradient id="gold-shimmer" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.7)">
+              <animate attributeName="stop-opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="50%" stopColor="rgba(245,214,142,0.9)">
+              <animate attributeName="stop-opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite" />
+            </stop>
+            <stop offset="100%" stopColor="rgba(212,175,55,0.7)">
+              <animate attributeName="stop-opacity" values="0.5;0.8;0.5" dur="4s" repeatCount="indefinite" />
+            </stop>
+          </linearGradient>
+
           {/* Gold line glow filter */}
-          <filter id="gold-ring-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
+          <filter id="gold-ring-glow" x="-25%" y="-25%" width="150%" height="150%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
 
           {/* Planet glow filter */}
-          <filter id="planet-aura" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
+          <filter id="planet-aura" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3.5" result="blur" />
             <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          {/* Strong planet glow for Sun/Moon */}
+          <filter id="planet-aura-strong" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
@@ -205,9 +250,18 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             </feMerge>
           </filter>
 
-          {/* Subtle star sparkle */}
+          {/* Sparkle */}
           <filter id="sparkle">
             <feGaussianBlur stdDeviation="1.5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+
+          {/* Zodiac glyph enhanced glow */}
+          <filter id="zodiac-glow" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -216,40 +270,41 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         </defs>
 
         {/* === BACKGROUND LAYERS === */}
-        {/* Deep cosmic bg */}
-        <circle cx={cx} cy={cy} r={outerR + 22} fill="url(#chart-bg-premium)" />
-        {/* Celestial purple ambient */}
-        <circle cx={cx} cy={cy} r={outerR + 22} fill="url(#celestial-ambient)" />
-        {/* Outer glow aura */}
-        <circle cx={cx} cy={cy} r={outerR + 22} fill="url(#outer-glow)" />
-        {/* Outer border ring */}
-        <circle cx={cx} cy={cy} r={outerR + 16} fill="none" stroke="rgba(212,175,55,0.08)" strokeWidth="0.5" />
+        <circle cx={cx} cy={cy} r={outerR + 26} fill="url(#chart-bg-premium)" />
+        <circle cx={cx} cy={cy} r={outerR + 26} fill="url(#celestial-ambient)" />
+        <circle cx={cx} cy={cy} r={outerR + 26} fill="url(#outer-glow)" />
+
+        {/* Pulsing outer aura ring */}
+        <circle cx={cx} cy={cy} r={outerR + 18} fill="none" stroke="rgba(139,92,246,0.06)" strokeWidth="8">
+          <animate attributeName="stroke-opacity" values="0.03;0.08;0.03" dur="5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={cx} cy={cy} r={outerR + 12} fill="none" stroke="rgba(212,175,55,0.04)" strokeWidth="0.5" />
 
         {/* === MAIN RINGS === */}
-        {/* Outer gold ring with glow */}
-        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="rgba(212,175,55,0.55)" strokeWidth="1.5" filter="url(#gold-ring-glow)" />
-        {/* Secondary outer ring */}
-        <circle cx={cx} cy={cy} r={outerR - 1} fill="none" stroke="rgba(212,175,55,0.12)" strokeWidth="0.5" />
+        {/* Primary outer gold ring with shimmer */}
+        <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="url(#gold-shimmer)" strokeWidth="1.8" filter="url(#gold-ring-glow)" />
+        {/* Inner accent ring */}
+        <circle cx={cx} cy={cy} r={outerR - 1.5} fill="none" stroke="rgba(212,175,55,0.1)" strokeWidth="0.4" />
 
         {/* House boundary ring */}
-        <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.3)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
 
         {/* Inner circle with core glow */}
-        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.4)" strokeWidth="1.2" />
 
-        {/* Decorative tick marks on outer ring */}
+        {/* Decorative tick marks */}
         {Array.from({ length: 72 }).map((_, i) => {
           const angle = asc + i * 5;
           const isMajor = i % 6 === 0;
-          const tickLen = isMajor ? 5 : 2.5;
+          const tickLen = isMajor ? 6 : 2.5;
           const s = polar(cx, cy, outerR - tickLen, angle);
           const e = polar(cx, cy, outerR, angle);
           return (
             <line
               key={`tick-${i}`}
               x1={s.x} y1={s.y} x2={e.x} y2={e.y}
-              stroke={isMajor ? "rgba(212,175,55,0.35)" : "rgba(212,175,55,0.12)"}
-              strokeWidth={isMajor ? 0.8 : 0.4}
+              stroke={isMajor ? "rgba(212,175,55,0.45)" : "rgba(212,175,55,0.12)"}
+              strokeWidth={isMajor ? 0.9 : 0.4}
             />
           );
         })}
@@ -265,29 +320,30 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           return (
             <g key={i}>
-              {/* Subtle colored segment arc */}
+              {/* Colored segment arc */}
               <path
                 d={describeArc(cx, cy, outerR - 1, angle, angle + 30)}
                 fill="none"
-                stroke={`${ZODIAC_COLORS[i]}10`}
+                stroke={`${ZODIAC_COLORS[i]}12`}
                 strokeWidth={size * 0.07}
               />
               {/* House division line */}
               <line
                 x1={lineStart.x} y1={lineStart.y}
                 x2={lineEnd.x} y2={lineEnd.y}
-                stroke={isCardinal ? "rgba(212,175,55,0.45)" : "rgba(212,175,55,0.15)"}
-                strokeWidth={isCardinal ? 1.5 : 0.7}
+                stroke={isCardinal ? "rgba(212,175,55,0.5)" : "rgba(212,175,55,0.18)"}
+                strokeWidth={isCardinal ? 1.6 : 0.7}
                 strokeDasharray={isCardinal ? "none" : "2 3"}
               />
               {/* Zodiac glyph */}
               <text
                 x={zodiacPos.x} y={zodiacPos.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.05}
+                fontSize={size * 0.052}
                 fill={ZODIAC_COLORS[i]}
-                style={{ opacity: 0.92 }}
-                filter="url(#sparkle)"
+                style={{ opacity: 0.95 }}
+                filter="url(#zodiac-glow)"
+                fontWeight="600"
               >
                 {ZODIAC_GLYPHS[i]}
               </text>
@@ -295,8 +351,8 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               <text
                 x={housePos.x} y={housePos.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.02}
-                fill="rgba(212,175,55,0.3)"
+                fontSize={size * 0.021}
+                fill="rgba(212,175,55,0.35)"
                 fontWeight="500"
                 fontFamily="'Cinzel', serif"
               >
@@ -310,7 +366,8 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         {PLANET_DEFS.map((planet) => {
           const deg = positions[planet.key] + asc;
           const pt = polar(cx, cy, planetR, deg);
-          const r = size * 0.03;
+          const r = size * 0.032;
+          const isEmphasis = planet.key === "sun" || planet.key === "moon";
 
           return (
             <g
@@ -319,41 +376,42 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               onMouseLeave={handlePlanetLeave}
               style={{ cursor: "pointer" }}
             >
-              {/* Outer aura */}
+              {/* Outer ambient aura */}
               <circle
-                cx={pt.x} cy={pt.y} r={r + 6}
-                fill={`${planet.color}08`}
+                cx={pt.x} cy={pt.y} r={r + (isEmphasis ? 10 : 7)}
+                fill={`${planet.color}${isEmphasis ? "0c" : "06"}`}
                 stroke="none"
-              />
+              >
+                {isEmphasis && (
+                  <animate attributeName="r" values={`${r + 8};${r + 12};${r + 8}`} dur="3s" repeatCount="indefinite" />
+                )}
+              </circle>
               {/* Hit area */}
-              <circle
-                cx={pt.x} cy={pt.y} r={r + 5}
-                fill="transparent"
-              />
+              <circle cx={pt.x} cy={pt.y} r={r + 5} fill="transparent" />
               {/* Planet bg */}
               <circle
                 cx={pt.x} cy={pt.y} r={r}
-                fill="rgba(12,10,25,0.94)"
+                fill="rgba(12,10,25,0.95)"
                 stroke={planet.color}
-                strokeWidth="1.5"
-                filter="url(#planet-aura)"
+                strokeWidth={isEmphasis ? 2 : 1.5}
+                filter={isEmphasis ? "url(#planet-aura-strong)" : "url(#planet-aura)"}
               />
               {/* Planet symbol */}
               <text
                 x={pt.x} y={pt.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.027}
+                fontSize={size * (isEmphasis ? 0.032 : 0.027)}
                 fill={planet.color}
                 fontWeight="700"
               >
                 {planet.symbol}
               </text>
-              {/* Connector line to ring */}
+              {/* Connector line */}
               <line
                 x1={pt.x} y1={pt.y}
                 x2={polar(cx, cy, houseR + 2, deg).x}
                 y2={polar(cx, cy, houseR + 2, deg).y}
-                stroke={`${planet.color}20`}
+                stroke={`${planet.color}22`}
                 strokeWidth="0.5"
                 strokeDasharray="2 2"
               />
@@ -364,11 +422,10 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         {/* === ASCENDANT MARKER === */}
         {(() => {
           const start = polar(cx, cy, outerR - 3, asc);
-          const end = polar(cx, cy, outerR + 20, asc);
-          const label = polar(cx, cy, outerR + 32, asc);
-          // Arrow tip
+          const end = polar(cx, cy, outerR + 22, asc);
+          const label = polar(cx, cy, outerR + 34, asc);
           const tipAngle = (asc - 90) * (Math.PI / 180);
-          const arrowLen = 6;
+          const arrowLen = 7;
           const tip = { x: end.x, y: end.y };
           const left = {
             x: tip.x - arrowLen * Math.cos(tipAngle - 0.4),
@@ -383,7 +440,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             <g filter="url(#asc-glow)">
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="#E85D5D" strokeWidth="2"
+                stroke="#E85D5D" strokeWidth="2.2"
               />
               <polygon
                 points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
@@ -392,10 +449,10 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.024} fontWeight="700"
+                fontSize={size * 0.025} fontWeight="700"
                 fill="#E85D5D"
                 fontFamily="'Cinzel', serif"
-                letterSpacing="0.08em"
+                letterSpacing="0.1em"
               >
                 ASC
               </text>
@@ -407,8 +464,8 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         <text
           x={cx} y={cy - 6}
           textAnchor="middle"
-          fontSize={size * 0.03}
-          fill="rgba(212,175,55,0.85)"
+          fontSize={size * 0.032}
+          fill="rgba(212,175,55,0.9)"
           fontWeight="700"
           fontFamily="'Cinzel', serif"
         >
@@ -418,8 +475,8 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           <text
             x={cx} y={cy + size * 0.035}
             textAnchor="middle"
-            fontSize={size * 0.018}
-            fill="rgba(200,190,220,0.5)"
+            fontSize={size * 0.019}
+            fill="rgba(200,190,220,0.55)"
             fontFamily="'Heebo', sans-serif"
           >
             {chartData.sunSign.symbol} {chartData.sunSign.hebrewName} • {chartData.risingSign?.symbol} {chartData.risingSign?.hebrewName} עולה
@@ -433,12 +490,20 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
           return (
             <circle
               key={`dot-${i}`}
-              cx={pt.x} cy={pt.y} r={0.6}
-              fill="rgba(212,175,55,0.2)"
+              cx={pt.x} cy={pt.y} r={0.7}
+              fill="rgba(212,175,55,0.25)"
             />
           );
         })}
       </svg>
+
+      {/* CSS keyframes for breathing effect */}
+      <style>{`
+        @keyframes chartBreathing {
+          0%, 100% { opacity: 0.7; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.02); }
+        }
+      `}</style>
     </div>
   );
 };
