@@ -68,12 +68,13 @@ interface Props {
 
 const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
-  const [phase, setPhase] = useState(0); // 0=hidden, 1=fade, 2=full
+  const [phase, setPhase] = useState(0); // 0=hidden, 1=reveal, 2=glow, 3=full
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase(1), 60);
-    const t2 = setTimeout(() => setPhase(2), 1400);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    const t1 = setTimeout(() => setPhase(1), 80);
+    const t2 = setTimeout(() => setPhase(2), 1200);
+    const t3 = setTimeout(() => setPhase(3), 2200);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   const size = sizeProp || 520;
@@ -121,24 +122,26 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         justifyContent: "center",
         position: "relative",
         overflow: "visible",
+        paddingTop: "clamp(8px, 2vw, 16px)",
+        marginBottom: "clamp(8px, 2vw, 20px)",
         opacity: phase >= 1 ? 1 : 0,
         transform: phase >= 1
           ? "scale(1) rotate(0deg)"
-          : "scale(0.88) rotate(-8deg)",
-        transition: "opacity 1.6s cubic-bezier(0.16,1,0.3,1), transform 1.6s cubic-bezier(0.16,1,0.3,1)",
+          : "scale(0.85) rotate(-10deg)",
+        transition: "opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.4s cubic-bezier(0.16,1,0.3,1)",
       }}
     >
       {/* Ambient outer aura */}
       <div
         style={{
           position: "absolute",
-          inset: "-15%",
+          inset: "-18%",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, rgba(212,175,55,0.04) 40%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(139,92,246,0.1) 0%, rgba(212,175,55,0.06) 35%, transparent 65%)",
           opacity: phase >= 2 ? 1 : 0,
-          transition: "opacity 2s ease-out",
+          transition: "opacity 1.8s ease-out",
           pointerEvents: "none",
-          animation: phase >= 2 ? "chartBreathing 6s ease-in-out infinite" : "none",
+          animation: phase >= 3 ? "chartBreathing 7s ease-in-out infinite" : "none",
         }}
       />
 
@@ -208,11 +211,19 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
-          {/* Inner core glow */}
+          {/* Inner core glow — deeper energy */}
           <radialGradient id="inner-core" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="rgba(212,175,55,0.08)" />
-            <stop offset="60%" stopColor="rgba(15,12,30,0.98)" />
+            <stop offset="0%" stopColor="rgba(212,175,55,0.18)" />
+            <stop offset="30%" stopColor="rgba(139,92,246,0.08)" />
+            <stop offset="65%" stopColor="rgba(15,12,30,0.98)" />
             <stop offset="100%" stopColor="#0a0818" />
+          </radialGradient>
+
+          {/* Center energy pulse */}
+          <radialGradient id="center-energy" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.12)" />
+            <stop offset="40%" stopColor="rgba(139,92,246,0.06)" />
+            <stop offset="100%" stopColor="transparent" />
           </radialGradient>
 
           {/* Gold shimmer gradient for outer ring */}
@@ -303,7 +314,10 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         <circle cx={cx} cy={cy} r={houseR} fill="none" stroke="rgba(212,175,55,0.35)" strokeWidth="1" />
 
         {/* Inner circle with core glow */}
-        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.4)" strokeWidth="1.2" />
+        <circle cx={cx} cy={cy} r={innerR + 3} fill="url(#center-energy)" stroke="none">
+          <animate attributeName="opacity" values="0.4;0.8;0.4" dur="5s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={cx} cy={cy} r={innerR} fill="url(#inner-core)" stroke="rgba(212,175,55,0.5)" strokeWidth="1.4" />
 
         {/* Decorative tick marks */}
         {Array.from({ length: 72 }).map((_, i) => {
@@ -454,21 +468,26 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
 
           return (
             <g filter="url(#asc-glow)">
+              {/* Subtle connecting arc */}
               <line
                 x1={start.x} y1={start.y} x2={end.x} y2={end.y}
-                stroke="#E85D5D" strokeWidth="2.2"
+                stroke="rgba(232,93,93,0.7)" strokeWidth="1.8"
+              />
+              <line
+                x1={start.x} y1={start.y} x2={end.x} y2={end.y}
+                stroke="rgba(232,93,93,0.15)" strokeWidth="5"
               />
               <polygon
                 points={`${tip.x},${tip.y} ${left.x},${left.y} ${right.x},${right.y}`}
-                fill="#E85D5D"
+                fill="rgba(232,93,93,0.85)"
               />
               <text
                 x={label.x} y={label.y}
                 textAnchor="middle" dominantBaseline="central"
-                fontSize={size * 0.028} fontWeight="700"
-                fill="#E85D5D"
+                fontSize={size * 0.026} fontWeight="700"
+                fill="rgba(232,93,93,0.85)"
                 fontFamily="'Cinzel', serif"
-                letterSpacing="0.1em"
+                letterSpacing="0.12em"
               >
                 ASC
               </text>
@@ -516,8 +535,8 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
       {/* CSS keyframes for breathing effect */}
       <style>{`
         @keyframes chartBreathing {
-          0%, 100% { opacity: 0.7; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.02); }
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.03); }
         }
       `}</style>
     </div>
