@@ -279,7 +279,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
                 fontWeight="bold"
                 fill="hsl(0, 65%, 55%)"
               >
-                ASC
+                אופק
               </text>
             </g>
           );
