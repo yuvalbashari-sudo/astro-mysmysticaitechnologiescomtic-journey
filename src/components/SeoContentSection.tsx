@@ -249,7 +249,6 @@ const SeoContentSection = () => {
               {isHe ? "מפה אסטרולוגית מלאה" : "Full Astrological Chart"}
             </div>
           </motion.div>
-          </div>
         </div>
       </motion.div>
     </section>
