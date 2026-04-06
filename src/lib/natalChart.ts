@@ -104,7 +104,9 @@ function parseBirthTime(birthTime: string) {
 }
 
 function getSignMeta(label?: string) {
-  return SIGN_META[(label || "Aries") as SignLabel] || SIGN_META.Aries;
+  const key = (label || "Aries") as string;
+  const meta = SIGN_META[key] || SIGN_META.Aries;
+  return { ...meta, key };
 }
 
 function normalizeDegree(degree: number) {
@@ -224,6 +226,7 @@ export async function calculateNatalChart(input: {
       name: PLANET_META[key].name,
       symbol: PLANET_META[key].symbol,
       sign: signMeta.hebrewName,
+      signKey: signMeta.key,
       degree: degreeInSign(absoluteDegree),
       house: body?.House?.id || 1,
       absoluteDegree,
@@ -246,6 +249,7 @@ export async function calculateNatalChart(input: {
     return {
       house: house.id,
       sign: signMeta.hebrewName,
+      signKey: signMeta.key,
       degree: degreeInSign(cuspDegree),
       absoluteDegree: cuspDegree,
     };
@@ -272,13 +276,17 @@ export async function calculateNatalChart(input: {
         label: `${left} • ${ASPECT_META[aspect.aspectKey] || aspect.label} • ${right}`,
         type: ASPECT_META[aspect.aspectKey] || aspect.label,
         orb: Math.round((aspect.orb || 0) * 10) / 10,
+        planet1Key: aspect.point1Key,
+        planet2Key: aspect.point2Key,
       };
     });
 
-  const elementCounts = planetPlacements.reduce<Record<string, number>>((acc, placement) => {
+  const elementCounts = planetPlacements.reduce<Record<string, { count: number; elementKey: string }>>((acc, placement) => {
     const signEntry = Object.values(SIGN_META).find((sign) => sign.hebrewName === placement.sign);
     const element = signEntry?.element || "אוויר";
-    acc[element] = (acc[element] || 0) + 1;
+    const elementKey = signEntry?.elementKey || "air";
+    if (!acc[element]) acc[element] = { count: 0, elementKey };
+    acc[element].count += 1;
     return acc;
   }, {});
 
@@ -289,17 +297,18 @@ export async function calculateNatalChart(input: {
 
   return {
     location,
-    sunSign: sunMeta,
-    risingSign: risingMeta,
+    sunSign: { ...sunMeta },
+    risingSign: { ...risingMeta },
     moonSign: moonMeta.hebrewName,
+    moonSignKey: moonMeta.key,
     ascendantAngle,
     planetPositions,
     planetPlacements,
     aspects,
     houseCusps,
     dominantElements: Object.entries(elementCounts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([element, count]) => ({ element, count })),
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([element, data]) => ({ element, elementKey: data.elementKey, count: data.count })),
     dominantHouses: Object.entries(houseCounts)
       .map(([house, count]) => ({ house: Number(house), count }))
       .sort((a, b) => b.count - a.count),
