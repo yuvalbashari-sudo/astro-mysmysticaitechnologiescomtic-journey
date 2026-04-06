@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star } from "lucide-react";
+import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
@@ -16,6 +16,23 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
 import { toast } from "@/components/ui/sonner";
+
+const CHART_DAILY_KEY = "astrologai_birthchart_daily";
+
+function hasUsedChartToday(): boolean {
+  try {
+    const stored = localStorage.getItem(CHART_DAILY_KEY);
+    if (!stored) return false;
+    const today = new Date().toISOString().slice(0, 10);
+    return stored === today;
+  } catch { return false; }
+}
+
+function markChartUsedToday(): void {
+  try {
+    localStorage.setItem(CHART_DAILY_KEY, new Date().toISOString().slice(0, 10));
+  } catch { /* ignore */ }
+}
 
 interface Props {
   isOpen: boolean;
@@ -47,6 +64,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [textSize, setTextSize] = useState<TextSize>("default");
+  const [dailyLimitReached, setDailyLimitReached] = useState(false);
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +81,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     () => (chartData?.dominantElements || []).slice(0, 3).map(({ elementKey, count }) => `${getElementName(elementKey, language)} (${count})`).join(" • "),
     [chartData, language],
   );
+
+  useEffect(() => {
+    if (isOpen) {
+      setDailyLimitReached(hasUsedChartToday());
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -99,6 +123,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
   const handleSubmit = useCallback(async () => {
     setAttempted(true);
+
+    if (dailyLimitReached) {
+      toast.error(t.chart_daily_limit_toast);
+      return;
+    }
 
     if (!gender || !birthDate || !birthTime || !birthCity.trim()) {
       toast.error(t.chart_form_error);
@@ -188,6 +217,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       () => {
         setAiStreaming(false);
         setPhase("result");
+        markChartUsedToday();
+        setDailyLimitReached(true);
         readingsStorage.save({
           type: "birth-chart",
           title: `${chartLabels.birthChart} — ${getSignNameByKey(chartData.sunSign.key, language)} ${chartData.sunSign.symbol}`,
@@ -197,8 +228,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         });
       },
       (error) => {
-        toast.error(error);
+        if (error === "DAILY_LIMIT_REACHED") {
+          markChartUsedToday();
+          setDailyLimitReached(true);
+          toast.error(t.chart_daily_limit_toast);
+        } else {
+          toast.error(error);
+        }
         setAiStreaming(false);
+        setPhase("form");
         setPhase("form");
       },
       language,
@@ -279,29 +317,52 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </p>
                 </div>
 
-                <div className="space-y-5">
-                  <BirthDetailsForm
-                    values={details}
-                    onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
-                    attempted={attempted}
-                    showTime
-                  />
+                {dailyLimitReached ? (
+                  <div className="space-y-4">
+                    <div
+                      className="rounded-xl p-4 text-center"
+                      style={{
+                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.6), hsl(var(--deep-blue) / 0.8))",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
+                      }}
+                    >
+                      <Clock className="w-6 h-6 mx-auto mb-2" style={{ color: "hsl(var(--gold) / 0.6)" }} />
+                      <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.7)" }}>
+                        {t.chart_daily_limit_reached}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <BirthDetailsForm
+                      values={details}
+                      onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
+                      attempted={attempted}
+                      showTime
+                    />
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleSubmit}
-                    disabled={preparingChart}
-                    className="btn-gold w-full text-base font-heading flex items-center justify-center gap-2"
-                  >
-                    {preparingChart ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-                    {preparingChart ? t.chart_form_loading : t.birth_chart_cta}
-                  </motion.button>
+                    <div className="text-center">
+                      <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
+                        {t.chart_daily_available}
+                      </p>
+                    </div>
 
-                  <p className="text-center text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
-                    {t.chart_form_note}
-                  </p>
-                </div>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleSubmit}
+                      disabled={preparingChart}
+                      className="btn-gold w-full text-base font-heading flex items-center justify-center gap-2"
+                    >
+                      {preparingChart ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                      {preparingChart ? t.chart_form_loading : t.birth_chart_cta}
+                    </motion.button>
+
+                    <p className="text-center text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
+                      {t.chart_form_note}
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
 

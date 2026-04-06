@@ -680,6 +680,9 @@ export const ar: TranslationKeys = {
   chart_form_error: "يرجى ملء الجنس وتاريخ ووقت ومكان الولادة",
   chart_form_loading: "نبحث عن مكان الولادة ونحسب الخريطة...",
   chart_form_note: "مكان الولادة يؤثر مباشرة على الطالع والبيوت والتفسير بأكمله.",
+  chart_daily_available: "خريطة ميلاد يومية متاحة",
+  chart_daily_limit_reached: "لقد فتحت خريطتك الشخصية اليوم بالفعل. عد غداً ✨",
+  chart_daily_limit_toast: "تم الوصول إلى الحد اليومي لخريطة الميلاد. عد غداً.",
 
   guide_tarot_hero_title: "كيف تبدأ مع التاروت",
   guide_tarot_hero_subtitle: "الدليل الكامل للمبتدئين — من البطاقة الأولى إلى الفهم العميق",

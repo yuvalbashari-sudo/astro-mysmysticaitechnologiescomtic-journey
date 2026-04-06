@@ -680,6 +680,9 @@ export const en: TranslationKeys = {
   chart_form_error: "Please fill in gender, birth date, birth time and birth place",
   chart_form_loading: "Locating birth place and calculating chart...",
   chart_form_note: "Birth place directly affects the ascendant, houses and the entire interpretation.",
+  chart_daily_available: "1 daily personal chart available",
+  chart_daily_limit_reached: "You have already opened your personal chart today. Please come back tomorrow ✨",
+  chart_daily_limit_toast: "Daily personal chart limit reached. Please come back tomorrow.",
 
   guide_tarot_hero_title: "How to Start with Tarot",
   guide_tarot_hero_subtitle: "The complete beginner's guide — from your first card to deep understanding",

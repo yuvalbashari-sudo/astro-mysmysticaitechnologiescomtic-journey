@@ -724,6 +724,9 @@ export type TranslationKeys = {
   chart_form_error: string;
   chart_form_loading: string;
   chart_form_note: string;
+  chart_daily_available: string;
+  chart_daily_limit_reached: string;
+  chart_daily_limit_toast: string;
 
   // Tarot Guide Page
   guide_tarot_hero_title: string;
