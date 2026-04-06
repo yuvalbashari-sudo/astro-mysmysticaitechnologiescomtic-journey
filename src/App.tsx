@@ -45,6 +45,9 @@ const App = () => (
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/natal-test" element={<NatalTest />} />
                 <Route path="/tarot-guide" element={<TarotGuidePage />} />
+                <Route path="/tarot-guides" element={<TarotGuidesPage />} />
+                <Route path="/astrology-guides" element={<AstrologyGuidesPage />} />
+                <Route path="/guides/:slug" element={<GuideDetailPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
