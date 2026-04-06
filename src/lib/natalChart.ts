@@ -66,6 +66,8 @@ export interface NatalAspect {
   label: string;
   type: string;
   orb: number;
+  planet1Key: string;
+  planet2Key: string;
 }
 
 export interface NatalHouseCusp {
