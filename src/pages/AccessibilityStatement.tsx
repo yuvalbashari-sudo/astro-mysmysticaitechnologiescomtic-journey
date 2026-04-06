@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const AccessibilityStatement = () => {
   const t = useT();
-  const { dir, isRTL } = useLanguage();
+  const { dir, isRTL, language } = useLanguage();
   const navigate = useNavigate();
 
   const goHome = () => navigate("/");
