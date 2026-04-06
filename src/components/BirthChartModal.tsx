@@ -360,8 +360,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
                     <p className="text-center text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
                       {t.chart_form_note}
-                  </p>
-                </div>
+                    </p>
+                  </div>
+                )}
               </motion.div>
             )}
 
