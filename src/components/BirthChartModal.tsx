@@ -409,8 +409,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       }}
                     >
                       <span className="text-lg block" style={{ color: PLANET_COLOR_BY_KEY[planet.key] || "#E8B84B" }}>{planet.symbol}</span>
-                      <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.9)" }}>{planet.name}</span>
-                      <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{planet.sign} {planet.degree}°</span>
+                      <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.9)" }}>{getPlanetName(planet.key, language)}</span>
+                      <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{getSignNameByKey(planet.signKey, language)} {planet.degree}°</span>
                       <span className="text-[10px] font-body block" style={{ color: "hsl(var(--foreground) / 0.35)" }}>{chartLabels.house} {planet.house}</span>
                     </div>
                   ))}
@@ -425,7 +425,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       {chartData.houseCusps.map((house) => (
                         <div key={house.house} className="rounded-lg px-3 py-2" style={{ background: "hsl(var(--deep-blue-light) / 0.35)" }}>
                           <div className="text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.5)" }}>{chartLabels.house} {house.house}</div>
-                          <div className="text-sm font-body" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{house.sign} {house.degree}°</div>
+                          <div className="text-sm font-body" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{getSignNameByKey(house.signKey, language)} {house.degree}°</div>
                         </div>
                       ))}
                     </div>
@@ -436,7 +436,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     <div className="space-y-2">
                       {(chartData.dominantElements || []).slice(0, 4).map((entry) => (
                         <div key={entry.element} className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "hsl(var(--deep-blue-light) / 0.35)" }}>
-                          <span className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{entry.element}</span>
+                          <span className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{getElementName(entry.elementKey, language)}</span>
                           <span className="font-body text-xs" style={{ color: "hsl(var(--gold) / 0.7)" }}>{entry.count}</span>
                         </div>
                       ))}
