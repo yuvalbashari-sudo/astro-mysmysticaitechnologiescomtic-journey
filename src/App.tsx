@@ -17,6 +17,9 @@ import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NatalTest from "./pages/NatalTest";
 import TarotGuidePage from "./pages/TarotGuidePage";
+import TarotGuidesPage from "./pages/TarotGuidesPage";
+import AstrologyGuidesPage from "./pages/AstrologyGuidesPage";
+import GuideDetailPage from "./pages/GuideDetailPage";
 import FloatingOracleButton from "./components/FloatingOracleButton";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 
@@ -42,6 +45,9 @@ const App = () => (
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/natal-test" element={<NatalTest />} />
                 <Route path="/tarot-guide" element={<TarotGuidePage />} />
+                <Route path="/tarot-guides" element={<TarotGuidesPage />} />
+                <Route path="/astrology-guides" element={<AstrologyGuidesPage />} />
+                <Route path="/guides/:slug" element={<GuideDetailPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

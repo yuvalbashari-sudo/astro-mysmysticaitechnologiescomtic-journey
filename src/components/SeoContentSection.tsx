@@ -244,7 +244,7 @@ const SeoContentSection = () => {
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               {/* Primary: Guides */}
               <Link
-                to="/tarot-gallery"
+                to="/tarot-guides"
                 className="group flex-[2] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.015]"
                 style={{
                   background: "linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 10, 20, 0.85) 55%, rgba(255, 215, 0, 0.04) 100%)",
@@ -301,7 +301,7 @@ const SeoContentSection = () => {
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               {/* Primary: Guides */}
               <Link
-                to="/zodiac/aries"
+                to="/astrology-guides"
                 className="group flex-[2] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.015]"
                 style={{
                   background: "linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 10, 20, 0.85) 55%, rgba(255, 215, 0, 0.04) 100%)",
