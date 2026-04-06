@@ -1,60 +1,50 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Sun, ArrowLeft } from "lucide-react";
+import { Sun, ArrowLeft, ArrowRight } from "lucide-react";
 import StarField from "@/components/StarField";
-import { astrologyGuides, type GuideEntry } from "@/data/guideContent";
+import { getAstrologyGuides, type GuideEntry } from "@/data/guideContent";
+import { useLanguage } from "@/i18n";
 
 const AstrologyGuidesPage = () => {
+  const { language, dir, isRTL } = useLanguage();
+  const guides = getAstrologyGuides(language);
+  const BackArrow = isRTL ? ArrowLeft : ArrowRight;
+
+  const labels = {
+    he: { heading: "מדריכי אסטרולוגיה", sub: "מפת לידה, כוכבים, בתים ומדריכים להבנת המפה האישית שלכם", back: "חזרה לדף הבית" },
+    en: { heading: "Astrology Guides", sub: "Birth chart, planets, houses and guides to understanding your personal chart", back: "Back to Home" },
+    ru: { heading: "Руководства по астрологии", sub: "Натальная карта, планеты, дома и руководства для понимания вашей карты", back: "На главную" },
+    ar: { heading: "أدلة الفلك", sub: "خريطة الميلاد والكواكب والبيوت وأدلة لفهم خريطتك الشخصية", back: "العودة للرئيسية" },
+  }[language];
+
   return (
-    <div className="min-h-screen bg-background text-foreground" dir="rtl">
+    <div className="min-h-screen bg-background text-foreground" dir={dir}>
       <StarField />
 
-      {/* Hero */}
       <section className="relative pt-16 pb-10 px-4 text-center">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
-        <motion.div
-          className="relative z-10 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <motion.div className="relative z-10 max-w-2xl mx-auto" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Sun className="w-8 h-8 text-gold mx-auto mb-4" />
-          <h1 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">
-            מדריכי אסטרולוגיה
-          </h1>
-          <p className="text-foreground/60 font-body text-base max-w-md mx-auto">
-            מפת לידה, כוכבים, בתים ומדריכים להבנת המפה האישית שלכם
-          </p>
+          <h1 className="font-heading text-3xl md:text-4xl gold-gradient-text mb-3">{labels.heading}</h1>
+          <p className="text-foreground/60 font-body text-base max-w-md mx-auto">{labels.sub}</p>
         </motion.div>
       </section>
 
-      {/* Guide cards */}
       <section className="max-w-2xl mx-auto px-4 pb-20 space-y-5">
-        {astrologyGuides.map((guide, i) => (
-          <GuideCard key={guide.slug} guide={guide} index={i} />
+        {guides.map((guide, i) => (
+          <GuideCard key={guide.slug} guide={guide} index={i} BackArrow={BackArrow} />
         ))}
-
-        {/* Back to home */}
         <div className="text-center pt-6">
-          <Link
-            to="/"
-            className="text-gold/50 hover:text-gold font-body text-xs transition-colors inline-flex items-center gap-1"
-          >
-            חזרה לדף הבית
-          </Link>
+          <Link to="/" className="text-gold/50 hover:text-gold font-body text-xs transition-colors inline-flex items-center gap-1">{labels.back}</Link>
         </div>
       </section>
     </div>
   );
 };
 
-function GuideCard({ guide, index }: { guide: GuideEntry; index: number }) {
+function GuideCard({ guide, index, BackArrow }: { guide: GuideEntry; index: number; BackArrow: typeof ArrowLeft }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.08 }}
-    >
+    <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: index * 0.08 }}>
       <Link
         to={`/guides/${guide.slug}`}
         className="block group rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.01]"
@@ -67,14 +57,10 @@ function GuideCard({ guide, index }: { guide: GuideEntry; index: number }) {
         <div className="flex items-start gap-4">
           <span className="text-3xl shrink-0">{guide.heroEmoji}</span>
           <div className="flex-1 min-w-0">
-            <h3 className="font-heading text-lg text-gold mb-1 group-hover:text-gold-light transition-colors">
-              {guide.title}
-            </h3>
-            <p className="font-body text-sm text-foreground/55 leading-relaxed">
-              {guide.subtitle}
-            </p>
+            <h3 className="font-heading text-lg text-gold mb-1 group-hover:text-gold-light transition-colors">{guide.title}</h3>
+            <p className="font-body text-sm text-foreground/55 leading-relaxed">{guide.subtitle}</p>
           </div>
-          <ArrowLeft className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors shrink-0 mt-1" />
+          <BackArrow className="w-5 h-5 text-gold/30 group-hover:text-gold/60 transition-colors shrink-0 mt-1" />
         </div>
       </Link>
     </motion.div>
