@@ -119,8 +119,8 @@ const AvatarHoverTeaser = ({
                 color: "hsl(var(--foreground) / 0.8)",
               }}
             >
-              {text}{" "}
-              <span style={{ color: "hsl(var(--gold))" }}>{highlightText}</span>
+              {resolvedText}{" "}
+              <span style={{ color: "hsl(var(--gold))" }}>{resolvedHighlight}</span>
             </p>
             {/* Directional arrow */}
             <div
