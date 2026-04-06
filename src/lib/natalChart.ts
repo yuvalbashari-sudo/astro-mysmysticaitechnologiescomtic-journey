@@ -1,20 +1,20 @@
 // @ts-ignore - package main field missing .js extension
 import { Horoscope, Origin } from "circular-natal-horoscope-js/dist/index.js";
 
-const SIGN_META = {
-  Aries: { hebrewName: "טלה", symbol: "♈", element: "אש" },
-  Taurus: { hebrewName: "שור", symbol: "♉", element: "אדמה" },
-  Gemini: { hebrewName: "תאומים", symbol: "♊", element: "אוויר" },
-  Cancer: { hebrewName: "סרטן", symbol: "♋", element: "מים" },
-  Leo: { hebrewName: "אריה", symbol: "♌", element: "אש" },
-  Virgo: { hebrewName: "בתולה", symbol: "♍", element: "אדמה" },
-  Libra: { hebrewName: "מאזניים", symbol: "♎", element: "אוויר" },
-  Scorpio: { hebrewName: "עקרב", symbol: "♏", element: "מים" },
-  Sagittarius: { hebrewName: "קשת", symbol: "♐", element: "אש" },
-  Capricorn: { hebrewName: "גדי", symbol: "♑", element: "אדמה" },
-  Aquarius: { hebrewName: "דלי", symbol: "♒", element: "אוויר" },
-  Pisces: { hebrewName: "דגים", symbol: "♓", element: "מים" },
-} as const;
+const SIGN_META: Record<string, { hebrewName: string; symbol: string; element: string; elementKey: string }> = {
+  Aries: { hebrewName: "טלה", symbol: "♈", element: "אש", elementKey: "fire" },
+  Taurus: { hebrewName: "שור", symbol: "♉", element: "אדמה", elementKey: "earth" },
+  Gemini: { hebrewName: "תאומים", symbol: "♊", element: "אוויר", elementKey: "air" },
+  Cancer: { hebrewName: "סרטן", symbol: "♋", element: "מים", elementKey: "water" },
+  Leo: { hebrewName: "אריה", symbol: "♌", element: "אש", elementKey: "fire" },
+  Virgo: { hebrewName: "בתולה", symbol: "♍", element: "אדמה", elementKey: "earth" },
+  Libra: { hebrewName: "מאזניים", symbol: "♎", element: "אוויר", elementKey: "air" },
+  Scorpio: { hebrewName: "עקרב", symbol: "♏", element: "מים", elementKey: "water" },
+  Sagittarius: { hebrewName: "קשת", symbol: "♐", element: "אש", elementKey: "fire" },
+  Capricorn: { hebrewName: "גדי", symbol: "♑", element: "אדמה", elementKey: "earth" },
+  Aquarius: { hebrewName: "דלי", symbol: "♒", element: "אוויר", elementKey: "air" },
+  Pisces: { hebrewName: "דגים", symbol: "♓", element: "מים", elementKey: "water" },
+};
 
 const PLANET_META = {
   sun: { name: "שמש", symbol: "☉" },
@@ -40,7 +40,7 @@ const ASPECT_META: Record<string, string> = {
 
 const SUPPORTED_PLANETS = Object.keys(PLANET_META) as Array<keyof typeof PLANET_META>;
 
-type SignLabel = keyof typeof SIGN_META;
+type SignLabel = string;
 
 export interface GeocodedBirthPlace {
   name: string;
@@ -51,10 +51,12 @@ export interface GeocodedBirthPlace {
 }
 
 export interface PlanetPlacement {
-  key: keyof typeof PLANET_META;
+  key: string;
   name: string;
   symbol: string;
   sign: string;
+  /** English sign key, e.g. "Aries" */
+  signKey: string;
   degree: number;
   house: number;
   absoluteDegree: number;
