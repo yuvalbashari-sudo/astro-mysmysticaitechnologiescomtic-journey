@@ -178,7 +178,7 @@ const SeoContentSection = () => {
               />
               <Star className="w-5 h-5 text-gold relative z-10" fill="currentColor" />
               <span className="relative z-10 tracking-wide">
-                {isHe ? "מפה אסטרולוגית מלאה" : "Full Astrological Chart"}
+                {l({ he: "מפה אסטרולוגית מלאה", en: "Full Astrological Chart", ru: "Полная астрологическая карта", ar: "خريطة فلكية كاملة" })}
               </span>
               <Sparkles className="w-4 h-4 text-gold/60 relative z-10" />
             </div>
@@ -204,7 +204,7 @@ const SeoContentSection = () => {
         {/* Knowledge gateway cards */}
         <div className="mt-10 md:mt-12 relative z-10">
           <p className="font-body text-xs text-foreground/30 mb-6 text-center">
-            {isHe ? "גלו עוד:" : "Explore more:"}
+            {l({ he: "גלו עוד:", en: "Explore more:", ru: "Узнайте больше:", ar: "اكتشفوا المزيد:" })}
           </p>
 
           <div className="flex flex-col gap-6 md:gap-8">
@@ -232,12 +232,10 @@ const SeoContentSection = () => {
                     <Eye className="w-8 h-8 text-gold" />
                   </div>
                   <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {isHe ? "מדריכי טארוט" : "Tarot Guides"}
+                    {l({ he: "מדריכי טארוט", en: "Tarot Guides", ru: "Руководства по Таро", ar: "أدلة التاروت" })}
                   </h4>
                   <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
-                    {isHe
-                      ? "לימוד פתיחות, פירושי קלפים והכוונה למתחילים"
-                      : "Learn spreads, card interpretations & beginner guidance"}
+                    {l({ he: "לימוד פתיחות, פירושי קלפים והכוונה למתחילים", en: "Learn spreads, card interpretations & beginner guidance", ru: "Расклады, интерпретации карт и руководство для начинающих", ar: "تعلّم التوزيعات وتفسيرات البطاقات وإرشاد المبتدئين" })}
                   </p>
                 </div>
               </Link>
@@ -254,12 +252,10 @@ const SeoContentSection = () => {
                 <div className="flex flex-col items-center text-center gap-2">
                   <Eye className="w-5 h-5 text-gold/50 mb-1" />
                   <h4 className="font-heading text-base text-gold/80">
-                    {isHe ? "ספריית קלפים" : "Card Library"}
+                    {l({ he: "ספריית קלפים", en: "Card Library", ru: "Библиотека карт", ar: "مكتبة البطاقات" })}
                   </h4>
                   <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
-                    {isHe
-                      ? "עיינו בכל קלפי הטארוט והמשמעויות שלהם"
-                      : "Browse all tarot cards and their meanings"}
+                    {l({ he: "עיינו בכל קלפי הטארוט והמשמעויות שלהם", en: "Browse all tarot cards and their meanings", ru: "Просмотрите все карты Таро и их значения", ar: "تصفح جميع بطاقات التاروت ومعانيها" })}
                   </p>
                 </div>
               </Link>
@@ -289,12 +285,10 @@ const SeoContentSection = () => {
                     <Sun className="w-8 h-8 text-gold" />
                   </div>
                   <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {isHe ? "מדריכי אסטרולוגיה" : "Astrology Guides"}
+                    {l({ he: "מדריכי אסטרולוגיה", en: "Astrology Guides", ru: "Руководства по астрологии", ar: "أدلة الفلك" })}
                   </h4>
                   <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
-                    {isHe
-                      ? "מפת לידה, שמש, ירח, אופק והבנת המפה האישית"
-                      : "Birth chart, sun, moon, rising & personal chart understanding"}
+                    {l({ he: "מפת לידה, שמש, ירח, אופק והבנת המפה האישית", en: "Birth chart, sun, moon, rising & personal chart understanding", ru: "Натальная карта, Солнце, Луна, асцендент и понимание вашей карты", ar: "خريطة الميلاد والشمس والقمر والطالع وفهم خريطتك الشخصية" })}
                   </p>
                 </div>
               </Link>
@@ -311,12 +305,10 @@ const SeoContentSection = () => {
                 <div className="flex flex-col items-center text-center gap-2">
                   <Sun className="w-5 h-5 text-gold/50 mb-1" />
                   <h4 className="font-heading text-base text-gold/80">
-                    {isHe ? "ספריית מזלות" : "Zodiac Library"}
+                    {l({ he: "ספריית מזלות", en: "Zodiac Library", ru: "Библиотека знаков", ar: "مكتبة الأبراج" })}
                   </h4>
                   <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
-                    {isHe
-                      ? "גלו את פירושי המזלות והמאפיינים שלהם"
-                      : "Explore zodiac sign meanings and traits"}
+                    {l({ he: "גלו את פירושי המזלות והמאפיינים שלהם", en: "Explore zodiac sign meanings and traits", ru: "Изучите значения знаков зодиака и их черты", ar: "اكتشفوا معاني الأبراج وسماتها" })}
                   </p>
                 </div>
               </Link>
