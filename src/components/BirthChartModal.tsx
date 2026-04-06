@@ -118,8 +118,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       });
 
       setChartData(natalChart);
-      mysticalProfile.recordZodiac(natalChart.sunSign.hebrewName, natalChart.sunSign.symbol, natalChart.sunSign.element, birthDate);
-      mysticalProfile.recordRising(`${natalChart.risingSign.hebrewName} עולה`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
+      mysticalProfile.recordZodiac(getSignNameByKey(natalChart.sunSign.key, language), natalChart.sunSign.symbol, natalChart.sunSign.element, birthDate);
+      mysticalProfile.recordRising(`${getSignNameByKey(natalChart.risingSign.key, language)} ${chartLabels.rising}`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
       setPhase("loading");
     } catch (error) {
       const msg = error instanceof Error ? error.message : "";
@@ -149,7 +149,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       ? chartData.aspects.map((aspect) => {
           const left = aspect.planet1Key === "ascendant" ? chartLabels.ascendant : `${getPlanetName(aspect.planet1Key, language)}`;
           const right = aspect.planet2Key === "ascendant" ? chartLabels.ascendant : `${getPlanetName(aspect.planet2Key, language)}`;
-          return `${left} • ${aspect.type} • ${right} — orb ${aspect.orb}°`;
+          return `${left} • ${getAspectName(aspect.type, language)} • ${right} — orb ${aspect.orb}°`;
         }).join("\n")
       : chartLabels.noStrongAspects;
 
@@ -397,7 +397,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       <div className="space-y-2">
                         {chartData.aspects.slice(0, 4).map((aspect) => (
                           <p key={`${aspect.planet1Key}-${aspect.planet2Key}`} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
-                            {aspect.planet1Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet1Key, language)} • {aspect.type} • {aspect.planet2Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet2Key, language)}
+                            {aspect.planet1Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet1Key, language)} • {getAspectName(aspect.type, language)} • {aspect.planet2Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet2Key, language)}
                           </p>
                         ))}
                       </div>
