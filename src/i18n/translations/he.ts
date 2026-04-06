@@ -537,6 +537,7 @@ export const he: TranslationKeys = {
   a11y_statement_contact_title: "יצירת קשר",
   a11y_statement_contact_text: "אם נתקלת בבעיה בנושא נגישות, ניתן לפנות אלינו ונשמח לסייע.",
   a11y_statement_last_updated: "",
+  a11y_back_to_main: "חזרה למסך הראשי",
   a11y_link_label: "הצהרת נגישות",
   a11y_no_readings: "אין קריאות שמורות עדיין",
 

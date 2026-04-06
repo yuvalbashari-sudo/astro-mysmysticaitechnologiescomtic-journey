@@ -5,93 +5,61 @@ import { useLanguage } from "@/i18n";
 
 const SeoContentSection = () => {
   const { language } = useLanguage();
-  const isHe = language === "he" || language === "ar";
+  const isRTL = language === "he" || language === "ar";
 
-  // SEO-rich content in Hebrew (primary) with English fallback
-  const content = language === "he" ? {
-    mainTitle: "גלו את סודות היקום עם ASTROLOGAI",
-    mainDesc: "ASTROLOGAI הוא פלטפורמת האסטרולוגיה והמיסטיקה המתקדמת בישראל, המשלבת בינה מלאכותית עם מסורות רוחניות עתיקות. קבלו קריאת טארוט מותאמת אישית, קריאת כף יד מבוססת AI, בדיקת התאמה זוגית לפי מזלות, מפת לידה מפורטת והורוסקופ חודשי — הכל בחוויה אחת אלגנטית ומרהיבה.",
-    services: [
-      {
-        icon: Eye,
-        title: "קריאת טארוט אונליין",
-        desc: "שאלו שאלה וקבלו פריסת טארוט אישית עם פירוש מעמיק של כל קלף. קריאת הטארוט שלנו מבוססת על 78 קלפי טארוט — 22 קלפי ארקנה מאז'ורית ו-56 קלפי ארקנה מינורית — כולל פירושים לאהבה, קריירה, רוחניות ומסר יומי.",
-        link: "/tarot-gallery",
-        linkText: "צפו בכל קלפי הטארוט →",
-      },
-      {
-        icon: Hand,
-        title: "קריאת כף יד בינה מלאכותית",
-        desc: "העלו תמונות של כפות הידיים ומערכת ה-AI שלנו תנתח את קווי החיים, הלב, הגורל, השמש והאינטואיציה. קריאת כף היד כוללת ניתוח צורת היד, האצבעות ותילי כף היד לקבלת תובנות אישיות מעמיקות.",
-        link: null,
-        linkText: null,
-      },
-      {
-        icon: Heart,
-        title: "בדיקת התאמה זוגית לפי מזלות",
-        desc: "גלו את הכימיה הקוסמית בינכם לבין בן או בת הזוג. ניתוח ההתאמה הזוגית שלנו בוחן תאימות רגשית, רומנטית, תקשורתית ורוחנית בין 12 המזלות — טלה, שור, תאומים, סרטן, אריה, בתולה, מאזניים, עקרב, קשת, גדי, דלי ודגים.",
-        link: "/zodiac/aries",
-        linkText: "גלו את המזל שלכם →",
-      },
-      {
-        icon: Sun,
-        title: "מפת לידה והורוסקופ חודשי",
-        desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית הכוללת מיקום כוכבי הלכת, בתים אסטרולוגיים, מזל עולה ותחזית חודשית מותאמת אישית — בחינם.",
-        link: null,
-        linkText: null,
-      },
-    ],
-    trustTitle: "למה לבחור ב-ASTROLOGAI?",
-    trustItems: [
-      "חוויה מיסטית פרימיום מותאמת אישית",
-      "טכנולוגיית AI מתקדמת לקריאות מדויקות",
-      "זמין בעברית, אנגלית, ערבית ורוסית",
-      "קלף יומי והורוסקופ חודשי בחינם",
-      "קריאות מותאמות לשם ולתאריך לידה",
-    ],
-  } : {
-    mainTitle: "Discover the Secrets of the Universe with ASTROLOGAI",
-    mainDesc: "ASTROLOGAI is the leading AI-powered astrology and mystical guidance platform. Get a personalized tarot reading, AI palm reading analysis, zodiac compatibility test, detailed birth chart, and monthly horoscope — all in one elegant, premium experience.",
-    services: [
-      {
-        icon: Eye,
-        title: "Online Tarot Reading",
-        desc: "Ask a question and receive a personalized tarot spread with deep interpretation of each card. Our tarot reading uses all 78 tarot cards — 22 Major Arcana and 56 Minor Arcana — with interpretations for love, career, spirituality, and daily guidance.",
-        link: "/tarot-gallery",
-        linkText: "Browse all Tarot Cards →",
-      },
-      {
-        icon: Hand,
-        title: "AI Palm Reading Online",
-        desc: "Upload photos of your palms and our AI system will analyze your life line, heart line, fate line, sun line, and intuition line. The palm reading includes analysis of hand shape, fingers, and mounts for deep personal insights.",
-        link: null,
-        linkText: null,
-      },
-      {
-        icon: Heart,
-        title: "Zodiac Compatibility Test",
-        desc: "Discover the cosmic chemistry between you and your partner. Our compatibility analysis examines emotional, romantic, communicative, and spiritual compatibility across all 12 zodiac signs — Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Sagittarius, Capricorn, Aquarius, and Pisces.",
-        link: "/zodiac/aries",
-        linkText: "Explore your Zodiac Sign →",
-      },
-      {
-        icon: Sun,
-        title: "Birth Chart & Monthly Horoscope",
-        desc: "Enter your birth date and time to receive a personalized birth chart with planet placements, astrological houses, rising sign, and a tailored monthly forecast — completely free.",
-        link: null,
-        linkText: null,
-      },
-    ],
-    trustTitle: "Why Choose ASTROLOGAI?",
-    trustItems: [
-      "Premium personalized mystical experience",
-      "Advanced AI technology for accurate readings",
-      "Available in Hebrew, English, Arabic, and Russian",
-      "Free daily card and monthly horoscope",
-      "Readings personalized to your name and birth date",
-    ],
-  };
+  /** Pick localized string by language */
+  const l = <T,>(map: Record<string, T>): T => (map as any)[language] ?? (map as any).en;
 
+  const content = l({
+    he: {
+      mainTitle: "גלו את סודות היקום עם ASTROLOGAI",
+      mainDesc: "ASTROLOGAI הוא פלטפורמת האסטרולוגיה והמיסטיקה המתקדמת בישראל, המשלבת בינה מלאכותית עם מסורות רוחניות עתיקות. קבלו קריאת טארוט מותאמת אישית, קריאת כף יד מבוססת AI, בדיקת התאמה זוגית לפי מזלות, מפת לידה מפורטת והורוסקופ חודשי — הכל בחוויה אחת אלגנטית ומרהיבה.",
+      services: [
+        { icon: Eye, title: "קריאת טארוט אונליין", desc: "שאלו שאלה וקבלו פריסת טארוט אישית עם פירוש מעמיק של כל קלף.", link: "/tarot-gallery", linkText: "צפו בכל קלפי הטארוט →" },
+        { icon: Hand, title: "קריאת כף יד בינה מלאכותית", desc: "העלו תמונות של כפות הידיים ומערכת ה-AI שלנו תנתח את קווי החיים, הלב, הגורל, השמש והאינטואיציה.", link: null, linkText: null },
+        { icon: Heart, title: "בדיקת התאמה זוגית לפי מזלות", desc: "גלו את הכימיה הקוסמית בינכם לבין בן או בת הזוג.", link: "/zodiac/aries", linkText: "גלו את המזל שלכם →" },
+        { icon: Sun, title: "מפת לידה והורוסקופ חודשי", desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית — בחינם.", link: null, linkText: null },
+      ],
+      trustTitle: "למה לבחור ב-ASTROLOGAI?",
+      trustItems: ["חוויה מיסטית פרימיום מותאמת אישית", "טכנולוגיית AI מתקדמת לקריאות מדויקות", "זמין בעברית, אנגלית, ערבית ורוסית", "קלף יומי והורוסקופ חודשי בחינם", "קריאות מותאמות לשם ולתאריך לידה"],
+    },
+    en: {
+      mainTitle: "Discover the Secrets of the Universe with ASTROLOGAI",
+      mainDesc: "ASTROLOGAI is the leading AI-powered astrology and mystical guidance platform. Get a personalized tarot reading, AI palm reading analysis, zodiac compatibility test, detailed birth chart, and monthly horoscope — all in one elegant, premium experience.",
+      services: [
+        { icon: Eye, title: "Online Tarot Reading", desc: "Ask a question and receive a personalized tarot spread with deep interpretation of each card.", link: "/tarot-gallery", linkText: "Browse all Tarot Cards →" },
+        { icon: Hand, title: "AI Palm Reading Online", desc: "Upload photos of your palms and our AI system will analyze your life line, heart line, fate line, and more.", link: null, linkText: null },
+        { icon: Heart, title: "Zodiac Compatibility Test", desc: "Discover the cosmic chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your Zodiac Sign →" },
+        { icon: Sun, title: "Birth Chart & Monthly Horoscope", desc: "Enter your birth date and time to receive a personalized birth chart — completely free.", link: null, linkText: null },
+      ],
+      trustTitle: "Why Choose ASTROLOGAI?",
+      trustItems: ["Premium personalized mystical experience", "Advanced AI technology for accurate readings", "Available in Hebrew, English, Arabic, and Russian", "Free daily card and monthly horoscope", "Readings personalized to your name and birth date"],
+    },
+    ru: {
+      mainTitle: "Откройте тайны Вселенной с ASTROLOGAI",
+      mainDesc: "ASTROLOGAI — ведущая AI-платформа астрологии и мистического руководства. Персональное чтение Таро, анализ ладони, тест совместимости знаков зодиака, натальная карта и ежемесячный гороскоп — всё в одном элегантном опыте.",
+      services: [
+        { icon: Eye, title: "Онлайн чтение Таро", desc: "Задайте вопрос и получите персональный расклад Таро с глубокой интерпретацией каждой карты.", link: "/tarot-gallery", linkText: "Все карты Таро →" },
+        { icon: Hand, title: "AI чтение ладони", desc: "Загрузите фото ладоней и наша AI-система проанализирует линии жизни, сердца и судьбы.", link: null, linkText: null },
+        { icon: Heart, title: "Тест совместимости знаков", desc: "Откройте космическую химию между вами и вашим партнёром по всем 12 знакам зодиака.", link: "/zodiac/aries", linkText: "Узнайте свой знак →" },
+        { icon: Sun, title: "Натальная карта и гороскоп", desc: "Введите дату и время рождения для персональной натальной карты — совершенно бесплатно.", link: null, linkText: null },
+      ],
+      trustTitle: "Почему ASTROLOGAI?",
+      trustItems: ["Премиум персонализированный мистический опыт", "Передовая AI-технология для точных чтений", "Доступно на иврите, английском, арабском и русском", "Бесплатная карта дня и ежемесячный гороскоп", "Чтения персонализированы по имени и дате рождения"],
+    },
+    ar: {
+      mainTitle: "اكتشفوا أسرار الكون مع ASTROLOGAI",
+      mainDesc: "ASTROLOGAI هي منصة الفلك والإرشاد الروحي الرائدة المدعومة بالذكاء الاصطناعي. احصلوا على قراءة تاروت شخصية، تحليل كف اليد، اختبار توافق الأبراج، خريطة ميلاد مفصلة وتوقعات شهرية — كل ذلك في تجربة واحدة أنيقة.",
+      services: [
+        { icon: Eye, title: "قراءة تاروت أونلاين", desc: "اطرح سؤالاً واحصل على توزيع تاروت شخصي مع تفسير عميق لكل بطاقة.", link: "/tarot-gallery", linkText: "تصفح جميع بطاقات التاروت →" },
+        { icon: Hand, title: "قراءة كف اليد بالذكاء الاصطناعي", desc: "ارفع صور كفيك وسيقوم نظام الذكاء الاصطناعي بتحليل خطوط الحياة والقلب والمصير.", link: null, linkText: null },
+        { icon: Heart, title: "اختبار توافق الأبراج", desc: "اكتشفوا الكيمياء الكونية بينكم وبين شريككم عبر جميع الأبراج الـ12.", link: "/zodiac/aries", linkText: "اكتشف برجك →" },
+        { icon: Sun, title: "خريطة ميلاد وتوقعات شهرية", desc: "أدخل تاريخ ووقت ميلادك للحصول على خريطة ميلاد شخصية — مجانًا.", link: null, linkText: null },
+      ],
+      trustTitle: "لماذا ASTROLOGAI؟",
+      trustItems: ["تجربة روحية متميزة ومخصصة", "تقنية ذكاء اصطناعي متقدمة لقراءات دقيقة", "متاح بالعبرية والإنجليزية والعربية والروسية", "بطاقة يومية وتوقعات شهرية مجانية", "قراءات مخصصة لاسمك وتاريخ ميلادك"],
+    },
+  });
   return (
     <section className="py-12 md:py-20 px-3 md:px-4 relative cosmic-section-bg overflow-hidden" aria-label="SEO Content">
       <div className="absolute inset-0 pointer-events-none">
@@ -210,7 +178,7 @@ const SeoContentSection = () => {
               />
               <Star className="w-5 h-5 text-gold relative z-10" fill="currentColor" />
               <span className="relative z-10 tracking-wide">
-                {isHe ? "מפה אסטרולוגית מלאה" : "Full Astrological Chart"}
+                {l({ he: "מפה אסטרולוגית מלאה", en: "Full Astrological Chart", ru: "Полная астрологическая карта", ar: "خريطة فلكية كاملة" })}
               </span>
               <Sparkles className="w-4 h-4 text-gold/60 relative z-10" />
             </div>
@@ -236,7 +204,7 @@ const SeoContentSection = () => {
         {/* Knowledge gateway cards */}
         <div className="mt-10 md:mt-12 relative z-10">
           <p className="font-body text-xs text-foreground/30 mb-6 text-center">
-            {isHe ? "גלו עוד:" : "Explore more:"}
+            {l({ he: "גלו עוד:", en: "Explore more:", ru: "Узнайте больше:", ar: "اكتشفوا المزيد:" })}
           </p>
 
           <div className="flex flex-col gap-6 md:gap-8">
@@ -264,12 +232,10 @@ const SeoContentSection = () => {
                     <Eye className="w-8 h-8 text-gold" />
                   </div>
                   <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {isHe ? "מדריכי טארוט" : "Tarot Guides"}
+                    {l({ he: "מדריכי טארוט", en: "Tarot Guides", ru: "Руководства по Таро", ar: "أدلة التاروت" })}
                   </h4>
                   <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
-                    {isHe
-                      ? "לימוד פתיחות, פירושי קלפים והכוונה למתחילים"
-                      : "Learn spreads, card interpretations & beginner guidance"}
+                    {l({ he: "לימוד פתיחות, פירושי קלפים והכוונה למתחילים", en: "Learn spreads, card interpretations & beginner guidance", ru: "Расклады, интерпретации карт и руководство для начинающих", ar: "تعلّم التوزيعات وتفسيرات البطاقات وإرشاد المبتدئين" })}
                   </p>
                 </div>
               </Link>
@@ -286,12 +252,10 @@ const SeoContentSection = () => {
                 <div className="flex flex-col items-center text-center gap-2">
                   <Eye className="w-5 h-5 text-gold/50 mb-1" />
                   <h4 className="font-heading text-base text-gold/80">
-                    {isHe ? "ספריית קלפים" : "Card Library"}
+                    {l({ he: "ספריית קלפים", en: "Card Library", ru: "Библиотека карт", ar: "مكتبة البطاقات" })}
                   </h4>
                   <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
-                    {isHe
-                      ? "עיינו בכל קלפי הטארוט והמשמעויות שלהם"
-                      : "Browse all tarot cards and their meanings"}
+                    {l({ he: "עיינו בכל קלפי הטארוט והמשמעויות שלהם", en: "Browse all tarot cards and their meanings", ru: "Просмотрите все карты Таро и их значения", ar: "تصفح جميع بطاقات التاروت ومعانيها" })}
                   </p>
                 </div>
               </Link>
@@ -321,12 +285,10 @@ const SeoContentSection = () => {
                     <Sun className="w-8 h-8 text-gold" />
                   </div>
                   <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {isHe ? "מדריכי אסטרולוגיה" : "Astrology Guides"}
+                    {l({ he: "מדריכי אסטרולוגיה", en: "Astrology Guides", ru: "Руководства по астрологии", ar: "أدلة الفلك" })}
                   </h4>
                   <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
-                    {isHe
-                      ? "מפת לידה, שמש, ירח, אופק והבנת המפה האישית"
-                      : "Birth chart, sun, moon, rising & personal chart understanding"}
+                    {l({ he: "מפת לידה, שמש, ירח, אופק והבנת המפה האישית", en: "Birth chart, sun, moon, rising & personal chart understanding", ru: "Натальная карта, Солнце, Луна, асцендент и понимание вашей карты", ar: "خريطة الميلاد والشمس والقمر والطالع وفهم خريطتك الشخصية" })}
                   </p>
                 </div>
               </Link>
@@ -343,12 +305,10 @@ const SeoContentSection = () => {
                 <div className="flex flex-col items-center text-center gap-2">
                   <Sun className="w-5 h-5 text-gold/50 mb-1" />
                   <h4 className="font-heading text-base text-gold/80">
-                    {isHe ? "ספריית מזלות" : "Zodiac Library"}
+                    {l({ he: "ספריית מזלות", en: "Zodiac Library", ru: "Библиотека знаков", ar: "مكتبة الأبراج" })}
                   </h4>
                   <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
-                    {isHe
-                      ? "גלו את פירושי המזלות והמאפיינים שלהם"
-                      : "Explore zodiac sign meanings and traits"}
+                    {l({ he: "גלו את פירושי המזלות והמאפיינים שלהם", en: "Explore zodiac sign meanings and traits", ru: "Изучите значения знаков зодиака и их черты", ar: "اكتشفوا معاني الأبراج وسماتها" })}
                   </p>
                 </div>
               </Link>

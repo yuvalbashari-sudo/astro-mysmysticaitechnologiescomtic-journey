@@ -537,6 +537,7 @@ export const ru: TranslationKeys = {
   a11y_statement_contact_title: "Контакт",
   a11y_statement_contact_text: "Если вы столкнулись с проблемой доступности, свяжитесь с нами, и мы постараемся помочь.",
   a11y_statement_last_updated: "",
+  a11y_back_to_main: "Вернуться на главный экран",
   a11y_link_label: "Заявление о доступности",
   a11y_no_readings: "Сохранённых чтений пока нет",
 

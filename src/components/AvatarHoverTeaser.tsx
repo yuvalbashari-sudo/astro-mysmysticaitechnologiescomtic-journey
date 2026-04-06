@@ -1,6 +1,7 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { assistantName } from "@/lib/assistantConfig";
+import { useLanguage } from "@/i18n";
 
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
@@ -25,13 +26,24 @@ interface AvatarHoverTeaserProps {
  */
 const AvatarHoverTeaser = ({
   children,
-  text = `${assistantName} – רוצים הכוונה?`,
-  highlightText = "לחצו לשיחה",
+  text,
+  highlightText,
   disabled = false,
   anchor = "auto",
   className = "",
   style,
 }: AvatarHoverTeaserProps) => {
+  const { language } = useLanguage();
+  const defaults = useMemo(() => ({
+    he: { t: `${assistantName} – רוצים הכוונה?`, h: "לחצו לשיחה" },
+    en: { t: `${assistantName} – Want guidance?`, h: "Click to chat" },
+    ru: { t: `${assistantName} – Нужна помощь?`, h: "Нажмите для чата" },
+    ar: { t: `${assistantName} – تريد إرشادًا؟`, h: "اضغط للمحادثة" },
+  }[language]), [language]);
+
+  const resolvedText = text ?? defaults.t;
+  const resolvedHighlight = highlightText ?? defaults.h;
+
   const [hovered, setHovered] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -107,8 +119,8 @@ const AvatarHoverTeaser = ({
                 color: "hsl(var(--foreground) / 0.8)",
               }}
             >
-              {text}{" "}
-              <span style={{ color: "hsl(var(--gold))" }}>{highlightText}</span>
+              {resolvedText}{" "}
+              <span style={{ color: "hsl(var(--gold))" }}>{resolvedHighlight}</span>
             </p>
             {/* Directional arrow */}
             <div

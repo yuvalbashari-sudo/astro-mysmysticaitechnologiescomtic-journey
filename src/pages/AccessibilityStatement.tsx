@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const AccessibilityStatement = () => {
   const t = useT();
-  const { dir, isRTL } = useLanguage();
+  const { dir, isRTL, language } = useLanguage();
   const navigate = useNavigate();
 
   const goHome = () => navigate("/");
@@ -40,7 +40,7 @@ const AccessibilityStatement = () => {
             onMouseLeave={e => (e.currentTarget.style.color = "hsl(var(--gold) / 0.7)")}
           >
             <ArrowRight className={`w-4 h-4 ${isRTL ? "" : "rotate-180"}`} />
-            חזרה למסך הראשי
+            {t.a11y_back_to_main}
           </button>
           <button
             onClick={goHome}

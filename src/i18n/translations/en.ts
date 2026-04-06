@@ -537,6 +537,7 @@ export const en: TranslationKeys = {
   a11y_statement_contact_title: "Contact",
   a11y_statement_contact_text: "If you encounter an accessibility issue, please contact us and we will be happy to assist.",
   a11y_statement_last_updated: "",
+  a11y_back_to_main: "Back to Main Screen",
   a11y_link_label: "Accessibility statement",
   a11y_no_readings: "No saved readings yet",
 
