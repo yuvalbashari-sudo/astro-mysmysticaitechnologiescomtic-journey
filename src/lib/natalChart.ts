@@ -122,16 +122,16 @@ function degreeInSign(degree: number) {
 
 export async function geocodeBirthPlace(place: string): Promise<GeocodedBirthPlace> {
   const query = place.trim();
-  if (!query) throw new Error("יש להזין מקום לידה");
+  if (!query) throw new Error("GEOCODE_EMPTY");
 
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=he&format=json`;
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
   const response = await fetch(url);
-  if (!response.ok) throw new Error("לא הצלחנו לאתר את מקום הלידה כרגע");
+  if (!response.ok) throw new Error("GEOCODE_FETCH_FAILED");
 
   const data = await response.json();
   const result = data?.results?.[0];
   if (!result) {
-    throw new Error("לא הצלחנו לזהות את מקום הלידה. נסו לכתוב עיר ומדינה.");
+    throw new Error("GEOCODE_NOT_FOUND");
   }
 
   return {
