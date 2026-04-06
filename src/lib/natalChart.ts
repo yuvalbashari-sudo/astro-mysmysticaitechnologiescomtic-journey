@@ -82,8 +82,8 @@ export interface NatalHouseCusp {
 
 export interface NatalChartResult {
   location: GeocodedBirthPlace;
-  sunSign: { hebrewName: string; symbol: string; element: string; key: string };
-  risingSign: { hebrewName: string; symbol: string; element: string; key: string };
+  sunSign: { hebrewName: string; symbol: string; element: string; elementKey: string; key: string };
+  risingSign: { hebrewName: string; symbol: string; element: string; elementKey: string; key: string };
   moonSign: string;
   /** English key of moon sign for localization */
   moonSignKey: string;
