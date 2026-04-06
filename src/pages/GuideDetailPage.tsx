@@ -3,18 +3,27 @@ import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Sparkles, BookOpen, Sun } from "lucide-react";
 import StarField from "@/components/StarField";
 import { getGuideBySlug } from "@/data/guideContent";
+import { useLanguage } from "@/i18n";
 
 const GuideDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const guide = getGuideBySlug(slug || "");
+  const { language, dir, isRTL } = useLanguage();
+  const guide = getGuideBySlug(slug || "", language);
+
+  const notFoundLabel = { he: "המדריך לא נמצא", en: "Guide not found", ru: "Руководство не найдено", ar: "الدليل غير موجود" }[language];
+  const backLabel = { he: "חזרה לדף הבית", en: "Back to Home", ru: "На главную", ar: "العودة للرئيسية" }[language];
+  const goBackLabel = { he: "חזרה", en: "Back", ru: "Назад", ar: "رجوع" }[language];
+
+  const ForwardArrow = isRTL ? ArrowLeft : ArrowRight;
+  const BackwardArrow = isRTL ? ArrowRight : ArrowLeft;
 
   if (!guide) {
     return (
-      <div className="min-h-screen bg-background text-foreground flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center" dir={dir}>
         <div className="text-center">
-          <p className="text-foreground/60 font-body mb-4">המדריך לא נמצא</p>
-          <button onClick={() => navigate("/")} className="btn-gold font-body text-sm">חזרה לדף הבית</button>
+          <p className="text-foreground/60 font-body mb-4">{notFoundLabel}</p>
+          <button onClick={() => navigate("/")} className="btn-gold font-body text-sm">{backLabel}</button>
         </div>
       </div>
     );
@@ -23,29 +32,18 @@ const GuideDetailPage = () => {
   const IconComponent = guide.icon === "tarot" ? BookOpen : Sun;
 
   return (
-    <div className="min-h-screen bg-background text-foreground" dir="rtl">
+    <div className="min-h-screen bg-background text-foreground" dir={dir}>
       <StarField />
 
-      {/* Hero */}
       <section className="relative pt-16 pb-12 px-4 text-center">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
-        <motion.div
-          className="relative z-10 max-w-2xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
+        <motion.div className="relative z-10 max-w-2xl mx-auto" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <span className="text-4xl block mb-4">{guide.heroEmoji}</span>
-          <h1 className="font-heading text-4xl md:text-5xl gold-gradient-text mb-4 leading-tight">
-            {guide.title}
-          </h1>
-          <p className="text-foreground/70 text-xl md:text-2xl leading-relaxed max-w-lg mx-auto">
-            {guide.subtitle}
-          </p>
+          <h1 className="font-heading text-4xl md:text-5xl gold-gradient-text mb-4 leading-tight">{guide.title}</h1>
+          <p className="text-foreground/70 text-xl md:text-2xl leading-relaxed max-w-lg mx-auto">{guide.subtitle}</p>
         </motion.div>
       </section>
 
-      {/* Sections */}
       <section className="max-w-2xl mx-auto px-4 pb-20 space-y-8">
         {guide.sections.map((section, i) => (
           <motion.div
@@ -69,21 +67,13 @@ const GuideDetailPage = () => {
             </div>
 
             {section.blocks?.map((block, j) => (
-              <p
-                key={j}
-                className="font-body text-lg md:text-xl text-foreground/75 leading-[2] mb-4 last:mb-0"
-              >
-                {block}
-              </p>
+              <p key={j} className="font-body text-lg md:text-xl text-foreground/75 leading-[2] mb-4 last:mb-0">{block}</p>
             ))}
 
             {section.bullets && (
               <ul className="space-y-2 mt-2">
                 {section.bullets.map((bullet, j) => (
-                  <li
-                    key={j}
-                    className="flex items-start gap-2 font-body text-lg md:text-xl text-foreground/75 leading-relaxed"
-                  >
+                  <li key={j} className="flex items-start gap-2 font-body text-lg md:text-xl text-foreground/75 leading-relaxed">
                     <Sparkles className="w-3 h-3 text-gold/40 mt-1.5 shrink-0" />
                     <span>{bullet}</span>
                   </li>
@@ -93,31 +83,18 @@ const GuideDetailPage = () => {
           </motion.div>
         ))}
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center pt-8"
-        >
+        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center pt-8">
           <p className="text-foreground/60 text-sm mb-5">{guide.ctaText}</p>
-          <button
-            onClick={() => navigate(guide.ctaLink)}
-            className="btn-gold inline-flex items-center gap-2 font-heading text-base"
-          >
+          <button onClick={() => navigate(guide.ctaLink)} className="btn-gold inline-flex items-center gap-2 font-heading text-base">
             <span>{guide.ctaButton}</span>
-            <ArrowLeft className="w-4 h-4" />
+            <ForwardArrow className="w-4 h-4" />
           </button>
         </motion.div>
 
-        {/* Back link */}
         <div className="text-center pt-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="text-gold/50 hover:text-gold font-body text-xs transition-colors inline-flex items-center gap-1"
-          >
-            <ArrowRight className="w-3 h-3" />
-            חזרה
+          <button onClick={() => navigate(-1)} className="text-gold/50 hover:text-gold font-body text-xs transition-colors inline-flex items-center gap-1">
+            <BackwardArrow className="w-3 h-3" />
+            {goBackLabel}
           </button>
         </div>
       </section>
