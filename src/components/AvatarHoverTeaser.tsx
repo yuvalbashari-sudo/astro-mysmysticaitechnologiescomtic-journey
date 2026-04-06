@@ -33,6 +33,17 @@ const AvatarHoverTeaser = ({
   className = "",
   style,
 }: AvatarHoverTeaserProps) => {
+  const { language } = useLanguage();
+  const defaults = useMemo(() => ({
+    he: { t: `${assistantName} – רוצים הכוונה?`, h: "לחצו לשיחה" },
+    en: { t: `${assistantName} – Want guidance?`, h: "Click to chat" },
+    ru: { t: `${assistantName} – Нужна помощь?`, h: "Нажмите для чата" },
+    ar: { t: `${assistantName} – تريد إرشادًا؟`, h: "اضغط للمحادثة" },
+  }[language]), [language]);
+
+  const resolvedText = text ?? defaults.t;
+  const resolvedHighlight = highlightText ?? defaults.h;
+
   const [hovered, setHovered] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
