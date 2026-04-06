@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star } from "lucide-react";
+import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
@@ -16,6 +16,23 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
 import { toast } from "@/components/ui/sonner";
+
+const CHART_DAILY_KEY = "astrologai_birthchart_daily";
+
+function hasUsedChartToday(): boolean {
+  try {
+    const stored = localStorage.getItem(CHART_DAILY_KEY);
+    if (!stored) return false;
+    const today = new Date().toISOString().slice(0, 10);
+    return stored === today;
+  } catch { return false; }
+}
+
+function markChartUsedToday(): void {
+  try {
+    localStorage.setItem(CHART_DAILY_KEY, new Date().toISOString().slice(0, 10));
+  } catch { /* ignore */ }
+}
 
 interface Props {
   isOpen: boolean;
