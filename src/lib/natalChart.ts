@@ -398,7 +398,7 @@ export async function calculateNatalChart(input: {
 
       return {
         label: `${left} • ${ASPECT_META[aspect.aspectKey] || aspect.label} • ${right}`,
-        type: ASPECT_META[aspect.aspectKey] || aspect.label,
+        type: aspect.aspectKey || aspect.label,
         orb: Math.round((aspect.orb || 0) * 10) / 10,
         planet1Key: aspect.point1Key,
         planet2Key: aspect.point2Key,
