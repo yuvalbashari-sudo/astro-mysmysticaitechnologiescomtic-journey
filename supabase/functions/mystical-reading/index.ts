@@ -1101,6 +1101,19 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
       });
     }
+
+    // Daily usage limit check (e.g., 1 birth chart per day per IP)
+    const dailyCheck = await checkDailyLimit(clientIp, type || "generic");
+    if (!dailyCheck.allowed) {
+      if (logCostFn && getFeatureCostsFn) {
+        await logCostFn({ clientIp, feature: type || "generic", status: "daily_limit_exceeded", userTier: "unknown", aiCost: 0, imageCost: 0 });
+      }
+      return new Response(JSON.stringify({ error: "DAILY_LIMIT_REACHED" }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Resolve userName: explicit param > data.userName > extract from profileContext
     const userName = reqUserName || data?.userName || null;
     
