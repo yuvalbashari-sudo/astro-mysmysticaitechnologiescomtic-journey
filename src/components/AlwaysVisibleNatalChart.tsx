@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import type { NatalChartResult } from "@/lib/natalChart";
 import { useLanguage } from "@/i18n";
-import { getPlanetName, signFromDeg, getChartLabels } from "@/lib/astroLocale";
+import { getPlanetName, signFromDeg, getChartLabels, getSignNameByKey } from "@/lib/astroLocale";
 
 import ariesIcon from "@/assets/zodiac-icons/aries.png";
 import taurusIcon from "@/assets/zodiac-icons/taurus.png";
@@ -191,7 +191,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
         width={size}
         height={size}
         role="img"
-        aria-label="גלגל מפת לידה אסטרולוגית"
+        aria-label={labels.astroWheel}
         style={{
           display: "block",
           width: "100%",
@@ -656,7 +656,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
             fontFamily="'Heebo', sans-serif"
             letterSpacing="0.02em"
           >
-            {chartData.sunSign.symbol} {chartData.sunSign.hebrewName} • {chartData.risingSign?.symbol} {chartData.risingSign?.hebrewName} {labels.rising}
+            {chartData.sunSign.symbol} {getSignNameByKey(chartData.sunSign.key, language)} • {chartData.risingSign?.symbol} {chartData.risingSign?.key ? getSignNameByKey(chartData.risingSign.key, language) : ''} {labels.rising}
           </text>
         )}
 
