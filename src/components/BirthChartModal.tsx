@@ -122,7 +122,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       mysticalProfile.recordRising(`${natalChart.risingSign.hebrewName} עולה`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
       setPhase("loading");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : t.chart_form_error);
+      const msg = error instanceof Error ? error.message : "";
+      const geocodeErrors: Record<string, string> = {
+        GEOCODE_EMPTY: t.geocode_empty,
+        GEOCODE_FETCH_FAILED: t.geocode_fetch_failed,
+        GEOCODE_NOT_FOUND: t.geocode_not_found,
+      };
+      toast.error(geocodeErrors[msg] || t.chart_form_error);
     } finally {
       setPreparingChart(false);
     }

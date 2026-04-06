@@ -470,6 +470,9 @@ export type TranslationKeys = {
   birth_chart_rising: string;
   birth_chart_moon: string;
   birth_chart_error_required: string;
+  geocode_empty: string;
+  geocode_fetch_failed: string;
+  geocode_not_found: string;
   nav_birthchart_title: string;
   nav_birthchart_desc: string;
   nav_birthchart_cta: string;

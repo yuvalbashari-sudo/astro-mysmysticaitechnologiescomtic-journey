@@ -705,4 +705,7 @@ export const en: TranslationKeys = {
   guide_tarot_s4_bullet5: "Expecting \"yes/no\" answers — Tarot works with nuances, layers and insights.",
   guide_tarot_cta_text: "Want to go deeper? Start a personal reading now ✨",
   guide_tarot_cta_button: "Start a Reading",
+  geocode_empty: "Please enter a birth place",
+  geocode_fetch_failed: "Could not locate the birth place right now",
+  geocode_not_found: "Could not identify the birth place. Try entering a city and country.",
 };

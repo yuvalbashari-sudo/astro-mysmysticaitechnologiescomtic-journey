@@ -705,4 +705,7 @@ export const ar: TranslationKeys = {
   guide_tarot_s4_bullet5: "توقع إجابات «نعم/لا» — التاروت يعمل بالفروق الدقيقة والطبقات والرؤى.",
   guide_tarot_cta_text: "تريد التعمق أكثر؟ ابدأ قراءة شخصية الآن ✨",
   guide_tarot_cta_button: "ابدأ القراءة",
+  geocode_empty: "يرجى إدخال مكان الولادة",
+  geocode_fetch_failed: "تعذر تحديد مكان الولادة حالياً",
+  geocode_not_found: "تعذر التعرف على مكان الولادة. حاول كتابة المدينة والدولة.",
 };
