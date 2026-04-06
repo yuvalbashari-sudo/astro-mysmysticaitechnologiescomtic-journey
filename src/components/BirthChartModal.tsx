@@ -60,8 +60,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   );
 
   const elementSummary = useMemo(
-    () => (chartData?.dominantElements || []).slice(0, 3).map(({ element, count }) => `${element} (${count})`).join(" • "),
-    [chartData],
+    () => (chartData?.dominantElements || []).slice(0, 3).map(({ elementKey, count }) => `${getElementName(elementKey, language)} (${count})`).join(" • "),
+    [chartData, language],
   );
 
   useEffect(() => {
@@ -136,15 +136,19 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setAiStreaming(true);
 
     const planetLines = chartData.planetPlacements
-      .map((planet) => `${planet.symbol} ${planet.name}: ${planet.sign} ${planet.degree}° — ${chartLabels.house} ${planet.house}`)
+      .map((planet) => `${planet.symbol} ${getPlanetName(planet.key, language)}: ${getSignNameByKey(planet.signKey, language)} ${planet.degree}° — ${chartLabels.house} ${planet.house}`)
       .join("\n");
 
     const aspectLines = chartData.aspects.length
-      ? chartData.aspects.map((aspect) => `${aspect.label} — orb ${aspect.orb}°`).join("\n")
+      ? chartData.aspects.map((aspect) => {
+          const left = aspect.planet1Key === "ascendant" ? chartLabels.ascendant : `${getPlanetName(aspect.planet1Key, language)}`;
+          const right = aspect.planet2Key === "ascendant" ? chartLabels.ascendant : `${getPlanetName(aspect.planet2Key, language)}`;
+          return `${left} • ${aspect.type} • ${right} — orb ${aspect.orb}°`;
+        }).join("\n")
       : chartLabels.noStrongAspects;
 
     const houseLines = chartData.houseCusps
-      .map((house) => `${chartLabels.house} ${house.house}: ${house.sign} ${house.degree}°`)
+      .map((house) => `${chartLabels.house} ${house.house}: ${getSignNameByKey(house.signKey, language)} ${house.degree}°`)
       .join("\n");
 
     const dominantText = [
@@ -180,8 +184,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         setPhase("result");
         readingsStorage.save({
           type: "birth-chart",
-          title: `${chartLabels.birthChart} — ${chartData.sunSign.hebrewName} ${chartData.sunSign.symbol}`,
-          subtitle: `☉ ${chartData.sunSign.hebrewName} | ⬆ ${chartData.risingSign.hebrewName} | ☽ ${chartData.moonSign}`,
+          title: `${chartLabels.birthChart} — ${getSignNameByKey(chartData.sunSign.key, language)} ${chartData.sunSign.symbol}`,
+          subtitle: `☉ ${getSignNameByKey(chartData.sunSign.key, language)} | ⬆ ${getSignNameByKey(chartData.risingSign.key, language)} | ☽ ${chartData.moonSignKey ? getSignNameByKey(chartData.moonSignKey, language) : chartData.moonSign}`,
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
         });
@@ -386,8 +390,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_key_aspects}</div>
                       <div className="space-y-2">
                         {chartData.aspects.slice(0, 4).map((aspect) => (
-                          <p key={aspect.label} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
-                            {aspect.label}
+                          <p key={`${aspect.planet1Key}-${aspect.planet2Key}`} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
+                            {aspect.planet1Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet1Key, language)} • {aspect.type} • {aspect.planet2Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet2Key, language)}
                           </p>
                         ))}
                       </div>
