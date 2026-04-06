@@ -317,27 +317,49 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </p>
                 </div>
 
-                <div className="space-y-5">
-                  <BirthDetailsForm
-                    values={details}
-                    onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
-                    attempted={attempted}
-                    showTime
-                  />
+                {dailyLimitReached ? (
+                  <div className="space-y-4">
+                    <div
+                      className="rounded-xl p-4 text-center"
+                      style={{
+                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.6), hsl(var(--deep-blue) / 0.8))",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
+                      }}
+                    >
+                      <Clock className="w-6 h-6 mx-auto mb-2" style={{ color: "hsl(var(--gold) / 0.6)" }} />
+                      <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.7)" }}>
+                        {t.chart_daily_limit_reached}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-5">
+                    <BirthDetailsForm
+                      values={details}
+                      onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
+                      attempted={attempted}
+                      showTime
+                    />
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handleSubmit}
-                    disabled={preparingChart}
-                    className="btn-gold w-full text-base font-heading flex items-center justify-center gap-2"
-                  >
-                    {preparingChart ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-                    {preparingChart ? t.chart_form_loading : t.birth_chart_cta}
-                  </motion.button>
+                    <div className="text-center">
+                      <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
+                        {t.chart_daily_available}
+                      </p>
+                    </div>
 
-                  <p className="text-center text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
-                    {t.chart_form_note}
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleSubmit}
+                      disabled={preparingChart}
+                      className="btn-gold w-full text-base font-heading flex items-center justify-center gap-2"
+                    >
+                      {preparingChart ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                      {preparingChart ? t.chart_form_loading : t.birth_chart_cta}
+                    </motion.button>
+
+                    <p className="text-center text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
+                      {t.chart_form_note}
                   </p>
                 </div>
               </motion.div>
