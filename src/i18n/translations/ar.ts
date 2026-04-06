@@ -537,6 +537,7 @@ export const ar: TranslationKeys = {
   a11y_statement_contact_title: "تواصل معنا",
   a11y_statement_contact_text: "إذا واجهت مشكلة تتعلق بإمكانية الوصول، يرجى التواصل معنا وسنكون سعداء بالمساعدة.",
   a11y_statement_last_updated: "",
+  a11y_back_to_main: "العودة للشاشة الرئيسية",
   a11y_link_label: "بيان إمكانية الوصول",
   a11y_no_readings: "لا توجد قراءات محفوظة بعد",
 
