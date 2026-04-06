@@ -680,6 +680,9 @@ export const he: TranslationKeys = {
   chart_form_error: "יש למלא מגדר, תאריך לידה, שעת לידה ומקום לידה",
   chart_form_loading: "מאתרים את מקום הלידה ומחשבים את המפה...",
   chart_form_note: "מקום הלידה משפיע ישירות על האופק, הבתים והפירוש כולו.",
+  chart_daily_available: "מפת לידה יומית זמינה",
+  chart_daily_limit_reached: "כבר פתחתם מפת לידה היום. חזרו מחר ✨",
+  chart_daily_limit_toast: "כבר פתחתם את מפת הלידה האישית היום. חזרו מחר.",
 
   guide_tarot_hero_title: "איך להתחיל עם טארוט",
   guide_tarot_hero_subtitle: "המדריך המלא למתחילים – מהקלף הראשון ועד להבנה עמוקה",
