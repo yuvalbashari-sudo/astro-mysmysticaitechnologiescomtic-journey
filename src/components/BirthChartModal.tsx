@@ -10,7 +10,7 @@ import ChartLoadingRitual from "@/components/ChartLoadingRitual";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
-import { getChartLabels } from "@/lib/astroLocale";
+import { getChartLabels, getPlanetName, getSignNameByKey, getElementName, getAspectName } from "@/lib/astroLocale";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
@@ -354,15 +354,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 <div className="grid md:grid-cols-3 gap-3 w-full">
                   <div className="mystical-card p-4 text-center">
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.sun}</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {chartData.sunSign.hebrewName}</div>
+                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {getSignNameByKey(chartData.sunSign.key, language)}</div>
                   </div>
                   <div className="mystical-card p-4 text-center">
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{t.chart_asc_horizon}</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {chartData.risingSign.hebrewName}</div>
+                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {getSignNameByKey(chartData.risingSign.key, language)}</div>
                   </div>
                   <div className="mystical-card p-4 text-center">
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.moon}</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSign}</div>
+                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSignKey ? getSignNameByKey(chartData.moonSignKey, language) : chartData.moonSign}</div>
                   </div>
                 </div>
                 )}
