@@ -1,20 +1,20 @@
 // @ts-ignore - package main field missing .js extension
 import { Horoscope, Origin } from "circular-natal-horoscope-js/dist/index.js";
 
-const SIGN_META = {
-  Aries: { hebrewName: "טלה", symbol: "♈", element: "אש" },
-  Taurus: { hebrewName: "שור", symbol: "♉", element: "אדמה" },
-  Gemini: { hebrewName: "תאומים", symbol: "♊", element: "אוויר" },
-  Cancer: { hebrewName: "סרטן", symbol: "♋", element: "מים" },
-  Leo: { hebrewName: "אריה", symbol: "♌", element: "אש" },
-  Virgo: { hebrewName: "בתולה", symbol: "♍", element: "אדמה" },
-  Libra: { hebrewName: "מאזניים", symbol: "♎", element: "אוויר" },
-  Scorpio: { hebrewName: "עקרב", symbol: "♏", element: "מים" },
-  Sagittarius: { hebrewName: "קשת", symbol: "♐", element: "אש" },
-  Capricorn: { hebrewName: "גדי", symbol: "♑", element: "אדמה" },
-  Aquarius: { hebrewName: "דלי", symbol: "♒", element: "אוויר" },
-  Pisces: { hebrewName: "דגים", symbol: "♓", element: "מים" },
-} as const;
+const SIGN_META: Record<string, { hebrewName: string; symbol: string; element: string; elementKey: string }> = {
+  Aries: { hebrewName: "טלה", symbol: "♈", element: "אש", elementKey: "fire" },
+  Taurus: { hebrewName: "שור", symbol: "♉", element: "אדמה", elementKey: "earth" },
+  Gemini: { hebrewName: "תאומים", symbol: "♊", element: "אוויר", elementKey: "air" },
+  Cancer: { hebrewName: "סרטן", symbol: "♋", element: "מים", elementKey: "water" },
+  Leo: { hebrewName: "אריה", symbol: "♌", element: "אש", elementKey: "fire" },
+  Virgo: { hebrewName: "בתולה", symbol: "♍", element: "אדמה", elementKey: "earth" },
+  Libra: { hebrewName: "מאזניים", symbol: "♎", element: "אוויר", elementKey: "air" },
+  Scorpio: { hebrewName: "עקרב", symbol: "♏", element: "מים", elementKey: "water" },
+  Sagittarius: { hebrewName: "קשת", symbol: "♐", element: "אש", elementKey: "fire" },
+  Capricorn: { hebrewName: "גדי", symbol: "♑", element: "אדמה", elementKey: "earth" },
+  Aquarius: { hebrewName: "דלי", symbol: "♒", element: "אוויר", elementKey: "air" },
+  Pisces: { hebrewName: "דגים", symbol: "♓", element: "מים", elementKey: "water" },
+};
 
 const PLANET_META = {
   sun: { name: "שמש", symbol: "☉" },
@@ -40,7 +40,7 @@ const ASPECT_META: Record<string, string> = {
 
 const SUPPORTED_PLANETS = Object.keys(PLANET_META) as Array<keyof typeof PLANET_META>;
 
-type SignLabel = keyof typeof SIGN_META;
+type SignLabel = string;
 
 export interface GeocodedBirthPlace {
   name: string;
@@ -51,10 +51,12 @@ export interface GeocodedBirthPlace {
 }
 
 export interface PlanetPlacement {
-  key: keyof typeof PLANET_META;
+  key: string;
   name: string;
   symbol: string;
   sign: string;
+  /** English sign key, e.g. "Aries" */
+  signKey: string;
   degree: number;
   house: number;
   absoluteDegree: number;
@@ -64,26 +66,31 @@ export interface NatalAspect {
   label: string;
   type: string;
   orb: number;
+  planet1Key: string;
+  planet2Key: string;
 }
 
 export interface NatalHouseCusp {
   house: number;
   sign: string;
+  signKey: string;
   degree: number;
   absoluteDegree: number;
 }
 
 export interface NatalChartResult {
   location: GeocodedBirthPlace;
-  sunSign: { hebrewName: string; symbol: string; element: string };
-  risingSign: { hebrewName: string; symbol: string; element: string };
+  sunSign: { hebrewName: string; symbol: string; element: string; key: string };
+  risingSign: { hebrewName: string; symbol: string; element: string; key: string };
   moonSign: string;
+  /** English key of moon sign for localization */
+  moonSignKey: string;
   ascendantAngle: number;
   planetPositions: Record<string, number>;
   planetPlacements: PlanetPlacement[];
   aspects: NatalAspect[];
   houseCusps: NatalHouseCusp[];
-  dominantElements: Array<{ element: string; count: number }>;
+  dominantElements: Array<{ element: string; elementKey: string; count: number }>;
   dominantHouses: Array<{ house: number; count: number }>;
 }
 
@@ -100,7 +107,9 @@ function parseBirthTime(birthTime: string) {
 }
 
 function getSignMeta(label?: string) {
-  return SIGN_META[(label || "Aries") as SignLabel] || SIGN_META.Aries;
+  const key = (label || "Aries") as string;
+  const meta = SIGN_META[key] || SIGN_META.Aries;
+  return { ...meta, key };
 }
 
 function normalizeDegree(degree: number) {
@@ -220,6 +229,7 @@ export async function calculateNatalChart(input: {
       name: PLANET_META[key].name,
       symbol: PLANET_META[key].symbol,
       sign: signMeta.hebrewName,
+      signKey: signMeta.key,
       degree: degreeInSign(absoluteDegree),
       house: body?.House?.id || 1,
       absoluteDegree,
@@ -242,6 +252,7 @@ export async function calculateNatalChart(input: {
     return {
       house: house.id,
       sign: signMeta.hebrewName,
+      signKey: signMeta.key,
       degree: degreeInSign(cuspDegree),
       absoluteDegree: cuspDegree,
     };
@@ -268,13 +279,17 @@ export async function calculateNatalChart(input: {
         label: `${left} • ${ASPECT_META[aspect.aspectKey] || aspect.label} • ${right}`,
         type: ASPECT_META[aspect.aspectKey] || aspect.label,
         orb: Math.round((aspect.orb || 0) * 10) / 10,
+        planet1Key: aspect.point1Key,
+        planet2Key: aspect.point2Key,
       };
     });
 
-  const elementCounts = planetPlacements.reduce<Record<string, number>>((acc, placement) => {
+  const elementCounts = planetPlacements.reduce<Record<string, { count: number; elementKey: string }>>((acc, placement) => {
     const signEntry = Object.values(SIGN_META).find((sign) => sign.hebrewName === placement.sign);
     const element = signEntry?.element || "אוויר";
-    acc[element] = (acc[element] || 0) + 1;
+    const elementKey = signEntry?.elementKey || "air";
+    if (!acc[element]) acc[element] = { count: 0, elementKey };
+    acc[element].count += 1;
     return acc;
   }, {});
 
@@ -285,17 +300,18 @@ export async function calculateNatalChart(input: {
 
   return {
     location,
-    sunSign: sunMeta,
-    risingSign: risingMeta,
+    sunSign: { ...sunMeta },
+    risingSign: { ...risingMeta },
     moonSign: moonMeta.hebrewName,
+    moonSignKey: moonMeta.key,
     ascendantAngle,
     planetPositions,
     planetPlacements,
     aspects,
     houseCusps,
     dominantElements: Object.entries(elementCounts)
-      .sort((a, b) => b[1] - a[1])
-      .map(([element, count]) => ({ element, count })),
+      .sort((a, b) => b[1].count - a[1].count)
+      .map(([element, data]) => ({ element, elementKey: data.elementKey, count: data.count })),
     dominantHouses: Object.entries(houseCounts)
       .map(([house, count]) => ({ house: Number(house), count }))
       .sort((a, b) => b.count - a.count),

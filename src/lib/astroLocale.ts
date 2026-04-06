@@ -94,12 +94,44 @@ const CHART_LABELS: Record<Language, {
   },
 };
 
+/** Localized element names */
+const ELEMENT_NAMES: Record<Language, Record<string, string>> = {
+  he: { fire: "אש", earth: "אדמה", air: "אוויר", water: "מים" },
+  en: { fire: "Fire", earth: "Earth", air: "Air", water: "Water" },
+  ru: { fire: "Огонь", earth: "Земля", air: "Воздух", water: "Вода" },
+  ar: { fire: "نار", earth: "أرض", air: "هواء", water: "ماء" },
+};
+
+/** Localized aspect names */
+const ASPECT_NAMES: Record<Language, Record<string, string>> = {
+  he: { conjunction: "צמידות", opposition: "מולות", trine: "טריין", square: "ריבוע", sextile: "שישון", quincunx: "קווינקונקס" },
+  en: { conjunction: "Conjunction", opposition: "Opposition", trine: "Trine", square: "Square", sextile: "Sextile", quincunx: "Quincunx" },
+  ru: { conjunction: "Соединение", opposition: "Оппозиция", trine: "Тригон", square: "Квадрат", sextile: "Секстиль", quincunx: "Квинконс" },
+  ar: { conjunction: "اقتران", opposition: "تقابل", trine: "تثليث", square: "تربيع", sextile: "تسديس", quincunx: "كوينكونكس" },
+};
+
 export function getPlanetName(key: string, lang: Language): string {
   return PLANET_NAMES[lang]?.[key] ?? PLANET_NAMES.en[key] ?? key;
 }
 
 export function getSignName(index: number, lang: Language): string {
   return SIGN_NAMES[lang]?.[index] ?? SIGN_NAMES.en[index] ?? "";
+}
+
+/** Get localized sign name by English key (e.g. "Aries") */
+export function getSignNameByKey(key: string, lang: Language): string {
+  const SIGN_KEYS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+  const idx = SIGN_KEYS.indexOf(key);
+  if (idx === -1) return key;
+  return getSignName(idx, lang);
+}
+
+export function getElementName(key: string, lang: Language): string {
+  return ELEMENT_NAMES[lang]?.[key] ?? ELEMENT_NAMES.en[key] ?? key;
+}
+
+export function getAspectName(key: string, lang: Language): string {
+  return ASPECT_NAMES[lang]?.[key] ?? ASPECT_NAMES.en[key] ?? key;
 }
 
 export function getSignNames(lang: Language): string[] {
