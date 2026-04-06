@@ -75,15 +75,17 @@ export interface NatalHouseCusp {
 
 export interface NatalChartResult {
   location: GeocodedBirthPlace;
-  sunSign: { hebrewName: string; symbol: string; element: string };
-  risingSign: { hebrewName: string; symbol: string; element: string };
+  sunSign: { hebrewName: string; symbol: string; element: string; key: string };
+  risingSign: { hebrewName: string; symbol: string; element: string; key: string };
   moonSign: string;
+  /** English key of moon sign for localization */
+  moonSignKey: string;
   ascendantAngle: number;
   planetPositions: Record<string, number>;
   planetPlacements: PlanetPlacement[];
   aspects: NatalAspect[];
   houseCusps: NatalHouseCusp[];
-  dominantElements: Array<{ element: string; count: number }>;
+  dominantElements: Array<{ element: string; elementKey: string; count: number }>;
   dominantHouses: Array<{ house: number; count: number }>;
 }
 
