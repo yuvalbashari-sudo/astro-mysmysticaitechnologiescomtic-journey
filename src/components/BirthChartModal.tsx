@@ -83,6 +83,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   );
 
   useEffect(() => {
+    if (isOpen) {
+      setDailyLimitReached(hasUsedChartToday());
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const frame = requestAnimationFrame(() => {
