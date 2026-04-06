@@ -5,7 +5,7 @@ import { useLanguage } from "@/i18n";
 
 const SeoContentSection = () => {
   const { language } = useLanguage();
-  const isHe = language === "he" || language === "ar";
+  const isRTL = language === "he" || language === "ar";
 
   // SEO-rich content in Hebrew (primary) with English fallback
   const content = language === "he" ? {
