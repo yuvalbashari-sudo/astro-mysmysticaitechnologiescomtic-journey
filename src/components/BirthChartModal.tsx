@@ -217,6 +217,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       () => {
         setAiStreaming(false);
         setPhase("result");
+        markChartUsedToday();
+        setDailyLimitReached(true);
         readingsStorage.save({
           type: "birth-chart",
           title: `${chartLabels.birthChart} — ${getSignNameByKey(chartData.sunSign.key, language)} ${chartData.sunSign.symbol}`,
@@ -226,8 +228,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         });
       },
       (error) => {
-        toast.error(error);
+        if (error === "DAILY_LIMIT_REACHED") {
+          markChartUsedToday();
+          setDailyLimitReached(true);
+          toast.error(t.chart_daily_limit_toast);
+        } else {
+          toast.error(error);
+        }
         setAiStreaming(false);
+        setPhase("form");
         setPhase("form");
       },
       language,
