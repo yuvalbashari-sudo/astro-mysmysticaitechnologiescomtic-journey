@@ -120,16 +120,54 @@ function degreeInSign(degree: number) {
   return Math.round((normalizeDegree(degree) % 30) * 10) / 10;
 }
 
+async function tryGeocode(query: string): Promise<any | null> {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
+  const response = await fetch(url);
+  if (!response.ok) return null;
+  const data = await response.json();
+  return data?.results?.[0] || null;
+}
+
 export async function geocodeBirthPlace(place: string): Promise<GeocodedBirthPlace> {
   const query = place.trim();
   if (!query) throw new Error("GEOCODE_EMPTY");
 
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("GEOCODE_FETCH_FAILED");
+  // Try original query first
+  let result = await tryGeocode(query);
 
-  const data = await response.json();
-  const result = data?.results?.[0];
+  // If not found, try variations: strip country suffix and retry just the city,
+  // or add spaces between concatenated words (e.g. "batyam" → "bat yam")
+  if (!result) {
+    // Try removing common country suffixes and search just the city part
+    const parts = query.split(/[\s,]+/).filter(Boolean);
+    if (parts.length > 1) {
+      // Try just the first part (city name)
+      result = await tryGeocode(parts[0]);
+    }
+    // If still not found, try inserting a space before each uppercase letter
+    // or before the last 2-6 chars (handles "batyam" → "bat yam", "telaviv" → "tel aviv")
+    if (!result) {
+      const spacedQuery = query.replace(/([a-z])([A-Z])/g, "$1 $2");
+      if (spacedQuery !== query) {
+        result = await tryGeocode(spacedQuery);
+      }
+    }
+    if (!result) {
+      // Brute-force: try inserting a space at each position in the first word
+      const firstWord = parts[0]?.toLowerCase() || query.toLowerCase();
+      if (firstWord.length >= 4 && firstWord.length <= 15) {
+        for (let i = 2; i < firstWord.length - 1; i++) {
+          const candidate = firstWord.slice(0, i) + " " + firstWord.slice(i);
+          const fullCandidate = parts.length > 1
+            ? candidate + " " + parts.slice(1).join(" ")
+            : candidate;
+          result = await tryGeocode(fullCandidate);
+          if (result) break;
+        }
+      }
+    }
+  }
+
   if (!result) {
     throw new Error("GEOCODE_NOT_FOUND");
   }
