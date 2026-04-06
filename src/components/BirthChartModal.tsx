@@ -124,6 +124,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const handleSubmit = useCallback(async () => {
     setAttempted(true);
 
+    if (dailyLimitReached) {
+      toast.error(t.chart_daily_limit_toast);
+      return;
+    }
+
     if (!gender || !birthDate || !birthTime || !birthCity.trim()) {
       toast.error(t.chart_form_error);
       return;
