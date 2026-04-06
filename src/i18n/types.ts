@@ -604,6 +604,7 @@ export type TranslationKeys = {
   a11y_statement_contact_title: string;
   a11y_statement_contact_text: string;
   a11y_statement_last_updated: string;
+  a11y_back_to_main: string;
   a11y_link_label: string;
   a11y_no_readings: string;
 
