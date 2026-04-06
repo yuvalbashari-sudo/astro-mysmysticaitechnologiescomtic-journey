@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-
+import { useLanguage } from "@/i18n";
+import { getChartLabels } from "@/lib/astroLocale";
 const FALLBACK_PLANET_POSITIONS: Record<string, number> = {
   sun: 42,
   moon: 118,
@@ -82,6 +83,8 @@ interface Props {
 }
 
 const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props) => {
+  const { language } = useLanguage();
+  const chartLabels = getChartLabels(language);
   const resolvedPlanetPositions = PLANETS.reduce<Record<string, number>>((acc, planet) => {
     const rawAngle = planetPositions?.[planet.key];
     acc[planet.key] = Number.isFinite(rawAngle)
@@ -140,7 +143,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
         viewBox={`0 0 ${size} ${size}`}
         className="relative z-10 block w-full h-full overflow-visible"
         role="img"
-        aria-label="גלגל מפת הלידה"
+        aria-label={chartLabels.astroWheel}
       >
         <defs>
           <radialGradient id="wheelBg">
@@ -314,7 +317,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
                 fontWeight="bold"
                 fill="hsl(0, 65%, 55%)"
               >
-                אופק
+                {chartLabels.ascendant}
               </text>
             </g>
           );
@@ -330,7 +333,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
           fill="hsl(var(--gold) / 0.82)"
           fontWeight="700"
         >
-          מפת לידה
+          {chartLabels.birthChart}
         </text>
         <text
           x={cx}
@@ -339,7 +342,7 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
           fontSize={size * 0.02}
           fill="hsl(var(--foreground) / 0.55)"
         >
-          גלגל אישי
+          {chartLabels.astroWheel}
         </text>
         <circle cx={cx} cy={cy} r="4" fill="hsl(43, 80%, 55%)" fillOpacity="0.4" />
         <circle cx={cx} cy={cy} r="2" fill="hsl(43, 80%, 55%)" fillOpacity="0.7" />
