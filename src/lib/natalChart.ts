@@ -71,6 +71,7 @@ export interface NatalAspect {
 export interface NatalHouseCusp {
   house: number;
   sign: string;
+  signKey: string;
   degree: number;
   absoluteDegree: number;
 }
