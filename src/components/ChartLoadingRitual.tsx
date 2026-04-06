@@ -1,38 +1,63 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useT } from "@/i18n/LanguageContext";
+import { useLanguage } from "@/i18n/LanguageContext";
+import type { Language } from "@/i18n/types";
 
 interface Props {
   userName?: string;
   onComplete: () => void;
 }
 
-const STEPS_HE = [
-  { icon: "🌌", text: "מחשב את מיקומי כוכבי הלכת..." },
-  { icon: "☉", text: "ממפה את מזל השמש והמהות הפנימית..." },
-  { icon: "☽", text: "חושף את עולמך הרגשי דרך הירח..." },
-  { icon: "⬆️", text: "קובע את המזל העולה והרושם הראשוני..." },
-  { icon: "🏠", text: "מסדר את הבתים האסטרולוגיים..." },
-  { icon: "✨", text: "מסנתז את מפת הלידה המלאה שלך..." },
-];
+type Step = { icon: string; text: string };
 
-const STEPS_EN = [
-  { icon: "🌌", text: "Calculating planetary positions..." },
-  { icon: "☉", text: "Mapping your Sun sign and inner essence..." },
-  { icon: "☽", text: "Revealing your emotional world through the Moon..." },
-  { icon: "⬆️", text: "Determining your Rising sign and first impression..." },
-  { icon: "🏠", text: "Arranging the astrological houses..." },
-  { icon: "✨", text: "Synthesizing your complete natal chart..." },
-];
+const STEPS: Record<Language, Step[]> = {
+  he: [
+    { icon: "🌌", text: "מחשב את מיקומי כוכבי הלכת..." },
+    { icon: "☉", text: "ממפה את מזל השמש והמהות הפנימית..." },
+    { icon: "☽", text: "חושף את עולמך הרגשי דרך הירח..." },
+    { icon: "⬆️", text: "קובע את המזל העולה והרושם הראשוני..." },
+    { icon: "🏠", text: "מסדר את הבתים האסטרולוגיים..." },
+    { icon: "✨", text: "מסנתז את מפת הלידה המלאה שלך..." },
+  ],
+  en: [
+    { icon: "🌌", text: "Calculating planetary positions..." },
+    { icon: "☉", text: "Mapping your Sun sign and inner essence..." },
+    { icon: "☽", text: "Revealing your emotional world through the Moon..." },
+    { icon: "⬆️", text: "Determining your Rising sign and first impression..." },
+    { icon: "🏠", text: "Arranging the astrological houses..." },
+    { icon: "✨", text: "Synthesizing your complete natal chart..." },
+  ],
+  ru: [
+    { icon: "🌌", text: "Вычисление положений планет..." },
+    { icon: "☉", text: "Определение вашего знака Солнца и внутренней сущности..." },
+    { icon: "☽", text: "Раскрытие вашего эмоционального мира через Луну..." },
+    { icon: "⬆️", text: "Определение восходящего знака и первого впечатления..." },
+    { icon: "🏠", text: "Расстановка астрологических домов..." },
+    { icon: "✨", text: "Синтез вашей полной натальной карты..." },
+  ],
+  ar: [
+    { icon: "🌌", text: "حساب مواقع الكواكب..." },
+    { icon: "☉", text: "تحديد برجك الشمسي وجوهرك الداخلي..." },
+    { icon: "☽", text: "كشف عالمك العاطفي من خلال القمر..." },
+    { icon: "⬆️", text: "تحديد برجك الطالع والانطباع الأول..." },
+    { icon: "🏠", text: "ترتيب البيوت الفلكية..." },
+    { icon: "✨", text: "تركيب خريطة ميلادك الكاملة..." },
+  ],
+};
+
+const CALCULATING_TITLE: Record<Language, string> = {
+  he: "מחשבים את המפה שלך...",
+  en: "calculating your chart...",
+  ru: "рассчитываем вашу карту...",
+  ar: "جاري حساب خريطتك...",
+};
 
 const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
-  const t = useT();
+  const { language } = useLanguage();
   const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  // Detect language from translations
-  const isHebrew = t.meta_title?.includes("טארוט") || t.meta_title?.includes("ASTROLOGAI");
-  const steps = isHebrew ? STEPS_HE : STEPS_EN;
+  const steps = STEPS[language] || STEPS.en;
 
   useEffect(() => {
     const totalDuration = 4500;
@@ -69,13 +94,11 @@ const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
-      {/* Cosmic orb */}
       <motion.div
         className="relative mb-10"
         animate={{ rotate: 360 }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
       >
-        {/* Outer ring */}
         <div
           className="w-40 h-40 rounded-full"
           style={{
@@ -83,7 +106,6 @@ const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
             border: "1px solid hsl(43 80% 55% / 0.15)",
           }}
         />
-        {/* Inner pulsing core */}
         <motion.div
           className="absolute inset-6 rounded-full"
           style={{
@@ -99,7 +121,6 @@ const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
           }}
           transition={{ duration: 2, repeat: Infinity }}
         />
-        {/* Center symbol */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center"
           animate={{ rotate: -360 }}
@@ -111,7 +132,6 @@ const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
         </motion.div>
       </motion.div>
 
-      {/* Title */}
       {userName && (
         <motion.h3
           className="font-heading text-xl md:text-2xl gold-gradient-text mb-4 text-center"
@@ -119,11 +139,10 @@ const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          {isHebrew ? `${userName}, מחשבים את המפה שלך...` : `${userName}, calculating your chart...`}
+          {`${userName}, ${CALCULATING_TITLE[language] || CALCULATING_TITLE.en}`}
         </motion.h3>
       )}
 
-      {/* Step text */}
       <AnimatePresence mode="wait">
         <motion.p
           key={step}
@@ -138,7 +157,6 @@ const ChartLoadingRitual = ({ userName, onComplete }: Props) => {
         </motion.p>
       </AnimatePresence>
 
-      {/* Progress bar */}
       <div
         className="w-48 h-0.5 mt-8 rounded-full overflow-hidden"
         style={{ background: "hsl(var(--gold) / 0.1)" }}
