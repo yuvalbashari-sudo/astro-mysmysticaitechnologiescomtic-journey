@@ -996,6 +996,45 @@ const RATE_LIMIT_MAX: Record<string, number> = {
   tarotSpread: 15,
 };
 
+// Daily limits per IP (separate from hourly rate limits)
+const DAILY_LIMIT_FEATURES: Record<string, number> = {
+  birthChart: 1, // 1 birth chart per day per IP
+};
+
+async function checkDailyLimit(clientIp: string, action: string): Promise<{ allowed: boolean; remaining: number }> {
+  const maxDaily = DAILY_LIMIT_FEATURES[action];
+  if (!maxDaily) return { allowed: true, remaining: 99 };
+
+  try {
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceKey);
+
+    const todayStart = new Date();
+    todayStart.setUTCHours(0, 0, 0, 0);
+
+    const { count } = await supabase
+      .from("rate_limits")
+      .select("*", { count: "exact", head: true })
+      .eq("client_ip", clientIp)
+      .eq("action", `daily_${action}`)
+      .gte("created_at", todayStart.toISOString());
+
+    const used = count || 0;
+    if (used >= maxDaily) {
+      return { allowed: false, remaining: 0 };
+    }
+
+    // Record daily usage
+    await supabase.from("rate_limits").insert({ client_ip: clientIp, action: `daily_${action}` });
+    return { allowed: true, remaining: maxDaily - used - 1 };
+  } catch (e) {
+    console.error("Daily limit check failed:", e);
+    return { allowed: true, remaining: 1 }; // fail-open
+  }
+}
+
 async function checkServerRateLimit(clientIp: string, action: string): Promise<{ allowed: boolean }> {
   try {
     const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
