@@ -40,7 +40,7 @@ const AccessibilityStatement = () => {
             onMouseLeave={e => (e.currentTarget.style.color = "hsl(var(--gold) / 0.7)")}
           >
             <ArrowRight className={`w-4 h-4 ${isRTL ? "" : "rotate-180"}`} />
-            {t.a11y_back_to_main || (language === "he" ? "חזרה למסך הראשי" : language === "ar" ? "العودة للشاشة الرئيسية" : language === "ru" ? "Вернуться на главный экран" : "Back to Main Screen")}
+            {t.a11y_back_to_main}
           </button>
           <button
             onClick={goHome}
