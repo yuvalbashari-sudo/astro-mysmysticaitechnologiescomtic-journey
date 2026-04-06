@@ -1,6 +1,7 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { assistantName } from "@/lib/assistantConfig";
+import { useLanguage } from "@/i18n";
 
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
