@@ -38,6 +38,8 @@ const ASPECT_META: Record<string, string> = {
   quincunx: "קווינקונקס",
 };
 
+const ISRAEL_ALIASES = ["Israel", "ישראל", "Израиль", "إسرائيل"];
+
 const SUPPORTED_PLANETS = Object.keys(PLANET_META) as Array<keyof typeof PLANET_META>;
 
 type SignLabel = string;
@@ -120,55 +122,136 @@ function degreeInSign(degree: number) {
   return Math.round((normalizeDegree(degree) % 30) * 10) / 10;
 }
 
-async function tryGeocode(query: string): Promise<any | null> {
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=en&format=json`;
-  const response = await fetch(url);
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function normalizePlaceQuery(query: string) {
+  return query
+    .replace(/[،]/g, ",")
+    .replace(/\s*,\s*/g, ", ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function detectGeocodeLanguages(query: string) {
+  if (/[\u0590-\u05FF]/.test(query)) return ["he", "en"];
+  if (/[\u0600-\u06FF]/.test(query)) return ["ar", "en"];
+  if (/[\u0400-\u04FF]/.test(query)) return ["ru", "en"];
+  return ["en", "he"];
+}
+
+function buildGeocodeCandidates(query: string) {
+  const candidates = new Set<string>();
+
+  const addCandidate = (value?: string) => {
+    const normalized = normalizePlaceQuery(value || "");
+    if (!normalized) return;
+
+    candidates.add(normalized);
+
+    const camelSplit = normalized.replace(/([a-z])([A-Z])/g, "$1 $2");
+    if (camelSplit !== normalized) {
+      candidates.add(camelSplit);
+    }
+  };
+
+  addCandidate(query);
+
+  const normalizedQuery = normalizePlaceQuery(query);
+  const parts = normalizedQuery.split(/\s+/).filter(Boolean);
+
+  if (!normalizedQuery.includes(",") && parts.length >= 2) {
+    addCandidate(`${parts.slice(0, -1).join(" ")}, ${parts[parts.length - 1]}`);
+  }
+
+  for (const alias of ISRAEL_ALIASES) {
+    const exactCountryPattern = new RegExp(`^${escapeRegExp(alias)}$`, "i");
+    const suffixCountryPattern = new RegExp(`^(.+?)(?:,\\s*|\\s+)${escapeRegExp(alias)}$`, "i");
+
+    if (exactCountryPattern.test(normalizedQuery)) {
+      addCandidate(alias);
+      addCandidate(alias === "Israel" ? "ישראל" : "Israel");
+    }
+
+    const suffixMatch = normalizedQuery.match(suffixCountryPattern);
+    if (!suffixMatch) continue;
+
+    const cityPart = suffixMatch[1].trim();
+    addCandidate(cityPart);
+    addCandidate(`${cityPart}, ${alias}`);
+    addCandidate(`${cityPart}, Israel`);
+    addCandidate(`${cityPart}, ישראל`);
+  }
+
+  const firstWord = parts[0] || normalizedQuery;
+  if (firstWord.length >= 4 && firstWord.length <= 15 && !firstWord.includes(" ")) {
+    for (let i = 2; i < firstWord.length - 1; i++) {
+      const splitWord = `${firstWord.slice(0, i)} ${firstWord.slice(i)}`;
+      const fullCandidate = parts.length > 1
+        ? `${splitWord} ${parts.slice(1).join(" ")}`
+        : splitWord;
+
+      addCandidate(fullCandidate);
+
+      const splitParts = normalizePlaceQuery(fullCandidate).split(/\s+/).filter(Boolean);
+      if (splitParts.length >= 2 && !fullCandidate.includes(",")) {
+        addCandidate(`${splitParts.slice(0, -1).join(" ")}, ${splitParts[splitParts.length - 1]}`);
+      }
+    }
+  }
+
+  return Array.from(candidates);
+}
+
+async function tryGeocode(query: string, language: string): Promise<any | null> {
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=${encodeURIComponent(language)}&format=json`;
+  let response: Response;
+
+  try {
+    response = await fetch(url);
+  } catch {
+    throw new Error("GEOCODE_FETCH_FAILED");
+  }
+
   if (!response.ok) return null;
   const data = await response.json();
   return data?.results?.[0] || null;
 }
 
 export async function geocodeBirthPlace(place: string): Promise<GeocodedBirthPlace> {
-  const query = place.trim();
+  const query = normalizePlaceQuery(place);
   if (!query) throw new Error("GEOCODE_EMPTY");
 
-  // Try original query first
-  let result = await tryGeocode(query);
+  const candidates = buildGeocodeCandidates(query);
+  const languages = detectGeocodeLanguages(query);
+  let result: any | null = null;
+  let hadFetchFailure = false;
 
-  // If not found, try variations: strip country suffix and retry just the city,
-  // or add spaces between concatenated words (e.g. "batyam" → "bat yam")
-  if (!result) {
-    // Try removing common country suffixes and search just the city part
-    const parts = query.split(/[\s,]+/).filter(Boolean);
-    if (parts.length > 1) {
-      // Try just the first part (city name)
-      result = await tryGeocode(parts[0]);
-    }
-    // If still not found, try inserting a space before each uppercase letter
-    // or before the last 2-6 chars (handles "batyam" → "bat yam", "telaviv" → "tel aviv")
-    if (!result) {
-      const spacedQuery = query.replace(/([a-z])([A-Z])/g, "$1 $2");
-      if (spacedQuery !== query) {
-        result = await tryGeocode(spacedQuery);
-      }
-    }
-    if (!result) {
-      // Brute-force: try inserting a space at each position in the first word
-      const firstWord = parts[0]?.toLowerCase() || query.toLowerCase();
-      if (firstWord.length >= 4 && firstWord.length <= 15) {
-        for (let i = 2; i < firstWord.length - 1; i++) {
-          const candidate = firstWord.slice(0, i) + " " + firstWord.slice(i);
-          const fullCandidate = parts.length > 1
-            ? candidate + " " + parts.slice(1).join(" ")
-            : candidate;
-          result = await tryGeocode(fullCandidate);
-          if (result) break;
+  for (const candidate of candidates) {
+    for (const language of languages) {
+      try {
+        result = await tryGeocode(candidate, language);
+      } catch (error) {
+        if (error instanceof Error && error.message === "GEOCODE_FETCH_FAILED") {
+          hadFetchFailure = true;
+          continue;
         }
+
+        throw error;
       }
+
+      if (result) break;
     }
+
+    if (result) break;
   }
 
   if (!result) {
+    if (hadFetchFailure) {
+      throw new Error("GEOCODE_FETCH_FAILED");
+    }
+
     throw new Error("GEOCODE_NOT_FOUND");
   }
 
