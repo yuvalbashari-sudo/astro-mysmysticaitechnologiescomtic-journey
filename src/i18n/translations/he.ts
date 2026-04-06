@@ -705,4 +705,7 @@ export const he: TranslationKeys = {
   guide_tarot_s4_bullet5: "ציפייה לתשובות \"כן/לא\" – הטארוט עובד עם ניואנסים, שכבות ותובנות.",
   guide_tarot_cta_text: "רוצים להעמיק עוד? התחילו קריאה אישית עכשיו ✨",
   guide_tarot_cta_button: "התחילו קריאה",
+  geocode_empty: "יש להזין מקום לידה",
+  geocode_fetch_failed: "לא הצלחנו לאתר את מקום הלידה כרגע",
+  geocode_not_found: "לא הצלחנו לזהות את מקום הלידה. נסו לכתוב עיר ומדינה.",
 };
