@@ -214,11 +214,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                 <AnimatePresence>
                   {guideOpen && (
                     <motion.div
-                      className="fixed flex flex-col gap-1.5 rounded-xl p-2 z-[100]"
+                      className="fixed flex flex-col gap-2 rounded-xl p-3 z-[100]"
                       style={{
                         top: 44,
-                        left: 16,
                         right: 16,
+                        width: 200,
                         minWidth: 180,
                         background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.95))",
                         border: "1px solid hsl(var(--gold) / 0.18)",
@@ -233,8 +233,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                       <Link
                         to="/tarot-guides"
                         onClick={() => setGuideOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg font-body text-[13px] font-medium transition-colors hover:bg-gold/10"
-                        style={{ color: "hsl(var(--foreground) / 0.85)" }}
+                        className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[19px] font-medium transition-colors hover:bg-gold/10"
+                        style={{ color: "hsl(var(--foreground) / 0.9)" }}
                       >
                         <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
                         {t.topbar_guide_tarot}
@@ -242,8 +242,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                       <Link
                         to="/astrology-guides"
                         onClick={() => setGuideOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg font-body text-[13px] font-medium transition-colors hover:bg-gold/10"
-                        style={{ color: "hsl(var(--foreground) / 0.85)" }}
+                        className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[19px] font-medium transition-colors hover:bg-gold/10"
+                        style={{ color: "hsl(var(--foreground) / 0.9)" }}
                       >
                         <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
                         {t.topbar_guide_astrology}
