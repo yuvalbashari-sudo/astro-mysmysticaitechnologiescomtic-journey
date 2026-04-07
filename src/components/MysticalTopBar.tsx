@@ -175,7 +175,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             <motion.h1
               className="font-heading uppercase pointer-events-none select-none"
               style={{
-                fontSize: 19,
+                fontSize: 28,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 lineHeight: 1,
