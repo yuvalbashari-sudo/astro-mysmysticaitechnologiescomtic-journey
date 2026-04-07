@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 export interface BirthDetails {
   userName: string;
