@@ -27,6 +27,18 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
   const { dir } = useLanguage();
   const t = useT();
   const isMobile = useIsMobile();
+  const [guideOpen, setGuideOpen] = useState(false);
+  const guideRef = useRef<HTMLDivElement>(null);
+
+  // Close guide dropdown on outside click
+  useEffect(() => {
+    if (!guideOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (guideRef.current && !guideRef.current.contains(e.target as Node)) setGuideOpen(false);
+    };
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
+  }, [guideOpen]);
 
   /* ── Shared icon elements ── */
   const dashboardBtn = (
