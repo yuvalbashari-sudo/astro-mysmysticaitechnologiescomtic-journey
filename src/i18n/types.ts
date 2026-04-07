@@ -755,6 +755,11 @@ export type TranslationKeys = {
   guide_tarot_cta_text: string;
   guide_tarot_cta_button: string;
 
+  // Guide entry card (mobile top bar)
+  topbar_guide_label: string;
+  topbar_guide_tarot: string;
+  topbar_guide_astrology: string;
+
   // Payment gating
   gating_upgrade_label: string;
   gating_pay_label: string;

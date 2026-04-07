@@ -712,4 +712,7 @@ export const en: TranslationKeys = {
   geocode_empty: "Please enter a birth place",
   geocode_fetch_failed: "Could not locate the birth place right now",
   geocode_not_found: "Could not identify the birth place. Try entering a city and country.",
+  topbar_guide_label: "Guides",
+  topbar_guide_tarot: "Tarot Guide",
+  topbar_guide_astrology: "Astrology Guide",
 };

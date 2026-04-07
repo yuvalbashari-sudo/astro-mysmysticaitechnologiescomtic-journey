@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
-import { MessageCircle, Clock, Sparkles } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, Clock, Sparkles, BookOpen } from "lucide-react";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
@@ -26,6 +27,18 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
   const { dir } = useLanguage();
   const t = useT();
   const isMobile = useIsMobile();
+  const [guideOpen, setGuideOpen] = useState(false);
+  const guideRef = useRef<HTMLDivElement>(null);
+
+  // Close guide dropdown on outside click
+  useEffect(() => {
+    if (!guideOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (guideRef.current && !guideRef.current.contains(e.target as Node)) setGuideOpen(false);
+    };
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
+  }, [guideOpen]);
 
   /* ── Shared icon elements ── */
   const dashboardBtn = (
@@ -181,11 +194,64 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
               ASTROLOGAI
             </motion.h1>
 
-            <nav className="flex items-center gap-1.5">
-              {dashboardBtn}
-              {historyBtn}
+            <div className="flex items-center gap-1.5" ref={guideRef}>
+              <div className="relative">
+                <motion.button
+                  onClick={() => setGuideOpen(!guideOpen)}
+                  className={`${iconBtn} w-9 h-9`}
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.7), hsl(var(--deep-blue-light) / 0.5))",
+                    border: "1px solid hsl(var(--gold) / 0.2)",
+                    color: "hsl(var(--gold) / 0.8)",
+                  }}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.95 }}
+                  aria-label={t.topbar_guide_label}
+                  aria-expanded={guideOpen}
+                >
+                  <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
+                </motion.button>
+                <AnimatePresence>
+                  {guideOpen && (
+                    <motion.div
+                      className="absolute top-full mt-2 flex flex-col gap-1.5 rounded-xl p-2 z-[100]"
+                      style={{
+                        [dir === "rtl" ? "right" : "left"]: 0,
+                        minWidth: 180,
+                        background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.95))",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
+                        boxShadow: "0 8px 32px hsl(var(--deep-blue) / 0.6), 0 0 12px hsl(var(--gold) / 0.06)",
+                        backdropFilter: "blur(16px)",
+                      }}
+                      initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                      transition={{ duration: 0.18 }}
+                    >
+                      <Link
+                        to="/tarot-guides"
+                        onClick={() => setGuideOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg font-body text-[13px] font-medium transition-colors hover:bg-gold/10"
+                        style={{ color: "hsl(var(--foreground) / 0.85)" }}
+                      >
+                        <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
+                        {t.topbar_guide_tarot}
+                      </Link>
+                      <Link
+                        to="/astrology-guides"
+                        onClick={() => setGuideOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg font-body text-[13px] font-medium transition-colors hover:bg-gold/10"
+                        style={{ color: "hsl(var(--foreground) / 0.85)" }}
+                      >
+                        <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
+                        {t.topbar_guide_astrology}
+                      </Link>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
               {whatsappBtn}
-            </nav>
+            </div>
           </div>
 
         </div>

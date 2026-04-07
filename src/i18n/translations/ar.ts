@@ -712,4 +712,7 @@ export const ar: TranslationKeys = {
   geocode_empty: "يرجى إدخال مكان الولادة",
   geocode_fetch_failed: "تعذر تحديد مكان الولادة حالياً",
   geocode_not_found: "تعذر التعرف على مكان الولادة. حاول كتابة المدينة والدولة.",
+  topbar_guide_label: "أدلة",
+  topbar_guide_tarot: "دليل التاروت",
+  topbar_guide_astrology: "دليل الفلك",
 };

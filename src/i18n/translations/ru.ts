@@ -712,4 +712,7 @@ export const ru: TranslationKeys = {
   geocode_empty: "Введите место рождения",
   geocode_fetch_failed: "Не удалось определить место рождения сейчас",
   geocode_not_found: "Не удалось распознать место рождения. Попробуйте ввести город и страну.",
+  topbar_guide_label: "Руководства",
+  topbar_guide_tarot: "Руководство по Таро",
+  topbar_guide_astrology: "Руководство по астрологии",
 };
