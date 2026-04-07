@@ -252,6 +252,10 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
               </div>
               {whatsappBtn}
             </div>
+          </div>
+
+        </div>
+      ) : (
         /* ── DESKTOP / TABLET: original single-row layout ── */
         <div className="flex items-center justify-between w-full">
           <div className="hidden md:flex flex-1" />
