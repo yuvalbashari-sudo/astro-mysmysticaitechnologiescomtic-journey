@@ -127,6 +127,7 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCi
           </label>
           <input
             type="time"
+            lang={language}
             value={values.birthTime}
             onChange={(e) => onChange({ birthTime: e.target.value })}
             className="mystical-input font-body text-center w-full"
