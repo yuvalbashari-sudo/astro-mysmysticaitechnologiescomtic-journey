@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
-import { MessageCircle, Clock, Sparkles } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, Clock, Sparkles, BookOpen } from "lucide-react";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
