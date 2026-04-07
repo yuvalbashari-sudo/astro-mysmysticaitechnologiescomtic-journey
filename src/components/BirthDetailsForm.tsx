@@ -31,6 +31,7 @@ interface Props {
  */
 const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCity = true, size = "default" }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const isLarge = size === "large";
 
   const labelClass = isLarge
