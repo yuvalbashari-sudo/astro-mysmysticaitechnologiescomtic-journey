@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 export interface BirthDetails {
   userName: string;
@@ -31,6 +31,7 @@ interface Props {
  */
 const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCity = true, size = "default" }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const isLarge = size === "large";
 
   const labelClass = isLarge
@@ -126,6 +127,7 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCi
           </label>
           <input
             type="time"
+            lang={language}
             value={values.birthTime}
             onChange={(e) => onChange({ birthTime: e.target.value })}
             className="mystical-input font-body text-center w-full"
