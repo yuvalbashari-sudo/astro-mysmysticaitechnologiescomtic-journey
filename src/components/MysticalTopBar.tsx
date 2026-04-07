@@ -214,9 +214,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                 <AnimatePresence>
                   {guideOpen && (
                     <motion.div
-                      className="absolute top-full mt-2 flex flex-col gap-1.5 rounded-xl p-2 z-[100]"
+                      className="fixed flex flex-col gap-1.5 rounded-xl p-2 z-[100]"
                       style={{
-                        [dir === "rtl" ? "right" : "left"]: 0,
+                        top: 44,
+                        left: 16,
+                        right: 16,
                         minWidth: 180,
                         background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.95))",
                         border: "1px solid hsl(var(--gold) / 0.18)",
