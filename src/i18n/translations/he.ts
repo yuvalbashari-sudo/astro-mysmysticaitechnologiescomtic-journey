@@ -712,4 +712,7 @@ export const he: TranslationKeys = {
   geocode_empty: "יש להזין מקום לידה",
   geocode_fetch_failed: "לא הצלחנו לאתר את מקום הלידה כרגע",
   geocode_not_found: "לא הצלחנו לזהות את מקום הלידה. נסו לכתוב עיר ומדינה.",
+  topbar_guide_label: "מדריכים",
+  topbar_guide_tarot: "מדריך טארוט",
+  topbar_guide_astrology: "מדריך אסטרולוגיה",
 };
