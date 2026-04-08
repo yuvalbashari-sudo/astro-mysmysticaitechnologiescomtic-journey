@@ -3085,13 +3085,13 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
       )}
 
 
-    {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile/tablet: centered grid ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: (isMobile || isTablet) ? "42px" : "0", bottom: (isMobile || isTablet) ? "auto" : "0", display: (isMobile || isTablet) ? "flex" : undefined, justifyContent: (isMobile || isTablet) ? "center" : undefined }}>
-      {(isMobile || isTablet) ? (
-        /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
+    {/* ── Feature tabs — desktop/tablet: vertical columns on left/right edges; mobile: centered grid ── */}
+    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "42px" : "0", bottom: isMobile ? "auto" : "0", display: isMobile ? "flex" : undefined, justifyContent: isMobile ? "center" : undefined }}>
+      {isMobile ? (
+        /* ── Mobile: two vertical columns ── */
         <motion.div
           className="pointer-events-auto"
-          style={{ width: "100%", maxWidth: isTablet ? 520 : 370, paddingLeft: isTablet ? 24 : 12, paddingRight: isTablet ? 24 : 12, boxSizing: "border-box", direction: "ltr", margin: "0 auto" }}
+          style={{ width: "100%", maxWidth: 370, paddingLeft: 12, paddingRight: 12, boxSizing: "border-box", direction: "ltr", margin: "0 auto" }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
