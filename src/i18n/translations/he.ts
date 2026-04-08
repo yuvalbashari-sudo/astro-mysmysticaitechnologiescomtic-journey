@@ -24,6 +24,7 @@ export const he: TranslationKeys = {
   hero_menu_palm: "קריאת כף יד",
   hero_menu_birthchart: "מפת לידה",
   hero_menu_fullchart: "מפה אסטרולוגית מלאה",
+  hero_menu_daily_horoscope: "הורוסקופ יומי",
 
   nav_title: "שערים מיסטיים",
   nav_subtitle: "בחרו את השער שלכם לעולם הרוחני",
