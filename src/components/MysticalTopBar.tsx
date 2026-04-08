@@ -24,7 +24,7 @@ const iconStyle = {
 
 const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
   const { scale, setScale } = useFontScale();
-  const { dir } = useLanguage();
+  const { dir, language } = useLanguage();
   const t = useT();
   const isMobile = useIsMobile();
   const [guideOpen, setGuideOpen] = useState(false);
