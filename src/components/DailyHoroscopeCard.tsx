@@ -230,8 +230,8 @@ const DailyHoroscopeCard = () => {
 
         {/* Header */}
         <div className="px-5 pt-5 pb-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center text-lg"
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
               style={{
                 background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))",
                 border: "1px solid hsl(var(--gold) / 0.2)",
@@ -240,13 +240,13 @@ const DailyHoroscopeCard = () => {
               {ZODIAC_SYMBOLS[zodiacSign] || "✦"}
             </div>
             <div>
-              <h3 className="text-gold font-heading text-base font-semibold tracking-wide">
+              <h3 className="text-gold font-heading text-2xl font-semibold tracking-wide">
                 {t.daily_horoscope_title}
               </h3>
-              <p className="text-foreground/40 text-xs font-body">{formattedDate}</p>
+              <p className="text-foreground/40 text-base font-body">{formattedDate}</p>
             </div>
           </div>
-          <Sparkles className="w-4 h-4 text-gold/30" />
+          <Sparkles className="w-5 h-5 text-gold/30" />
         </div>
 
         {/* Content */}
@@ -297,7 +297,7 @@ const DailyHoroscopeCard = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <p className="text-foreground/80 text-sm font-body leading-relaxed whitespace-pre-wrap mb-4">
+                <p className="text-foreground/80 text-[1.05rem] font-body leading-relaxed whitespace-pre-wrap mb-4">
                   {data.content}
                 </p>
 
