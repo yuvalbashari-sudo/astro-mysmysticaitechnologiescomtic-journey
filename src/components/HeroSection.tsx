@@ -3921,12 +3921,12 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                 >
                   {/* Subtle label */}
                   <motion.div
-                    className="text-center mb-5"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.15, duration: 0.5 }}
+                    className="text-center mb-6"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.12, duration: 0.5 }}
                   >
-                    <span className="tracking-[0.35em] uppercase font-heading font-medium" style={{ fontSize: 10, color: `hsl(${guidePColor} / 0.5)` }}>
+                    <span className="tracking-[0.25em] uppercase font-heading font-bold" style={{ fontSize: isMobile ? 18 : 20, color: `hsl(${guidePColor} / 0.8)`, textShadow: `0 0 20px hsl(${guidePColor} / 0.2)` }}>
                       {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
                     </span>
                   </motion.div>
