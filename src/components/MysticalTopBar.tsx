@@ -131,19 +131,27 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     </Link>
   );
 
+  const guideLabelText = language === "he" ? "מדריכים" : language === "ar" ? "الأدلة" : language === "ru" ? "Руководства" : "Guides";
+
   const desktopGuideBtn = (
     <div className="relative" ref={guideRef}>
       <motion.button
         onClick={() => setGuideOpen(!guideOpen)}
-        className={`${iconBtn} w-12 h-12`}
-        style={iconStyle}
-        whileHover={{ scale: 1.08 }}
+        className="flex items-center gap-2 rounded-full px-4 py-2.5 backdrop-blur-md transition-all"
+        style={{
+          background: "hsl(var(--deep-blue-light) / 0.6)",
+          border: "1px solid hsl(var(--gold) / 0.18)",
+          color: "hsl(var(--gold) / 0.78)",
+        }}
+        whileHover={{ scale: 1.05, borderColor: "hsl(var(--gold) / 0.35)" }}
         whileTap={{ scale: 0.95 }}
         aria-label={t.topbar_guide_label}
         aria-expanded={guideOpen}
-        title={language === "he" ? "מדריכים" : language === "ar" ? "الأدلة" : language === "ru" ? "Руководства" : "Guides"}
       >
-        <BookOpen className="w-6 h-6" aria-hidden="true" />
+        <BookOpen className="w-5 h-5 shrink-0" aria-hidden="true" />
+        <span className="font-body text-[14px] font-semibold tracking-wide whitespace-nowrap" style={{ color: "hsl(var(--gold) / 0.85)" }}>
+          {guideLabelText}
+        </span>
       </motion.button>
       <AnimatePresence>
         {guideOpen && (
@@ -356,7 +364,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           {/* Right side: navigation/settings */}
           <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
             {desktopGuideBtn}
-            <MysticalLanguageDropdown />
+            <MysticalLanguageDropdown showLabel />
           </div>
         </div>
       )}

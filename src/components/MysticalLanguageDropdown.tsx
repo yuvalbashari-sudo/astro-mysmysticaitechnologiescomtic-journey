@@ -9,7 +9,7 @@ const PORTAL_MENU_Z_INDEX = 2147483647;
 const VIEWPORT_PADDING = 12;
 const MENU_GAP = 8;
 
-const MysticalLanguageDropdown = () => {
+const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }) => {
   const { language, setLanguage, dir } = useLanguage();
   const t = useT();
   const [mounted, setMounted] = useState(false);
@@ -61,26 +61,37 @@ const MysticalLanguageDropdown = () => {
     if (open) setMenuPos(getMenuPosition());
   }, [open, getMenuPosition, language]);
 
+  const labelText = language === "he" ? "שפות" : language === "ar" ? "اللغات" : language === "ru" ? "Языки" : "Languages";
+
   return (
     <>
-      {/* Compact trigger – same size as other icon buttons */}
+      {/* Trigger */}
       <motion.button
         ref={triggerRef}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center justify-center shrink-0 rounded-full backdrop-blur-md transition-all w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12"
+        className={`flex items-center justify-center shrink-0 backdrop-blur-md transition-all ${
+          showLabel
+            ? "gap-2 rounded-full px-4 py-2.5"
+            : "rounded-full w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12"
+        }`}
         style={{
           background: "hsl(var(--deep-blue-light) / 0.6)",
           border: "1px solid hsl(var(--gold) / 0.18)",
           color: "hsl(var(--gold) / 0.78)",
         }}
-        whileHover={{ scale: 1.08, borderColor: "hsl(var(--gold) / 0.32)" }}
+        whileHover={{ scale: 1.05, borderColor: "hsl(var(--gold) / 0.35)" }}
         whileTap={{ scale: 0.95 }}
         aria-label={t.a11y_language_selector}
         aria-expanded={open}
         aria-haspopup="listbox"
       >
-        <Globe className="w-5 h-5 md:w-6 md:h-6 shrink-0" aria-hidden="true" />
+        <Globe className={showLabel ? "w-5 h-5 shrink-0" : "w-5 h-5 md:w-6 md:h-6 shrink-0"} aria-hidden="true" />
+        {showLabel && (
+          <span className="font-body text-[14px] font-semibold tracking-wide whitespace-nowrap" style={{ color: "hsl(var(--gold) / 0.85)" }}>
+            {labelText}
+          </span>
+        )}
       </motion.button>
 
       {/* Dropdown menu – portalled */}
