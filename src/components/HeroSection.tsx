@@ -3099,7 +3099,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           <p
             className="font-body text-center pointer-events-none select-none"
             style={{
-              fontSize: isTablet ? 17 : 15,
+              fontSize: 15,
               fontWeight: 600,
               color: "hsl(40 30% 78% / 0.92)",
               letterSpacing: "0.03em",
@@ -3111,10 +3111,10 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           >
             תובנות שמחברות בין הכוכבים לחיים שלכם
           </p>
-        <div className="grid grid-cols-2" style={{ gap: isTablet ? 16 : 12 }}>
+        <div className="grid grid-cols-2" style={{ gap: 12 }}>
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
-              <div key={colIdx} className="flex flex-col" style={{ gap: isTablet ? 12 : 10 }}>
+              <div key={colIdx} className="flex flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
                   // Neon color map matching desktop: blue for Compatibility, red for Tarot, gold for others
@@ -3146,7 +3146,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       aria-label={item.label}
                     >
                       <div
-                        className={`relative flex items-center gap-2.5 transition-all duration-300 ${isTablet ? "px-4 py-3" : "px-3 py-2"} ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
+                        className={`relative flex items-center gap-2.5 transition-all duration-300 px-3 py-2 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
                           borderColor: isNeonPanel
@@ -3165,7 +3165,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         }}
                       >
                         <item.icon
-                          className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-7 h-7" : "w-6 h-6"}`}
+                          className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                           style={{
                             color: isNeonPanel
                               ? neon.iconColor
@@ -3176,7 +3176,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                           }}
                         />
                         <span
-                          className={`font-body transition-colors duration-300 ${isTablet ? "text-[16px]" : "text-[14px]"} font-semibold leading-tight`}
+                          className="font-body transition-colors duration-300 text-[14px] font-semibold leading-tight"
                           style={{
                             color: isNeonPanel
                               ? "#fff"
