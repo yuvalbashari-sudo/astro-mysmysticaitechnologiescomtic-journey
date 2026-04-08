@@ -345,6 +345,7 @@ const DailyHoroscopeCard = () => {
           </AnimatePresence>
         </div>
       </div>
+      <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} />
     </motion.div>
   );
 };
