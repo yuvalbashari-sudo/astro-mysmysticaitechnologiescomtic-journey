@@ -3091,6 +3091,18 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
+          <p
+            className="font-body text-center pointer-events-none select-none"
+            style={{
+              fontSize: 13,
+              color: "hsl(var(--gold) / 0.75)",
+              letterSpacing: "0.04em",
+              marginBottom: 6,
+              direction: "rtl",
+            }}
+          >
+            טארוט, הורוסקופ ותובנות אישיות
+          </p>
         <div className="grid grid-cols-2" style={{ gap: 12 }}>
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
