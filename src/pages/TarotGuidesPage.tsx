@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, ArrowLeft, ArrowRight } from "lucide-react";
+import { BookOpen, ArrowLeft, ArrowRight, X } from "lucide-react";
 import StarField from "@/components/StarField";
 import { getTarotGuides, type GuideEntry } from "@/data/guideContent";
 import { useLanguage } from "@/i18n";
 
 const TarotGuidesPage = () => {
   const { language, dir, isRTL } = useLanguage();
+  const navigate = useNavigate();
   const guides = getTarotGuides(language);
   const BackArrow = isRTL ? ArrowLeft : ArrowRight;
 
@@ -20,6 +21,21 @@ const TarotGuidesPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground" dir={dir}>
       <StarField />
+
+      {/* Close button */}
+      <motion.button
+        onClick={() => navigate("/")}
+        className="fixed top-5 left-5 z-50 w-[52px] h-[52px] min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer transition-colors duration-200"
+        style={{
+          background: "hsl(var(--deep-blue) / 0.55)",
+          border: "1px solid hsl(var(--gold) / 0.2)",
+        }}
+        whileHover={{ scale: 1.1, backgroundColor: "hsl(var(--deep-blue) / 0.7)" }}
+        whileTap={{ scale: 0.92 }}
+        aria-label="Close"
+      >
+        <X className="w-6 h-6 text-gold/80" />
+      </motion.button>
 
       <section className="relative pt-20 pb-14 px-4 text-center">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background pointer-events-none" />
