@@ -349,6 +349,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           >
             {dashboardBtn}
             {historyBtn}
+            {desktopGuideBtn}
             <MysticalLanguageDropdown />
             {fontSizeControl}
             {a11yLink}
