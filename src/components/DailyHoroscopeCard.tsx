@@ -59,19 +59,17 @@ function getTodayStr(): string {
   return new Date().toISOString().split("T")[0];
 }
 
-/* ── Score dots ── */
-const ScoreDots = ({ score, max = 5 }: { score: number; max?: number }) => (
-  <div className="flex gap-1">
-    {Array.from({ length: max }).map((_, i) => (
-      <div
-        key={i}
-        className={`w-2 h-2 rounded-full transition-colors ${
-          i < score ? "bg-gold" : "bg-foreground/15"
-        }`}
-      />
-    ))}
-  </div>
-);
+/* ── Score indicator ── */
+const ScoreValue = ({ score, max = 5 }: { score: number; max?: number }) => {
+  const out10 = Math.round((score / max) * 10);
+  return (
+    <span className="text-gold font-heading text-sm font-semibold tabular-nums"
+      style={{ textShadow: "0 0 6px hsl(var(--gold) / 0.3)" }}
+    >
+      {out10}/10
+    </span>
+  );
+};
 
 interface HoroscopeData {
   content: string;
@@ -302,21 +300,21 @@ const DailyHoroscopeCard = () => {
                 </p>
 
                 {/* Score indicators */}
-                <div className="flex items-center gap-5 pt-3 border-t border-foreground/5">
-                  <div className="flex items-center gap-2">
-                    <Heart className="w-3.5 h-3.5 text-pink-400/70" />
-                    <span className="text-foreground/40 text-xs font-body">{t.daily_horoscope_love}</span>
-                    <ScoreDots score={data.love_score} />
+                <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
+                  <div className="flex items-center gap-1.5">
+                    <Heart className="w-4 h-4 text-pink-400/70" />
+                    <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_love}</span>
+                    <ScoreValue score={data.love_score} />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Briefcase className="w-3.5 h-3.5 text-blue-400/70" />
-                    <span className="text-foreground/40 text-xs font-body">{t.daily_horoscope_career}</span>
-                    <ScoreDots score={data.career_score} />
+                  <div className="flex items-center gap-1.5">
+                    <Briefcase className="w-4 h-4 text-blue-400/70" />
+                    <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_career}</span>
+                    <ScoreValue score={data.career_score} />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-3.5 h-3.5 text-gold/70" />
-                    <span className="text-foreground/40 text-xs font-body">{t.daily_horoscope_energy}</span>
-                    <ScoreDots score={data.energy_score} />
+                  <div className="flex items-center gap-1.5">
+                    <Zap className="w-4 h-4 text-gold/70" />
+                    <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_energy}</span>
+                    <ScoreValue score={data.energy_score} />
                   </div>
                 </div>
               </motion.div>
