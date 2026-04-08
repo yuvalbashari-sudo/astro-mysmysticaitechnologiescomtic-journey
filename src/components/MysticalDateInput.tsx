@@ -32,6 +32,7 @@ function isFutureDate(iso: string): boolean {
  * Future dates are blocked.
  */
 const MysticalDateInput = ({ value, onChange, className = "", style, placeholder }: Props) => {
+  const { language } = useLanguage();
   const hiddenRef = useRef<HTMLInputElement>(null);
   const [futureError, setFutureError] = useState(false);
 
