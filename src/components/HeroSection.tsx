@@ -3866,7 +3866,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
               onClick={() => setGuideOpen(false)}
-              style={{ background: "hsl(222 47% 3% / 0.7)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
+              style={{ background: "hsl(222 47% 3% / 0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
             />
             {/* Bottom sheet */}
             <motion.div
@@ -3878,48 +3878,55 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className="relative rounded-t-3xl overflow-hidden"
+                className="relative rounded-t-[28px] overflow-hidden"
                 style={{
-                  maxHeight: "88vh",
-                  background: "linear-gradient(170deg, hsl(230 35% 12% / 0.98) 0%, hsl(225 40% 8% / 0.99) 100%)",
-                  border: `1px solid hsl(${guidePColor} / 0.15)`,
+                  maxHeight: "90vh",
+                  background: "linear-gradient(170deg, hsl(230 35% 13% / 0.99) 0%, hsl(225 42% 7% / 0.99) 100%)",
+                  border: `1px solid hsl(${guidePColor} / 0.18)`,
                   borderBottom: "none",
-                  boxShadow: `0 -12px 60px hsl(${guidePColor} / 0.1), 0 -4px 24px hsl(222 47% 3% / 0.6), inset 0 1px 0 hsl(${guidePColor} / 0.08)`,
+                  boxShadow: `0 -16px 80px hsl(${guidePColor} / 0.12), 0 -6px 32px hsl(222 47% 3% / 0.7), inset 0 1px 0 hsl(${guidePColor} / 0.1)`,
                 }}
               >
-                {/* Top accent glow */}
-                <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${guidePColor} / 0.5) 30%, hsl(270 50% 65% / 0.4) 70%, transparent 95%)` }} />
+                {/* Top accent glow line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${guidePColor} / 0.6) 25%, hsl(270 50% 65% / 0.5) 50%, hsl(${guidePColor} / 0.6) 75%, transparent 95%)` }} />
+
+                {/* Ambient glow behind content */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[60%] pointer-events-none" style={{ background: `radial-gradient(ellipse 100% 100% at 50% 0%, hsl(${guidePColor} / 0.06) 0%, transparent 70%)` }} />
 
                 {/* Drag handle */}
-                <div className="flex justify-center pt-3 pb-2">
-                  <div className="w-9 h-[3px] rounded-full" style={{ background: "hsl(var(--foreground) / 0.18)" }} />
+                <div className="flex justify-center pt-4 pb-2">
+                  <div className="w-10 h-[4px] rounded-full" style={{ background: "hsl(var(--foreground) / 0.2)" }} />
                 </div>
 
                 {/* Close button */}
                 <motion.button
                   type="button"
-                  className="absolute top-3 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                  className="absolute top-3.5 right-4 z-10 w-11 h-11 rounded-full flex items-center justify-center cursor-pointer"
                   style={{
-                    background: "hsl(var(--deep-blue) / 0.5)",
-                    border: "1px solid hsl(var(--foreground) / 0.12)",
+                    background: "hsl(var(--deep-blue) / 0.6)",
+                    border: "1px solid hsl(var(--foreground) / 0.15)",
                     backdropFilter: "blur(8px)",
                   }}
                   onClick={() => setGuideOpen(false)}
-                  whileHover={{ scale: 1.08, borderColor: "hsl(var(--foreground) / 0.25)" }}
+                  whileHover={{ scale: 1.08, borderColor: "hsl(var(--foreground) / 0.3)" }}
                   whileTap={{ scale: 0.88 }}
                 >
-                  <X className="w-4 h-4" style={{ color: "hsl(var(--foreground) / 0.6)" }} />
+                  <X className="w-5 h-5" style={{ color: "hsl(var(--foreground) / 0.7)" }} />
                 </motion.button>
 
-                <div className={`${isMobile ? "px-7 pb-10 pt-1" : "px-10 pb-12 pt-2"} space-y-6 overflow-y-auto`} style={{ maxHeight: "calc(88vh - 44px)" }}>
+                <div
+                  className={`${isMobile ? "px-8 pb-12 pt-2" : "px-12 pb-14 pt-3"} overflow-y-auto`}
+                  style={{ maxHeight: "calc(90vh - 48px)" }}
+                  dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
+                >
                   {/* Subtle label */}
                   <motion.div
-                    className="text-center"
+                    className="text-center mb-5"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.15, duration: 0.5 }}
                   >
-                    <span className="tracking-[0.3em] uppercase font-heading font-medium" style={{ fontSize: 9, color: "hsl(var(--foreground) / 0.3)" }}>
+                    <span className="tracking-[0.35em] uppercase font-heading font-medium" style={{ fontSize: 10, color: `hsl(${guidePColor} / 0.5)` }}>
                       {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
                     </span>
                   </motion.div>
@@ -3928,58 +3935,60 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   <motion.div
                     className="relative rounded-2xl overflow-hidden"
                     style={{
-                      background: `linear-gradient(145deg, hsl(${guidePColor} / 0.06) 0%, hsl(230 35% 10% / 0.5) 50%, hsl(${guidePColor} / 0.04) 100%)`,
-                      border: `1px solid hsl(${guidePColor} / 0.12)`,
-                      boxShadow: `0 4px 30px hsl(${guidePColor} / 0.06), inset 0 1px 0 hsl(${guidePColor} / 0.08)`,
-                      backdropFilter: "blur(12px)",
-                      padding: isMobile ? "28px 24px" : "32px 28px",
+                      background: `linear-gradient(155deg, hsl(${guidePColor} / 0.1) 0%, hsl(230 30% 11% / 0.7) 40%, hsl(225 35% 8% / 0.8) 70%, hsl(${guidePColor} / 0.06) 100%)`,
+                      border: `1px solid hsl(${guidePColor} / 0.16)`,
+                      boxShadow: `0 8px 48px hsl(${guidePColor} / 0.08), 0 2px 16px hsl(222 47% 3% / 0.4), inset 0 1px 0 hsl(${guidePColor} / 0.12), inset 0 -1px 0 hsl(${guidePColor} / 0.04)`,
+                      padding: isMobile ? "36px 28px 32px" : "40px 36px 36px",
                     }}
                     initial={{ opacity: 0, y: 16, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
                   >
-                    {/* Subtle radial glow behind planet */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${guidePColor} / 0.08) 0%, transparent 70%)` }} />
+                    {/* Multi-layer radial glow behind planet */}
+                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-52 h-52 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${guidePColor} / 0.1) 0%, hsl(${guidePColor} / 0.04) 40%, transparent 70%)` }} />
+                    <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, hsl(270 50% 55% / 0.04) 0%, transparent 60%)` }} />
 
-                    <div className="relative flex flex-col items-center gap-5">
+                    {/* Decorative celestial lines */}
+                    <div className="absolute top-[20%] left-[10%] w-[80%] h-[1px] pointer-events-none" style={{ background: `linear-gradient(90deg, transparent, hsl(${guidePColor} / 0.08), transparent)` }} />
+                    <div className="absolute bottom-[25%] left-[15%] w-[70%] h-[1px] pointer-events-none" style={{ background: `linear-gradient(90deg, transparent, hsl(${guidePColor} / 0.06), transparent)` }} />
+
+                    <div className="relative flex flex-col items-center gap-7">
                       {/* Planet symbol with aura */}
-                      <motion.div className="relative flex items-center justify-center">
-                        {/* Outer aura ring */}
+                      <motion.div className="relative flex items-center justify-center mb-2">
+                        {/* Outer soft aura */}
                         <motion.div
                           className="absolute rounded-full"
                           style={{
-                            width: isMobile ? 72 : 84,
-                            height: isMobile ? 72 : 84,
-                            background: `radial-gradient(circle, hsl(${guidePColor} / 0.12) 30%, hsl(${guidePColor} / 0.04) 60%, transparent 80%)`,
-                            boxShadow: `0 0 30px hsl(${guidePColor} / 0.15), 0 0 60px hsl(${guidePColor} / 0.06)`,
+                            width: isMobile ? 96 : 110,
+                            height: isMobile ? 96 : 110,
+                            background: `radial-gradient(circle, hsl(${guidePColor} / 0.15) 20%, hsl(${guidePColor} / 0.06) 50%, transparent 75%)`,
+                            boxShadow: `0 0 40px hsl(${guidePColor} / 0.18), 0 0 80px hsl(${guidePColor} / 0.08)`,
                           }}
                           animate={{
-                            scale: [1, 1.08, 1],
-                            opacity: [0.7, 1, 0.7],
+                            scale: [1, 1.1, 1],
+                            opacity: [0.6, 1, 0.6],
                           }}
                           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
                         />
-                        {/* Inner glow */}
+                        {/* Inner core glow */}
                         <motion.div
                           className="absolute rounded-full"
                           style={{
-                            width: isMobile ? 48 : 56,
-                            height: isMobile ? 48 : 56,
-                            background: `radial-gradient(circle, hsl(${guidePColor} / 0.2) 0%, transparent 70%)`,
+                            width: isMobile ? 60 : 70,
+                            height: isMobile ? 60 : 70,
+                            background: `radial-gradient(circle, hsl(${guidePColor} / 0.25) 0%, hsl(${guidePColor} / 0.08) 50%, transparent 70%)`,
                           }}
-                          animate={{
-                            scale: [1, 1.12, 1],
-                          }}
+                          animate={{ scale: [1, 1.15, 1] }}
                           transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
                         />
                         <motion.span
                           className="relative"
-                          style={{ fontSize: isMobile ? 38 : 46 }}
+                          style={{ fontSize: isMobile ? 48 : 56 }}
                           animate={{
                             textShadow: [
-                              `0 0 8px hsl(${guidePColor} / 0.3), 0 0 20px hsl(${guidePColor} / 0.15)`,
-                              `0 0 16px hsl(${guidePColor} / 0.5), 0 0 40px hsl(${guidePColor} / 0.25)`,
-                              `0 0 8px hsl(${guidePColor} / 0.3), 0 0 20px hsl(${guidePColor} / 0.15)`,
+                              `0 0 12px hsl(${guidePColor} / 0.35), 0 0 30px hsl(${guidePColor} / 0.18)`,
+                              `0 0 20px hsl(${guidePColor} / 0.55), 0 0 50px hsl(${guidePColor} / 0.3)`,
+                              `0 0 12px hsl(${guidePColor} / 0.35), 0 0 30px hsl(${guidePColor} / 0.18)`,
                             ],
                           }}
                           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -3989,30 +3998,30 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       </motion.div>
 
                       {/* Main title: "Mars in Libra" */}
-                      <div className="text-center space-y-1">
+                      <div className="text-center space-y-2.5">
                         <h3
-                          className={`font-heading font-bold tracking-[0.06em] ${isMobile ? "text-xl" : "text-2xl"}`}
-                          style={{ color: "hsl(var(--foreground) / 0.95)" }}
+                          className={`font-heading font-bold tracking-[0.04em] ${isMobile ? "text-2xl" : "text-3xl"}`}
+                          style={{ color: "hsl(var(--foreground) / 0.97)", lineHeight: 1.3 }}
                         >
                           {guideInfluence.title[language]}
                         </h3>
                         {/* Influence area */}
-                        <div className="flex items-center justify-center gap-1.5">
-                          <span style={{ fontSize: 12, color: `hsl(${guidePColor} / 0.7)` }}>
+                        <div className="flex items-center justify-center gap-2">
+                          <span style={{ fontSize: isMobile ? 14 : 15, color: `hsl(${guidePColor} / 0.75)` }}>
                             {INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}
                           </span>
                           <span
-                            className="font-body tracking-[0.12em] uppercase"
-                            style={{ fontSize: 10, color: `hsl(${guidePColor} / 0.65)` }}
+                            className="font-body tracking-[0.14em] uppercase font-medium"
+                            style={{ fontSize: isMobile ? 12 : 13, color: `hsl(${guidePColor} / 0.7)` }}
                           >
-                        {guideInfluence.life_area[language]}
+                            {guideInfluence.life_area[language]}
                           </span>
                         </div>
 
                         {/* Personalized sign line */}
                         {userSignIndex !== null && (
                           <motion.div
-                            className="flex items-center justify-center gap-2 mt-1"
+                            className="flex items-center justify-center gap-2.5 mt-2"
                             initial={{ opacity: 0, y: 4 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.4 }}
@@ -4020,12 +4029,12 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                             <img
                               src={ZODIAC_ICONS[userSignIndex]}
                               alt=""
-                              className="w-4 h-4"
-                              style={{ filter: "sepia(0.4) saturate(1.6) brightness(1.2) hue-rotate(10deg)", opacity: 0.8 }}
+                              className="w-5 h-5"
+                              style={{ filter: "sepia(0.4) saturate(1.6) brightness(1.2) hue-rotate(10deg)", opacity: 0.85 }}
                             />
                             <span
-                              className="font-body text-xs tracking-wide"
-                              style={{ color: `hsl(${guidePColor} / 0.55)` }}
+                              className="font-body text-sm tracking-wide"
+                              style={{ color: `hsl(${guidePColor} / 0.6)` }}
                             >
                               {language === "he" ? `עבור המזל שלך: ${ZODIAC_WHEEL.he[userSignIndex].name}`
                                 : language === "ar" ? `لبرجك: ${ZODIAC_WHEEL.ar[userSignIndex].name}`
@@ -4038,11 +4047,11 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
                       {/* Zodiac badge */}
                       <motion.div
-                        className="flex items-center gap-2.5 px-5 py-2.5 rounded-full"
+                        className="flex items-center gap-3 px-6 py-3 rounded-full"
                         style={{
-                          background: `linear-gradient(135deg, hsl(${guidePColor} / 0.08), hsl(${guidePColor} / 0.04))`,
-                          border: `1px solid hsl(${guidePColor} / 0.18)`,
-                          boxShadow: `0 2px 12px hsl(${guidePColor} / 0.06)`,
+                          background: `linear-gradient(135deg, hsl(${guidePColor} / 0.1), hsl(${guidePColor} / 0.05))`,
+                          border: `1px solid hsl(${guidePColor} / 0.22)`,
+                          boxShadow: `0 4px 20px hsl(${guidePColor} / 0.08), inset 0 1px 0 hsl(${guidePColor} / 0.06)`,
                         }}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -4051,10 +4060,10 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         <img
                           src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]}
                           alt=""
-                          className="w-6 h-6"
+                          className="w-7 h-7"
                           style={{ filter: "sepia(0.5) saturate(1.8) brightness(1.15) hue-rotate(10deg)" }}
                         />
-                        <span className="font-heading text-sm font-semibold tracking-wide" style={{ color: "hsl(var(--foreground) / 0.85)" }}>
+                        <span className="font-heading text-base font-semibold tracking-wide" style={{ color: "hsl(var(--foreground) / 0.88)" }}>
                           {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
                         </span>
                       </motion.div>
@@ -4063,8 +4072,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
                   {/* Description */}
                   <motion.p
-                    className={`text-center leading-[1.85] font-body ${isMobile ? "text-[13.5px]" : "text-[15px]"}`}
-                    style={{ color: "hsl(var(--foreground) / 0.6)" }}
+                    className={`text-center font-body mt-7 ${isMobile ? "text-[16px]" : "text-[17px]"}`}
+                    style={{ color: "hsl(var(--foreground) / 0.7)", lineHeight: 2 }}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.5 }}
@@ -4080,21 +4089,22 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
                   {/* CTA Button */}
                   <motion.div
-                    className="flex justify-center"
+                    className="flex justify-center mt-8"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5, duration: 0.4 }}
                   >
                     <motion.button
                       type="button"
-                      className="font-heading text-[13px] font-semibold tracking-[0.1em] uppercase px-7 py-3 rounded-full cursor-pointer"
+                      className={`font-heading font-bold tracking-[0.08em] uppercase rounded-full cursor-pointer ${isMobile ? "text-[15px] px-8 py-4" : "text-[14px] px-9 py-3.5"}`}
                       style={{
-                        background: `linear-gradient(135deg, hsl(${guidePColor} / 0.15), hsl(${guidePColor} / 0.08))`,
-                        border: `1px solid hsl(${guidePColor} / 0.25)`,
+                        background: `linear-gradient(135deg, hsl(${guidePColor} / 0.2), hsl(${guidePColor} / 0.1))`,
+                        border: `1px solid hsl(${guidePColor} / 0.3)`,
                         color: `hsl(${guidePColor})`,
-                        boxShadow: `0 2px 16px hsl(${guidePColor} / 0.08)`,
+                        boxShadow: `0 4px 24px hsl(${guidePColor} / 0.12), inset 0 1px 0 hsl(${guidePColor} / 0.1)`,
+                        minHeight: 52,
                       }}
-                      whileHover={{ scale: 1.04, boxShadow: `0 4px 24px hsl(${guidePColor} / 0.15)` }}
+                      whileHover={{ scale: 1.04, boxShadow: `0 6px 32px hsl(${guidePColor} / 0.2)` }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => {
                         setGuideOpen(false);
@@ -4107,11 +4117,12 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
                   {/* Closing whisper */}
                   <motion.div
-                    className="text-center font-body"
-                    style={{ fontSize: 10, color: "hsl(var(--foreground) / 0.25)", letterSpacing: "0.12em" }}
+                    className="text-center font-body mt-6"
+                    style={{ fontSize: isMobile ? 12 : 11, color: "hsl(var(--foreground) / 0.3)", letterSpacing: "0.1em", lineHeight: 1.8 }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.65 }}
+                    dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
                   >
                     {language === "he" ? "גלו כיצד האנרגיה הקוסמית מעצבת את ההורוסקופ שלכם היום ✨" : language === "ar" ? "اكتشفوا كيف تشكّل الطاقة الكونية برجكم اليوم ✨" : language === "ru" ? "Узнайте, как космическая энергия влияет на ваш гороскоп сегодня ✨" : "See how today's cosmic energy shapes your horoscope ✨"}
                   </motion.div>
