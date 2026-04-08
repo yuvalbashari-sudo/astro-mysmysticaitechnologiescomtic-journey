@@ -3866,7 +3866,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
               onClick={() => setGuideOpen(false)}
-              style={{ background: "hsl(222 47% 3% / 0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+              style={{ background: "hsl(225 42% 7%)" }}
             />
             {/* Full-screen sheet */}
             <motion.div
