@@ -3340,7 +3340,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3351,14 +3351,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -3498,7 +3498,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3509,14 +3509,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -3568,7 +3568,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3579,14 +3579,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
