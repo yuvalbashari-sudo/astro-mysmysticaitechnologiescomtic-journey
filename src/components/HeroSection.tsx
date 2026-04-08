@@ -3177,40 +3177,7 @@ const HeroSection = () => {
               </div>
             ))}
           </div>
-          {/* Guide button — cosmic influence */}
-          <motion.button
-            type="button"
-            className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none w-full mt-2"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 0.88, y: 0 }}
-            transition={{ duration: 0.5, delay: 2 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setGuideOpen(true)}
-            aria-label={language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
-          >
-            <div
-              className="relative flex items-center justify-center gap-2 transition-all duration-300 px-3 py-2 rounded-full mx-auto"
-              style={{
-                maxWidth: 200,
-                borderWidth: "1px", borderStyle: "solid",
-                borderColor: "hsl(270 50% 60% / 0.3)",
-                background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.75), hsl(270 40% 15% / 0.6))",
-                boxShadow: "0 0 18px hsl(270 50% 60% / 0.12), 0 4px 16px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(270 50% 70% / 0.08)",
-              }}
-            >
-              <BookOpen className="flex-shrink-0 w-5 h-5" style={{ color: "hsl(270 60% 70%)", filter: "drop-shadow(0 0 4px hsl(270 50% 60% / 0.5))" }} />
-              <span className="font-body text-[13px] font-semibold leading-tight" style={{ color: "hsl(var(--foreground) / 0.88)" }}>
-                {language === "he" ? "✦ מדריך קוסמי" : language === "ar" ? "✦ الدليل الكوني" : language === "ru" ? "✦ Космический гид" : "✦ Cosmic Guide"}
-              </span>
-              {/* Pulsing dot */}
-              <motion.div
-                className="w-2 h-2 rounded-full flex-shrink-0"
-                style={{ background: `hsl(${guidePColor})`, boxShadow: `0 0 6px hsl(${guidePColor} / 0.6)` }}
-                animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-            </div>
-          </motion.button>
+          {/* Guide icon-only trigger — small, top-aligned */}
         </motion.div>
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
