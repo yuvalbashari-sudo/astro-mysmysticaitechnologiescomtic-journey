@@ -3827,213 +3827,138 @@ const HeroSection = () => {
     <>
       {heroLayer}
 
-      {/* ── Cosmic Guide Panel ── */}
+      {/* ── Cosmic Guide Bottom Sheet ── */}
       <AnimatePresence>
         {guideOpen && (
-          <motion.div
-            className="fixed inset-0 z-[90] flex items-center justify-center pointer-events-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            onClick={() => setGuideOpen(false)}
-            style={{
-              background: "radial-gradient(ellipse 60% 50% at 50% 45%, hsl(270 40% 12% / 0.6) 0%, hsl(var(--deep-blue) / 0.85) 60%, hsl(222 47% 3% / 0.95) 100%)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-            }}
-          >
-            {/* Close button */}
-            <motion.button
-              type="button"
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-              style={{
-                background: "hsl(var(--deep-blue) / 0.6)",
-                border: "1px solid hsl(var(--foreground) / 0.15)",
-                backdropFilter: "blur(10px)",
-              }}
-              onClick={(e) => { e.stopPropagation(); setGuideOpen(false); }}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 z-[89] pointer-events-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <X className="w-5 h-5" style={{ color: "hsl(var(--foreground) / 0.7)" }} />
-            </motion.button>
-
-            {/* Floating particles */}
-            {[...Array(10)].map((_, i) => (
-              <motion.div
-                key={`gp-${i}`}
-                className="absolute rounded-full pointer-events-none"
-                style={{
-                  width: i % 3 === 0 ? 3 : 2,
-                  height: i % 3 === 0 ? 3 : 2,
-                  left: `${10 + Math.random() * 80}%`,
-                  top: `${10 + Math.random() * 80}%`,
-                  background: i % 2 === 0 ? `hsl(${guidePColor} / 0.5)` : "hsl(270 60% 70% / 0.3)",
-                }}
-                animate={{ opacity: [0, 0.7, 0], y: [0, -(15 + Math.random() * 30)] }}
-                transition={{ duration: 3 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 2, ease: "easeOut" }}
-              />
-            ))}
-
-            {/* Content card */}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => setGuideOpen(false)}
+              style={{ background: "hsl(222 47% 3% / 0.6)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}
+            />
+            {/* Bottom sheet */}
             <motion.div
-              className="relative rounded-2xl overflow-hidden"
-              style={{
-                maxWidth: isMobile ? 340 : 420,
-                width: isMobile ? "90%" : 420,
-                background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
-                border: `1px solid hsl(${guidePColor} / 0.25)`,
-                boxShadow: `0 0 50px hsl(${guidePColor} / 0.1), 0 0 100px hsl(270 50% 40% / 0.08), 0 12px 40px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${guidePColor} / 0.1)`,
-              }}
-              initial={{ opacity: 0, y: 40, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed inset-x-0 bottom-0 z-[90] pointer-events-auto"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 300 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Top accent line */}
               <div
-                className="absolute top-0 left-0 right-0 h-[2px]"
-                style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${guidePColor} / 0.6), hsl(270 50% 60% / 0.4), transparent 90%)` }}
-              />
+                className="relative rounded-t-2xl overflow-hidden"
+                style={{
+                  maxHeight: "85vh",
+                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.98), hsl(var(--deep-blue) / 0.99))",
+                  border: `1px solid hsl(${guidePColor} / 0.2)`,
+                  borderBottom: "none",
+                  boxShadow: `0 -8px 40px hsl(${guidePColor} / 0.08), 0 -4px 20px hsl(var(--deep-blue) / 0.5)`,
+                }}
+              >
+                {/* Top accent line */}
+                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${guidePColor} / 0.6), hsl(270 50% 60% / 0.4), transparent 90%)` }} />
 
-              <div className={`${isMobile ? "px-6 py-7" : "px-8 py-9"} space-y-5`}>
-                {/* Title */}
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
+                {/* Drag handle */}
+                <div className="flex justify-center pt-3 pb-1">
+                  <div className="w-10 h-1 rounded-full" style={{ background: "hsl(var(--foreground) / 0.2)" }} />
+                </div>
+
+                {/* Close button */}
+                <motion.button
+                  type="button"
+                  className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
+                  style={{ background: "hsl(var(--deep-blue) / 0.6)", border: "1px solid hsl(var(--foreground) / 0.15)" }}
+                  onClick={() => setGuideOpen(false)}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <div
-                    className="tracking-[0.25em] uppercase font-heading font-medium mb-2"
-                    style={{ fontSize: isMobile ? 10 : 11, color: "hsl(var(--foreground) / 0.4)" }}
-                  >
-                    {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
-                  </div>
-                  <div
-                    className={`font-heading font-bold tracking-wide ${isMobile ? "text-lg" : "text-xl"}`}
-                    style={{ color: "hsl(var(--foreground) / 0.9)" }}
-                  >
-                    {language === "he" ? "✦ השפעה קוסמית נוכחית ✦" : language === "ar" ? "✦ التأثير الكوني الحالي ✦" : language === "ru" ? "✦ Текущее космическое влияние ✦" : "✦ Current Cosmic Influence ✦"}
-                  </div>
-                </motion.div>
+                  <X className="w-4 h-4" style={{ color: "hsl(var(--foreground) / 0.7)" }} />
+                </motion.button>
 
-                {/* Separator */}
-                <motion.div
-                  className="mx-auto"
-                  style={{ width: 80, height: 1, background: `linear-gradient(90deg, transparent, hsl(${guidePColor} / 0.5), transparent)` }}
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.5, duration: 0.6 }}
-                />
-
-                {/* Planet symbol + title */}
-                <motion.div
-                  className="flex items-center justify-center gap-3"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                >
-                  <motion.span
-                    className={`${isMobile ? "text-3xl" : "text-4xl"}`}
-                    animate={{
-                      textShadow: [
-                        `0 0 12px hsl(${guidePColor} / 0.3)`,
-                        `0 0 28px hsl(${guidePColor} / 0.7)`,
-                        `0 0 12px hsl(${guidePColor} / 0.3)`,
-                      ],
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                <div className={`${isMobile ? "px-6 pb-8 pt-2" : "px-8 pb-10 pt-3"} space-y-5 overflow-y-auto`} style={{ maxHeight: "calc(85vh - 40px)" }}>
+                  {/* Title */}
+                  <motion.div
+                    className="text-center"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15, duration: 0.4 }}
                   >
-                    {guideInfluence.planet_symbol}
-                  </motion.span>
-                  <span
-                    className={`font-heading font-bold tracking-[0.1em] uppercase ${isMobile ? "text-base" : "text-lg"}`}
-                    style={{ color: `hsl(${guidePColor})` }}
-                  >
-                    {guideInfluence.title[language]}
-                  </span>
-                </motion.div>
+                    <div className="tracking-[0.25em] uppercase font-heading font-medium mb-2" style={{ fontSize: isMobile ? 10 : 11, color: "hsl(var(--foreground) / 0.4)" }}>
+                      {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
+                    </div>
+                    <div className={`font-heading font-bold tracking-wide ${isMobile ? "text-lg" : "text-xl"}`} style={{ color: "hsl(var(--foreground) / 0.9)" }}>
+                      {language === "he" ? "✦ השפעה קוסמית נוכחית ✦" : language === "ar" ? "✦ التأثير الكوني الحالي ✦" : language === "ru" ? "✦ Текущее космическое влияние ✦" : "✦ Current Cosmic Influence ✦"}
+                    </div>
+                  </motion.div>
 
-                {/* Zodiac sign icon */}
-                <motion.div
-                  className="flex items-center justify-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  <div className="flex items-center gap-3 px-4 py-2 rounded-xl" style={{ background: `hsl(${guidePColor} / 0.06)`, border: `1px solid hsl(${guidePColor} / 0.15)` }}>
-                    <img
-                      src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]}
-                      alt=""
-                      className="w-8 h-8"
-                      style={{ filter: "sepia(0.6) saturate(2) brightness(1.1) hue-rotate(10deg)" }}
-                    />
-                    <span className="font-body text-sm font-medium" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
-                      {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
+                  {/* Separator */}
+                  <motion.div className="mx-auto" style={{ width: 80, height: 1, background: `linear-gradient(90deg, transparent, hsl(${guidePColor} / 0.5), transparent)` }} initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.25, duration: 0.5 }} />
+
+                  {/* Planet symbol + title */}
+                  <motion.div className="flex items-center justify-center gap-3" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.4 }}>
+                    <motion.span
+                      className={`${isMobile ? "text-3xl" : "text-4xl"}`}
+                      animate={{ textShadow: [`0 0 12px hsl(${guidePColor} / 0.3)`, `0 0 28px hsl(${guidePColor} / 0.7)`, `0 0 12px hsl(${guidePColor} / 0.3)`] }}
+                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      {guideInfluence.planet_symbol}
+                    </motion.span>
+                    <span className={`font-heading font-bold tracking-[0.1em] uppercase ${isMobile ? "text-base" : "text-lg"}`} style={{ color: `hsl(${guidePColor})` }}>
+                      {guideInfluence.title[language]}
                     </span>
-                  </div>
-                </motion.div>
+                  </motion.div>
 
-                {/* Influence area badge */}
-                <motion.div
-                  className="flex items-center justify-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7 }}
-                >
-                  <span
-                    className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[10px]" : "text-[11px]"}`}
-                    style={{
-                      background: `hsl(${guidePColor} / 0.08)`,
-                      border: `1px solid hsl(${guidePColor} / 0.2)`,
-                      color: `hsl(${guidePColor} / 0.85)`,
-                    }}
+                  {/* Zodiac sign icon */}
+                  <motion.div className="flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
+                    <div className="flex items-center gap-3 px-4 py-2 rounded-xl" style={{ background: `hsl(${guidePColor} / 0.06)`, border: `1px solid hsl(${guidePColor} / 0.15)` }}>
+                      <img src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]} alt="" className="w-8 h-8" style={{ filter: "sepia(0.6) saturate(2) brightness(1.1) hue-rotate(10deg)" }} />
+                      <span className="font-body text-sm font-medium" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
+                        {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
+                      </span>
+                    </div>
+                  </motion.div>
+
+                  {/* Influence area badge */}
+                  <motion.div className="flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
+                    <span
+                      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[10px]" : "text-[11px]"}`}
+                      style={{ background: `hsl(${guidePColor} / 0.08)`, border: `1px solid hsl(${guidePColor} / 0.2)`, color: `hsl(${guidePColor} / 0.85)` }}
+                    >
+                      <span>{INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}</span>
+                      {guideInfluence.life_area[language]}
+                    </span>
+                  </motion.div>
+
+                  {/* Description */}
+                  <motion.div
+                    className={`text-center leading-relaxed ${isMobile ? "text-sm" : "text-[15px]"}`}
+                    style={{ color: "hsl(var(--foreground) / 0.7)" }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.5 }}
+                    dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
                   >
-                    <span>{INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}</span>
-                    {guideInfluence.life_area[language]}
-                  </span>
-                </motion.div>
+                    {guideInfluence.description[language]}
+                  </motion.div>
 
-                {/* Description */}
-                <motion.div
-                  className={`text-center leading-relaxed ${isMobile ? "text-sm" : "text-[15px]"}`}
-                  style={{ color: "hsl(var(--foreground) / 0.7)" }}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.6 }}
-                  dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
-                >
-                  {guideInfluence.description[language]}
-                </motion.div>
-
-                {/* Bottom separator */}
-                <motion.div
-                  className="mx-auto"
-                  style={{ width: 40, height: 1, background: `linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.15), transparent)` }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1 }}
-                />
-
-                {/* Closing mystical note */}
-                <motion.div
-                  className="text-center font-body"
-                  style={{ fontSize: isMobile ? 11 : 12, color: "hsl(var(--foreground) / 0.35)", letterSpacing: "0.08em" }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 1.1 }}
-                >
-                  {language === "he" ? "הכוכבים מדברים... הקשיבו ✨" : language === "ar" ? "النجوم تتحدث... استمعوا ✨" : language === "ru" ? "Звёзды говорят... слушайте ✨" : "The stars speak... listen ✨"}
-                </motion.div>
+                  {/* Closing note */}
+                  <motion.div
+                    className="text-center font-body"
+                    style={{ fontSize: isMobile ? 11 : 12, color: "hsl(var(--foreground) / 0.35)", letterSpacing: "0.08em" }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    {language === "he" ? "הכוכבים מדברים... הקשיבו ✨" : language === "ar" ? "النجوم تتحدث... استمعوا ✨" : language === "ru" ? "Звёзды говорят... слушайте ✨" : "The stars speak... listen ✨"}
+                  </motion.div>
+                </div>
               </div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
