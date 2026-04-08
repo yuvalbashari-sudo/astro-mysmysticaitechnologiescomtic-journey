@@ -251,8 +251,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     >
        {isMobile ? (
         /* ── MOBILE: two rows ── */
-        <div className="flex flex-col items-center gap-0 pb-[15px]">
-          {/* Row 1: all icons in a single row */}
+        <div className="flex flex-col items-center gap-0 pb-[6px]">
+          {/* Row 1: icons + centered logo + icons */}
           <div className="flex items-center justify-between w-full">
             <nav className="flex items-center gap-1.5" aria-label={t.a11y_main_navigation}>
               <MysticalLanguageDropdown />
@@ -263,9 +263,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             <motion.h1
               className="font-heading uppercase pointer-events-none select-none"
               style={{
-                fontSize: 28,
+                fontSize: 36,
                 fontWeight: 700,
-                letterSpacing: "0.1em",
+                letterSpacing: "0.12em",
                 lineHeight: 1,
                 color: "hsl(var(--gold))",
                 background:
@@ -354,6 +354,23 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
               {whatsappBtn}
             </div>
           </div>
+
+          {/* Row 2: subtitle */}
+          <p
+            className="font-body text-center pointer-events-none select-none w-full"
+            style={{
+              fontSize: 13,
+              fontWeight: 500,
+              color: "hsl(40 30% 78% / 0.85)",
+              letterSpacing: "0.02em",
+              lineHeight: 1.3,
+              marginTop: 2,
+              direction: "rtl",
+              textShadow: "0 0 10px hsl(40 25% 70% / 0.15)",
+            }}
+          >
+            תובנות שמחברות בין הכוכבים לחיים שלכם
+          </p>
 
         </div>
       ) : (
