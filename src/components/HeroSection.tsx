@@ -3094,14 +3094,17 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           <p
             className="font-body text-center pointer-events-none select-none"
             style={{
-              fontSize: 13,
-              color: "hsl(var(--gold) / 0.75)",
-              letterSpacing: "0.04em",
-              marginBottom: 6,
+              fontSize: 15,
+              fontWeight: 600,
+              color: "hsl(var(--gold) / 0.88)",
+              letterSpacing: "0.03em",
+              lineHeight: 1.6,
+              marginBottom: 8,
               direction: "rtl",
+              textShadow: "0 0 12px hsl(var(--gold) / 0.25), 0 0 24px hsl(var(--gold) / 0.1)",
             }}
           >
-            טארוט, הורוסקופ ותובנות אישיות
+            תובנות שמחברות בין הכוכבים לחיים שלכם
           </p>
         <div className="grid grid-cols-2" style={{ gap: 12 }}>
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
