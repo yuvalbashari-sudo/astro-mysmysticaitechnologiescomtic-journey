@@ -23,7 +23,7 @@ const iconStyle = {
   color: "hsl(var(--gold) / 0.7)",
 };
 
-const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
+const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, hasHistory }: Props) => {
   const { scale, setScale } = useFontScale();
   const { dir, language } = useLanguage();
   const t = useT();
