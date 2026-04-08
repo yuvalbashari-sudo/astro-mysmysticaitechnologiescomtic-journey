@@ -3086,15 +3086,15 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
         /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
           className="pointer-events-auto"
-          style={{ width: "100%", maxWidth: 390, paddingLeft: 24, paddingRight: 24, boxSizing: "border-box", direction: "ltr" }}
+          style={{ width: "100%", maxWidth: 390, paddingLeft: 6, paddingRight: 6, boxSizing: "border-box", direction: "ltr" }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
-        <div className="flex justify-between" style={{ gap: 32 }}>
+        <div className="grid grid-cols-2" style={{ gap: 12 }}>
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
-              <div key={colIdx} className="flex flex-1 flex-col gap-2.5">
+              <div key={colIdx} className="flex flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
                   // Neon color map matching desktop: blue for Compatibility, red for Tarot, gold for others
