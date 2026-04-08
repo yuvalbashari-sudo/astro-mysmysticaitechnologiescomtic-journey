@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Eye, Hand, Heart, Star, Sparkles, Sun } from "lucide-react";
+import { Eye, Heart, Star, Sparkles, Sun } from "lucide-react";
 import { useLanguage } from "@/i18n";
 
 const SeoContentSection = () => {
