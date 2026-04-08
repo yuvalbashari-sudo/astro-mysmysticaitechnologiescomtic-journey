@@ -3101,7 +3101,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               lineHeight: 1.6,
               marginBottom: 8,
               direction: "rtl",
-              textShadow: "0 0 12px hsl(var(--gold) / 0.25), 0 0 24px hsl(var(--gold) / 0.1)",
+              textShadow: "0 0 14px hsl(40 25% 70% / 0.18), 0 0 28px hsl(40 20% 60% / 0.08)",
             }}
           >
             תובנות שמחברות בין הכוכבים לחיים שלכם
