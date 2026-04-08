@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Eye, Hand, Sun } from "lucide-react";
+import { Sparkles, Star, Eye, Hand, Sun, BookOpen, X } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -1467,100 +1467,7 @@ const ZodiacWheel = ({
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Planetary Influence Info Card */}
-      <motion.div
-        className="absolute pointer-events-none z-20"
-        style={{
-          bottom: isMobile ? -100 : -130,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: isMobile ? 280 : 360,
-        }}
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, delay: 3 }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={influenceKey}
-            initial={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-          >
-            <div
-              className="relative rounded-xl font-heading backdrop-blur-2xl overflow-hidden text-center"
-              style={{
-                background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
-                border: `1px solid hsl(${pColor} / 0.3)`,
-                boxShadow: `0 0 35px hsl(${pColor} / 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${pColor} / 0.1)`,
-              }}
-            >
-              {/* Top accent */}
-              <div
-                className="absolute top-0 left-0 right-0 h-[2px]"
-                style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${pColor} / 0.6), transparent 90%)` }}
-              />
-
-              <div className={`${isMobile ? "px-4 py-3.5 space-y-2" : "px-6 py-5 space-y-2.5"}`}>
-                {/* Subtitle */}
-                <div
-                  className={`tracking-[0.2em] uppercase font-medium ${isMobile ? "text-[9px]" : "text-[10px]"}`}
-                  style={{ color: "hsl(var(--foreground) / 0.45)" }}
-                >
-                  {t.zodiac_planetary_influence}
-                </div>
-
-                {/* Planet symbol + aspect title */}
-                <div className="flex items-center justify-center gap-2.5">
-                  <motion.span
-                    className={`${isMobile ? "text-xl" : "text-2xl"}`}
-                    animate={{
-                      textShadow: [
-                        `0 0 8px hsl(${pColor} / 0.3)`,
-                        `0 0 20px hsl(${pColor} / 0.6)`,
-                        `0 0 8px hsl(${pColor} / 0.3)`,
-                      ],
-                    }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    {planetaryInfluence.planet_symbol}
-                  </motion.span>
-                  <span
-                    className={`font-bold tracking-[0.1em] uppercase ${isMobile ? "text-sm" : "text-base"}`}
-                    style={{ color: `hsl(${pColor})` }}
-                  >
-                    {planetaryInfluence.title[language]}
-                  </span>
-                </div>
-
-                {/* Influence area badge */}
-                <div className="flex items-center justify-center">
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[9px]" : "text-[10px]"}`}
-                    style={{
-                      background: `hsl(${pColor} / 0.08)`,
-                      border: `1px solid hsl(${pColor} / 0.2)`,
-                      color: `hsl(${pColor} / 0.85)`,
-                    }}
-                  >
-                    <span>{INFLUENCE_AREA_ICONS[planetaryInfluence.influence_area] || "✦"}</span>
-                    {planetaryInfluence.life_area[language]}
-                  </span>
-                </div>
-
-                {/* Interpretation */}
-                <div
-                  className={`leading-relaxed ${isMobile ? "text-[11px]" : "text-xs"}`}
-                  style={{ color: "hsl(var(--foreground) / 0.6)" }}
-                >
-                  {planetaryInfluence.description[language]}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </motion.div>
+      {/* Planetary Influence Info Card — moved to Guide panel */}
 
       {/* Mobile zodiac info card — rendered via portal outside rotating containers */}
       {isMobile && hoveredSign !== null && (() => {
@@ -2266,6 +2173,9 @@ const HeroSection = () => {
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
   const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
+  const guideInfluence = useMemo(() => getDailyInfluence(), []);
+  const guidePColor = PLANET_COLORS[guideInfluence.planet] || "43 80% 55%";
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
@@ -3267,6 +3177,40 @@ const HeroSection = () => {
               </div>
             ))}
           </div>
+          {/* Guide button — cosmic influence */}
+          <motion.button
+            type="button"
+            className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none w-full mt-2"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 0.88, y: 0 }}
+            transition={{ duration: 0.5, delay: 2 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setGuideOpen(true)}
+            aria-label={language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
+          >
+            <div
+              className="relative flex items-center justify-center gap-2 transition-all duration-300 px-3 py-2 rounded-full mx-auto"
+              style={{
+                maxWidth: 200,
+                borderWidth: "1px", borderStyle: "solid",
+                borderColor: "hsl(270 50% 60% / 0.3)",
+                background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.75), hsl(270 40% 15% / 0.6))",
+                boxShadow: "0 0 18px hsl(270 50% 60% / 0.12), 0 4px 16px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(270 50% 70% / 0.08)",
+              }}
+            >
+              <BookOpen className="flex-shrink-0 w-5 h-5" style={{ color: "hsl(270 60% 70%)", filter: "drop-shadow(0 0 4px hsl(270 50% 60% / 0.5))" }} />
+              <span className="font-body text-[13px] font-semibold leading-tight" style={{ color: "hsl(var(--foreground) / 0.88)" }}>
+                {language === "he" ? "✦ מדריך קוסמי" : language === "ar" ? "✦ الدليل الكوني" : language === "ru" ? "✦ Космический гид" : "✦ Cosmic Guide"}
+              </span>
+              {/* Pulsing dot */}
+              <motion.div
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ background: `hsl(${guidePColor})`, boxShadow: `0 0 6px hsl(${guidePColor} / 0.6)` }}
+                animate={{ scale: [1, 1.4, 1], opacity: [0.6, 1, 0.6] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </div>
+          </motion.button>
         </motion.div>
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
@@ -3915,6 +3859,216 @@ const HeroSection = () => {
   return (
     <>
       {heroLayer}
+
+      {/* ── Cosmic Guide Panel ── */}
+      <AnimatePresence>
+        {guideOpen && (
+          <motion.div
+            className="fixed inset-0 z-[90] flex items-center justify-center pointer-events-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            onClick={() => setGuideOpen(false)}
+            style={{
+              background: "radial-gradient(ellipse 60% 50% at 50% 45%, hsl(270 40% 12% / 0.6) 0%, hsl(var(--deep-blue) / 0.85) 60%, hsl(222 47% 3% / 0.95) 100%)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+          >
+            {/* Close button */}
+            <motion.button
+              type="button"
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+              style={{
+                background: "hsl(var(--deep-blue) / 0.6)",
+                border: "1px solid hsl(var(--foreground) / 0.15)",
+                backdropFilter: "blur(10px)",
+              }}
+              onClick={(e) => { e.stopPropagation(); setGuideOpen(false); }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <X className="w-5 h-5" style={{ color: "hsl(var(--foreground) / 0.7)" }} />
+            </motion.button>
+
+            {/* Floating particles */}
+            {[...Array(10)].map((_, i) => (
+              <motion.div
+                key={`gp-${i}`}
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: i % 3 === 0 ? 3 : 2,
+                  height: i % 3 === 0 ? 3 : 2,
+                  left: `${10 + Math.random() * 80}%`,
+                  top: `${10 + Math.random() * 80}%`,
+                  background: i % 2 === 0 ? `hsl(${guidePColor} / 0.5)` : "hsl(270 60% 70% / 0.3)",
+                }}
+                animate={{ opacity: [0, 0.7, 0], y: [0, -(15 + Math.random() * 30)] }}
+                transition={{ duration: 3 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 2, ease: "easeOut" }}
+              />
+            ))}
+
+            {/* Content card */}
+            <motion.div
+              className="relative rounded-2xl overflow-hidden"
+              style={{
+                maxWidth: isMobile ? 340 : 420,
+                width: isMobile ? "90%" : 420,
+                background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.98))",
+                border: `1px solid hsl(${guidePColor} / 0.25)`,
+                boxShadow: `0 0 50px hsl(${guidePColor} / 0.1), 0 0 100px hsl(270 50% 40% / 0.08), 0 12px 40px hsl(var(--deep-blue) / 0.6), inset 0 1px 0 hsl(${guidePColor} / 0.1)`,
+              }}
+              initial={{ opacity: 0, y: 40, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.95 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Top accent line */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[2px]"
+                style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${guidePColor} / 0.6), hsl(270 50% 60% / 0.4), transparent 90%)` }}
+              />
+
+              <div className={`${isMobile ? "px-6 py-7" : "px-8 py-9"} space-y-5`}>
+                {/* Title */}
+                <motion.div
+                  className="text-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                >
+                  <div
+                    className="tracking-[0.25em] uppercase font-heading font-medium mb-2"
+                    style={{ fontSize: isMobile ? 10 : 11, color: "hsl(var(--foreground) / 0.4)" }}
+                  >
+                    {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
+                  </div>
+                  <div
+                    className={`font-heading font-bold tracking-wide ${isMobile ? "text-lg" : "text-xl"}`}
+                    style={{ color: "hsl(var(--foreground) / 0.9)" }}
+                  >
+                    {language === "he" ? "✦ השפעה קוסמית נוכחית ✦" : language === "ar" ? "✦ التأثير الكوني الحالي ✦" : language === "ru" ? "✦ Текущее космическое влияние ✦" : "✦ Current Cosmic Influence ✦"}
+                  </div>
+                </motion.div>
+
+                {/* Separator */}
+                <motion.div
+                  className="mx-auto"
+                  style={{ width: 80, height: 1, background: `linear-gradient(90deg, transparent, hsl(${guidePColor} / 0.5), transparent)` }}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                />
+
+                {/* Planet symbol + title */}
+                <motion.div
+                  className="flex items-center justify-center gap-3"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                  <motion.span
+                    className={`${isMobile ? "text-3xl" : "text-4xl"}`}
+                    animate={{
+                      textShadow: [
+                        `0 0 12px hsl(${guidePColor} / 0.3)`,
+                        `0 0 28px hsl(${guidePColor} / 0.7)`,
+                        `0 0 12px hsl(${guidePColor} / 0.3)`,
+                      ],
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {guideInfluence.planet_symbol}
+                  </motion.span>
+                  <span
+                    className={`font-heading font-bold tracking-[0.1em] uppercase ${isMobile ? "text-base" : "text-lg"}`}
+                    style={{ color: `hsl(${guidePColor})` }}
+                  >
+                    {guideInfluence.title[language]}
+                  </span>
+                </motion.div>
+
+                {/* Zodiac sign icon */}
+                <motion.div
+                  className="flex items-center justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <div className="flex items-center gap-3 px-4 py-2 rounded-xl" style={{ background: `hsl(${guidePColor} / 0.06)`, border: `1px solid hsl(${guidePColor} / 0.15)` }}>
+                    <img
+                      src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]}
+                      alt=""
+                      className="w-8 h-8"
+                      style={{ filter: "sepia(0.6) saturate(2) brightness(1.1) hue-rotate(10deg)" }}
+                    />
+                    <span className="font-body text-sm font-medium" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
+                      {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
+                    </span>
+                  </div>
+                </motion.div>
+
+                {/* Influence area badge */}
+                <motion.div
+                  className="flex items-center justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7 }}
+                >
+                  <span
+                    className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[10px]" : "text-[11px]"}`}
+                    style={{
+                      background: `hsl(${guidePColor} / 0.08)`,
+                      border: `1px solid hsl(${guidePColor} / 0.2)`,
+                      color: `hsl(${guidePColor} / 0.85)`,
+                    }}
+                  >
+                    <span>{INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}</span>
+                    {guideInfluence.life_area[language]}
+                  </span>
+                </motion.div>
+
+                {/* Description */}
+                <motion.div
+                  className={`text-center leading-relaxed ${isMobile ? "text-sm" : "text-[15px]"}`}
+                  style={{ color: "hsl(var(--foreground) / 0.7)" }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                  dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
+                >
+                  {guideInfluence.description[language]}
+                </motion.div>
+
+                {/* Bottom separator */}
+                <motion.div
+                  className="mx-auto"
+                  style={{ width: 40, height: 1, background: `linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.15), transparent)` }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1 }}
+                />
+
+                {/* Closing mystical note */}
+                <motion.div
+                  className="text-center font-body"
+                  style={{ fontSize: isMobile ? 11 : 12, color: "hsl(var(--foreground) / 0.35)", letterSpacing: "0.08em" }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.1 }}
+                >
+                  {language === "he" ? "הכוכבים מדברים... הקשיבו ✨" : language === "ar" ? "النجوم تتحدث... استمعوا ✨" : language === "ru" ? "Звёзды говорят... слушайте ✨" : "The stars speak... listen ✨"}
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
       <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
