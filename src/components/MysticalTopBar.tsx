@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface Props {
   onOpenHistory?: () => void;
   onOpenDashboard?: () => void;
+  onOpenCosmicGuide?: () => void;
   hasHistory?: boolean;
 }
 
