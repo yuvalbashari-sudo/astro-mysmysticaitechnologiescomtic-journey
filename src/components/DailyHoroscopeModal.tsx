@@ -8,7 +8,7 @@ interface Props {
 
 const DailyHoroscopeModal = ({ isOpen, onClose }: Props) => {
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={onClose}>
+    <CinematicModalShell isOpen={isOpen} onClose={onClose} hideAdvisor>
       <div className="max-w-lg mx-auto py-6 px-2">
         <DailyHoroscopeCard />
       </div>
