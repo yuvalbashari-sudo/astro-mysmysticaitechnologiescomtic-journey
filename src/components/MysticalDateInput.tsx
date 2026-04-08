@@ -150,6 +150,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       <input
         ref={hiddenRef}
         type="date"
+        lang={language}
         value={value}
         max={todayISO}
         onChange={handleNativeChange}
