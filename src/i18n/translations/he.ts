@@ -715,4 +715,15 @@ export const he: TranslationKeys = {
   topbar_guide_label: "מדריכים",
   topbar_guide_tarot: "מדריך טארוט",
   topbar_guide_astrology: "מדריך אסטרולוגיה",
+
+  daily_horoscope_title: "ההורוסקופ היומי שלך",
+  daily_horoscope_subtitle: "מסר אישי מהכוכבים",
+  daily_horoscope_loading: "קוראים בכוכבים...",
+  daily_horoscope_error: "לא הצלחנו לטעון את ההורוסקופ",
+  daily_horoscope_retry: "נסו שוב",
+  daily_horoscope_love: "אהבה",
+  daily_horoscope_career: "קריירה",
+  daily_horoscope_energy: "אנרגיה",
+  daily_horoscope_no_sign: "הזינו את תאריך הלידה כדי לקבל הורוסקופ מותאם אישית",
+  daily_horoscope_cta: "צללו עמוק יותר",
 };

@@ -770,4 +770,16 @@ export type TranslationKeys = {
   gating_resets_in: string;
   gating_resets_in_days: string;
   gating_or_pay_now: string;
+
+  // Daily Horoscope
+  daily_horoscope_title: string;
+  daily_horoscope_subtitle: string;
+  daily_horoscope_loading: string;
+  daily_horoscope_error: string;
+  daily_horoscope_retry: string;
+  daily_horoscope_love: string;
+  daily_horoscope_career: string;
+  daily_horoscope_energy: string;
+  daily_horoscope_no_sign: string;
+  daily_horoscope_cta: string;
 };

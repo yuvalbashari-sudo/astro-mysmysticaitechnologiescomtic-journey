@@ -715,4 +715,15 @@ export const ru: TranslationKeys = {
   topbar_guide_label: "Руководства",
   topbar_guide_tarot: "Руководство по Таро",
   topbar_guide_astrology: "Руководство по астрологии",
+
+  daily_horoscope_title: "Ваш дневной гороскоп",
+  daily_horoscope_subtitle: "Личное послание от звёзд",
+  daily_horoscope_loading: "Читаем звёзды...",
+  daily_horoscope_error: "Не удалось загрузить гороскоп",
+  daily_horoscope_retry: "Попробовать снова",
+  daily_horoscope_love: "Любовь",
+  daily_horoscope_career: "Карьера",
+  daily_horoscope_energy: "Энергия",
+  daily_horoscope_no_sign: "Введите дату рождения для персонального гороскопа",
+  daily_horoscope_cta: "Погрузиться глубже",
 };

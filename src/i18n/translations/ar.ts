@@ -715,4 +715,15 @@ export const ar: TranslationKeys = {
   topbar_guide_label: "أدلة",
   topbar_guide_tarot: "دليل التاروت",
   topbar_guide_astrology: "دليل الفلك",
+
+  daily_horoscope_title: "برجك اليومي",
+  daily_horoscope_subtitle: "رسالة شخصية من النجوم",
+  daily_horoscope_loading: "نقرأ النجوم...",
+  daily_horoscope_error: "تعذر تحميل البرج",
+  daily_horoscope_retry: "حاول مجدداً",
+  daily_horoscope_love: "الحب",
+  daily_horoscope_career: "المهنة",
+  daily_horoscope_energy: "الطاقة",
+  daily_horoscope_no_sign: "أدخل تاريخ ميلادك للحصول على برج مخصص",
+  daily_horoscope_cta: "استكشف أعمق",
 };

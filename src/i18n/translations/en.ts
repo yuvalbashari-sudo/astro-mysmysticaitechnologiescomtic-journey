@@ -715,4 +715,15 @@ export const en: TranslationKeys = {
   topbar_guide_label: "Guides",
   topbar_guide_tarot: "Tarot Guide",
   topbar_guide_astrology: "Astrology Guide",
+
+  daily_horoscope_title: "Your Daily Horoscope",
+  daily_horoscope_subtitle: "A personal message from the stars",
+  daily_horoscope_loading: "Reading the stars...",
+  daily_horoscope_error: "Could not load your horoscope",
+  daily_horoscope_retry: "Try again",
+  daily_horoscope_love: "Love",
+  daily_horoscope_career: "Career",
+  daily_horoscope_energy: "Energy",
+  daily_horoscope_no_sign: "Enter your birth date to receive a personalized horoscope",
+  daily_horoscope_cta: "Explore deeper",
 };
