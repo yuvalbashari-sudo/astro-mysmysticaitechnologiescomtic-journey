@@ -14,6 +14,7 @@ const Index = () => {
   const t = useT();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [cosmicGuideOpen, setCosmicGuideOpen] = useState(false);
   const [hasHistory, setHasHistory] = useState(false);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const Index = () => {
   return (
     <>
       <SeoStructuredData />
-      <HeroSection />
+      <HeroSection cosmicGuideOpen={cosmicGuideOpen} onCosmicGuideChange={setCosmicGuideOpen} />
 
       <div className="relative z-10 md:h-screen md:overflow-hidden pointer-events-none" dir={dir} style={{ background: "transparent" }}>
         <a
@@ -35,6 +36,7 @@ const Index = () => {
         <MysticalTopBar
           onOpenHistory={() => setHistoryOpen(true)}
           onOpenDashboard={() => setDashboardOpen(true)}
+          onOpenCosmicGuide={() => setCosmicGuideOpen(true)}
           hasHistory={hasHistory}
         />
         <div className="md:hidden pointer-events-none">

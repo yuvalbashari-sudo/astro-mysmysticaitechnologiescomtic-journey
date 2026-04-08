@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface Props {
   onOpenHistory?: () => void;
   onOpenDashboard?: () => void;
+  onOpenCosmicGuide?: () => void;
   hasHistory?: boolean;
 }
 
@@ -22,7 +23,7 @@ const iconStyle = {
   color: "hsl(var(--gold) / 0.7)",
 };
 
-const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) => {
+const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, hasHistory }: Props) => {
   const { scale, setScale } = useFontScale();
   const { dir, language } = useLanguage();
   const t = useT();
@@ -190,6 +191,17 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
               <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
               {t.topbar_guide_astrology}
             </Link>
+            {onOpenCosmicGuide && (
+              <button
+                type="button"
+                onClick={() => { setGuideOpen(false); onOpenCosmicGuide(); }}
+                className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[15px] font-medium transition-colors hover:bg-gold/10 w-full text-start cursor-pointer bg-transparent border-0"
+                style={{ color: "hsl(var(--foreground) / 0.9)" }}
+              >
+                <span style={{ color: "hsl(270 60% 65%)" }}>✦</span>
+                {language === "he" ? "השפעה קוסמית" : language === "ar" ? "التأثير الكوني" : language === "ru" ? "Космическое влияние" : "Cosmic Influence"}
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
@@ -313,6 +325,17 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
                         <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
                         {t.topbar_guide_astrology}
                       </Link>
+                      {onOpenCosmicGuide && (
+                        <button
+                          type="button"
+                          onClick={() => { setGuideOpen(false); onOpenCosmicGuide(); }}
+                          className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[19px] font-medium transition-colors hover:bg-gold/10 w-full text-start cursor-pointer bg-transparent border-0"
+                          style={{ color: "hsl(var(--foreground) / 0.9)" }}
+                        >
+                          <span style={{ color: "hsl(270 60% 65%)" }}>✦</span>
+                          {language === "he" ? "השפעה קוסמית" : language === "ar" ? "التأثير الكوني" : language === "ru" ? "Космическое влияние" : "Cosmic Influence"}
+                        </button>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
