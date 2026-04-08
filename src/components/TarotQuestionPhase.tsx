@@ -138,42 +138,52 @@ const UI_COPY: Record<Language, {
   continueCta: string;
   skipCta: string;
   validation: string;
+  freeTextFallback: string;
+  selectHint: string;
 }> = {
   he: {
     title: "לפני שהקלפים נפתחים",
-    description: "הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה. כתבו את השאלה, ההתלבטות או התחום שמעסיק אתכם כעת.",
+    description: "הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה. בחרו אחת מהשאלות המומלצות או נסחו שאלה משלכם.",
     questionLabel: "מה השאלה שלכם?",
     guidance: "ככל שהשאלה תהיה ברורה ואישית יותר, כך הקריאה תהיה מדויקת יותר.",
     continueCta: "המשיכו לפתיחת הקלפים",
     skipCta: "דלגו והמשיכו ללא שאלה",
     validation: "כדי שהקלפים יוכלו להעניק מסר מדויק יותר, נסחו שאלה מעט מפורטת יותר.",
+    freeTextFallback: "כדי לקבל תובנות מדויקות, בחרו אחת מהשאלות המומלצות ✨",
+    selectHint: "בחרו שאלה:",
   },
   en: {
     title: "Before the cards are revealed",
-    description: "Cards respond better when your intention is clear. Write your question, dilemma, or the area that currently occupies your mind.",
+    description: "Cards respond better when your intention is clear. Choose one of the guided questions or write your own.",
     questionLabel: "What is your question?",
     guidance: "The clearer and more personal your question is, the more accurate the reading will be.",
     continueCta: "Continue to reveal the cards",
     skipCta: "Skip and continue without a question",
     validation: "For a more precise message, please write a slightly more detailed question.",
+    freeTextFallback: "To receive accurate insights, please select one of the guided questions ✨",
+    selectHint: "Choose a question:",
   },
   ru: {
     title: "Перед открытием карт",
-    description: "Карты лучше откликаются на чёткое намерение. Напишите вопрос, сомнение или тему, которая волнует вас сейчас.",
+    description: "Карты лучше откликаются на чёткое намерение. Выберите один из рекомендованных вопросов или напишите свой.",
     questionLabel: "Какой у вас вопрос?",
     guidance: "Чем яснее и личнее вопрос, тем точнее будет чтение.",
     continueCta: "Продолжить к открытию карт",
     skipCta: "Пропустить и продолжить без вопроса",
     validation: "Чтобы получить более точное послание, сформулируйте вопрос чуть подробнее.",
+    freeTextFallback: "Для точных предсказаний выберите один из рекомендованных вопросов ✨",
+    selectHint: "Выберите вопрос:",
   },
   ar: {
     title: "قبل أن تنكشف البطاقات",
-    description: "تستجيب البطاقات بشكل أفضل عندما تكون نيتك واضحة. اكتب سؤالك أو حيرتك أو المجال الذي يشغلك الآن.",
+    description: "تستجيب البطاقات بشكل أفضل عندما تكون نيتك واضحة. اختر أحد الأسئلة الموجّهة أو اكتب سؤالك الخاص.",
     questionLabel: "ما سؤالك؟",
     guidance: "كلما كان السؤال أوضح وأكثر شخصية، كانت القراءة أدق.",
     continueCta: "تابع لكشف البطاقات",
-    skipCta: "تخطَّ وتابع بدون سؤال",
+    skipCta: "تخطَّ وتابع بدون سؤال",
     validation: "للحصول على رسالة أدق، يُرجى صياغة سؤال أكثر تفصيلاً قليلاً.",
+    freeTextFallback: "للحصول على رؤى دقيقة، يرجى اختيار أحد الأسئلة الموجّهة ✨",
+    selectHint: "اختر سؤالاً:",
   },
 };
 
