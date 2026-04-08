@@ -2995,6 +2995,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   style={{
                     clipPath: "circle(50% at 50% 50%)",
                     WebkitClipPath: "circle(50% at 50% 50%)",
+                    pointerEvents: guideOpen ? "none" : "auto",
                   }}
                   onPointerEnter={() => setIsCrystalHovered(true)}
                   onPointerLeave={() => setIsCrystalHovered(false)}
@@ -3010,7 +3011,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
       </div>
 
       {/* ── Daily Card Teaser — subtle hint below crystal ball ── */}
-      {entranceComplete && !isUniverseMessageOpen && !dailyCardOpen && (
+      {entranceComplete && !isUniverseMessageOpen && !dailyCardOpen && !guideOpen && (
         <motion.div
           className="absolute z-[27] pointer-events-auto cursor-pointer"
           style={{
@@ -3602,7 +3603,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
 
     {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
-    {entranceComplete && !isUniverseMessageOpen && (
+    {entranceComplete && !isUniverseMessageOpen && !guideOpen && (
       <motion.button
         type="button"
         aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
