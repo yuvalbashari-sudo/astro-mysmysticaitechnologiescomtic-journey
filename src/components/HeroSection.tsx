@@ -3096,7 +3096,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
             style={{
               fontSize: 15,
               fontWeight: 600,
-              color: "hsl(var(--gold) / 0.88)",
+              color: "hsl(40 30% 78% / 0.92)",
               letterSpacing: "0.03em",
               lineHeight: 1.6,
               marginBottom: 8,
