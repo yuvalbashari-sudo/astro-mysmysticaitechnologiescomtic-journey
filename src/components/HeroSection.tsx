@@ -3868,23 +3868,20 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               onClick={() => setGuideOpen(false)}
               style={{ background: "hsl(222 47% 3% / 0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
             />
-            {/* Bottom sheet */}
+            {/* Full-screen sheet */}
             <motion.div
-              className="fixed inset-x-0 bottom-0 z-[90] pointer-events-auto"
+              className="fixed inset-0 z-[90] pointer-events-auto flex flex-col justify-end"
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 280 }}
               onClick={(e) => e.stopPropagation()}
+              style={{ background: "hsl(225 42% 7%)" }}
             >
               <div
-                className="relative rounded-t-[28px] overflow-hidden"
+                className="relative w-full h-full overflow-hidden"
                 style={{
-                  maxHeight: "90vh",
-                  background: "linear-gradient(170deg, hsl(230 35% 13% / 0.99) 0%, hsl(225 42% 7% / 0.99) 100%)",
-                  border: `1px solid hsl(${guidePColor} / 0.18)`,
-                  borderBottom: "none",
-                  boxShadow: `0 -16px 80px hsl(${guidePColor} / 0.12), 0 -6px 32px hsl(222 47% 3% / 0.7), inset 0 1px 0 hsl(${guidePColor} / 0.1)`,
+                  background: "linear-gradient(170deg, hsl(230 35% 13%) 0%, hsl(225 42% 7%) 100%)",
                 }}
               >
                 {/* Top accent glow line */}
@@ -3915,8 +3912,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                 </motion.button>
 
                 <div
-                  className={`${isMobile ? "px-8 pb-12 pt-2" : "px-12 pb-14 pt-3"} overflow-y-auto`}
-                  style={{ maxHeight: "calc(90vh - 48px)" }}
+                  className={`${isMobile ? "px-8 pb-12 pt-2" : "px-12 pb-14 pt-3"} overflow-y-auto flex-1`}
                   dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
                 >
                   {/* Subtle label */}
