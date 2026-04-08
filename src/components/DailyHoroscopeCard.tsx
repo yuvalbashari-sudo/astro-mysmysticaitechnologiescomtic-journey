@@ -4,7 +4,7 @@ import { Sun, Heart, Briefcase, Zap, RefreshCw, Sparkles, Star } from "lucide-re
 import { useT, useLanguage } from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { mysticalProfile } from "@/lib/mysticalProfile";
-import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
+import AdvisorChatPanel from "./AdvisorChatPanel";
 
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
