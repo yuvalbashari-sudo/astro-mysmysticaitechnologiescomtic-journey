@@ -128,6 +128,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       <input
         type="text"
         inputMode="numeric"
+        lang={language}
         value={displayValue}
         onChange={handleTextChange}
         placeholder={placeholder || "DD / MM / YYYY"}
