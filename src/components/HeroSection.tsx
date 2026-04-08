@@ -3096,12 +3096,12 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
             style={{
               fontSize: 15,
               fontWeight: 600,
-              color: "hsl(var(--gold) / 0.88)",
+              color: "hsl(40 30% 78% / 0.92)",
               letterSpacing: "0.03em",
               lineHeight: 1.6,
               marginBottom: 8,
               direction: "rtl",
-              textShadow: "0 0 12px hsl(var(--gold) / 0.25), 0 0 24px hsl(var(--gold) / 0.1)",
+              textShadow: "0 0 14px hsl(40 25% 70% / 0.18), 0 0 28px hsl(40 20% 60% / 0.08)",
             }}
           >
             תובנות שמחברות בין הכוכבים לחיים שלכם
