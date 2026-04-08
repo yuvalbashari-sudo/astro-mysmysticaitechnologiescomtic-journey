@@ -364,7 +364,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
           {/* Right side: navigation/settings */}
           <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
             {desktopGuideBtn}
-            <MysticalLanguageDropdown />
+            <MysticalLanguageDropdown showLabel />
           </div>
         </div>
       )}
