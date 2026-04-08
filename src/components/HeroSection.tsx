@@ -2173,7 +2173,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
   const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
-  const [guideOpen, setGuideOpen] = useState(false);
+  const guideOpen = cosmicGuideOpen ?? false;
+  const setGuideOpen = (open: boolean) => onCosmicGuideChange?.(open);
   const guideInfluence = useMemo(() => getDailyInfluence(), []);
   const guidePColor = PLANET_COLORS[guideInfluence.planet] || "43 80% 55%";
   
