@@ -446,6 +446,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             onChange={(e) => {
               setQuestion(e.target.value);
               if (validationMsg) setValidationMsg("");
+              if (showFallback) setShowFallback(false);
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
