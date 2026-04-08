@@ -4,6 +4,7 @@ import { Sun, Heart, Briefcase, Zap, RefreshCw, Sparkles, Star } from "lucide-re
 import { useT, useLanguage } from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
@@ -229,6 +230,26 @@ const DailyHoroscopeCard = () => {
         {/* Header */}
         {/* Header — centered layout */}
         <div className="px-5 pt-5 pb-3 flex flex-col items-center text-center">
+          {/* Advisor avatar */}
+          <motion.div
+            className="w-20 h-20 rounded-full overflow-hidden mb-4"
+            style={{
+              boxShadow: "0 4px 24px hsl(270 60% 45% / 0.3), 0 0 20px hsl(200 70% 50% / 0.12), 0 0 8px hsl(var(--gold) / 0.2)",
+              border: "2px solid hsl(var(--gold) / 0.35)",
+            }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <img
+              src={astrologerAvatar}
+              alt={t.astrologer_chat_title}
+              className="w-full h-full object-cover scale-105"
+              style={{ objectPosition: "center 42%" }}
+              draggable={false}
+            />
+          </motion.div>
+
           <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl mb-3"
             style={{
               background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))",
