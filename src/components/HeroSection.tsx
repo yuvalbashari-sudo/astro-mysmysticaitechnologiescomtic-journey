@@ -19,6 +19,7 @@ import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import DailyHoroscopeModal from "./DailyHoroscopeModal";
 import RemainingReadingsBadge from "./RemainingReadingsBadge";
 import { useT, useLanguage } from "@/i18n";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import { useCardName } from "@/hooks/useCardName";
 import type { Language } from "@/i18n";
 import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
@@ -2178,6 +2179,31 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
   const guideInfluence = useMemo(() => getDailyInfluence(), []);
   const guidePColor = PLANET_COLORS[guideInfluence.planet] || "43 80% 55%";
   
+  // User's zodiac sign for personalization
+  const userProfile = mysticalProfile.getProfile();
+  const userSignIndex = useMemo(() => {
+    if (userProfile.birthDate) {
+      const d = new Date(userProfile.birthDate);
+      const m = d.getMonth() + 1, day = d.getDate();
+      const ranges: [number, number, number, number][] = [
+        [3,21,4,19],[4,20,5,20],[5,21,6,20],[6,21,7,22],[7,23,8,22],[8,23,9,22],
+        [9,23,10,22],[10,23,11,21],[11,22,12,21],[12,22,1,19],[1,20,2,18],[2,19,3,20],
+      ];
+      for (let i = 0; i < ranges.length; i++) {
+        const [sm,sd,em,ed] = ranges[i];
+        if (i === 9) { if ((m === sm && day >= sd) || (m === 1 && day <= ed)) return i; }
+        else { if ((m === sm && day >= sd) || (m === em && day <= ed)) return i; }
+      }
+      return 9;
+    }
+    if (userProfile.zodiacSign) {
+      const keys = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+      const idx = keys.indexOf(userProfile.zodiacSign);
+      if (idx !== -1) return idx;
+    }
+    return null;
+  }, [userProfile.birthDate, userProfile.zodiacSign]);
+  
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
   const [zodiacSignIndex, setZodiacSignIndex] = useState<number | null>(null);
@@ -3979,9 +4005,35 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                             className="font-body tracking-[0.12em] uppercase"
                             style={{ fontSize: 10, color: `hsl(${guidePColor} / 0.65)` }}
                           >
-                            {guideInfluence.life_area[language]}
+                        {guideInfluence.life_area[language]}
                           </span>
                         </div>
+
+                        {/* Personalized sign line */}
+                        {userSignIndex !== null && (
+                          <motion.div
+                            className="flex items-center justify-center gap-2 mt-1"
+                            initial={{ opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.4 }}
+                          >
+                            <img
+                              src={ZODIAC_ICONS[userSignIndex]}
+                              alt=""
+                              className="w-4 h-4"
+                              style={{ filter: "sepia(0.4) saturate(1.6) brightness(1.2) hue-rotate(10deg)", opacity: 0.8 }}
+                            />
+                            <span
+                              className="font-body text-xs tracking-wide"
+                              style={{ color: `hsl(${guidePColor} / 0.55)` }}
+                            >
+                              {language === "he" ? `עבור המזל שלך: ${ZODIAC_WHEEL.he[userSignIndex].name}`
+                                : language === "ar" ? `لبرجك: ${ZODIAC_WHEEL.ar[userSignIndex].name}`
+                                : language === "ru" ? `Для вашего знака: ${ZODIAC_WHEEL.ru[userSignIndex].name}`
+                                : `For your sign: ${ZODIAC_WHEEL.en[userSignIndex].name}`}
+                            </span>
+                          </motion.div>
+                        )}
                       </div>
 
                       {/* Zodiac badge */}
@@ -4018,7 +4070,12 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     transition={{ delay: 0.4, duration: 0.5 }}
                     dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
                   >
-                    {guideInfluence.description[language]}
+                    {userSignIndex !== null
+                      ? (language === "he" ? guideInfluence.description[language].replace(/משפיע/g, "משפיע עליך").replace(/מביא/g, "מביא לך")
+                        : language === "ar" ? guideInfluence.description[language].replace(/يجلب/g, "يجلب لك")
+                        : language === "ru" ? guideInfluence.description[language].replace(/приносит/g, "приносит вам")
+                        : guideInfluence.description[language].replace(/brings/gi, "brings you").replace(/creates/gi, "creates for you"))
+                      : guideInfluence.description[language]}
                   </motion.p>
 
                   {/* CTA Button */}
