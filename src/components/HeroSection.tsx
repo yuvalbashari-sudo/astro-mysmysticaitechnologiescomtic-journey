@@ -3153,7 +3153,7 @@ const HeroSection = () => {
         >
         <div className="flex gap-2.5">
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
-            {[[1, 0], [2, 3]].map((colIndices, colIdx) => (
+            {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-1 flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
@@ -3163,6 +3163,7 @@ const HeroSection = () => {
                     1: { neon: "rgba(0, 150, 255, 0.85)", neonLight: "rgba(0, 150, 255, 0.5)", iconColor: "rgba(0, 170, 255, 0.85)" },
                     2: { neon: "rgba(220, 50, 50, 0.85)", neonLight: "rgba(220, 50, 50, 0.5)", iconColor: "rgba(255, 80, 80, 0.85)" },
                     3: { neon: ITEM_COLORS[3].glow, neonLight: ITEM_COLORS[3].glow, iconColor: ITEM_COLORS[3].glow },
+                    4: { neon: ITEM_COLORS[4].glow, neonLight: ITEM_COLORS[4].glow, iconColor: ITEM_COLORS[4].glow },
                   };
                   const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
