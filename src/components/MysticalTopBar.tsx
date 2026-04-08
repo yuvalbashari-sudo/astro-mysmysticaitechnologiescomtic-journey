@@ -149,7 +149,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     <div className="relative" ref={guideRef}>
       <motion.button
         onClick={() => setGuideOpen(!guideOpen)}
-        className={`flex items-center ${isTablet ? "justify-center rounded-full w-10 h-10" : "gap-2 rounded-full px-4 py-2.5"} backdrop-blur-md transition-all`}
+        className="flex items-center gap-2 rounded-full px-4 py-2.5 backdrop-blur-md transition-all"
         style={{
           background: "hsl(var(--deep-blue-light) / 0.6)",
           border: "1px solid hsl(var(--gold) / 0.18)",
@@ -161,11 +161,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
         aria-expanded={guideOpen}
       >
         <BookOpen className="w-5 h-5 shrink-0" aria-hidden="true" />
-        {!isTablet && (
-          <span className="font-body text-[14px] font-semibold tracking-wide whitespace-nowrap" style={{ color: "hsl(var(--gold) / 0.85)" }}>
-            {guideLabelText}
-          </span>
-        )}
+        <span className="font-body text-[14px] font-semibold tracking-wide whitespace-nowrap" style={{ color: "hsl(var(--gold) / 0.85)" }}>
+          {guideLabelText}
+        </span>
       </motion.button>
       <AnimatePresence>
         {guideOpen && (
@@ -253,8 +251,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     >
        {isMobile ? (
         /* ── MOBILE: two rows ── */
-        <div className="flex flex-col items-center gap-0 pb-[6px]">
-          {/* Row 1: icons + centered logo + icons */}
+        <div className="flex flex-col items-center gap-0 pb-[15px]">
+          {/* Row 1: all icons in a single row */}
           <div className="flex items-center justify-between w-full">
             <nav className="flex items-center gap-1.5" aria-label={t.a11y_main_navigation}>
               <MysticalLanguageDropdown />
@@ -265,9 +263,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             <motion.h1
               className="font-heading uppercase pointer-events-none select-none"
               style={{
-                fontSize: 36,
+                fontSize: 28,
                 fontWeight: 700,
-                letterSpacing: "0.12em",
+                letterSpacing: "0.1em",
                 lineHeight: 1,
                 color: "hsl(var(--gold))",
                 background:
@@ -357,23 +355,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             </div>
           </div>
 
-          {/* Row 2: subtitle */}
-          <p
-            className="font-body text-center pointer-events-none select-none w-full"
-            style={{
-              fontSize: 13,
-              fontWeight: 500,
-              color: "hsl(40 30% 78% / 0.85)",
-              letterSpacing: "0.02em",
-              lineHeight: 1.3,
-              marginTop: 2,
-              direction: "rtl",
-              textShadow: "0 0 10px hsl(40 25% 70% / 0.15)",
-            }}
-          >
-            תובנות שמחברות בין הכוכבים לחיים שלכם
-          </p>
-
         </div>
       ) : (
         /* ── DESKTOP / TABLET: original single-row layout ── */
@@ -432,7 +413,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
           {/* Right side: navigation/settings */}
           <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
             {desktopGuideBtn}
-            <MysticalLanguageDropdown showLabel={!isTablet} />
+            <MysticalLanguageDropdown showLabel />
           </div>
         </div>
       )}
