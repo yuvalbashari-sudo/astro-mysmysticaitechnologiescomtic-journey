@@ -3178,7 +3178,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               </div>
             ))}
           </div>
-          {/* Guide icon-only trigger — small, top-aligned */}
+          
         </motion.div>
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
