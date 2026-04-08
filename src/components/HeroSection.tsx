@@ -3838,9 +3838,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.35 }}
               onClick={() => setGuideOpen(false)}
-              style={{ background: "hsl(222 47% 3% / 0.6)", backdropFilter: "blur(4px)", WebkitBackdropFilter: "blur(4px)" }}
+              style={{ background: "hsl(222 47% 3% / 0.7)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)" }}
             />
             {/* Bottom sheet */}
             <motion.div
@@ -3848,111 +3848,213 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 28, stiffness: 300 }}
+              transition={{ type: "spring", damping: 30, stiffness: 280 }}
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className="relative rounded-t-2xl overflow-hidden"
+                className="relative rounded-t-3xl overflow-hidden"
                 style={{
-                  maxHeight: "85vh",
-                  background: "linear-gradient(160deg, hsl(var(--deep-blue-light) / 0.98), hsl(var(--deep-blue) / 0.99))",
-                  border: `1px solid hsl(${guidePColor} / 0.2)`,
+                  maxHeight: "88vh",
+                  background: "linear-gradient(170deg, hsl(230 35% 12% / 0.98) 0%, hsl(225 40% 8% / 0.99) 100%)",
+                  border: `1px solid hsl(${guidePColor} / 0.15)`,
                   borderBottom: "none",
-                  boxShadow: `0 -8px 40px hsl(${guidePColor} / 0.08), 0 -4px 20px hsl(var(--deep-blue) / 0.5)`,
+                  boxShadow: `0 -12px 60px hsl(${guidePColor} / 0.1), 0 -4px 24px hsl(222 47% 3% / 0.6), inset 0 1px 0 hsl(${guidePColor} / 0.08)`,
                 }}
               >
-                {/* Top accent line */}
-                <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: `linear-gradient(90deg, transparent 10%, hsl(${guidePColor} / 0.6), hsl(270 50% 60% / 0.4), transparent 90%)` }} />
+                {/* Top accent glow */}
+                <div className="absolute top-0 left-0 right-0 h-[1.5px]" style={{ background: `linear-gradient(90deg, transparent 5%, hsl(${guidePColor} / 0.5) 30%, hsl(270 50% 65% / 0.4) 70%, transparent 95%)` }} />
 
                 {/* Drag handle */}
-                <div className="flex justify-center pt-3 pb-1">
-                  <div className="w-10 h-1 rounded-full" style={{ background: "hsl(var(--foreground) / 0.2)" }} />
+                <div className="flex justify-center pt-3 pb-2">
+                  <div className="w-9 h-[3px] rounded-full" style={{ background: "hsl(var(--foreground) / 0.18)" }} />
                 </div>
 
                 {/* Close button */}
                 <motion.button
                   type="button"
-                  className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center cursor-pointer"
-                  style={{ background: "hsl(var(--deep-blue) / 0.6)", border: "1px solid hsl(var(--foreground) / 0.15)" }}
+                  className="absolute top-3 right-4 z-10 w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                  style={{
+                    background: "hsl(var(--deep-blue) / 0.5)",
+                    border: "1px solid hsl(var(--foreground) / 0.12)",
+                    backdropFilter: "blur(8px)",
+                  }}
                   onClick={() => setGuideOpen(false)}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={{ scale: 1.08, borderColor: "hsl(var(--foreground) / 0.25)" }}
+                  whileTap={{ scale: 0.88 }}
                 >
-                  <X className="w-4 h-4" style={{ color: "hsl(var(--foreground) / 0.7)" }} />
+                  <X className="w-4 h-4" style={{ color: "hsl(var(--foreground) / 0.6)" }} />
                 </motion.button>
 
-                <div className={`${isMobile ? "px-6 pb-8 pt-2" : "px-8 pb-10 pt-3"} space-y-5 overflow-y-auto`} style={{ maxHeight: "calc(85vh - 40px)" }}>
-                  {/* Title */}
+                <div className={`${isMobile ? "px-7 pb-10 pt-1" : "px-10 pb-12 pt-2"} space-y-6 overflow-y-auto`} style={{ maxHeight: "calc(88vh - 44px)" }}>
+                  {/* Subtle label */}
                   <motion.div
                     className="text-center"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.15, duration: 0.4 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.15, duration: 0.5 }}
                   >
-                    <div className="tracking-[0.25em] uppercase font-heading font-medium mb-2" style={{ fontSize: isMobile ? 10 : 11, color: "hsl(var(--foreground) / 0.4)" }}>
+                    <span className="tracking-[0.3em] uppercase font-heading font-medium" style={{ fontSize: 9, color: "hsl(var(--foreground) / 0.3)" }}>
                       {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
-                    </div>
-                    <div className={`font-heading font-bold tracking-wide ${isMobile ? "text-lg" : "text-xl"}`} style={{ color: "hsl(var(--foreground) / 0.9)" }}>
-                      {language === "he" ? "✦ השפעה קוסמית נוכחית ✦" : language === "ar" ? "✦ التأثير الكوني الحالي ✦" : language === "ru" ? "✦ Текущее космическое влияние ✦" : "✦ Current Cosmic Influence ✦"}
-                    </div>
-                  </motion.div>
-
-                  {/* Separator */}
-                  <motion.div className="mx-auto" style={{ width: 80, height: 1, background: `linear-gradient(90deg, transparent, hsl(${guidePColor} / 0.5), transparent)` }} initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.25, duration: 0.5 }} />
-
-                  {/* Planet symbol + title */}
-                  <motion.div className="flex items-center justify-center gap-3" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, duration: 0.4 }}>
-                    <motion.span
-                      className={`${isMobile ? "text-3xl" : "text-4xl"}`}
-                      animate={{ textShadow: [`0 0 12px hsl(${guidePColor} / 0.3)`, `0 0 28px hsl(${guidePColor} / 0.7)`, `0 0 12px hsl(${guidePColor} / 0.3)`] }}
-                      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      {guideInfluence.planet_symbol}
-                    </motion.span>
-                    <span className={`font-heading font-bold tracking-[0.1em] uppercase ${isMobile ? "text-base" : "text-lg"}`} style={{ color: `hsl(${guidePColor})` }}>
-                      {guideInfluence.title[language]}
                     </span>
                   </motion.div>
 
-                  {/* Zodiac sign icon */}
-                  <motion.div className="flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}>
-                    <div className="flex items-center gap-3 px-4 py-2 rounded-xl" style={{ background: `hsl(${guidePColor} / 0.06)`, border: `1px solid hsl(${guidePColor} / 0.15)` }}>
-                      <img src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]} alt="" className="w-8 h-8" style={{ filter: "sepia(0.6) saturate(2) brightness(1.1) hue-rotate(10deg)" }} />
-                      <span className="font-body text-sm font-medium" style={{ color: "hsl(var(--foreground) / 0.8)" }}>
-                        {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
-                      </span>
-                    </div>
-                  </motion.div>
+                  {/* ── Main influence card ── */}
+                  <motion.div
+                    className="relative rounded-2xl overflow-hidden"
+                    style={{
+                      background: `linear-gradient(145deg, hsl(${guidePColor} / 0.06) 0%, hsl(230 35% 10% / 0.5) 50%, hsl(${guidePColor} / 0.04) 100%)`,
+                      border: `1px solid hsl(${guidePColor} / 0.12)`,
+                      boxShadow: `0 4px 30px hsl(${guidePColor} / 0.06), inset 0 1px 0 hsl(${guidePColor} / 0.08)`,
+                      backdropFilter: "blur(12px)",
+                      padding: isMobile ? "28px 24px" : "32px 28px",
+                    }}
+                    initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
+                  >
+                    {/* Subtle radial glow behind planet */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full pointer-events-none" style={{ background: `radial-gradient(circle, hsl(${guidePColor} / 0.08) 0%, transparent 70%)` }} />
 
-                  {/* Influence area badge */}
-                  <motion.div className="flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}>
-                    <span
-                      className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full tracking-[0.15em] uppercase font-medium ${isMobile ? "text-[10px]" : "text-[11px]"}`}
-                      style={{ background: `hsl(${guidePColor} / 0.08)`, border: `1px solid hsl(${guidePColor} / 0.2)`, color: `hsl(${guidePColor} / 0.85)` }}
-                    >
-                      <span>{INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}</span>
-                      {guideInfluence.life_area[language]}
-                    </span>
+                    <div className="relative flex flex-col items-center gap-5">
+                      {/* Planet symbol with aura */}
+                      <motion.div className="relative flex items-center justify-center">
+                        {/* Outer aura ring */}
+                        <motion.div
+                          className="absolute rounded-full"
+                          style={{
+                            width: isMobile ? 72 : 84,
+                            height: isMobile ? 72 : 84,
+                            background: `radial-gradient(circle, hsl(${guidePColor} / 0.12) 30%, hsl(${guidePColor} / 0.04) 60%, transparent 80%)`,
+                            boxShadow: `0 0 30px hsl(${guidePColor} / 0.15), 0 0 60px hsl(${guidePColor} / 0.06)`,
+                          }}
+                          animate={{
+                            scale: [1, 1.08, 1],
+                            opacity: [0.7, 1, 0.7],
+                          }}
+                          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                        />
+                        {/* Inner glow */}
+                        <motion.div
+                          className="absolute rounded-full"
+                          style={{
+                            width: isMobile ? 48 : 56,
+                            height: isMobile ? 48 : 56,
+                            background: `radial-gradient(circle, hsl(${guidePColor} / 0.2) 0%, transparent 70%)`,
+                          }}
+                          animate={{
+                            scale: [1, 1.12, 1],
+                          }}
+                          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                        />
+                        <motion.span
+                          className="relative"
+                          style={{ fontSize: isMobile ? 38 : 46 }}
+                          animate={{
+                            textShadow: [
+                              `0 0 8px hsl(${guidePColor} / 0.3), 0 0 20px hsl(${guidePColor} / 0.15)`,
+                              `0 0 16px hsl(${guidePColor} / 0.5), 0 0 40px hsl(${guidePColor} / 0.25)`,
+                              `0 0 8px hsl(${guidePColor} / 0.3), 0 0 20px hsl(${guidePColor} / 0.15)`,
+                            ],
+                          }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          {guideInfluence.planet_symbol}
+                        </motion.span>
+                      </motion.div>
+
+                      {/* Main title: "Mars in Libra" */}
+                      <div className="text-center space-y-1">
+                        <h3
+                          className={`font-heading font-bold tracking-[0.06em] ${isMobile ? "text-xl" : "text-2xl"}`}
+                          style={{ color: "hsl(var(--foreground) / 0.95)" }}
+                        >
+                          {guideInfluence.title[language]}
+                        </h3>
+                        {/* Influence area */}
+                        <div className="flex items-center justify-center gap-1.5">
+                          <span style={{ fontSize: 12, color: `hsl(${guidePColor} / 0.7)` }}>
+                            {INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}
+                          </span>
+                          <span
+                            className="font-body tracking-[0.12em] uppercase"
+                            style={{ fontSize: 10, color: `hsl(${guidePColor} / 0.65)` }}
+                          >
+                            {guideInfluence.life_area[language]}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Zodiac badge */}
+                      <motion.div
+                        className="flex items-center gap-2.5 px-5 py-2.5 rounded-full"
+                        style={{
+                          background: `linear-gradient(135deg, hsl(${guidePColor} / 0.08), hsl(${guidePColor} / 0.04))`,
+                          border: `1px solid hsl(${guidePColor} / 0.18)`,
+                          boxShadow: `0 2px 12px hsl(${guidePColor} / 0.06)`,
+                        }}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.35, duration: 0.4 }}
+                      >
+                        <img
+                          src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]}
+                          alt=""
+                          className="w-6 h-6"
+                          style={{ filter: "sepia(0.5) saturate(1.8) brightness(1.15) hue-rotate(10deg)" }}
+                        />
+                        <span className="font-heading text-sm font-semibold tracking-wide" style={{ color: "hsl(var(--foreground) / 0.85)" }}>
+                          {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
+                        </span>
+                      </motion.div>
+                    </div>
                   </motion.div>
 
                   {/* Description */}
-                  <motion.div
-                    className={`text-center leading-relaxed ${isMobile ? "text-sm" : "text-[15px]"}`}
-                    style={{ color: "hsl(var(--foreground) / 0.7)" }}
-                    initial={{ opacity: 0, y: 10 }}
+                  <motion.p
+                    className={`text-center leading-[1.85] font-body ${isMobile ? "text-[13.5px]" : "text-[15px]"}`}
+                    style={{ color: "hsl(var(--foreground) / 0.6)" }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.5 }}
                     dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
                   >
                     {guideInfluence.description[language]}
+                  </motion.p>
+
+                  {/* CTA Button */}
+                  <motion.div
+                    className="flex justify-center"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.4 }}
+                  >
+                    <motion.button
+                      type="button"
+                      className="font-heading text-[13px] font-semibold tracking-[0.1em] uppercase px-7 py-3 rounded-full cursor-pointer"
+                      style={{
+                        background: `linear-gradient(135deg, hsl(${guidePColor} / 0.15), hsl(${guidePColor} / 0.08))`,
+                        border: `1px solid hsl(${guidePColor} / 0.25)`,
+                        color: `hsl(${guidePColor})`,
+                        boxShadow: `0 2px 16px hsl(${guidePColor} / 0.08)`,
+                      }}
+                      whileHover={{ scale: 1.04, boxShadow: `0 4px 24px hsl(${guidePColor} / 0.15)` }}
+                      whileTap={{ scale: 0.96 }}
+                      onClick={() => {
+                        setGuideOpen(false);
+                        setDailyHoroscopeOpen(true);
+                      }}
+                    >
+                      {language === "he" ? "ראו איך זה משפיע עליכם" : language === "ar" ? "اكتشفوا تأثيره عليكم" : language === "ru" ? "Узнайте ваше влияние" : "See How It Affects You"}
+                    </motion.button>
                   </motion.div>
 
-                  {/* Closing note */}
+                  {/* Closing whisper */}
                   <motion.div
                     className="text-center font-body"
-                    style={{ fontSize: isMobile ? 11 : 12, color: "hsl(var(--foreground) / 0.35)", letterSpacing: "0.08em" }}
+                    style={{ fontSize: 10, color: "hsl(var(--foreground) / 0.25)", letterSpacing: "0.12em" }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.65 }}
                   >
                     {language === "he" ? "הכוכבים מדברים... הקשיבו ✨" : language === "ar" ? "النجوم تتحدث... استمعوا ✨" : language === "ru" ? "Звёзды говорят... слушайте ✨" : "The stars speak... listen ✨"}
                   </motion.div>
