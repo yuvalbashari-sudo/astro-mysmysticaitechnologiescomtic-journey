@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -83,6 +83,7 @@ const ITEM_COLORS = [
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
+  { glow: "hsl(35, 85%, 55%)", bg: "hsl(35, 85%, 55%)", label: "amber" },        // Daily Horoscope - amber
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
@@ -2263,6 +2264,7 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
+  const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
@@ -2284,6 +2286,7 @@ const HeroSection = () => {
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Star, label: t.hero_menu_fullchart, side: "right" as const, index: 1 },
+    { icon: Sun, label: t.hero_menu_daily_horoscope, side: "right" as const, index: 2 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
