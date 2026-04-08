@@ -131,6 +131,63 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
     </Link>
   );
 
+  const desktopGuideBtn = (
+    <div className="relative" ref={guideRef}>
+      <motion.button
+        onClick={() => setGuideOpen(!guideOpen)}
+        className={`${iconBtn} w-12 h-12`}
+        style={iconStyle}
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        aria-label={t.topbar_guide_label}
+        aria-expanded={guideOpen}
+        title={language === "he" ? "מדריכים" : language === "ar" ? "الأدلة" : language === "ru" ? "Руководства" : "Guides"}
+      >
+        <BookOpen className="w-6 h-6" aria-hidden="true" />
+      </motion.button>
+      <AnimatePresence>
+        {guideOpen && (
+          <motion.div
+            className="absolute flex flex-col gap-2 rounded-xl p-3 z-[100]"
+            style={{
+              top: 52,
+              right: 0,
+              width: 220,
+              minWidth: 200,
+              background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.95))",
+              border: "1px solid hsl(var(--gold) / 0.18)",
+              boxShadow: "0 8px 32px hsl(var(--deep-blue) / 0.6), 0 0 12px hsl(var(--gold) / 0.06)",
+              backdropFilter: "blur(16px)",
+            }}
+            initial={{ opacity: 0, y: -6, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.95 }}
+            transition={{ duration: 0.18 }}
+          >
+            <Link
+              to="/tarot-guides"
+              onClick={() => setGuideOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[15px] font-medium transition-colors hover:bg-gold/10"
+              style={{ color: "hsl(var(--foreground) / 0.9)" }}
+            >
+              <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
+              {t.topbar_guide_tarot}
+            </Link>
+            <Link
+              to="/astrology-guides"
+              onClick={() => setGuideOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[15px] font-medium transition-colors hover:bg-gold/10"
+              style={{ color: "hsl(var(--foreground) / 0.9)" }}
+            >
+              <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
+              {t.topbar_guide_astrology}
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+
   const whatsappUrl = "https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI";
 
   const whatsappBtn = (
