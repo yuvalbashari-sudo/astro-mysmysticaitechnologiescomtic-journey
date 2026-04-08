@@ -3924,7 +3924,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.12, duration: 0.5 }}
                   >
-                    <span className="tracking-[0.25em] uppercase font-heading font-bold" style={{ fontSize: isMobile ? 18 : 20, color: `hsl(${guidePColor} / 0.8)`, textShadow: `0 0 20px hsl(${guidePColor} / 0.2)` }}>
+                    <span className="tracking-[0.25em] uppercase font-heading font-bold" style={{ fontSize: isMobile ? 36 : 40, color: `hsl(${guidePColor} / 0.8)`, textShadow: `0 0 20px hsl(${guidePColor} / 0.2)` }}>
                       {language === "he" ? "מדריך קוסמי" : language === "ar" ? "الدليل الكوني" : language === "ru" ? "Космический гид" : "Cosmic Guide"}
                     </span>
                   </motion.div>
@@ -3981,7 +3981,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         />
                         <motion.span
                           className="relative"
-                          style={{ fontSize: isMobile ? 48 : 56 }}
+                          style={{ fontSize: isMobile ? 72 : 80 }}
                           animate={{
                             textShadow: [
                               `0 0 12px hsl(${guidePColor} / 0.35), 0 0 30px hsl(${guidePColor} / 0.18)`,
@@ -3998,19 +3998,19 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       {/* Main title: "Mars in Libra" */}
                       <div className="text-center space-y-2.5">
                         <h3
-                          className={`font-heading font-bold tracking-[0.04em] ${isMobile ? "text-2xl" : "text-3xl"}`}
+                          className={`font-heading font-bold tracking-[0.04em] ${isMobile ? "text-4xl" : "text-5xl"}`}
                           style={{ color: "hsl(var(--foreground) / 0.97)", lineHeight: 1.3 }}
                         >
                           {guideInfluence.title[language]}
                         </h3>
                         {/* Influence area */}
                         <div className="flex items-center justify-center gap-2">
-                          <span style={{ fontSize: isMobile ? 14 : 15, color: `hsl(${guidePColor} / 0.75)` }}>
+                          <span style={{ fontSize: isMobile ? 24 : 26, color: `hsl(${guidePColor} / 0.75)` }}>
                             {INFLUENCE_AREA_ICONS[guideInfluence.influence_area] || "✦"}
                           </span>
                           <span
                             className="font-body tracking-[0.14em] uppercase font-medium"
-                            style={{ fontSize: isMobile ? 12 : 13, color: `hsl(${guidePColor} / 0.7)` }}
+                            style={{ fontSize: isMobile ? 22 : 24, color: `hsl(${guidePColor} / 0.7)` }}
                           >
                             {guideInfluence.life_area[language]}
                           </span>
@@ -4027,11 +4027,11 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                             <img
                               src={ZODIAC_ICONS[userSignIndex]}
                               alt=""
-                              className="w-5 h-5"
+                              className="w-8 h-8"
                               style={{ filter: "sepia(0.4) saturate(1.6) brightness(1.2) hue-rotate(10deg)", opacity: 0.85 }}
                             />
                             <span
-                              className="font-body text-sm tracking-wide"
+                              className="font-body text-2xl tracking-wide"
                               style={{ color: `hsl(${guidePColor} / 0.6)` }}
                             >
                               {language === "he" ? `עבור המזל שלך: ${ZODIAC_WHEEL.he[userSignIndex].name}`
@@ -4058,10 +4058,10 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         <img
                           src={ZODIAC_ICONS[guideInfluence.zodiac_sign_index]}
                           alt=""
-                          className="w-7 h-7"
+                          className="w-12 h-12"
                           style={{ filter: "sepia(0.5) saturate(1.8) brightness(1.15) hue-rotate(10deg)" }}
                         />
-                        <span className="font-heading text-base font-semibold tracking-wide" style={{ color: "hsl(var(--foreground) / 0.88)" }}>
+                        <span className="font-heading text-2xl font-semibold tracking-wide" style={{ color: "hsl(var(--foreground) / 0.88)" }}>
                           {ZODIAC_WHEEL[language][guideInfluence.zodiac_sign_index].name}
                         </span>
                       </motion.div>
@@ -4070,7 +4070,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
                   {/* Description */}
                   <motion.p
-                    className={`text-center font-body mt-7 ${isMobile ? "text-[16px]" : "text-[17px]"}`}
+                    className={`text-center font-body mt-7 ${isMobile ? "text-[28px]" : "text-[30px]"}`}
                     style={{ color: "hsl(var(--foreground) / 0.7)", lineHeight: 2 }}
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -4094,13 +4094,13 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   >
                     <motion.button
                       type="button"
-                      className={`font-heading font-bold tracking-[0.08em] uppercase rounded-full cursor-pointer ${isMobile ? "text-[15px] px-8 py-4" : "text-[14px] px-9 py-3.5"}`}
+                      className={`font-heading font-bold tracking-[0.08em] uppercase rounded-full cursor-pointer ${isMobile ? "text-[26px] px-10 py-5" : "text-[24px] px-12 py-5"}`}
                       style={{
                         background: `linear-gradient(135deg, hsl(${guidePColor} / 0.2), hsl(${guidePColor} / 0.1))`,
                         border: `1px solid hsl(${guidePColor} / 0.3)`,
                         color: `hsl(${guidePColor})`,
                         boxShadow: `0 4px 24px hsl(${guidePColor} / 0.12), inset 0 1px 0 hsl(${guidePColor} / 0.1)`,
-                        minHeight: 52,
+                        minHeight: 72,
                       }}
                       whileHover={{ scale: 1.04, boxShadow: `0 6px 32px hsl(${guidePColor} / 0.2)` }}
                       whileTap={{ scale: 0.96 }}
@@ -4116,7 +4116,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   {/* Closing whisper */}
                   <motion.div
                     className="text-center font-body mt-6"
-                    style={{ fontSize: isMobile ? 12 : 11, color: "hsl(var(--foreground) / 0.3)", letterSpacing: "0.1em", lineHeight: 1.8 }}
+                    style={{ fontSize: isMobile ? 22 : 20, color: "hsl(var(--foreground) / 0.3)", letterSpacing: "0.1em", lineHeight: 1.8 }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.65 }}
