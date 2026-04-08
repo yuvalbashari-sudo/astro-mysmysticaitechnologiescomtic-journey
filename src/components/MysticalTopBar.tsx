@@ -385,7 +385,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             <p
               className="font-body text-center"
               style={{
-                fontSize: "clamp(11px, 1.2vw, 16px)",
+                fontSize: "clamp(22px, 2.4vw, 32px)",
                 fontWeight: 500,
                 color: "hsl(40 30% 78% / 0.92)",
                 letterSpacing: "0.03em",
