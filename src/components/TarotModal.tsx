@@ -924,23 +924,23 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     <motion.p className="text-gold/50 font-body text-xs mb-2" style={{ textShadow: "0 2px 8px hsl(222 47% 5% / 0.8)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{SPREAD_LABELS[selectedSpread.key]}</motion.p>
                     <motion.h2 className="font-heading text-2xl gold-gradient-text mb-4" style={{ textShadow: "0 2px 12px hsl(222 47% 5% / 0.8)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t.tarot_cards_title}</motion.h2>
 
-                    {/* Card display */}
-                    <div className="w-full max-w-3xl mx-auto overflow-hidden">
-                      <div className="flex items-center justify-center gap-3 sm:gap-5 mb-8 flex-wrap px-2">
+                    {/* Card display — full width, evenly distributed */}
+                    <div className="w-full mx-auto overflow-hidden px-2">
+                      <div className="grid mb-8" style={{ gridTemplateColumns: `repeat(${cards.length}, 1fr)`, gap: 8 }}>
                         {cards.map((card, i) => (
                           <motion.div
                             key={i}
-                            className="flex flex-col items-center gap-2 px-4 py-3 rounded-xl backdrop-blur-sm shrink-0"
-                            style={{ background: "hsl(var(--deep-blue) / 0.4)", border: "1px solid hsl(var(--gold) / 0.1)", maxWidth: cards.length === 1 ? 200 : 160 }}
+                            className="flex flex-col items-center gap-2 py-3 rounded-xl"
+                            style={{ background: "hsl(222 35% 10% / 0.7)", border: "1px solid hsl(var(--gold) / 0.1)" }}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 + i * 0.2 }}
                           >
                             {card.image
-                              ? <img src={card.image} alt={localizedName(card)} className="rounded-lg shadow-lg object-contain" style={{ border: "1px solid hsl(var(--gold) / 0.2)", width: "min(6rem, 15vw)", height: "min(8.5rem, 22vh)", aspectRatio: "2/3" }} />
+                              ? <img src={card.image} alt={localizedName(card)} className="rounded-lg shadow-lg object-contain w-full px-2" style={{ border: "1px solid hsl(var(--gold) / 0.2)", aspectRatio: "2/3", maxHeight: "28vh" }} />
                               : <span className="text-4xl">{card.symbol}</span>}
-                            <span className="font-body text-sm text-gold mt-1">{localizedName(card)}</span>
-                            <span className="text-xs text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
+                            <span className="font-heading text-sm text-gold mt-1 text-center leading-tight px-1">{localizedName(card)}</span>
+                            <span className="text-[11px] text-muted-foreground font-body">{selectedSpread.positionLabels[i]}</span>
                           </motion.div>
                         ))}
                       </div>
