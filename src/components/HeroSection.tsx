@@ -3252,8 +3252,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
               transition={{ delay: 2.2, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.div
-                className="relative rounded-2xl px-10 py-7 backdrop-blur-xl text-center overflow-hidden"
+                <motion.div
+                className={`relative rounded-2xl ${isTablet ? "px-5 py-4" : "px-10 py-7"} backdrop-blur-xl text-center overflow-hidden`}
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "left"
@@ -3291,9 +3291,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   )}
                 </AnimatePresence>
                 <div className="flex items-center justify-center gap-3">
-                  <Sparkles className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
+                  <Sparkles className={`${isTablet ? "w-5 h-5" : "w-8 h-8"} flex-shrink-0`} style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
-                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
+                    className={`${isTablet ? "text-[18px]" : "text-[32px]"} font-heading font-bold tracking-wide leading-tight`}
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35), 0 0 40px rgba(0, 150, 255, 0.15)",
@@ -3302,7 +3302,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
                   </div>
                 </div>
-                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className={`${isTablet ? "text-[13px]" : "text-[17px]"} font-body mt-2.5`} style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
                 </div>
                 <motion.div
@@ -3340,7 +3340,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3351,14 +3351,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -3410,8 +3410,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
               transition={{ delay: 2.5, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.div
-                className="relative rounded-2xl px-10 py-7 backdrop-blur-xl text-center overflow-hidden"
+                <motion.div
+                className={`relative rounded-2xl ${isTablet ? "px-5 py-4" : "px-10 py-7"} backdrop-blur-xl text-center overflow-hidden`}
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "right"
@@ -3449,9 +3449,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   )}
                 </AnimatePresence>
                 <div className="flex items-center justify-center gap-3">
-                  <Eye className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
+                  <Eye className={`${isTablet ? "w-5 h-5" : "w-8 h-8"} flex-shrink-0`} style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
                   <div
-                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
+                    className={`${isTablet ? "text-[18px]" : "text-[32px]"} font-heading font-bold tracking-wide leading-tight`}
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(220, 50, 50, 0.65), 0 0 20px rgba(220, 50, 50, 0.35), 0 0 40px rgba(220, 50, 50, 0.15)",
@@ -3460,7 +3460,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
                   </div>
                 </div>
-                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className={`${isTablet ? "text-[13px]" : "text-[17px]"} font-body mt-2.5`} style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
                 </div>
                 <motion.div
@@ -3498,7 +3498,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3509,14 +3509,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -3568,7 +3568,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3579,14 +3579,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     }}
                   >
                     <item.icon
-                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
                       style={{
                         color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
                         filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
