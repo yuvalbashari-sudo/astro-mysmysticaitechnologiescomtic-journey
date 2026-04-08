@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useFontScale } from "@/contexts/FontScaleContext";
+import TextSizeControl from "@/components/TextSizeControl";
 import HeroSection from "@/components/HeroSection";
 import MysticalDashboard from "@/components/MysticalDashboard";
 import MysticalTopBar from "@/components/MysticalTopBar";
@@ -42,6 +44,9 @@ const Index = () => {
         <div className="md:hidden pointer-events-none">
           <div style={{ height: "100dvh" }} aria-hidden="true" />
           <div className="pointer-events-auto">
+            <div className="flex justify-center py-4">
+              <TextSizeControl value={scale as any} onChange={(s) => setScale(s as any)} />
+            </div>
             <SeoContentSection />
           </div>
         </div>
