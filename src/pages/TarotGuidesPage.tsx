@@ -7,6 +7,7 @@ import { useLanguage } from "@/i18n";
 
 const TarotGuidesPage = () => {
   const { language, dir, isRTL } = useLanguage();
+  const navigate = useNavigate();
   const guides = getTarotGuides(language);
   const BackArrow = isRTL ? ArrowLeft : ArrowRight;
 
