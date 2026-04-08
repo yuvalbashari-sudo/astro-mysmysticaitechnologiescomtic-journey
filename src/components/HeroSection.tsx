@@ -2913,6 +2913,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   style={{
                     clipPath: "circle(50% at 50% 50%)",
                     WebkitClipPath: "circle(50% at 50% 50%)",
+                    pointerEvents: guideOpen ? "none" : "auto",
                   }}
                   onClick={() => setDailyCardOpen(true)}
                 />
