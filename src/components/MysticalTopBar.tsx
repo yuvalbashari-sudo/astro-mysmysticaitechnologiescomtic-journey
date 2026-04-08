@@ -430,7 +430,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
           {/* Right side: navigation/settings */}
           <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
             {desktopGuideBtn}
-            <MysticalLanguageDropdown showLabel />
+            <MysticalLanguageDropdown showLabel={!isTablet} />
           </div>
         </div>
       )}
