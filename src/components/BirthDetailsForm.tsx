@@ -126,13 +126,11 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCi
           <label className={labelClass} style={labelStyle}>
             {t.birth_chart_time_label}
           </label>
-          <input
-            type="time"
-            lang={language}
+          <MysticalTimeInput
             value={values.birthTime}
-            onChange={(e) => onChange({ birthTime: e.target.value })}
-            className="mystical-input font-body text-center w-full"
-            style={{ direction: "ltr", ...inputSizeStyle }}
+            onChange={(v) => onChange({ birthTime: v })}
+            className="w-full"
+            style={inputSizeStyle}
           />
           {attempted && !values.birthTime && (
             <p className={errorClass} style={errorStyle}>{t.forecast_birthdate_required}</p>

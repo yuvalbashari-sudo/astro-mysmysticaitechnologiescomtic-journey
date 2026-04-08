@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import MysticalDateInput from "@/components/MysticalDateInput";
+import MysticalTimeInput from "@/components/MysticalTimeInput";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
