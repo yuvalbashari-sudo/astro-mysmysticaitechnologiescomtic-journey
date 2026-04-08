@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { CalendarDays } from "lucide-react";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   value: string; // YYYY-MM-DD
@@ -31,6 +32,7 @@ function isFutureDate(iso: string): boolean {
  * Future dates are blocked.
  */
 const MysticalDateInput = ({ value, onChange, className = "", style, placeholder }: Props) => {
+  const { language } = useLanguage();
   const hiddenRef = useRef<HTMLInputElement>(null);
   const [futureError, setFutureError] = useState(false);
 
@@ -126,6 +128,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       <input
         type="text"
         inputMode="numeric"
+        lang={language}
         value={displayValue}
         onChange={handleTextChange}
         placeholder={placeholder || "DD / MM / YYYY"}
@@ -147,6 +150,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       <input
         ref={hiddenRef}
         type="date"
+        lang={language}
         value={value}
         max={todayISO}
         onChange={handleNativeChange}
