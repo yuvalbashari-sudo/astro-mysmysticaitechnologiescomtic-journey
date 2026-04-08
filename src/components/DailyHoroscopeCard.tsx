@@ -227,24 +227,20 @@ const DailyHoroscopeCard = () => {
           style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }} />
 
         {/* Header */}
-        <div className="px-5 pt-5 pb-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))",
-                border: "1px solid hsl(var(--gold) / 0.2)",
-              }}
-            >
-              {ZODIAC_SYMBOLS[zodiacSign] || "✦"}
-            </div>
-            <div>
-              <h3 className="text-gold font-heading text-2xl font-semibold tracking-wide">
-                {t.daily_horoscope_title}
-              </h3>
-              <p className="text-foreground/40 text-base font-body">{formattedDate}</p>
-            </div>
+        {/* Header — centered layout */}
+        <div className="px-5 pt-5 pb-3 flex flex-col items-center text-center">
+          <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl mb-3"
+            style={{
+              background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))",
+              border: "1px solid hsl(var(--gold) / 0.2)",
+            }}
+          >
+            {ZODIAC_SYMBOLS[zodiacSign] || "✦"}
           </div>
-          <Sparkles className="w-5 h-5 text-gold/30" />
+          <h3 className="text-gold font-heading text-2xl font-semibold tracking-wide">
+            {t.daily_horoscope_title}
+          </h3>
+          <p className="text-foreground/40 text-base font-body mt-1">{formattedDate}</p>
         </div>
 
         {/* Content */}
