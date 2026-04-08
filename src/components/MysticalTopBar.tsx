@@ -359,12 +359,12 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             {whatsappBtn}
           </nav>
 
-          {/* Center: logo */}
-          <div className="flex-shrink-0 pointer-events-none select-none">
+          {/* Center: logo + subtitle */}
+          <div className="flex-shrink-0 pointer-events-none select-none flex flex-col items-center">
             <motion.h1
               className="font-heading uppercase"
               style={{
-                fontSize: "clamp(22px, 4.8vw, 94px)",
+                fontSize: "clamp(20px, 4.2vw, 82px)",
                 fontWeight: 700,
                 letterSpacing: "clamp(0.08em, 1vw, 0.5em)",
                 lineHeight: 1,
@@ -382,6 +382,21 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             >
               ASTROLOGAI
             </motion.h1>
+            <p
+              className="font-body text-center"
+              style={{
+                fontSize: "clamp(11px, 1.2vw, 16px)",
+                fontWeight: 500,
+                color: "hsl(40 30% 78% / 0.92)",
+                letterSpacing: "0.03em",
+                lineHeight: 1.4,
+                marginTop: 4,
+                direction: "rtl",
+                textShadow: "0 0 14px hsl(40 25% 70% / 0.18), 0 0 28px hsl(40 20% 60% / 0.08)",
+              }}
+            >
+              תובנות שמחברות בין הכוכבים לחיים שלכם
+            </p>
           </div>
 
           {/* Right side: navigation/settings */}
