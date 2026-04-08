@@ -916,8 +916,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               ) : cards ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
-                  {/* Subtle readability vignette */}
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 40%, hsl(222 47% 5% / 0.55) 0%, transparent 75%)" }} />
+                  {/* Strong dark overlay for text readability */}
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "hsl(222 47% 4% / 0.88)" }} />
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 70% at 50% 40%, hsl(222 47% 5% / 0.6) 0%, transparent 75%)" }} />
                   {/* Header */}
                   <div className="text-center mb-6 relative z-10 pt-10">
                     <motion.p className="text-gold/50 font-body text-xs mb-2" style={{ textShadow: "0 2px 8px hsl(222 47% 5% / 0.8)" }} initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{SPREAD_LABELS[selectedSpread.key]}</motion.p>
@@ -959,8 +960,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1 }}
-                    className="rounded-2xl p-6 md:p-8 mt-6 backdrop-blur-sm relative z-10"
-                    style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)", boxShadow: "0 0 40px hsl(var(--deep-blue) / 0.3)" }}
+                    className="rounded-2xl p-6 md:p-8 mt-6 backdrop-blur-md relative z-10"
+                    style={{
+                      background: "linear-gradient(165deg, hsl(222 35% 10% / 0.95), hsl(222 45% 6% / 0.98))",
+                      border: "1px solid hsl(var(--gold) / 0.12)",
+                      boxShadow: "0 0 50px hsl(222 47% 3% / 0.6), 0 4px 24px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.05)",
+                    }}
                   >
                     <div className="flex items-center justify-center gap-3 mb-6">
                       <Layers className="w-5 h-5 text-gold" />
@@ -990,7 +995,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     {aiText && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                         <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                        {renderMysticalText(aiText, textSize)}
+                        <div style={{ lineHeight: 2.1, letterSpacing: "0.01em" }}>
+                          {renderMysticalText(aiText, textSize)}
+                        </div>
                       </motion.div>
                     )}
                   </motion.div>
@@ -999,7 +1006,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                   {/* Premium CTA */}
                   <div className="section-divider max-w-[200px] mx-auto my-8" />
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-10 backdrop-blur-sm relative z-10" style={{ background: "hsl(var(--deep-blue) / 0.35)", border: "1px solid hsl(var(--gold) / 0.08)" }}>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-10 backdrop-blur-md relative z-10" style={{ background: "linear-gradient(165deg, hsl(222 35% 10% / 0.95), hsl(222 45% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.12)", boxShadow: "0 4px 24px hsl(0 0% 0% / 0.4)" }}>
                     <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
                     <h4 className="font-heading text-2xl text-gold mb-4">{t.tarot_premium_title}</h4>
                     <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
