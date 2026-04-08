@@ -14,6 +14,7 @@ const Index = () => {
   const t = useT();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
+  const [cosmicGuideOpen, setCosmicGuideOpen] = useState(false);
   const [hasHistory, setHasHistory] = useState(false);
 
   useEffect(() => {
