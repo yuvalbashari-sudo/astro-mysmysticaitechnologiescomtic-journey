@@ -193,13 +193,18 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
   const [question, setQuestion] = useState("");
   const [userName, setUserName] = useState("");
   const [validationMsg, setValidationMsg] = useState("");
+  const [showFallback, setShowFallback] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const placeholdersBySpread = PLACEHOLDERS[language];
   const placeholders = placeholdersBySpread[spreadType] || placeholdersBySpread["timeline"];
   const spreadIcon = SPREAD_ICONS[spreadType] || "🔮";
+
+  // All predefined questions across all spreads for the current language
+  const allPredefined = Object.values(placeholdersBySpread).flat();
 
   // Rotate placeholder
   useEffect(() => {
@@ -209,12 +214,30 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
     return () => clearInterval(interval);
   }, [placeholders.length]);
 
+  const handleSelectQuestion = (q: string) => {
+    setQuestion(q);
+    setShowFallback(false);
+    setValidationMsg("");
+  };
+
   const handleSubmit = () => {
-    if (question.trim().length > 0 && question.trim().length < 5) {
+    const trimmed = question.trim();
+    if (trimmed.length > 0 && trimmed.length < 5) {
       setValidationMsg(copy.validation);
       return;
     }
+    // Check if question matches any predefined question
+    if (trimmed.length > 0 && !allPredefined.includes(trimmed)) {
+      setShowFallback(true);
+      setValidationMsg("");
+      // Scroll to suggestion chips
+      setTimeout(() => {
+        suggestionsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
+      return;
+    }
     setValidationMsg("");
+    setShowFallback(false);
     if (userName.trim()) {
       mysticalProfile.recordUserName(userName.trim());
     }
