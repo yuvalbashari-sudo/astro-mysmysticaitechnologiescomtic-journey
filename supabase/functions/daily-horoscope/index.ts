@@ -49,12 +49,31 @@ serve(async (req) => {
       ? (isMale ? "القارئ ذكر — استخدم صيغة المذكر." : isFemale ? "القارئة أنثى — استخدم صيغة المؤنث." : "")
       : "";
 
-    const nameInstruction = userName
-      ? (lang === "he" ? `שם הקורא/ת: ${userName}. השתמש בשם בפתיחה ובנקודות רגשיות — אל תשתמש יותר מדי.`
-        : lang === "en" ? `Reader's name: ${userName}. Use the name naturally at the opening and emotional moments.`
-        : lang === "ru" ? `Имя читателя: ${userName}. Используйте имя в начале и в эмоциональных моментах.`
-        : `اسم القارئ: ${userName}. استخدم الاسم في البداية وفي اللحظات العاطفية.`)
-      : "";
+    // Detect if the name's script matches the target language
+    const isHebrew = (s: string) => /[\u0590-\u05FF]/.test(s);
+    const isArabic = (s: string) => /[\u0600-\u06FF]/.test(s);
+    const isCyrillic = (s: string) => /[\u0400-\u04FF]/.test(s);
+    const isLatin = (s: string) => /^[A-Za-z\s\-']+$/.test(s);
+
+    let safeName = userName || "";
+    if (safeName) {
+      const scriptOk =
+        (lang === "he" && (isHebrew(safeName) || isLatin(safeName))) ||
+        (lang === "ar" && (isArabic(safeName) || isLatin(safeName))) ||
+        (lang === "ru" && (isCyrillic(safeName) || isLatin(safeName))) ||
+        (lang === "en" && isLatin(safeName));
+      if (!scriptOk) safeName = ""; // omit name if script doesn't match
+    }
+
+    const nameInstruction = safeName
+      ? (lang === "he" ? `שם הקורא/ת: ${safeName}. השתמש בשם בפתיחה ובנקודות רגשיות — אל תשתמש יותר מדי.`
+        : lang === "en" ? `Reader's name: ${safeName}. Use the name naturally at the opening and emotional moments.`
+        : lang === "ru" ? `Имя читателя: ${safeName}. Используйте имя в начале и в эмоциональных моментах.`
+        : `اسم القارئ: ${safeName}. استخدم الاسم في البداية وفي اللحظات العاطفية.`)
+      : (lang === "he" ? "אין שם — השתמש בפנייה כללית חמה."
+        : lang === "en" ? "No name available — use a warm generic greeting instead."
+        : lang === "ru" ? "Имя недоступно — используйте тёплое общее приветствие."
+        : "الاسم غير متاح — استخدم تحية عامة دافئة.");
 
     const systemPrompt = `You are a premium mystical astrologer generating a personalized daily horoscope.
 ${tone}
