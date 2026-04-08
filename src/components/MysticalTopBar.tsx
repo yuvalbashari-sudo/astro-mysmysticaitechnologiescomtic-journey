@@ -364,9 +364,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             <motion.h1
               className="font-heading uppercase"
               style={{
-                fontSize: "clamp(20px, 4.2vw, 82px)",
+                fontSize: isTablet ? "clamp(38px, 5.5vw, 56px)" : "clamp(20px, 4.2vw, 82px)",
                 fontWeight: 700,
-                letterSpacing: "clamp(0.08em, 1vw, 0.5em)",
+                letterSpacing: isTablet ? "clamp(0.12em, 1.2vw, 0.35em)" : "clamp(0.08em, 1vw, 0.5em)",
                 lineHeight: 1,
                 color: "hsl(var(--gold))",
                 background:
@@ -385,7 +385,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             <p
               className="font-body text-center"
               style={{
-                fontSize: "clamp(22px, 2.4vw, 32px)",
+                fontSize: isTablet ? "clamp(14px, 1.8vw, 20px)" : "clamp(22px, 2.4vw, 32px)",
                 fontWeight: 500,
                 color: "hsl(40 30% 78% / 0.92)",
                 letterSpacing: "0.03em",
