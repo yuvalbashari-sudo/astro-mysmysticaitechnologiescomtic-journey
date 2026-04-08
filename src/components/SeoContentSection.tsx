@@ -16,7 +16,6 @@ const SeoContentSection = () => {
       mainDesc: "ASTROLOGAI הוא פלטפורמת האסטרולוגיה והמיסטיקה המתקדמת בישראל, המשלבת בינה מלאכותית עם מסורות רוחניות עתיקות. קבלו קריאת טארוט מותאמת אישית, קריאת כף יד מבוססת AI, בדיקת התאמה זוגית לפי מזלות, מפת לידה מפורטת והורוסקופ חודשי — הכל בחוויה אחת אלגנטית ומרהיבה.",
       services: [
         { icon: Eye, title: "קריאת טארוט אונליין", desc: "שאלו שאלה וקבלו פריסת טארוט אישית עם פירוש מעמיק של כל קלף.", link: "/tarot-gallery", linkText: "צפו בכל קלפי הטארוט →" },
-        { icon: Hand, title: "קריאת כף יד בינה מלאכותית", desc: "העלו תמונות של כפות הידיים ומערכת ה-AI שלנו תנתח את קווי החיים, הלב, הגורל, השמש והאינטואיציה.", link: null, linkText: null },
         { icon: Heart, title: "בדיקת התאמה זוגית לפי מזלות", desc: "גלו את הכימיה הקוסמית בינכם לבין בן או בת הזוג.", link: "/zodiac/aries", linkText: "גלו את המזל שלכם →" },
         { icon: Sun, title: "מפת לידה והורוסקופ חודשי", desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית — בחינם.", link: null, linkText: null },
       ],
@@ -28,7 +27,6 @@ const SeoContentSection = () => {
       mainDesc: "ASTROLOGAI is the leading AI-powered astrology and mystical guidance platform. Get a personalized tarot reading, AI palm reading analysis, zodiac compatibility test, detailed birth chart, and monthly horoscope — all in one elegant, premium experience.",
       services: [
         { icon: Eye, title: "Online Tarot Reading", desc: "Ask a question and receive a personalized tarot spread with deep interpretation of each card.", link: "/tarot-gallery", linkText: "Browse all Tarot Cards →" },
-        { icon: Hand, title: "AI Palm Reading Online", desc: "Upload photos of your palms and our AI system will analyze your life line, heart line, fate line, and more.", link: null, linkText: null },
         { icon: Heart, title: "Zodiac Compatibility Test", desc: "Discover the cosmic chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your Zodiac Sign →" },
         { icon: Sun, title: "Birth Chart & Monthly Horoscope", desc: "Enter your birth date and time to receive a personalized birth chart — completely free.", link: null, linkText: null },
       ],
@@ -40,7 +38,6 @@ const SeoContentSection = () => {
       mainDesc: "ASTROLOGAI — ведущая AI-платформа астрологии и мистического руководства. Персональное чтение Таро, анализ ладони, тест совместимости знаков зодиака, натальная карта и ежемесячный гороскоп — всё в одном элегантном опыте.",
       services: [
         { icon: Eye, title: "Онлайн чтение Таро", desc: "Задайте вопрос и получите персональный расклад Таро с глубокой интерпретацией каждой карты.", link: "/tarot-gallery", linkText: "Все карты Таро →" },
-        { icon: Hand, title: "AI чтение ладони", desc: "Загрузите фото ладоней и наша AI-система проанализирует линии жизни, сердца и судьбы.", link: null, linkText: null },
         { icon: Heart, title: "Тест совместимости знаков", desc: "Откройте космическую химию между вами и вашим партнёром по всем 12 знакам зодиака.", link: "/zodiac/aries", linkText: "Узнайте свой знак →" },
         { icon: Sun, title: "Натальная карта и гороскоп", desc: "Введите дату и время рождения для персональной натальной карты — совершенно бесплатно.", link: null, linkText: null },
       ],
@@ -52,7 +49,6 @@ const SeoContentSection = () => {
       mainDesc: "ASTROLOGAI هي منصة الفلك والإرشاد الروحي الرائدة المدعومة بالذكاء الاصطناعي. احصلوا على قراءة تاروت شخصية، تحليل كف اليد، اختبار توافق الأبراج، خريطة ميلاد مفصلة وتوقعات شهرية — كل ذلك في تجربة واحدة أنيقة.",
       services: [
         { icon: Eye, title: "قراءة تاروت أونلاين", desc: "اطرح سؤالاً واحصل على توزيع تاروت شخصي مع تفسير عميق لكل بطاقة.", link: "/tarot-gallery", linkText: "تصفح جميع بطاقات التاروت →" },
-        { icon: Hand, title: "قراءة كف اليد بالذكاء الاصطناعي", desc: "ارفع صور كفيك وسيقوم نظام الذكاء الاصطناعي بتحليل خطوط الحياة والقلب والمصير.", link: null, linkText: null },
         { icon: Heart, title: "اختبار توافق الأبراج", desc: "اكتشفوا الكيمياء الكونية بينكم وبين شريككم عبر جميع الأبراج الـ12.", link: "/zodiac/aries", linkText: "اكتشف برجك →" },
         { icon: Sun, title: "خريطة ميلاد وتوقعات شهرية", desc: "أدخل تاريخ ووقت ميلادك للحصول على خريطة ميلاد شخصية — مجانًا.", link: null, linkText: null },
       ],
@@ -201,120 +197,6 @@ const SeoContentSection = () => {
           </ul>
         </motion.div>
 
-        {/* Knowledge gateway cards */}
-        <div className="mt-10 md:mt-12 relative z-10">
-          <p className="font-body text-xs text-foreground/30 mb-6 text-center">
-            {l({ he: "גלו עוד:", en: "Explore more:", ru: "Узнайте больше:", ar: "اكتشفوا المزيد:" })}
-          </p>
-
-          <div className="flex flex-col gap-6 md:gap-8">
-            {/* ── Tarot Knowledge World ── */}
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-              {/* Primary: Guides */}
-              <Link
-                to="/tarot-guides"
-                className="group flex-[2] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.015]"
-                style={{
-                  background: "linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 10, 20, 0.85) 55%, rgba(255, 215, 0, 0.04) 100%)",
-                  border: "1px solid hsl(var(--gold) / 0.25)",
-                  boxShadow: "0 0 36px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 0 60px rgba(255, 215, 0, 0.04)",
-                }}
-              >
-                <div className="flex flex-col items-center text-center gap-3">
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-1"
-                    style={{
-                      background: "radial-gradient(circle, rgba(255, 215, 0, 0.14) 0%, transparent 70%)",
-                      border: "1px solid hsl(var(--gold) / 0.25)",
-                      boxShadow: "0 0 24px rgba(255, 215, 0, 0.1)",
-                    }}
-                  >
-                    <Eye className="w-8 h-8 text-gold" />
-                  </div>
-                  <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {l({ he: "מדריכי טארוט", en: "Tarot Guides", ru: "Руководства по Таро", ar: "أدلة التاروت" })}
-                  </h4>
-                  <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
-                    {l({ he: "לימוד פתיחות, פירושי קלפים והכוונה למתחילים", en: "Learn spreads, card interpretations & beginner guidance", ru: "Расклады, интерпретации карт и руководство для начинающих", ar: "تعلّم التوزيعات وتفسيرات البطاقات وإرشاد المبتدئين" })}
-                  </p>
-                </div>
-              </Link>
-
-              {/* Secondary: Library */}
-              <Link
-                to="/tarot-gallery"
-                className="group flex-1 rounded-2xl p-5 md:p-6 transition-all duration-300 hover:scale-[1.015] flex items-center justify-center"
-                style={{
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid hsl(var(--gold) / 0.12)",
-                }}
-              >
-                <div className="flex flex-col items-center text-center gap-2">
-                  <Eye className="w-5 h-5 text-gold/50 mb-1" />
-                  <h4 className="font-heading text-base text-gold/80">
-                    {l({ he: "ספריית קלפים", en: "Card Library", ru: "Библиотека карт", ar: "مكتبة البطاقات" })}
-                  </h4>
-                  <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
-                    {l({ he: "עיינו בכל קלפי הטארוט והמשמעויות שלהם", en: "Browse all tarot cards and their meanings", ru: "Просмотрите все карты Таро и их значения", ar: "تصفح جميع بطاقات التاروت ومعانيها" })}
-                  </p>
-                </div>
-              </Link>
-            </div>
-
-            {/* ── Astrology Knowledge World ── */}
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-              {/* Primary: Guides */}
-              <Link
-                to="/astrology-guides"
-                className="group flex-[2] rounded-2xl p-6 md:p-8 transition-all duration-300 hover:scale-[1.015]"
-                style={{
-                  background: "linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(10, 10, 20, 0.85) 55%, rgba(255, 215, 0, 0.04) 100%)",
-                  border: "1px solid hsl(var(--gold) / 0.25)",
-                  boxShadow: "0 0 36px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 0 60px rgba(255, 215, 0, 0.04)",
-                }}
-              >
-                <div className="flex flex-col items-center text-center gap-3">
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mb-1"
-                    style={{
-                      background: "radial-gradient(circle, rgba(255, 215, 0, 0.14) 0%, transparent 70%)",
-                      border: "1px solid hsl(var(--gold) / 0.25)",
-                      boxShadow: "0 0 24px rgba(255, 215, 0, 0.1)",
-                    }}
-                  >
-                    <Sun className="w-8 h-8 text-gold" />
-                  </div>
-                  <h4 className="font-heading text-xl md:text-2xl text-gold tracking-wide">
-                    {l({ he: "מדריכי אסטרולוגיה", en: "Astrology Guides", ru: "Руководства по астрологии", ar: "أدلة الفلك" })}
-                  </h4>
-                  <p className="font-body text-sm text-foreground/60 leading-relaxed max-w-[300px]">
-                    {l({ he: "מפת לידה, שמש, ירח, אופק והבנת המפה האישית", en: "Birth chart, sun, moon, rising & personal chart understanding", ru: "Натальная карта, Солнце, Луна, асцендент и понимание вашей карты", ar: "خريطة الميلاد والشمس والقمر والطالع وفهم خريطتك الشخصية" })}
-                  </p>
-                </div>
-              </Link>
-
-              {/* Secondary: Library */}
-              <Link
-                to="/zodiac/aries"
-                className="group flex-1 rounded-2xl p-5 md:p-6 transition-all duration-300 hover:scale-[1.015] flex items-center justify-center"
-                style={{
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid hsl(var(--gold) / 0.12)",
-                }}
-              >
-                <div className="flex flex-col items-center text-center gap-2">
-                  <Sun className="w-5 h-5 text-gold/50 mb-1" />
-                  <h4 className="font-heading text-base text-gold/80">
-                    {l({ he: "ספריית מזלות", en: "Zodiac Library", ru: "Библиотека знаков", ar: "مكتبة الأبراج" })}
-                  </h4>
-                  <p className="font-body text-xs text-foreground/40 leading-relaxed max-w-[220px]">
-                    {l({ he: "גלו את פירושי המזלות והמאפיינים שלהם", en: "Explore zodiac sign meanings and traits", ru: "Изучите значения знаков зодиака и их черты", ar: "اكتشفوا معاني الأبراج وسماتها" })}
-                  </p>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
       </motion.div>
     </section>
   );
