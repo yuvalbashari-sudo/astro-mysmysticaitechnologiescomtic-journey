@@ -503,6 +503,77 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         )}
       </AnimatePresence>
 
+      {/* Fallback message + guided question chips */}
+      <AnimatePresence>
+        {showFallback && (
+          <motion.div
+            ref={suggestionsRef}
+            className="relative z-10 max-w-md mx-auto mb-5"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4 }}
+          >
+            {/* Fallback message */}
+            <motion.div
+              className="px-5 py-3.5 rounded-2xl text-center mb-4"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.03))",
+                border: "1px solid hsl(var(--gold) / 0.15)",
+                boxShadow: "0 0 20px hsl(var(--gold) / 0.05)",
+              }}
+              animate={{
+                boxShadow: [
+                  "0 0 20px hsl(43 80% 55% / 0.05)",
+                  "0 0 30px hsl(43 80% 55% / 0.1)",
+                  "0 0 20px hsl(43 80% 55% / 0.05)",
+                ],
+              }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+            >
+              <p className="text-gold/80 font-body text-[13px] leading-relaxed" dir={dir}>
+                {copy.freeTextFallback}
+              </p>
+            </motion.div>
+
+            {/* Guided question hint */}
+            <p className="text-[11px] text-gold/40 font-body mb-3 text-center" dir={dir}>
+              {copy.selectHint}
+            </p>
+
+            {/* Clickable question chips */}
+            <div className="flex flex-col gap-2">
+              {placeholders.map((q, i) => (
+                <motion.button
+                  key={i}
+                  onClick={() => handleSelectQuestion(q)}
+                  className="w-full text-start px-4 py-3 rounded-xl font-body text-[12px] leading-relaxed transition-all duration-300"
+                  style={{
+                    background: question === q
+                      ? "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))"
+                      : "hsl(var(--gold) / 0.03)",
+                    border: `1px solid hsl(var(--gold) / ${question === q ? "0.25" : "0.08"})`,
+                    color: question === q ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                  }}
+                  dir={dir}
+                  initial={{ opacity: 0, x: dir === "rtl" ? 10 : -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.08 }}
+                  whileHover={{
+                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
+                    borderColor: "hsl(var(--gold) / 0.2)",
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="opacity-60 mr-2">✦</span>
+                  {q}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* CTA Button */}
       <motion.button
         onClick={handleSubmit}
