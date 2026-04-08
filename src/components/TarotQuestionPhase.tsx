@@ -138,42 +138,52 @@ const UI_COPY: Record<Language, {
   continueCta: string;
   skipCta: string;
   validation: string;
+  freeTextFallback: string;
+  selectHint: string;
 }> = {
   he: {
     title: "לפני שהקלפים נפתחים",
-    description: "הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה. כתבו את השאלה, ההתלבטות או התחום שמעסיק אתכם כעת.",
+    description: "הקלפים מגיבים טוב יותר כאשר יש כוונה ברורה. בחרו אחת מהשאלות המומלצות או נסחו שאלה משלכם.",
     questionLabel: "מה השאלה שלכם?",
     guidance: "ככל שהשאלה תהיה ברורה ואישית יותר, כך הקריאה תהיה מדויקת יותר.",
     continueCta: "המשיכו לפתיחת הקלפים",
     skipCta: "דלגו והמשיכו ללא שאלה",
     validation: "כדי שהקלפים יוכלו להעניק מסר מדויק יותר, נסחו שאלה מעט מפורטת יותר.",
+    freeTextFallback: "כדי לקבל תובנות מדויקות, בחרו אחת מהשאלות המומלצות ✨",
+    selectHint: "בחרו שאלה:",
   },
   en: {
     title: "Before the cards are revealed",
-    description: "Cards respond better when your intention is clear. Write your question, dilemma, or the area that currently occupies your mind.",
+    description: "Cards respond better when your intention is clear. Choose one of the guided questions or write your own.",
     questionLabel: "What is your question?",
     guidance: "The clearer and more personal your question is, the more accurate the reading will be.",
     continueCta: "Continue to reveal the cards",
     skipCta: "Skip and continue without a question",
     validation: "For a more precise message, please write a slightly more detailed question.",
+    freeTextFallback: "To receive accurate insights, please select one of the guided questions ✨",
+    selectHint: "Choose a question:",
   },
   ru: {
     title: "Перед открытием карт",
-    description: "Карты лучше откликаются на чёткое намерение. Напишите вопрос, сомнение или тему, которая волнует вас сейчас.",
+    description: "Карты лучше откликаются на чёткое намерение. Выберите один из рекомендованных вопросов или напишите свой.",
     questionLabel: "Какой у вас вопрос?",
     guidance: "Чем яснее и личнее вопрос, тем точнее будет чтение.",
     continueCta: "Продолжить к открытию карт",
     skipCta: "Пропустить и продолжить без вопроса",
     validation: "Чтобы получить более точное послание, сформулируйте вопрос чуть подробнее.",
+    freeTextFallback: "Для точных предсказаний выберите один из рекомендованных вопросов ✨",
+    selectHint: "Выберите вопрос:",
   },
   ar: {
     title: "قبل أن تنكشف البطاقات",
-    description: "تستجيب البطاقات بشكل أفضل عندما تكون نيتك واضحة. اكتب سؤالك أو حيرتك أو المجال الذي يشغلك الآن.",
+    description: "تستجيب البطاقات بشكل أفضل عندما تكون نيتك واضحة. اختر أحد الأسئلة الموجّهة أو اكتب سؤالك الخاص.",
     questionLabel: "ما سؤالك؟",
     guidance: "كلما كان السؤال أوضح وأكثر شخصية، كانت القراءة أدق.",
     continueCta: "تابع لكشف البطاقات",
-    skipCta: "تخطَّ وتابع بدون سؤال",
+    skipCta: "تخطَّ وتابع بدون سؤال",
     validation: "للحصول على رسالة أدق، يُرجى صياغة سؤال أكثر تفصيلاً قليلاً.",
+    freeTextFallback: "للحصول على رؤى دقيقة، يرجى اختيار أحد الأسئلة الموجّهة ✨",
+    selectHint: "اختر سؤالاً:",
   },
 };
 
@@ -183,13 +193,18 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
   const [question, setQuestion] = useState("");
   const [userName, setUserName] = useState("");
   const [validationMsg, setValidationMsg] = useState("");
+  const [showFallback, setShowFallback] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const placeholdersBySpread = PLACEHOLDERS[language];
   const placeholders = placeholdersBySpread[spreadType] || placeholdersBySpread["timeline"];
   const spreadIcon = SPREAD_ICONS[spreadType] || "🔮";
+
+  // All predefined questions across all spreads for the current language
+  const allPredefined = Object.values(placeholdersBySpread).flat();
 
   // Rotate placeholder
   useEffect(() => {
@@ -199,12 +214,30 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
     return () => clearInterval(interval);
   }, [placeholders.length]);
 
+  const handleSelectQuestion = (q: string) => {
+    setQuestion(q);
+    setShowFallback(false);
+    setValidationMsg("");
+  };
+
   const handleSubmit = () => {
-    if (question.trim().length > 0 && question.trim().length < 5) {
+    const trimmed = question.trim();
+    if (trimmed.length > 0 && trimmed.length < 5) {
       setValidationMsg(copy.validation);
       return;
     }
+    // Check if question matches any predefined question
+    if (trimmed.length > 0 && !allPredefined.includes(trimmed)) {
+      setShowFallback(true);
+      setValidationMsg("");
+      // Scroll to suggestion chips
+      setTimeout(() => {
+        suggestionsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 200);
+      return;
+    }
     setValidationMsg("");
+    setShowFallback(false);
     if (userName.trim()) {
       mysticalProfile.recordUserName(userName.trim());
     }
@@ -413,6 +446,7 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             onChange={(e) => {
               setQuestion(e.target.value);
               if (validationMsg) setValidationMsg("");
+              if (showFallback) setShowFallback(false);
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -466,6 +500,77 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
             <p className="text-foreground/50 font-body text-[11px] leading-relaxed" dir={dir}>
               {validationMsg}
             </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fallback message + guided question chips */}
+      <AnimatePresence>
+        {showFallback && (
+          <motion.div
+            ref={suggestionsRef}
+            className="relative z-10 max-w-md mx-auto mb-5"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.4 }}
+          >
+            {/* Fallback message */}
+            <motion.div
+              className="px-5 py-3.5 rounded-2xl text-center mb-4"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.03))",
+                border: "1px solid hsl(var(--gold) / 0.15)",
+                boxShadow: "0 0 20px hsl(var(--gold) / 0.05)",
+              }}
+              animate={{
+                boxShadow: [
+                  "0 0 20px hsl(43 80% 55% / 0.05)",
+                  "0 0 30px hsl(43 80% 55% / 0.1)",
+                  "0 0 20px hsl(43 80% 55% / 0.05)",
+                ],
+              }}
+              transition={{ duration: 2.5, repeat: Infinity }}
+            >
+              <p className="text-gold/80 font-body text-[13px] leading-relaxed" dir={dir}>
+                {copy.freeTextFallback}
+              </p>
+            </motion.div>
+
+            {/* Guided question hint */}
+            <p className="text-[11px] text-gold/40 font-body mb-3 text-center" dir={dir}>
+              {copy.selectHint}
+            </p>
+
+            {/* Clickable question chips */}
+            <div className="flex flex-col gap-2">
+              {placeholders.map((q, i) => (
+                <motion.button
+                  key={i}
+                  onClick={() => handleSelectQuestion(q)}
+                  className="w-full text-start px-4 py-3 rounded-xl font-body text-[12px] leading-relaxed transition-all duration-300"
+                  style={{
+                    background: question === q
+                      ? "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))"
+                      : "hsl(var(--gold) / 0.03)",
+                    border: `1px solid hsl(var(--gold) / ${question === q ? "0.25" : "0.08"})`,
+                    color: question === q ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
+                  }}
+                  dir={dir}
+                  initial={{ opacity: 0, x: dir === "rtl" ? 10 : -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.08 }}
+                  whileHover={{
+                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
+                    borderColor: "hsl(var(--gold) / 0.2)",
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span className="opacity-60 mr-2">✦</span>
+                  {q}
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
