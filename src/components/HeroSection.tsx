@@ -3588,11 +3588,12 @@ const HeroSection = () => {
               transition={{ delay: 2.0, duration: 0.7, ease: "easeOut" }}
             >
               <div
-                className="relative rounded-2xl backdrop-blur-xl overflow-hidden"
+                className="relative rounded-2xl overflow-hidden"
                 style={{
-                  background: "linear-gradient(145deg, hsl(var(--deep-blue) / 0.6), hsl(var(--deep-blue) / 0.4))",
-                  border: "1px solid hsl(var(--gold) / 0.18)",
-                  boxShadow: "0 0 20px hsl(var(--gold) / 0.06), 0 8px 28px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                  background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.95), hsl(var(--deep-blue) / 0.92))",
+                  border: "1px solid hsl(var(--gold) / 0.25)",
+                  boxShadow: "0 0 24px hsl(var(--gold) / 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.7), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                  backdropFilter: "blur(20px)",
                   padding: "14px 16px",
                 }}
               >
