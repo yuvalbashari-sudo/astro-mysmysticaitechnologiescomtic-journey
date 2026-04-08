@@ -3218,7 +3218,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
         <>
           {/* Left column */}
           <motion.div
-            className="absolute pointer-events-auto flex flex-col gap-[14px]"
+            className={`absolute pointer-events-auto flex flex-col ${isTablet ? "gap-[10px]" : "gap-[14px]"}`}
             style={{ left: "max(16px, 1.5vw)", top: isTablet ? "160px" : "120px" }}
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -3376,7 +3376,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
           {/* Right column */}
           <motion.div
-            className="absolute pointer-events-auto flex flex-col gap-[14px]"
+            className={`absolute pointer-events-auto flex flex-col ${isTablet ? "gap-[10px]" : "gap-[14px]"}`}
             style={{ right: "max(16px, 1.5vw)", top: isTablet ? "160px" : "120px" }}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
