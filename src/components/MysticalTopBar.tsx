@@ -149,7 +149,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     <div className="relative" ref={guideRef}>
       <motion.button
         onClick={() => setGuideOpen(!guideOpen)}
-        className="flex items-center gap-2 rounded-full px-4 py-2.5 backdrop-blur-md transition-all"
+        className={`flex items-center ${isTablet ? "justify-center rounded-full w-10 h-10" : "gap-2 rounded-full px-4 py-2.5"} backdrop-blur-md transition-all`}
         style={{
           background: "hsl(var(--deep-blue-light) / 0.6)",
           border: "1px solid hsl(var(--gold) / 0.18)",
@@ -161,9 +161,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
         aria-expanded={guideOpen}
       >
         <BookOpen className="w-5 h-5 shrink-0" aria-hidden="true" />
-        <span className="font-body text-[14px] font-semibold tracking-wide whitespace-nowrap" style={{ color: "hsl(var(--gold) / 0.85)" }}>
-          {guideLabelText}
-        </span>
+        {!isTablet && (
+          <span className="font-body text-[14px] font-semibold tracking-wide whitespace-nowrap" style={{ color: "hsl(var(--gold) / 0.85)" }}>
+            {guideLabelText}
+          </span>
+        )}
       </motion.button>
       <AnimatePresence>
         {guideOpen && (
