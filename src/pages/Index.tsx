@@ -36,6 +36,7 @@ const Index = () => {
         <MysticalTopBar
           onOpenHistory={() => setHistoryOpen(true)}
           onOpenDashboard={() => setDashboardOpen(true)}
+          onOpenCosmicGuide={() => setCosmicGuideOpen(true)}
           hasHistory={hasHistory}
         />
         <div className="md:hidden pointer-events-none">
