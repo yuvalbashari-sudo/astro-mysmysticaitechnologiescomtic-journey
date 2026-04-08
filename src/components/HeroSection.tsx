@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Eye, Hand, Sun } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -16,6 +16,7 @@ import BirthChartModal from "./BirthChartModal";
 import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
+import DailyHoroscopeModal from "./DailyHoroscopeModal";
 import RemainingReadingsBadge from "./RemainingReadingsBadge";
 import { useT, useLanguage } from "@/i18n";
 import { useCardName } from "@/hooks/useCardName";
@@ -83,6 +84,7 @@ const ITEM_COLORS = [
   { glow: "hsl(340, 70%, 60%)", bg: "hsl(340, 70%, 60%)", label: "pink" },       // Compatibility - pink
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
+  { glow: "hsl(35, 85%, 55%)", bg: "hsl(35, 85%, 55%)", label: "amber" },        // Daily Horoscope - amber
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
@@ -2263,6 +2265,7 @@ const HeroSection = () => {
   const [palmOpen, setPalmOpen] = useState(false);
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
+  const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
@@ -2284,6 +2287,7 @@ const HeroSection = () => {
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Star, label: t.hero_menu_fullchart, side: "right" as const, index: 1 },
+    { icon: Sun, label: t.hero_menu_daily_horoscope, side: "right" as const, index: 2 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
@@ -3150,7 +3154,7 @@ const HeroSection = () => {
         >
         <div className="flex gap-2.5">
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
-            {[[1, 0], [2, 3]].map((colIndices, colIdx) => (
+            {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-1 flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
@@ -3160,6 +3164,7 @@ const HeroSection = () => {
                     1: { neon: "rgba(0, 150, 255, 0.85)", neonLight: "rgba(0, 150, 255, 0.5)", iconColor: "rgba(0, 170, 255, 0.85)" },
                     2: { neon: "rgba(220, 50, 50, 0.85)", neonLight: "rgba(220, 50, 50, 0.5)", iconColor: "rgba(255, 80, 80, 0.85)" },
                     3: { neon: ITEM_COLORS[3].glow, neonLight: ITEM_COLORS[3].glow, iconColor: ITEM_COLORS[3].glow },
+                    4: { neon: ITEM_COLORS[4].glow, neonLight: ITEM_COLORS[4].glow, iconColor: ITEM_COLORS[4].glow },
                   };
                   const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
@@ -3178,7 +3183,7 @@ const HeroSection = () => {
                       onFocus={() => setHoveredItem(i)}
                       onBlur={() => setHoveredItem(null)}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); if (i === 4) setDailyHoroscopeOpen(true); }}
                       aria-label={item.label}
                     >
                       <div
@@ -3579,6 +3584,76 @@ const HeroSection = () => {
               );
             })}
 
+            {/* Daily Horoscope tab */}
+            {(() => {
+              const i = 4;
+              const item = menuItems[i];
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  key={i}
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.8 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  onFocus={() => setHoveredItem(i)}
+                  onBlur={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setDailyHoroscopeOpen(true)}
+                  aria-label={item.label}
+                >
+                  <div
+                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <item.icon
+                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
+                    <span
+                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                    >
+                      {item.label}
+                    </span>
+                    {isHovered && (
+                      <motion.div
+                        className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                        style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 0.8, scaleX: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                    {isHovered && (
+                      <motion.div
+                        className="absolute -inset-2 rounded-full pointer-events-none"
+                        style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.6, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })()}
+
 
           </motion.div>
         </>
@@ -3849,6 +3924,7 @@ const HeroSection = () => {
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
+      <DailyHoroscopeModal isOpen={dailyHoroscopeOpen} onClose={() => setDailyHoroscopeOpen(false)} />
     </>
   );
 };
