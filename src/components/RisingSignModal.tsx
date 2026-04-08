@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
+import MysticalTimeInput from "@/components/MysticalTimeInput";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
@@ -141,7 +142,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                           </div>
                           <div>
                             <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
-                            <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                            <MysticalTimeInput value={birthTime} onChange={setBirthTime} />
                           </div>
                           <div>
                             <label className="block text-sm text-gold/70 font-body mb-2 text-start">מקום לידה</label>
@@ -191,7 +192,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                       </div>
                       <div>
                         <label className="block text-sm text-gold/70 font-body mb-2 text-start"><Clock className="w-3.5 h-3.5 inline-block ms-1" />{t.rising_birthtime_label}</label>
-                        <input type="time" value={birthTime} onChange={(e) => setBirthTime(e.target.value)} className="mystical-input font-body text-center" style={{ direction: "ltr" }} />
+                        <MysticalTimeInput value={birthTime} onChange={setBirthTime} />
                       </div>
                       <div>
                         <label className="block text-sm text-gold/70 font-body mb-2 text-start">מקום לידה</label>

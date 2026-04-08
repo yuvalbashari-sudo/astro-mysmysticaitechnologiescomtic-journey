@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import MysticalNameInput from "@/components/MysticalNameInput";
 import MysticalDateInput from "@/components/MysticalDateInput";
+import MysticalTimeInput from "@/components/MysticalTimeInput";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 
 export interface BirthDetails {
@@ -31,7 +32,6 @@ interface Props {
  */
 const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCity = true, size = "default" }: Props) => {
   const t = useT();
-  const { language } = useLanguage();
   const isLarge = size === "large";
 
   const labelClass = isLarge
@@ -125,13 +125,11 @@ const BirthDetailsForm = ({ values, onChange, attempted, showTime = true, showCi
           <label className={labelClass} style={labelStyle}>
             {t.birth_chart_time_label}
           </label>
-          <input
-            type="time"
-            lang={language}
+          <MysticalTimeInput
             value={values.birthTime}
-            onChange={(e) => onChange({ birthTime: e.target.value })}
-            className="mystical-input font-body text-center w-full"
-            style={{ direction: "ltr", ...inputSizeStyle }}
+            onChange={(v) => onChange({ birthTime: v })}
+            className="w-full"
+            style={inputSizeStyle}
           />
           {attempted && !values.birthTime && (
             <p className={errorClass} style={errorStyle}>{t.forecast_birthdate_required}</p>
