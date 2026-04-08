@@ -317,8 +317,18 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
       ) : (
         /* ── DESKTOP / TABLET: original single-row layout ── */
         <div className="flex items-center justify-between w-full">
-          <div className="hidden md:flex flex-1" />
+          {/* Left side: action icons */}
+          <nav
+            className="flex flex-1 items-center gap-2 md:gap-3"
+            aria-label={t.a11y_main_navigation}
+          >
+            {dashboardBtn}
+            {fontSizeControl}
+            {a11yLink}
+            {whatsappBtn}
+          </nav>
 
+          {/* Center: logo */}
           <div className="flex-shrink-0 pointer-events-none select-none">
             <motion.h1
               className="font-heading uppercase"
@@ -343,18 +353,11 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, hasHistory }: Props) =
             </motion.h1>
           </div>
 
-          <nav
-            className="flex flex-1 items-center justify-end gap-2 md:gap-3"
-            aria-label={t.a11y_main_navigation}
-          >
-            {dashboardBtn}
-            {historyBtn}
+          {/* Right side: navigation/settings */}
+          <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
             {desktopGuideBtn}
             <MysticalLanguageDropdown />
-            {fontSizeControl}
-            {a11yLink}
-            {whatsappBtn}
-          </nav>
+          </div>
         </div>
       )}
     </motion.header>
