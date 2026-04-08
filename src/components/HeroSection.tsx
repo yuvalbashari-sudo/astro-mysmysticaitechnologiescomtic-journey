@@ -3086,7 +3086,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
         /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
           className="pointer-events-auto"
-          style={{ width: "100%", maxWidth: 390, paddingLeft: 4, paddingRight: 8, boxSizing: "border-box", direction: "ltr" }}
+          style={{ width: "100%", maxWidth: 370, paddingLeft: 12, paddingRight: 12, boxSizing: "border-box", direction: "ltr", margin: "0 auto" }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
