@@ -86,6 +86,7 @@ const DailyHoroscopeCard = () => {
   const [data, setData] = useState<HoroscopeData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [advisorOpen, setAdvisorOpen] = useState(false);
 
   const profile = mysticalProfile.getProfile();
   const birthDate = profile.birthDate;
