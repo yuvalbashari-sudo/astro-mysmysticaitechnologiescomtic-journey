@@ -3099,7 +3099,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           <p
             className="font-body text-center pointer-events-none select-none"
             style={{
-              fontSize: 15,
+              fontSize: isTablet ? 17 : 15,
               fontWeight: 600,
               color: "hsl(40 30% 78% / 0.92)",
               letterSpacing: "0.03em",
