@@ -3214,28 +3214,31 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           
         </motion.div>
       ) : isTablet ? (
-        /* ── Tablet: centered 2-column grid ── */
-        <motion.div
-          className="pointer-events-auto w-full flex justify-center"
-          style={{ paddingTop: 90, paddingLeft: 16, paddingRight: 16, boxSizing: "border-box" }}
-          initial={{ opacity: 0, y: -15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
-        >
-          <div className="grid grid-cols-2 gap-3 w-full" style={{ maxWidth: 680 }}>
-            {/* Row 1: Compatibility CTA + Tarot CTA */}
+        /* ── Tablet: desktop-like side columns, scaled down ── */
+        <>
+          {/* Left column */}
+          <motion.div
+            className="absolute pointer-events-auto flex flex-col gap-[10px]"
+            style={{ left: "8px", top: "100px" }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
+          >
             {/* Left CTA — Compatibility */}
             <motion.button
               type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-2"
               onClick={() => setCompatibilityOpen(true)}
               onMouseEnter={() => { setHoveredTeaser("left"); setHoveredItem(1); }}
               onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
+              transition={{ delay: 2.2, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <motion.div
-                className="relative rounded-2xl px-4 py-3.5 backdrop-blur-xl text-center overflow-hidden h-full"
+                className="relative rounded-2xl px-5 py-4 backdrop-blur-xl text-center overflow-hidden"
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "left"
@@ -3245,12 +3248,13 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     ? "0 0 36px rgba(0, 150, 255, 0.22), 0 0 72px rgba(0, 150, 255, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
                     : "0 0 24px rgba(0, 150, 255, 0.12), 0 0 48px rgba(0, 150, 255, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
                   transition: "border-color 0.3s ease-out, box-shadow 0.3s ease-out",
+                  maxWidth: 220,
                 }}
               >
                 <div className="flex items-center justify-center gap-2">
                   <Sparkles className="w-5 h-5 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
-                    className="text-[16px] font-heading font-bold tracking-wide leading-tight"
+                    className="text-[15px] font-heading font-bold tracking-wide leading-tight"
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35)",
@@ -3259,56 +3263,15 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
                   </div>
                 </div>
-                <div className="text-[12px] font-body mt-1.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className="text-[11px] font-body mt-1" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
                 </div>
               </motion.div>
             </motion.button>
 
-            {/* Right CTA — Tarot */}
-            <motion.button
-              type="button"
-              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
-              onClick={() => setImmersiveTarotOpen(true)}
-              onMouseEnter={() => { setHoveredTeaser("right"); setHoveredItem(4); }}
-              onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.96 }}
-            >
-              <motion.div
-                className="relative rounded-2xl px-4 py-3.5 backdrop-blur-xl text-center overflow-hidden h-full"
-                style={{
-                  background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
-                  border: hoveredTeaser === "right"
-                    ? "1px solid rgba(220, 50, 50, 0.5)"
-                    : "1px solid rgba(220, 50, 50, 0.25)",
-                  boxShadow: hoveredTeaser === "right"
-                    ? "0 0 36px rgba(220, 50, 50, 0.22), 0 0 72px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
-                    : "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
-                  transition: "border-color 0.3s ease-out, box-shadow 0.3s ease-out",
-                }}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <Eye className="w-5 h-5 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
-                  <div
-                    className="text-[16px] font-heading font-bold tracking-wide leading-tight"
-                    style={{
-                      color: "#fff",
-                      textShadow: "0 0 10px rgba(220, 50, 50, 0.65), 0 0 20px rgba(220, 50, 50, 0.35)",
-                    }}
-                  >
-                    {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
-                  </div>
-                </div>
-                <div className="text-[12px] font-body mt-1.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
-                  {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
-                </div>
-              </motion.div>
-            </motion.button>
-
-            {/* Row 2: Forecast + Astro Chart */}
-            {[0, 3].map((i) => {
-              const item = menuItems[i];
+            {/* Forecast tab */}
+            {[menuItems[0]].map((item, idx) => {
+              const i = 0;
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
               return (
@@ -3316,18 +3279,18 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   key={i}
                   type="button"
                   className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: isHovered ? 1 : 0.85, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.7 }}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.6 + idx * 0.12 }}
                   onMouseEnter={() => setHoveredItem(i)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.08, x: 4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { if (i === 0) setForecastOpen(true); if (i === 3) setBirthChartOpen(true); }}
+                  onClick={() => setForecastOpen(true)}
                   aria-label={item.label}
                 >
                   <div
-                    className="relative flex items-center justify-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-4 py-2.5"
+                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
                     style={{
                       borderWidth: "1px", borderStyle: "solid",
                       borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
@@ -3345,7 +3308,110 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       }}
                     />
                     <span
-                      className="font-body transition-colors duration-300 text-[14px] font-semibold"
+                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </motion.div>
+
+          {/* Right column */}
+          <motion.div
+            className="absolute pointer-events-auto flex flex-col gap-[10px]"
+            style={{ right: "8px", top: "100px" }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
+          >
+            {/* Right CTA — Tarot */}
+            <motion.button
+              type="button"
+              className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-2"
+              onClick={() => setImmersiveTarotOpen(true)}
+              onMouseEnter={() => { setHoveredTeaser("right"); setHoveredItem(4); }}
+              onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.96 }}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
+              transition={{ delay: 2.5, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <motion.div
+                className="relative rounded-2xl px-5 py-4 backdrop-blur-xl text-center overflow-hidden"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
+                  border: hoveredTeaser === "right"
+                    ? "1px solid rgba(220, 50, 50, 0.5)"
+                    : "1px solid rgba(220, 50, 50, 0.25)",
+                  boxShadow: hoveredTeaser === "right"
+                    ? "0 0 36px rgba(220, 50, 50, 0.22), 0 0 72px rgba(220, 50, 50, 0.1), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)"
+                    : "0 0 24px rgba(220, 50, 50, 0.12), 0 0 48px rgba(220, 50, 50, 0.06), 0 8px 32px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)",
+                  transition: "border-color 0.3s ease-out, box-shadow 0.3s ease-out",
+                  maxWidth: 220,
+                }}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <Eye className="w-5 h-5 flex-shrink-0" style={{ color: "rgba(255, 80, 80, 0.85)", filter: "drop-shadow(0 0 4px rgba(220, 50, 50, 0.5))" }} />
+                  <div
+                    className="text-[15px] font-heading font-bold tracking-wide leading-tight"
+                    style={{
+                      color: "#fff",
+                      textShadow: "0 0 10px rgba(220, 50, 50, 0.65), 0 0 20px rgba(220, 50, 50, 0.35)",
+                    }}
+                  >
+                    {language === "he" ? "פתח קריאת טארוט" : language === "ar" ? "افتح قراءة التاروت" : language === "ru" ? "Откройте расклад Таро" : "Open Tarot reading"}
+                  </div>
+                </div>
+                <div className="text-[11px] font-body mt-1" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                  {language === "he" ? "קבלו מסר ברור תוך שניות" : language === "ar" ? "احصلوا على رسالة واضحة" : language === "ru" ? "Получите ясное послание" : "Get a clear message in seconds"}
+                </div>
+              </motion.div>
+            </motion.button>
+
+            {/* Birth Chart tab */}
+            {[menuItems[3]].map((item, idx) => {
+              const i = 3;
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  key={i}
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.6 + idx * 0.12 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setBirthChartOpen(true)}
+                  aria-label={item.label}
+                >
+                  <div
+                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <item.icon
+                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
+                    <span
+                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
                       style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
                       {item.label}
@@ -3355,58 +3421,56 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               );
             })}
 
-            {/* Row 3: Daily Horoscope — centered across 2 cols */}
-            <div className="col-span-2 flex justify-center">
-              {(() => {
-                const i = 4;
-                const item = menuItems[i];
-                const itemColor = ITEM_COLORS[i];
-                const isHovered = hoveredItem === i;
-                return (
-                  <motion.button
-                    type="button"
-                    className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: isHovered ? 1 : 0.85, y: 0 }}
-                    transition={{ duration: 0.5, delay: 1.8 }}
-                    onMouseEnter={() => setHoveredItem(i)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setDailyHoroscopeOpen(true)}
-                    aria-label={item.label}
+            {/* Daily Horoscope tab */}
+            {(() => {
+              const i = 4;
+              const item = menuItems[i];
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.8 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setDailyHoroscopeOpen(true)}
+                  aria-label={item.label}
+                >
+                  <div
+                    className="relative flex items-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-5 py-3"
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
                   >
-                    <div
-                      className="relative flex items-center justify-center gap-2 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-6 py-2.5"
+                    <item.icon
+                      className="flex-shrink-0 transition-all duration-300 w-5 h-5"
                       style={{
-                        borderWidth: "1px", borderStyle: "solid",
-                        borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
-                        background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
-                        boxShadow: isHovered
-                          ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
-                          : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
                       }}
+                    />
+                    <span
+                      className="font-body transition-colors duration-300 text-[13px] font-semibold"
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
                     >
-                      <item.icon
-                        className="flex-shrink-0 transition-all duration-300 w-5 h-5"
-                        style={{
-                          color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
-                          filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
-                        }}
-                      />
-                      <span
-                        className="font-body transition-colors duration-300 text-[14px] font-semibold"
-                        style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
-                      >
-                        {item.label}
-                      </span>
-                    </div>
-                  </motion.button>
-                );
-              })()}
-            </div>
-          </div>
-        </motion.div>
+                      {item.label}
+                    </span>
+                  </div>
+                </motion.button>
+              );
+            })()}
+          </motion.div>
+        </>
       ) : (
         /* ── Desktop: two vertical columns on left and right edges ── */
         <>
