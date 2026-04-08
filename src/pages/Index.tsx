@@ -24,7 +24,7 @@ const Index = () => {
   return (
     <>
       <SeoStructuredData />
-      <HeroSection />
+      <HeroSection cosmicGuideOpen={cosmicGuideOpen} onCosmicGuideChange={setCosmicGuideOpen} />
 
       <div className="relative z-10 md:h-screen md:overflow-hidden pointer-events-none" dir={dir} style={{ background: "transparent" }}>
         <a
