@@ -3912,8 +3912,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                 </motion.button>
 
                 <div
-                  className={`${isMobile ? "px-8 pb-12 pt-2" : "px-12 pb-14 pt-3"} overflow-y-auto`}
-                  style={{ maxHeight: "calc(90vh - 48px)" }}
+                  className={`${isMobile ? "px-8 pb-12 pt-2" : "px-12 pb-14 pt-3"} overflow-y-auto flex-1`}
                   dir={language === "he" || language === "ar" ? "rtl" : "ltr"}
                 >
                   {/* Subtle label */}
