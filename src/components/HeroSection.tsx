@@ -3883,22 +3883,28 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
               onClick={() => setGuideOpen(false)}
-              style={{ background: "hsl(225 42% 7%)" }}
+              style={{ background: isMobile ? "hsl(225 42% 7%)" : "hsl(225 42% 7% / 0.85)", backdropFilter: isMobile ? "none" : "blur(12px)" }}
             />
-            {/* Full-screen sheet */}
+            {/* Modal / sheet */}
             <motion.div
-              className="fixed inset-0 z-[90] pointer-events-auto flex flex-col justify-end"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 280 }}
+              className={`fixed z-[90] pointer-events-auto flex flex-col ${isMobile ? "inset-0 justify-end" : "inset-0 items-center justify-center"}`}
+              initial={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.96 }}
+              animate={isMobile ? { y: 0 } : { opacity: 1, scale: 1 }}
+              exit={isMobile ? { y: "100%" } : { opacity: 0, scale: 0.96 }}
+              transition={isMobile ? { type: "spring", damping: 30, stiffness: 280 } : { duration: 0.35, ease: "easeOut" }}
               onClick={(e) => e.stopPropagation()}
-              style={{ background: "hsl(225 42% 7%)" }}
+              style={isMobile ? { background: "hsl(225 42% 7%)" } : {}}
             >
               <div
-                className="relative w-full h-full overflow-hidden"
+                className={`relative overflow-hidden ${isMobile ? "w-full h-full" : "w-full rounded-2xl"}`}
                 style={{
                   background: "linear-gradient(170deg, hsl(230 35% 13%) 0%, hsl(225 42% 7%) 100%)",
+                  ...(!isMobile ? {
+                    maxWidth: 720,
+                    maxHeight: "88vh",
+                    boxShadow: "0 8px 60px hsl(260 50% 20% / 0.5), 0 0 80px hsl(270 40% 30% / 0.15), 0 2px 20px hsl(0 0% 0% / 0.4)",
+                    border: "1px solid hsl(270 30% 40% / 0.2)",
+                  } : {}),
                 }}
               >
                 {/* Top accent glow line */}
