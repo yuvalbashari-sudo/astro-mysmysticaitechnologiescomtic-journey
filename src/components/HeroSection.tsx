@@ -3132,10 +3132,10 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: isHovered ? 1 : 0.88, y: 0 }}
                       transition={{ duration: 0.5, delay: 1.6 + i * 0.1 }}
-                      onMouseEnter={() => setHoveredItem(i)}
-                      onMouseLeave={() => setHoveredItem(null)}
-                      onFocus={() => setHoveredItem(i)}
-                      onBlur={() => setHoveredItem(null)}
+                      onMouseEnter={() => { if (!isMobile) setHoveredItem(i); }}
+                      onMouseLeave={() => { if (!isMobile) setHoveredItem(null); }}
+                      onFocus={() => { if (!isMobile) setHoveredItem(i); }}
+                      onBlur={() => { if (!isMobile) setHoveredItem(null); }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); if (i === 4) setDailyHoroscopeOpen(true); }}
                       aria-label={item.label}
