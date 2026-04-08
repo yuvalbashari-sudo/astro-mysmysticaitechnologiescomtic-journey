@@ -3085,9 +3085,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
       )}
 
 
-    {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile: horizontal scroll ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "42px" : "0", bottom: isMobile ? "auto" : "0", display: isMobile ? "flex" : undefined, justifyContent: isMobile ? "center" : undefined }}>
-      {isMobile ? (
+    {/* ── Feature tabs — desktop: vertical columns on left/right edges; mobile/tablet: centered grid ── */}
+    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: (isMobile || isTablet) ? "42px" : "0", bottom: (isMobile || isTablet) ? "auto" : "0", display: (isMobile || isTablet) ? "flex" : undefined, justifyContent: (isMobile || isTablet) ? "center" : undefined }}>
+      {(isMobile || isTablet) ? (
         /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
           className="pointer-events-auto"
