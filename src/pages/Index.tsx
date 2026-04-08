@@ -14,6 +14,7 @@ import { readingsStorage } from "@/lib/readingsStorage";
 const Index = () => {
   const { dir } = useLanguage();
   const t = useT();
+  const { scale, setScale } = useFontScale();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [cosmicGuideOpen, setCosmicGuideOpen] = useState(false);
