@@ -3147,12 +3147,12 @@ const HeroSection = () => {
         /* ── Mobile: two vertical columns — visually identical to desktop panels ── */
         <motion.div
           className="pointer-events-auto"
-          style={{ width: "100%", maxWidth: 370, paddingLeft: 16, paddingRight: 12, boxSizing: "border-box", direction: "ltr" }}
+          style={{ width: "100%", maxWidth: 400, paddingLeft: 6, paddingRight: 6, boxSizing: "border-box", direction: "ltr" }}
           initial={{ opacity: 0, y: -15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
-        <div className="flex gap-2.5">
+        <div className="flex justify-between" style={{ gap: 40 }}>
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-1 flex-col gap-2.5">
