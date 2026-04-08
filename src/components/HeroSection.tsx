@@ -1,6 +1,7 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Eye, Hand } from "lucide-react";
+import { Sparkles, Star, Eye, Hand, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -3579,6 +3580,90 @@ const HeroSection = () => {
               );
             })}
 
+            {/* ── Guides Card — desktop only ── */}
+            <motion.div
+              className="mt-2"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 2.0, duration: 0.7, ease: "easeOut" }}
+            >
+              <div
+                className="relative rounded-2xl backdrop-blur-xl overflow-hidden"
+                style={{
+                  background: "linear-gradient(145deg, hsl(var(--deep-blue) / 0.6), hsl(var(--deep-blue) / 0.4))",
+                  border: "1px solid hsl(var(--gold) / 0.18)",
+                  boxShadow: "0 0 20px hsl(var(--gold) / 0.06), 0 8px 28px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                  padding: "14px 16px",
+                }}
+              >
+                {/* Top accent */}
+                <motion.div
+                  className="absolute top-0 left-[10%] right-[10%] h-[1px]"
+                  style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)" }}
+                  animate={{ opacity: [0.4, 0.8, 0.4] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+
+                <div className="flex items-center gap-2.5 mb-3">
+                  <BookOpen className="w-5 h-5 flex-shrink-0" style={{ color: "hsl(var(--gold) / 0.8)", filter: "drop-shadow(0 0 4px hsl(var(--gold) / 0.3))" }} />
+                  <span
+                    className="font-heading text-[15px] font-bold tracking-[0.1em] uppercase"
+                    style={{ color: "hsl(var(--gold))", textShadow: "0 0 12px hsl(var(--gold) / 0.2)" }}
+                  >
+                    {language === "he" ? "מדריכים" : language === "ar" ? "الأدلة" : language === "ru" ? "Руководства" : "Guides"}
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <Link
+                    to="/tarot-guides"
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-body text-[15px] font-medium transition-all duration-200 hover:scale-[1.02] no-underline"
+                    style={{
+                      color: "hsl(var(--foreground) / 0.85)",
+                      background: "hsl(var(--deep-blue-light) / 0.3)",
+                      border: "1px solid hsl(var(--gold) / 0.08)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "hsl(var(--gold) / 0.08)";
+                      e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "hsl(var(--deep-blue-light) / 0.3)";
+                      e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.08)";
+                    }}
+                  >
+                    <span style={{ color: "hsl(var(--gold) / 0.6)", fontSize: 12 }}>✦</span>
+                    {language === "he" ? "מדריכי טארוט" : language === "ar" ? "أدلة التاروت" : language === "ru" ? "Гиды по Таро" : "Tarot Guides"}
+                  </Link>
+                  <Link
+                    to="/astrology-guides"
+                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-body text-[15px] font-medium transition-all duration-200 hover:scale-[1.02] no-underline"
+                    style={{
+                      color: "hsl(var(--foreground) / 0.85)",
+                      background: "hsl(var(--deep-blue-light) / 0.3)",
+                      border: "1px solid hsl(var(--gold) / 0.08)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = "hsl(var(--gold) / 0.08)";
+                      e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.2)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = "hsl(var(--deep-blue-light) / 0.3)";
+                      e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.08)";
+                    }}
+                  >
+                    <span style={{ color: "hsl(var(--gold) / 0.6)", fontSize: 12 }}>✦</span>
+                    {language === "he" ? "מדריכי אסטרולוגיה" : language === "ar" ? "أدلة الفلك" : language === "ru" ? "Гиды по астрологии" : "Astrology Guides"}
+                  </Link>
+                </div>
+
+                {/* Bottom accent */}
+                <div
+                  className="absolute bottom-0 left-[15%] right-[15%] h-px"
+                  style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.15), transparent)" }}
+                />
+              </div>
+            </motion.div>
 
           </motion.div>
         </>
