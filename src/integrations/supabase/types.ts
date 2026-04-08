@@ -86,6 +86,51 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_horoscopes: {
+        Row: {
+          birth_date: string | null
+          career_score: number | null
+          content: string
+          created_at: string
+          energy_score: number | null
+          horoscope_date: string
+          id: string
+          language: string
+          love_score: number | null
+          user_fingerprint: string
+          user_name: string | null
+          zodiac_sign: string | null
+        }
+        Insert: {
+          birth_date?: string | null
+          career_score?: number | null
+          content: string
+          created_at?: string
+          energy_score?: number | null
+          horoscope_date?: string
+          id?: string
+          language?: string
+          love_score?: number | null
+          user_fingerprint: string
+          user_name?: string | null
+          zodiac_sign?: string | null
+        }
+        Update: {
+          birth_date?: string | null
+          career_score?: number | null
+          content?: string
+          created_at?: string
+          energy_score?: number | null
+          horoscope_date?: string
+          id?: string
+          language?: string
+          love_score?: number | null
+          user_fingerprint?: string
+          user_name?: string | null
+          zodiac_sign?: string | null
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string

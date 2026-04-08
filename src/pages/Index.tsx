@@ -5,6 +5,7 @@ import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
+import DailyHoroscopeCard from "@/components/DailyHoroscopeCard";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -39,9 +40,16 @@ const Index = () => {
         />
         <div className="md:hidden pointer-events-none">
           <div style={{ height: "100dvh" }} aria-hidden="true" />
+          <div className="pointer-events-auto px-4 py-6">
+            <DailyHoroscopeCard />
+          </div>
           <div className="pointer-events-auto">
             <SeoContentSection />
           </div>
+        </div>
+        {/* Desktop daily horoscope — positioned in the hero area */}
+        <div className="hidden md:block pointer-events-auto fixed bottom-6 right-6 z-50 w-[420px]">
+          <DailyHoroscopeCard />
         </div>
       </div>
       <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
