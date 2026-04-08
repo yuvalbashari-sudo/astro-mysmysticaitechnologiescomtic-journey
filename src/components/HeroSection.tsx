@@ -2266,6 +2266,7 @@ const HeroSection = () => {
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
   const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
