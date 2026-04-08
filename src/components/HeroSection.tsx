@@ -3086,7 +3086,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
 
     {/* ── Feature tabs — desktop/tablet: vertical columns on left/right edges; mobile: centered grid ── */}
-    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "42px" : "0", bottom: isMobile ? "auto" : "0", display: isMobile ? "flex" : undefined, justifyContent: isMobile ? "center" : undefined }}>
+    <div className="fixed z-[65] pointer-events-none inset-x-0" style={{ top: isMobile ? "58px" : "0", bottom: isMobile ? "auto" : "0", display: isMobile ? "flex" : undefined, justifyContent: isMobile ? "center" : undefined }}>
       {isMobile ? (
         /* ── Mobile: two vertical columns ── */
         <motion.div
@@ -3096,21 +3096,6 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
-          <p
-            className="font-body text-center pointer-events-none select-none"
-            style={{
-              fontSize: 15,
-              fontWeight: 600,
-              color: "hsl(40 30% 78% / 0.92)",
-              letterSpacing: "0.03em",
-              lineHeight: 1.6,
-              marginBottom: 8,
-              direction: "rtl",
-              textShadow: "0 0 14px hsl(40 25% 70% / 0.18), 0 0 28px hsl(40 20% 60% / 0.08)",
-            }}
-          >
-            תובנות שמחברות בין הכוכבים לחיים שלכם
-          </p>
         <div className="grid grid-cols-2" style={{ gap: 12 }}>
             {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
             {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
