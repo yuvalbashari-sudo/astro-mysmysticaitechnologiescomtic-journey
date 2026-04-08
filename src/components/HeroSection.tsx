@@ -2158,7 +2158,7 @@ const TarotCardReveal = ({
 };
 
 /* ── Main Hero ─────────────────────────────────────── */
-const HeroSection = () => {
+const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen?: boolean; onCosmicGuideChange?: (open: boolean) => void }) => {
   const t = useT();
   const { language, dir } = useLanguage();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
