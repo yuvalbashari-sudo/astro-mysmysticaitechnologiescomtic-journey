@@ -28,7 +28,18 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   const { dir, language } = useLanguage();
   const t = useT();
   const isMobile = useIsMobile();
+  const [isTablet, setIsTablet] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+
+  useEffect(() => {
+    const check = () => {
+      const w = window.innerWidth;
+      setIsTablet(w >= 768 && w < 1024);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
   const guideRef = useRef<HTMLDivElement>(null);
 
   // Close guide dropdown on outside click
