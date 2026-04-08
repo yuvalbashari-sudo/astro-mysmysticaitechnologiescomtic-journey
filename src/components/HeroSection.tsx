@@ -3252,8 +3252,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               animate={{ opacity: 1, scale: [1, 1.04, 1], y: [0, -3, 0] }}
               transition={{ delay: 2.2, duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.div
-                className="relative rounded-2xl px-10 py-7 backdrop-blur-xl text-center overflow-hidden"
+                <motion.div
+                className={`relative rounded-2xl ${isTablet ? "px-5 py-4" : "px-10 py-7"} backdrop-blur-xl text-center overflow-hidden`}
                 style={{
                   background: "linear-gradient(135deg, hsl(var(--deep-blue) / 0.55), hsl(var(--deep-blue) / 0.35))",
                   border: hoveredTeaser === "left"
@@ -3291,9 +3291,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   )}
                 </AnimatePresence>
                 <div className="flex items-center justify-center gap-3">
-                  <Sparkles className="w-8 h-8 flex-shrink-0" style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
+                  <Sparkles className={`${isTablet ? "w-5 h-5" : "w-8 h-8"} flex-shrink-0`} style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
-                    className="text-[32px] font-heading font-bold tracking-wide leading-tight"
+                    className={`${isTablet ? "text-[18px]" : "text-[32px]"} font-heading font-bold tracking-wide leading-tight`}
                     style={{
                       color: "#fff",
                       textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35), 0 0 40px rgba(0, 150, 255, 0.15)",
@@ -3302,7 +3302,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
                   </div>
                 </div>
-                <div className="text-[17px] font-body mt-2.5" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
+                <div className={`${isTablet ? "text-[13px]" : "text-[17px]"} font-body mt-2.5`} style={{ color: "hsl(var(--foreground) / 0.6)" }}>
                   {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
                 </div>
                 <motion.div
