@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, ArrowLeft, ArrowRight } from "lucide-react";
+import { BookOpen, ArrowLeft, ArrowRight, X } from "lucide-react";
 import StarField from "@/components/StarField";
 import { getTarotGuides, type GuideEntry } from "@/data/guideContent";
 import { useLanguage } from "@/i18n";
