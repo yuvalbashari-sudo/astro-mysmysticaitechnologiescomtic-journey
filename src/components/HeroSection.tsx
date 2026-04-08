@@ -4044,7 +4044,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         setDailyHoroscopeOpen(true);
                       }}
                     >
-                      {language === "he" ? "ראו איך זה משפיע עליכם" : language === "ar" ? "اكتشفوا تأثيره عليكم" : language === "ru" ? "Узнайте ваше влияние" : "See How It Affects You"}
+                      {language === "he" ? "צפו בהורוסקופ היומי" : language === "ar" ? "شاهدوا الأبراج اليومية" : language === "ru" ? "Смотреть гороскоп дня" : "View Daily Horoscope"}
                     </motion.button>
                   </motion.div>
 
@@ -4056,7 +4056,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.65 }}
                   >
-                    {language === "he" ? "הכוכבים מדברים... הקשיבו ✨" : language === "ar" ? "النجوم تتحدث... استمعوا ✨" : language === "ru" ? "Звёзды говорят... слушайте ✨" : "The stars speak... listen ✨"}
+                    {language === "he" ? "גלו כיצד האנרגיה הקוסמית מעצבת את ההורוסקופ שלכם היום ✨" : language === "ar" ? "اكتشفوا كيف تشكّل الطاقة الكونية برجكم اليوم ✨" : language === "ru" ? "Узнайте, как космическая энергия влияет на ваш гороскоп сегодня ✨" : "See how today's cosmic energy shapes your horoscope ✨"}
                   </motion.div>
                 </div>
               </div>
