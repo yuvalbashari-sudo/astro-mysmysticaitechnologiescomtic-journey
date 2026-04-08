@@ -2174,6 +2174,8 @@ const HeroSection = () => {
   const [birthChartOpen, setBirthChartOpen] = useState(false);
   const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const guideInfluence = useMemo(() => getDailyInfluence(), []);
+  const guidePColor = PLANET_COLORS[guideInfluence.planet] || "43 80% 55%";
   
   const [astrologerOpen, setAstrologerOpen] = useState(false);
   
