@@ -191,6 +191,17 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
               <span style={{ color: "hsl(var(--gold) / 0.7)" }}>✦</span>
               {t.topbar_guide_astrology}
             </Link>
+            {onOpenCosmicGuide && (
+              <button
+                type="button"
+                onClick={() => { setGuideOpen(false); onOpenCosmicGuide(); }}
+                className="flex items-center gap-2.5 px-4 py-3 rounded-lg font-body text-[15px] font-medium transition-colors hover:bg-gold/10 w-full text-start cursor-pointer bg-transparent border-0"
+                style={{ color: "hsl(var(--foreground) / 0.9)" }}
+              >
+                <span style={{ color: "hsl(270 60% 65%)" }}>✦</span>
+                {language === "he" ? "השפעה קוסמית" : language === "ar" ? "التأثير الكوني" : language === "ru" ? "Космическое влияние" : "Cosmic Influence"}
+              </button>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
