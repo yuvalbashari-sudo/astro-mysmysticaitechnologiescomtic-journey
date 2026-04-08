@@ -3583,6 +3583,76 @@ const HeroSection = () => {
               );
             })}
 
+            {/* Daily Horoscope tab */}
+            {(() => {
+              const i = 4;
+              const item = menuItems[i];
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  key={i}
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.8 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  onFocus={() => setHoveredItem(i)}
+                  onBlur={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setDailyHoroscopeOpen(true)}
+                  aria-label={item.label}
+                >
+                  <div
+                    className="relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md px-9 py-5"
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <item.icon
+                      className="flex-shrink-0 transition-all duration-300 w-8 h-8"
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
+                    <span
+                      className="font-body transition-colors duration-300 text-[18px] font-semibold"
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                    >
+                      {item.label}
+                    </span>
+                    {isHovered && (
+                      <motion.div
+                        className="absolute bottom-0 left-[15%] right-[15%] h-[2px] rounded-full pointer-events-none"
+                        style={{ background: `linear-gradient(90deg, transparent, ${itemColor.glow}, transparent)` }}
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: 0.8, scaleX: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    )}
+                    {isHovered && (
+                      <motion.div
+                        className="absolute -inset-2 rounded-full pointer-events-none"
+                        style={{ background: `radial-gradient(circle, ${itemColor.glow}12, transparent 70%)` }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.6, 0.3] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      />
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })()}
+
 
           </motion.div>
         </>
@@ -3853,6 +3923,7 @@ const HeroSection = () => {
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
+      <DailyHoroscopeModal isOpen={dailyHoroscopeOpen} onClose={() => setDailyHoroscopeOpen(false)} />
     </>
   );
 };
