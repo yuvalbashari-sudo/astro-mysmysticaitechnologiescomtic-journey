@@ -3883,7 +3883,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
               onClick={() => setGuideOpen(false)}
-              style={{ background: "hsl(225 42% 7%)" }}
+              style={{ background: isMobile ? "hsl(225 42% 7%)" : "hsl(225 42% 7% / 0.85)", backdropFilter: isMobile ? "none" : "blur(12px)" }}
             />
             {/* Modal / sheet */}
             <motion.div
