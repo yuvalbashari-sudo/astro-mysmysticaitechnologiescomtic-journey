@@ -26,8 +26,8 @@ function isFutureDate(iso: string): boolean {
 }
 
 /**
- * A mobile-friendly date input that shows a visible text field with DD/MM/YYYY
- * format. Users can type manually OR tap the calendar icon to use native picker.
+ * A mobile-friendly date input that shows a visible text field.
+ * English → MM/DD/YYYY, others → DD/MM/YYYY.
  * Outputs YYYY-MM-DD for internal consistency.
  * Future dates are blocked.
  */
@@ -36,50 +36,58 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
   const hiddenRef = useRef<HTMLInputElement>(null);
   const [futureError, setFutureError] = useState(false);
 
+  const isEN = language === "en";
   const todayISO = useMemo(() => getTodayISO(), []);
 
-  // Convert YYYY-MM-DD → DD/MM/YYYY for display
-  const toDisplay = (iso: string) => {
+  // Convert YYYY-MM-DD → display string
+  const toDisplay = useCallback((iso: string) => {
     if (!iso) return "";
     const [y, m, d] = iso.split("-");
     if (!y || !m || !d) return iso;
-    return `${d}/${m}/${y}`;
-  };
+    return isEN ? `${m}/${d}/${y}` : `${d}/${m}/${y}`;
+  }, [isEN]);
 
-  // Convert DD/MM/YYYY → YYYY-MM-DD for storage
-  const toIso = (display: string) => {
+  // Convert display string → YYYY-MM-DD
+  // EN: MM/DD/YYYY, others: DD/MM/YYYY
+  const toIso = useCallback((display: string) => {
     const cleaned = display.replace(/[^0-9/]/g, "");
     const parts = cleaned.split("/");
     if (parts.length === 3 && parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-      const d = parts[0].padStart(2, "0");
-      const m = parts[1].padStart(2, "0");
+      const p0 = parts[0].padStart(2, "0");
+      const p1 = parts[1].padStart(2, "0");
       const y = parts[2];
-      const day = parseInt(d, 10);
-      const month = parseInt(m, 10);
+
+      const month = isEN ? parseInt(p0, 10) : parseInt(p1, 10);
+      const day = isEN ? parseInt(p1, 10) : parseInt(p0, 10);
       const year = parseInt(y, 10);
+
+      const m = isEN ? p0 : p1;
+      const d = isEN ? p1 : p0;
+
       if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900 && year <= 2100) {
         return `${y}-${m}-${d}`;
       }
     }
     return "";
-  };
+  }, [isEN]);
 
   const [displayValue, setDisplayValue] = useState(toDisplay(value));
 
   // Sync if parent value changes externally
   const prevValueRef = useRef(value);
-  if (value !== prevValueRef.current) {
+  const prevLangRef = useRef(language);
+  if (value !== prevValueRef.current || language !== prevLangRef.current) {
     prevValueRef.current = value;
+    prevLangRef.current = language;
     setDisplayValue(toDisplay(value));
     setFutureError(false);
   }
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    // Strip everything except digits
     let digits = e.target.value.replace(/[^0-9]/g, "");
     if (digits.length > 8) digits = digits.slice(0, 8);
     
-    // Auto-format with slashes: DD/MM/YYYY
+    // Auto-format with slashes
     let formatted = "";
     if (digits.length <= 2) {
       formatted = digits;
@@ -94,7 +102,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
     if (iso) {
       if (isFutureDate(iso)) {
         setFutureError(true);
-        onChange(""); // Clear the value — don't allow future dates
+        onChange("");
         return;
       }
       setFutureError(false);
@@ -103,7 +111,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       setFutureError(false);
       onChange("");
     }
-  }, [onChange]);
+  }, [onChange, toIso]);
 
   const handleNativePick = useCallback(() => {
     hiddenRef.current?.showPicker?.();
@@ -121,7 +129,9 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
     setFutureError(false);
     onChange(v);
     setDisplayValue(toDisplay(v));
-  }, [onChange]);
+  }, [onChange, toDisplay]);
+
+  const defaultPlaceholder = isEN ? "MM / DD / YYYY" : "DD / MM / YYYY";
 
   return (
     <div className="relative w-full">
@@ -131,7 +141,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
         lang={language}
         value={displayValue}
         onChange={handleTextChange}
-        placeholder={placeholder || "DD / MM / YYYY"}
+        placeholder={placeholder || defaultPlaceholder}
         className={`mystical-input font-body text-center w-full ${className} ${futureError ? "ring-1 ring-crimson/60" : ""}`}
         style={{ direction: "ltr", paddingRight: 36, ...style }}
         autoComplete="off"
