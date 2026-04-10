@@ -226,10 +226,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               key={planet.key}
               className="absolute"
               style={{
-                left: 0,
-                top: 0,
-                width: 320,
-                height: 320,
+                inset: 0,
+                position: "absolute",
                 pointerEvents: "none",
               }}
               initial={{ opacity: 0 }}
