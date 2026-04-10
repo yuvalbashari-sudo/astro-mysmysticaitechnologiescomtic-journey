@@ -200,7 +200,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
       </div>
 
       {/* Central figure with rays */}
-      <div className="relative" style={{ width: 320, height: 320 }}>
+      <div className="relative w-full" style={{ maxWidth: 320, aspectRatio: "1 / 1" }}>
         {/* Outer cosmic ring */}
         <motion.div
           className="absolute inset-0 rounded-full"
@@ -226,17 +226,15 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               key={planet.key}
               className="absolute"
               style={{
-                left: 0,
-                top: 0,
-                width: 320,
-                height: 320,
+                inset: 0,
+                position: "absolute",
                 pointerEvents: "none",
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <svg width="320" height="320" style={{ position: "absolute", inset: 0 }}>
+              <svg viewBox="0 0 320 320" width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
                 <defs>
                   <linearGradient id={`ray-${planet.key}`} x1={startX} y1={startY} x2="160" y2="160" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor={ray.color} stopOpacity={0.7 * influence + 0.2} />
@@ -266,14 +264,15 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               <motion.div
                 className="absolute flex items-center justify-center"
                 style={{
-                  left: startX - 14,
-                  top: startY - 14,
-                  width: 28,
-                  height: 28,
+                  left: `${(startX / 320) * 100}%`,
+                  top: `${(startY / 320) * 100}%`,
+                  width: "8.75%",
+                  height: "8.75%",
+                  transform: "translate(-50%, -50%)",
                   borderRadius: "50%",
                   background: `radial-gradient(circle, ${ray.color}30, transparent)`,
                   border: `1px solid ${ray.color}50`,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: ray.color,
                   textShadow: `0 0 8px ${ray.color}80`,
                 }}
@@ -294,10 +293,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
 
         {/* Human silhouette */}
         <svg
-          width="320"
-          height="320"
           viewBox="0 0 320 320"
-          className="absolute inset-0"
+          className="absolute inset-0 w-full h-full"
           style={{ filter: `drop-shadow(0 0 ${10 + coreIntensity * 20}px ${dominantColor}40)` }}
         >
           <defs>
@@ -348,10 +345,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           style={{
             left: "50%",
             top: "50%",
-            width: 60,
-            height: 60,
-            marginLeft: -30,
-            marginTop: -30,
+            width: "18.75%",
+            height: "18.75%",
+            transform: "translate(-50%, -50%)",
             border: `1px solid ${dominantColor}20`,
           }}
           animate={{ rotate: 360, scale: [1, 1.1, 1] }}
@@ -362,10 +358,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           style={{
             left: "50%",
             top: "50%",
-            width: 100,
-            height: 100,
-            marginLeft: -50,
-            marginTop: -50,
+            width: "31.25%",
+            height: "31.25%",
+            transform: "translate(-50%, -50%)",
             border: `1px solid ${dominantColor}12`,
           }}
           animate={{ rotate: -360 }}
