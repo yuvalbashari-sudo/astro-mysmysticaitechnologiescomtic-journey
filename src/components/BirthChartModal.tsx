@@ -281,6 +281,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       fullscreen={isMobile}
       hideAdvisor={isMobile}
       wide={showResult && !isMobile}
+      avatarStyle={{
+        bottom: 18,
+        right: 40,
+        left: "auto",
+        width: 140,
+        height: 140,
+      }}
     >
       <div dir={dir}>
         <div ref={chartContentRef} className="p-4 md:p-8">
