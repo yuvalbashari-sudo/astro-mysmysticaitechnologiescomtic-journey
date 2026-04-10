@@ -200,7 +200,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
       </div>
 
       {/* Central figure with rays */}
-      <div className="relative" style={{ width: 320, height: 320 }}>
+      <div className="relative w-full" style={{ maxWidth: 320, aspectRatio: "1 / 1" }}>
         {/* Outer cosmic ring */}
         <motion.div
           className="absolute inset-0 rounded-full"
