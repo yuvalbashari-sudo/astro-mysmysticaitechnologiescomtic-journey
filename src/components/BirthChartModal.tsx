@@ -373,9 +373,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {phase === "loading" && (
+            {phase === "loading" && chartData && (
               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <ChartLoadingRitual userName={userName.trim() || undefined} onComplete={startAIInterpretation} />
+                <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
             )}
 
