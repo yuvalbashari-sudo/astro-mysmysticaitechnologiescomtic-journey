@@ -295,8 +295,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
         <svg
           viewBox="0 0 320 320"
           className="absolute inset-0 w-full h-full"
-          viewBox="0 0 320 320"
-          className="absolute inset-0"
           style={{ filter: `drop-shadow(0 0 ${10 + coreIntensity * 20}px ${dominantColor}40)` }}
         >
           <defs>
