@@ -264,14 +264,15 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               <motion.div
                 className="absolute flex items-center justify-center"
                 style={{
-                  left: startX - 14,
-                  top: startY - 14,
-                  width: 28,
-                  height: 28,
+                  left: `${(startX / 320) * 100}%`,
+                  top: `${(startY / 320) * 100}%`,
+                  width: "8.75%",
+                  height: "8.75%",
+                  transform: "translate(-50%, -50%)",
                   borderRadius: "50%",
                   background: `radial-gradient(circle, ${ray.color}30, transparent)`,
                   border: `1px solid ${ray.color}50`,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: ray.color,
                   textShadow: `0 0 8px ${ray.color}80`,
                 }}
