@@ -6,7 +6,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AdvisorChatPanel from "./AdvisorChatPanel";
-
+import TextSizeControl from "./TextSizeControl";
+import { useFontScale } from "@/contexts/FontScaleContext";
+import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
   { sign: "Capricorn", start: [1, 1], end: [1, 19] },
@@ -87,6 +89,8 @@ const DailyHoroscopeCard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const { scale, setScale } = useFontScale();
+  const ts = TEXT_SIZE_CLASSES[scale];
 
   const profile = mysticalProfile.getProfile();
   const birthDate = profile.birthDate;
@@ -270,6 +274,11 @@ const DailyHoroscopeCard = () => {
           <p className="text-foreground/40 text-base font-body mt-1">{formattedDate}</p>
         </div>
 
+        {/* Text size control */}
+        <div className="flex justify-center px-5 pb-2">
+          <TextSizeControl value={scale} onChange={setScale} />
+        </div>
+
         {/* Content */}
         <div className="px-5 pb-4 min-h-[100px]">
           <AnimatePresence mode="wait">
@@ -318,7 +327,7 @@ const DailyHoroscopeCard = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <p className="text-foreground/80 text-[1.05rem] font-body leading-relaxed whitespace-pre-wrap mb-4">
+                <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
                   {data.content}
                 </p>
 
