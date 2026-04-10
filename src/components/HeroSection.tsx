@@ -3060,8 +3060,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
         </motion.div>
       )}
 
-      {/* ── Astrologer Avatar — desktop only ── */}
-      {!isMobile && entranceComplete && (
+      {/* ── Astrologer Avatar — desktop only, hidden when birth chart modal is open ── */}
+      {!isMobile && entranceComplete && !birthChartOpen && (
         <motion.div
           className="fixed z-[30] pointer-events-auto"
           style={{
