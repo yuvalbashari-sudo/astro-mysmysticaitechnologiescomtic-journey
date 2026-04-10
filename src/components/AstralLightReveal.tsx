@@ -234,7 +234,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <svg width="320" height="320" style={{ position: "absolute", inset: 0 }}>
+              <svg viewBox="0 0 320 320" width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
                 <defs>
                   <linearGradient id={`ray-${planet.key}`} x1={startX} y1={startY} x2="160" y2="160" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor={ray.color} stopOpacity={0.7 * influence + 0.2} />
