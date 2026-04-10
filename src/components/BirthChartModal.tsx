@@ -6,7 +6,7 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
-import ChartLoadingRitual from "@/components/ChartLoadingRitual";
+import AstralLightReveal from "@/components/AstralLightReveal";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
