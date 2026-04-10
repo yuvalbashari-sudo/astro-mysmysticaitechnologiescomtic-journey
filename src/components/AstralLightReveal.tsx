@@ -345,10 +345,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           style={{
             left: "50%",
             top: "50%",
-            width: 60,
-            height: 60,
-            marginLeft: -30,
-            marginTop: -30,
+            width: "18.75%",
+            height: "18.75%",
+            transform: "translate(-50%, -50%)",
             border: `1px solid ${dominantColor}20`,
           }}
           animate={{ rotate: 360, scale: [1, 1.1, 1] }}
@@ -359,10 +358,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           style={{
             left: "50%",
             top: "50%",
-            width: 100,
-            height: 100,
-            marginLeft: -50,
-            marginTop: -50,
+            width: "31.25%",
+            height: "31.25%",
+            transform: "translate(-50%, -50%)",
             border: `1px solid ${dominantColor}12`,
           }}
           animate={{ rotate: -360 }}
