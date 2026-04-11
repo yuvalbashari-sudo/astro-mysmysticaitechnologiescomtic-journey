@@ -1115,30 +1115,36 @@ serve(async (req) => {
   try {
     const { type, data, profileContext, language, userName: reqUserName } = await req.json();
 
-    // Server-side rate limiting
-    const clientIp = getClientIp(req);
-    const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
-    if (!rateCheck.allowed) {
-      // Log blocked request at zero cost
-      if (logCostFn && getFeatureCostsFn) {
-        await logCostFn({ clientIp, feature: type || "generic", status: "rate_limited", userTier: "unknown", aiCost: 0, imageCost: 0 });
-      }
-      return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
-      });
-    }
+    // Check if the caller is an admin user
+    const adminUser = await isAdminUser(req);
 
-    // Daily usage limit check (e.g., 1 birth chart per day per IP)
-    const dailyCheck = await checkDailyLimit(clientIp, type || "generic");
-    if (!dailyCheck.allowed) {
-      if (logCostFn && getFeatureCostsFn) {
-        await logCostFn({ clientIp, feature: type || "generic", status: "daily_limit_exceeded", userTier: "unknown", aiCost: 0, imageCost: 0 });
+    // Server-side rate limiting (skip for admins)
+    const clientIp = getClientIp(req);
+    if (!adminUser) {
+      const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
+      if (!rateCheck.allowed) {
+        if (logCostFn && getFeatureCostsFn) {
+          await logCostFn({ clientIp, feature: type || "generic", status: "rate_limited", userTier: "unknown", aiCost: 0, imageCost: 0 });
+        }
+        return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
+        });
       }
-      return new Response(JSON.stringify({ error: "DAILY_LIMIT_REACHED" }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+      // Daily usage limit check (skip for admins)
+      const dailyCheck = await checkDailyLimit(clientIp, type || "generic");
+      if (!dailyCheck.allowed) {
+        if (logCostFn && getFeatureCostsFn) {
+          await logCostFn({ clientIp, feature: type || "generic", status: "daily_limit_exceeded", userTier: "unknown", aiCost: 0, imageCost: 0 });
+        }
+        return new Response(JSON.stringify({ error: "DAILY_LIMIT_REACHED" }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    } else {
+      console.log("[ADMIN] Bypassing rate/daily limits for admin user");
     }
 
     // Resolve userName: explicit param > data.userName > extract from profileContext
