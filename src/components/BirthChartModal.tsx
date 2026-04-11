@@ -448,7 +448,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
 
                 {chartData && (
-                <div className="grid md:grid-cols-3 gap-3 w-full">
+                <motion.div
+                  className="grid md:grid-cols-3 gap-3 w-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                >
                   <div className="mystical-card p-4 text-center">
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.sun}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {getSignNameByKey(chartData.sunSign.key, language)}</div>
@@ -461,7 +466,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.moon}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSignKey ? getSignNameByKey(chartData.moonSignKey, language) : chartData.moonSign}</div>
                   </div>
-                </div>
+                </motion.div>
                 )}
 
                 {chartData && (
