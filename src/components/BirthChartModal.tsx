@@ -428,7 +428,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </motion.div>
 
-                <div className="text-center">
+                <motion.div
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                >
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
                       {t.chart_of_name} {userName.trim()}
@@ -440,7 +445,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
                       {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : t.chart_computing}
                   </p>
-                </div>
+                </motion.div>
 
                 {chartData && (
                 <div className="grid md:grid-cols-3 gap-3 w-full">
