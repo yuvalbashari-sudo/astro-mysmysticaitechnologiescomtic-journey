@@ -3160,23 +3160,31 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         <item.icon
                           className="flex-shrink-0 transition-all duration-300 w-6 h-6"
                           style={{
-                            color: isNeonPanel
+                            color: isDailyPrimary
                               ? neon.iconColor
-                              : (isHovered ? neon.neon : "hsl(var(--gold) / 0.7)"),
-                            filter: isNeonPanel
-                              ? `drop-shadow(0 0 4px ${neon.neonLight})`
-                              : (isHovered ? `drop-shadow(0 0 6px ${neon.neon})` : "none"),
+                              : isNeonPanel
+                                ? neon.iconColor
+                                : (isHovered ? neon.neon : "hsl(var(--gold) / 0.7)"),
+                            filter: isDailyPrimary
+                              ? `drop-shadow(0 0 5px ${neon.neonLight})`
+                              : isNeonPanel
+                                ? `drop-shadow(0 0 4px ${neon.neonLight})`
+                                : (isHovered ? `drop-shadow(0 0 6px ${neon.neon})` : "none"),
                           }}
                         />
                         <span
                           className="font-body transition-colors duration-300 text-[14px] font-semibold leading-tight"
                           style={{
-                            color: isNeonPanel
-                              ? "#fff"
-                              : (isHovered ? neon.neon : "hsl(var(--foreground) / 0.88)"),
-                            textShadow: isNeonPanel
-                              ? `0 0 8px ${neon.neonLight}, 0 0 16px ${i === 1 ? "rgba(0, 150, 255, 0.15)" : "rgba(220, 50, 50, 0.15)"}`
-                              : "none",
+                            color: isDailyPrimary
+                              ? "hsl(35, 85%, 75%)"
+                              : isNeonPanel
+                                ? "#fff"
+                                : (isHovered ? neon.neon : "hsl(var(--foreground) / 0.88)"),
+                            textShadow: isDailyPrimary
+                              ? "0 0 10px hsl(35 85% 55% / 0.2)"
+                              : isNeonPanel
+                                ? `0 0 8px ${neon.neonLight}, 0 0 16px ${i === 1 ? "rgba(0, 150, 255, 0.15)" : "rgba(220, 50, 50, 0.15)"}`
+                                : "none",
                           }}
                         >
                           {item.label}
