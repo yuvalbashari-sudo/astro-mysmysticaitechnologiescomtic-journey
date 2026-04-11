@@ -3,6 +3,7 @@ import { Sparkles } from "lucide-react";
 import React from "react";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { TEXT_SIZE_CLASSES, type TextSize } from "@/components/TextSizeControl";
+import { supabase } from "@/integrations/supabase/client";
 
 // Stream AI reading from edge function
 export async function streamMysticalReading(
@@ -19,12 +20,19 @@ export async function streamMysticalReading(
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getUserName() || undefined;
 
+  // Get auth token if available (for admin bypass)
+  let authToken: string | null = null;
+  try {
+    const { data: sessionData } = await supabase.auth.getSession();
+    authToken = sessionData?.session?.access_token ?? null;
+  } catch { /* ignore */ }
+
   try {
     const resp = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        Authorization: `Bearer ${authToken || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
       body: JSON.stringify({ type, data, profileContext, language, userName }),
     });

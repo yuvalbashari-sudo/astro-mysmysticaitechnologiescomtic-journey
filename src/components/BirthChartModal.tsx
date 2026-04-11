@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock } from "lucide-react";
+import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
 import AstralLightReveal from "@/components/AstralLightReveal";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { getChartLabels, getPlanetName, getSignNameByKey, getElementName, getAspectName } from "@/lib/astroLocale";
@@ -82,11 +83,14 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     [chartData, language],
   );
 
+  const isAdmin = subscriptionManager.isAdmin();
+
   useEffect(() => {
     if (isOpen) {
-      setDailyLimitReached(hasUsedChartToday());
+      // Admins never hit daily limit
+      setDailyLimitReached(isAdmin ? false : hasUsedChartToday());
     }
-  }, [isOpen]);
+  }, [isOpen, isAdmin]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -124,7 +128,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const handleSubmit = useCallback(async () => {
     setAttempted(true);
 
-    if (dailyLimitReached) {
+    if (dailyLimitReached && !isAdmin) {
       toast.error(t.chart_daily_limit_toast);
       return;
     }
@@ -217,8 +221,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       () => {
         setAiStreaming(false);
         setPhase("result");
-        markChartUsedToday();
-        setDailyLimitReached(true);
+        if (!isAdmin) {
+          markChartUsedToday();
+          setDailyLimitReached(true);
+        }
         readingsStorage.save({
           type: "birth-chart",
           title: `${chartLabels.birthChart} — ${getSignNameByKey(chartData.sunSign.key, language)} ${chartData.sunSign.symbol}`,
@@ -229,8 +235,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       },
       (error) => {
         if (error === "DAILY_LIMIT_REACHED") {
-          markChartUsedToday();
-          setDailyLimitReached(true);
+          if (!isAdmin) {
+            markChartUsedToday();
+            setDailyLimitReached(true);
+          }
           toast.error(t.chart_daily_limit_toast);
         } else {
           toast.error(error);
@@ -324,7 +332,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </p>
                 </div>
 
-                {dailyLimitReached ? (
+                {dailyLimitReached && !isAdmin ? (
                   <div className="space-y-4">
                     <div
                       className="rounded-xl p-4 text-center"
@@ -341,6 +349,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   <div className="space-y-5">
+                    {isAdmin && (
+                      <div className="flex items-center justify-center gap-1.5 py-1.5 px-3 mx-auto w-fit rounded-full text-xs font-body" style={{
+                        background: "hsl(var(--gold) / 0.08)",
+                        border: "1px solid hsl(var(--gold) / 0.2)",
+                        color: "hsl(var(--gold))",
+                      }}>
+                        <Shield className="w-3 h-3" />
+                        <span>ADMIN — unlimited</span>
+                      </div>
+                    )}
                     <BirthDetailsForm
                       values={details}
                       onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
@@ -348,11 +366,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       showTime
                     />
 
-                    <div className="text-center">
-                      <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                        {t.chart_daily_available}
-                      </p>
-                    </div>
+                    {!isAdmin && (
+                      <div className="text-center">
+                        <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
+                          {t.chart_daily_available}
+                        </p>
+                      </div>
+                    )}
 
                     <motion.button
                       whileHover={{ scale: 1.02 }}

@@ -1002,6 +1002,32 @@ const DAILY_LIMIT_FEATURES: Record<string, number> = {
   birthChart: 1, // 1 birth chart per day per IP
 };
 
+// Admin emails — bypass all limits
+const ADMIN_EMAILS = ["yuvalbashari@gmail.com"];
+
+async function isAdminUser(req: Request): Promise<boolean> {
+  try {
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) return false;
+    const token = authHeader.slice(7);
+    
+    // Skip anon key — not an auth token
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || "";
+    if (token === anonKey) return false;
+
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceKey);
+
+    const { data: { user } } = await supabase.auth.getUser(token);
+    if (!user?.email) return false;
+    return ADMIN_EMAILS.includes(user.email.trim().toLowerCase());
+  } catch {
+    return false;
+  }
+}
+
 async function checkDailyLimit(clientIp: string, action: string): Promise<{ allowed: boolean; remaining: number }> {
   const maxDaily = DAILY_LIMIT_FEATURES[action];
   if (!maxDaily) return { allowed: true, remaining: 99 };
@@ -1089,30 +1115,36 @@ serve(async (req) => {
   try {
     const { type, data, profileContext, language, userName: reqUserName } = await req.json();
 
-    // Server-side rate limiting
-    const clientIp = getClientIp(req);
-    const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
-    if (!rateCheck.allowed) {
-      // Log blocked request at zero cost
-      if (logCostFn && getFeatureCostsFn) {
-        await logCostFn({ clientIp, feature: type || "generic", status: "rate_limited", userTier: "unknown", aiCost: 0, imageCost: 0 });
-      }
-      return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
-      });
-    }
+    // Check if the caller is an admin user
+    const adminUser = await isAdminUser(req);
 
-    // Daily usage limit check (e.g., 1 birth chart per day per IP)
-    const dailyCheck = await checkDailyLimit(clientIp, type || "generic");
-    if (!dailyCheck.allowed) {
-      if (logCostFn && getFeatureCostsFn) {
-        await logCostFn({ clientIp, feature: type || "generic", status: "daily_limit_exceeded", userTier: "unknown", aiCost: 0, imageCost: 0 });
+    // Server-side rate limiting (skip for admins)
+    const clientIp = getClientIp(req);
+    if (!adminUser) {
+      const rateCheck = await checkServerRateLimit(clientIp, type || "generic");
+      if (!rateCheck.allowed) {
+        if (logCostFn && getFeatureCostsFn) {
+          await logCostFn({ clientIp, feature: type || "generic", status: "rate_limited", userTier: "unknown", aiCost: 0, imageCost: 0 });
+        }
+        return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": "300" },
+        });
       }
-      return new Response(JSON.stringify({ error: "DAILY_LIMIT_REACHED" }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+
+      // Daily usage limit check (skip for admins)
+      const dailyCheck = await checkDailyLimit(clientIp, type || "generic");
+      if (!dailyCheck.allowed) {
+        if (logCostFn && getFeatureCostsFn) {
+          await logCostFn({ clientIp, feature: type || "generic", status: "daily_limit_exceeded", userTier: "unknown", aiCost: 0, imageCost: 0 });
+        }
+        return new Response(JSON.stringify({ error: "DAILY_LIMIT_REACHED" }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    } else {
+      console.log("[ADMIN] Bypassing rate/daily limits for admin user");
     }
 
     // Resolve userName: explicit param > data.userName > extract from profileContext
