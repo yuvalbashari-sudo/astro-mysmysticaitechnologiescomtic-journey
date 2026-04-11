@@ -12,82 +12,68 @@ interface Props {
   onComplete: () => void;
 }
 
-/* ── Planet visual config with vibrant colors ── */
-const PLANET_RAYS: Record<string, { color: string; glowColor: string; angle: number }> = {
-  sun:     { color: "#E8B84B", glowColor: "#FFD97040", angle: 0 },
-  moon:    { color: "#C4C9D2", glowColor: "#C4C9D240", angle: 36 },
-  mercury: { color: "#8BC4A9", glowColor: "#8BC4A940", angle: 72 },
-  venus:   { color: "#E88BC4", glowColor: "#E88BC440", angle: 108 },
-  mars:    { color: "#C45B5B", glowColor: "#C45B5B40", angle: 144 },
-  jupiter: { color: "#8B9FE8", glowColor: "#8B9FE840", angle: 180 },
-  saturn:  { color: "#A89070", glowColor: "#A8907040", angle: 216 },
-  uranus:  { color: "#70C8E8", glowColor: "#70C8E840", angle: 252 },
-  neptune: { color: "#7088E8", glowColor: "#7088E840", angle: 288 },
-  pluto:   { color: "#9070A8", glowColor: "#9070A840", angle: 324 },
+/* ── Planet visual config ── */
+const PLANET_RAYS: Record<string, { color: string; angle: number }> = {
+  sun:     { color: "#E8B84B", angle: 18 },
+  moon:    { color: "#C4C9D2", angle: 54 },
+  mercury: { color: "#8BC4A9", angle: 90 },
+  venus:   { color: "#E88BC4", angle: 126 },
+  mars:    { color: "#C45B5B", angle: 162 },
+  jupiter: { color: "#8B9FE8", angle: 198 },
+  saturn:  { color: "#A89070", angle: 234 },
+  uranus:  { color: "#70C8E8", angle: 270 },
+  neptune: { color: "#7088E8", angle: 306 },
+  pluto:   { color: "#9070A8", angle: 342 },
 };
 
 const STATUS_TEXT: Record<Language, string[]> = {
   he: [
-    "מחשבים את המפה האישית שלך...",
-    "מנתחים השפעות פלנטריות...",
-    "האור האסטרלי שלך מתגבש...",
-    "חותמת האנרגיה שלך נחשפת...",
+    "קרני הכוכבים יורדות אליך...",
+    "האור נספג לתוך הדמות שלך...",
+    "האנרגיה האסטרלית מתעצמת...",
+    "החותם הקוסמי שלך נחשף...",
   ],
   en: [
-    "Calculating your personal chart...",
-    "Analyzing planetary influences...",
-    "Your astral light is taking shape...",
-    "Your energy signature is revealed...",
+    "Stellar rays descending toward you...",
+    "Light is being absorbed into your figure...",
+    "Your astral energy is intensifying...",
+    "Your cosmic signature is revealed...",
   ],
   ru: [
-    "Рассчитываем вашу персональную карту...",
-    "Анализируем планетарные влияния...",
-    "Ваш астральный свет обретает форму...",
-    "Ваша энергетическая подпись раскрывается...",
+    "Звёздные лучи нисходят к вам...",
+    "Свет поглощается вашей фигурой...",
+    "Ваша астральная энергия усиливается...",
+    "Ваша космическая подпись раскрывается...",
   ],
   ar: [
-    "حساب خريطتك الشخصية...",
-    "تحليل التأثيرات الكوكبية...",
-    "ضوءك النجمي يتشكل...",
-    "بصمة طاقتك تتكشف...",
+    "أشعة النجوم تنزل نحوك...",
+    "يُمتص الضوء في صورتك...",
+    "طاقتك النجمية تتكثف...",
+    "بصمتك الكونية تتكشف...",
   ],
 };
 
-/* Calculate planet influence weight from chart data */
+/* Influence weights from chart data */
 function computeInfluences(chartData: NatalChartResult): Record<string, number> {
   const weights: Record<string, number> = {};
   const basePriority: Record<string, number> = {
     sun: 3, moon: 2.5, mercury: 1, venus: 1, mars: 1,
     jupiter: 1, saturn: 1, uranus: 0.8, neptune: 0.8, pluto: 0.8,
   };
-
-  PLANETS.forEach((p) => {
-    weights[p.key] = basePriority[p.key] || 1;
-  });
-
-  // Boost planets with more aspects
+  PLANETS.forEach((p) => { weights[p.key] = basePriority[p.key] || 1; });
   chartData.aspects.forEach((a) => {
     if (weights[a.planet1Key] !== undefined) weights[a.planet1Key] += 0.5;
     if (weights[a.planet2Key] !== undefined) weights[a.planet2Key] += 0.5;
   });
-
-  // Boost angular house planets (1, 4, 7, 10)
   chartData.planetPlacements.forEach((p) => {
-    if ([1, 4, 7, 10].includes(p.house)) {
-      weights[p.key] = (weights[p.key] || 1) + 1;
-    }
+    if ([1, 4, 7, 10].includes(p.house)) weights[p.key] = (weights[p.key] || 1) + 1;
   });
-
-  // Normalize to percentage
   const total = Object.values(weights).reduce((s, v) => s + v, 0);
-  Object.keys(weights).forEach((k) => {
-    weights[k] = Math.round((weights[k] / total) * 100);
-  });
-
+  Object.keys(weights).forEach((k) => { weights[k] = Math.round((weights[k] / total) * 100); });
   return weights;
 }
 
-/* ── Human silhouette SVG path ── */
+/* Human silhouette path */
 const SILHOUETTE_PATH = `
 M 150,30
 C 150,30 140,15 150,8 C 160,1 170,15 170,30
@@ -99,83 +85,98 @@ L 130,162 L 120,160 L 135,100 L 155,70
 C 150,65 145,60 145,50 C 145,40 148,35 150,30 Z
 `;
 
+/*
+ * TIMING (ms)
+ * Phase 1 – Beam descent:       0 → 3500
+ * Phase 2 – Absorption + climax: 3500 → 7500 (climax peaks at ~5500, holds 2s)
+ * Phase 3 – Hold complete:       7500 → 9000 (stable glow, influence cards)
+ * onComplete fires at 9500
+ */
+const PHASE1_END = 3500;
+const CLIMAX_PEAK = 5500;
+const CLIMAX_HOLD_END = 7500;
+const TOTAL_DURATION = 9000;
+
 const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
   const { language } = useLanguage();
-  const [step, setStep] = useState(0);
   const [activePlanets, setActivePlanets] = useState(0);
-  const [showInfluences, setShowInfluences] = useState(false);
+  const [climaxIntensity, setClimaxIntensity] = useState(0); // 0→1
+  const [step, setStep] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showInfluences, setShowInfluences] = useState(false);
 
   const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
   const influences = useMemo(() => computeInfluences(chartData), [chartData]);
 
-  // Sort planets by influence for reveal order
-  const sortedPlanets = useMemo(() => {
-    return [...PLANETS].sort((a, b) => (influences[b.key] || 0) - (influences[a.key] || 0));
-  }, [influences]);
-
-  // Top 5 for influence cards
-  const topInfluences = useMemo(() => {
-    return sortedPlanets.slice(0, 5);
-  }, [sortedPlanets]);
+  const sortedPlanets = useMemo(
+    () => [...PLANETS].sort((a, b) => (influences[b.key] || 0) - (influences[a.key] || 0)),
+    [influences],
+  );
+  const topInfluences = useMemo(() => sortedPlanets.slice(0, 5), [sortedPlanets]);
 
   useEffect(() => {
-    const totalDuration = 6000;
-    const planetInterval = totalDuration * 0.6 / PLANETS.length;
-    const statusInterval = totalDuration / statusTexts.length;
+    const planetInterval = PHASE1_END / PLANETS.length;
 
     // Progress bar
-    const progTimer = setInterval(() => {
-      setProgress((p) => Math.min(p + 1, 100));
-    }, totalDuration / 100);
+    const progTimer = setInterval(() => setProgress((p) => Math.min(p + 1, 100)), TOTAL_DURATION / 100);
 
-    // Reveal planets one by one
+    // Phase 1: beams appear one by one
     const planetTimer = setInterval(() => {
       setActivePlanets((p) => {
-        if (p >= PLANETS.length) {
-          clearInterval(planetTimer);
-          return p;
-        }
+        if (p >= PLANETS.length) { clearInterval(planetTimer); return p; }
         return p + 1;
       });
     }, planetInterval);
 
-    // Status text progression
-    const statusTimer = setInterval(() => {
-      setStep((s) => Math.min(s + 1, statusTexts.length - 1));
-    }, statusInterval);
+    // Status text
+    const statusInterval = TOTAL_DURATION / statusTexts.length;
+    const statusTimer = setInterval(() => setStep((s) => Math.min(s + 1, statusTexts.length - 1)), statusInterval);
 
-    // Show influence cards
-    const influenceTimer = setTimeout(() => setShowInfluences(true), totalDuration * 0.75);
+    // Phase 2: climax ramp from PHASE1_END to CLIMAX_PEAK
+    const climaxStart = setTimeout(() => {
+      const rampDuration = CLIMAX_PEAK - PHASE1_END;
+      const steps = 30;
+      const stepMs = rampDuration / steps;
+      let i = 0;
+      const rampTimer = setInterval(() => {
+        i++;
+        setClimaxIntensity(Math.min(i / steps, 1));
+        if (i >= steps) clearInterval(rampTimer);
+      }, stepMs);
+    }, PHASE1_END);
 
-    // Complete
-    const completeTimer = setTimeout(onComplete, totalDuration + 800);
+    // Phase 3: show influence cards after climax hold
+    const influenceTimer = setTimeout(() => setShowInfluences(true), CLIMAX_HOLD_END);
+
+    // Fire onComplete after everything
+    const completeTimer = setTimeout(onComplete, TOTAL_DURATION + 500);
 
     return () => {
       clearInterval(progTimer);
       clearInterval(planetTimer);
       clearInterval(statusTimer);
+      clearTimeout(climaxStart);
       clearTimeout(influenceTimer);
       clearTimeout(completeTimer);
     };
   }, []);
 
-  // Core glow intensity grows with active planets
-  const coreIntensity = Math.min(activePlanets / PLANETS.length, 1);
-
-  // Compute the dominant color blend for the core
+  // Dominant color from top influencer
   const dominantColor = useMemo(() => {
-    if (activePlanets === 0) return "hsl(43 80% 55% / 0.1)";
-    const active = sortedPlanets.slice(0, activePlanets);
-    // Weighted average toward top influencer
-    const topKey = active[0]?.key;
-    const topColor = PLANET_RAYS[topKey]?.color || "#E8B84B";
-    return topColor;
+    if (activePlanets === 0) return "#E8B84B";
+    const topKey = sortedPlanets[0]?.key;
+    return PLANET_RAYS[topKey]?.color || "#E8B84B";
   }, [activePlanets, sortedPlanets]);
+
+  // SVG dimensions: figure sits in the lower portion
+  const SVG_W = 320;
+  const SVG_H = 400;
+  const FIGURE_CX = 160;
+  const FIGURE_CY = 280; // lower center
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[65vh] px-4 relative overflow-hidden">
-      {/* Cosmic background particles */}
+      {/* Background particles */}
       <div className="absolute inset-0 pointer-events-none">
         {Array.from({ length: 30 }).map((_, i) => (
           <motion.div
@@ -186,192 +187,176 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
-            animate={{
-              opacity: [0, 0.8, 0],
-              scale: [0.5, 1.2, 0.5],
-            }}
-            transition={{
-              duration: 2 + Math.random() * 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
+            animate={{ opacity: [0, 0.8, 0], scale: [0.5, 1.2, 0.5] }}
+            transition={{ duration: 2 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 3 }}
           />
         ))}
       </div>
 
-      {/* Central figure with rays */}
-      <div className="relative w-full" style={{ maxWidth: 320, aspectRatio: "1 / 1" }}>
-        {/* Outer cosmic ring */}
-        <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: `radial-gradient(circle, transparent 55%, ${dominantColor}10 70%, transparent 85%)`,
-          }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        />
-
-        {/* Planet rays */}
-        {sortedPlanets.map((planet, idx) => {
-          const ray = PLANET_RAYS[planet.key];
-          if (!ray || idx >= activePlanets) return null;
-          const influence = (influences[planet.key] || 5) / 100;
-          const angle = ray.angle;
-          const radians = (angle - 90) * (Math.PI / 180);
-          const startX = 160 + Math.cos(radians) * 140;
-          const startY = 160 + Math.sin(radians) * 140;
-
-          return (
-            <motion.div
-              key={planet.key}
-              className="absolute"
-              style={{
-                inset: 0,
-                position: "absolute",
-                pointerEvents: "none",
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              <svg viewBox="0 0 320 320" width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
-                <defs>
-                  <linearGradient id={`ray-${planet.key}`} x1={startX} y1={startY} x2="160" y2="160" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor={ray.color} stopOpacity={0.7 * influence + 0.2} />
-                    <stop offset="100%" stopColor={ray.color} stopOpacity={0} />
-                  </linearGradient>
-                  <filter id={`glow-${planet.key}`}>
-                    <feGaussianBlur stdDeviation="3" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-                <line
-                  x1={startX}
-                  y1={startY}
-                  x2={160}
-                  y2={160}
-                  stroke={`url(#ray-${planet.key})`}
-                  strokeWidth={2 + influence * 4}
-                  filter={`url(#glow-${planet.key})`}
-                  strokeLinecap="round"
-                />
-              </svg>
-
-              {/* Planet symbol at ray origin */}
-              <motion.div
-                className="absolute flex items-center justify-center"
-                style={{
-                  left: `${(startX / 320) * 100}%`,
-                  top: `${(startY / 320) * 100}%`,
-                  width: "8.75%",
-                  height: "8.75%",
-                  transform: "translate(-50%, -50%)",
-                  borderRadius: "50%",
-                  background: `radial-gradient(circle, ${ray.color}30, transparent)`,
-                  border: `1px solid ${ray.color}50`,
-                  fontSize: 12,
-                  color: ray.color,
-                  textShadow: `0 0 8px ${ray.color}80`,
-                }}
-                animate={{
-                  boxShadow: [
-                    `0 0 6px ${ray.color}30`,
-                    `0 0 16px ${ray.color}60`,
-                    `0 0 6px ${ray.color}30`,
-                  ],
-                }}
-                transition={{ duration: 2, repeat: Infinity, delay: idx * 0.15 }}
-              >
-                {planet.symbol}
-              </motion.div>
-            </motion.div>
-          );
-        })}
-
-        {/* Human silhouette */}
-        <svg
-          viewBox="0 0 320 320"
-          className="absolute inset-0 w-full h-full"
-          style={{ filter: `drop-shadow(0 0 ${10 + coreIntensity * 20}px ${dominantColor}40)` }}
-        >
+      {/* Main SVG scene */}
+      <div className="relative w-full" style={{ maxWidth: 320, aspectRatio: `${SVG_W} / ${SVG_H}` }}>
+        <svg viewBox={`0 0 ${SVG_W} ${SVG_H}`} width="100%" height="100%" className="absolute inset-0">
           <defs>
-            <radialGradient id="core-glow" cx="50%" cy="50%" r="40%">
-              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + coreIntensity * 0.25} />
-              <stop offset="60%" stopColor={dominantColor} stopOpacity={0.05 + coreIntensity * 0.1} />
+            {/* Climax radial glow */}
+            <radialGradient id="climax-glow" cx="50%" cy="70%" r="35%">
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.6 * climaxIntensity} />
+              <stop offset="40%" stopColor={dominantColor} stopOpacity={0.3 * climaxIntensity} />
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
             </radialGradient>
+            {/* Silhouette gradient */}
             <linearGradient id="silhouette-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + coreIntensity * 0.3} />
-              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.25 + coreIntensity * 0.35} />
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + climaxIntensity * 0.4} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.25 + climaxIntensity * 0.5} />
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0.05} />
             </linearGradient>
+            {/* Beam gradients */}
+            {sortedPlanets.map((planet, idx) => {
+              const ray = PLANET_RAYS[planet.key];
+              if (!ray || idx >= activePlanets) return null;
+              const influence = (influences[planet.key] || 5) / 100;
+              // Beams come from the top, spread horizontally
+              const spreadX = FIGURE_CX + (idx - PLANETS.length / 2) * 28;
+              return (
+                <linearGradient
+                  key={`beam-grad-${planet.key}`}
+                  id={`beam-${planet.key}`}
+                  x1={spreadX} y1="0"
+                  x2={FIGURE_CX} y2={FIGURE_CY}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop offset="0%" stopColor={ray.color} stopOpacity={0.8 * influence + 0.15} />
+                  <stop offset="70%" stopColor={ray.color} stopOpacity={0.3 * influence} />
+                  <stop offset="100%" stopColor={ray.color} stopOpacity={0} />
+                </linearGradient>
+              );
+            })}
+            {/* Beam glow filters */}
+            <filter id="beam-glow">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="climax-blur">
+              <feGaussianBlur stdDeviation="12" />
+            </filter>
           </defs>
 
-          {/* Inner glow */}
-          <circle cx="160" cy="160" r="80" fill="url(#core-glow)" />
+          {/* Phase 1: Beams descending from top */}
+          {sortedPlanets.map((planet, idx) => {
+            const ray = PLANET_RAYS[planet.key];
+            if (!ray || idx >= activePlanets) return null;
+            const influence = (influences[planet.key] || 5) / 100;
+            const spreadX = FIGURE_CX + (idx - PLANETS.length / 2) * 28;
+            return (
+              <motion.line
+                key={`beam-${planet.key}`}
+                x1={spreadX} y1={0}
+                x2={FIGURE_CX} y2={FIGURE_CY}
+                stroke={`url(#beam-${planet.key})`}
+                strokeWidth={2 + influence * 5}
+                strokeLinecap="round"
+                filter="url(#beam-glow)"
+                initial={{ opacity: 0, pathLength: 0 }}
+                animate={{ opacity: [0, 1, 1, 0.3], pathLength: 1 }}
+                transition={{
+                  opacity: { duration: 2, times: [0, 0.2, 0.7, 1], delay: idx * 0.08 },
+                  pathLength: { duration: 1.5, delay: idx * 0.08, ease: "easeOut" },
+                }}
+              />
+            );
+          })}
 
-          {/* Pulsing energy core */}
+          {/* Planet symbols at beam origins */}
+          {sortedPlanets.map((planet, idx) => {
+            const ray = PLANET_RAYS[planet.key];
+            if (!ray || idx >= activePlanets) return null;
+            const spreadX = FIGURE_CX + (idx - PLANETS.length / 2) * 28;
+            return (
+              <motion.text
+                key={`sym-${planet.key}`}
+                x={spreadX} y={18}
+                textAnchor="middle"
+                fill={ray.color}
+                fontSize={11}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 1, 0.4] }}
+                transition={{ duration: 2.5, times: [0, 0.15, 0.6, 1], delay: idx * 0.08 }}
+              >
+                {planet.symbol}
+              </motion.text>
+            );
+          })}
+
+          {/* Phase 2: Climax glow behind figure */}
           <motion.circle
-            cx="160"
-            cy="130"
-            r={12 + coreIntensity * 8}
-            fill={dominantColor}
-            opacity={0.15 + coreIntensity * 0.2}
+            cx={FIGURE_CX} cy={FIGURE_CY - 20}
+            r={60}
+            fill="url(#climax-glow)"
+            filter="url(#climax-blur)"
+            initial={{ opacity: 0, r: 30 }}
             animate={{
-              r: [12 + coreIntensity * 6, 16 + coreIntensity * 10, 12 + coreIntensity * 6],
-              opacity: [0.15 + coreIntensity * 0.15, 0.25 + coreIntensity * 0.25, 0.15 + coreIntensity * 0.15],
+              opacity: climaxIntensity,
+              r: 40 + climaxIntensity * 50,
             }}
-            transition={{ duration: 2.5, repeat: Infinity }}
+            transition={{ duration: 0.3 }}
           />
 
-          {/* Silhouette figure */}
-          <g transform="translate(5, 25) scale(1.95)">
+          {/* Pulsing energy core inside figure */}
+          <motion.circle
+            cx={FIGURE_CX} cy={FIGURE_CY - 40}
+            r={8 + climaxIntensity * 16}
+            fill={dominantColor}
+            opacity={0.1 + climaxIntensity * 0.5}
+            animate={climaxIntensity > 0.8 ? {
+              r: [8 + climaxIntensity * 14, 8 + climaxIntensity * 20, 8 + climaxIntensity * 14],
+              opacity: [0.3 + climaxIntensity * 0.3, 0.5 + climaxIntensity * 0.4, 0.3 + climaxIntensity * 0.3],
+            } : undefined}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          />
+
+          {/* Secondary shimmer rings during climax */}
+          {climaxIntensity > 0.5 && (
+            <>
+              <motion.circle
+                cx={FIGURE_CX} cy={FIGURE_CY - 30}
+                r={30}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.5}
+                strokeOpacity={0.3 * climaxIntensity}
+                animate={{ r: [30, 55, 30], opacity: [0.3, 0.1, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+              <motion.circle
+                cx={FIGURE_CX} cy={FIGURE_CY - 30}
+                r={50}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.3}
+                strokeOpacity={0.15 * climaxIntensity}
+                animate={{ r: [50, 75, 50], opacity: [0.15, 0.05, 0.15] }}
+                transition={{ duration: 4, repeat: Infinity, delay: 0.5 }}
+              />
+            </>
+          )}
+
+          {/* Human silhouette (lower center) */}
+          <g transform={`translate(${FIGURE_CX - 155}, ${FIGURE_CY - 215}) scale(1.95)`}>
             <path
               d={SILHOUETTE_PATH}
               fill="url(#silhouette-fill)"
               stroke={dominantColor}
               strokeWidth="0.5"
-              strokeOpacity={0.3 + coreIntensity * 0.3}
+              strokeOpacity={0.3 + climaxIntensity * 0.5}
+              style={{ filter: `drop-shadow(0 0 ${6 + climaxIntensity * 18}px ${dominantColor}50)` }}
             />
           </g>
         </svg>
-
-        {/* Central rings */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            left: "50%",
-            top: "50%",
-            width: "18.75%",
-            height: "18.75%",
-            transform: "translate(-50%, -50%)",
-            border: `1px solid ${dominantColor}20`,
-          }}
-          animate={{ rotate: 360, scale: [1, 1.1, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{
-            left: "50%",
-            top: "50%",
-            width: "31.25%",
-            height: "31.25%",
-            transform: "translate(-50%, -50%)",
-            border: `1px solid ${dominantColor}12`,
-          }}
-          animate={{ rotate: -360 }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        />
       </div>
 
-      {/* Status text */}
+      {/* User name */}
       {userName && (
         <motion.p
-          className="font-heading text-lg md:text-xl gold-gradient-text mt-6 mb-2 text-center"
+          className="font-heading text-lg md:text-xl gold-gradient-text mt-4 mb-1 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
@@ -380,6 +365,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
         </motion.p>
       )}
 
+      {/* Status text */}
       <AnimatePresence mode="wait">
         <motion.p
           key={step}
@@ -395,29 +381,24 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
       </AnimatePresence>
 
       {/* Progress bar */}
-      <div
-        className="w-48 h-0.5 mt-6 rounded-full overflow-hidden"
-        style={{ background: "hsl(var(--gold) / 0.1)" }}
-      >
+      <div className="w-48 h-0.5 mt-5 rounded-full overflow-hidden" style={{ background: "hsl(var(--gold) / 0.1)" }}>
         <motion.div
           className="h-full rounded-full"
-          style={{
-            background: `linear-gradient(90deg, ${dominantColor}40, ${dominantColor}90, ${dominantColor}40)`,
-          }}
+          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${dominantColor}90, ${dominantColor}40)` }}
           initial={{ width: "0%" }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.1 }}
         />
       </div>
 
-      {/* Influence cards preview */}
+      {/* Influence cards – appear during climax hold */}
       <AnimatePresence>
         {showInfluences && (
           <motion.div
-            className="flex flex-wrap justify-center gap-2 mt-6 max-w-sm"
+            className="flex flex-wrap justify-center gap-2 mt-5 max-w-sm"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, staggerChildren: 0.08 }}
+            transition={{ duration: 0.6 }}
           >
             {topInfluences.map((planet, i) => {
               const ray = PLANET_RAYS[planet.key];
