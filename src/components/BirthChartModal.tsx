@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock } from "lucide-react";
+import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
 import AstralLightReveal from "@/components/AstralLightReveal";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { getChartLabels, getPlanetName, getSignNameByKey, getElementName, getAspectName } from "@/lib/astroLocale";
@@ -82,11 +83,14 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     [chartData, language],
   );
 
+  const isAdmin = subscriptionManager.isAdmin();
+
   useEffect(() => {
     if (isOpen) {
-      setDailyLimitReached(hasUsedChartToday());
+      // Admins never hit daily limit
+      setDailyLimitReached(isAdmin ? false : hasUsedChartToday());
     }
-  }, [isOpen]);
+  }, [isOpen, isAdmin]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -124,7 +128,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const handleSubmit = useCallback(async () => {
     setAttempted(true);
 
-    if (dailyLimitReached) {
+    if (dailyLimitReached && !isAdmin) {
       toast.error(t.chart_daily_limit_toast);
       return;
     }
