@@ -374,15 +374,30 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
             )}
 
             {phase === "loading" && chartData && (
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, scale: 0.85, filter: "blur(8px)" }}
+                transition={{ exit: { duration: 0.8, ease: "easeInOut" } }}
+              >
                 <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
             )}
 
               {showResult && (
-              <div key="result" className="space-y-8">
-                <div
+              <motion.div
+                key="result"
+                className="space-y-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <motion.div
                   className="w-full"
+                  initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   style={{
                     minHeight: wheelSize + 48,
                     display: "block",
@@ -412,7 +427,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       size={wheelSize}
                     />
                   </div>
-                </div>
+                </motion.div>
 
                 <div className="text-center">
                   {userName.trim() && (
