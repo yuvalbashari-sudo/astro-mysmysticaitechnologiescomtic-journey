@@ -542,6 +542,7 @@ export const en: TranslationKeys = {
   a11y_link_label: "Accessibility statement",
   a11y_no_readings: "No saved readings yet",
 
+  advisor_name: "Norielle",
   advisor_title: "Norielle – Your Personal Astrology Guide",
   advisor_placeholder_context: "Ask Norielle about your reading...",
   advisor_placeholder_general: "Ask Norielle...",
