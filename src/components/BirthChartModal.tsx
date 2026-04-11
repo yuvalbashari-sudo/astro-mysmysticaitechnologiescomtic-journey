@@ -391,14 +391,14 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
-                {/* Chart wheel emerges from below */}
+                {/* Chart wheel emerges from below — delayed after climax exit */}
                 <motion.div
                   className="w-full"
-                  initial={{ opacity: 0, y: 80, scale: 0.85 }}
+                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 1.2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 1.4, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
                   style={{
                     minHeight: wheelSize + 48,
                     display: "block",
@@ -434,7 +434,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   className="text-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.7, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
                 >
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
