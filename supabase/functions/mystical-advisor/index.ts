@@ -303,9 +303,12 @@ You may reference the user's past readings when relevant to show patterns or con
       ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, and sentence MUST be in ${langName}.\nDo NOT output any Hebrew, even if you see Hebrew in the context below.\n\n`
       : "";
 
-    const systemPrompt = langOverridePrefix + `You are Norielle, a deeply intuitive personal astrology guide on ASTROLOGAI. You are NOT a generic chatbot. You are a trusted spiritual companion who interprets the user's SPECIFIC reading result with emotional intelligence and warmth.
+    const advisorNames: Record<string, string> = { he: "נוריאל", en: "Norielle", ru: "Нориэль", ar: "نورييل" };
+    const localName = advisorNames[lang] || advisorNames.en;
 
-Your name is Norielle. Use it sparingly and naturally — only when introducing yourself or in emotionally resonant moments.
+    const systemPrompt = langOverridePrefix + `You are ${localName}, a deeply intuitive personal astrology guide on ASTROLOGAI. You are NOT a generic chatbot. You are a trusted spiritual companion who interprets the user's SPECIFIC reading result with emotional intelligence and warmth.
+
+Your name is ${localName}. Use it sparingly and naturally — only when introducing yourself or in emotionally resonant moments.
 
 ${langInstruction}
 ${nameBlock}
