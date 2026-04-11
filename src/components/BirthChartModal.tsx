@@ -332,7 +332,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </p>
                 </div>
 
-                {dailyLimitReached ? (
+                {dailyLimitReached && !isAdmin ? (
                   <div className="space-y-4">
                     <div
                       className="rounded-xl p-4 text-center"
@@ -349,6 +349,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   <div className="space-y-5">
+                    {isAdmin && (
+                      <div className="flex items-center justify-center gap-1.5 py-1.5 px-3 mx-auto w-fit rounded-full text-xs font-body" style={{
+                        background: "hsl(var(--gold) / 0.08)",
+                        border: "1px solid hsl(var(--gold) / 0.2)",
+                        color: "hsl(var(--gold))",
+                      }}>
+                        <Shield className="w-3 h-3" />
+                        <span>ADMIN — unlimited</span>
+                      </div>
+                    )}
                     <BirthDetailsForm
                       values={details}
                       onChange={(patch) => setDetails((prev) => ({ ...prev, ...patch }))}
@@ -356,11 +366,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       showTime
                     />
 
-                    <div className="text-center">
-                      <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                        {t.chart_daily_available}
-                      </p>
-                    </div>
+                    {!isAdmin && (
+                      <div className="text-center">
+                        <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
+                          {t.chart_daily_available}
+                        </p>
+                      </div>
+                    )}
 
                     <motion.button
                       whileHover={{ scale: 1.02 }}
