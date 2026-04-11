@@ -3136,19 +3136,25 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                         className={`relative flex items-center gap-2.5 transition-all duration-300 px-3 py-2 ${isNeonPanel ? "rounded-2xl" : "rounded-full"}`}
                         style={{
                           borderWidth: "1px", borderStyle: "solid",
-                          borderColor: isNeonPanel
-                            ? (isHovered ? neon.neonLight : `${i === 1 ? "rgba(0, 150, 255, 0.25)" : "rgba(220, 50, 50, 0.25)"}`)
-                            : (isHovered ? `${neon.neon}bb` : "hsl(var(--gold) / 0.12)"),
-                          background: isNeonPanel
-                            ? "linear-gradient(135deg, hsl(var(--deep-blue) / 0.75), hsl(var(--deep-blue) / 0.6))"
-                            : (isHovered ? `${neon.neon}2a` : "hsl(var(--deep-blue) / 0.7)"),
-                          boxShadow: isNeonPanel
-                            ? (isHovered
-                              ? `0 0 28px ${i === 1 ? "rgba(0, 150, 255, 0.22)" : "rgba(220, 50, 50, 0.22)"}, 0 0 56px ${i === 1 ? "rgba(0, 150, 255, 0.1)" : "rgba(220, 50, 50, 0.1)"}, 0 8px 24px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)`
-                              : `0 0 18px ${i === 1 ? "rgba(0, 150, 255, 0.12)" : "rgba(220, 50, 50, 0.12)"}, 0 0 36px ${i === 1 ? "rgba(0, 150, 255, 0.06)" : "rgba(220, 50, 50, 0.06)"}, 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)`)
-                            : (isHovered
-                              ? `0 0 28px ${neon.neon}55, 0 0 56px ${neon.neon}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
-                              : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)"),
+                          borderColor: isDailyPrimary
+                            ? "hsl(35, 80%, 50% / 0.35)"
+                            : isNeonPanel
+                              ? (isHovered ? neon.neonLight : `${i === 1 ? "rgba(0, 150, 255, 0.25)" : "rgba(220, 50, 50, 0.25)"}`)
+                              : (isHovered ? `${neon.neon}bb` : "hsl(var(--gold) / 0.12)"),
+                          background: isDailyPrimary
+                            ? "linear-gradient(135deg, hsl(var(--deep-blue) / 0.65), hsl(35 40% 8% / 0.7))"
+                            : isNeonPanel
+                              ? "linear-gradient(135deg, hsl(var(--deep-blue) / 0.75), hsl(var(--deep-blue) / 0.6))"
+                              : (isHovered ? `${neon.neon}2a` : "hsl(var(--deep-blue) / 0.7)"),
+                          boxShadow: isDailyPrimary
+                            ? "0 0 20px hsl(35 85% 55% / 0.15), 0 0 40px hsl(35 85% 55% / 0.06), 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 hsl(35 80% 60% / 0.12)"
+                            : isNeonPanel
+                              ? (isHovered
+                                ? `0 0 28px ${i === 1 ? "rgba(0, 150, 255, 0.22)" : "rgba(220, 50, 50, 0.22)"}, 0 0 56px ${i === 1 ? "rgba(0, 150, 255, 0.1)" : "rgba(220, 50, 50, 0.1)"}, 0 8px 24px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.1)`
+                                : `0 0 18px ${i === 1 ? "rgba(0, 150, 255, 0.12)" : "rgba(220, 50, 50, 0.12)"}, 0 0 36px ${i === 1 ? "rgba(0, 150, 255, 0.06)" : "rgba(220, 50, 50, 0.06)"}, 0 4px 16px hsl(var(--deep-blue) / 0.5), inset 0 1px 0 rgba(255,255,255,0.06)`)
+                              : (isHovered
+                                ? `0 0 28px ${neon.neon}55, 0 0 56px ${neon.neon}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                                : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)"),
                         }}
                       >
                         <item.icon
