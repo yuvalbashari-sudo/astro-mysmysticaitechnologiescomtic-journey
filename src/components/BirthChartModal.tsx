@@ -374,15 +374,29 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
             )}
 
             {phase === "loading" && chartData && (
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.div
+                key="loading"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
+              >
                 <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
             )}
 
               {showResult && (
-              <div key="result" className="space-y-8">
-                <div
+              <motion.div
+                key="result"
+                className="space-y-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
+                <motion.div
                   className="w-full"
+                  initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   style={{
                     minHeight: wheelSize + 48,
                     display: "block",
@@ -412,9 +426,14 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       size={wheelSize}
                     />
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="text-center">
+                <motion.div
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                >
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
                       {t.chart_of_name} {userName.trim()}
@@ -426,10 +445,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
                       {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : t.chart_computing}
                   </p>
-                </div>
+                </motion.div>
 
                 {chartData && (
-                <div className="grid md:grid-cols-3 gap-3 w-full">
+                <motion.div
+                  className="grid md:grid-cols-3 gap-3 w-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                >
                   <div className="mystical-card p-4 text-center">
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.sun}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {getSignNameByKey(chartData.sunSign.key, language)}</div>
@@ -442,7 +466,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.moon}</div>
                     <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSignKey ? getSignNameByKey(chartData.moonSignKey, language) : chartData.moonSign}</div>
                   </div>
-                </div>
+                </motion.div>
                 )}
 
                 {chartData && (
@@ -569,7 +593,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     </div>
                   </motion.div>
                 )}
-              </div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>
