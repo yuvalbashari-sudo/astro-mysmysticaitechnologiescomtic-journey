@@ -24,7 +24,7 @@ export const ar: TranslationKeys = {
   hero_menu_palm: "قراءة الكف",
   hero_menu_birthchart: "خريطة الميلاد",
   hero_menu_fullchart: "خريطة فلكية كاملة",
-  hero_menu_daily_horoscope: "الأبراج اليومية",
+  hero_menu_daily_horoscope: "برجك اليومي",
 
   nav_title: "البوابات الروحية",
   nav_subtitle: "اختاروا بوابتكم إلى العالم الروحي",
