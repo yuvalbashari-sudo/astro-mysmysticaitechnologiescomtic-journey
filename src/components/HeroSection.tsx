@@ -3097,8 +3097,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
         <div className="grid grid-cols-2" style={{ gap: 12 }}>
-            {/* Left column: Compatibility (i=1), Forecast (i=0) — Right column: Tarot (i=2), Palm (i=3) */}
-            {[[1, 0], [2, 3, 4]].map((colIndices, colIdx) => (
+            {/* Left column: DailyHoroscope (i=4), Forecast (i=0) — Right column: Tarot (i=2), BirthChart (i=3), Compatibility (i=1) */}
+            {[[4, 0], [2, 3, 1]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
@@ -3108,12 +3108,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     1: { neon: "rgba(0, 150, 255, 0.85)", neonLight: "rgba(0, 150, 255, 0.5)", iconColor: "rgba(0, 170, 255, 0.85)" },
                     2: { neon: "rgba(220, 50, 50, 0.85)", neonLight: "rgba(220, 50, 50, 0.5)", iconColor: "rgba(255, 80, 80, 0.85)" },
                     3: { neon: ITEM_COLORS[3].glow, neonLight: ITEM_COLORS[3].glow, iconColor: ITEM_COLORS[3].glow },
-                    4: { neon: ITEM_COLORS[4].glow, neonLight: ITEM_COLORS[4].glow, iconColor: ITEM_COLORS[4].glow },
+                    4: { neon: "hsl(35, 90%, 58%)", neonLight: "hsl(35, 85%, 50%)", iconColor: "hsl(35, 90%, 60%)" },
                   };
                   const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
                   // Neon panels (Compatibility=1, Tarot=2) get special treatment matching desktop CTA teasers
+                  // Daily horoscope (i=4) gets premium emphasis as primary daily action
                   const isNeonPanel = i === 1 || i === 2;
+                  const isDailyPrimary = i === 4;
                   return (
                     <motion.button
                       key={i}
