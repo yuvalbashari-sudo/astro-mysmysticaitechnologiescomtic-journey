@@ -610,6 +610,7 @@ export type TranslationKeys = {
   a11y_no_readings: string;
 
   // Advisor
+  advisor_name: string;
   advisor_title: string;
   advisor_placeholder_context: string;
   advisor_placeholder_general: string;
