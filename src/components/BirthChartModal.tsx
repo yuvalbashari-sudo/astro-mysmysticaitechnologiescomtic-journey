@@ -378,8 +378,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 key="loading"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.85, filter: "blur(8px)" }}
-                transition={{ exit: { duration: 0.8, ease: "easeInOut" } }}
+                transition={{ duration: 0.8, ease: "easeInOut" }}
               >
                 <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
