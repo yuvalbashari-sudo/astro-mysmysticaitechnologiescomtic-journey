@@ -109,7 +109,8 @@ function matchIsraeliCity(input: string): string | null {
 
   // Try without spaces
   const noSpaces = cleaned.replace(/\s/g, "");
-  for (const [key, canonical] of _israeliCityLookup.entries()) {
+  const entries = Array.from(_israeliCityLookup.entries());
+  for (const [key, canonical] of entries) {
     if (key.replace(/[\s']/g, "") === noSpaces) return canonical;
   }
 
