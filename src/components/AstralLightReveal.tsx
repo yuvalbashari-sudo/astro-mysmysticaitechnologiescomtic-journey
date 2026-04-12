@@ -4,6 +4,7 @@ import { PLANETS } from "@/components/NatalChartWheel";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getPlanetName } from "@/lib/astroLocale";
 import type { NatalChartResult } from "@/lib/natalChart";
+import { getAuraResult, type AuraResult } from "@/lib/auraResultBank";
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 
@@ -20,6 +21,7 @@ interface Props {
   userName?: string;
   chartData: NatalChartResult;
   onComplete: () => void;
+  onAuraResult?: (result: AuraResult) => void;
   fastMode?: boolean;
 }
 
@@ -124,7 +126,7 @@ const FIG_CX = W / 2;       // 160 — perfectly centered
 const FIG_CHEST_Y = 255;    // where beams target (chest area in scene coords)
 const FIG_CORE_Y = 240;     // energy core center
 
-const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }: Props) => {
+const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fastMode = false }: Props) => {
   console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure", fastMode ? "(fast)" : "");
   const { language } = useLanguage();
 
@@ -138,8 +140,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
   const [showConstellations, setShowConstellations] = useState(true);
 
   const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
-  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
   const influences = useMemo(() => computeInfluences(chartData), [chartData]);
+
+  /* ── Compute structured aura result (deterministic, memo'd) ── */
+  const auraResult = useMemo(() => getAuraResult(influences), [influences]);
 
   const sortedPlanets = useMemo(
     () => [...PLANETS].sort((a, b) => (influences[b.key] || 0) - (influences[a.key] || 0)),
@@ -230,7 +234,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
     }, CS);
 
     const infTimer = setTimeout(() => setShowInfluences(true), CPK + 500 * S);
-    const doneTimer = setTimeout(onComplete, T);
+    const doneTimer = setTimeout(() => {
+      onAuraResult?.(auraResult);
+      onComplete();
+    }, T);
     const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
 
     return () => {
