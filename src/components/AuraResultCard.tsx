@@ -1,14 +1,51 @@
 import { motion } from "framer-motion";
-import type { AuraResult, AuraFamily } from "@/lib/auraResultBank";
+import { Download, Sparkles } from "lucide-react";
+import type { AuraResult, AuraFamily, EnergyModifier } from "@/lib/auraResultBank";
 import { AURA_BANK } from "@/lib/auraResultBank";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 /* ── Localized labels ── */
-const LABELS: Record<string, { dominant: string; secondary: string }> = {
-  he: { dominant: "ההילה הדומיננטית שלך", secondary: "גוונים משניים" },
-  en: { dominant: "Your Dominant Aura", secondary: "Secondary tones" },
-  ru: { dominant: "Ваша доминирующая аура", secondary: "Вторичные тона" },
-  ar: { dominant: "هالتك المهيمنة", secondary: "نغمات ثانوية" },
+const LABELS: Record<string, Record<string, string>> = {
+  he: {
+    dominant: "ההילה הדומיננטית שלך",
+    secondary: "גוונים משניים",
+    energySignature: "חתימת האנרגיה שלך",
+    primaryLabel: "הילה ראשית",
+    secondaryLabel: "גוונים תומכים",
+    modifierLabel: "טון אנרגטי",
+    shareTitle: "שתפ/י את ההילה שלך",
+    downloadCta: "הורד/י את ההילה שלך",
+  },
+  en: {
+    dominant: "Your Dominant Aura",
+    secondary: "Secondary tones",
+    energySignature: "Your Energy Signature",
+    primaryLabel: "Primary Aura",
+    secondaryLabel: "Supporting Tones",
+    modifierLabel: "Energy Tone",
+    shareTitle: "Share Your Aura",
+    downloadCta: "Download Your Aura",
+  },
+  ru: {
+    dominant: "Ваша доминирующая аура",
+    secondary: "Вторичные тона",
+    energySignature: "Ваша энергетическая подпись",
+    primaryLabel: "Основная аура",
+    secondaryLabel: "Поддерживающие тона",
+    modifierLabel: "Энергетический тон",
+    shareTitle: "Поделитесь своей аурой",
+    downloadCta: "Скачать вашу ауру",
+  },
+  ar: {
+    dominant: "هالتك المهيمنة",
+    secondary: "نغمات ثانوية",
+    energySignature: "بصمتك الطاقية",
+    primaryLabel: "الهالة الأساسية",
+    secondaryLabel: "نغمات داعمة",
+    modifierLabel: "النغمة الطاقية",
+    shareTitle: "شارك هالتك",
+    downloadCta: "حمّل هالتك",
+  },
 };
 
 /* ── Localized aura names, subtitles & meanings ── */
@@ -52,6 +89,14 @@ const AURA_I18N: Record<string, Record<AuraFamily, AuraI18n>> = {
   },
 };
 
+/* ── Localized modifier names ── */
+const MODIFIER_I18N: Record<string, Record<EnergyModifier, string>> = {
+  he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
+  en: { radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep", balanced: "Balanced", transformative: "Transformative", grounded: "Grounded", fluid: "Fluid", intense: "Intense", ethereal: "Ethereal" },
+  ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
+  ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
+};
+
 /* ── Visual mapping per aura family ── */
 const AURA_VISUALS: Record<AuraFamily, { accent: string; glow: string; gradient: string }> = {
   solar_gold:        { accent: "#F5C842", glow: "43 80% 55%",   gradient: "linear-gradient(135deg, #F5C84218, #F5C84208)" },
@@ -78,7 +123,14 @@ const AuraResultCard = ({ result }: Props) => {
   const title = i18n?.title ?? result.title;
   const subtitle = i18n?.subtitle ?? result.subtitle;
   const meaning = i18n?.shortMeaning ?? result.shortMeaning;
+  const modifierName = MODIFIER_I18N[language]?.[result.modifier] ?? MODIFIER_I18N.en[result.modifier];
   const getAuraTitle = (a: AuraFamily) => AURA_I18N[language]?.[a]?.title ?? AURA_BANK[a].title;
+
+  // Shareable identity in current language
+  const shareableIdentity = `${modifierName} ${title}`;
+
+  // Secondary visuals
+  const secondaryVis = result.secondaryAuras.slice(0, 2).map(a => AURA_VISUALS[a]);
 
   return (
     <motion.div
@@ -87,83 +139,188 @@ const AuraResultCard = ({ result }: Props) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        background: vis.gradient,
+        background: `linear-gradient(180deg, ${vis.accent}12 0%, ${vis.accent}06 40%, transparent 100%)`,
         border: `1px solid ${vis.accent}22`,
-        boxShadow: `0 0 40px hsl(${vis.glow} / 0.08), inset 0 1px 0 ${vis.accent}10`,
+        boxShadow: `0 0 60px hsl(${vis.glow} / 0.12), 0 0 120px hsl(${vis.glow} / 0.06), inset 0 1px 0 ${vis.accent}10`,
       }}
     >
-      {/* Subtle aura shimmer */}
+      {/* Animated aura shimmer — pulsing glow */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse 60% 50% at 50% 30%, ${vis.accent}0A, transparent 70%)`,
+          background: `radial-gradient(ellipse 80% 60% at 50% 20%, ${vis.accent}14, transparent 70%)`,
         }}
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
+        animate={{ opacity: [0.3, 0.7, 0.3] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      <div className="relative px-5 py-6 md:px-8 md:py-8 space-y-4">
-        {/* Title */}
-        <div className="text-center space-y-1.5">
+      {/* Secondary color blending gradients */}
+      {secondaryVis.map((sv, i) => (
+        <motion.div
+          key={i}
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: `radial-gradient(ellipse 40% 40% at ${i === 0 ? '20% 70%' : '80% 80%'}, ${sv.accent}0A, transparent 60%)`,
+          }}
+          animate={{ opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: i * 1.5 }}
+        />
+      ))}
+
+      <div className="relative px-5 py-7 md:px-8 md:py-10 space-y-6">
+
+        {/* ═══ HERO IDENTITY — Most dominant element ═══ */}
+        <div className="text-center space-y-3">
+          {/* Modifier + Primary aura = Shareable Identity */}
+          <motion.h2
+            className="font-heading text-2xl md:text-3xl tracking-wide font-bold"
+            style={{
+              color: vis.accent,
+              textShadow: `0 0 30px ${vis.accent}60, 0 0 60px ${vis.accent}30`,
+            }}
+            initial={{ opacity: 0, y: 12, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {shareableIdentity}
+          </motion.h2>
+
+          {/* Emotional subtitle */}
           <motion.p
-            className="font-body text-xs md:text-sm uppercase tracking-widest"
-            style={{ color: `${vis.accent}88` }}
+            className="font-body text-sm md:text-base italic max-w-[320px] mx-auto"
+            style={{ color: `${vis.accent}BB` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            {labels.dominant}
-          </motion.p>
-          <motion.h3
-            className="font-heading text-xl md:text-2xl tracking-wide"
-            style={{ color: vis.accent }}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            {title}
-          </motion.h3>
-          <motion.p
-            className="font-body text-sm md:text-base italic"
-            style={{ color: `${vis.accent}AA` }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
           >
             {subtitle}
           </motion.p>
         </div>
 
-        {/* Divider */}
-        <div
+        {/* Glowing divider */}
+        <motion.div
           className="mx-auto"
           style={{
-            width: "40%",
+            width: "50%",
             height: 1,
-            background: `linear-gradient(90deg, transparent, ${vis.accent}30, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${vis.accent}50, transparent)`,
+            boxShadow: `0 0 8px ${vis.accent}30`,
           }}
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
         />
 
-        {/* Short meaning */}
+        {/* ═══ MEANING — Personal reading ═══ */}
         <motion.p
-          className="font-body text-sm md:text-base text-center leading-relaxed"
+          className="font-body text-sm md:text-base text-center leading-relaxed max-w-[360px] mx-auto"
           style={{
             color: "hsl(var(--foreground) / 0.82)",
             lineHeight: 1.9,
           }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9 }}
+          transition={{ duration: 0.7, delay: 1.1 }}
         >
           {meaning}
         </motion.p>
 
-        {/* Visual tone tag */}
+        {/* ═══ ENERGY SIGNATURE SECTION ═══ */}
+        <motion.div
+          className="rounded-xl p-4 space-y-3"
+          style={{
+            background: `${vis.accent}08`,
+            border: `1px solid ${vis.accent}12`,
+          }}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+        >
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Sparkles size={14} style={{ color: vis.accent }} />
+            <span
+              className="font-body text-[11px] uppercase tracking-[0.15em]"
+              style={{ color: `${vis.accent}99` }}
+            >
+              {labels.energySignature}
+            </span>
+            <Sparkles size={14} style={{ color: vis.accent }} />
+          </div>
+
+          {/* Primary */}
+          <div className="flex items-center gap-3">
+            <motion.div
+              className="w-3 h-3 rounded-full flex-shrink-0"
+              style={{
+                background: vis.accent,
+                boxShadow: `0 0 10px ${vis.accent}80, 0 0 20px ${vis.accent}40`,
+              }}
+              animate={{ boxShadow: [`0 0 10px ${vis.accent}80, 0 0 20px ${vis.accent}40`, `0 0 16px ${vis.accent}A0, 0 0 30px ${vis.accent}60`, `0 0 10px ${vis.accent}80, 0 0 20px ${vis.accent}40`] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <div className="flex-1 min-w-0">
+              <span className="font-body text-[10px] uppercase tracking-wider block" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
+                {labels.primaryLabel}
+              </span>
+              <span className="font-heading text-sm" style={{ color: vis.accent }}>
+                {title}
+              </span>
+            </div>
+          </div>
+
+          {/* Secondary auras */}
+          {result.secondaryAuras.length > 0 && (
+            <div className="flex items-start gap-3">
+              <div className="flex flex-col gap-1 pt-1.5 flex-shrink-0">
+                {result.secondaryAuras.slice(0, 2).map((a, i) => (
+                  <div
+                    key={i}
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{
+                      background: AURA_VISUALS[a].accent,
+                      opacity: 0.7,
+                      boxShadow: `0 0 6px ${AURA_VISUALS[a].accent}50`,
+                    }}
+                  />
+                ))}
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="font-body text-[10px] uppercase tracking-wider block" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
+                  {labels.secondaryLabel}
+                </span>
+                <span className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.65)" }}>
+                  {result.secondaryAuras.slice(0, 2).map(a => getAuraTitle(a)).join(" · ")}
+                </span>
+              </div>
+            </div>
+          )}
+
+          {/* Modifier */}
+          <div className="flex items-center gap-3">
+            <div
+              className="w-3 h-3 rounded-sm flex-shrink-0"
+              style={{
+                background: `linear-gradient(135deg, ${vis.accent}40, ${vis.accent}20)`,
+                border: `1px solid ${vis.accent}30`,
+              }}
+            />
+            <div className="flex-1 min-w-0">
+              <span className="font-body text-[10px] uppercase tracking-wider block" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
+                {labels.modifierLabel}
+              </span>
+              <span className="font-body text-xs" style={{ color: `${vis.accent}CC` }}>
+                {modifierName}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* ═══ VISUAL TONE TAG ═══ */}
         <motion.div
           className="flex justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1.1 }}
+          transition={{ duration: 0.5, delay: 1.5 }}
         >
           <span
             className="px-4 py-1.5 rounded-full font-body text-[11px] tracking-wider uppercase"
@@ -177,18 +334,37 @@ const AuraResultCard = ({ result }: Props) => {
           </span>
         </motion.div>
 
-        {/* Secondary auras */}
-        {result.secondaryAuras.length > 0 && (
-          <motion.p
-            className="text-center font-body text-[11px] md:text-xs"
-            style={{ color: "hsl(var(--foreground) / 0.4)" }}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.3 }}
+        {/* ═══ SHARE SECTION ═══ */}
+        <motion.div
+          className="text-center space-y-3 pt-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.7 }}
+        >
+          <p
+            className="font-body text-[11px] uppercase tracking-[0.15em]"
+            style={{ color: "hsl(var(--foreground) / 0.35)" }}
           >
-            {labels.secondary}: {result.secondaryAuras.slice(0, 3).map(a => getAuraTitle(a)).join(" • ")}
-          </motion.p>
-        )}
+            {labels.shareTitle}
+          </p>
+          <motion.button
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-body text-sm tracking-wide cursor-pointer transition-all duration-300"
+            style={{
+              color: vis.accent,
+              background: `${vis.accent}14`,
+              border: `1px solid ${vis.accent}28`,
+              boxShadow: `0 0 20px ${vis.accent}10`,
+            }}
+            whileHover={{
+              boxShadow: `0 0 30px ${vis.accent}25, 0 0 60px ${vis.accent}10`,
+              scale: 1.03,
+            }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Download size={14} />
+            {labels.downloadCta}
+          </motion.button>
+        </motion.div>
       </div>
     </motion.div>
   );
