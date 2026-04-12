@@ -16,6 +16,7 @@ import PremiumUpgrade from "./pages/PremiumUpgrade";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NatalTest from "./pages/NatalTest";
+import AstralPreview from "./pages/AstralPreview";
 import TarotGuidePage from "./pages/TarotGuidePage";
 import TarotGuidesPage from "./pages/TarotGuidesPage";
 import AstrologyGuidesPage from "./pages/AstrologyGuidesPage";
