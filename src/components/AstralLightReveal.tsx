@@ -377,19 +377,19 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             {/* Inner glow — radial from chest, uses top 3 planet colors */}
             <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
-              <stop offset="30%" stopColor={planetColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
-              <stop offset="60%" stopColor={planetColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
-              <stop offset="100%" stopColor={planetColors.tertiary} stopOpacity={0} />
+              <stop offset="30%" stopColor={auraColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
+              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
+              <stop offset="100%" stopColor={auraColors.tertiary} stopOpacity={0} />
             </radialGradient>
 
-            {/* Climax radial — personalized planetary blend */}
+            {/* Climax radial — aura-driven color blend */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#fff" stopOpacity={0.2 * climaxLevel} />
-              <stop offset="15%" stopColor={planetColors.dominant} stopOpacity={0.6 * climaxLevel * (planetColors.weights[0] || 0.3) * 2.5} />
-              <stop offset="35%" stopColor={planetColors.secondary} stopOpacity={0.4 * climaxLevel * (planetColors.weights[1] || 0.2) * 2} />
-              <stop offset="55%" stopColor={planetColors.tertiary} stopOpacity={0.25 * climaxLevel * (planetColors.weights[2] || 0.15) * 2} />
-              <stop offset="75%" stopColor={planetColors.accent} stopOpacity={0.1 * climaxLevel} />
-              <stop offset="100%" stopColor={planetColors.subtle} stopOpacity={0} />
+              <stop offset="20%" stopColor={auraColors.dominant} stopOpacity={0.7 * climaxLevel} />
+              <stop offset="45%" stopColor={auraColors.dominant} stopOpacity={0.4 * climaxLevel} />
+              <stop offset="65%" stopColor={auraColors.secondary} stopOpacity={0.15 * climaxLevel} />
+              <stop offset="85%" stopColor={auraColors.tertiary} stopOpacity={0.05 * climaxLevel} />
+              <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
             {/* Beam gradients — all target figure chest */}
