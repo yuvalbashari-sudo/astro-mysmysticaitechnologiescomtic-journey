@@ -556,7 +556,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               })}
 
               {/* Internal energy veins — anatomical meridians */}
-              {/* Spine (central) */}
+              {/* Spine (central) — dominant planet color */}
               <motion.line
                 x1={FIG_CX} y1={FIG_CORE_Y - 45}
                 x2={FIG_CX} y2={FIG_CORE_Y + 80}
@@ -567,13 +567,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 animate={{ strokeOpacity: [absorptionLevel * 0.25, absorptionLevel * 0.55, absorptionLevel * 0.25] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
-              {/* Left/right spine parallels */}
+              {/* Left/right spine parallels — secondary planet color */}
               {[-6, 6].map((offset, vi) => (
                 <motion.line
                   key={`vein-${vi}`}
                   x1={FIG_CX + offset} y1={FIG_CORE_Y - 35}
                   x2={FIG_CX + offset} y2={FIG_CORE_Y + 70}
-                  stroke={dominantColor}
+                  stroke={secondaryColor}
                   strokeWidth={0.6}
                   strokeOpacity={absorptionLevel * 0.3}
                   filter="url(#body-glow)"
