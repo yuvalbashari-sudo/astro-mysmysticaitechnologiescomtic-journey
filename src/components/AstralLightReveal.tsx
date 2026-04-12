@@ -8,9 +8,9 @@ import { getAuraResult, type AuraResult, type AuraFamily } from "@/lib/auraResul
 
 /* Localized aura title lookup for the final status line */
 const AURA_TITLE_I18N: Record<string, Record<AuraFamily, string>> = {
-  he: { gold: "זוהר שמשי", blue: "עומקים ירחיים", green: "זרם אזמרגד", purple: "צעיף מיסטי", red: "להבה חיונית", pink: "חן נוגהי", turquoise: "זרם אסטרלי", indigo: "עוגן עמוק", orange: "אור מתרחב", white: "טרנסמוטציה טהורה" },
-  ru: { gold: "Солнечное сияние", blue: "Лунные глубины", green: "Изумрудный поток", purple: "Мистическая завеса", red: "Жизненное пламя", pink: "Венерианская грация", turquoise: "Астральный поток", indigo: "Глубокий якорь", orange: "Расширяющийся свет", white: "Чистая трансмутация" },
-  ar: { gold: "إشراق شمسي", blue: "أعماق قمرية", green: "تيار زمردي", purple: "حجاب صوفي", red: "لهب حيوي", pink: "رشاقة فينوسية", turquoise: "تيار نجمي", indigo: "مرساة عميقة", orange: "نور متسع", white: "تحوّل نقي" },
+  he: { solar_gold: "זוהר שמשי", lunar_blue: "עומקים ירחיים", healing_green: "זרם אזמרגד", mystical_purple: "צעיף מיסטי", vital_red: "להבה חיונית", venus_pink: "חן נוגהי", astral_turquoise: "זרם אסטרלי", deep_indigo: "עוגן עמוק", expansive_orange: "אור מתרחב", pure_white: "טרנסמוטציה טהורה" },
+  ru: { solar_gold: "Солнечное сияние", lunar_blue: "Лунные глубины", healing_green: "Изумрудный поток", mystical_purple: "Мистическая завеса", vital_red: "Жизненное пламя", venus_pink: "Венерианская грация", astral_turquoise: "Астральный поток", deep_indigo: "Глубокий якорь", expansive_orange: "Расширяющийся свет", pure_white: "Чистая трансмутация" },
+  ar: { solar_gold: "إشراق شمسي", lunar_blue: "أعماق قمرية", healing_green: "تيار زمردي", mystical_purple: "حجاب صوفي", vital_red: "لهب حيوي", venus_pink: "رشاقة فينوسية", astral_turquoise: "تيار نجمي", deep_indigo: "مرساة عميقة", expansive_orange: "نور متسع", pure_white: "تحوّل نقي" },
 };
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
@@ -48,16 +48,16 @@ const PLANET_VIS: Record<string, { color: string; glow: string }> = {
 
 /* ── Aura family → dominant visual color (drives the figure glow) ── */
 const AURA_COLOR_MAP: Record<AuraFamily, { primary: string; glow: string }> = {
-  gold:      { primary: "#F5C842", glow: "#F5C84290" },
-  blue:      { primary: "#7AAFE0", glow: "#7AAFE090" },
-  green:     { primary: "#5EC090", glow: "#5EC09090" },
-  purple:    { primary: "#9B6FD0", glow: "#9B6FD090" },
-  red:       { primary: "#E05252", glow: "#E0525290" },
-  pink:      { primary: "#F28DC7", glow: "#F28DC790" },
-  turquoise: { primary: "#3CC8C8", glow: "#3CC8C890" },
-  indigo:    { primary: "#4A5AB8", glow: "#4A5AB890" },
-  orange:    { primary: "#E89040", glow: "#E8904090" },
-  white:     { primary: "#E0E0F0", glow: "#E0E0F090" },
+  solar_gold:        { primary: "#F5C842", glow: "#F5C84290" },
+  lunar_blue:        { primary: "#7AAFE0", glow: "#7AAFE090" },
+  healing_green:     { primary: "#5EC090", glow: "#5EC09090" },
+  mystical_purple:   { primary: "#9B6FD0", glow: "#9B6FD090" },
+  vital_red:         { primary: "#E05252", glow: "#E0525290" },
+  venus_pink:        { primary: "#F28DC7", glow: "#F28DC790" },
+  astral_turquoise:  { primary: "#3CC8C8", glow: "#3CC8C890" },
+  deep_indigo:       { primary: "#4A5AB8", glow: "#4A5AB890" },
+  expansive_orange:  { primary: "#E89040", glow: "#E8904090" },
+  pure_white:        { primary: "#E0E0F0", glow: "#E0E0F090" },
 };
 
 /* Mini constellation patterns */

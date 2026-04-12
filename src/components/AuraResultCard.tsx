@@ -54,16 +54,16 @@ const AURA_I18N: Record<string, Record<AuraFamily, AuraI18n>> = {
 
 /* ── Visual mapping per aura family ── */
 const AURA_VISUALS: Record<AuraFamily, { accent: string; glow: string; gradient: string }> = {
-  gold:      { accent: "#F5C842", glow: "43 80% 55%",   gradient: "linear-gradient(135deg, #F5C84218, #F5C84208)" },
-  blue:      { accent: "#D0D6E0", glow: "220 20% 85%",  gradient: "linear-gradient(135deg, #D0D6E018, #D0D6E008)" },
-  green:     { accent: "#7FD4A8", glow: "150 45% 66%",  gradient: "linear-gradient(135deg, #7FD4A818, #7FD4A808)" },
-  purple:    { accent: "#9060B8", glow: "275 40% 55%",  gradient: "linear-gradient(135deg, #9060B818, #9060B808)" },
-  red:       { accent: "#E05252", glow: "0 70% 60%",    gradient: "linear-gradient(135deg, #E0525218, #E0525208)" },
-  pink:      { accent: "#F28DC7", glow: "330 80% 75%",  gradient: "linear-gradient(135deg, #F28DC718, #F28DC708)" },
-  turquoise: { accent: "#5FC8E8", glow: "195 75% 64%",  gradient: "linear-gradient(135deg, #5FC8E818, #5FC8E808)" },
-  indigo:    { accent: "#6070E8", glow: "233 75% 64%",  gradient: "linear-gradient(135deg, #6070E818, #6070E808)" },
-  orange:    { accent: "#E8A040", glow: "33 78% 58%",   gradient: "linear-gradient(135deg, #E8A04018, #E8A04008)" },
-  white:     { accent: "#E0DCD4", glow: "36 12% 86%",   gradient: "linear-gradient(135deg, #E0DCD418, #E0DCD408)" },
+  solar_gold:        { accent: "#F5C842", glow: "43 80% 55%",   gradient: "linear-gradient(135deg, #F5C84218, #F5C84208)" },
+  lunar_blue:        { accent: "#D0D6E0", glow: "220 20% 85%",  gradient: "linear-gradient(135deg, #D0D6E018, #D0D6E008)" },
+  healing_green:     { accent: "#7FD4A8", glow: "150 45% 66%",  gradient: "linear-gradient(135deg, #7FD4A818, #7FD4A808)" },
+  mystical_purple:   { accent: "#9060B8", glow: "275 40% 55%",  gradient: "linear-gradient(135deg, #9060B818, #9060B808)" },
+  vital_red:         { accent: "#E05252", glow: "0 70% 60%",    gradient: "linear-gradient(135deg, #E0525218, #E0525208)" },
+  venus_pink:        { accent: "#F28DC7", glow: "330 80% 75%",  gradient: "linear-gradient(135deg, #F28DC718, #F28DC708)" },
+  astral_turquoise:  { accent: "#5FC8E8", glow: "195 75% 64%",  gradient: "linear-gradient(135deg, #5FC8E818, #5FC8E808)" },
+  deep_indigo:       { accent: "#6070E8", glow: "233 75% 64%",  gradient: "linear-gradient(135deg, #6070E818, #6070E808)" },
+  expansive_orange:  { accent: "#E8A040", glow: "33 78% 58%",   gradient: "linear-gradient(135deg, #E8A04018, #E8A04008)" },
+  pure_white:        { accent: "#E0DCD4", glow: "36 12% 86%",   gradient: "linear-gradient(135deg, #E0DCD418, #E0DCD408)" },
 };
 
 interface Props {
