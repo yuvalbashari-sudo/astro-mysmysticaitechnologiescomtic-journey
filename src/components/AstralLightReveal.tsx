@@ -517,10 +517,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
                 <motion.circle
                   cx={FIG_CX}
                   cy={FIG_CHEST_Y}
-                  r={3}
+                  r={5}
                   fill={vis.color}
-                  initial={{ opacity: 0, r: 2 }}
-                  animate={{ opacity: [0, 0.6, 0], r: [2, 8, 3] }}
+                  initial={{ opacity: 0, r: 3 }}
+                  animate={{ opacity: [0, 0.8, 0], r: [3, 14, 5] }}
                   transition={{ duration: 0.8, delay: 1.6 }}
                 />
               </g>
