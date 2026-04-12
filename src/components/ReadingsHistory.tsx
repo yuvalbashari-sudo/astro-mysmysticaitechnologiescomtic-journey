@@ -26,7 +26,7 @@ const ReadingsHistory = () => {
     palm: t.readings_type_palm,
   };
 
-  const dateLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
+  // date formatting handled by formatDateTime utility
 
   useEffect(() => {
     setReadings(readingsStorage.getAll());
@@ -63,9 +63,7 @@ const ReadingsHistory = () => {
             {readings.map((reading, i) => {
               const IconComp = typeIcons[reading.type] || Star;
               const isExpanded = expanded === reading.id;
-              const dateStr = new Date(reading.date).toLocaleDateString(dateLocale, {
-                day: "numeric",
-                month: "long",
+              const dateStr = formatDateTime(reading.date, language);
                 year: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
