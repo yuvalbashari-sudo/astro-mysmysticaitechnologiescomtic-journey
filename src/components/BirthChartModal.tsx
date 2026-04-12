@@ -7,6 +7,7 @@ import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsFo
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
 import AstralLightReveal from "@/components/AstralLightReveal";
+import AuraResultCard from "@/components/AuraResultCard";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
