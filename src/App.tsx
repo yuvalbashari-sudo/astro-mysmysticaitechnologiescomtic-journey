@@ -16,7 +16,7 @@ import PremiumUpgrade from "./pages/PremiumUpgrade";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NatalTest from "./pages/NatalTest";
-import AstralPreview from "./pages/AstralPreview";
+
 import TarotGuidePage from "./pages/TarotGuidePage";
 import TarotGuidesPage from "./pages/TarotGuidesPage";
 import AstrologyGuidesPage from "./pages/AstrologyGuidesPage";
@@ -46,7 +46,7 @@ const App = () => (
                 <Route path="/admin/costs" element={<AdminCostAnalytics />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/natal-test" element={<NatalTest />} />
-                <Route path="/astral-preview" element={<AstralPreview />} />
+                
                 <Route path="/tarot-guide" element={<TarotGuidePage />} />
                 <Route path="/tarot-guides" element={<TarotGuidesPage />} />
                 <Route path="/astrology-guides" element={<AstrologyGuidesPage />} />

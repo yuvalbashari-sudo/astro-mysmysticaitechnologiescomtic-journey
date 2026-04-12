@@ -384,11 +384,11 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
             {/* Climax radial — aura-driven color blend */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fff" stopOpacity={0.2 * climaxLevel} />
-              <stop offset="20%" stopColor={auraColors.dominant} stopOpacity={0.7 * climaxLevel} />
-              <stop offset="45%" stopColor={auraColors.dominant} stopOpacity={0.4 * climaxLevel} />
-              <stop offset="65%" stopColor={auraColors.secondary} stopOpacity={0.15 * climaxLevel} />
-              <stop offset="85%" stopColor={auraColors.tertiary} stopOpacity={0.05 * climaxLevel} />
+              <stop offset="0%" stopColor="#fff" stopOpacity={0.3 * climaxLevel} />
+              <stop offset="15%" stopColor={auraColors.dominant} stopOpacity={0.85 * climaxLevel} />
+              <stop offset="40%" stopColor={auraColors.dominant} stopOpacity={0.55 * climaxLevel} />
+              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.3 * climaxLevel} />
+              <stop offset="80%" stopColor={auraColors.tertiary} stopOpacity={0.12 * climaxLevel} />
               <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
@@ -411,11 +411,21 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </defs>
 
 
-          {/* ─── Human figure — AI-generated astral image (rendered first = behind stars) ─── */}
+          {/* ─── Halo ellipse behind figure — colorful aura envelope ─── */}
+          <ellipse
+            cx={FIG_CX}
+            cy={FIG_CORE_Y + 40}
+            rx={75 + absorptionLevel * 15 + climaxLevel * 10}
+            ry={110 + absorptionLevel * 20 + climaxLevel * 15}
+            fill="url(#climax-radial)"
+            opacity={absorptionLevel * 0.6 + climaxLevel * 0.35}
+          />
+
+          {/* ─── Human figure — outline with colorful aura glow ─── */}
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
-              filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'}) drop-shadow(0 0 ${climaxLevel * 12}px ${secondaryColor}40)`,
+              filter: `drop-shadow(0 0 ${6 + absorptionLevel * 12 + climaxLevel * 26}px ${dominantColor}${climaxLevel > 0.5 ? 'c0' : '70'}) drop-shadow(0 0 ${4 + climaxLevel * 18}px ${secondaryColor}60)`,
             }}
           >
             <image
@@ -424,7 +434,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               y="0"
               width={FIG_VB_W}
               height={FIG_VB_H}
-              opacity={0.15 + absorptionLevel * 0.55 + climaxLevel * 0.3}
+              opacity={0.25 + absorptionLevel * 0.5 + climaxLevel * 0.25}
               style={{ mixBlendMode: 'screen' }}
             />
             {climaxLevel > 0 && (
@@ -434,8 +444,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 y="0"
                 width={FIG_VB_W}
                 height={FIG_VB_H}
-                opacity={climaxLevel * 0.4}
-                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 3}px) brightness(${1.5 + climaxLevel})` }}
+                opacity={climaxLevel * 0.5}
+                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 4}px) brightness(${1.6 + climaxLevel * 0.8})` }}
               />
             )}
           </g>
@@ -605,9 +615,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 fill="url(#climax-radial)"
                 filter="url(#climax-mega)"
                 animate={{
-                  rx: [45 + climaxLevel * 20, 55 + climaxLevel * 30, 45 + climaxLevel * 20],
-                  ry: [120 + climaxLevel * 40, 140 + climaxLevel * 55, 120 + climaxLevel * 40],
-                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
+                  rx: [50 + climaxLevel * 25, 65 + climaxLevel * 35, 50 + climaxLevel * 25],
+                  ry: [130 + climaxLevel * 50, 155 + climaxLevel * 65, 130 + climaxLevel * 50],
+                  opacity: [climaxLevel * 0.25, climaxLevel * 0.5, climaxLevel * 0.25],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -616,14 +626,14 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
-                  x="-3"
-                  y="-4"
-                  width={FIG_VB_W + 6}
-                  height={FIG_VB_H + 8}
-                  opacity={climaxLevel * 0.35}
+                  x="-5"
+                  y="-6"
+                  width={FIG_VB_W + 10}
+                  height={FIG_VB_H + 12}
+                  opacity={climaxLevel * 0.5}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.4})`,
+                    filter: `blur(10px) brightness(${1.2 + climaxLevel * 0.6})`,
                   }}
                 />
               </g>
