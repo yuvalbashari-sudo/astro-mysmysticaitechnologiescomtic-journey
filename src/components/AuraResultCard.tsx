@@ -1,5 +1,15 @@
 import { motion } from "framer-motion";
 import type { AuraResult, AuraFamily } from "@/lib/auraResultBank";
+import { AURA_BANK } from "@/lib/auraResultBank";
+import { useLanguage } from "@/i18n/LanguageContext";
+
+/* ── Localized labels ── */
+const LABELS: Record<string, { dominant: string; secondary: string }> = {
+  he: { dominant: "ההילה הדומיננטית שלך", secondary: "גוונים משניים" },
+  en: { dominant: "Your Dominant Aura", secondary: "Secondary tones" },
+  ru: { dominant: "Ваша доминирующая аура", secondary: "Вторичные тона" },
+  ar: { dominant: "هالتك المهيمنة", secondary: "نغمات ثانوية" },
+};
 
 /* ── Visual mapping per aura family ── */
 const AURA_VISUALS: Record<AuraFamily, { accent: string; glow: string; gradient: string }> = {
@@ -20,7 +30,9 @@ interface Props {
 }
 
 const AuraResultCard = ({ result }: Props) => {
+  const { language } = useLanguage();
   const vis = AURA_VISUALS[result.primaryAura];
+  const labels = LABELS[language] || LABELS.en;
 
   return (
     <motion.div
@@ -47,6 +59,15 @@ const AuraResultCard = ({ result }: Props) => {
       <div className="relative px-5 py-6 md:px-8 md:py-8 space-y-4">
         {/* Title */}
         <div className="text-center space-y-1.5">
+          <motion.p
+            className="font-body text-xs md:text-sm uppercase tracking-widest"
+            style={{ color: `${vis.accent}88` }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            {labels.dominant}
+          </motion.p>
           <motion.h3
             className="font-heading text-xl md:text-2xl tracking-wide"
             style={{ color: vis.accent }}
@@ -110,16 +131,16 @@ const AuraResultCard = ({ result }: Props) => {
           </span>
         </motion.div>
 
-        {/* Blend indicator */}
-        {result.blendMode && result.secondaryAuras.length > 0 && (
+        {/* Secondary auras */}
+        {result.secondaryAuras.length > 0 && (
           <motion.p
-            className="text-center font-body text-[11px]"
-            style={{ color: "hsl(var(--foreground) / 0.35)" }}
+            className="text-center font-body text-[11px] md:text-xs"
+            style={{ color: "hsl(var(--foreground) / 0.4)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3 }}
           >
-            ✦ blended with {result.secondaryAuras[0]} influence
+            {labels.secondary}: {result.secondaryAuras.slice(0, 3).map(a => AURA_BANK[a].title).join(" • ")}
           </motion.p>
         )}
       </div>
