@@ -172,41 +172,35 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   );
   const topInfluences = useMemo(() => sortedPlanets.slice(0, 5), [sortedPlanets]);
 
-  /* ── Personalized planetary color palette ── */
+  /* ── Aura-driven color palette (single source of truth: auraResult) ── */
+  const auraColors = useMemo(() => {
+    const primary = AURA_COLOR_MAP[auraResult.primaryAura];
+    const secondaryAura = auraResult.secondaryAuras[0];
+    const tertiaryAura = auraResult.secondaryAuras[1];
+    const secondary = secondaryAura ? AURA_COLOR_MAP[secondaryAura] : primary;
+    const tertiary = tertiaryAura ? AURA_COLOR_MAP[tertiaryAura] : secondary;
+
+    return {
+      dominant: primary.primary,
+      dominantGlow: primary.glow,
+      secondary: secondary.primary,
+      tertiary: tertiary.primary,
+    };
+  }, [auraResult]);
+
+  /* ── Planet-based colors still used for constellation nodes & beams ── */
   const planetColors = useMemo(() => {
     const top5 = sortedPlanets.slice(0, 5);
     const weights = top5.map(p => influences[p.key] || 1);
     const totalW = weights.reduce((s, v) => s + v, 0);
     const normalized = weights.map(w => w / totalW);
-
     const colors = top5.map(p => PLANET_VIS[p.key]?.color || "#F5C842");
-    const glows = top5.map(p => PLANET_VIS[p.key]?.glow || "#F5C84280");
 
-    // Build CSS gradient stops weighted by influence
-    const gradientStops = (() => {
-      let pos = 0;
-      return colors.map((c, i) => {
-        const start = pos;
-        pos += normalized[i] * 100;
-        return `${c} ${Math.round(start)}%, ${c} ${Math.round(pos)}%`;
-      }).join(", ");
-    })();
-
-    return {
-      dominant: colors[0] || "#F5C842",
-      secondary: colors[1] || "#D0D6E0",
-      tertiary: colors[2] || "#7FD4A8",
-      accent: colors[3] || "#7B8FE8",
-      subtle: colors[4] || "#9060B8",
-      weights: normalized,
-      colors,
-      glows,
-      gradientStops,
-    };
+    return { weights: normalized, colors };
   }, [sortedPlanets, influences]);
 
-  const dominantColor = planetColors.dominant;
-  const secondaryColor = planetColors.secondary;
+  const dominantColor = auraColors.dominant;
+  const secondaryColor = auraColors.secondary;
 
   useEffect(() => {
     const S = fastMode ? 0.45 : 1; // speed multiplier
