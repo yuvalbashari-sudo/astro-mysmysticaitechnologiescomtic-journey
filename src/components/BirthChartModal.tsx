@@ -485,6 +485,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   userName={userName.trim() || undefined}
                   chartData={chartData}
                   onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
+                  onAuraResult={setAuraResult}
                   fastMode={restoredFromCache}
                 />
               </motion.div>
