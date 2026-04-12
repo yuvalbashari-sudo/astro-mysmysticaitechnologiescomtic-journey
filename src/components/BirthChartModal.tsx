@@ -398,8 +398,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 key="loading"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.92, filter: "blur(6px)" }}
-                transition={{ duration: 0.8, ease: "easeInOut" }}
+                exit={{ opacity: 0.6, scale: 0.75, y: -40 }}
+                transition={{ duration: 1.4, ease: "easeInOut" }}
               >
                 <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
@@ -411,14 +411,27 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
               >
-                {/* Chart wheel emerges from below — delayed after climax exit */}
+                {/* Residual glowing figure silhouette — stays above map briefly */}
                 <motion.div
-                  className="w-full"
+                  className="flex justify-center pointer-events-none"
+                  initial={{ opacity: 0.7, scale: 0.7 }}
+                  animate={{ opacity: 0, scale: 0.5, y: -30 }}
+                  transition={{ duration: 2.5, delay: 1.2, ease: "easeInOut" }}
+                >
+                  <div className="w-16 h-28 rounded-full" style={{
+                    background: `radial-gradient(ellipse, ${PLANET_COLOR_BY_KEY[chartData?.sunSign?.key || "sun"] || "hsl(var(--gold))"}30, transparent 70%)`,
+                    filter: `blur(8px)`,
+                  }} />
+                </motion.div>
+
+                {/* Chart wheel emerges from below */}
+                <motion.div
+                  className="w-full -mt-20"
                   initial={{ opacity: 0, y: 100, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 1.4, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
                   style={{
                     minHeight: wheelSize + 48,
                     display: "block",
