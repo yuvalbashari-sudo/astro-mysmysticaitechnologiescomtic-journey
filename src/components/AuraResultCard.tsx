@@ -121,7 +121,7 @@ const AuraResultCard = ({ result }: Props) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            {result.title}
+            {title}
           </motion.h3>
           <motion.p
             className="font-body text-sm md:text-base italic"
@@ -130,7 +130,7 @@ const AuraResultCard = ({ result }: Props) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.7 }}
           >
-            {result.subtitle}
+            {subtitle}
           </motion.p>
         </div>
 
@@ -155,7 +155,7 @@ const AuraResultCard = ({ result }: Props) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.9 }}
         >
-          {result.shortMeaning}
+          {meaning}
         </motion.p>
 
         {/* Visual tone tag */}
@@ -186,7 +186,7 @@ const AuraResultCard = ({ result }: Props) => {
             animate={{ opacity: 1 }}
             transition={{ delay: 1.3 }}
           >
-            {labels.secondary}: {result.secondaryAuras.slice(0, 3).map(a => AURA_BANK[a].title).join(" • ")}
+            {labels.secondary}: {result.secondaryAuras.slice(0, 3).map(a => getAuraTitle(a)).join(" • ")}
           </motion.p>
         )}
       </div>
