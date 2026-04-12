@@ -189,7 +189,18 @@ const AuraResultCard = ({ result }: Props) => {
             {shareableIdentity}
           </motion.h2>
 
-
+          {/* Localized translation — smaller, below English identity */}
+          {localizedIdentity && (
+            <motion.p
+              className="font-heading text-base md:text-lg"
+              style={{ color: `${vis.accent}80` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              {localizedIdentity}
+            </motion.p>
+          )}
 
           {/* Emotional subtitle */}
           <motion.p
