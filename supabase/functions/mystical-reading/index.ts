@@ -2,7 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-email, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 const READING_PROMPTS: Record<string, (data: any) => { system: string; user: string | any[] }> = {
@@ -1007,22 +1007,31 @@ const ADMIN_EMAILS = ["yuvalbashari@gmail.com"];
 
 async function isAdminUser(req: Request): Promise<boolean> {
   try {
+    // Method 1: Check JWT auth token
     const authHeader = req.headers.get("authorization");
-    if (!authHeader?.startsWith("Bearer ")) return false;
-    const token = authHeader.slice(7);
-    
-    // Skip anon key — not an auth token
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || "";
-    if (token === anonKey) return false;
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.slice(7);
+      const anonKey = Deno.env.get("SUPABASE_ANON_KEY") || Deno.env.get("SUPABASE_PUBLISHABLE_KEY") || "";
+      if (token !== anonKey) {
+        const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
+        const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+        const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        const supabase = createClient(supabaseUrl, serviceKey);
+        const { data: { user } } = await supabase.auth.getUser(token);
+        if (user?.email && ADMIN_EMAILS.includes(user.email.trim().toLowerCase())) {
+          return true;
+        }
+      }
+    }
 
-    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2");
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, serviceKey);
+    // Method 2: Check x-admin-email header (client-side admin persistence)
+    const adminEmailHeader = req.headers.get("x-admin-email");
+    if (adminEmailHeader && ADMIN_EMAILS.includes(adminEmailHeader.trim().toLowerCase())) {
+      console.log("[ADMIN] Verified via x-admin-email header:", adminEmailHeader);
+      return true;
+    }
 
-    const { data: { user } } = await supabase.auth.getUser(token);
-    if (!user?.email) return false;
-    return ADMIN_EMAILS.includes(user.email.trim().toLowerCase());
+    return false;
   } catch {
     return false;
   }
