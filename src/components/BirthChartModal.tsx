@@ -6,7 +6,7 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
-import AstralLightReveal from "@/components/AstralLightReveal";
+import FullChartAstralTransformation from "@/components/FullChartAstralTransformation";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -423,7 +423,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 exit={{ opacity: 0.6, scale: 0.75, y: -40 }}
                 transition={{ duration: 1.4, ease: "easeInOut" }}
               >
-                <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
+                <FullChartAstralTransformation userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
             )}
 
@@ -435,16 +435,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                {/* Residual glowing figure silhouette — stays above map briefly */}
+                {/* Persistent astral figure glow — stays visible above map */}
                 <motion.div
                   className="flex justify-center pointer-events-none"
-                  initial={{ opacity: 0.7, scale: 0.7 }}
-                  animate={{ opacity: 0, scale: 0.5, y: -30 }}
-                  transition={{ duration: 2.5, delay: 1.2, ease: "easeInOut" }}
+                  initial={{ opacity: 0.6, scale: 0.8 }}
+                  animate={{ opacity: [0.6, 0.35], scale: [0.8, 0.65] }}
+                  transition={{ duration: 3, ease: "easeInOut" }}
                 >
-                  <div className="w-16 h-28 rounded-full" style={{
-                    background: `radial-gradient(ellipse, ${PLANET_COLOR_BY_KEY[chartData?.sunSign?.key || "sun"] || "hsl(var(--gold))"}30, transparent 70%)`,
-                    filter: `blur(8px)`,
+                  <div className="w-24 h-36 rounded-full" style={{
+                    background: `radial-gradient(ellipse, ${PLANET_COLOR_BY_KEY[chartData?.sunSign?.key || "sun"] || "hsl(var(--gold))"}40, transparent 70%)`,
+                    filter: `blur(12px)`,
                   }} />
                 </motion.div>
 
