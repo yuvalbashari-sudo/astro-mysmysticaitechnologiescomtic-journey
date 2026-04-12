@@ -32,7 +32,7 @@ interface Props {
   fastMode?: boolean;
 }
 
-/* ── Planet visual config ── */
+/* ── Planet visual config (used for constellation nodes & beams) ── */
 const PLANET_VIS: Record<string, { color: string; glow: string }> = {
   sun:     { color: "#F5C842", glow: "#F5C84280" },
   moon:    { color: "#D0D6E0", glow: "#D0D6E080" },
@@ -44,6 +44,20 @@ const PLANET_VIS: Record<string, { color: string; glow: string }> = {
   uranus:  { color: "#5FC8E8", glow: "#5FC8E880" },
   neptune: { color: "#6070E8", glow: "#6070E880" },
   pluto:   { color: "#9060B8", glow: "#9060B880" },
+};
+
+/* ── Aura family → dominant visual color (drives the figure glow) ── */
+const AURA_COLOR_MAP: Record<AuraFamily, { primary: string; glow: string }> = {
+  gold:      { primary: "#F5C842", glow: "#F5C84290" },
+  blue:      { primary: "#7AAFE0", glow: "#7AAFE090" },
+  green:     { primary: "#5EC090", glow: "#5EC09090" },
+  purple:    { primary: "#9B6FD0", glow: "#9B6FD090" },
+  red:       { primary: "#E05252", glow: "#E0525290" },
+  pink:      { primary: "#F28DC7", glow: "#F28DC790" },
+  turquoise: { primary: "#3CC8C8", glow: "#3CC8C890" },
+  indigo:    { primary: "#4A5AB8", glow: "#4A5AB890" },
+  orange:    { primary: "#E89040", glow: "#E8904090" },
+  white:     { primary: "#E0E0F0", glow: "#E0E0F090" },
 };
 
 /* Mini constellation patterns */
@@ -158,41 +172,35 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   );
   const topInfluences = useMemo(() => sortedPlanets.slice(0, 5), [sortedPlanets]);
 
-  /* ── Personalized planetary color palette ── */
+  /* ── Aura-driven color palette (single source of truth: auraResult) ── */
+  const auraColors = useMemo(() => {
+    const primary = AURA_COLOR_MAP[auraResult.primaryAura];
+    const secondaryAura = auraResult.secondaryAuras[0];
+    const tertiaryAura = auraResult.secondaryAuras[1];
+    const secondary = secondaryAura ? AURA_COLOR_MAP[secondaryAura] : primary;
+    const tertiary = tertiaryAura ? AURA_COLOR_MAP[tertiaryAura] : secondary;
+
+    return {
+      dominant: primary.primary,
+      dominantGlow: primary.glow,
+      secondary: secondary.primary,
+      tertiary: tertiary.primary,
+    };
+  }, [auraResult]);
+
+  /* ── Planet-based colors still used for constellation nodes & beams ── */
   const planetColors = useMemo(() => {
     const top5 = sortedPlanets.slice(0, 5);
     const weights = top5.map(p => influences[p.key] || 1);
     const totalW = weights.reduce((s, v) => s + v, 0);
     const normalized = weights.map(w => w / totalW);
-
     const colors = top5.map(p => PLANET_VIS[p.key]?.color || "#F5C842");
-    const glows = top5.map(p => PLANET_VIS[p.key]?.glow || "#F5C84280");
 
-    // Build CSS gradient stops weighted by influence
-    const gradientStops = (() => {
-      let pos = 0;
-      return colors.map((c, i) => {
-        const start = pos;
-        pos += normalized[i] * 100;
-        return `${c} ${Math.round(start)}%, ${c} ${Math.round(pos)}%`;
-      }).join(", ");
-    })();
-
-    return {
-      dominant: colors[0] || "#F5C842",
-      secondary: colors[1] || "#D0D6E0",
-      tertiary: colors[2] || "#7FD4A8",
-      accent: colors[3] || "#7B8FE8",
-      subtle: colors[4] || "#9060B8",
-      weights: normalized,
-      colors,
-      glows,
-      gradientStops,
-    };
+    return { weights: normalized, colors };
   }, [sortedPlanets, influences]);
 
-  const dominantColor = planetColors.dominant;
-  const secondaryColor = planetColors.secondary;
+  const dominantColor = auraColors.dominant;
+  const secondaryColor = auraColors.secondary;
 
   useEffect(() => {
     const S = fastMode ? 0.45 : 1; // speed multiplier
@@ -286,9 +294,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 relative overflow-hidden">
-      {/* Deep space background */}
+      {/* Deep space background with aura-tinted glow */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(var(--deep-blue-light) / 0.15), transparent)",
+        background: `radial-gradient(ellipse 80% 60% at 50% 40%, ${dominantColor}18, ${dominantColor}08 40%, transparent 70%)`,
       }} />
 
       {/* Floating star particles */}
@@ -369,19 +377,19 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             {/* Inner glow — radial from chest, uses top 3 planet colors */}
             <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
-              <stop offset="30%" stopColor={planetColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
-              <stop offset="60%" stopColor={planetColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
-              <stop offset="100%" stopColor={planetColors.tertiary} stopOpacity={0} />
+              <stop offset="30%" stopColor={auraColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
+              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
+              <stop offset="100%" stopColor={auraColors.tertiary} stopOpacity={0} />
             </radialGradient>
 
-            {/* Climax radial — personalized planetary blend */}
+            {/* Climax radial — aura-driven color blend */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#fff" stopOpacity={0.2 * climaxLevel} />
-              <stop offset="15%" stopColor={planetColors.dominant} stopOpacity={0.6 * climaxLevel * (planetColors.weights[0] || 0.3) * 2.5} />
-              <stop offset="35%" stopColor={planetColors.secondary} stopOpacity={0.4 * climaxLevel * (planetColors.weights[1] || 0.2) * 2} />
-              <stop offset="55%" stopColor={planetColors.tertiary} stopOpacity={0.25 * climaxLevel * (planetColors.weights[2] || 0.15) * 2} />
-              <stop offset="75%" stopColor={planetColors.accent} stopOpacity={0.1 * climaxLevel} />
-              <stop offset="100%" stopColor={planetColors.subtle} stopOpacity={0} />
+              <stop offset="20%" stopColor={auraColors.dominant} stopOpacity={0.7 * climaxLevel} />
+              <stop offset="45%" stopColor={auraColors.dominant} stopOpacity={0.4 * climaxLevel} />
+              <stop offset="65%" stopColor={auraColors.secondary} stopOpacity={0.15 * climaxLevel} />
+              <stop offset="85%" stopColor={auraColors.tertiary} stopOpacity={0.05 * climaxLevel} />
+              <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
             {/* Beam gradients — all target figure chest */}
@@ -747,7 +755,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
       <div className="w-48 h-0.5 mt-5 rounded-full overflow-hidden" style={{ background: "hsl(var(--gold) / 0.1)" }}>
         <motion.div
           className="h-full rounded-full"
-          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${planetColors.tertiary}60, ${dominantColor}40)` }}
+          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${auraColors.tertiary}60, ${dominantColor}40)` }}
           initial={{ width: "0%" }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.1 }}
