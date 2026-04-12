@@ -903,7 +903,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 </motion.p>
               )}
 
-              {/* SHAREABLE IDENTITY — in user's language */}
+              {/* MAIN IDENTITY — always English: "Balanced Deep Indigo" */}
               <motion.h2
                 className="font-heading text-2xl md:text-3xl text-center tracking-wide leading-tight"
                 style={{
@@ -914,20 +914,29 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                {(() => {
-                  const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? AURA_DISPLAY_EN[auraResult.primaryAura] ?? auraResult.title;
-                  const localMod = MOD_I18N_MAP[language]?.[auraResult.modifier] ?? MODIFIER_LABELS_EN[auraResult.modifier] ?? "";
-                  return `${localMod} ${localTitle}`;
-                })()}
+                {`${MODIFIER_LABELS_EN[auraResult.modifier] || "Radiant"} ${AURA_DISPLAY_EN[auraResult.primaryAura] || "Solar Gold"}`}
               </motion.h2>
 
-              {/* Localized subtitle */}
+              {/* Hebrew/localized translation — smaller, below */}
+              {language !== "en" && AURA_TITLE_I18N[language]?.[auraResult.primaryAura] && (
+                <motion.p
+                  className="font-heading text-base text-center"
+                  style={{ color: `${dominantColor}80` }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.7, duration: 0.5 }}
+                >
+                  {`${MOD_I18N_MAP[language]?.[auraResult.modifier] || ""} ${AURA_TITLE_I18N[language]?.[auraResult.primaryAura] || ""}`.trim()}
+                </motion.p>
+              )}
+
+              {/* Emotional subtitle in user's language */}
               <motion.p
                 className="font-body text-sm text-center italic max-w-[280px]"
                 style={{ color: `${dominantColor}AA`, lineHeight: 1.7 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.6 }}
+                transition={{ delay: 0.9, duration: 0.6 }}
               >
                 {AURA_SUBTITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.subtitle}
               </motion.p>
