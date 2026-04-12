@@ -756,88 +756,170 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
         </svg>
       </div>
 
-      {/* ─── Text overlay ─── */}
-      {userName && (
-        <motion.p
-          className="font-heading text-lg md:text-xl gold-gradient-text mt-3 mb-1 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          {userName}
-        </motion.p>
-      )}
-
-      <AnimatePresence mode="wait">
-        <motion.p
-          key={statusIdx}
-          className={`font-body text-center max-w-sm ${statusIdx === statusTexts.length - 1 && auraResult ? "font-heading text-lg md:text-xl" : "text-sm md:text-base"}`}
-          style={{ color: statusIdx === statusTexts.length - 1 && auraResult ? dominantColor : "hsl(var(--foreground) / 0.6)", textShadow: statusIdx === statusTexts.length - 1 && auraResult ? `0 0 20px ${dominantColor}60` : "none" }}
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.5 }}
-        >
-          {statusIdx === statusTexts.length - 1 && auraResult
-            ? (() => {
-                const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.title;
-                const modI18n: Record<string, Record<string, string>> = {
-                  he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
-                  ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
-                  ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
-                  en: { radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep", balanced: "Balanced", transformative: "Transformative", grounded: "Grounded", fluid: "Fluid", intense: "Intense", ethereal: "Ethereal" },
-                };
-                const mod = modI18n[language]?.[auraResult.modifier] ?? modI18n.en[auraResult.modifier] ?? "";
-                return `${mod} ${localTitle}`;
-              })()
-            : statusTexts[statusIdx]}
-        </motion.p>
-      </AnimatePresence>
-
-      {/* Progress bar */}
-      <div className="w-48 h-0.5 mt-5 rounded-full overflow-hidden" style={{ background: "hsl(var(--gold) / 0.1)" }}>
-        <motion.div
-          className="h-full rounded-full"
-          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${auraColors.tertiary}60, ${dominantColor}40)` }}
-          initial={{ width: "0%" }}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.1 }}
-        />
-      </div>
-
-      {/* Influence cards — subtle, no percentages */}
-      <AnimatePresence>
-        {showInfluences && (
+      {/* ─── CINEMATIC IDENTITY REVEAL PANEL ─── */}
+      <motion.div
+        className="relative w-full flex flex-col items-center mt-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
+        {/* Premium glass panel behind identity text */}
+        {statusIdx === statusTexts.length - 1 && auraResult ? (
           <motion.div
-            className="flex flex-wrap justify-center gap-1.5 mt-4 max-w-xs"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 0.7, y: 0 }}
-            transition={{ duration: 0.6 }}
+            className="relative w-full max-w-sm mx-auto rounded-2xl overflow-hidden"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           >
-            {topInfluences.slice(0, 4).map((planet, i) => {
-              const vis = PLANET_VIS[planet.key];
-              return (
-                <motion.div
-                  key={planet.key}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-full font-body"
-                  style={{
-                    background: `${vis?.color || "#fff"}0C`,
-                    border: `1px solid ${vis?.color || "#fff"}20`,
-                    color: vis?.color || "hsl(var(--foreground))",
-                    fontSize: 10,
-                  }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
+            {/* Glass backdrop */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background: `linear-gradient(180deg, hsl(222 47% 4% / 0.75) 0%, hsl(222 47% 6% / 0.65) 100%)`,
+                backdropFilter: "blur(20px)",
+                border: `1px solid ${dominantColor}18`,
+                borderRadius: "1rem",
+                boxShadow: `0 0 40px ${dominantColor}15, inset 0 1px 0 ${dominantColor}10`,
+              }}
+            />
+            {/* Aura glow behind panel */}
+            <motion.div
+              className="absolute inset-0 pointer-events-none rounded-2xl"
+              style={{
+                background: `radial-gradient(ellipse 70% 50% at 50% 30%, ${dominantColor}18, transparent 70%)`,
+              }}
+              animate={{ opacity: [0.4, 0.8, 0.4] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+            />
+
+            <div className="relative px-5 py-6 flex flex-col items-center gap-3">
+              {/* User name */}
+              {userName && (
+                <motion.p
+                  className="font-body text-xs tracking-widest uppercase"
+                  style={{ color: `${dominantColor}70` }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
                 >
-                  <span style={{ fontSize: 12 }}>{planet.symbol}</span>
-                  <span>{getPlanetName(planet.key, language)}</span>
-                </motion.div>
-              );
-            })}
+                  {userName}
+                </motion.p>
+              )}
+
+              {/* SHAREABLE IDENTITY — the hero headline */}
+              <motion.h2
+                className="font-heading text-2xl md:text-3xl text-center tracking-wide leading-tight"
+                style={{
+                  color: dominantColor,
+                  textShadow: `0 0 30px ${dominantColor}50, 0 0 60px ${dominantColor}25, 0 2px 4px rgba(0,0,0,0.5)`,
+                }}
+                initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {(() => {
+                  const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.title;
+                  const modI18n: Record<string, Record<string, string>> = {
+                    he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
+                    ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
+                    ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
+                    en: { radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep", balanced: "Balanced", transformative: "Transformative", grounded: "Grounded", fluid: "Fluid", intense: "Intense", ethereal: "Ethereal" },
+                  };
+                  const mod = modI18n[language]?.[auraResult.modifier] ?? modI18n.en[auraResult.modifier] ?? "";
+                  return `${mod} ${localTitle}`;
+                })()}
+              </motion.h2>
+
+              {/* Emotional subtitle */}
+              <motion.p
+                className="font-body text-sm text-center italic max-w-[280px]"
+                style={{ color: `${dominantColor}AA`, lineHeight: 1.7 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+              >
+                {auraResult.subtitle}
+              </motion.p>
+
+              {/* Glowing divider */}
+              <div
+                className="mx-auto"
+                style={{
+                  width: "40%",
+                  height: 1,
+                  background: `linear-gradient(90deg, transparent, ${dominantColor}40, transparent)`,
+                  boxShadow: `0 0 6px ${dominantColor}20`,
+                }}
+              />
+
+              {/* Top 3 planetary influences — premium pills */}
+              <motion.div
+                className="flex flex-wrap justify-center gap-2"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.0, duration: 0.5 }}
+              >
+                {topInfluences.slice(0, 3).map((planet, i) => {
+                  const pv = PLANET_VIS[planet.key];
+                  return (
+                    <div
+                      key={planet.key}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-xs"
+                      style={{
+                        background: `${pv?.color || "#fff"}12`,
+                        border: `1px solid ${pv?.color || "#fff"}25`,
+                        color: pv?.color || "hsl(var(--foreground))",
+                      }}
+                    >
+                      <span style={{ fontSize: 13 }}>{planet.symbol}</span>
+                      <span>{getPlanetName(planet.key, language)}</span>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
           </motion.div>
+        ) : (
+          /* During loading — show status text + progress as before */}
+          <>
+            {userName && (
+              <motion.p
+                className="font-heading text-lg md:text-xl gold-gradient-text mt-3 mb-1 text-center"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                {userName}
+              </motion.p>
+            )}
+
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={statusIdx}
+                className="font-body text-sm md:text-base text-center max-w-sm"
+                style={{ color: "hsl(var(--foreground) / 0.6)" }}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.5 }}
+              >
+                {statusTexts[statusIdx]}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Progress bar */}
+            <div className="w-48 h-0.5 mt-5 rounded-full overflow-hidden" style={{ background: "hsl(var(--gold) / 0.1)" }}>
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${auraColors.tertiary}60, ${dominantColor}40)` }}
+                initial={{ width: "0%" }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.1 }}
+              />
+            </div>
+          </>
         )}
-      </AnimatePresence>
+      </motion.div>
     </div>
   );
 };
