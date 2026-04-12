@@ -234,7 +234,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
     }, CS);
 
     const infTimer = setTimeout(() => setShowInfluences(true), CPK + 500 * S);
-    const doneTimer = setTimeout(onComplete, T);
+    const doneTimer = setTimeout(() => {
+      onAuraResult?.(auraResult);
+      onComplete();
+    }, T);
     const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
 
     return () => {
