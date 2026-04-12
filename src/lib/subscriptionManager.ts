@@ -11,14 +11,21 @@ import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "astrologai_user_plan";
 const ADMIN_EMAIL_KEY = "astrologai_admin_email";
+const ADMIN_OVERRIDE_KEY = "astrologai_admin_override";
 
 // Internal admin accounts — bypass all limits
 const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
 
+// Preview/dev mode detection
+const IS_PREVIEW = window.location.hostname.includes("preview") ||
+  window.location.hostname.includes("lovableproject.com") ||
+  window.location.hostname === "localhost" ||
+  import.meta.env.DEV;
+
 // Cached auth email — updated via listener
 // On startup, seed from localStorage so admin persists across refreshes
 let _cachedAuthEmail: string | null = localStorage.getItem(ADMIN_EMAIL_KEY);
-let _authReady = _cachedAuthEmail !== null; // If we have a stored admin email, consider auth "ready"
+let _authReady = _cachedAuthEmail !== null || (IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true");
 const _authReadyCallbacks: Array<() => void> = [];
 // Subscribers that fire on EVERY auth state change (not just the first)
 const _authChangeListeners = new Set<() => void>();
@@ -58,11 +65,19 @@ supabase.auth.onAuthStateChange((_event, session) => {
 })();
 
 /**
- * Check if the authenticated user is an admin.
+ * Check if the authenticated user is an admin,
+ * OR if preview admin override is active.
  */
 function isAdminEmail(): boolean {
-  if (!_cachedAuthEmail) return false;
-  return (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail);
+  // 1. Real auth admin
+  if (_cachedAuthEmail && (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail)) {
+    return true;
+  }
+  // 2. Preview override — only works in preview/dev environments
+  if (IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true") {
+    return true;
+  }
+  return false;
 }
 
 interface PlanData {
@@ -188,6 +203,36 @@ function onAuthChange(cb: () => void): () => void {
   return () => { _authChangeListeners.delete(cb); };
 }
 
+/**
+ * Enable admin override for preview/dev testing.
+ * Only works in preview/localhost environments.
+ */
+function enableAdminOverride(): boolean {
+  if (!IS_PREVIEW) return false;
+  localStorage.setItem(ADMIN_OVERRIDE_KEY, "true");
+  // Also set admin email so edge functions see the x-admin-email header
+  localStorage.setItem(ADMIN_EMAIL_KEY, ADMIN_EMAILS[0]);
+  _authReady = true;
+  _authChangeListeners.forEach((cb) => cb());
+  return true;
+}
+
+/**
+ * Disable admin override.
+ */
+function disableAdminOverride(): void {
+  localStorage.removeItem(ADMIN_OVERRIDE_KEY);
+  localStorage.removeItem(ADMIN_EMAIL_KEY);
+  _authChangeListeners.forEach((cb) => cb());
+}
+
+/**
+ * Check if admin override is currently active.
+ */
+function isAdminOverride(): boolean {
+  return IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true";
+}
+
 export const subscriptionManager = {
   getCurrentTier,
   getPlanDetails,
@@ -200,4 +245,7 @@ export const subscriptionManager = {
   isAuthReady,
   onAuthReady,
   onAuthChange,
+  enableAdminOverride,
+  disableAdminOverride,
+  isAdminOverride,
 };
