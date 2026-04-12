@@ -358,14 +358,24 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <feGaussianBlur stdDeviation="3" />
             </filter>
 
-            {/* Edge outline glow — subtle separation from background */}
-            <filter id="edge-outline">
-              <feMorphology operator="dilate" radius="0.8" in="SourceAlpha" result="expanded" />
-              <feGaussianBlur stdDeviation="1.5" in="expanded" result="blurred-edge" />
-              <feFlood floodColor={dominantColor} floodOpacity={0.4 + absorptionLevel * 0.3} result="color" />
-              <feComposite in="color" in2="blurred-edge" operator="in" result="colored-edge" />
+            {/* Soft edge glow — no hard outlines, just a gentle luminous fringe */}
+            <filter id="soft-edge-glow" x="-20%" y="-20%" width="140%" height="140%">
+              {/* Extract the alpha silhouette */}
+              <feGaussianBlur stdDeviation="2.5" in="SourceAlpha" result="soft-spread" />
+              {/* Tint it with the dominant aura color */}
+              <feFlood floodColor={dominantColor} floodOpacity={0.25 + absorptionLevel * 0.2} result="edge-color" />
+              <feComposite in="edge-color" in2="soft-spread" operator="in" result="soft-colored-edge" />
+              {/* Subtract the original shape to keep only the outer fringe */}
+              <feComposite in="soft-colored-edge" in2="SourceAlpha" operator="out" result="fringe-only" />
+              {/* Add a second, wider but fainter layer for cinematic depth */}
+              <feGaussianBlur stdDeviation="5" in="SourceAlpha" result="wide-spread" />
+              <feFlood floodColor={dominantColor} floodOpacity={0.1 + absorptionLevel * 0.08} result="wide-color" />
+              <feComposite in="wide-color" in2="wide-spread" operator="in" result="wide-fringe" />
+              <feComposite in="wide-fringe" in2="SourceAlpha" operator="out" result="wide-fringe-only" />
+              {/* Merge: wide fringe → tight fringe → original figure */}
               <feMerge>
-                <feMergeNode in="colored-edge" />
+                <feMergeNode in="wide-fringe-only" />
+                <feMergeNode in="fringe-only" />
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
@@ -480,7 +490,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             }}
           >
             {/* Core figure with edge outline */}
-            <g filter="url(#edge-outline)">
+            <g filter="url(#soft-edge-glow)">
               <image
                 href={astralFigureImg}
                 x="0"
