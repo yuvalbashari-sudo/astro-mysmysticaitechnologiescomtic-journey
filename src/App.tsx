@@ -46,6 +46,7 @@ const App = () => (
                 <Route path="/admin/costs" element={<AdminCostAnalytics />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/natal-test" element={<NatalTest />} />
+                <Route path="/astral-preview" element={<AstralPreview />} />
                 <Route path="/tarot-guide" element={<TarotGuidePage />} />
                 <Route path="/tarot-guides" element={<TarotGuidesPage />} />
                 <Route path="/astrology-guides" element={<AstrologyGuidesPage />} />
