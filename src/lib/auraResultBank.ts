@@ -3,11 +3,11 @@
  * to structured, personalized result objects.
  *
  * Architecture:
- *  1. `classifyAura()`  – reads sorted planet influences → AuraClassification
+ *  1. `classifyAura()`      – reads sorted planet influences → AuraClassification
  *  2. `resolveAuraResult()` – classification → final AuraResult via the bank
  *
- * All text is English-only for now; each field is a clean string ready for
- * future wrapping in a Record<Language, string> translation object.
+ * v2: Layered identity system with energy modifiers, visual profiles,
+ *     and shareable identity strings for large-scale personalization.
  */
 
 /* ═══════════════════════════════════════════
@@ -26,12 +26,31 @@ export type AuraFamily =
   | "orange"
   | "white";
 
+export type EnergyModifier =
+  | "radiant"
+  | "soft"
+  | "magnetic"
+  | "deep"
+  | "balanced"
+  | "transformative"
+  | "grounded"
+  | "fluid"
+  | "intense"
+  | "ethereal";
+
 export interface AuraBankEntry {
   title: string;
   subtitle: string;
   shortMeaning: string;
   personalityTone: string;
   visualTone: string;
+}
+
+export interface VisualProfile {
+  coreColor: string;
+  auraColor: string;
+  accentColor: string;
+  intensity: "soft" | "medium" | "strong" | "radiant";
 }
 
 export interface AuraClassification {
@@ -41,6 +60,7 @@ export interface AuraClassification {
   secondaryPlanets: string[];
   blendMode: boolean;
   intensityProfile: "dominant" | "balanced" | "diffused";
+  modifier: EnergyModifier;
 }
 
 export interface AuraResult {
@@ -54,6 +74,12 @@ export interface AuraResult {
   dominantPlanet: string;
   secondaryPlanets: string[];
   blendMode: boolean;
+  /** Energy modifier describing the quality of the aura */
+  modifier: EnergyModifier;
+  /** Human-readable shareable identity line */
+  shareableIdentity: string;
+  /** Visual rendering hints for UI layers */
+  visualProfile: VisualProfile;
 }
 
 /* ═══════════════════════════════════════════
@@ -72,6 +98,116 @@ const PLANET_AURA_MAP: Record<string, AuraFamily> = {
   neptune: "purple",
   pluto: "white",
 };
+
+/* ═══════════════════════════════════════════
+   Energy modifier system
+   ═══════════════════════════════════════════ */
+
+/** Planet-pair affinities that determine the energy modifier */
+const MODIFIER_RULES: Array<{
+  condition: (dom: string, secs: string[], profile: string) => boolean;
+  modifier: EnergyModifier;
+}> = [
+  { condition: (d, s) => d === "sun" && s.includes("jupiter"),              modifier: "radiant" },
+  { condition: (d, s) => d === "sun" && s.includes("mars"),                 modifier: "intense" },
+  { condition: (d, s) => d === "moon" && s.includes("neptune"),             modifier: "ethereal" },
+  { condition: (d, s) => d === "moon" && s.includes("venus"),               modifier: "soft" },
+  { condition: (d, s) => d === "venus" && s.includes("neptune"),            modifier: "fluid" },
+  { condition: (d, s) => d === "venus" && s.includes("pluto"),              modifier: "magnetic" },
+  { condition: (d, s) => d === "mars" && s.includes("pluto"),               modifier: "transformative" },
+  { condition: (d, s) => d === "saturn" && s.includes("mars"),              modifier: "grounded" },
+  { condition: (d, s) => d === "saturn" && s.includes("jupiter"),           modifier: "balanced" },
+  { condition: (d, s) => d === "pluto" && s.includes("neptune"),            modifier: "deep" },
+  { condition: (d, s) => d === "mercury" && s.includes("uranus"),           modifier: "magnetic" },
+  { condition: (d, s) => d === "uranus" && s.includes("mercury"),           modifier: "fluid" },
+  { condition: (d, s) => d === "jupiter" && s.includes("neptune"),          modifier: "ethereal" },
+  { condition: (d, s) => d === "neptune" && s.includes("moon"),             modifier: "soft" },
+  // Intensity-profile fallbacks
+  { condition: (_d, _s, p) => p === "dominant",   modifier: "intense" },
+  { condition: (_d, _s, p) => p === "diffused",   modifier: "balanced" },
+];
+
+/** Fallback modifier by planet when no rule matches */
+const PLANET_DEFAULT_MODIFIER: Record<string, EnergyModifier> = {
+  sun: "radiant",
+  moon: "soft",
+  mercury: "fluid",
+  venus: "magnetic",
+  mars: "intense",
+  jupiter: "radiant",
+  saturn: "grounded",
+  uranus: "transformative",
+  neptune: "ethereal",
+  pluto: "deep",
+};
+
+function resolveModifier(
+  dominantPlanet: string,
+  secondaryPlanets: string[],
+  intensityProfile: string,
+): EnergyModifier {
+  for (const rule of MODIFIER_RULES) {
+    if (rule.condition(dominantPlanet, secondaryPlanets, intensityProfile)) {
+      return rule.modifier;
+    }
+  }
+  return PLANET_DEFAULT_MODIFIER[dominantPlanet] || "balanced";
+}
+
+/* ═══════════════════════════════════════════
+   Modifier display names (for shareable identity)
+   ═══════════════════════════════════════════ */
+
+const MODIFIER_LABELS: Record<EnergyModifier, string> = {
+  radiant: "Radiant",
+  soft: "Soft",
+  magnetic: "Magnetic",
+  deep: "Deep",
+  balanced: "Balanced",
+  transformative: "Transformative",
+  grounded: "Grounded",
+  fluid: "Fluid",
+  intense: "Intense",
+  ethereal: "Ethereal",
+};
+
+/* ═══════════════════════════════════════════
+   Visual profile system
+   ═══════════════════════════════════════════ */
+
+const AURA_VISUAL_PROFILES: Record<AuraFamily, { core: string; aura: string; accent: string }> = {
+  gold:      { core: "#F5C842", aura: "#DAA520", accent: "#FFE4A0" },
+  blue:      { core: "#8AAFC8", aura: "#5B8BA8", accent: "#D0E8F5" },
+  green:     { core: "#5AAF7A", aura: "#3D8B5E", accent: "#A8E6C0" },
+  purple:    { core: "#9060B8", aura: "#6B3FA0", accent: "#CBA8E8" },
+  red:       { core: "#D04848", aura: "#A03030", accent: "#F0A0A0" },
+  pink:      { core: "#E878B0", aura: "#C05888", accent: "#F8C8E0" },
+  turquoise: { core: "#48B8D8", aura: "#2898B8", accent: "#A0E8F8" },
+  indigo:    { core: "#5060C8", aura: "#3848A8", accent: "#A0A8E8" },
+  orange:    { core: "#D89038", aura: "#B87020", accent: "#F0C888" },
+  white:     { core: "#D8D0C4", aura: "#B8B0A0", accent: "#F0ECE4" },
+};
+
+function resolveVisualProfile(
+  primary: AuraFamily,
+  secondary: AuraFamily | undefined,
+  intensityProfile: AuraClassification["intensityProfile"],
+): VisualProfile {
+  const base = AURA_VISUAL_PROFILES[primary];
+  const accentSource = secondary ? AURA_VISUAL_PROFILES[secondary] : base;
+
+  const intensity: VisualProfile["intensity"] =
+    intensityProfile === "dominant" ? "radiant"
+    : intensityProfile === "balanced" ? "medium"
+    : "soft";
+
+  return {
+    coreColor: base.core,
+    auraColor: base.aura,
+    accentColor: accentSource.accent,
+    intensity,
+  };
+}
 
 /* ═══════════════════════════════════════════
    Result bank — 10 aura families
@@ -192,6 +328,24 @@ const BLEND_MEANING_SUFFIXES: Record<AuraFamily, string> = {
 };
 
 /* ═══════════════════════════════════════════
+   Shareable identity builder
+   ═══════════════════════════════════════════ */
+
+function buildShareableIdentity(
+  primary: AuraBankEntry,
+  modifier: EnergyModifier,
+  secondary?: AuraFamily,
+): string {
+  const modLabel = MODIFIER_LABELS[modifier];
+  const base = `${modLabel} ${primary.title}`;
+  if (secondary) {
+    const secTitle = AURA_BANK[secondary].title.split(" ")[0]; // first word
+    return `${base} with ${secTitle} Undertones`;
+  }
+  return base;
+}
+
+/* ═══════════════════════════════════════════
    Classifier — planetary influences → AuraClassification
    ═══════════════════════════════════════════ */
 
@@ -216,6 +370,7 @@ export function classifyAura(
       secondaryPlanets: [],
       blendMode: false,
       intensityProfile: "dominant",
+      modifier: "radiant",
     };
   }
 
@@ -244,6 +399,9 @@ export function classifyAura(
   // Blend mode activates when the top two are close in strength
   const blendMode = ratio < 1.4 && secondaryAuras.length > 0;
 
+  // Resolve energy modifier
+  const modifier = resolveModifier(dominantPlanet, secondaryPlanets, intensityProfile);
+
   return {
     primaryAura,
     secondaryAuras,
@@ -251,6 +409,7 @@ export function classifyAura(
     secondaryPlanets,
     blendMode,
     intensityProfile,
+    modifier,
   };
 }
 
@@ -272,16 +431,26 @@ export function resolveAuraResult(
   const topSecondary = classification.secondaryAuras[0];
 
   if (classification.blendMode && topSecondary) {
-    // Blend mode: layer secondary influence into subtitle + meaning
     const secondaryEntry = AURA_BANK[topSecondary];
     subtitle = `${primary.subtitle} — ${BLEND_SUBTITLE_MODIFIERS[topSecondary]}`;
     shortMeaning = `${primary.shortMeaning} ${BLEND_MEANING_SUFFIXES[topSecondary]}`;
     personalityTone = `${primary.personalityTone}, ${secondaryEntry.personalityTone.split(",")[0].trim()}`;
     visualTone = `${primary.visualTone}, ${secondaryEntry.visualTone.split(",")[0].trim()}`;
   } else if (topSecondary) {
-    // Non-blend: subtle secondary enrichment in meaning only
     shortMeaning = `${primary.shortMeaning} ${BLEND_MEANING_SUFFIXES[topSecondary]}`;
   }
+
+  const visualProfile = resolveVisualProfile(
+    classification.primaryAura,
+    topSecondary,
+    classification.intensityProfile,
+  );
+
+  const shareableIdentity = buildShareableIdentity(
+    primary,
+    classification.modifier,
+    topSecondary,
+  );
 
   return {
     title,
@@ -294,6 +463,9 @@ export function resolveAuraResult(
     dominantPlanet: classification.dominantPlanet,
     secondaryPlanets: classification.secondaryPlanets,
     blendMode: classification.blendMode,
+    modifier: classification.modifier,
+    shareableIdentity,
+    visualProfile,
   };
 }
 
@@ -317,4 +489,4 @@ export function getAuraResult(
 }
 
 /** Expose the bank for reference / testing */
-export { AURA_BANK, PLANET_AURA_MAP };
+export { AURA_BANK, PLANET_AURA_MAP, MODIFIER_LABELS, AURA_VISUAL_PROFILES };
