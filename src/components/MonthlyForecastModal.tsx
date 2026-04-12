@@ -10,6 +10,7 @@ import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import { formatMonthName } from "@/lib/dateTimeFormat";
 import ShareResultSection from "@/components/ShareResultSection";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
@@ -40,8 +41,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
 
-  const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
-  const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
+  const monthName = formatMonthName(new Date(), language);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
   const updateDetails = (patch: Partial<BirthDetails>) => setDetails(prev => ({ ...prev, ...patch }));

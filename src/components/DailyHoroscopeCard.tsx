@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Heart, Briefcase, Zap, RefreshCw, Sparkles, Star } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
+import { formatFullDate } from "@/lib/dateTimeFormat";
 import { supabase } from "@/integrations/supabase/client";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
@@ -192,10 +193,7 @@ const DailyHoroscopeCard = () => {
   }, [fetchHoroscope]);
 
   // Format today's date in locale
-  const formattedDate = new Date().toLocaleDateString(
-    language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US",
-    { weekday: "long", year: "numeric", month: "long", day: "numeric" }
-  );
+  const formattedDate = formatFullDate(new Date(), language);
 
   if (needsSetup) {
     const setupZodiac = setupBirthDate ? getZodiacFromDate(setupBirthDate) : null;
