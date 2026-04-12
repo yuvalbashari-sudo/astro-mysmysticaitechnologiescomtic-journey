@@ -140,7 +140,23 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
 
-  const handleClose = useCallback(() => {
+  // Auto-restore cached chart for returning users
+  useEffect(() => {
+    if (!isOpen || phase !== "form") return;
+    const cached = loadCachedChart();
+    if (!cached || !cached.resultText) return;
+    setDetails(cached.details);
+    setChartData(cached.chartData);
+    setResultText(cached.resultText);
+    setRestoredFromCache(true);
+    setPhase("result");
+    if (cached.details.userName?.trim()) {
+      setShowWelcomeBack(true);
+      setTimeout(() => setShowWelcomeBack(false), 4000);
+    }
+  }, [isOpen]);
+
+
     onClose();
     setTimeout(() => {
       setPhase("form");
