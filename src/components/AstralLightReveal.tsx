@@ -525,6 +525,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               </g>
             );
           })}
+          </motion.g>{/* end cosmic rotation wrapper */}
 
           {/* ─── Human figure — AI-generated astral image ─── */}
           <g
