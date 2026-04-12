@@ -525,5 +525,38 @@ export function getAuraResult(
   return resolveAuraResult(classification);
 }
 
+/* ═══════════════════════════════════════════
+   Selection reasoning — admin debug helper
+   ═══════════════════════════════════════════ */
+
+/**
+ * Deterministic reasoning strings explaining why each aura decision was made.
+ * Admin debug only — not shown to regular users.
+ */
+export function getSelectionReasoning(
+  influences: Record<string, number>,
+  result: AuraResult,
+): string[] {
+  const sorted = Object.entries(influences).sort((a, b) => b[1] - a[1]);
+  const top = sorted[0];
+  const second = sorted[1];
+  const gap = top ? (top[1] - (second?.[1] ?? 0)) : 0;
+  const lines: string[] = [];
+
+  if (top) {
+    lines.push(`dominantPlanet: ${top[0]} (score: ${top[1]}, gap: +${gap} over ${second?.[0] ?? 'none'})`);
+  } else {
+    lines.push("dominantPlanet: NONE (empty influence map)");
+  }
+
+  lines.push(`secondaryPlanets: ${result.secondaryPlanets.join(', ') || 'none'}`);
+  lines.push(`modifier: ${result.modifier} (rule-based from ${result.dominantPlanet} + ${result.secondaryPlanets[0] ?? 'none'})`);
+  lines.push(`primaryAura: ${result.primaryAura} → mapped from ${result.dominantPlanet}`);
+  lines.push(`blendMode: ${result.blendMode} (ratio threshold)`);
+  lines.push(`fallback: ${!top || top[1] === 0 ? 'YES — zero/empty scores' : 'not used'}`);
+
+  return lines;
+}
+
 /** Expose the bank for reference / testing */
 export { AURA_BANK, PLANET_AURA_MAP, MODIFIER_LABELS, AURA_VISUAL_PROFILES };
