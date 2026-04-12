@@ -469,7 +469,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {(phase === "loading" || showResult) && chartData && !restoredFromCache && (
+            {(phase === "loading" || showResult) && chartData && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -478,7 +478,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="pointer-events-none"
                 style={{ position: showResult ? 'relative' : undefined, zIndex: showResult ? 10 : undefined }}
               >
-                <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
+                <AstralLightReveal
+                  userName={userName.trim() || undefined}
+                  chartData={chartData}
+                  onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
+                  fastMode={restoredFromCache}
+                />
               </motion.div>
             )}
 
