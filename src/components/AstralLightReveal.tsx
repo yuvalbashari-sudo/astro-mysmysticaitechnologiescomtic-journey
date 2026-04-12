@@ -4,7 +4,14 @@ import { PLANETS } from "@/components/NatalChartWheel";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getPlanetName } from "@/lib/astroLocale";
 import type { NatalChartResult } from "@/lib/natalChart";
-import { getAuraResult, type AuraResult } from "@/lib/auraResultBank";
+import { getAuraResult, type AuraResult, type AuraFamily } from "@/lib/auraResultBank";
+
+/* Localized aura title lookup for the final status line */
+const AURA_TITLE_I18N: Record<string, Record<AuraFamily, string>> = {
+  he: { gold: "זוהר שמשי", blue: "עומקים ירחיים", green: "זרם אזמרגד", purple: "צעיף מיסטי", red: "להבה חיונית", pink: "חן נוגהי", turquoise: "זרם אסטרלי", indigo: "עוגן עמוק", orange: "אור מתרחב", white: "טרנסמוטציה טהורה" },
+  ru: { gold: "Солнечное сияние", blue: "Лунные глубины", green: "Изумрудный поток", purple: "Мистическая завеса", red: "Жизненное пламя", pink: "Венерианская грация", turquoise: "Астральный поток", indigo: "Глубокий якорь", orange: "Расширяющийся свет", white: "Чистая трансмутация" },
+  ar: { gold: "إشراق شمسي", blue: "أعماق قمرية", green: "تيار زمردي", purple: "حجاب صوفي", red: "لهب حيوي", pink: "رشاقة فينوسية", turquoise: "تيار نجمي", indigo: "مرساة عميقة", orange: "نور متسع", white: "تحوّل نقي" },
+};
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 
