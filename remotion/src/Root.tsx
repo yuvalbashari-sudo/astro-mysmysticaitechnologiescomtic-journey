@@ -1,10 +1,10 @@
 import { Composition } from "remotion";
-import { NewAstralTransformationScene } from "./NewAstralTransformationScene";
+import { PromoAd } from "./PromoAd";
 
 export const RemotionRoot = () => (
   <Composition
     id="promo-ad"
-    component={NewAstralTransformationScene}
+    component={PromoAd}
     durationInFrames={300}
     fps={30}
     width={1080}
