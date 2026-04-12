@@ -17,6 +17,7 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
+import type { AuraResult } from "@/lib/auraResultBank";
 import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
