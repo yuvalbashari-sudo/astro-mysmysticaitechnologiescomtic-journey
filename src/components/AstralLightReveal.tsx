@@ -38,16 +38,16 @@ const PLANET_VIS: Record<string, { color: string; glow: string }> = {
 
 /* Mini constellation patterns */
 const CONSTELLATION_STARS: number[][] = [
-  [0, -4, 6, 2, -3, 5, 4, -2],
-  [-5, 0, 0, -5, 5, -1, -2, 4],
-  [-4, -3, 2, -5, 6, 0, -1, 3],
-  [0, -6, -4, -1, 3, -4, 5, 2],
-  [-3, -5, 4, -3, -1, 1, 6, -1],
-  [2, -4, -5, 0, 0, -6, 4, 1],
-  [-6, -2, 1, -5, 5, -3, -2, 2],
-  [3, -6, -4, -2, 0, -4, 5, 0],
-  [-3, -4, 4, -5, -1, -1, 6, 2],
-  [0, -5, -5, -1, 3, -3, 5, 1],
+  [0, -3, 4, 1, -2, 4, 3, -2],
+  [-4, 0, 0, -4, 4, -1, -2, 3],
+  [-3, -2, 2, -4, 4, 0, -1, 2],
+  [0, -4, -3, -1, 2, -3, 4, 1],
+  [-2, -4, 3, -2, -1, 1, 4, -1],
+  [2, -3, -4, 0, 0, -4, 3, 1],
+  [-4, -2, 1, -4, 4, -2, -2, 2],
+  [2, -4, -3, -2, 0, -3, 4, 0],
+  [-2, -3, 3, -4, -1, -1, 4, 2],
+  [0, -4, -4, -1, 2, -2, 4, 1],
 ];
 
 const STATUS_TEXT: Record<Language, string[]> = {
@@ -235,12 +235,19 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
     };
   }, []);
 
-  /* ── Beam positions: spread across top, all aim at figure chest ── */
+  /* ── Beam positions: elliptical orbit around figure ── */
   const beamPositions = useMemo(() => {
+    const count = sortedPlanets.length;
+    const rx = 110; // horizontal radius of orbit ellipse
+    const ry = 130; // vertical radius of orbit ellipse
+    // Deterministic jitter per planet for organic feel
+    const jitters = [0.12, -0.08, 0.15, -0.05, 0.1, -0.13, 0.07, -0.11, 0.09, -0.06];
     return sortedPlanets.map((planet, idx) => {
-      const spread = W / (PLANETS.length + 1);
-      const x = spread * (idx + 1);
-      const y = 40;
+      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2; // start from top
+      const jitter = jitters[idx % jitters.length];
+      const angle = baseAngle + jitter;
+      const x = FIG_CX + rx * Math.cos(angle);
+      const y = FIG_CORE_Y + ry * Math.sin(angle);
       return { key: planet.key, symbol: planet.symbol, x, y };
     });
   }, [sortedPlanets]);
@@ -438,20 +445,33 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
             );
           })}
 
-          {/* ─── Phase 1b: Beams descending to figure chest ─── */}
+          {/* ─── Phase 1b: Curved beams flowing to figure chest ─── */}
           {beamPositions.map((bp, idx) => {
             const vis = PLANET_VIS[bp.key];
             if (!vis || idx >= beamsFired) return null;
             const inf = (influences[bp.key] || 5) / 100;
 
+            // Compute Bézier control point — perpendicular offset for natural arc
+            const midX = (bp.x + FIG_CX) / 2;
+            const midY = (bp.y + FIG_CHEST_Y) / 2;
+            const dx = FIG_CX - bp.x;
+            const dy = FIG_CHEST_Y - bp.y;
+            const len = Math.sqrt(dx * dx + dy * dy) || 1;
+            // Perpendicular direction, alternating sides
+            const perpSign = idx % 2 === 0 ? 1 : -1;
+            const perpMag = 25 + (idx % 3) * 10; // vary curvature
+            const ctrlX = midX + (-dy / len) * perpMag * perpSign;
+            const ctrlY = midY + (dx / len) * perpMag * perpSign;
+            const pathD = `M ${bp.x} ${bp.y} Q ${ctrlX} ${ctrlY} ${FIG_CX} ${FIG_CHEST_Y}`;
+
             return (
               <g key={`beam-${bp.key}`}>
-                <motion.line
-                  x1={bp.x} y1={bp.y}
-                  x2={FIG_CX} y2={FIG_CHEST_Y}
+                <motion.path
+                  d={pathD}
                   stroke={`url(#beam-g-${bp.key})`}
                   strokeWidth={2 + inf * 6}
                   strokeLinecap="round"
+                  fill="none"
                   filter="url(#beam-glow-strong)"
                   initial={{ opacity: 0, pathLength: 0 }}
                   animate={{
@@ -464,22 +484,24 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                   }}
                 />
 
-                {/* Traveling energy particle along beam */}
+                {/* Traveling energy particle — follows curved path via offset keyframes */}
                 <motion.circle
                   r={2 + inf * 2}
                   fill={vis.color}
                   filter="url(#const-glow)"
                   initial={{ cx: bp.x, cy: bp.y, opacity: 0 }}
                   animate={{
-                    cx: [bp.x, FIG_CX],
-                    cy: [bp.y, FIG_CHEST_Y],
+                    cx: [bp.x, ctrlX, FIG_CX],
+                    cy: [bp.y, ctrlY, FIG_CHEST_Y],
                     opacity: [0, 1, 0.8, 0],
                   }}
                   transition={{
                     duration: 1.5,
                     delay: 0.3,
                     ease: "easeIn",
-                    times: [0, 0.1, 0.8, 1],
+                    cx: { times: [0, 0.5, 1] },
+                    cy: { times: [0, 0.5, 1] },
+                    opacity: { times: [0, 0.1, 0.8, 1] },
                   }}
                 />
 
