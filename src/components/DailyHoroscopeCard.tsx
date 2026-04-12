@@ -99,6 +99,11 @@ const DailyHoroscopeCard = () => {
   const userName = profile.userName;
   const gender = profile.gender;
 
+  // Inline setup form state
+  const [setupName, setSetupName] = useState("");
+  const [setupBirthDate, setSetupBirthDate] = useState("");
+  const [needsSetup, setNeedsSetup] = useState(!zodiacSign);
+
   const fetchHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
 
