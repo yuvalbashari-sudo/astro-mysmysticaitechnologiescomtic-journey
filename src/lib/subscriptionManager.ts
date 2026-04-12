@@ -11,9 +11,16 @@ import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "astrologai_user_plan";
 const ADMIN_EMAIL_KEY = "astrologai_admin_email";
+const ADMIN_OVERRIDE_KEY = "astrologai_admin_override";
 
 // Internal admin accounts — bypass all limits
 const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
+
+// Preview/dev mode detection
+const IS_PREVIEW = window.location.hostname.includes("preview") ||
+  window.location.hostname.includes("lovableproject.com") ||
+  window.location.hostname === "localhost" ||
+  import.meta.env.DEV;
 
 // Cached auth email — updated via listener
 // On startup, seed from localStorage so admin persists across refreshes
