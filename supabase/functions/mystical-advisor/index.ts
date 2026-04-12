@@ -226,13 +226,23 @@ serve(async (req) => {
 
   try {
     const clientIp = getClientIp(req);
-    const { messages, readingContext, readingsHistory, language, userName } = await req.json();
+    const { messages: rawMessages, readingContext, readingsHistory, language, userName } = await req.json();
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const lang = language || "he";
     const langName = LANG_NAMES[lang] || "Hebrew";
+
+    // Detect if the latest user message is free-form text vs a button click
+    const lastMsg = rawMessages?.[rawMessages.length - 1];
+    const isLastMessageFreeText = lastMsg?.role === "user" && lastMsg?.source !== "button";
+
+    // Strip source metadata before sending to AI — only pass role + content
+    const messages = (rawMessages || []).map((m: { role: string; content: string }) => ({
+      role: m.role,
+      content: m.content,
+    }));
 
     const langInstruction = lang === "he"
       ? "אתה כותב בעברית בלבד — לא מתרגם מאנגלית, אלא יוצר ישירות בעברית. אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד."
@@ -380,12 +390,23 @@ Before writing, ask yourself:
   - In palm mode: "Your heart line suggests…"
 - NEVER mix domain vocabulary (e.g. don't mention "cards" in astrology mode, don't mention "planets" in tarot mode)
 
+## FREE-FORM QUESTION HANDLING
+${isLastMessageFreeText ? `⚠️ IMPORTANT: The user's latest message is a FREELY TYPED question — NOT a button click from predefined suggestions.
+- Treat this as an ORIGINAL, PERSONAL question that deserves a thoughtful, custom answer.
+- Do NOT respond with a generic predefined answer or template. 
+- Do NOT assume the user is asking one of the suggested questions — read their ACTUAL words carefully.
+- Understand the user's INTENT from their own phrasing and respond accordingly.
+- If the question is clear → answer it directly and personally, connecting to the reading context when relevant.
+- If the question is vague or unclear → respond warmly and ask a clarifying question in ${langName}.
+- If the question is unrelated to the reading → still answer helpfully, then gently connect back to the reading.
+- The user must feel HEARD — never give a response that ignores what they actually wrote.` : ""}
+
 ${featureBlock}
 
 ${contextBlock}
 ${historyBlock}
 
-If the user asks about something unrelated to their reading or spirituality, gently and warmly guide them back: "That's an interesting thought… but I sense there's something in your reading that's calling for attention right now."`;
+If the user asks about something unrelated to their reading or spirituality, gently and warmly guide them back: ${lang === "ru" ? '"Интересная мысль... но мне кажется, что в твоём чтении есть кое-что, что сейчас требует внимания."' : lang === "ar" ? '"فكرة مثيرة... لكنني أشعر أن هناك شيئاً في قراءتك يستدعي الاهتمام الآن."' : lang === "he" ? '"מחשבה מעניינת... אבל אני מרגישה שיש משהו בקריאה שלך שדורש תשומת לב עכשיו."' : '"That\'s an interesting thought… but I sense there\'s something in your reading that\'s calling for attention right now."'}`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",

@@ -10,6 +10,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  source?: "button" | "text";
 }
 
 interface Props {
@@ -99,7 +100,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
     const text = (prefilledText ?? input).trim();
     if (!text || isStreaming || isLimitReached) return;
 
-    const userMsg: Message = { role: "user", content: text };
+    const isButtonClick = !!prefilledText;
+    const userMsg: Message = { role: "user", content: text, source: isButtonClick ? "button" : "text" };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
@@ -116,7 +118,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
         },
         body: JSON.stringify({
-          messages: newMessages.map(m => ({ role: m.role, content: m.content })),
+          messages: newMessages.map(m => ({ role: m.role, content: m.content, source: m.source })),
           readingContext: activeReading,
           readingsHistory: readingsStorage.getAll().slice(0, 10).map(r => ({
             type: r.type,
