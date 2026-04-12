@@ -755,7 +755,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
       <div className="w-48 h-0.5 mt-5 rounded-full overflow-hidden" style={{ background: "hsl(var(--gold) / 0.1)" }}>
         <motion.div
           className="h-full rounded-full"
-          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${planetColors.tertiary}60, ${dominantColor}40)` }}
+          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${auraColors.tertiary}60, ${dominantColor}40)` }}
           initial={{ width: "0%" }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.1 }}
