@@ -547,7 +547,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 y="0"
                 width={FIG_VB_W}
                 height={FIG_VB_H}
-                opacity={0.35 + absorptionLevel * 0.4 + climaxLevel * 0.25}
+                opacity={0.28 + absorptionLevel * 0.32 + climaxLevel * 0.2}
                 style={{ mixBlendMode: 'screen' }}
               />
             </g>
@@ -895,19 +895,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
                 {(() => {
-                  const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.title;
-                  const modI18n: Record<string, Record<string, string>> = {
-                    he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
-                    ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
-                    ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
-                    en: { radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep", balanced: "Balanced", transformative: "Transformative", grounded: "Grounded", fluid: "Fluid", intense: "Intense", ethereal: "Ethereal" },
-                  };
-                  const mod = modI18n[language]?.[auraResult.modifier] ?? modI18n.en[auraResult.modifier] ?? "";
-                  return `${mod} ${localTitle}`;
+                  const mod = MODIFIER_LABELS_EN[auraResult.modifier] ?? "Radiant";
+                  const displayName = AURA_DISPLAY_EN[auraResult.primaryAura] ?? "Solar Gold";
+                  return `${mod} ${displayName}`;
                 })()}
               </motion.h2>
 
-              {/* Emotional subtitle */}
+              {/* Localized subtitle — smaller, supporting */}
               <motion.p
                 className="font-body text-sm text-center italic max-w-[280px]"
                 style={{ color: `${dominantColor}AA`, lineHeight: 1.7 }}
@@ -917,6 +911,23 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               >
                 {AURA_SUBTITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.subtitle}
               </motion.p>
+
+              {/* Localized aura name — in user's language, smaller */}
+              {language !== "en" && (
+                <motion.p
+                  className="font-heading text-base text-center"
+                  style={{ color: `${dominantColor}88` }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9, duration: 0.5 }}
+                >
+                  {(() => {
+                    const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? "";
+                    const localMod = MOD_I18N_MAP[language]?.[auraResult.modifier] ?? "";
+                    return localTitle && localMod ? `${localMod} ${localTitle}` : localTitle;
+                  })()}
+                </motion.p>
+              )}
 
               {/* Glowing divider */}
               <div
