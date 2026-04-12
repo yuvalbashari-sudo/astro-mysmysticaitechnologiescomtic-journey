@@ -162,17 +162,23 @@ export const PromoAd = () => {
   const constellationProg = interpolate(frame, [0, 40], [0, 1], { extrapolateRight: "clamp" });
   const beamProg = interpolate(frame, [15, 60], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── Scene 2: Absorption + energy fill + climax (50–130) ──
+  // ── Scene 2: Absorption + energy fill + climax (50–120) ──
   const absorptionRamp = interpolate(frame, [50, 80], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
   const climaxIntensity = interpolate(frame, [80, 105], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  const beamSustain = interpolate(frame, [60, 180], [1, 0.6], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // Beams sustain but dim slightly after climax
+  const beamSustain = interpolate(frame, [60, 130], [1, 0.5], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── Scene 3: Map emergence (120–180) ──
-  const mapReveal = spring({ frame: frame - 125, fps, config: { damping: 30, stiffness: 80 } });
-  const mapOpacity = interpolate(frame, [125, 150], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ── Scene 3: Map emergence (130–170), then HOLD everything (170–300) ──
+  const mapReveal = spring({ frame: frame - 135, fps, config: { damping: 30, stiffness: 80 } });
+  const mapOpacity = interpolate(frame, [135, 160], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // Figure visibility (fades in with constellations)
+  // Figure: fades in early, NEVER fades out — stays at full opacity forever
   const figureOpacity = interpolate(frame, [5, 30], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+
+  // Final hold glow — intensifies after climax and stays permanently bright
+  const holdGlow = interpolate(frame, [105, 130], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // Gentle breathing pulse during hold phase (frame > 130)
+  const holdBreath = frame > 130 ? Math.sin((frame - 130) * 0.04) * 0.08 : 0;
 
   // Star field
   const stars = Array.from({ length: 120 }, (_, i) => ({
@@ -182,8 +188,9 @@ export const PromoAd = () => {
     phase: i * 0.7,
   }));
 
-  const coreGlow = 0.15 + climaxIntensity * 0.7;
-  const coreR = 30 + climaxIntensity * 80 + Math.sin(frame * 0.1) * 8 * climaxIntensity;
+  // Core glow: builds during climax, then stays strong with gentle breathing
+  const coreGlow = 0.15 + climaxIntensity * 0.5 + holdGlow * 0.35 + holdBreath;
+  const coreR = 30 + climaxIntensity * 60 + holdGlow * 30 + Math.sin(frame * 0.1) * 8 * Math.max(climaxIntensity, holdGlow);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#020510" }}>
@@ -252,17 +259,17 @@ export const PromoAd = () => {
 
             {/* Figure fill — translucent with energy */}
             <linearGradient id="fig-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#60D0F0" stopOpacity={0.05 + absorptionRamp * 0.15 + climaxIntensity * 0.25} />
-              <stop offset="30%" stopColor="#F0C840" stopOpacity={0.08 + absorptionRamp * 0.2 + climaxIntensity * 0.35} />
-              <stop offset="60%" stopColor="#50E0A0" stopOpacity={0.06 + absorptionRamp * 0.12 + climaxIntensity * 0.2} />
-              <stop offset="100%" stopColor="#8060E0" stopOpacity={0.03 + absorptionRamp * 0.05} />
+              <stop offset="0%" stopColor="#60D0F0" stopOpacity={0.05 + absorptionRamp * 0.15 + Math.max(climaxIntensity, holdGlow) * 0.3 + holdBreath * 0.1} />
+              <stop offset="30%" stopColor="#F0C840" stopOpacity={0.08 + absorptionRamp * 0.2 + Math.max(climaxIntensity, holdGlow) * 0.4 + holdBreath * 0.1} />
+              <stop offset="60%" stopColor="#50E0A0" stopOpacity={0.06 + absorptionRamp * 0.12 + Math.max(climaxIntensity, holdGlow) * 0.25} />
+              <stop offset="100%" stopColor="#8060E0" stopOpacity={0.03 + absorptionRamp * 0.05 + holdGlow * 0.1} />
             </linearGradient>
 
-            {/* Chest core radial */}
+            {/* Chest core radial — stays bright during hold */}
             <radialGradient id="chest-core" cx="50%" cy="42%" r="25%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.5 * climaxIntensity} />
-              <stop offset="20%" stopColor="#F0E060" stopOpacity={0.6 * climaxIntensity} />
-              <stop offset="50%" stopColor="#40D8C0" stopOpacity={0.3 * climaxIntensity} />
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.5 * Math.max(climaxIntensity, holdGlow) + holdBreath * 0.15} />
+              <stop offset="20%" stopColor="#F0E060" stopOpacity={0.6 * Math.max(climaxIntensity, holdGlow)} />
+              <stop offset="50%" stopColor="#40D8C0" stopOpacity={0.3 * Math.max(climaxIntensity, holdGlow)} />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
 
@@ -398,7 +405,7 @@ export const PromoAd = () => {
 
           {/* ═══ HUMAN FIGURE — multi-part anatomical body ═══ */}
           <g opacity={figureOpacity} style={{
-            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + climaxIntensity * 20}px rgba(80,200,240,${0.3 + climaxIntensity * 0.3}))`,
+            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + Math.max(climaxIntensity, holdGlow) * 25}px rgba(80,200,240,${0.3 + Math.max(climaxIntensity, holdGlow) * 0.4}))`,
           }}>
             {/* Body fill */}
             {FIGURE_PARTS.map((p, pi) => (
@@ -411,8 +418,8 @@ export const PromoAd = () => {
               <path key={`outline-${pi}`} d={p}
                 fill="none"
                 stroke="#60D0F0"
-                strokeWidth={1.2 + climaxIntensity * 0.6}
-                strokeOpacity={0.25 + absorptionRamp * 0.25 + climaxIntensity * 0.3}
+                strokeWidth={1.2 + Math.max(climaxIntensity, holdGlow) * 0.8}
+                strokeOpacity={0.25 + absorptionRamp * 0.25 + Math.max(climaxIntensity, holdGlow) * 0.35}
                 strokeLinecap="round"
                 strokeLinejoin="round" />
             ))}
