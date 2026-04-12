@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
 import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand, AlertTriangle } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
+import { formatDateTime } from "@/lib/dateTimeFormat";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
