@@ -1,28 +1,22 @@
 
 
-# Limit Constellation Effect to 5 Seconds, Then Fade Out Stars
+# Plan: Generate Clean Astral Figure Image
 
-## What changes
-Only `src/components/AstralLightReveal.tsx` is modified.
+## Current State
+The astral figure (`src/assets/astral-figure.png`) contains colored chakra dots baked into the image itself. All SVG overlay code has already been removed, but the dots persist in the source image.
 
-### 1. Add a new state: `showConstellations`
-- Starts as `true`
-- After 5 seconds (scaled by `fastMode`), set to `false`
+## Plan
 
-### 2. Fade out stars and beams at the 5-second mark
-- Wrap the rotating `<motion.g>` group containing constellations and beams in an `<AnimatePresence>` block
-- When `showConstellations` becomes `false`, the group fades out over ~1 second with `exit={{ opacity: 0 }}` transition
-- The figure, its aura/glow, chakras, and all body effects remain visible and unchanged
+1. **Generate a new astral figure image** using AI image generation (Lovable AI with Gemini image model)
+   - Prompt: A photorealistic, translucent human silhouette glowing with soft ethereal light against a dark/transparent background. No chakra points, no colored dots on the body. Clean, luminous silhouette only — suitable as a mystical/astral overlay.
+   - Output a preview to `/mnt/documents/astral-figure-preview.png` for your review first
 
-### 3. Keep the figure's established colors
-- The absorption and climax effects (body glow, aura envelope, energy rays) continue to display at their final intensity
-- Only the orbiting planet nodes, mini constellation stars, curved energy beams, and traveling particles disappear
+2. **After your approval** — replace `src/assets/astral-figure.png` with the approved image
 
-### 4. Adjust timing
-- Add a timer at `5000 * S` (where S is the speed multiplier) that sets `showConstellations = false`
-- The `onComplete` timer and overall duration remain unchanged (the figure holds its glow until the map transition)
+No code changes needed beyond swapping the image file. The component already references it via the existing import.
 
-## Scope
-- Only `src/components/AstralLightReveal.tsx`
-- No changes to BirthChartModal, timing of onComplete, or any other component
+## Technical Details
+- Will use `google/gemini-3-pro-image-preview` for high-quality generation
+- The image needs a dark or transparent background to work with the existing SVG overlay system
+- The silhouette should be centered and roughly match the current figure's proportions
 
