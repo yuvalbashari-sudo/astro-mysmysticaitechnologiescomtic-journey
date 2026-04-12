@@ -83,7 +83,9 @@ export interface AuraResult {
   blendMode: boolean;
   /** Energy modifier — how the aura behaves */
   modifier: EnergyModifier;
-  /** Human-readable shareable identity, e.g. "Radiant Solar Gold" */
+  /** Stable internal title key: "soft_moon_silver_blue" */
+  titleKey: string;
+  /** Human-readable shareable identity (English fallback) */
   shareableIdentity: string;
   /** Visual rendering hints for UI layers */
   visualProfile: VisualProfile;
@@ -199,7 +201,7 @@ const MODIFIER_LABELS: Record<EnergyModifier, string> = {
 
 const AURA_VISUAL_PROFILES: Record<AuraFamily, { core: string; aura: string; accent: string }> = {
   solar_gold:        { core: "#F5C842", aura: "#DAA520", accent: "#FFE4A0" },
-  moon_silver_blue:        { core: "#8AAFC8", aura: "#5B8BA8", accent: "#D0E8F5" },
+  moon_silver_blue:  { core: "#A8C4D8", aura: "#7AAFE0", accent: "#D0E8F5" },
   healing_green:     { core: "#5AAF7A", aura: "#3D8B5E", accent: "#A8E6C0" },
   mystical_purple:   { core: "#9060B8", aura: "#6B3FA0", accent: "#CBA8E8" },
   vital_red:         { core: "#D04848", aura: "#A03030", accent: "#F0A0A0" },
