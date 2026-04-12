@@ -138,7 +138,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setAttempted(true);
 
     if (!authReady) {
-      toast.error(t.loading || "Loading...");
+      toast.error(t.common_loading);
       return;
     }
 
@@ -179,7 +179,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     } finally {
       setPreparingChart(false);
     }
-  }, [birthCity, birthDate, birthTime, gender, userName]);
+  }, [authReady, birthCity, birthDate, birthTime, dailyLimitReached, gender, isAdmin, t.common_loading, t.chart_daily_limit_toast, t.chart_form_error, userName]);
 
   const startAIInterpretation = useCallback(() => {
     if (!chartData) return;
