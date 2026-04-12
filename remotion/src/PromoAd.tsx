@@ -396,17 +396,31 @@ export const PromoAd = () => {
             );
           })}
 
-          {/* ═══ HUMAN FIGURE ═══ */}
-          <path d={FIGURE_PATH}
-            fill="url(#fig-fill)"
-            stroke="#60D0F0"
-            strokeWidth={1.2 + climaxIntensity * 0.6}
-            strokeOpacity={0.25 + absorptionRamp * 0.25 + climaxIntensity * 0.3}
-            opacity={figureOpacity}
-            style={{
-              filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + climaxIntensity * 20}px rgba(80,200,240,${0.3 + climaxIntensity * 0.3}))`,
-            }}
-          />
+          {/* ═══ HUMAN FIGURE — multi-part anatomical body ═══ */}
+          <g opacity={figureOpacity} style={{
+            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + climaxIntensity * 20}px rgba(80,200,240,${0.3 + climaxIntensity * 0.3}))`,
+          }}>
+            {/* Body fill */}
+            {FIGURE_PARTS.map((p, pi) => (
+              <path key={`fill-${pi}`} d={p}
+                fill="url(#fig-fill)"
+                stroke="none" />
+            ))}
+            {/* Body outline glow */}
+            {FIGURE_OUTLINE.map((p, pi) => (
+              <path key={`outline-${pi}`} d={p}
+                fill="none"
+                stroke="#60D0F0"
+                strokeWidth={1.2 + climaxIntensity * 0.6}
+                strokeOpacity={0.25 + absorptionRamp * 0.25 + climaxIntensity * 0.3}
+                strokeLinecap="round"
+                strokeLinejoin="round" />
+            ))}
+            {/* Subtle inner body highlight */}
+            <path d={TORSO}
+              fill="url(#chest-core)"
+              stroke="none" opacity={0.6} />
+          </g>
 
           {/* ═══ INTERNAL ENERGY CHANNELS ═══ */}
           {absorptionRamp > 0.15 && ENERGY_CHANNELS.map((path, ci) => {
