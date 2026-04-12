@@ -646,31 +646,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 />
               ))}
 
-              {/* Chakra points along spine */}
-              {[
-                { cy: FIG_CORE_Y - 42, color: "#9B59B6" }, // Crown
-                { cy: FIG_CORE_Y - 30, color: "#5B6AB8" }, // Third eye
-                { cy: FIG_CORE_Y - 15, color: "#3498DB" }, // Throat
-                { cy: FIG_CORE_Y, color: "#2ECC71" },       // Heart
-                { cy: FIG_CORE_Y + 18, color: "#F1C40F" },  // Solar plexus
-                { cy: FIG_CORE_Y + 35, color: "#E67E22" },  // Sacral
-                { cy: FIG_CORE_Y + 50, color: "#E74C3C" },  // Root
-              ].map((chakra, ci) => (
-                <motion.circle
-                  key={`chakra-${ci}`}
-                  cx={FIG_CX}
-                  cy={chakra.cy}
-                  r={2}
-                  fill={chakra.color}
-                  opacity={absorptionLevel * 0.4}
-                  filter="url(#const-glow)"
-                  animate={{
-                    r: [1.5, 3, 1.5],
-                    opacity: [absorptionLevel * 0.2, absorptionLevel * 0.5, absorptionLevel * 0.2],
-                  }}
-                  transition={{ duration: 1.8, repeat: Infinity, delay: ci * 0.15 }}
-                />
-              ))}
             </g>
           )}
 
