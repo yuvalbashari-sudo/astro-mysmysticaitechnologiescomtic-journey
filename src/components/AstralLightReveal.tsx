@@ -477,13 +477,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
                 <motion.path
                   d={pathD}
                   stroke={`url(#beam-g-${bp.key})`}
-                  strokeWidth={2 + inf * 6}
+                  strokeWidth={4 + inf * 10}
                   strokeLinecap="round"
                   fill="none"
                   filter="url(#beam-glow-strong)"
                   initial={{ opacity: 0, pathLength: 0 }}
                   animate={{
-                    opacity: [0, 0.9, 0.8, absorptionLevel > 0.5 ? 0.15 : 0.6],
+                    opacity: [0, 1, 0.95, absorptionLevel > 0.5 ? 0.3 : 0.8],
                     pathLength: 1,
                   }}
                   transition={{
