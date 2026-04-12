@@ -66,6 +66,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [downloading, setDownloading] = useState(false);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
+  const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
@@ -86,11 +87,19 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const isAdmin = subscriptionManager.isAdmin();
 
   useEffect(() => {
-    if (isOpen) {
-      // Admins never hit daily limit
-      setDailyLimitReached(isAdmin ? false : hasUsedChartToday());
-    }
-  }, [isOpen, isAdmin]);
+    const syncAdminState = () => {
+      const ready = subscriptionManager.isAuthReady();
+      const admin = subscriptionManager.isAdmin();
+      setAuthReady(ready);
+      if (!isOpen) return;
+      setDailyLimitReached(ready ? (admin ? false : hasUsedChartToday()) : false);
+    };
+
+    syncAdminState();
+    const unsubscribe = subscriptionManager.onAuthChange(syncAdminState);
+    subscriptionManager.onAuthReady(syncAdminState);
+    return unsubscribe;
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -127,6 +136,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
   const handleSubmit = useCallback(async () => {
     setAttempted(true);
+
+    if (!authReady) {
+      toast.error(t.common_loading);
+      return;
+    }
 
     if (dailyLimitReached && !isAdmin) {
       toast.error(t.chart_daily_limit_toast);
@@ -165,7 +179,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     } finally {
       setPreparingChart(false);
     }
-  }, [birthCity, birthDate, birthTime, gender, userName]);
+  }, [authReady, birthCity, birthDate, birthTime, dailyLimitReached, gender, isAdmin, t.common_loading, t.chart_daily_limit_toast, t.chart_form_error, userName]);
 
   const startAIInterpretation = useCallback(() => {
     if (!chartData) return;
@@ -249,7 +263,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       },
       language,
     );
-  }, [birthDate, birthTime, chartData, chartLabels, elementSummary, gender, houseSummary, language, userName]);
+  }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
