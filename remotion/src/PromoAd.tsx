@@ -8,7 +8,7 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } fr
 
 const CX = 540;   // center X of 1080
 const CY = 900;   // center Y — figure centered in upper 2/3
-const CHEST_Y = CY - 30; // beam convergence point
+const CHEST_Y = 730; // beam convergence — center of torso
 
 // Zodiac constellations arranged in a wide arc around the figure
 // Colors follow a rainbow spectrum matching the reference
@@ -27,63 +27,131 @@ const ZODIAC: { name: string; symbol: string; color: string; angle: number; dist
   { name: "PISCES",      symbol: "♓", color: "#5060E8", angle: 120,  dist: 460, stars: [[0,0],[20,15],[-20,20],[15,-10],[-10,-15]] },
 ];
 
-// Large anatomical human figure — elegant proportions spanning ~550px height
-// Head at ~620, feet at ~1180, centered at CX
-const FIGURE_PATH = `
-M 540,620
-C 525,620 513,632 510,648
-C 507,664 510,678 518,688
-C 522,694 530,696 540,696
-C 550,696 558,694 562,688
-C 570,678 573,664 570,648
-C 567,632 555,620 540,620 Z
+// ═══ NEW FULL-BODY ASTRAL FIGURE ═══
+// Large dominant figure: head ~500, feet ~1300, ~800px tall
+// 7.5-head proportion, centered at CX=540
+// Constructed from multiple body-part paths for anatomical clarity
 
-M 530,696 L 528,710
-C 515,714 490,730 478,755
-C 465,782 455,818 450,850
-L 435,905 L 420,945
-C 416,955 420,962 428,960
-L 450,952 L 468,910 L 480,868
-L 490,838 L 500,855
-C 496,885 494,920 492,960
-L 488,1040 L 485,1100 L 483,1160
-C 483,1170 488,1175 495,1175
-L 518,1175
-C 525,1175 528,1170 528,1160
-L 530,1100 L 534,1040 L 537,975
-L 540,975
-L 543,975 L 546,1040 L 550,1100
-L 552,1160
-C 552,1170 555,1175 562,1175
-L 585,1175
-C 592,1175 597,1170 597,1160
-L 595,1100 L 592,1040 L 588,960
-C 586,920 584,885 580,855
-L 590,838 L 600,868
-L 612,910 L 630,952
-L 652,960
-C 660,962 664,955 660,945
-L 645,905 L 630,850
-C 625,818 615,782 602,755
-C 590,730 565,714 552,710
-L 550,696
-`;
+const HEAD = `
+M 540,500
+C 520,500 505,515 502,535
+C 499,555 503,575 515,585
+C 520,590 528,594 540,594
+C 552,594 560,590 565,585
+C 577,575 581,555 578,535
+C 575,515 560,500 540,500 Z`;
 
-// Internal energy channel paths — flowing from chest outward through the body
+const NECK = `
+M 530,594 L 528,618
+M 550,594 L 552,618`;
+
+const TORSO = `
+M 528,618
+C 510,622 475,640 458,670
+C 445,695 440,730 442,760
+L 445,810
+C 447,835 455,860 465,880
+L 478,920
+C 485,932 498,942 515,948
+L 525,952 L 540,954 L 555,952 L 565,948
+C 582,942 595,932 602,920
+L 615,880
+C 625,860 633,835 635,810
+L 638,760
+C 640,730 635,695 622,670
+C 605,640 570,622 552,618 Z`;
+
+const LEFT_ARM = `
+M 458,670
+C 445,678 425,700 410,730
+C 395,762 385,800 378,835
+L 370,875
+C 365,892 360,910 358,925
+C 356,938 358,948 365,952
+L 375,955
+C 382,955 387,950 388,942
+L 395,905
+L 405,865
+L 418,828
+L 435,790
+L 445,760`;
+
+const RIGHT_ARM = `
+M 622,670
+C 635,678 655,700 670,730
+C 685,762 695,800 702,835
+L 710,875
+C 715,892 720,910 722,925
+C 724,938 722,948 715,952
+L 705,955
+C 698,955 693,950 692,942
+L 685,905
+L 675,865
+L 662,828
+L 645,790
+L 635,760`;
+
+const LEFT_LEG = `
+M 515,948
+L 510,985
+C 505,1020 500,1060 497,1100
+L 493,1150
+L 490,1200
+L 488,1250
+L 486,1285
+C 486,1295 490,1302 498,1305
+L 525,1308
+C 533,1308 538,1303 538,1295
+L 536,1260
+L 534,1200
+L 533,1150
+L 534,1100
+L 537,1040
+L 540,985`;
+
+const RIGHT_LEG = `
+M 565,948
+L 570,985
+C 575,1020 580,1060 583,1100
+L 587,1150
+L 590,1200
+L 592,1250
+L 594,1285
+C 594,1295 590,1302 582,1305
+L 555,1308
+C 547,1308 542,1303 542,1295
+L 544,1260
+L 546,1200
+L 547,1150
+L 546,1100
+L 543,1040
+L 540,985`;
+
+const FIGURE_PARTS = [HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
+const FIGURE_OUTLINE = [HEAD, NECK, TORSO, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
+
+// Internal energy channels — meridian-like paths through the body
 const ENERGY_CHANNELS = [
-  // Central spine channel
-  `M 540,700 Q 540,800 540,975`,
-  // Left arm channel
-  `M 540,740 Q 510,760 478,755 Q 455,800 435,905`,
-  // Right arm channel
-  `M 540,740 Q 570,760 602,755 Q 625,800 645,905`,
-  // Left leg channel
-  `M 540,975 Q 530,1040 485,1100`,
-  // Right leg channel
-  `M 540,975 Q 550,1040 595,1100`,
-  // Heart branches
-  `M 540,740 Q 520,750 505,755`,
-  `M 540,740 Q 560,750 575,755`,
+  // Central spine — crown to root
+  `M 540,510 C 540,550 540,600 540,700 C 540,780 540,860 540,954`,
+  // Left arm meridian
+  `M 540,670 C 520,680 490,700 458,670 C 440,690 410,730 378,835`,
+  // Right arm meridian
+  `M 540,670 C 560,680 590,700 622,670 C 640,690 670,730 702,835`,
+  // Left leg meridian
+  `M 540,954 C 530,980 515,1020 497,1100 C 493,1150 490,1200 488,1250`,
+  // Right leg meridian
+  `M 540,954 C 550,980 565,1020 583,1100 C 587,1150 590,1200 592,1250`,
+  // Heart cross-channel
+  `M 480,730 C 500,720 520,715 540,718 C 560,715 580,720 600,730`,
+  // Solar plexus ring
+  `M 475,810 C 490,800 520,795 540,795 C 560,795 590,800 605,810`,
+  // Sacral
+  `M 500,920 C 515,912 530,910 540,910 C 550,910 565,912 580,920`,
+  // Third eye
+  `M 525,530 C 530,525 535,523 540,523 C 545,523 550,525 555,530`,
+  // Throat
+  `M 530,610 C 535,606 540,605 540,605 C 540,605 545,606 550,610`,
 ];
 
 export const PromoAd = () => {
@@ -328,22 +396,37 @@ export const PromoAd = () => {
             );
           })}
 
-          {/* ═══ HUMAN FIGURE ═══ */}
-          <path d={FIGURE_PATH}
-            fill="url(#fig-fill)"
-            stroke="#60D0F0"
-            strokeWidth={1.2 + climaxIntensity * 0.6}
-            strokeOpacity={0.25 + absorptionRamp * 0.25 + climaxIntensity * 0.3}
-            opacity={figureOpacity}
-            style={{
-              filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + climaxIntensity * 20}px rgba(80,200,240,${0.3 + climaxIntensity * 0.3}))`,
-            }}
-          />
+          {/* ═══ HUMAN FIGURE — multi-part anatomical body ═══ */}
+          <g opacity={figureOpacity} style={{
+            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + climaxIntensity * 20}px rgba(80,200,240,${0.3 + climaxIntensity * 0.3}))`,
+          }}>
+            {/* Body fill */}
+            {FIGURE_PARTS.map((p, pi) => (
+              <path key={`fill-${pi}`} d={p}
+                fill="url(#fig-fill)"
+                stroke="none" />
+            ))}
+            {/* Body outline glow */}
+            {FIGURE_OUTLINE.map((p, pi) => (
+              <path key={`outline-${pi}`} d={p}
+                fill="none"
+                stroke="#60D0F0"
+                strokeWidth={1.2 + climaxIntensity * 0.6}
+                strokeOpacity={0.25 + absorptionRamp * 0.25 + climaxIntensity * 0.3}
+                strokeLinecap="round"
+                strokeLinejoin="round" />
+            ))}
+            {/* Subtle inner body highlight */}
+            <path d={TORSO}
+              fill="url(#chest-core)"
+              stroke="none" opacity={0.6} />
+          </g>
 
           {/* ═══ INTERNAL ENERGY CHANNELS ═══ */}
           {absorptionRamp > 0.15 && ENERGY_CHANNELS.map((path, ci) => {
             const channelPulse = Math.sin(frame * 0.1 + ci * 1.3) * 0.3 + 0.7;
-            const colors = ["#60D0F0", "#F0C840", "#50E0A0", "#A060E0", "#E06080", "#40D880", "#F0A040"];
+            const colors = ["#60D0F0", "#F0C840", "#50E0A0", "#A060E0", "#E06080", "#40D880", "#F0A040", "#C050D0", "#30E8B0", "#E8A030"];
+            const isChakra = ci >= 5; // chakra channels get extra glow
             return (
               <path key={`ch-${ci}`} d={path}
                 fill="none" stroke={colors[ci % colors.length]}
@@ -370,7 +453,7 @@ export const PromoAd = () => {
             const r = 80 + ring * 40;
             const ringPulse = Math.sin(frame * 0.04 + ring * 1.0) * 0.2 + 0.5;
             return (
-              <ellipse key={`base-${ring}`} cx={CX} cy={1180} rx={r} ry={r * 0.3}
+              <ellipse key={`base-${ring}`} cx={CX} cy={1310} rx={r} ry={r * 0.3}
                 fill="none" stroke="#40D8E0" strokeWidth={1}
                 opacity={figureOpacity * 0.2 * ringPulse} />
             );
