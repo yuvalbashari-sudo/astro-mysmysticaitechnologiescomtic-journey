@@ -107,7 +107,7 @@ const STATUS_TEXT: Record<Language, string[]> = {
 };
 
 /* Influence weights — balanced so different charts produce different dominant planets */
-function computeInfluences(chartData: NatalChartResult): Record<string, number> {
+export function computeInfluences(chartData: NatalChartResult): Record<string, number> {
   const w: Record<string, number> = {};
   /* Base weights are intentionally close so aspects & houses can shift dominance */
   const base: Record<string, number> = {
