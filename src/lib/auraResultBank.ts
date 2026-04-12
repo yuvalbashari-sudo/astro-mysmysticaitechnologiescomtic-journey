@@ -21,7 +21,7 @@
 
 export type AuraFamily =
   | "solar_gold"
-  | "lunar_blue"
+  | "moon_silver_blue"
   | "healing_green"
   | "mystical_purple"
   | "vital_red"
