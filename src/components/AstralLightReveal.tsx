@@ -4,6 +4,7 @@ import { PLANETS } from "@/components/NatalChartWheel";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getPlanetName } from "@/lib/astroLocale";
 import type { NatalChartResult } from "@/lib/natalChart";
+import { getAuraResult, type AuraResult } from "@/lib/auraResultBank";
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 
@@ -20,6 +21,7 @@ interface Props {
   userName?: string;
   chartData: NatalChartResult;
   onComplete: () => void;
+  onAuraResult?: (result: AuraResult) => void;
   fastMode?: boolean;
 }
 
