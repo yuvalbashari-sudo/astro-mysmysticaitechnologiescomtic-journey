@@ -771,8 +771,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
       <AnimatePresence mode="wait">
         <motion.p
           key={statusIdx}
-          className="font-body text-sm md:text-base text-center max-w-sm"
-          style={{ color: "hsl(var(--foreground) / 0.6)" }}
+          className={`font-body text-center max-w-sm ${statusIdx === statusTexts.length - 1 && auraResult ? "font-heading text-lg md:text-xl" : "text-sm md:text-base"}`}
+          style={{ color: statusIdx === statusTexts.length - 1 && auraResult ? dominantColor : "hsl(var(--foreground) / 0.6)", textShadow: statusIdx === statusTexts.length - 1 && auraResult ? `0 0 20px ${dominantColor}60` : "none" }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
@@ -781,10 +781,14 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           {statusIdx === statusTexts.length - 1 && auraResult
             ? (() => {
                 const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.title;
-                return language === "he" ? `ההילה הדומיננטית שלך: ${localTitle}`
-                  : language === "ar" ? `هالتك المهيمنة: ${localTitle}`
-                  : language === "ru" ? `Ваша доминирующая аура: ${localTitle}`
-                  : `Your dominant aura: ${localTitle}`;
+                const modI18n: Record<string, Record<string, string>> = {
+                  he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
+                  ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
+                  ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
+                  en: { radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep", balanced: "Balanced", transformative: "Transformative", grounded: "Grounded", fluid: "Fluid", intense: "Intense", ethereal: "Ethereal" },
+                };
+                const mod = modI18n[language]?.[auraResult.modifier] ?? modI18n.en[auraResult.modifier] ?? "";
+                return `${mod} ${localTitle}`;
               })()
             : statusTexts[statusIdx]}
         </motion.p>
@@ -801,33 +805,33 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
         />
       </div>
 
-      {/* Influence cards */}
+      {/* Influence cards — subtle, no percentages */}
       <AnimatePresence>
         {showInfluences && (
           <motion.div
-            className="flex flex-wrap justify-center gap-2 mt-5 max-w-sm"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-wrap justify-center gap-1.5 mt-4 max-w-xs"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 0.7, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {topInfluences.map((planet, i) => {
+            {topInfluences.slice(0, 4).map((planet, i) => {
               const vis = PLANET_VIS[planet.key];
               return (
                 <motion.div
                   key={planet.key}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-body"
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-full font-body"
                   style={{
-                    background: `${vis?.color || "#fff"}15`,
-                    border: `1px solid ${vis?.color || "#fff"}35`,
+                    background: `${vis?.color || "#fff"}0C`,
+                    border: `1px solid ${vis?.color || "#fff"}20`,
                     color: vis?.color || "hsl(var(--foreground))",
+                    fontSize: 10,
                   }}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.12 }}
+                  transition={{ delay: i * 0.1 }}
                 >
-                  <span style={{ fontSize: 13 }}>{planet.symbol}</span>
+                  <span style={{ fontSize: 12 }}>{planet.symbol}</span>
                   <span>{getPlanetName(planet.key, language)}</span>
-                  <span style={{ opacity: 0.6 }}>{influences[planet.key]}%</span>
                 </motion.div>
               );
             })}
