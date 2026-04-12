@@ -566,6 +566,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
               );
             })}
           </motion.g>
+          )}
+          </AnimatePresence>
 
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
           {absorptionLevel > 0 && (
