@@ -137,6 +137,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const handleSubmit = useCallback(async () => {
     setAttempted(true);
 
+    if (!authReady) {
+      toast.error(t.loading || "Loading...");
+      return;
+    }
+
     if (dailyLimitReached && !isAdmin) {
       toast.error(t.chart_daily_limit_toast);
       return;
