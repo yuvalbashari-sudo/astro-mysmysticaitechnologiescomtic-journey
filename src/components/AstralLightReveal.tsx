@@ -436,42 +436,158 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </defs>
 
 
-          {/* ─── Halo ellipse behind figure — colorful aura envelope ─── */}
+          {/* ─── Layer 3: Outer aura — very soft diffuse glow behind everything ─── */}
+          <g transform={`translate(${figX}, ${figY}) scale(${figScale})`} filter="url(#outer-aura-blur)">
+            <image
+              href={astralFigureImg}
+              x="-8"
+              y="-8"
+              width={FIG_VB_W + 16}
+              height={FIG_VB_H + 16}
+              opacity={absorptionLevel * 0.2 + climaxLevel * 0.15}
+              style={{ mixBlendMode: 'screen' }}
+            />
+          </g>
+
+          {/* ─── Halo ellipse behind figure — subtle aura envelope ─── */}
           <ellipse
             cx={FIG_CX}
             cy={FIG_CORE_Y + 40}
-            rx={75 + absorptionLevel * 15 + climaxLevel * 10}
-            ry={110 + absorptionLevel * 20 + climaxLevel * 15}
+            rx={75 + absorptionLevel * 12 + climaxLevel * 8}
+            ry={110 + absorptionLevel * 15 + climaxLevel * 10}
             fill="url(#climax-radial)"
-            opacity={absorptionLevel * 0.6 + climaxLevel * 0.35}
+            opacity={absorptionLevel * 0.35 + climaxLevel * 0.2}
           />
 
-          {/* ─── Human figure — outline with colorful aura glow ─── */}
-          <g
-            transform={`translate(${figX}, ${figY}) scale(${figScale})`}
-            style={{
-              filter: `drop-shadow(0 0 ${6 + absorptionLevel * 12 + climaxLevel * 26}px ${dominantColor}${climaxLevel > 0.5 ? 'c0' : '70'}) drop-shadow(0 0 ${4 + climaxLevel * 18}px ${secondaryColor}60)`,
-            }}
-          >
+          {/* ─── Layer 2: Body fill — soft semi-transparent color across the figure ─── */}
+          <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
             <image
               href={astralFigureImg}
               x="0"
               y="0"
               width={FIG_VB_W}
               height={FIG_VB_H}
-              opacity={0.25 + absorptionLevel * 0.5 + climaxLevel * 0.25}
-              style={{ mixBlendMode: 'screen' }}
+              opacity={absorptionLevel * 0.25 + climaxLevel * 0.15}
+              style={{ mixBlendMode: 'screen', filter: `blur(3px) brightness(${1.1 + absorptionLevel * 0.3})` }}
             />
-            {climaxLevel > 0 && (
+          </g>
+
+          {/* ─── Layer 1: Core figure — crisp outline with edge definition ─── */}
+          <g
+            transform={`translate(${figX}, ${figY}) scale(${figScale})`}
+            style={{
+              filter: `drop-shadow(0 0 ${2 + absorptionLevel * 4 + climaxLevel * 6}px ${dominantColor}${climaxLevel > 0.5 ? '80' : '50'}) drop-shadow(0 0 ${1 + climaxLevel * 3}px ${secondaryColor}30)`,
+            }}
+          >
+            {/* Core figure with edge outline */}
+            <g filter="url(#edge-outline)">
               <image
                 href={astralFigureImg}
                 x="0"
                 y="0"
                 width={FIG_VB_W}
                 height={FIG_VB_H}
-                opacity={climaxLevel * 0.5}
-                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 4}px) brightness(${1.6 + climaxLevel * 0.8})` }}
+                opacity={0.35 + absorptionLevel * 0.4 + climaxLevel * 0.25}
+                style={{ mixBlendMode: 'screen' }}
               />
+            </g>
+
+            {/* Core chest glow — concentrated energy center */}
+            <rect
+              x="0" y="0" width={FIG_VB_W} height={FIG_VB_H}
+              fill="url(#fig-core-glow)"
+              opacity={absorptionLevel * 0.6 + climaxLevel * 0.4}
+              style={{ mixBlendMode: 'screen' }}
+            />
+
+            {/* Depth shading — 3D volume on edges */}
+            <rect
+              x="0" y="0" width={FIG_VB_W} height={FIG_VB_H}
+              fill="url(#fig-depth)"
+              opacity={absorptionLevel * 0.4}
+              style={{ mixBlendMode: 'screen' }}
+            />
+
+            {/* ─── Subtle energy lines flowing inside the body ─── */}
+            {absorptionLevel > 0.3 && (
+              <g opacity={Math.min((absorptionLevel - 0.3) * 1.4, 0.45) + climaxLevel * 0.2} style={{ mixBlendMode: 'screen' }}>
+                {/* Central spine energy */}
+                <motion.path
+                  d="M 55 25 C 55 40, 53 55, 55 70 S 57 90, 55 110 S 53 130, 55 155"
+                  stroke={dominantColor}
+                  strokeWidth="0.6"
+                  fill="none"
+                  strokeOpacity={0.5}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: "easeOut" }}
+                />
+                {/* Left shoulder to hand */}
+                <motion.path
+                  d="M 48 42 C 40 48, 30 52, 22 58 S 16 66, 12 75"
+                  stroke={dominantColor}
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeOpacity={0.35}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.8, delay: 0.3, ease: "easeOut" }}
+                />
+                {/* Right shoulder to hand */}
+                <motion.path
+                  d="M 62 42 C 70 48, 80 52, 88 58 S 94 66, 98 75"
+                  stroke={dominantColor}
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeOpacity={0.35}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.8, delay: 0.3, ease: "easeOut" }}
+                />
+                {/* Left torso branch */}
+                <motion.path
+                  d="M 50 65 C 45 75, 42 90, 40 105 S 38 125, 38 145"
+                  stroke={secondaryColor}
+                  strokeWidth="0.35"
+                  fill="none"
+                  strokeOpacity={0.3}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2.2, delay: 0.5, ease: "easeOut" }}
+                />
+                {/* Right torso branch */}
+                <motion.path
+                  d="M 60 65 C 65 75, 68 90, 70 105 S 72 125, 72 145"
+                  stroke={secondaryColor}
+                  strokeWidth="0.35"
+                  fill="none"
+                  strokeOpacity={0.3}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2.2, delay: 0.5, ease: "easeOut" }}
+                />
+                {/* Chest radiating arcs */}
+                <motion.path
+                  d="M 45 50 C 48 45, 55 43, 55 43 S 62 45, 65 50"
+                  stroke={dominantColor}
+                  strokeWidth="0.3"
+                  fill="none"
+                  strokeOpacity={0.25}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: [0, 1, 0.8] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.path
+                  d="M 42 55 C 47 48, 55 46, 55 46 S 63 48, 68 55"
+                  stroke={auraColors.tertiary}
+                  strokeWidth="0.25"
+                  fill="none"
+                  strokeOpacity={0.2}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: [0, 1, 0.7] }}
+                  transition={{ duration: 3.5, delay: 0.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </g>
             )}
           </g>
 
