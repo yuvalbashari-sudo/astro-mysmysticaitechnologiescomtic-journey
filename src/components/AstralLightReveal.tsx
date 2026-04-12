@@ -4,6 +4,7 @@ import { PLANETS } from "@/components/NatalChartWheel";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getPlanetName } from "@/lib/astroLocale";
 import type { NatalChartResult } from "@/lib/natalChart";
+import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 
 /* ═══════════════════════════════════════════════════════
@@ -100,127 +101,8 @@ function computeInfluences(chartData: NatalChartResult): Record<string, number> 
   return w;
 }
 
-/* ── Anatomically correct human figure — multi-part paths ── */
-/* viewBox 0 0 110 175, centered at x=55 */
-/* Proportions: ~7.5 heads tall. Head height ≈ 20, total ≈ 168 */
-
-// Head: natural oval cranium — wider at temples, narrower chin
-const HEAD = `
-  M 55,8
-  C 49,8 44,12 44,19
-  C 44,23 45,26 47,28
-  C 48,30 50,32 52,33
-  L 58,33
-  C 60,32 62,30 63,28
-  C 65,26 66,23 66,19
-  C 66,12 61,8 55,8 Z`;
-
-// Neck: gentle taper, realistic width (~10px)
-const NECK = `M 51,33 L 51,39 C 51,40 53,41 55,41 C 57,41 59,40 59,39 L 59,33`;
-
-// Torso: shoulders broad (30px each side), chest → waist taper, natural curves
-const TORSO = `
-  M 55,41
-  C 59,41 65,42 70,44
-  C 74,46 76,49 76,52
-  C 76,56 75,60 74,64
-  C 73,68 72,73 70,78
-  C 69,82 67,86 65,90
-  C 63,93 60,95 55,95
-  C 50,95 47,93 45,90
-  C 43,86 41,82 40,78
-  C 38,73 37,68 36,64
-  C 35,60 34,56 34,52
-  C 34,49 36,46 40,44
-  C 45,42 51,41 55,41 Z`;
-
-// Left arm: shoulder → elbow (slight bend out) → forearm → hand
-const LEFT_ARM = `
-  M 35,47
-  C 32,49 28,53 25,59
-  C 23,64 21,70 20,76
-  C 19,81 19,85 19,88
-  C 19,91 20,93 22,94
-  L 24,94
-  C 25,93 25,91 25,88
-  C 25,84 26,79 27,75
-  C 28,70 30,65 32,60
-  C 34,56 36,52 37,49`;
-
-// Right arm: mirror
-const RIGHT_ARM = `
-  M 75,47
-  C 78,49 82,53 85,59
-  C 87,64 89,70 90,76
-  C 91,81 91,85 91,88
-  C 91,91 90,93 88,94
-  L 86,94
-  C 85,93 85,91 85,88
-  C 85,84 84,79 83,75
-  C 82,70 80,65 78,60
-  C 76,56 74,52 73,49`;
-
-// Left leg: hip socket → thigh (slight outward curve) → knee → calf → ankle → foot
-const LEFT_LEG = `
-  M 49,93
-  C 48,97 47,103 46,110
-  C 45,118 44,126 43,134
-  C 42,141 41,148 41,154
-  C 41,159 41,163 42,166
-  C 42,168 44,170 47,170
-  L 49,170
-  C 50,169 50,167 50,164
-  C 50,159 49,153 49,147
-  C 49,140 49,132 50,124
-  C 50,117 51,110 51,103
-  C 51,99 51,96 51,93`;
-
-// Right leg: mirror
-const RIGHT_LEG = `
-  M 61,93
-  C 62,97 63,103 64,110
-  C 65,118 66,126 67,134
-  C 68,141 69,148 69,154
-  C 69,159 69,163 68,166
-  C 68,168 66,170 63,170
-  L 61,170
-  C 60,169 60,167 60,164
-  C 60,159 61,153 61,147
-  C 61,140 61,132 60,124
-  C 60,117 59,110 59,103
-  C 59,99 59,96 59,93`;
-
-// All body parts for rendering
-const BODY_PARTS = [
-  { id: "torso", d: TORSO },
-  { id: "head", d: HEAD },
-  { id: "neck", d: NECK },
-  { id: "left-arm", d: LEFT_ARM },
-  { id: "right-arm", d: RIGHT_ARM },
-  { id: "left-leg", d: LEFT_LEG },
-  { id: "right-leg", d: RIGHT_LEG },
-];
-
-// Muscle contour hints (subtle anatomical detail lines)
-const CONTOURS = [
-  // Collar bones
-  `M 44,44 C 48,43 52,42 55,42 C 58,42 62,43 66,44`,
-  // Pectoral separation
-  `M 43,53 C 47,56 51,57 55,57 C 59,57 63,56 67,53`,
-  // Abdominal midline
-  `M 55,58 L 55,90`,
-  // Waist indentation
-  `M 43,78 C 47,80 51,81 55,81 C 59,81 63,80 67,78`,
-  // Shoulder deltoid caps
-  `M 35,47 C 37,44 41,42 45,43`,
-  `M 75,47 C 73,44 69,42 65,43`,
-  // Knee caps
-  `M 44,132 C 46,135 48,135 50,133`,
-  `M 66,132 C 64,135 62,135 60,133`,
-  // Rib hints (very subtle)
-  `M 42,60 C 46,62 50,63 55,63`,
-  `M 68,60 C 64,62 60,63 55,63`,
-];
+/* ── Astral figure is now rendered as a high-fidelity AI-generated image ── */
+/* The image is positioned within the same viewBox (0 0 110 175) */
 
 /* figure SVG viewBox: 0 0 110 175 — figure centered at (55, 87) */
 const FIG_VB_W = 110;
@@ -584,83 +466,34 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
             );
           })}
 
-          {/* ─── Human figure — anatomically correct, multi-part ─── */}
+          {/* ─── Human figure — AI-generated astral image ─── */}
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
               filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'})`,
             }}
           >
-            {/* Base fill layer — all body parts */}
-            {BODY_PARTS.map((part) => (
-              <path
-                key={`fill-${part.id}`}
-                d={part.d}
-                fill="url(#sil-fill)"
-                strokeLinejoin="round"
-                strokeLinecap="round"
+            <image
+              href={astralFigureImg}
+              x="0"
+              y="0"
+              width={FIG_VB_W}
+              height={FIG_VB_H}
+              opacity={0.15 + absorptionLevel * 0.55 + climaxLevel * 0.3}
+              style={{ mixBlendMode: 'screen' }}
+            />
+            {/* Additional glow overlay during climax */}
+            {climaxLevel > 0 && (
+              <image
+                href={astralFigureImg}
+                x="0"
+                y="0"
+                width={FIG_VB_W}
+                height={FIG_VB_H}
+                opacity={climaxLevel * 0.4}
+                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 3}px) brightness(${1.5 + climaxLevel})` }}
               />
-            ))}
-
-            {/* Depth shading layer — 3D volume */}
-            {BODY_PARTS.map((part) => (
-              <path
-                key={`depth-${part.id}`}
-                d={part.d}
-                fill="url(#fig-depth)"
-                opacity={0.5 + absorptionLevel * 0.3}
-              />
-            ))}
-
-            {/* Inner glow layer */}
-            {BODY_PARTS.map((part) => (
-              <path
-                key={`glow-${part.id}`}
-                d={part.d}
-                fill="url(#fig-inner-glow)"
-                opacity={absorptionLevel * 0.6 + climaxLevel * 0.4}
-              />
-            ))}
-
-            {/* Outline stroke — all body parts */}
-            {BODY_PARTS.map((part) => (
-              <path
-                key={`stroke-${part.id}`}
-                d={part.d}
-                fill="none"
-                stroke={dominantColor}
-                strokeWidth={0.4 + climaxLevel * 0.4}
-                strokeOpacity={0.3 + absorptionLevel * 0.3 + climaxLevel * 0.4}
-                strokeLinejoin="round"
-                strokeLinecap="round"
-              />
-            ))}
-
-            {/* White highlight outline for depth */}
-            {BODY_PARTS.map((part) => (
-              <path
-                key={`highlight-${part.id}`}
-                d={part.d}
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth={0.15}
-                strokeOpacity={0.08 + absorptionLevel * 0.08 + climaxLevel * 0.12}
-                strokeLinejoin="round"
-              />
-            ))}
-
-            {/* Muscle contour hints */}
-            {CONTOURS.map((d, i) => (
-              <path
-                key={`contour-${i}`}
-                d={d}
-                fill="none"
-                stroke={dominantColor}
-                strokeWidth={0.3}
-                strokeOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.1}
-                strokeLinecap="round"
-              />
-            ))}
+            )}
           </g>
 
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
