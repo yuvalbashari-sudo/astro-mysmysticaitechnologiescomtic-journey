@@ -92,6 +92,7 @@ const DailyHoroscopeCard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const { scale, setScale } = useFontScale();
   const ts = TEXT_SIZE_CLASSES[scale];
 
@@ -106,7 +107,17 @@ const DailyHoroscopeCard = () => {
   const [setupName, setSetupName] = useState("");
   const [setupBirthDate, setSetupBirthDate] = useState("");
   // Admin users skip setup entirely
+  const isReturning = mysticalProfile.isReturningUser();
   const [needsSetup, setNeedsSetup] = useState(!zodiacSign && !adminMode);
+
+  // Show welcome-back greeting for returning users
+  useEffect(() => {
+    if (isReturning && userName && !needsSetup) {
+      setShowWelcomeBack(true);
+      const timer = setTimeout(() => setShowWelcomeBack(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const fetchHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
@@ -336,7 +347,23 @@ const DailyHoroscopeCard = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 rounded-b-full"
           style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }} />
 
-        {/* Header */}
+        {/* Welcome back greeting */}
+        <AnimatePresence>
+          {showWelcomeBack && userName && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+              className="px-5 pt-4 pb-1 text-center"
+            >
+              <p className="text-gold/70 font-body text-sm tracking-wide">
+                {t.welcome_back_greeting.replace("{name}", userName)}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Header — centered layout */}
         <div className="px-5 pt-5 pb-3 flex flex-col items-center text-center">
           {/* Advisor avatar */}

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { mysticalProfile } from "@/lib/mysticalProfile";
 import { Language, languageConfig, TranslationKeys } from "./types";
 import { he } from "./translations/he";
 import { ar } from "./translations/ar";
@@ -70,6 +71,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     setLanguageState(lang);
     try {
       localStorage.setItem(STORAGE_KEY, lang);
+      mysticalProfile.recordLanguagePreference(lang);
     } catch {
       // Ignore storage failures and still update UI language in-memory.
     }

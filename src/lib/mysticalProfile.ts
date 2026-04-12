@@ -17,6 +17,8 @@ export interface MysticalProfileData {
   risingElement?: string;
   birthDate?: string;
   birthTime?: string;
+  birthLocation?: string;
+  languagePreference?: string;
 
   // Relationship patterns
   compatibilityHistory: Array<{
@@ -155,6 +157,31 @@ function recordRising(sign: string, symbol: string, element: string, birthTime: 
   saveProfile(profile);
 }
 
+function recordBirthLocation(location: string): void {
+  const profile = getProfile();
+  profile.birthLocation = location.trim();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function getBirthLocation(): string | undefined {
+  return getProfile().birthLocation;
+}
+
+function recordLanguagePreference(lang: string): void {
+  const profile = getProfile();
+  profile.languagePreference = lang;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function getLanguagePreference(): string | undefined {
+  return getProfile().languagePreference;
+}
+
+function isReturningUser(): boolean {
+  const profile = getProfile();
+  return !!(profile.userName && profile.zodiacSign);
+}
+
 function recordCompatibility(partnerSign: string, partnerSymbol: string, score: number): void {
   const profile = getProfile();
   profile.compatibilityHistory.unshift({
@@ -214,6 +241,9 @@ function buildContextForAI(): string | null {
   }
   if (profile.risingSign) {
     lines.push(`מזל עולה: ${profile.risingSign} ${profile.risingSymbol || ""} (יסוד: ${profile.risingElement || "לא ידוע"})`);
+  }
+  if (profile.birthLocation) {
+    lines.push(`מקום לידה: ${profile.birthLocation}`);
   }
 
   // Reading count
@@ -287,6 +317,11 @@ export const mysticalProfile = {
   getUserGender,
   recordZodiac,
   recordRising,
+  recordBirthLocation,
+  getBirthLocation,
+  recordLanguagePreference,
+  getLanguagePreference,
+  isReturningUser,
   recordCompatibility,
   recordTarotCards,
   recordDailyCard,
