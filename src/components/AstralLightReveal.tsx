@@ -183,7 +183,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
   const [progress, setProgress] = useState(0);
   const [showInfluences, setShowInfluences] = useState(false);
 
-  const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
+  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
   const influences = useMemo(() => computeInfluences(chartData), [chartData]);
 
   const sortedPlanets = useMemo(
