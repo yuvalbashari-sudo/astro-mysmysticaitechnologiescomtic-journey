@@ -610,9 +610,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           {absorptionLevel > 0.2 && (
             <motion.circle
               cx={FIG_CX} cy={FIG_CHEST_Y}
-              r={4 + absorptionLevel * 6}
+              r={4 + absorptionLevel * 4}
               fill={dominantColor}
-              opacity={absorptionLevel * 0.4}
+              opacity={absorptionLevel * 0.2}
               filter="url(#body-glow)"
               animate={{
                 r: [4 + absorptionLevel * 4, 4 + absorptionLevel * 8, 4 + absorptionLevel * 4],
@@ -634,7 +634,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 animate={{
                   rx: [45 + climaxLevel * 20, 55 + climaxLevel * 30, 45 + climaxLevel * 20],
                   ry: [120 + climaxLevel * 40, 140 + climaxLevel * 55, 120 + climaxLevel * 40],
-                  opacity: [climaxLevel * 0.3, climaxLevel * 0.5, climaxLevel * 0.3],
+                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -647,52 +647,15 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                   y="-4"
                   width={FIG_VB_W + 6}
                   height={FIG_VB_H + 8}
-                  opacity={climaxLevel * 0.55}
+                  opacity={climaxLevel * 0.35}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(10px) brightness(${1.4 + climaxLevel * 0.8})`,
+                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.4})`,
                   }}
                 />
               </g>
 
-              {/* Core chest glow (original — focal intensity) */}
-              <motion.circle
-                cx={FIG_CX} cy={FIG_CORE_Y}
-                fill="url(#climax-radial)"
-                filter="url(#climax-mega)"
-                animate={{
-                  r: [30 + climaxLevel * 30, 40 + climaxLevel * 50, 30 + climaxLevel * 40],
-                }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-
-              <motion.circle
-                cx={FIG_CX} cy={FIG_CORE_Y}
-                r={6 + climaxLevel * 14}
-                fill="#fff"
-                opacity={0.15 + climaxLevel * 0.55}
-                filter="url(#body-glow)"
-                animate={climaxLevel > 0.7 ? {
-                  r: [6 + climaxLevel * 12, 6 + climaxLevel * 18, 6 + climaxLevel * 12],
-                  opacity: [0.4 + climaxLevel * 0.3, 0.6 + climaxLevel * 0.35, 0.4 + climaxLevel * 0.3],
-                } : undefined}
-                transition={{ duration: 1.8, repeat: Infinity }}
-              />
-
-              <motion.circle
-                cx={FIG_CX} cy={FIG_CORE_Y}
-                r={12 + climaxLevel * 10}
-                fill="none"
-                stroke={dominantColor}
-                strokeWidth={2}
-                strokeOpacity={climaxLevel * 0.8}
-                filter="url(#const-glow)"
-                animate={{
-                  r: [12 + climaxLevel * 8, 18 + climaxLevel * 14, 12 + climaxLevel * 8],
-                  strokeOpacity: [climaxLevel * 0.6, climaxLevel * 0.9, climaxLevel * 0.6],
-                }}
-                transition={{ duration: 2.2, repeat: Infinity }}
-              />
+              {/* Core circles removed — no more "sun" effect */}
 
               {/* Radiating energy lines from core — extended reach */}
               {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
@@ -707,11 +670,11 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                     x2={FIG_CX + Math.cos(rad) * outerR}
                     y2={FIG_CORE_Y + Math.sin(rad) * outerR}
                     stroke={dominantColor}
-                    strokeWidth={1.5}
+                    strokeWidth={0.8}
                     strokeLinecap="round"
                     initial={{ opacity: 0 }}
                     animate={{
-                      opacity: [0.2 * climaxLevel, 0.7 * climaxLevel, 0.2 * climaxLevel],
+                      opacity: [0.1 * climaxLevel, 0.4 * climaxLevel, 0.1 * climaxLevel],
                       x2: [
                         FIG_CX + Math.cos(rad) * (outerR - 8),
                         FIG_CX + Math.cos(rad) * (outerR + 5),
