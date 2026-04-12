@@ -92,6 +92,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
   const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+  const [restoredFromCache, setRestoredFromCache] = useState(false);
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
