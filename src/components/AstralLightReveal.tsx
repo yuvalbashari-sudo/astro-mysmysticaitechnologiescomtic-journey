@@ -424,21 +424,21 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                     key={`star-${si}`}
                     cx={bp.x + stars[si * 2]}
                     cy={bp.y + stars[si * 2 + 1]}
-                    r={1.5}
+                    r={1}
                     fill={vis.color}
                     initial={{ opacity: 0, r: 0 }}
-                    animate={{ opacity: [0, 1, 0.7], r: [0, 2.25, 1.5] }}
+                    animate={{ opacity: [0, 1, 0.7], r: [0, 1.5, 1] }}
                     transition={{ duration: 0.6, delay: idx * 0.06 + si * 0.08 }}
                   />
                 ))}
 
                 <motion.circle
                   cx={bp.x} cy={bp.y}
-                  r={9}
+                  r={6}
                   fill={vis.color}
                   filter="url(#const-glow)"
-                  initial={{ opacity: 0, r: 3 }}
-                  animate={{ opacity: [0, 0.9, 0.7], r: [3, 10.5, 7.5] }}
+                  initial={{ opacity: 0, r: 2 }}
+                  animate={{ opacity: [0, 0.9, 0.7], r: [2, 7, 5] }}
                   transition={{ duration: 0.8, delay: idx * 0.06 }}
                 />
                 <motion.text
@@ -446,7 +446,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                   textAnchor="middle"
                   dominantBaseline="central"
                   fill="#fff"
-                  fontSize={12}
+                  fontSize={8}
                   fontWeight="bold"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: [0, 1, 0.9] }}
@@ -482,7 +482,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 <motion.path
                   d={pathD}
                   stroke={`url(#beam-g-${bp.key})`}
-                  strokeWidth={3 + inf * 9}
+                  strokeWidth={2 + inf * 6}
                   strokeLinecap="round"
                   fill="none"
                   filter="url(#beam-glow-strong)"
