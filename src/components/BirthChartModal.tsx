@@ -96,6 +96,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [restoredFromCache, setRestoredFromCache] = useState(false);
+  const [auraResult, setAuraResult] = useState<AuraResult | null>(null);
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
