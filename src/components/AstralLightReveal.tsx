@@ -390,12 +390,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
             })}
           </defs>
 
-          {/* Slow cosmic rotation wrapper for constellation + beams */}
-          <motion.g
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            style={{ transformOrigin: `${FIG_CX}px ${FIG_CORE_Y}px` }}
-          >
           {/* ─── Phase 1: Constellation nodes ─── */}
           {beamPositions.map((bp, idx) => {
             const vis = PLANET_VIS[bp.key];
@@ -537,7 +531,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               </g>
             );
           })}
-          </motion.g>{/* end cosmic rotation wrapper */}
+          
 
           {/* ─── Human figure — AI-generated astral image ─── */}
           <g
