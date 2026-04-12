@@ -20,6 +20,14 @@ import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
 const CHART_DAILY_KEY = "astrologai_birthchart_daily";
+const CHART_CACHE_KEY = "astrologai_birthchart_cache";
+
+interface CachedChart {
+  chartData: NatalChartResult;
+  resultText: string;
+  details: { userName: string; gender: string; birthDate: string; birthTime: string; birthCity: string };
+  savedAt: string;
+}
 
 function hasUsedChartToday(): boolean {
   try {
@@ -34,6 +42,22 @@ function markChartUsedToday(): void {
   try {
     localStorage.setItem(CHART_DAILY_KEY, new Date().toISOString().slice(0, 10));
   } catch { /* ignore */ }
+}
+
+function saveCachedChart(data: CachedChart): void {
+  try {
+    localStorage.setItem(CHART_CACHE_KEY, JSON.stringify(data));
+  } catch { /* ignore - storage full */ }
+}
+
+function loadCachedChart(): CachedChart | null {
+  try {
+    const raw = localStorage.getItem(CHART_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CachedChart;
+    if (parsed.chartData && parsed.resultText && parsed.details) return parsed;
+  } catch { /* ignore */ }
+  return null;
 }
 
 interface Props {
