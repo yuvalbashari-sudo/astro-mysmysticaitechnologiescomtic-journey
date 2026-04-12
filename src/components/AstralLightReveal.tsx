@@ -743,43 +743,41 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </AnimatePresence>
 
 
-          {/* ─── Phase 3: CLIMAX — mega inner light + breathing after stars fade ─── */}
+          {/* ─── Phase 3: CLIMAX — refined layered glow + breathing ─── */}
           {climaxLevel > 0 && (
             <motion.g
-              animate={!showConstellations ? { opacity: [1, 0.65, 1] } : undefined}
+              animate={!showConstellations ? { opacity: [1, 0.7, 1] } : undefined}
               transition={!showConstellations ? { duration: 3.5, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
-              {/* Full-body elliptical glow — encompasses entire figure */}
+              {/* Outer aura bloom — gentle pulsing ellipse */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 40}
                 fill="url(#climax-radial)"
                 filter="url(#climax-mega)"
                 animate={{
-                  rx: [50 + climaxLevel * 25, 65 + climaxLevel * 35, 50 + climaxLevel * 25],
-                  ry: [130 + climaxLevel * 50, 155 + climaxLevel * 65, 130 + climaxLevel * 50],
-                  opacity: [climaxLevel * 0.25, climaxLevel * 0.5, climaxLevel * 0.25],
+                  rx: [50 + climaxLevel * 20, 60 + climaxLevel * 28, 50 + climaxLevel * 20],
+                  ry: [120 + climaxLevel * 35, 140 + climaxLevel * 45, 120 + climaxLevel * 35],
+                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Blurred aura image — full-body silhouette glow */}
+              {/* Soft body-shaped aura — follows figure silhouette */}
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
-                  x="-5"
-                  y="-6"
-                  width={FIG_VB_W + 10}
-                  height={FIG_VB_H + 12}
-                  opacity={climaxLevel * 0.5}
+                  x="-4"
+                  y="-4"
+                  width={FIG_VB_W + 8}
+                  height={FIG_VB_H + 8}
+                  opacity={climaxLevel * 0.3}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(10px) brightness(${1.2 + climaxLevel * 0.6})`,
+                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.3})`,
                   }}
                 />
               </g>
-
-              {/* Core circles & radiating rays removed for cleaner look */}
             </motion.g>
           )}
         </svg>
