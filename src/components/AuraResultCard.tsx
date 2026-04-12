@@ -37,9 +37,11 @@ const AuraResultCard = ({ result }: Props) => {
   // All display strings from centralized locale
   const title = buildLocalizedTitle(language, result.primaryAura, result.modifier);
   const subtitle = getAuraSubtitle(language, result.primaryAura);
-  const meaning = getAuraMeaning(language, result.primaryAura);
   const modifierName = getModifierName(language, result.modifier);
   const auraName = (a: AuraFamily) => getAuraName(language, a);
+
+  // Composed meaning from 3-layer engine
+  const meaning = composeAuraMeaning(language, result.primaryAura, result.modifier, result.secondaryAuras);
 
   // Secondary visuals
   const secondaryVis = result.secondaryAuras.slice(0, 2).map(a => AURA_VISUALS[a]);
