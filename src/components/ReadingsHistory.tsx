@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
 import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
+import { formatDateTime } from "@/lib/dateTimeFormat";
 
 const typeIcons: Record<string, typeof Star> = {
   forecast: Star,
@@ -64,10 +65,6 @@ const ReadingsHistory = () => {
               const IconComp = typeIcons[reading.type] || Star;
               const isExpanded = expanded === reading.id;
               const dateStr = formatDateTime(reading.date, language);
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              });
 
               return (
                 <motion.div
