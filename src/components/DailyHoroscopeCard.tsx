@@ -197,7 +197,28 @@ const DailyHoroscopeCard = () => {
     { weekday: "long", year: "numeric", month: "long", day: "numeric" }
   );
 
-  if (!zodiacSign) {
+  if (needsSetup) {
+    const setupZodiac = setupBirthDate ? getZodiacFromDate(setupBirthDate) : null;
+    const canSubmit = setupName.trim().length >= 1 && setupZodiac;
+
+    const handleSetupSubmit = () => {
+      if (!canSubmit) return;
+      // Save to mystical profile
+      mysticalProfile.recordUserName(setupName.trim());
+      const ZODIAC_ELEMENTS: Record<string, string> = {
+        Aries: "Fire", Taurus: "Earth", Gemini: "Air", Cancer: "Water",
+        Leo: "Fire", Virgo: "Earth", Libra: "Air", Scorpio: "Water",
+        Sagittarius: "Fire", Capricorn: "Earth", Aquarius: "Air", Pisces: "Water",
+      };
+      mysticalProfile.recordZodiac(
+        setupZodiac!,
+        ZODIAC_SYMBOLS[setupZodiac!] || "✦",
+        ZODIAC_ELEMENTS[setupZodiac!] || "",
+        setupBirthDate
+      );
+      setNeedsSetup(false);
+    };
+
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -206,14 +227,89 @@ const DailyHoroscopeCard = () => {
         dir={dir}
         className="w-full max-w-lg mx-auto"
       >
-        <div className="relative rounded-2xl overflow-hidden backdrop-blur-xl border border-gold/10"
+        <div
+          className="relative rounded-2xl overflow-hidden backdrop-blur-xl border border-gold/15"
           style={{
-            background: "linear-gradient(145deg, hsl(222 40% 8% / 0.85), hsl(222 47% 6% / 0.9))",
+            background: "linear-gradient(145deg, hsl(222 40% 8% / 0.88), hsl(222 47% 6% / 0.92))",
+            boxShadow: "0 8px 40px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.08)",
           }}
         >
-          <div className="p-5 text-center">
-            <Sun className="w-8 h-8 text-gold/50 mx-auto mb-3" />
-            <p className="text-foreground/60 text-sm font-body">{t.daily_horoscope_no_sign}</p>
+          {/* Top accent */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 rounded-b-full"
+            style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }} />
+
+          <div className="p-5 flex flex-col items-center text-center">
+            {/* Zodiac icon */}
+            <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl mb-3"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.05))",
+                border: "1px solid hsl(var(--gold) / 0.2)",
+              }}
+            >
+              <Sun className="w-6 h-6 text-gold/60" />
+            </div>
+
+            <h3 className="text-gold font-heading text-xl font-semibold tracking-wide mb-2">
+              {t.daily_horoscope_setup_title}
+            </h3>
+            <p className="text-foreground/50 text-sm font-body leading-relaxed mb-5 max-w-xs">
+              {t.daily_horoscope_setup_desc}
+            </p>
+
+            {/* Name input */}
+            <div className="w-full mb-3 text-start">
+              <label className="block text-xs text-gold/50 font-body mb-1.5 tracking-wider uppercase">
+                {t.daily_horoscope_setup_name_label}
+              </label>
+              <input
+                type="text"
+                value={setupName}
+                onChange={(e) => setSetupName(e.target.value)}
+                placeholder={t.daily_horoscope_setup_name_placeholder}
+                maxLength={50}
+                dir="auto"
+                className="w-full py-2.5 px-4 rounded-lg font-body text-sm text-foreground/80 placeholder:text-foreground/25 focus:outline-none transition-all duration-300"
+                style={{
+                  background: "hsl(var(--deep-blue-light) / 0.3)",
+                  border: "1px solid hsl(var(--gold) / 0.12)",
+                }}
+              />
+            </div>
+
+            {/* Birth date input */}
+            <div className="w-full mb-5 text-start">
+              <label className="block text-xs text-gold/50 font-body mb-1.5 tracking-wider uppercase">
+                {t.daily_horoscope_setup_birthdate_label}
+              </label>
+              <MysticalDateInput
+                value={setupBirthDate}
+                onChange={setSetupBirthDate}
+                className="py-2.5 px-4 rounded-lg font-body text-sm text-foreground/80 placeholder:text-foreground/25"
+                style={{
+                  background: "hsl(var(--deep-blue-light) / 0.3)",
+                  border: "1px solid hsl(var(--gold) / 0.12)",
+                }}
+              />
+            </div>
+
+            {/* Submit button */}
+            <motion.button
+              onClick={handleSetupSubmit}
+              disabled={!canSubmit}
+              className="w-full py-3 rounded-xl font-heading text-sm tracking-wide transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+              style={{
+                background: canSubmit
+                  ? "linear-gradient(135deg, hsl(var(--gold) / 0.25), hsl(var(--gold) / 0.12))"
+                  : "hsl(var(--deep-blue-light) / 0.2)",
+                border: `1px solid hsl(var(--gold) / ${canSubmit ? "0.35" : "0.08"})`,
+                color: canSubmit ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.3)",
+                boxShadow: canSubmit ? "0 4px 20px hsl(var(--gold) / 0.15)" : "none",
+              }}
+              whileHover={canSubmit ? { scale: 1.02 } : {}}
+              whileTap={canSubmit ? { scale: 0.98 } : {}}
+            >
+              {t.daily_horoscope_setup_cta}
+            </motion.button>
           </div>
         </div>
       </motion.div>
