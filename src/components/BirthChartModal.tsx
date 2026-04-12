@@ -161,15 +161,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     }
 
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
-    if (gender) mysticalProfile.recordGender(gender);
+    if (effectiveGender) mysticalProfile.recordGender(effectiveGender);
 
     setPreparingChart(true);
 
     try {
       const natalChart = await calculateNatalChart({
-        birthDate,
-        birthTime,
-        birthPlace: birthCity.trim(),
+        birthDate: effectiveBirthDate,
+        birthTime: effectiveBirthTime,
+        birthPlace: effectiveBirthCity,
       });
 
       setChartData(natalChart);
