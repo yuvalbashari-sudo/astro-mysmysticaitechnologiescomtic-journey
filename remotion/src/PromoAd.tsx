@@ -259,17 +259,17 @@ export const PromoAd = () => {
 
             {/* Figure fill — translucent with energy */}
             <linearGradient id="fig-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#60D0F0" stopOpacity={0.05 + absorptionRamp * 0.15 + climaxIntensity * 0.25} />
-              <stop offset="30%" stopColor="#F0C840" stopOpacity={0.08 + absorptionRamp * 0.2 + climaxIntensity * 0.35} />
-              <stop offset="60%" stopColor="#50E0A0" stopOpacity={0.06 + absorptionRamp * 0.12 + climaxIntensity * 0.2} />
-              <stop offset="100%" stopColor="#8060E0" stopOpacity={0.03 + absorptionRamp * 0.05} />
+              <stop offset="0%" stopColor="#60D0F0" stopOpacity={0.05 + absorptionRamp * 0.15 + Math.max(climaxIntensity, holdGlow) * 0.3 + holdBreath * 0.1} />
+              <stop offset="30%" stopColor="#F0C840" stopOpacity={0.08 + absorptionRamp * 0.2 + Math.max(climaxIntensity, holdGlow) * 0.4 + holdBreath * 0.1} />
+              <stop offset="60%" stopColor="#50E0A0" stopOpacity={0.06 + absorptionRamp * 0.12 + Math.max(climaxIntensity, holdGlow) * 0.25} />
+              <stop offset="100%" stopColor="#8060E0" stopOpacity={0.03 + absorptionRamp * 0.05 + holdGlow * 0.1} />
             </linearGradient>
 
-            {/* Chest core radial */}
+            {/* Chest core radial — stays bright during hold */}
             <radialGradient id="chest-core" cx="50%" cy="42%" r="25%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.5 * climaxIntensity} />
-              <stop offset="20%" stopColor="#F0E060" stopOpacity={0.6 * climaxIntensity} />
-              <stop offset="50%" stopColor="#40D8C0" stopOpacity={0.3 * climaxIntensity} />
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.5 * Math.max(climaxIntensity, holdGlow) + holdBreath * 0.15} />
+              <stop offset="20%" stopColor="#F0E060" stopOpacity={0.6 * Math.max(climaxIntensity, holdGlow)} />
+              <stop offset="50%" stopColor="#40D8C0" stopOpacity={0.3 * Math.max(climaxIntensity, holdGlow)} />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
 
