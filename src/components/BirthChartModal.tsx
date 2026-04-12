@@ -7,6 +7,7 @@ import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsFo
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
 import AstralLightReveal from "@/components/AstralLightReveal";
+import AuraResultCard from "@/components/AuraResultCard";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -16,6 +17,7 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
+import type { AuraResult } from "@/lib/auraResultBank";
 import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
@@ -94,6 +96,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [restoredFromCache, setRestoredFromCache] = useState(false);
+  const [auraResult, setAuraResult] = useState<AuraResult | null>(null);
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
@@ -482,6 +485,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   userName={userName.trim() || undefined}
                   chartData={chartData}
                   onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
+                  onAuraResult={setAuraResult}
                   fastMode={restoredFromCache}
                 />
               </motion.div>
@@ -616,6 +620,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </motion.div>
                 )}
+
+                {auraResult && (
+                  <AuraResultCard result={auraResult} />
+                )}
+
 
                 {chartData && (
                 <div className="grid xl:grid-cols-3 gap-4 w-full">
