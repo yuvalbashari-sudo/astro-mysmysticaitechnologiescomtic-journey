@@ -419,7 +419,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
           </g>
 
           {/* ─── Phase 1: Constellation nodes + beams (ABOVE figure, with gentle orbit) ─── */}
+          <AnimatePresence>
+          {showConstellations && (
           <motion.g
+            key="constellation-orbit"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 1 } }}
             animate={{ rotate: [0, 360] }}
             transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
             style={{ transformOrigin: `${FIG_CX}px ${FIG_CORE_Y}px` }}
