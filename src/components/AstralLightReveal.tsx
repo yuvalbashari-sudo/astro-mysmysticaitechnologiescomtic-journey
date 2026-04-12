@@ -591,64 +591,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           )}
           </AnimatePresence>
 
-          {/* ─── Phase 2: Absorption effects inside figure ─── */}
-          {absorptionLevel > 0 && (
-            <g>
-
-              {/* Internal energy veins — anatomical meridians */}
-              {/* Spine (central) — dominant planet color */}
-              <motion.line
-                x1={FIG_CX} y1={FIG_CORE_Y - 45}
-                x2={FIG_CX} y2={FIG_CORE_Y + 80}
-                stroke={dominantColor}
-                strokeWidth={1.2}
-                strokeOpacity={absorptionLevel * 0.5}
-                filter="url(#body-glow)"
-                animate={{ strokeOpacity: [absorptionLevel * 0.25, absorptionLevel * 0.55, absorptionLevel * 0.25] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-              {/* Left/right spine parallels — secondary planet color */}
-              {[-6, 6].map((offset, vi) => (
-                <motion.line
-                  key={`vein-${vi}`}
-                  x1={FIG_CX + offset} y1={FIG_CORE_Y - 35}
-                  x2={FIG_CX + offset} y2={FIG_CORE_Y + 70}
-                  stroke={secondaryColor}
-                  strokeWidth={0.6}
-                  strokeOpacity={absorptionLevel * 0.3}
-                  filter="url(#body-glow)"
-                  animate={{ strokeOpacity: [absorptionLevel * 0.15, absorptionLevel * 0.35, absorptionLevel * 0.15] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: vi * 0.3 }}
-                />
-              ))}
-
-              {/* Energy through arms and legs — tertiary planet color */}
-              {[
-                { x1: FIG_CX - 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX - 40, y2: FIG_CHEST_Y + 38 },
-                { x1: FIG_CX + 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX + 40, y2: FIG_CHEST_Y + 38 },
-                { x1: FIG_CX - 8, y1: FIG_CORE_Y + 55, x2: FIG_CX - 18, y2: FIG_CORE_Y + 120 },
-                { x1: FIG_CX + 8, y1: FIG_CORE_Y + 55, x2: FIG_CX + 18, y2: FIG_CORE_Y + 120 },
-                { x1: FIG_CX - 18, y1: FIG_CHEST_Y, x2: FIG_CX + 18, y2: FIG_CHEST_Y },
-                { x1: FIG_CX - 12, y1: FIG_CORE_Y + 20, x2: FIG_CX + 12, y2: FIG_CORE_Y + 20 },
-              ].map((line, li) => (
-                <motion.line
-                  key={`limb-${li}`}
-                  {...line}
-                  stroke={planetColors.colors[li % planetColors.colors.length] || secondaryColor}
-                  strokeWidth={0.8}
-                  strokeLinecap="round"
-                  initial={{ opacity: 0, pathLength: 0 }}
-                  animate={{
-                    opacity: absorptionLevel * 0.35,
-                    pathLength: absorptionLevel,
-                  }}
-                  transition={{ duration: 1.2, delay: li * 0.15 }}
-                />
-              ))}
-
-            </g>
-          )}
-
 
           {/* ─── Phase 3: CLIMAX — mega inner light + breathing after stars fade ─── */}
           {climaxLevel > 0 && (
