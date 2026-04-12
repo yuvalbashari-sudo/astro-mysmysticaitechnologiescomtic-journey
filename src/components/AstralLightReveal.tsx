@@ -490,7 +490,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             }}
           >
             {/* Core figure with edge outline */}
-            <g filter="url(#edge-outline)">
+            <g filter="url(#soft-edge-glow)">
               <image
                 href={astralFigureImg}
                 x="0"
