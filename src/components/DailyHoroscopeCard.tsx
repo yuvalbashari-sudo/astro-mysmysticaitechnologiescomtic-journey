@@ -9,6 +9,7 @@ import AdvisorChatPanel from "./AdvisorChatPanel";
 import TextSizeControl from "./TextSizeControl";
 import { useFontScale } from "@/contexts/FontScaleContext";
 import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
+import MysticalDateInput from "./MysticalDateInput";
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
   { sign: "Capricorn", start: [1, 1], end: [1, 19] },
