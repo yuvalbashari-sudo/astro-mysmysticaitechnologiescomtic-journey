@@ -174,7 +174,7 @@ const AuraResultCard = ({ result }: Props) => {
                 {labels.primaryLabel}
               </span>
               <span className="font-heading text-sm" style={{ color: vis.accent }}>
-                {title}
+                {auraName(result.primaryAura)}
               </span>
             </div>
           </div>
