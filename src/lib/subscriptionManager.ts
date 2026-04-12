@@ -210,6 +210,8 @@ function onAuthChange(cb: () => void): () => void {
 function enableAdminOverride(): boolean {
   if (!IS_PREVIEW) return false;
   localStorage.setItem(ADMIN_OVERRIDE_KEY, "true");
+  // Also set admin email so edge functions see the x-admin-email header
+  localStorage.setItem(ADMIN_EMAIL_KEY, ADMIN_EMAILS[0]);
   _authReady = true;
   _authChangeListeners.forEach((cb) => cb());
   return true;
@@ -220,6 +222,7 @@ function enableAdminOverride(): boolean {
  */
 function disableAdminOverride(): void {
   localStorage.removeItem(ADMIN_OVERRIDE_KEY);
+  localStorage.removeItem(ADMIN_EMAIL_KEY);
   _authChangeListeners.forEach((cb) => cb());
 }
 
