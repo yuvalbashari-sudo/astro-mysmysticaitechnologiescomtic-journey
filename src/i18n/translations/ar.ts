@@ -735,4 +735,7 @@ export const ar: TranslationKeys = {
   daily_horoscope_setup_birthdate_label: "تاريخ الميلاد",
   daily_horoscope_setup_cta: "✦ اكتشف برجك ✦",
   welcome_back_greeting: "مرحبًا بعودتك، {name} ✦",
+  chart_welcome_back: "مرحبًا بعودتك، {name} ✨",
+  chart_edit_details: "تعديل البيانات",
+  chart_loading_cached: "جارٍ استعادة خريطتك…",
 };

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield } from "lucide-react";
+import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield, Pencil } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
@@ -20,6 +20,14 @@ import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
 const CHART_DAILY_KEY = "astrologai_birthchart_daily";
+const CHART_CACHE_KEY = "astrologai_birthchart_cache";
+
+interface CachedChart {
+  chartData: NatalChartResult;
+  resultText: string;
+  details: { userName: string; gender: string; birthDate: string; birthTime: string; birthCity: string };
+  savedAt: string;
+}
 
 function hasUsedChartToday(): boolean {
   try {
@@ -34,6 +42,22 @@ function markChartUsedToday(): void {
   try {
     localStorage.setItem(CHART_DAILY_KEY, new Date().toISOString().slice(0, 10));
   } catch { /* ignore */ }
+}
+
+function saveCachedChart(data: CachedChart): void {
+  try {
+    localStorage.setItem(CHART_CACHE_KEY, JSON.stringify(data));
+  } catch { /* ignore - storage full */ }
+}
+
+function loadCachedChart(): CachedChart | null {
+  try {
+    const raw = localStorage.getItem(CHART_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CachedChart;
+    if (parsed.chartData && parsed.resultText && parsed.details) return parsed;
+  } catch { /* ignore */ }
+  return null;
 }
 
 interface Props {
@@ -68,6 +92,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
   const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+  const [restoredFromCache, setRestoredFromCache] = useState(false);
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
@@ -113,6 +139,22 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
+
+  // Auto-restore cached chart for returning users
+  useEffect(() => {
+    if (!isOpen || phase !== "form") return;
+    const cached = loadCachedChart();
+    if (!cached || !cached.resultText) return;
+    setDetails(cached.details as BirthDetails);
+    setChartData(cached.chartData);
+    setResultText(cached.resultText);
+    setRestoredFromCache(true);
+    setPhase("result");
+    if (cached.details.userName?.trim()) {
+      setShowWelcomeBack(true);
+      setTimeout(() => setShowWelcomeBack(false), 4000);
+    }
+  }, [isOpen]);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -254,6 +296,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           subtitle: `☉ ${getSignNameByKey(chartData.sunSign.key, language)} | ⬆ ${getSignNameByKey(chartData.risingSign.key, language)} | ☽ ${chartData.moonSignKey ? getSignNameByKey(chartData.moonSignKey, language) : chartData.moonSign}`,
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
+        });
+        // Cache chart + result for instant restore on return
+        setResultText((finalText) => {
+          saveCachedChart({
+            chartData,
+            resultText: finalText,
+            details: { userName, gender, birthDate, birthTime, birthCity },
+            savedAt: new Date().toISOString(),
+          });
+          return finalText;
         });
       },
       (error) => {
@@ -416,7 +468,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {(phase === "loading" || showResult) && chartData && (
+            {(phase === "loading" || showResult) && chartData && !restoredFromCache && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -435,8 +487,51 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.5 }}
+                transition={{ duration: restoredFromCache ? 0.4 : 0.6, delay: restoredFromCache ? 0 : 1.5 }}
               >
+
+                {/* Welcome back + edit for cached results */}
+                {restoredFromCache && (
+                  <motion.div
+                    className="flex items-center justify-between"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <AnimatePresence>
+                      {showWelcomeBack && userName.trim() && (
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="font-body text-sm"
+                          style={{ color: "hsl(var(--gold) / 0.7)" }}
+                        >
+                          {t.chart_welcome_back.replace("{name}", userName.trim())}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                    <motion.button
+                      onClick={() => {
+                        setRestoredFromCache(false);
+                        setPhase("form");
+                        setChartData(null);
+                        setResultText("");
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-xs transition-colors"
+                      style={{
+                        color: "hsl(var(--gold) / 0.6)",
+                        border: "1px solid hsl(var(--gold) / 0.15)",
+                        background: "hsl(var(--gold) / 0.05)",
+                      }}
+                      whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <Pencil className="w-3 h-3" />
+                      {t.chart_edit_details}
+                    </motion.button>
+                  </motion.div>
+                )}
 
                 {/* Chart wheel emerges from below */}
                 <motion.div
