@@ -369,8 +369,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       hideAdvisor={isMobile}
       wide={showResult && !isMobile}
       avatarStyle={{
-        bottom: 18,
+        top: 80,
         right: 40,
+        bottom: "auto",
         left: "auto",
         width: 140,
         height: 140,
