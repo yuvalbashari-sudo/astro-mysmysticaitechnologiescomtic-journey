@@ -126,8 +126,12 @@ const AuraResultCard = ({ result }: Props) => {
   const modifierName = MODIFIER_I18N[language]?.[result.modifier] ?? MODIFIER_I18N.en[result.modifier];
   const getAuraTitle = (a: AuraFamily) => AURA_I18N[language]?.[a]?.title ?? AURA_BANK[a].title;
 
-  // Shareable identity in user's language
-  const shareableIdentity = `${modifierName} ${title}`;
+  // English identity title: "Balanced Deep Indigo"
+  const enModLabel = MODIFIER_I18N.en[result.modifier] || "Radiant";
+  const enAuraLabel = AURA_BANK[result.primaryAura].displayName || "Solar Gold";
+  const shareableIdentity = `${enModLabel} ${enAuraLabel}`;
+  // Localized translation for non-English users
+  const localizedIdentity = language !== "en" ? `${modifierName} ${title}` : "";
 
   // Secondary visuals
   const secondaryVis = result.secondaryAuras.slice(0, 2).map(a => AURA_VISUALS[a]);
