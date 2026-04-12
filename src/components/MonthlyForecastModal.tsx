@@ -18,6 +18,7 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
+import { isAdminTestMode, getAdminSafeProfile, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -48,7 +49,14 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   const handleSubmit = () => {
     setAttempted(true);
-    if (!gender || !birthDate) return;
+    const adminMode = isAdminTestMode();
+    // Admin bypass: auto-fill missing required fields
+    if (adminMode) {
+      if (!gender) updateDetails({ gender: ADMIN_DEFAULTS.gender });
+      if (!birthDate) updateDetails({ birthDate: ADMIN_DEFAULTS.birthDate });
+    } else if (!gender || !birthDate) {
+      return;
+    }
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     if (gender) mysticalProfile.recordGender(gender);
     setIsLoading(true);

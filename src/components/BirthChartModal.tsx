@@ -17,6 +17,7 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
 import { toast } from "@/components/ui/sonner";
+import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
 const CHART_DAILY_KEY = "astrologai_birthchart_daily";
 
@@ -147,21 +148,28 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       return;
     }
 
-    if (!gender || !birthDate || !birthTime || !birthCity.trim()) {
+    // Admin bypass: auto-fill missing fields silently
+    const adminMode = isAdminTestMode();
+    const effectiveGender = gender || (adminMode ? ADMIN_DEFAULTS.gender : "");
+    const effectiveBirthDate = birthDate || (adminMode ? ADMIN_DEFAULTS.birthDate : "");
+    const effectiveBirthTime = birthTime || (adminMode ? ADMIN_DEFAULTS.birthTime : "");
+    const effectiveBirthCity = birthCity.trim() || (adminMode ? "Tel Aviv" : "");
+
+    if (!effectiveGender || !effectiveBirthDate || !effectiveBirthTime || !effectiveBirthCity) {
       toast.error(t.chart_form_error);
       return;
     }
 
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
-    if (gender) mysticalProfile.recordGender(gender);
+    if (effectiveGender) mysticalProfile.recordGender(effectiveGender);
 
     setPreparingChart(true);
 
     try {
       const natalChart = await calculateNatalChart({
-        birthDate,
-        birthTime,
-        birthPlace: birthCity.trim(),
+        birthDate: effectiveBirthDate,
+        birthTime: effectiveBirthTime,
+        birthPlace: effectiveBirthCity,
       });
 
       setChartData(natalChart);

@@ -11,6 +11,7 @@ import TextSizeControl from "./TextSizeControl";
 import { useFontScale } from "@/contexts/FontScaleContext";
 import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
 import MysticalDateInput from "./MysticalDateInput";
+import { isAdminTestMode, getAdminSafeProfile, getAdminSafeZodiac } from "@/lib/adminTestMode";
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
   { sign: "Capricorn", start: [1, 1], end: [1, 19] },
@@ -94,16 +95,18 @@ const DailyHoroscopeCard = () => {
   const { scale, setScale } = useFontScale();
   const ts = TEXT_SIZE_CLASSES[scale];
 
-  const profile = mysticalProfile.getProfile();
-  const birthDate = profile.birthDate;
-  const zodiacSign = birthDate ? getZodiacFromDate(birthDate) : (profile.zodiacSign || null);
-  const userName = profile.userName;
-  const gender = profile.gender;
+  const adminMode = isAdminTestMode();
+  const safeProfile = getAdminSafeProfile();
+  const birthDate = safeProfile.birthDate;
+  const zodiacSign = birthDate ? getZodiacFromDate(birthDate) : (safeProfile.zodiacSign || null);
+  const userName = safeProfile.userName;
+  const gender = safeProfile.gender;
 
   // Inline setup form state
   const [setupName, setSetupName] = useState("");
   const [setupBirthDate, setSetupBirthDate] = useState("");
-  const [needsSetup, setNeedsSetup] = useState(!zodiacSign);
+  // Admin users skip setup entirely
+  const [needsSetup, setNeedsSetup] = useState(!zodiacSign && !adminMode);
 
   const fetchHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
