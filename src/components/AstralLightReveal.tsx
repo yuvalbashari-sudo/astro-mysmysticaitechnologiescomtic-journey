@@ -20,6 +20,7 @@ interface Props {
   userName?: string;
   chartData: NatalChartResult;
   onComplete: () => void;
+  fastMode?: boolean;
 }
 
 /* ── Planet visual config ── */
@@ -123,8 +124,8 @@ const FIG_CX = W / 2;       // 160 — perfectly centered
 const FIG_CHEST_Y = 255;    // where beams target (chest area in scene coords)
 const FIG_CORE_Y = 240;     // energy core center
 
-const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
-  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
+const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }: Props) => {
+  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure", fastMode ? "(fast)" : "");
   const { language } = useLanguage();
 
   const [constellationsLit, setConstellationsLit] = useState(0);
