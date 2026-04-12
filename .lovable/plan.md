@@ -1,32 +1,37 @@
 
 
-# Expand Final Glow to Encompass Entire Astral Figure
+# Remove "Sun" Core Glow, Keep Soft Full-Body Aura
 
 ## Problem
-The climax glow radiates from `FIG_CORE_Y` (240) — roughly the chest area — creating a halo effect concentrated around the head/upper body. The figure extends from y≈175 to y≈472 in scene coordinates, so the lower body (legs, feet) gets no glow coverage.
+The climax phase renders a large bright white circle (`#fff`, lines 669-680) and a radial gradient circle (lines 659-667) centered at `FIG_CORE_Y` — creating a "sun" that covers the figure's face and chest, hiding its contours.
 
-## Solution
-Modify only the climax glow section in `src/components/AstralLightReveal.tsx` to wrap the entire figure in light:
+## Changes (all in `src/components/AstralLightReveal.tsx`)
 
-### Changes (all in `AstralLightReveal.tsx` only)
+### 1. Remove the bright core circles (lines 658-695)
+Delete these three elements:
+- The large radial gradient circle (lines 659-667) — the main "sun"
+- The white `#fff` circle (lines 669-680) — the bright core
+- The stroke ring around core (lines 682-695) — the pulsing outline ring
 
-1. **Add a full-body elliptical glow** (new element in the climax section, lines 625-700)
-   - Add a `<motion.ellipse>` centered at FIG_CX / vertical midpoint of figure (~323)
-   - rx covers figure width (~55px), ry covers full figure height (~150px)
-   - Uses `climax-radial` gradient, pulsates gently
-   - Rendered BEHIND the existing core glow circles
+### 2. Reduce blurred aura intensity (lines 642-656)
+- Lower the aura image opacity from `climaxLevel * 0.55` to `climaxLevel * 0.35`
+- Reduce brightness from `1.4 + climaxLevel * 0.8` to `1.1 + climaxLevel * 0.4`
+- This keeps a soft colorful envelope without washing out the figure's contours
 
-2. **Add a second blurred image overlay for full-body aura**
-   - Duplicate the figure image with heavy blur (8-12px) and `screen` blend mode
-   - Scaled slightly larger (1.05x) to create an aura halo effect around the entire silhouette
-   - Opacity tied to `climaxLevel`
+### 3. Soften the full-body ellipse (lines 628-640)
+- Reduce opacity range from `0.3–0.5` to `0.15–0.3` so it's a subtle ambient glow, not a blinding light
 
-3. **Increase the radial rays' reach**
-   - Lines 667-698: increase `outerR` from `30 + climaxLevel * 25` to `60 + climaxLevel * 50` so energy lines extend past the full figure height
+### 4. Soften the radiating rays (lines 697-729)
+- Reduce `strokeWidth` from `1.5` to `0.8`
+- Lower opacity range to `0.1–0.4` so they read as subtle energy lines, not harsh beams
 
-4. **Keep existing chest glow and core effects** — they add focal intensity at the heart center. The new full-body glow adds the surrounding envelope.
+### 5. Reduce chest glow (lines 609-623)
+- Lower opacity multiplier from `0.4` to `0.2` and reduce max radius so the chest area doesn't bloom over the face
+
+### Result
+The figure stays fully visible with clear contours. A soft, colorful light envelope surrounds the entire body without hiding any details.
 
 ### Scope
-- Only `src/components/AstralLightReveal.tsx` is modified
-- No figure design changes, no animation timing changes, no other files
+- Only `src/components/AstralLightReveal.tsx` modified
+- No figure design, timing, or other component changes
 
