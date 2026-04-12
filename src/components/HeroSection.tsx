@@ -364,7 +364,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
           <video
             ref={videoRef}
             autoPlay loop muted playsInline preload="auto"
-            src="/videos/new-astral-scene-proof.mp4"
+            src="/videos/cosmic-ball-loop.mp4"
             className="absolute inset-0 w-full h-full object-cover"
             style={{
               clipPath: "circle(34.5% at 50% 50%)",
@@ -404,7 +404,7 @@ const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
       }}
     >
       <div className="absolute inset-0 w-full h-full" style={{ animation: "cosmicDrift 50s ease-in-out infinite" }}>
-        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/new-astral-scene-proof.mp4"
+        <video ref={videoRef} autoPlay loop muted playsInline preload="auto" src="/videos/cosmic-ball-loop.mp4"
           className="absolute inset-0 w-full h-full" style={{ ...vidBase }} />
       </div>
 
