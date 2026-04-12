@@ -489,7 +489,24 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               filter: `drop-shadow(0 0 ${2 + absorptionLevel * 4 + climaxLevel * 6}px ${dominantColor}${climaxLevel > 0.5 ? '80' : '50'}) drop-shadow(0 0 ${1 + climaxLevel * 3}px ${secondaryColor}30)`,
             }}
           >
-            {/* Core figure with edge outline */}
+            {/* Breathing edge fringe — pulsing soft glow around the body */}
+            {absorptionLevel > 0.2 && (
+              <motion.g
+                filter="url(#soft-edge-glow)"
+                animate={{ opacity: [0.35, 0.7, 0.35] }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <image
+                  href={astralFigureImg}
+                  x="-2" y="-2"
+                  width={FIG_VB_W + 4} height={FIG_VB_H + 4}
+                  opacity={absorptionLevel * 0.3 + climaxLevel * 0.2}
+                  style={{ mixBlendMode: 'screen' }}
+                />
+              </motion.g>
+            )}
+
+            {/* Core figure with soft edge glow — stable layer */}
             <g filter="url(#soft-edge-glow)">
               <image
                 href={astralFigureImg}
