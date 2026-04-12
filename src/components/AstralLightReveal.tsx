@@ -692,9 +692,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
             />
           )}
 
-          {/* ─── Phase 3: CLIMAX — mega inner light ─── */}
+          {/* ─── Phase 3: CLIMAX — mega inner light + breathing after stars fade ─── */}
           {climaxLevel > 0 && (
-            <g>
+            <motion.g
+              animate={!showConstellations ? { opacity: [1, 0.65, 1] } : undefined}
+              transition={!showConstellations ? { duration: 3.5, repeat: Infinity, ease: "easeInOut" } : undefined}
+            >
               {/* Full-body elliptical glow — encompasses entire figure */}
               <motion.ellipse
                 cx={FIG_CX}
