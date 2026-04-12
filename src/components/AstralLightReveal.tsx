@@ -358,37 +358,62 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <feGaussianBlur stdDeviation="3" />
             </filter>
 
-            {/* Figure volume gradient */}
+            {/* Edge outline glow — subtle separation from background */}
+            <filter id="edge-outline">
+              <feMorphology operator="dilate" radius="0.8" in="SourceAlpha" result="expanded" />
+              <feGaussianBlur stdDeviation="1.5" in="expanded" result="blurred-edge" />
+              <feFlood floodColor={dominantColor} floodOpacity={0.4 + absorptionLevel * 0.3} result="color" />
+              <feComposite in="color" in2="blurred-edge" operator="in" result="colored-edge" />
+              <feMerge>
+                <feMergeNode in="colored-edge" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+
+            {/* Soft outer aura filter — very diffuse */}
+            <filter id="outer-aura-blur">
+              <feGaussianBlur stdDeviation="14" />
+            </filter>
+
+            {/* Body fill gradient — soft semi-transparent color across whole figure */}
             <linearGradient id="sil-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.25 + climaxLevel * 0.35} />
-              <stop offset="35%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.35 + climaxLevel * 0.45} />
-              <stop offset="65%" stopColor={secondaryColor} stopOpacity={0.08 + absorptionLevel * 0.2 + climaxLevel * 0.3} />
-              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02} />
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.08} />
+              <stop offset="25%" stopColor={dominantColor} stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.1} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.15 + climaxLevel * 0.12} />
+              <stop offset="75%" stopColor={secondaryColor} stopOpacity={0.04 + absorptionLevel * 0.1 + climaxLevel * 0.08} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02 + absorptionLevel * 0.05} />
             </linearGradient>
 
             {/* Depth shading — darker edges for 3D volume */}
             <linearGradient id="fig-depth" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
-              <stop offset="30%" stopColor={dominantColor} stopOpacity={0.02} />
-              <stop offset="70%" stopColor={dominantColor} stopOpacity={0.02} />
-              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.12 + absorptionLevel * 0.12} />
+              <stop offset="25%" stopColor={dominantColor} stopOpacity={0.03} />
+              <stop offset="75%" stopColor={dominantColor} stopOpacity={0.03} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.12 + absorptionLevel * 0.12} />
             </linearGradient>
 
-            {/* Inner glow — radial from chest, uses top 3 planet colors */}
-            <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
-              <stop offset="30%" stopColor={auraColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
-              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
+            {/* Core chest glow — concentrated but controlled */}
+            <radialGradient id="fig-core-glow" cx="50%" cy="38%" r="30%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.04 + absorptionLevel * 0.08 + climaxLevel * 0.12} />
+              <stop offset="20%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.15 + climaxLevel * 0.18} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.06} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
+            </radialGradient>
+
+            {/* Inner glow — radial from chest, uses top 3 aura colors */}
+            <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stopColor={auraColors.dominant} stopOpacity={0.02 + absorptionLevel * 0.06} />
+              <stop offset="40%" stopColor={auraColors.secondary} stopOpacity={0.01 + absorptionLevel * 0.03} />
               <stop offset="100%" stopColor={auraColors.tertiary} stopOpacity={0} />
             </radialGradient>
 
-            {/* Climax radial — aura-driven color blend */}
+            {/* Climax radial — controlled aura bloom */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fff" stopOpacity={0.3 * climaxLevel} />
-              <stop offset="15%" stopColor={auraColors.dominant} stopOpacity={0.85 * climaxLevel} />
-              <stop offset="40%" stopColor={auraColors.dominant} stopOpacity={0.55 * climaxLevel} />
-              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.3 * climaxLevel} />
-              <stop offset="80%" stopColor={auraColors.tertiary} stopOpacity={0.12 * climaxLevel} />
+              <stop offset="0%" stopColor="#fff" stopOpacity={0.12 * climaxLevel} />
+              <stop offset="10%" stopColor={auraColors.dominant} stopOpacity={0.45 * climaxLevel} />
+              <stop offset="30%" stopColor={auraColors.dominant} stopOpacity={0.3 * climaxLevel} />
+              <stop offset="55%" stopColor={auraColors.secondary} stopOpacity={0.15 * climaxLevel} />
+              <stop offset="80%" stopColor={auraColors.tertiary} stopOpacity={0.06 * climaxLevel} />
               <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
@@ -411,42 +436,158 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </defs>
 
 
-          {/* ─── Halo ellipse behind figure — colorful aura envelope ─── */}
+          {/* ─── Layer 3: Outer aura — very soft diffuse glow behind everything ─── */}
+          <g transform={`translate(${figX}, ${figY}) scale(${figScale})`} filter="url(#outer-aura-blur)">
+            <image
+              href={astralFigureImg}
+              x="-8"
+              y="-8"
+              width={FIG_VB_W + 16}
+              height={FIG_VB_H + 16}
+              opacity={absorptionLevel * 0.2 + climaxLevel * 0.15}
+              style={{ mixBlendMode: 'screen' }}
+            />
+          </g>
+
+          {/* ─── Halo ellipse behind figure — subtle aura envelope ─── */}
           <ellipse
             cx={FIG_CX}
             cy={FIG_CORE_Y + 40}
-            rx={75 + absorptionLevel * 15 + climaxLevel * 10}
-            ry={110 + absorptionLevel * 20 + climaxLevel * 15}
+            rx={75 + absorptionLevel * 12 + climaxLevel * 8}
+            ry={110 + absorptionLevel * 15 + climaxLevel * 10}
             fill="url(#climax-radial)"
-            opacity={absorptionLevel * 0.6 + climaxLevel * 0.35}
+            opacity={absorptionLevel * 0.35 + climaxLevel * 0.2}
           />
 
-          {/* ─── Human figure — outline with colorful aura glow ─── */}
-          <g
-            transform={`translate(${figX}, ${figY}) scale(${figScale})`}
-            style={{
-              filter: `drop-shadow(0 0 ${6 + absorptionLevel * 12 + climaxLevel * 26}px ${dominantColor}${climaxLevel > 0.5 ? 'c0' : '70'}) drop-shadow(0 0 ${4 + climaxLevel * 18}px ${secondaryColor}60)`,
-            }}
-          >
+          {/* ─── Layer 2: Body fill — soft semi-transparent color across the figure ─── */}
+          <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
             <image
               href={astralFigureImg}
               x="0"
               y="0"
               width={FIG_VB_W}
               height={FIG_VB_H}
-              opacity={0.25 + absorptionLevel * 0.5 + climaxLevel * 0.25}
-              style={{ mixBlendMode: 'screen' }}
+              opacity={absorptionLevel * 0.25 + climaxLevel * 0.15}
+              style={{ mixBlendMode: 'screen', filter: `blur(3px) brightness(${1.1 + absorptionLevel * 0.3})` }}
             />
-            {climaxLevel > 0 && (
+          </g>
+
+          {/* ─── Layer 1: Core figure — crisp outline with edge definition ─── */}
+          <g
+            transform={`translate(${figX}, ${figY}) scale(${figScale})`}
+            style={{
+              filter: `drop-shadow(0 0 ${2 + absorptionLevel * 4 + climaxLevel * 6}px ${dominantColor}${climaxLevel > 0.5 ? '80' : '50'}) drop-shadow(0 0 ${1 + climaxLevel * 3}px ${secondaryColor}30)`,
+            }}
+          >
+            {/* Core figure with edge outline */}
+            <g filter="url(#edge-outline)">
               <image
                 href={astralFigureImg}
                 x="0"
                 y="0"
                 width={FIG_VB_W}
                 height={FIG_VB_H}
-                opacity={climaxLevel * 0.5}
-                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 4}px) brightness(${1.6 + climaxLevel * 0.8})` }}
+                opacity={0.35 + absorptionLevel * 0.4 + climaxLevel * 0.25}
+                style={{ mixBlendMode: 'screen' }}
               />
+            </g>
+
+            {/* Core chest glow — concentrated energy center */}
+            <rect
+              x="0" y="0" width={FIG_VB_W} height={FIG_VB_H}
+              fill="url(#fig-core-glow)"
+              opacity={absorptionLevel * 0.6 + climaxLevel * 0.4}
+              style={{ mixBlendMode: 'screen' }}
+            />
+
+            {/* Depth shading — 3D volume on edges */}
+            <rect
+              x="0" y="0" width={FIG_VB_W} height={FIG_VB_H}
+              fill="url(#fig-depth)"
+              opacity={absorptionLevel * 0.4}
+              style={{ mixBlendMode: 'screen' }}
+            />
+
+            {/* ─── Subtle energy lines flowing inside the body ─── */}
+            {absorptionLevel > 0.3 && (
+              <g opacity={Math.min((absorptionLevel - 0.3) * 1.4, 0.45) + climaxLevel * 0.2} style={{ mixBlendMode: 'screen' }}>
+                {/* Central spine energy */}
+                <motion.path
+                  d="M 55 25 C 55 40, 53 55, 55 70 S 57 90, 55 110 S 53 130, 55 155"
+                  stroke={dominantColor}
+                  strokeWidth="0.6"
+                  fill="none"
+                  strokeOpacity={0.5}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: "easeOut" }}
+                />
+                {/* Left shoulder to hand */}
+                <motion.path
+                  d="M 48 42 C 40 48, 30 52, 22 58 S 16 66, 12 75"
+                  stroke={dominantColor}
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeOpacity={0.35}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.8, delay: 0.3, ease: "easeOut" }}
+                />
+                {/* Right shoulder to hand */}
+                <motion.path
+                  d="M 62 42 C 70 48, 80 52, 88 58 S 94 66, 98 75"
+                  stroke={dominantColor}
+                  strokeWidth="0.4"
+                  fill="none"
+                  strokeOpacity={0.35}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.8, delay: 0.3, ease: "easeOut" }}
+                />
+                {/* Left torso branch */}
+                <motion.path
+                  d="M 50 65 C 45 75, 42 90, 40 105 S 38 125, 38 145"
+                  stroke={secondaryColor}
+                  strokeWidth="0.35"
+                  fill="none"
+                  strokeOpacity={0.3}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2.2, delay: 0.5, ease: "easeOut" }}
+                />
+                {/* Right torso branch */}
+                <motion.path
+                  d="M 60 65 C 65 75, 68 90, 70 105 S 72 125, 72 145"
+                  stroke={secondaryColor}
+                  strokeWidth="0.35"
+                  fill="none"
+                  strokeOpacity={0.3}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2.2, delay: 0.5, ease: "easeOut" }}
+                />
+                {/* Chest radiating arcs */}
+                <motion.path
+                  d="M 45 50 C 48 45, 55 43, 55 43 S 62 45, 65 50"
+                  stroke={dominantColor}
+                  strokeWidth="0.3"
+                  fill="none"
+                  strokeOpacity={0.25}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: [0, 1, 0.8] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                />
+                <motion.path
+                  d="M 42 55 C 47 48, 55 46, 55 46 S 63 48, 68 55"
+                  stroke={auraColors.tertiary}
+                  strokeWidth="0.25"
+                  fill="none"
+                  strokeOpacity={0.2}
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: [0, 1, 0.7] }}
+                  transition={{ duration: 3.5, delay: 0.5, repeat: Infinity, ease: "easeInOut" }}
+                />
+              </g>
             )}
           </g>
 
@@ -602,43 +743,41 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </AnimatePresence>
 
 
-          {/* ─── Phase 3: CLIMAX — mega inner light + breathing after stars fade ─── */}
+          {/* ─── Phase 3: CLIMAX — refined layered glow + breathing ─── */}
           {climaxLevel > 0 && (
             <motion.g
-              animate={!showConstellations ? { opacity: [1, 0.65, 1] } : undefined}
+              animate={!showConstellations ? { opacity: [1, 0.7, 1] } : undefined}
               transition={!showConstellations ? { duration: 3.5, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
-              {/* Full-body elliptical glow — encompasses entire figure */}
+              {/* Outer aura bloom — gentle pulsing ellipse */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 40}
                 fill="url(#climax-radial)"
                 filter="url(#climax-mega)"
                 animate={{
-                  rx: [50 + climaxLevel * 25, 65 + climaxLevel * 35, 50 + climaxLevel * 25],
-                  ry: [130 + climaxLevel * 50, 155 + climaxLevel * 65, 130 + climaxLevel * 50],
-                  opacity: [climaxLevel * 0.25, climaxLevel * 0.5, climaxLevel * 0.25],
+                  rx: [50 + climaxLevel * 20, 60 + climaxLevel * 28, 50 + climaxLevel * 20],
+                  ry: [120 + climaxLevel * 35, 140 + climaxLevel * 45, 120 + climaxLevel * 35],
+                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Blurred aura image — full-body silhouette glow */}
+              {/* Soft body-shaped aura — follows figure silhouette */}
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
-                  x="-5"
-                  y="-6"
-                  width={FIG_VB_W + 10}
-                  height={FIG_VB_H + 12}
-                  opacity={climaxLevel * 0.5}
+                  x="-4"
+                  y="-4"
+                  width={FIG_VB_W + 8}
+                  height={FIG_VB_H + 8}
+                  opacity={climaxLevel * 0.3}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(10px) brightness(${1.2 + climaxLevel * 0.6})`,
+                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.3})`,
                   }}
                 />
               </g>
-
-              {/* Core circles & radiating rays removed for cleaner look */}
             </motion.g>
           )}
         </svg>
