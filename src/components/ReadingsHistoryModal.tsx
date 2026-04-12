@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
 import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand, AlertTriangle } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
+import { formatDateTime } from "@/lib/dateTimeFormat";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
@@ -45,7 +46,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
     palm: t.readings_type_palm,
   };
 
-  const dateLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
+  // date formatting handled by formatDateTime utility
 
   useEffect(() => {
     if (isOpen) setReadings(readingsStorage.getAll());
@@ -194,9 +195,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
                   {readings.map((reading, i) => {
                     const IconComp = typeIcons[reading.type] || Star;
                     const isExpanded = expanded === reading.id;
-                    const dateStr = new Date(reading.date).toLocaleDateString(dateLocale, {
-                      day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
-                    });
+                    const dateStr = formatDateTime(reading.date, language);
 
                     return (
                       <motion.div

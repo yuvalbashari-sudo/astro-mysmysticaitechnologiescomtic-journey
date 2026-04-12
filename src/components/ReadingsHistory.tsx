@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { readingsStorage, SavedReading } from "@/lib/readingsStorage";
 import { Trash2, Clock, Star, Moon, Sparkles, Eye, Hand } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
+import { formatDateTime } from "@/lib/dateTimeFormat";
 
 const typeIcons: Record<string, typeof Star> = {
   forecast: Star,
@@ -26,7 +27,7 @@ const ReadingsHistory = () => {
     palm: t.readings_type_palm,
   };
 
-  const dateLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
+  // date formatting handled by formatDateTime utility
 
   useEffect(() => {
     setReadings(readingsStorage.getAll());
@@ -63,13 +64,7 @@ const ReadingsHistory = () => {
             {readings.map((reading, i) => {
               const IconComp = typeIcons[reading.type] || Star;
               const isExpanded = expanded === reading.id;
-              const dateStr = new Date(reading.date).toLocaleDateString(dateLocale, {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              });
+              const dateStr = formatDateTime(reading.date, language);
 
               return (
                 <motion.div
