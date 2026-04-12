@@ -40,8 +40,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const isMobile = useIsMobile();
   const [advisorOpen, setAdvisorOpen] = useState(false);
 
-  const monthLocale = language === "he" ? "he-IL" : language === "ar" ? "ar-SA" : language === "ru" ? "ru-RU" : "en-US";
-  const monthName = new Date().toLocaleDateString(monthLocale, { month: "long" });
+  const monthName = formatMonthName(new Date(), language);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
   const updateDetails = (patch: Partial<BirthDetails>) => setDetails(prev => ({ ...prev, ...patch }));

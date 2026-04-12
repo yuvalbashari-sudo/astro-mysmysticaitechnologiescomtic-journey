@@ -54,3 +54,20 @@ export function formatDateTime(date: Date | string, lang: Language): string {
     hour12: lang === "en",
   });
 }
+
+/** Format with weekday: "Sunday, April 11, 2026" (EN) / "יום ראשון, 11 באפריל 2026" (HE) */
+export function formatFullDate(date: Date | string, lang: Language): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toLocaleDateString(getLocale(lang), {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+/** Format month name only: "April" (EN) / "אפריל" (HE) */
+export function formatMonthName(date: Date | string, lang: Language): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toLocaleDateString(getLocale(lang), { month: "long" });
+}
