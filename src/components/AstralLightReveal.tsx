@@ -8,15 +8,15 @@ import { getAuraResult, type AuraResult, type AuraFamily } from "@/lib/auraResul
 
 /* Localized aura title lookup for the final status line */
 const AURA_TITLE_I18N: Record<string, Record<AuraFamily, string>> = {
-  he: { solar_gold: "זוהר שמשי", lunar_blue: "עומקים ירחיים", healing_green: "זרם אזמרגד", mystical_purple: "צעיף מיסטי", vital_red: "להבה חיונית", venus_pink: "חן נוגהי", astral_turquoise: "זרם אסטרלי", deep_indigo: "עוגן עמוק", expansive_orange: "אור מתרחב", pure_white: "טרנסמוטציה טהורה" },
-  ru: { solar_gold: "Солнечное сияние", lunar_blue: "Лунные глубины", healing_green: "Изумрудный поток", mystical_purple: "Мистическая завеса", vital_red: "Жизненное пламя", venus_pink: "Венерианская грация", astral_turquoise: "Астральный поток", deep_indigo: "Глубокий якорь", expansive_orange: "Расширяющийся свет", pure_white: "Чистая трансмутация" },
-  ar: { solar_gold: "إشراق شمسي", lunar_blue: "أعماق قمرية", healing_green: "تيار زمردي", mystical_purple: "حجاب صوفي", vital_red: "لهب حيوي", venus_pink: "رشاقة فينوسية", astral_turquoise: "تيار نجمي", deep_indigo: "مرساة عميقة", expansive_orange: "نور متسع", pure_white: "تحوّل نقي" },
+  he: { solar_gold: "זוהר שמשי", moon_silver_blue: "עומקים ירחיים", healing_green: "זרם אזמרגד", mystical_purple: "צעיף מיסטי", vital_red: "להבה חיונית", venus_pink: "חן נוגהי", astral_turquoise: "זרם אסטרלי", deep_indigo: "עוגן עמוק", expansive_orange: "אור מתרחב", pure_white: "טרנסמוטציה טהורה" },
+  ru: { solar_gold: "Солнечное сияние", moon_silver_blue: "Лунные глубины", healing_green: "Изумрудный поток", mystical_purple: "Мистическая завеса", vital_red: "Жизненное пламя", venus_pink: "Венерианская грация", astral_turquoise: "Астральный поток", deep_indigo: "Глубокий якорь", expansive_orange: "Расширяющийся свет", pure_white: "Чистая трансмутация" },
+  ar: { solar_gold: "إشراق شمسي", moon_silver_blue: "أعماق قمرية", healing_green: "تيار زمردي", mystical_purple: "حجاب صوفي", vital_red: "لهب حيوي", venus_pink: "رشاقة فينوسية", astral_turquoise: "تيار نجمي", deep_indigo: "مرساة عميقة", expansive_orange: "نور متسع", pure_white: "تحوّل نقي" },
 };
 
 const AURA_SUBTITLE_I18N: Record<string, Record<AuraFamily, string>> = {
-  he: { solar_gold: "מהותך בוערת באור ריבוני", lunar_blue: "נשמתך מדברת בגאויות ובלחישות", healing_green: "המוח שלך אורג דפוסים שאחרים מפספסים", mystical_purple: "את/ה שוכן/ת היכן שחלומות פוגשים חזון", vital_red: "הרצון שלך מחושל באש", venus_pink: "יופי והרמוניה זורמים דרך ישותך", astral_turquoise: "את/ה רוכב/ת על קצה המחר", deep_indigo: "העוצמה שלך חצובה מסלע קדום", expansive_orange: "רוחך מחפשת את האופק", pure_white: "את/ה משנה כל מה שנוגע בך" },
-  ru: { solar_gold: "Ваша сущность горит суверенным светом", lunar_blue: "Ваша душа говорит приливами и шёпотом", healing_green: "Ваш разум плетёт узоры, которые другие не замечают", mystical_purple: "Вы живёте там, где сны встречают видение", vital_red: "Ваша воля закалена в огне", venus_pink: "Красота и гармония текут через ваше существо", astral_turquoise: "Вы на краю завтрашнего дня", deep_indigo: "Ваша сила высечена из древнего камня", expansive_orange: "Ваш дух ищет горизонт", pure_white: "Вы преображаете всё, к чему прикасаетесь" },
-  ar: { solar_gold: "جوهرك يتوهج بنور سيادي", lunar_blue: "روحك تتحدث بالمد والهمس", healing_green: "عقلك ينسج أنماطاً يغفلها الآخرون", mystical_purple: "تسكن حيث تلتقي الأحلام بالرؤية", vital_red: "إرادتك مصقولة بالنار", venus_pink: "الجمال والانسجام يتدفقان عبر كيانك", astral_turquoise: "تركب حافة الغد", deep_indigo: "قوتك منحوتة من صخر قديم", expansive_orange: "روحك تبحث عن الأفق", pure_white: "تُحوّل كل ما تلمسه" },
+  he: { solar_gold: "מהותך בוערת באור ריבוני", moon_silver_blue: "נשמתך מדברת בגאויות ובלחישות", healing_green: "המוח שלך אורג דפוסים שאחרים מפספסים", mystical_purple: "את/ה שוכן/ת היכן שחלומות פוגשים חזון", vital_red: "הרצון שלך מחושל באש", venus_pink: "יופי והרמוניה זורמים דרך ישותך", astral_turquoise: "את/ה רוכב/ת על קצה המחר", deep_indigo: "העוצמה שלך חצובה מסלע קדום", expansive_orange: "רוחך מחפשת את האופק", pure_white: "את/ה משנה כל מה שנוגע בך" },
+  ru: { solar_gold: "Ваша сущность горит суверенным светом", moon_silver_blue: "Ваша душа говорит приливами и шёпотом", healing_green: "Ваш разум плетёт узоры, которые другие не замечают", mystical_purple: "Вы живёте там, где сны встречают видение", vital_red: "Ваша воля закалена в огне", venus_pink: "Красота и гармония текут через ваше существо", astral_turquoise: "Вы на краю завтрашнего дня", deep_indigo: "Ваша сила высечена из древнего камня", expansive_orange: "Ваш дух ищет горизонт", pure_white: "Вы преображаете всё, к чему прикасаетесь" },
+  ar: { solar_gold: "جوهرك يتوهج بنور سيادي", moon_silver_blue: "روحك تتحدث بالمد والهمس", healing_green: "عقلك ينسج أنماطاً يغفلها الآخرون", mystical_purple: "تسكن حيث تلتقي الأحلام بالرؤية", vital_red: "إرادتك مصقولة بالنار", venus_pink: "الجمال والانسجام يتدفقان عبر كيانك", astral_turquoise: "تركب حافة الغد", deep_indigo: "قوتك منحوتة من صخر قديم", expansive_orange: "روحك تبحث عن الأفق", pure_white: "تُحوّل كل ما تلمسه" },
 };
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
@@ -29,7 +29,7 @@ const MODIFIER_LABELS_EN: Record<string, string> = {
 };
 
 const AURA_DISPLAY_EN: Record<string, string> = {
-  solar_gold: "Solar Gold", lunar_blue: "Lunar Blue", healing_green: "Healing Green",
+  solar_gold: "Solar Gold", moon_silver_blue: "Lunar Blue", healing_green: "Healing Green",
   mystical_purple: "Mystical Purple", vital_red: "Vital Red", venus_pink: "Venus Pink",
   astral_turquoise: "Astral Turquoise", deep_indigo: "Deep Indigo",
   expansive_orange: "Expansive Orange", pure_white: "Pure White",
@@ -75,7 +75,7 @@ const PLANET_VIS: Record<string, { color: string; glow: string }> = {
 /* ── Aura family → dominant visual color (drives the figure glow) ── */
 const AURA_COLOR_MAP: Record<AuraFamily, { primary: string; glow: string }> = {
   solar_gold:        { primary: "#F5C842", glow: "#F5C84290" },
-  lunar_blue:        { primary: "#7AAFE0", glow: "#7AAFE090" },
+  moon_silver_blue:        { primary: "#7AAFE0", glow: "#7AAFE090" },
   healing_green:     { primary: "#5EC090", glow: "#5EC09090" },
   mystical_purple:   { primary: "#9B6FD0", glow: "#9B6FD090" },
   vital_red:         { primary: "#E05252", glow: "#E0525290" },
