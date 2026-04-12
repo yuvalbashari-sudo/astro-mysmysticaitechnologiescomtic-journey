@@ -25,7 +25,7 @@ const IS_PREVIEW = window.location.hostname.includes("preview") ||
 // Cached auth email — updated via listener
 // On startup, seed from localStorage so admin persists across refreshes
 let _cachedAuthEmail: string | null = localStorage.getItem(ADMIN_EMAIL_KEY);
-let _authReady = _cachedAuthEmail !== null; // If we have a stored admin email, consider auth "ready"
+let _authReady = _cachedAuthEmail !== null || (IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true");
 const _authReadyCallbacks: Array<() => void> = [];
 // Subscribers that fire on EVERY auth state change (not just the first)
 const _authChangeListeners = new Set<() => void>();
@@ -203,6 +203,33 @@ function onAuthChange(cb: () => void): () => void {
   return () => { _authChangeListeners.delete(cb); };
 }
 
+/**
+ * Enable admin override for preview/dev testing.
+ * Only works in preview/localhost environments.
+ */
+function enableAdminOverride(): boolean {
+  if (!IS_PREVIEW) return false;
+  localStorage.setItem(ADMIN_OVERRIDE_KEY, "true");
+  _authReady = true;
+  _authChangeListeners.forEach((cb) => cb());
+  return true;
+}
+
+/**
+ * Disable admin override.
+ */
+function disableAdminOverride(): void {
+  localStorage.removeItem(ADMIN_OVERRIDE_KEY);
+  _authChangeListeners.forEach((cb) => cb());
+}
+
+/**
+ * Check if admin override is currently active.
+ */
+function isAdminOverride(): boolean {
+  return IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true";
+}
+
 export const subscriptionManager = {
   getCurrentTier,
   getPlanDetails,
@@ -215,4 +242,7 @@ export const subscriptionManager = {
   isAuthReady,
   onAuthReady,
   onAuthChange,
+  enableAdminOverride,
+  disableAdminOverride,
+  isAdminOverride,
 };
