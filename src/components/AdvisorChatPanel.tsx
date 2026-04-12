@@ -10,6 +10,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 interface Message {
   role: "user" | "assistant";
   content: string;
+  source?: "button" | "text";
 }
 
 interface Props {
