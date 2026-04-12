@@ -728,4 +728,10 @@ export const he: TranslationKeys = {
   daily_horoscope_energy: "אנרגיה",
   daily_horoscope_no_sign: "הזינו את תאריך הלידה כדי לקבל הורוסקופ מותאם אישית",
   daily_horoscope_cta: "צללו עמוק יותר",
+  daily_horoscope_setup_title: "✦ ההורוסקופ היומי שלך מחכה",
+  daily_horoscope_setup_desc: "כדי להכין עבורך הורוסקופ יומי מותאם אישית, צריך לדעת את שמך ותאריך הלידה שלך",
+  daily_horoscope_setup_name_label: "השם שלך",
+  daily_horoscope_setup_name_placeholder: "הזינו את שמכם",
+  daily_horoscope_setup_birthdate_label: "תאריך לידה",
+  daily_horoscope_setup_cta: "✦ גלו את ההורוסקופ שלכם ✦",
 };

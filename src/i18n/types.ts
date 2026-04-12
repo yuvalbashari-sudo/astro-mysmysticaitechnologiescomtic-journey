@@ -784,4 +784,10 @@ export type TranslationKeys = {
   daily_horoscope_energy: string;
   daily_horoscope_no_sign: string;
   daily_horoscope_cta: string;
+  daily_horoscope_setup_title: string;
+  daily_horoscope_setup_desc: string;
+  daily_horoscope_setup_name_label: string;
+  daily_horoscope_setup_name_placeholder: string;
+  daily_horoscope_setup_birthdate_label: string;
+  daily_horoscope_setup_cta: string;
 };

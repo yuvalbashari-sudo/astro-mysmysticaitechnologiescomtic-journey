@@ -728,4 +728,10 @@ export const en: TranslationKeys = {
   daily_horoscope_energy: "Energy",
   daily_horoscope_no_sign: "Enter your birth date to receive a personalized horoscope",
   daily_horoscope_cta: "Explore deeper",
+  daily_horoscope_setup_title: "✦ Your Daily Horoscope Awaits",
+  daily_horoscope_setup_desc: "To craft your personalized daily horoscope, we need your name and birth date",
+  daily_horoscope_setup_name_label: "Your Name",
+  daily_horoscope_setup_name_placeholder: "Enter your name",
+  daily_horoscope_setup_birthdate_label: "Birth Date",
+  daily_horoscope_setup_cta: "✦ Reveal Your Horoscope ✦",
 };

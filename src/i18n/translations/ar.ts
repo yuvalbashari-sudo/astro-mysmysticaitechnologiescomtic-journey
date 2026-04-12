@@ -728,4 +728,10 @@ export const ar: TranslationKeys = {
   daily_horoscope_energy: "الطاقة",
   daily_horoscope_no_sign: "أدخل تاريخ ميلادك للحصول على برج مخصص",
   daily_horoscope_cta: "استكشف أعمق",
+  daily_horoscope_setup_title: "✦ برجك اليومي في انتظارك",
+  daily_horoscope_setup_desc: "لإعداد برجك اليومي المخصص، نحتاج إلى اسمك وتاريخ ميلادك",
+  daily_horoscope_setup_name_label: "اسمك",
+  daily_horoscope_setup_name_placeholder: "أدخل اسمك",
+  daily_horoscope_setup_birthdate_label: "تاريخ الميلاد",
+  daily_horoscope_setup_cta: "✦ اكتشف برجك ✦",
 };
