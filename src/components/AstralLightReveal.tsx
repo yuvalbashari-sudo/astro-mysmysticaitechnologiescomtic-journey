@@ -294,9 +294,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 relative overflow-hidden">
-      {/* Deep space background */}
+      {/* Deep space background with aura-tinted glow */}
       <div className="absolute inset-0 pointer-events-none" style={{
-        background: "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(var(--deep-blue-light) / 0.15), transparent)",
+        background: `radial-gradient(ellipse 80% 60% at 50% 40%, ${dominantColor}18, ${dominantColor}08 40%, transparent 70%)`,
       }} />
 
       {/* Floating star particles */}
