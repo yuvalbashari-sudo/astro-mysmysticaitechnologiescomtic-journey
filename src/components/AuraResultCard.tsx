@@ -172,9 +172,9 @@ const AuraResultCard = ({ result }: Props) => {
 
       <div className="relative px-5 py-7 md:px-8 md:py-10 space-y-6">
 
-        {/* ═══ HERO IDENTITY — Most dominant element ═══ */}
-        <div className="text-center space-y-3">
-          {/* Modifier + Primary aura = Shareable Identity */}
+        {/* ═══ HERO IDENTITY — English-first premium label ═══ */}
+        <div className="text-center space-y-2">
+          {/* English identity — dominant focal point */}
           <motion.h2
             className="font-heading text-2xl md:text-3xl tracking-wide font-bold"
             style={{
@@ -188,13 +188,26 @@ const AuraResultCard = ({ result }: Props) => {
             {shareableIdentity}
           </motion.h2>
 
+          {/* Localized name — smaller, supporting */}
+          {localizedIdentity && (
+            <motion.p
+              className="font-heading text-base md:text-lg"
+              style={{ color: `${vis.accent}80` }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              {localizedIdentity}
+            </motion.p>
+          )}
+
           {/* Emotional subtitle */}
           <motion.p
             className="font-body text-sm md:text-base italic max-w-[320px] mx-auto"
             style={{ color: `${vis.accent}BB` }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
           >
             {subtitle}
           </motion.p>
