@@ -200,7 +200,7 @@ const AuraResultCard = ({ result }: Props) => {
                   {labels.secondaryLabel}
                 </span>
                 <span className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.65)" }}>
-                  {result.secondaryAuras.slice(0, 2).map(a => getAuraTitle(a)).join(" · ")}
+                  {result.secondaryAuras.slice(0, 2).map(a => auraName(a)).join(" · ")}
                 </span>
               </div>
             </div>
