@@ -156,7 +156,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     }
   }, [isOpen]);
 
-
+  const handleClose = useCallback(() => {
     onClose();
     setTimeout(() => {
       setPhase("form");
