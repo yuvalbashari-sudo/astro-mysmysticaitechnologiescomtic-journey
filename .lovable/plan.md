@@ -1,73 +1,86 @@
 
 
-# Plan: 3 Outline Variations with Isolated Preview
+## Plan: Admin-Only Aura Debug Panel with Live Forced Presets
 
-## What We'll Build
+### Problem
+No way to inspect why the same aura result keeps appearing. Need full pipeline visibility and the ability to force different dominant planets that actually re-render the entire result screen.
 
-Generate 3 transparent PNG outline figures (thin/medium/strong), display them in a self-contained preview page with the full aura animation, and keep production completely untouched until final approval.
+### Critical Design Rule
+Forced presets must replace the **actual influence map** used by the component — not just display debug values. This means the preset overrides `computeInfluences` output so all downstream `useMemo` chains (auraResult, auraColors, sortedPlanets, localized title, glow, pills) re-render naturally.
 
-## Steps
+### Files
 
-### 1. Generate 3 Outline Figures
-Using `google/gemini-3-pro-image-preview`, create 3 PNGs:
-- **thin** — Delicate contour, still visible at 320px width
-- **medium** — Balanced stroke weight, primary candidate
-- **strong** — Bold outline, worst-case visibility fallback
+**Create: `src/components/AuraDebugPanel.tsx`**
+- Collapsible panel, fixed bottom-right, dark bg, monospace, ~320px wide
+- Only renders when `isAdminTestMode()` is true
+- Sections:
+  1. **Pipeline Inspector** — activeDataSource, usedAdminOverride, presetName, currentLocale, direction, dominantPlanet, secondaryPlanets, primaryAuraKey, secondaryAuraKeys, modifierKey, titleKey, localizedVisibleTitle, localizedSubtitle, bindingSource, blendMode, glowIntensity, whetherFallbackWasUsed, fallbackReason, resultTimestamp
+  2. **Raw Influence Map** — the original `computeInfluences` output (unsorted), then sorted table of all 10 planets with winner highlighted and gap between #1 and #2
+  3. **Selection Reasoning** — deterministic text: why dominant selected, why secondaries, why modifier, fallback/override status
+  4. **10 Forced Preset Buttons** — Sun/Moon/Mercury/Venus/Mars/Jupiter/Saturn/Uranus/Neptune/Pluto Dominant
+  5. **Reset Controls** — "Clear Forced Preset" (removes sessionStorage key) and "Restore Real Result" (removes preset + clears localStorage chart cache)
 
-All: gender-neutral, transparent PNG, white contour only, no fill/shading/glow baked in, standing centered pose.
+**Modify: `src/components/AstralLightReveal.tsx`**
+- Export `computeInfluences` (currently file-scoped)
+- Add state: `const [forcedPreset, setForcedPreset] = useState<string | null>(sessionStorage.getItem("astrologai_admin_forced_preset"))`
+- Replace the influences computation:
+  ```typescript
+  const realInfluences = useMemo(() => computeInfluences(chartData), [chartData]);
+  const isForced = isAdminTestMode() && forcedPreset !== null;
+  const influences = useMemo(() => {
+    if (isForced) return JSON.parse(forcedPreset!);
+    return realInfluences;
+  }, [realInfluences, forcedPreset, isForced]);
+  ```
+- This means `auraResult`, `auraColors`, `sortedPlanets`, localized title — everything downstream — automatically re-renders from the forced map
+- Render `AuraDebugPanel` at the bottom when admin mode is active, passing: `realInfluences`, `influences`, `auraResult`, `language`, and a callback `onPresetChange` that updates `forcedPreset` state + sessionStorage
+- Pass `onPresetClear` callback that clears sessionStorage and resets state
 
-Output to `src/assets/astral-outline-thin.png`, `medium.png`, `strong.png`. Also copy to `/mnt/documents/` for review.
+**Modify: `src/lib/auraResultBank.ts`**
+- Add and export `getSelectionReasoning(influences, auraResult)`:
+  ```typescript
+  export function getSelectionReasoning(
+    influences: Record<string, number>,
+    result: AuraResult
+  ): string[] {
+    const sorted = Object.entries(influences).sort((a, b) => b[1] - a[1]);
+    const gap = sorted[0][1] - (sorted[1]?.[1] ?? 0);
+    return [
+      `dominantPlanet: ${sorted[0][0]} (score: ${sorted[0][1]}, gap: +${gap} over ${sorted[1]?.[0] ?? 'none'})`,
+      `secondaryPlanets: ${result.secondaryPlanets.join(', ')}`,
+      `modifier: ${result.modifier} (rule-based from ${result.dominantPlanet} + ${result.secondaryPlanets[0] ?? 'none'})`,
+      `fallback: ${sorted[0][1] === 0 ? 'YES — zero scores' : 'not used'}`,
+    ];
+  }
+  ```
 
-### 2. QA Each Image
-Inspect each generated image for: actual alpha transparency, no internal fill or color artifacts, visibility at small scale (simulate mobile crop).
+### Forced Preset Maps
 
-### 3. Create Isolated Preview Page
-New file: `src/pages/AstralPreview.tsx`
-
-- Shows 4 panels: current figure + 3 new variations
-- Each panel renders its own **self-contained mini animation** that duplicates the AstralLightReveal SVG structure (defs, gradients, ellipse, drop-shadow, image layers) using **local props/constants** — does NOT import or modify the real `AstralLightReveal` component
-- Uses mock `chartData` and `auraColors` to drive the animation identically
-- Toggle buttons for: `mix-blend-mode: screen` on/off, dark/real background
-- All tunable values exposed as **adjustable constants** at the top of the file:
-
-```typescript
-const PREVIEW_CONFIG = {
-  haloRx: 70,
-  haloRy: 100,
-  haloOpacityMultiplier: 0.5,
-  outerGlowBase: 6,
-  outerGlowAbsorptionScale: 10,
-  outerGlowClimaxScale: 24,
-  figBaseOpacity: 0.25,
-  figAbsorptionOpacityScale: 0.5,
-  figClimaxOpacityScale: 0.25,
-};
+Each preset sets one planet to ~40 and distributes others:
+```text
+Sun:     { sun:40, moon:12, mercury:10, venus:9, mars:8, jupiter:7, saturn:6, uranus:4, neptune:3, pluto:1 }
+Moon:    { moon:40, sun:12, venus:10, neptune:9, mercury:8, mars:7, jupiter:6, saturn:4, uranus:3, pluto:1 }
+Mercury: { mercury:40, uranus:12, sun:10, ... }
+...rotated for each planet
 ```
 
-- Responsive: 2×2 grid on desktop, vertical stack on mobile
-- Route added to `App.tsx`: `/astral-preview`
+### Why This Actually Re-Renders Everything
 
-### 4. What Stays Untouched
-- `src/components/AstralLightReveal.tsx` — **zero changes** until final decision
-- `src/assets/astral-figure.png` — **not replaced** until final decision
-- All animation timing/phases — untouched
-- Production behavior — completely unaffected
+The forced preset replaces the `influences` variable that feeds into:
+- `auraResult = useMemo(() => getAuraResult(influences), [influences])` — new dominant planet, new modifier, new aura family
+- `auraColors = useMemo(...)` — new glow colors
+- `sortedPlanets = useMemo(...)` — new constellation order
+- All localized title/subtitle calls use `auraResult.primaryAura` and `auraResult.modifier`
+- Visual profile (coreColor, auraColor, intensity) changes
 
-### 5. After Final Approval (separate step)
-- Copy chosen variation to `src/assets/astral-figure.png`
-- Apply the tuned constants from preview into `AstralLightReveal.tsx` (halo ellipse, glow values, base opacity)
-- Remove `/astral-preview` route, preview page, and all temporary asset files
-- Full cleanup
+No secondary binding needed — the entire render tree recomputes from the single `influences` override.
 
-## Files Created/Changed
+### Session Safety
+- Presets stored in `sessionStorage` only — cleared on tab close
+- "Restore Real Result" also clears `localStorage` key `astrologai_birthchart_cache` to force fresh calculation
+- Never touches real user production data
 
-| File | Action |
-|------|--------|
-| `src/assets/astral-outline-thin.png` | New (temporary) |
-| `src/assets/astral-outline-medium.png` | New (temporary) |
-| `src/assets/astral-outline-strong.png` | New (temporary) |
-| `src/pages/AstralPreview.tsx` | New (temporary) |
-| `src/App.tsx` | Add `/astral-preview` route (temporary) |
-
-No changes to `AstralLightReveal.tsx` or `astral-figure.png` until final approval.
+### What Does NOT Change
+- Normal user flow, result UI design, product copy, onboarding — all untouched
+- Non-admin users see nothing different
 
