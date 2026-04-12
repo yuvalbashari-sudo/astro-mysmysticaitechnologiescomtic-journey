@@ -32,7 +32,7 @@ interface Props {
   fastMode?: boolean;
 }
 
-/* ── Planet visual config ── */
+/* ── Planet visual config (used for constellation nodes & beams) ── */
 const PLANET_VIS: Record<string, { color: string; glow: string }> = {
   sun:     { color: "#F5C842", glow: "#F5C84280" },
   moon:    { color: "#D0D6E0", glow: "#D0D6E080" },
@@ -44,6 +44,20 @@ const PLANET_VIS: Record<string, { color: string; glow: string }> = {
   uranus:  { color: "#5FC8E8", glow: "#5FC8E880" },
   neptune: { color: "#6070E8", glow: "#6070E880" },
   pluto:   { color: "#9060B8", glow: "#9060B880" },
+};
+
+/* ── Aura family → dominant visual color (drives the figure glow) ── */
+const AURA_COLOR_MAP: Record<AuraFamily, { primary: string; glow: string }> = {
+  gold:      { primary: "#F5C842", glow: "#F5C84290" },
+  blue:      { primary: "#7AAFE0", glow: "#7AAFE090" },
+  green:     { primary: "#5EC090", glow: "#5EC09090" },
+  purple:    { primary: "#9B6FD0", glow: "#9B6FD090" },
+  red:       { primary: "#E05252", glow: "#E0525290" },
+  pink:      { primary: "#F28DC7", glow: "#F28DC790" },
+  turquoise: { primary: "#3CC8C8", glow: "#3CC8C890" },
+  indigo:    { primary: "#4A5AB8", glow: "#4A5AB890" },
+  orange:    { primary: "#E89040", glow: "#E8904090" },
+  white:     { primary: "#E0E0F0", glow: "#E0E0F090" },
 };
 
 /* Mini constellation patterns */
