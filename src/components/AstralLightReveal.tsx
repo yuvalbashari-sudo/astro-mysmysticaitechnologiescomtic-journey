@@ -696,42 +696,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 />
               </g>
 
-              {/* Core circles removed — no more "sun" effect */}
-
-              {/* Radiating energy lines — each ray colored by a different planet */}
-              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, ri) => {
-                const rad = (angle - 90) * (Math.PI / 180);
-                const innerR = 12;
-                const outerR = 60 + climaxLevel * 50;
-                const rayColor = planetColors.colors[ri % planetColors.colors.length] || dominantColor;
-                return (
-                  <motion.line
-                    key={`ray-${angle}`}
-                    x1={FIG_CX + Math.cos(rad) * innerR}
-                    y1={FIG_CORE_Y + Math.sin(rad) * innerR}
-                    x2={FIG_CX + Math.cos(rad) * outerR}
-                    y2={FIG_CORE_Y + Math.sin(rad) * outerR}
-                    stroke={rayColor}
-                    strokeWidth={0.8}
-                    strokeLinecap="round"
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: [0.1 * climaxLevel, 0.4 * climaxLevel, 0.1 * climaxLevel],
-                      x2: [
-                        FIG_CX + Math.cos(rad) * (outerR - 8),
-                        FIG_CX + Math.cos(rad) * (outerR + 5),
-                        FIG_CX + Math.cos(rad) * (outerR - 8),
-                      ],
-                      y2: [
-                        FIG_CORE_Y + Math.sin(rad) * (outerR - 8),
-                        FIG_CORE_Y + Math.sin(rad) * (outerR + 5),
-                        FIG_CORE_Y + Math.sin(rad) * (outerR - 8),
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, delay: angle * 0.002 }}
-                  />
-                );
-              })}
+              {/* Core circles & radiating rays removed for cleaner look */}
             </motion.g>
           )}
         </svg>
