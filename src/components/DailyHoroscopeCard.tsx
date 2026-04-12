@@ -347,7 +347,23 @@ const DailyHoroscopeCard = () => {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-1 rounded-b-full"
           style={{ background: "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)" }} />
 
-        {/* Header */}
+        {/* Welcome back greeting */}
+        <AnimatePresence>
+          {showWelcomeBack && userName && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5 }}
+              className="px-5 pt-4 pb-1 text-center"
+            >
+              <p className="text-gold/70 font-body text-sm tracking-wide">
+                {t.welcome_back_greeting.replace("{name}", userName)}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Header — centered layout */}
         <div className="px-5 pt-5 pb-3 flex flex-col items-center text-center">
           {/* Advisor avatar */}
