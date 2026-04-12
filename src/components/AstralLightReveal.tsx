@@ -771,8 +771,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
       <AnimatePresence mode="wait">
         <motion.p
           key={statusIdx}
-          className="font-body text-sm md:text-base text-center max-w-sm"
-          style={{ color: "hsl(var(--foreground) / 0.6)" }}
+          className={`font-body text-center max-w-sm ${statusIdx === statusTexts.length - 1 && auraResult ? "font-heading text-lg md:text-xl" : "text-sm md:text-base"}`}
+          style={{ color: statusIdx === statusTexts.length - 1 && auraResult ? dominantColor : "hsl(var(--foreground) / 0.6)", textShadow: statusIdx === statusTexts.length - 1 && auraResult ? `0 0 20px ${dominantColor}60` : "none" }}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
