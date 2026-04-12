@@ -145,13 +145,41 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
   );
   const topInfluences = useMemo(() => sortedPlanets.slice(0, 5), [sortedPlanets]);
 
-  const dominantColor = useMemo(() => {
-    return PLANET_VIS[sortedPlanets[0]?.key]?.color || "#F5C842";
-  }, [sortedPlanets]);
+  /* ── Personalized planetary color palette ── */
+  const planetColors = useMemo(() => {
+    const top5 = sortedPlanets.slice(0, 5);
+    const weights = top5.map(p => influences[p.key] || 1);
+    const totalW = weights.reduce((s, v) => s + v, 0);
+    const normalized = weights.map(w => w / totalW);
 
-  const secondaryColor = useMemo(() => {
-    return PLANET_VIS[sortedPlanets[1]?.key]?.color || "#D0D6E0";
-  }, [sortedPlanets]);
+    const colors = top5.map(p => PLANET_VIS[p.key]?.color || "#F5C842");
+    const glows = top5.map(p => PLANET_VIS[p.key]?.glow || "#F5C84280");
+
+    // Build CSS gradient stops weighted by influence
+    const gradientStops = (() => {
+      let pos = 0;
+      return colors.map((c, i) => {
+        const start = pos;
+        pos += normalized[i] * 100;
+        return `${c} ${Math.round(start)}%, ${c} ${Math.round(pos)}%`;
+      }).join(", ");
+    })();
+
+    return {
+      dominant: colors[0] || "#F5C842",
+      secondary: colors[1] || "#D0D6E0",
+      tertiary: colors[2] || "#7FD4A8",
+      accent: colors[3] || "#7B8FE8",
+      subtle: colors[4] || "#9060B8",
+      weights: normalized,
+      colors,
+      glows,
+      gradientStops,
+    };
+  }, [sortedPlanets, influences]);
+
+  const dominantColor = planetColors.dominant;
+  const secondaryColor = planetColors.secondary;
 
   useEffect(() => {
     const progTimer = setInterval(() => setProgress((p) => Math.min(p + 1, 100)), TOTAL / 100);
@@ -306,19 +334,22 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
             </linearGradient>
 
-            {/* Inner glow — radial from chest */}
+            {/* Inner glow — radial from chest, uses top 3 planet colors */}
             <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
-              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.06} />
-              <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
+              <stop offset="30%" stopColor={planetColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
+              <stop offset="60%" stopColor={planetColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
+              <stop offset="100%" stopColor={planetColors.tertiary} stopOpacity={0} />
             </radialGradient>
 
-            {/* Climax radial */}
+            {/* Climax radial — personalized planetary blend */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fff" stopOpacity={0.3 * climaxLevel} />
-              <stop offset="20%" stopColor={dominantColor} stopOpacity={0.7 * climaxLevel} />
-              <stop offset="50%" stopColor={secondaryColor} stopOpacity={0.3 * climaxLevel} />
-              <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
+              <stop offset="0%" stopColor="#fff" stopOpacity={0.2 * climaxLevel} />
+              <stop offset="15%" stopColor={planetColors.dominant} stopOpacity={0.6 * climaxLevel * (planetColors.weights[0] || 0.3) * 2.5} />
+              <stop offset="35%" stopColor={planetColors.secondary} stopOpacity={0.4 * climaxLevel * (planetColors.weights[1] || 0.2) * 2} />
+              <stop offset="55%" stopColor={planetColors.tertiary} stopOpacity={0.25 * climaxLevel * (planetColors.weights[2] || 0.15) * 2} />
+              <stop offset="75%" stopColor={planetColors.accent} stopOpacity={0.1 * climaxLevel} />
+              <stop offset="100%" stopColor={planetColors.subtle} stopOpacity={0} />
             </radialGradient>
 
             {/* Beam gradients — all target figure chest */}
@@ -470,7 +501,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
-              filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'})`,
+              filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'}) drop-shadow(0 0 ${climaxLevel * 12}px ${secondaryColor}40)`,
             }}
           >
             <image
@@ -499,30 +530,33 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
           {absorptionLevel > 0 && (
             <g>
-              {/* Pulse rings from chest */}
-              {[0, 1, 2].map((ring) => (
-                <motion.circle
-                  key={`pulse-${ring}`}
-                  cx={FIG_CX} cy={FIG_CHEST_Y}
-                  fill="none"
-                  stroke={dominantColor}
-                  strokeWidth={0.8}
-                  initial={{ r: 5, opacity: 0 }}
-                  animate={{
-                    r: [5, 35 + ring * 15, 50 + ring * 20],
-                    opacity: [0.5 * absorptionLevel, 0.3 * absorptionLevel, 0],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: ring * 0.6,
-                    ease: "easeOut",
-                  }}
-                />
-              ))}
+              {/* Pulse rings from chest — each ring uses a different planet color */}
+              {[0, 1, 2].map((ring) => {
+                const ringColor = planetColors.colors[ring] || dominantColor;
+                return (
+                  <motion.circle
+                    key={`pulse-${ring}`}
+                    cx={FIG_CX} cy={FIG_CHEST_Y}
+                    fill="none"
+                    stroke={ringColor}
+                    strokeWidth={0.8}
+                    initial={{ r: 5, opacity: 0 }}
+                    animate={{
+                      r: [5, 35 + ring * 15, 50 + ring * 20],
+                      opacity: [0.5 * absorptionLevel, 0.3 * absorptionLevel, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: ring * 0.6,
+                      ease: "easeOut",
+                    }}
+                  />
+                );
+              })}
 
               {/* Internal energy veins — anatomical meridians */}
-              {/* Spine (central) */}
+              {/* Spine (central) — dominant planet color */}
               <motion.line
                 x1={FIG_CX} y1={FIG_CORE_Y - 45}
                 x2={FIG_CX} y2={FIG_CORE_Y + 80}
@@ -533,13 +567,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 animate={{ strokeOpacity: [absorptionLevel * 0.25, absorptionLevel * 0.55, absorptionLevel * 0.25] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               />
-              {/* Left/right spine parallels */}
+              {/* Left/right spine parallels — secondary planet color */}
               {[-6, 6].map((offset, vi) => (
                 <motion.line
                   key={`vein-${vi}`}
                   x1={FIG_CX + offset} y1={FIG_CORE_Y - 35}
                   x2={FIG_CX + offset} y2={FIG_CORE_Y + 70}
-                  stroke={dominantColor}
+                  stroke={secondaryColor}
                   strokeWidth={0.6}
                   strokeOpacity={absorptionLevel * 0.3}
                   filter="url(#body-glow)"
@@ -548,25 +582,19 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 />
               ))}
 
-              {/* Energy through arms and legs — following anatomy */}
+              {/* Energy through arms and legs — tertiary planet color */}
               {[
-                // Left arm meridian (shoulder to hand)
                 { x1: FIG_CX - 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX - 40, y2: FIG_CHEST_Y + 38 },
-                // Right arm meridian
                 { x1: FIG_CX + 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX + 40, y2: FIG_CHEST_Y + 38 },
-                // Left leg meridian (hip to foot)
                 { x1: FIG_CX - 8, y1: FIG_CORE_Y + 55, x2: FIG_CX - 18, y2: FIG_CORE_Y + 120 },
-                // Right leg meridian
                 { x1: FIG_CX + 8, y1: FIG_CORE_Y + 55, x2: FIG_CX + 18, y2: FIG_CORE_Y + 120 },
-                // Cross-chest horizontal
                 { x1: FIG_CX - 18, y1: FIG_CHEST_Y, x2: FIG_CX + 18, y2: FIG_CHEST_Y },
-                // Solar plexus horizontal
                 { x1: FIG_CX - 12, y1: FIG_CORE_Y + 20, x2: FIG_CX + 12, y2: FIG_CORE_Y + 20 },
               ].map((line, li) => (
                 <motion.line
                   key={`limb-${li}`}
                   {...line}
-                  stroke={secondaryColor}
+                  stroke={planetColors.colors[li % planetColors.colors.length] || secondaryColor}
                   strokeWidth={0.8}
                   strokeLinecap="round"
                   initial={{ opacity: 0, pathLength: 0 }}
@@ -657,11 +685,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
 
               {/* Core circles removed — no more "sun" effect */}
 
-              {/* Radiating energy lines from core — extended reach */}
-              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
+              {/* Radiating energy lines — each ray colored by a different planet */}
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, ri) => {
                 const rad = (angle - 90) * (Math.PI / 180);
                 const innerR = 12;
                 const outerR = 60 + climaxLevel * 50;
+                const rayColor = planetColors.colors[ri % planetColors.colors.length] || dominantColor;
                 return (
                   <motion.line
                     key={`ray-${angle}`}
@@ -669,7 +698,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                     y1={FIG_CORE_Y + Math.sin(rad) * innerR}
                     x2={FIG_CX + Math.cos(rad) * outerR}
                     y2={FIG_CORE_Y + Math.sin(rad) * outerR}
-                    stroke={dominantColor}
+                    stroke={rayColor}
                     strokeWidth={0.8}
                     strokeLinecap="round"
                     initial={{ opacity: 0 }}
@@ -725,7 +754,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
       <div className="w-48 h-0.5 mt-5 rounded-full overflow-hidden" style={{ background: "hsl(var(--gold) / 0.1)" }}>
         <motion.div
           className="h-full rounded-full"
-          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${dominantColor}${climaxLevel > 0.5 ? 'ff' : '90'}, ${dominantColor}40)` }}
+          style={{ background: `linear-gradient(90deg, ${dominantColor}40, ${secondaryColor}90, ${planetColors.tertiary}60, ${dominantColor}40)` }}
           initial={{ width: "0%" }}
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.1 }}
