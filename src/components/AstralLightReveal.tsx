@@ -579,30 +579,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
           {absorptionLevel > 0 && (
             <g>
-              {/* Pulse rings from chest — each ring uses a different planet color */}
-              {[0, 1, 2].map((ring) => {
-                const ringColor = planetColors.colors[ring] || dominantColor;
-                return (
-                  <motion.circle
-                    key={`pulse-${ring}`}
-                    cx={FIG_CX} cy={FIG_CHEST_Y}
-                    fill="none"
-                    stroke={ringColor}
-                    strokeWidth={0.8}
-                    initial={{ r: 5, opacity: 0 }}
-                    animate={{
-                      r: [5, 35 + ring * 15, 50 + ring * 20],
-                      opacity: [0.5 * absorptionLevel, 0.3 * absorptionLevel, 0],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: ring * 0.6,
-                      ease: "easeOut",
-                    }}
-                  />
-                );
-              })}
 
               {/* Internal energy veins — anatomical meridians */}
               {/* Spine (central) — dominant planet color */}
@@ -683,21 +659,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             </g>
           )}
 
-          {/* ─── Chest / heart glow ─── */}
-          {absorptionLevel > 0.2 && (
-            <motion.circle
-              cx={FIG_CX} cy={FIG_CHEST_Y}
-              r={4 + absorptionLevel * 4}
-              fill={dominantColor}
-              opacity={absorptionLevel * 0.2}
-              filter="url(#body-glow)"
-              animate={{
-                r: [4 + absorptionLevel * 4, 4 + absorptionLevel * 8, 4 + absorptionLevel * 4],
-                opacity: [absorptionLevel * 0.25, absorptionLevel * 0.5, absorptionLevel * 0.25],
-              }}
-              transition={{ duration: 1.2, repeat: Infinity }}
-            />
-          )}
 
           {/* ─── Phase 3: CLIMAX — mega inner light + breathing after stars fade ─── */}
           {climaxLevel > 0 && (
