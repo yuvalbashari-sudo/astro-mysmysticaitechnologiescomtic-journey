@@ -105,21 +105,48 @@ const STATUS_TEXT: Record<Language, string[]> = {
   ],
 };
 
-/* Influence weights */
+/* Influence weights — balanced so different charts produce different dominant planets */
 function computeInfluences(chartData: NatalChartResult): Record<string, number> {
   const w: Record<string, number> = {};
+  /* Base weights are intentionally close so aspects & houses can shift dominance */
   const base: Record<string, number> = {
-    sun: 3, moon: 2.5, mercury: 1, venus: 1, mars: 1,
-    jupiter: 1, saturn: 1, uranus: 0.8, neptune: 0.8, pluto: 0.8,
+    sun: 1.5, moon: 1.4, mercury: 1.2, venus: 1.2, mars: 1.2,
+    jupiter: 1.1, saturn: 1.1, uranus: 1.0, neptune: 1.0, pluto: 1.0,
   };
   PLANETS.forEach((p) => { w[p.key] = base[p.key] || 1; });
+
+  /* Aspects add significant weight — a heavily aspected planet rises fast */
   chartData.aspects.forEach((a) => {
-    if (w[a.planet1Key] !== undefined) w[a.planet1Key] += 0.5;
-    if (w[a.planet2Key] !== undefined) w[a.planet2Key] += 0.5;
+    const aspectBoost = a.type === "conjunction" ? 1.2
+      : a.type === "opposition" ? 0.9
+      : a.type === "trine" ? 0.8
+      : a.type === "square" ? 0.7
+      : 0.5;
+    if (w[a.planet1Key] !== undefined) w[a.planet1Key] += aspectBoost;
+    if (w[a.planet2Key] !== undefined) w[a.planet2Key] += aspectBoost;
   });
+
+  /* Angular houses (1, 4, 7, 10) give a strong boost */
   chartData.planetPlacements.forEach((p) => {
-    if ([1, 4, 7, 10].includes(p.house)) w[p.key] = (w[p.key] || 1) + 1;
+    if ([1, 10].includes(p.house)) w[p.key] = (w[p.key] || 1) + 1.5;
+    else if ([4, 7].includes(p.house)) w[p.key] = (w[p.key] || 1) + 1.2;
+    else if ([5, 9].includes(p.house)) w[p.key] = (w[p.key] || 1) + 0.6;
   });
+
+  /* Sign rulership bonus — planet in its own sign gets a boost */
+  const RULERSHIP: Record<string, string[]> = {
+    sun: ["Leo"], moon: ["Cancer"], mercury: ["Gemini", "Virgo"],
+    venus: ["Taurus", "Libra"], mars: ["Aries", "Scorpio"],
+    jupiter: ["Sagittarius", "Pisces"], saturn: ["Capricorn", "Aquarius"],
+    uranus: ["Aquarius"], neptune: ["Pisces"], pluto: ["Scorpio"],
+  };
+  chartData.planetPlacements.forEach((p) => {
+    const rules = RULERSHIP[p.key];
+    if (rules && rules.includes(p.sign)) {
+      w[p.key] = (w[p.key] || 1) + 1.0;
+    }
+  });
+
   const total = Object.values(w).reduce((s, v) => s + v, 0);
   Object.keys(w).forEach((k) => { w[k] = Math.round((w[k] / total) * 100); });
   return w;
