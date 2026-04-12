@@ -74,6 +74,11 @@ const AuraResultCard = ({ result }: Props) => {
   const { language } = useLanguage();
   const vis = AURA_VISUALS[result.primaryAura];
   const labels = LABELS[language] || LABELS.en;
+  const i18n = AURA_I18N[language]?.[result.primaryAura];
+  const title = i18n?.title ?? result.title;
+  const subtitle = i18n?.subtitle ?? result.subtitle;
+  const meaning = i18n?.shortMeaning ?? result.shortMeaning;
+  const getAuraTitle = (a: AuraFamily) => AURA_I18N[language]?.[a]?.title ?? AURA_BANK[a].title;
 
   return (
     <motion.div
