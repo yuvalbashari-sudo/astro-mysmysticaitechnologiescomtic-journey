@@ -468,7 +468,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {(phase === "loading" || showResult) && chartData && (
+            {(phase === "loading" || showResult) && chartData && !restoredFromCache && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
