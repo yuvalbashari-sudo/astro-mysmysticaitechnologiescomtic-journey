@@ -162,17 +162,23 @@ export const PromoAd = () => {
   const constellationProg = interpolate(frame, [0, 40], [0, 1], { extrapolateRight: "clamp" });
   const beamProg = interpolate(frame, [15, 60], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── Scene 2: Absorption + energy fill + climax (50–130) ──
+  // ── Scene 2: Absorption + energy fill + climax (50–120) ──
   const absorptionRamp = interpolate(frame, [50, 80], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
   const climaxIntensity = interpolate(frame, [80, 105], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  const beamSustain = interpolate(frame, [60, 180], [1, 0.6], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // Beams sustain but dim slightly after climax
+  const beamSustain = interpolate(frame, [60, 130], [1, 0.5], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // ── Scene 3: Map emergence (120–180) ──
-  const mapReveal = spring({ frame: frame - 125, fps, config: { damping: 30, stiffness: 80 } });
-  const mapOpacity = interpolate(frame, [125, 150], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ── Scene 3: Map emergence (130–170), then HOLD everything (170–300) ──
+  const mapReveal = spring({ frame: frame - 135, fps, config: { damping: 30, stiffness: 80 } });
+  const mapOpacity = interpolate(frame, [135, 160], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
 
-  // Figure visibility (fades in with constellations)
+  // Figure: fades in early, NEVER fades out — stays at full opacity forever
   const figureOpacity = interpolate(frame, [5, 30], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+
+  // Final hold glow — intensifies after climax and stays permanently bright
+  const holdGlow = interpolate(frame, [105, 130], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // Gentle breathing pulse during hold phase (frame > 130)
+  const holdBreath = frame > 130 ? Math.sin((frame - 130) * 0.04) * 0.08 : 0;
 
   // Star field
   const stars = Array.from({ length: 120 }, (_, i) => ({
