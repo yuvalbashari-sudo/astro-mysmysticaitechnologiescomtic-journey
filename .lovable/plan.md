@@ -1,37 +1,46 @@
 
 
-# Remove "Sun" Core Glow, Keep Soft Full-Body Aura
+# Arrange Constellation Nodes in an Organic Orbit Around the Figure
 
 ## Problem
-The climax phase renders a large bright white circle (`#fff`, lines 669-680) and a radial gradient circle (lines 659-667) centered at `FIG_CORE_Y` — creating a "sun" that covers the figure's face and chest, hiding its contours.
+The planet constellation nodes are placed in a straight horizontal line at `y = 40` (top of the scene), far from the figure. The beams descend as rigid straight lines, creating an unnatural, distant look.
 
 ## Changes (all in `src/components/AstralLightReveal.tsx`)
 
-### 1. Remove the bright core circles (lines 658-695)
-Delete these three elements:
-- The large radial gradient circle (lines 659-667) — the main "sun"
-- The white `#fff` circle (lines 669-680) — the bright core
-- The stroke ring around core (lines 682-695) — the pulsing outline ring
+### 1. Replace linear spread with elliptical orbit positioning (lines 238-246)
+- Instead of `y = 40` for all nodes, compute positions on an **elliptical orbit** centered around the figure (`FIG_CX`, `~FIG_CORE_Y`)
+- Use an ellipse with `rx ≈ 110, ry ≈ 130` — close enough to surround the figure but with enough clearance to not overlap
+- Distribute planets at angular intervals around the ellipse (not evenly — add slight randomized angular offsets for organic feel)
+- Each planet gets a unique angle: `baseAngle = (idx / count) * 2π + smallRandomOffset`
 
-### 2. Reduce blurred aura intensity (lines 642-656)
-- Lower the aura image opacity from `climaxLevel * 0.55` to `climaxLevel * 0.35`
-- Reduce brightness from `1.4 + climaxLevel * 0.8` to `1.1 + climaxLevel * 0.4`
-- This keeps a soft colorful envelope without washing out the figure's contours
+### 2. Adjust constellation mini-star offsets (lines 40-51)
+- Reduce the star offset ranges from ±6 to ±4 so mini constellation patterns stay tighter around each node at closer range
 
-### 3. Soften the full-body ellipse (lines 628-640)
-- Reduce opacity range from `0.3–0.5` to `0.15–0.3` so it's a subtle ambient glow, not a blinding light
+### 3. Curve the energy beams (lines 441-498)
+- Replace straight `<line>` beams with `<path>` using a quadratic Bézier curve (`Q` command)
+- Control point offset perpendicular to the beam direction for a natural arc
+- This makes beams flow organically toward the chest instead of rigid straight lines
 
-### 4. Soften the radiating rays (lines 697-729)
-- Reduce `strokeWidth` from `1.5` to `0.8`
-- Lower opacity range to `0.1–0.4` so they read as subtle energy lines, not harsh beams
+### 4. Keep beam gradient and animation logic identical
+- Same gradient definitions, same traveling particle, same impact flash — just follow the curved path instead of straight line
 
-### 5. Reduce chest glow (lines 609-623)
-- Lower opacity multiplier from `0.4` to `0.2` and reduce max radius so the chest area doesn't bloom over the face
+## Technical detail
 
-### Result
-The figure stays fully visible with clear contours. A soft, colorful light envelope surrounds the entire body without hiding any details.
+Ellipse formula for node positions:
+```
+angle = (index / total) * 2π + jitter
+x = FIG_CX + rx * cos(angle)
+y = FIG_CORE_Y + ry * sin(angle)
+```
 
-### Scope
+Bézier control point for curved beams:
+```
+midX = (nodeX + FIG_CX) / 2 + perpOffset
+midY = (nodeY + FIG_CHEST_Y) / 2 + perpOffset
+path = `M ${nodeX} ${nodeY} Q ${midX} ${midY} ${FIG_CX} ${FIG_CHEST_Y}`
+```
+
+## Scope
 - Only `src/components/AstralLightReveal.tsx` modified
-- No figure design, timing, or other component changes
+- No changes to figure, timing, colors, or other components
 
