@@ -337,13 +337,28 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               <feGaussianBlur stdDeviation="3" />
             </filter>
 
-            {/* Silhouette gradient */}
+            {/* Figure volume gradient */}
             <linearGradient id="sil-fill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.25 + climaxLevel * 0.35} />
               <stop offset="35%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.35 + climaxLevel * 0.45} />
               <stop offset="65%" stopColor={secondaryColor} stopOpacity={0.08 + absorptionLevel * 0.2 + climaxLevel * 0.3} />
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02} />
             </linearGradient>
+
+            {/* Depth shading — darker edges for 3D volume */}
+            <linearGradient id="fig-depth" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
+              <stop offset="30%" stopColor={dominantColor} stopOpacity={0.02} />
+              <stop offset="70%" stopColor={dominantColor} stopOpacity={0.02} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
+            </linearGradient>
+
+            {/* Inner glow — radial from chest */}
+            <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.06} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
+            </radialGradient>
 
             {/* Climax radial */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
@@ -498,31 +513,83 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
             );
           })}
 
-          {/* ─── Human silhouette — centered, clean anatomy ─── */}
+          {/* ─── Human figure — anatomically correct, multi-part ─── */}
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
               filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'})`,
             }}
           >
-            <path
-              d={SILHOUETTE}
-              fill="url(#sil-fill)"
-              stroke={dominantColor}
-              strokeWidth={0.4 + climaxLevel * 0.4}
-              strokeOpacity={0.3 + absorptionLevel * 0.3 + climaxLevel * 0.4}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-            {/* Secondary outline for depth */}
-            <path
-              d={SILHOUETTE}
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth={0.15}
-              strokeOpacity={0.08 + absorptionLevel * 0.08 + climaxLevel * 0.12}
-              strokeLinejoin="round"
-            />
+            {/* Base fill layer — all body parts */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`fill-${part.id}`}
+                d={part.d}
+                fill="url(#sil-fill)"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            ))}
+
+            {/* Depth shading layer — 3D volume */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`depth-${part.id}`}
+                d={part.d}
+                fill="url(#fig-depth)"
+                opacity={0.5 + absorptionLevel * 0.3}
+              />
+            ))}
+
+            {/* Inner glow layer */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`glow-${part.id}`}
+                d={part.d}
+                fill="url(#fig-inner-glow)"
+                opacity={absorptionLevel * 0.6 + climaxLevel * 0.4}
+              />
+            ))}
+
+            {/* Outline stroke — all body parts */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`stroke-${part.id}`}
+                d={part.d}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.4 + climaxLevel * 0.4}
+                strokeOpacity={0.3 + absorptionLevel * 0.3 + climaxLevel * 0.4}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            ))}
+
+            {/* White highlight outline for depth */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`highlight-${part.id}`}
+                d={part.d}
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={0.15}
+                strokeOpacity={0.08 + absorptionLevel * 0.08 + climaxLevel * 0.12}
+                strokeLinejoin="round"
+              />
+            ))}
+
+            {/* Muscle contour hints */}
+            {CONTOURS.map((d, i) => (
+              <path
+                key={`contour-${i}`}
+                d={d}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.3}
+                strokeOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.1}
+                strokeLinecap="round"
+              />
+            ))}
           </g>
 
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
