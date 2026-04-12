@@ -419,21 +419,21 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
                     key={`star-${si}`}
                     cx={bp.x + stars[si * 2]}
                     cy={bp.y + stars[si * 2 + 1]}
-                    r={1}
+                    r={2}
                     fill={vis.color}
                     initial={{ opacity: 0, r: 0 }}
-                    animate={{ opacity: [0, 1, 0.7], r: [0, 1.5, 1] }}
+                    animate={{ opacity: [0, 1, 0.7], r: [0, 3, 2] }}
                     transition={{ duration: 0.6, delay: idx * 0.06 + si * 0.08 }}
                   />
                 ))}
 
                 <motion.circle
                   cx={bp.x} cy={bp.y}
-                  r={6}
+                  r={12}
                   fill={vis.color}
                   filter="url(#const-glow)"
-                  initial={{ opacity: 0, r: 2 }}
-                  animate={{ opacity: [0, 0.9, 0.7], r: [2, 7, 5] }}
+                  initial={{ opacity: 0, r: 4 }}
+                  animate={{ opacity: [0, 0.9, 0.7], r: [4, 14, 10] }}
                   transition={{ duration: 0.8, delay: idx * 0.06 }}
                 />
                 <motion.text
@@ -494,7 +494,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
 
                 {/* Traveling energy particle — follows curved path via offset keyframes */}
                 <motion.circle
-                  r={2 + inf * 2}
+                  r={4 + inf * 4}
                   fill={vis.color}
                   filter="url(#const-glow)"
                   initial={{ cx: bp.x, cy: bp.y, opacity: 0 }}
