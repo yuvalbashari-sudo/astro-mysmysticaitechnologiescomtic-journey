@@ -415,13 +415,14 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {phase === "loading" && chartData && (
+            {(phase === "loading" || showResult) && chartData && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0.6, scale: 0.75, y: -40 }}
-                transition={{ duration: 1.4, ease: "easeInOut" }}
+                transition={{ duration: 0.6 }}
+                className="pointer-events-none"
+                style={{ position: showResult ? 'relative' : undefined, zIndex: showResult ? 10 : undefined }}
               >
                 <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
               </motion.div>
@@ -433,20 +434,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+                transition={{ duration: 0.6, delay: 1.5 }}
               >
-                {/* Residual glowing figure silhouette — stays above map briefly */}
-                <motion.div
-                  className="flex justify-center pointer-events-none"
-                  initial={{ opacity: 0.7, scale: 0.7 }}
-                  animate={{ opacity: 0, scale: 0.5, y: -30 }}
-                  transition={{ duration: 2.5, delay: 1.2, ease: "easeInOut" }}
-                >
-                  <div className="w-16 h-28 rounded-full" style={{
-                    background: `radial-gradient(ellipse, ${PLANET_COLOR_BY_KEY[chartData?.sunSign?.key || "sun"] || "hsl(var(--gold))"}30, transparent 70%)`,
-                    filter: `blur(8px)`,
-                  }} />
-                </motion.div>
 
                 {/* Chart wheel emerges from below */}
                 <motion.div
