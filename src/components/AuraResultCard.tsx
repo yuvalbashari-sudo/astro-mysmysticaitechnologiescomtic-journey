@@ -30,7 +30,9 @@ interface Props {
 }
 
 const AuraResultCard = ({ result }: Props) => {
+  const { language } = useLanguage();
   const vis = AURA_VISUALS[result.primaryAura];
+  const labels = LABELS[language] || LABELS.en;
 
   return (
     <motion.div
