@@ -66,6 +66,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [downloading, setDownloading] = useState(false);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
+  const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
@@ -86,11 +87,19 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const isAdmin = subscriptionManager.isAdmin();
 
   useEffect(() => {
-    if (isOpen) {
-      // Admins never hit daily limit
-      setDailyLimitReached(isAdmin ? false : hasUsedChartToday());
-    }
-  }, [isOpen, isAdmin]);
+    const syncAdminState = () => {
+      const ready = subscriptionManager.isAuthReady();
+      const admin = subscriptionManager.isAdmin();
+      setAuthReady(ready);
+      if (!isOpen) return;
+      setDailyLimitReached(ready ? (admin ? false : hasUsedChartToday()) : false);
+    };
+
+    syncAdminState();
+    const unsubscribe = subscriptionManager.onAuthChange(syncAdminState);
+    subscriptionManager.onAuthReady(syncAdminState);
+    return unsubscribe;
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
