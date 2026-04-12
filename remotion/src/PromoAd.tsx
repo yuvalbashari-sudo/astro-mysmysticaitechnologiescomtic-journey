@@ -8,7 +8,7 @@ import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } fr
 
 const CX = 540;   // center X of 1080
 const CY = 900;   // center Y — figure centered in upper 2/3
-const CHEST_Y = CY - 30; // beam convergence point
+const CHEST_Y = 730; // beam convergence — center of torso
 
 // Zodiac constellations arranged in a wide arc around the figure
 // Colors follow a rainbow spectrum matching the reference
