@@ -241,6 +241,31 @@ function buildGeocodeCandidates(query: string) {
     addCandidate(`${parts.slice(0, -1).join(" ")}, ${parts[parts.length - 1]}`);
   }
 
+  /* ── Israeli city alias resolution ── */
+  // Extract city part (before comma if present, or full query)
+  const commaIdx = normalizedQuery.indexOf(",");
+  const cityInput = commaIdx >= 0 ? normalizedQuery.slice(0, commaIdx).trim() : normalizedQuery;
+  const countryInput = commaIdx >= 0 ? normalizedQuery.slice(commaIdx + 1).trim() : "";
+
+  // Check if country part matches Israel
+  const isIsraelCountry = countryInput
+    ? ISRAEL_ALIASES.some(a => a.toLowerCase() === countryInput.toLowerCase())
+    : false;
+
+  // Try to match the city against known Israeli cities
+  const matchedCity = matchIsraeliCity(cityInput);
+  if (matchedCity) {
+    // Prioritize canonical name with Israel suffix — add at the front
+    addCandidate(`${matchedCity}, Israel`);
+    addCandidate(matchedCity);
+    addCandidate(`${matchedCity}, ישראל`);
+  } else if (isIsraelCountry) {
+    // Country is Israel but city didn't match aliases — still try variations
+    addCandidate(`${cityInput}, Israel`);
+    addCandidate(cityInput);
+    addCandidate(`${cityInput}, ישראל`);
+  }
+
   for (const alias of ISRAEL_ALIASES) {
     const exactCountryPattern = new RegExp(`^${escapeRegExp(alias)}$`, "i");
     const suffixCountryPattern = new RegExp(`^(.+?)(?:,\\s*|\\s+)${escapeRegExp(alias)}$`, "i");
@@ -254,10 +279,11 @@ function buildGeocodeCandidates(query: string) {
     if (!suffixMatch) continue;
 
     const cityPart = suffixMatch[1].trim();
-    addCandidate(cityPart);
-    addCandidate(`${cityPart}, ${alias}`);
-    addCandidate(`${cityPart}, Israel`);
-    addCandidate(`${cityPart}, ישראל`);
+    const resolvedCity = matchIsraeliCity(cityPart);
+    addCandidate(resolvedCity || cityPart);
+    addCandidate(`${resolvedCity || cityPart}, ${alias}`);
+    addCandidate(`${resolvedCity || cityPart}, Israel`);
+    addCandidate(`${resolvedCity || cityPart}, ישראל`);
   }
 
   const firstWord = parts[0] || normalizedQuery;
