@@ -145,7 +145,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     if (!isOpen || phase !== "form") return;
     const cached = loadCachedChart();
     if (!cached || !cached.resultText) return;
-    setDetails(cached.details);
+    setDetails(cached.details as BirthDetails);
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
