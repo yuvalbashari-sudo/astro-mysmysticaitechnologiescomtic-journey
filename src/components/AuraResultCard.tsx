@@ -1,5 +1,15 @@
 import { motion } from "framer-motion";
 import type { AuraResult, AuraFamily } from "@/lib/auraResultBank";
+import { AURA_BANK } from "@/lib/auraResultBank";
+import { useLanguage } from "@/i18n/LanguageContext";
+
+/* ── Localized labels ── */
+const LABELS: Record<string, { dominant: string; secondary: string }> = {
+  he: { dominant: "ההילה הדומיננטית שלך", secondary: "גוונים משניים" },
+  en: { dominant: "Your Dominant Aura", secondary: "Secondary tones" },
+  ru: { dominant: "Ваша доминирующая аура", secondary: "Вторичные тона" },
+  ar: { dominant: "هالتك المهيمنة", secondary: "نغمات ثانوية" },
+};
 
 /* ── Visual mapping per aura family ── */
 const AURA_VISUALS: Record<AuraFamily, { accent: string; glow: string; gradient: string }> = {
