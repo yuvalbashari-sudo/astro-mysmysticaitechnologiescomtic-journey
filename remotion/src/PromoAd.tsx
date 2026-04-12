@@ -20,61 +20,136 @@ const MY = 780;   // figure vertical center (upper portion)
 // Completely new geometry
 // ═══════════════════════════════════════
 
-// Head: smooth oval, natural skull, no crest
-const SKULL = `M 540,440 C 558,440 572,450 578,468 C 584,486 582,510 576,524
-  C 572,534 564,542 554,546 L 540,550 L 526,546
-  C 516,542 508,534 504,524 C 498,510 496,486 502,468
-  C 508,450 522,440 540,440 Z`;
+// ═══════════════════════════════════════
+// VOLUMETRIC HUMAN FIGURE — Anatomically correct
+// Real muscle mass, depth shading, not a flat outline
+// ═══════════════════════════════════════
 
-// Neck: clean cylindrical
-const NECK_PATH = `M 528,548 C 530,558 532,572 532,580 L 548,580 C 548,572 550,558 552,548`;
+// HEAD — natural human skull with jaw, brow ridge, cranium
+const SKULL = `M 540,430 
+  C 562,430 580,445 586,468 C 590,484 589,504 585,520 
+  C 582,530 576,538 568,544 C 564,548 558,552 554,556 
+  L 540,560 L 526,556 C 522,552 516,548 512,544 
+  C 504,538 498,530 495,520 C 491,504 490,484 494,468 
+  C 500,445 518,430 540,430 Z`;
 
-// Shoulders + Upper torso: athletic, tapered
-const UPPER_TORSO = `M 532,580 C 520,582 490,590 462,608
-  C 448,618 440,632 438,650 L 436,680 L 436,720
-  C 436,732 438,744 442,754 L 540,754
-  L 638,754 C 642,744 644,732 644,720 L 644,680
-  L 642,650 C 640,632 632,618 618,608
-  C 590,590 560,582 548,580 Z`;
+// JAW definition — adds volume to the face
+const JAW = `M 526,544 C 530,554 534,558 540,560 C 546,558 550,554 554,544
+  C 550,550 546,556 540,558 C 534,556 530,550 526,544 Z`;
 
-// Lower torso: waist to hips
-const LOWER_TORSO = `M 442,754 C 446,772 452,790 460,808
-  L 470,830 C 478,844 490,856 504,862
-  L 540,870 L 576,862 C 590,856 602,844 610,830
-  L 620,808 C 628,790 634,772 638,754 Z`;
+// BROW ridge — subtle depth
+const BROW = `M 514,465 C 522,460 532,458 540,458 C 548,458 558,460 566,465`;
 
-// Left arm: natural hang, relaxed hand
-const L_ARM = `M 462,608 C 448,616 432,636 420,660
-  C 408,688 398,720 392,756 L 388,790
-  C 384,818 382,846 381,870 C 380,888 380,902 383,910
-  C 385,916 390,920 396,920 L 404,918
-  C 410,916 414,910 414,902 L 416,876 L 420,840
-  L 428,800 L 436,760 L 438,720`;
+// NECK — muscular, not a stick
+const NECK_L = `M 526,556 C 524,562 520,572 518,580 L 518,594`;
+const NECK_R = `M 554,556 C 556,562 560,572 562,580 L 562,594`;
+const NECK_FILL = `M 526,556 C 524,562 520,572 518,580 L 518,594 
+  L 562,594 L 562,580 C 560,572 556,562 554,556 
+  L 540,560 Z`;
 
-// Right arm: mirrored
-const R_ARM = `M 618,608 C 632,616 648,636 660,660
-  C 672,688 682,720 688,756 L 692,790
-  C 696,818 698,846 699,870 C 700,888 700,902 697,910
-  C 695,916 690,920 684,920 L 676,918
-  C 670,916 666,910 666,902 L 664,876 L 660,840
-  L 652,800 L 644,760 L 642,720`;
+// TRAPEZIUS — shoulder muscle mass
+const TRAP_L = `M 518,594 C 508,596 488,604 462,618 C 452,626 445,638 442,652`;
+const TRAP_R = `M 562,594 C 572,596 592,604 618,618 C 628,626 635,638 638,652`;
 
-// Left leg
-const L_LEG = `M 504,862 L 500,900 C 496,940 492,980 490,1024
-  L 488,1070 L 486,1120 L 484,1160 L 483,1190
-  C 483,1200 486,1208 492,1212 L 518,1215
-  C 526,1215 530,1210 530,1202 L 529,1180
-  L 528,1130 L 528,1080 L 530,1024 L 534,960 L 540,900`;
+// TORSO — with pectoral and abdominal definition (closed shape for fill)
+const TORSO_FILL = `M 518,594 C 508,596 488,604 462,618 
+  C 448,628 440,644 438,664 L 436,700 L 436,738 
+  C 438,750 442,762 448,770 L 540,770 L 632,770 
+  C 638,762 642,750 644,738 L 644,700 L 642,664 
+  C 640,644 632,628 618,618 C 592,604 572,596 562,594 
+  L 540,594 Z`;
 
-// Right leg
-const R_LEG = `M 576,862 L 580,900 C 584,940 588,980 590,1024
-  L 592,1070 L 594,1120 L 596,1160 L 597,1190
-  C 597,1200 594,1208 588,1212 L 562,1215
-  C 554,1215 550,1210 550,1202 L 551,1180
-  L 552,1130 L 552,1080 L 550,1024 L 546,960 L 540,900`;
+// PECTORAL muscles — left and right  
+const PECT_L = `M 520,618 C 510,624 490,640 478,660 C 470,675 466,694 468,710 
+  C 478,712 500,708 518,700 C 530,694 538,686 540,680`;
+const PECT_R = `M 560,618 C 570,624 590,640 602,660 C 610,675 614,694 612,710 
+  C 602,712 580,708 562,700 C 550,694 542,686 540,680`;
 
-const BODY_FILLS = [SKULL, UPPER_TORSO, LOWER_TORSO];
-const BODY_STROKES = [SKULL, NECK_PATH, UPPER_TORSO, LOWER_TORSO, L_ARM, R_ARM, L_LEG, R_LEG];
+// ABDOMINAL contours — six-pack hints
+const ABS_CENTER = `M 540,690 L 540,770`;
+const ABS_L1 = `M 508,710 C 512,720 516,732 518,745`;
+const ABS_R1 = `M 572,710 C 568,720 564,732 562,745`;
+const ABS_H1 = `M 512,712 C 522,708 532,706 540,706 C 548,706 558,708 568,712`;
+const ABS_H2 = `M 514,734 C 524,730 532,728 540,728 C 548,728 556,730 566,734`;
+const ABS_H3 = `M 518,754 C 528,750 534,749 540,749 C 546,749 552,750 562,754`;
+
+// OBLIQUES — side muscles 
+const OBLIQUE_L = `M 442,660 C 444,680 446,710 450,740 C 454,758 460,770 470,778`;
+const OBLIQUE_R = `M 638,660 C 636,680 634,710 630,740 C 626,758 620,770 610,778`;
+
+// LOWER TORSO / PELVIS 
+const PELVIS = `M 448,770 C 454,790 462,808 472,824 
+  C 482,838 496,850 512,858 L 540,866 L 568,858 
+  C 584,850 598,838 608,824 C 618,808 626,790 632,770 Z`;
+
+// HIP LINES
+const HIP_L = `M 470,778 C 478,800 490,822 506,842`;
+const HIP_R = `M 610,778 C 602,800 590,822 574,842`;
+
+// ARMS — with bicep/tricep volume (closed shapes for fill)
+const L_ARM_FILL = `M 462,618 C 448,628 432,648 420,672 
+  C 408,700 398,734 392,770 L 388,806 
+  C 384,834 382,862 381,886 C 380,904 382,916 386,922 
+  L 396,926 C 404,926 410,920 412,912 L 414,886 L 418,848 
+  L 426,806 L 434,768 L 438,738 L 442,700 L 442,664 Z`;
+
+const R_ARM_FILL = `M 618,618 C 632,628 648,648 660,672 
+  C 672,700 682,734 688,770 L 692,806 
+  C 696,834 698,862 699,886 C 700,904 698,916 694,922 
+  L 684,926 C 676,926 670,920 668,912 L 666,886 L 662,848 
+  L 654,806 L 646,768 L 642,738 L 638,700 L 638,664 Z`;
+
+// ARM muscle contour lines
+const BICEP_L = `M 450,630 C 442,650 434,680 428,714`;
+const BICEP_R = `M 630,630 C 638,650 646,680 652,714`;
+const FOREARM_L = `M 428,714 C 420,744 410,784 400,830`;
+const FOREARM_R = `M 652,714 C 660,744 670,784 680,830`;
+
+// LEGS — with thigh/calf volume (closed shapes)
+const L_LEG_FILL = `M 512,858 L 506,900 C 500,940 496,980 494,1024 
+  L 492,1070 L 490,1120 L 488,1168 L 487,1196 
+  C 487,1208 490,1216 498,1220 L 524,1222 
+  C 532,1222 536,1216 536,1206 L 535,1180 
+  L 534,1130 L 534,1080 L 536,1024 L 540,960 L 540,900 L 540,866 Z`;
+
+const R_LEG_FILL = `M 568,858 L 574,900 C 580,940 584,980 586,1024 
+  L 588,1070 L 590,1120 L 592,1168 L 593,1196 
+  C 593,1208 590,1216 582,1220 L 556,1222 
+  C 548,1222 544,1216 544,1206 L 545,1180 
+  L 546,1130 L 546,1080 L 544,1024 L 540,960 L 540,900 L 540,866 Z`;
+
+// LEG muscle contours
+const QUAD_L = `M 510,870 C 504,900 498,942 496,990`;
+const QUAD_R = `M 570,870 C 576,900 582,942 584,990`;
+const CALF_L = `M 496,1050 C 492,1080 490,1110 489,1150`;
+const CALF_R = `M 584,1050 C 588,1080 590,1110 591,1150`;
+const INNER_L = `M 536,870 C 534,910 530,960 528,1010`;
+const INNER_R = `M 544,870 C 546,910 550,960 552,1010`;
+const KNEE_L = `M 494,1020 C 500,1028 510,1032 520,1030`;
+const KNEE_R = `M 586,1020 C 580,1028 570,1032 560,1030`;
+
+// All closed shapes for volumetric fill
+const BODY_VOLUMES = [SKULL, NECK_FILL, TORSO_FILL, PELVIS, L_ARM_FILL, R_ARM_FILL, L_LEG_FILL, R_LEG_FILL];
+
+// Muscle definition lines (drawn as strokes for anatomical detail)
+const MUSCLE_CONTOURS = [
+  JAW, BROW, NECK_L, NECK_R, TRAP_L, TRAP_R,
+  PECT_L, PECT_R, ABS_CENTER, ABS_L1, ABS_R1, ABS_H1, ABS_H2, ABS_H3,
+  OBLIQUE_L, OBLIQUE_R, HIP_L, HIP_R,
+  BICEP_L, BICEP_R, FOREARM_L, FOREARM_R,
+  QUAD_L, QUAD_R, CALF_L, CALF_R, INNER_L, INNER_R, KNEE_L, KNEE_R,
+];
+
+// Outline paths (open strokes for silhouette edges)
+const BODY_OUTLINES = [
+  SKULL, NECK_L, NECK_R, TRAP_L, TRAP_R,
+  `M 436,700 L 436,738 C 438,750 442,762 448,770`,
+  `M 644,700 L 644,738 C 642,750 638,762 632,770`,
+  `M 462,618 C 448,628 432,648 420,672 C 408,700 398,734 392,770 L 388,806 C 384,834 382,862 381,886 C 380,904 382,916 386,922`,
+  `M 618,618 C 632,628 648,648 660,672 C 672,700 682,734 688,770 L 692,806 C 696,834 698,862 699,886 C 700,904 698,916 694,922`,
+  `M 512,858 L 506,900 C 500,940 496,980 494,1024 L 492,1070 L 490,1120 L 488,1168 L 487,1196`,
+  `M 568,858 L 574,900 C 580,940 584,980 586,1024 L 588,1070 L 590,1120 L 592,1168 L 593,1196`,
+];
 
 // ═══ INTERNAL ENERGY MERIDIANS ═══
 const MERIDIANS = [
@@ -245,13 +320,34 @@ export const PromoAd = () => {
               <feMerge><feMergeNode in="bl" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
 
-            {/* Figure body fill — builds energy over time */}
-            <linearGradient id="v2-figfill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#70D4F8" stopOpacity={0.04 + bodyEnergy * 0.28} />
-              <stop offset="25%" stopColor="#E8D060" stopOpacity={0.06 + bodyEnergy * 0.32} />
-              <stop offset="55%" stopColor="#50E8A8" stopOpacity={0.04 + bodyEnergy * 0.22} />
-              <stop offset="85%" stopColor="#9070E8" stopOpacity={0.03 + bodyEnergy * 0.14} />
-              <stop offset="100%" stopColor="#E06090" stopOpacity={0.02 + bodyEnergy * 0.08} />
+            {/* Figure body fill — volumetric depth with multiple gradients */}
+            <linearGradient id="v2-figfill" x1="0.3" y1="0" x2="0.7" y2="1">
+              <stop offset="0%" stopColor="#90E0F8" stopOpacity={0.06 + bodyEnergy * 0.3} />
+              <stop offset="20%" stopColor="#70C8E8" stopOpacity={0.08 + bodyEnergy * 0.35} />
+              <stop offset="45%" stopColor="#E8D860" stopOpacity={0.06 + bodyEnergy * 0.28} />
+              <stop offset="70%" stopColor="#50E8A8" stopOpacity={0.05 + bodyEnergy * 0.2} />
+              <stop offset="90%" stopColor="#9070E8" stopOpacity={0.04 + bodyEnergy * 0.14} />
+              <stop offset="100%" stopColor="#E06090" stopOpacity={0.03 + bodyEnergy * 0.1} />
+            </linearGradient>
+
+            {/* Depth shading — creates volume on left side */}
+            <linearGradient id="v2-depth-l" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#40A0D0" stopOpacity={0.02 + bodyEnergy * 0.12} />
+              <stop offset="50%" stopColor="#60D0F0" stopOpacity={0.04 + bodyEnergy * 0.18} />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+
+            {/* Inner light — center highlight for volume */}
+            <radialGradient id="v2-inner" cx="50%" cy="45%" r="40%">
+              <stop offset="0%" stopColor="#B0E8FF" stopOpacity={0.03 + bodyEnergy * 0.2} />
+              <stop offset="40%" stopColor="#80D0F0" stopOpacity={0.02 + bodyEnergy * 0.1} />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+
+            {/* Muscle highlight gradient */}
+            <linearGradient id="v2-muscle" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#70D8F8" stopOpacity={bodyEnergy * 0.15} />
+              <stop offset="100%" stopColor="#A0F0D0" stopOpacity={bodyEnergy * 0.08} />
             </linearGradient>
 
             {/* Heart core gradient */}
@@ -387,24 +483,44 @@ export const PromoAd = () => {
             );
           })}
 
-          {/* ═══ HUMAN FIGURE — ALWAYS VISIBLE AFTER APPEAR, NEVER FADES ═══ */}
+          {/* ═══ VOLUMETRIC HUMAN FIGURE — Real anatomy, not flat ═══ */}
           <g opacity={figAppear} style={{
-            filter: `drop-shadow(0 0 ${5 + bodyEnergy * 22}px rgba(90,210,250,${0.25 + bodyEnergy * 0.4}))`,
+            filter: `drop-shadow(0 0 ${8 + bodyEnergy * 25}px rgba(90,210,250,${0.2 + bodyEnergy * 0.35}))`,
           }}>
-            {/* Body fill */}
-            {BODY_FILLS.map((p, pi) => (
-              <path key={`bf-${pi}`} d={p} fill="url(#v2-figfill)" stroke="none" />
+            {/* Layer 1: Deep body volume fill */}
+            {BODY_VOLUMES.map((p, pi) => (
+              <path key={`bv-${pi}`} d={p} fill="url(#v2-figfill)" stroke="none" />
             ))}
-            {/* Outline — all parts */}
-            {BODY_STROKES.map((p, pi) => (
-              <path key={`bo-${pi}`} d={p}
+            {/* Layer 2: Depth shading — left side shadow for 3D effect */}
+            {BODY_VOLUMES.map((p, pi) => (
+              <path key={`bd-${pi}`} d={p} fill="url(#v2-depth-l)" stroke="none" />
+            ))}
+            {/* Layer 3: Inner light — center glow for volume */}
+            {BODY_VOLUMES.map((p, pi) => (
+              <path key={`bi-${pi}`} d={p} fill="url(#v2-inner)" stroke="none" />
+            ))}
+            {/* Layer 4: Muscle contour lines — anatomical definition */}
+            {MUSCLE_CONTOURS.map((p, mi) => (
+              <path key={`mc-${mi}`} d={p}
                 fill="none" stroke="#60D8F0"
-                strokeWidth={1 + bodyEnergy * 0.8}
+                strokeWidth={0.6 + bodyEnergy * 0.4}
+                strokeOpacity={0.12 + bodyEnergy * 0.25}
+                strokeLinecap="round" strokeLinejoin="round" />
+            ))}
+            {/* Layer 5: Outer silhouette edges */}
+            {BODY_OUTLINES.map((p, pi) => (
+              <path key={`bo-${pi}`} d={p}
+                fill="none" stroke="#70E0F8"
+                strokeWidth={1.2 + bodyEnergy * 0.6}
                 strokeOpacity={outlineGlow}
                 strokeLinecap="round" strokeLinejoin="round" />
             ))}
-            {/* Torso highlight overlay */}
-            <path d={UPPER_TORSO} fill="url(#v2-heart)" stroke="none" opacity={0.5} />
+            {/* Layer 6: Torso heart-glow overlay */}
+            <path d={TORSO_FILL} fill="url(#v2-heart)" stroke="none" opacity={0.4} />
+            {/* Layer 7: Face hint — eyes and third eye */}
+            <circle cx={530} cy={478} r={2.5} fill="#A0E0FF" opacity={figAppear * bodyEnergy * 0.5} />
+            <circle cx={550} cy={478} r={2.5} fill="#A0E0FF" opacity={figAppear * bodyEnergy * 0.5} />
+            <circle cx={540} cy={462} r={1.8} fill="#C070FF" opacity={figAppear * bodyEnergy * 0.4} filter="url(#v2-gsm)" />
           </g>
 
           {/* ═══ INTERNAL ENERGY MERIDIANS ═══ */}
