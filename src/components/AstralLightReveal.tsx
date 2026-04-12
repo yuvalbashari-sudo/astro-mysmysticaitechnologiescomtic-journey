@@ -625,6 +625,37 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           {/* ─── Phase 3: CLIMAX — mega inner light ─── */}
           {climaxLevel > 0 && (
             <g>
+              {/* Full-body elliptical glow — encompasses entire figure */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 40}
+                fill="url(#climax-radial)"
+                filter="url(#climax-mega)"
+                animate={{
+                  rx: [45 + climaxLevel * 20, 55 + climaxLevel * 30, 45 + climaxLevel * 20],
+                  ry: [120 + climaxLevel * 40, 140 + climaxLevel * 55, 120 + climaxLevel * 40],
+                  opacity: [climaxLevel * 0.3, climaxLevel * 0.5, climaxLevel * 0.3],
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Blurred aura image — full-body silhouette glow */}
+              <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
+                <image
+                  href={astralFigureImg}
+                  x="-3"
+                  y="-4"
+                  width={FIG_VB_W + 6}
+                  height={FIG_VB_H + 8}
+                  opacity={climaxLevel * 0.55}
+                  style={{
+                    mixBlendMode: 'screen',
+                    filter: `blur(10px) brightness(${1.4 + climaxLevel * 0.8})`,
+                  }}
+                />
+              </g>
+
+              {/* Core chest glow (original — focal intensity) */}
               <motion.circle
                 cx={FIG_CX} cy={FIG_CORE_Y}
                 fill="url(#climax-radial)"
@@ -663,11 +694,11 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 transition={{ duration: 2.2, repeat: Infinity }}
               />
 
-              {/* Radiating energy lines from core */}
+              {/* Radiating energy lines from core — extended reach */}
               {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
                 const rad = (angle - 90) * (Math.PI / 180);
                 const innerR = 12;
-                const outerR = 30 + climaxLevel * 25;
+                const outerR = 60 + climaxLevel * 50;
                 return (
                   <motion.line
                     key={`ray-${angle}`}
