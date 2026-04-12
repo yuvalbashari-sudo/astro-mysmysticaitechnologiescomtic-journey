@@ -12,7 +12,6 @@ import { ChevronDown, ChevronUp, RotateCcw, Trash2 } from "lucide-react";
 import { isAdminTestMode } from "@/lib/adminTestMode";
 import { getSelectionReasoning, type AuraResult } from "@/lib/auraResultBank";
 import { buildLocalizedTitle, getAuraSubtitle } from "@/lib/auraLocale";
-import { subscriptionManager } from "@/lib/subscriptionManager";
 import type { Language } from "@/i18n/types";
 
 /* ── Types ── */
@@ -93,7 +92,7 @@ const AuraDebugPanel = ({
       ? "cached"
       : "real_user";
 
-  const usedAdminOverride = subscriptionManager.isAdminOverride();
+  const usedAdminOverride = isForced;
   const direction = ["he", "ar"].includes(language) ? "rtl" : "ltr";
 
   // Binding source detection

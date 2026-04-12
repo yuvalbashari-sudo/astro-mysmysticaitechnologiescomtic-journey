@@ -178,6 +178,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       setAiStreaming(false);
       setCopied(false);
       setTextSize("default");
+      setAuraResult(null);
     }, 300);
   }, [onClose]);
 
