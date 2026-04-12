@@ -135,6 +135,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
   const [statusIdx, setStatusIdx] = useState(0);
   const [progress, setProgress] = useState(0);
   const [showInfluences, setShowInfluences] = useState(false);
+  const [showConstellations, setShowConstellations] = useState(true);
 
   const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
   console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
@@ -230,6 +231,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
 
     const infTimer = setTimeout(() => setShowInfluences(true), CPK + 500 * S);
     const doneTimer = setTimeout(onComplete, T);
+    const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
 
     return () => {
       clearInterval(progTimer);
@@ -240,6 +242,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
       clearTimeout(clxStart);
       clearTimeout(infTimer);
       clearTimeout(doneTimer);
+      clearTimeout(constFadeTimer);
     };
   }, []);
 
@@ -416,7 +419,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
           </g>
 
           {/* ─── Phase 1: Constellation nodes + beams (ABOVE figure, with gentle orbit) ─── */}
+          <AnimatePresence>
+          {showConstellations && (
           <motion.g
+            key="constellation-orbit"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 1 } }}
             animate={{ rotate: [0, 360] }}
             transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
             style={{ transformOrigin: `${FIG_CX}px ${FIG_CORE_Y}px` }}
@@ -558,6 +566,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
               );
             })}
           </motion.g>
+          )}
+          </AnimatePresence>
 
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
           {absorptionLevel > 0 && (
