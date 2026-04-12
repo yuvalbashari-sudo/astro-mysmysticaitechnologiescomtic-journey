@@ -764,7 +764,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
                   />
                 );
               })}
-            </g>
+            </motion.g>
           )}
         </svg>
       </div>
