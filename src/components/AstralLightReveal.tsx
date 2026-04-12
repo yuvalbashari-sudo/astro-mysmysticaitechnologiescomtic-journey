@@ -358,37 +358,62 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <feGaussianBlur stdDeviation="3" />
             </filter>
 
-            {/* Figure volume gradient */}
+            {/* Edge outline glow — subtle separation from background */}
+            <filter id="edge-outline">
+              <feMorphology operator="dilate" radius="0.8" in="SourceAlpha" result="expanded" />
+              <feGaussianBlur stdDeviation="1.5" in="expanded" result="blurred-edge" />
+              <feFlood floodColor={dominantColor} floodOpacity={0.4 + absorptionLevel * 0.3} result="color" />
+              <feComposite in="color" in2="blurred-edge" operator="in" result="colored-edge" />
+              <feMerge>
+                <feMergeNode in="colored-edge" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+
+            {/* Soft outer aura filter — very diffuse */}
+            <filter id="outer-aura-blur">
+              <feGaussianBlur stdDeviation="14" />
+            </filter>
+
+            {/* Body fill gradient — soft semi-transparent color across whole figure */}
             <linearGradient id="sil-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.25 + climaxLevel * 0.35} />
-              <stop offset="35%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.35 + climaxLevel * 0.45} />
-              <stop offset="65%" stopColor={secondaryColor} stopOpacity={0.08 + absorptionLevel * 0.2 + climaxLevel * 0.3} />
-              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02} />
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.08} />
+              <stop offset="25%" stopColor={dominantColor} stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.1} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.15 + climaxLevel * 0.12} />
+              <stop offset="75%" stopColor={secondaryColor} stopOpacity={0.04 + absorptionLevel * 0.1 + climaxLevel * 0.08} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02 + absorptionLevel * 0.05} />
             </linearGradient>
 
             {/* Depth shading — darker edges for 3D volume */}
             <linearGradient id="fig-depth" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
-              <stop offset="30%" stopColor={dominantColor} stopOpacity={0.02} />
-              <stop offset="70%" stopColor={dominantColor} stopOpacity={0.02} />
-              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.12 + absorptionLevel * 0.12} />
+              <stop offset="25%" stopColor={dominantColor} stopOpacity={0.03} />
+              <stop offset="75%" stopColor={dominantColor} stopOpacity={0.03} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.12 + absorptionLevel * 0.12} />
             </linearGradient>
 
-            {/* Inner glow — radial from chest, uses top 3 planet colors */}
-            <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
-              <stop offset="30%" stopColor={auraColors.dominant} stopOpacity={0.04 + absorptionLevel * 0.08} />
-              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.02 + absorptionLevel * 0.04} />
+            {/* Core chest glow — concentrated but controlled */}
+            <radialGradient id="fig-core-glow" cx="50%" cy="38%" r="30%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.04 + absorptionLevel * 0.08 + climaxLevel * 0.12} />
+              <stop offset="20%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.15 + climaxLevel * 0.18} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.06} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
+            </radialGradient>
+
+            {/* Inner glow — radial from chest, uses top 3 aura colors */}
+            <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stopColor={auraColors.dominant} stopOpacity={0.02 + absorptionLevel * 0.06} />
+              <stop offset="40%" stopColor={auraColors.secondary} stopOpacity={0.01 + absorptionLevel * 0.03} />
               <stop offset="100%" stopColor={auraColors.tertiary} stopOpacity={0} />
             </radialGradient>
 
-            {/* Climax radial — aura-driven color blend */}
+            {/* Climax radial — controlled aura bloom */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fff" stopOpacity={0.3 * climaxLevel} />
-              <stop offset="15%" stopColor={auraColors.dominant} stopOpacity={0.85 * climaxLevel} />
-              <stop offset="40%" stopColor={auraColors.dominant} stopOpacity={0.55 * climaxLevel} />
-              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.3 * climaxLevel} />
-              <stop offset="80%" stopColor={auraColors.tertiary} stopOpacity={0.12 * climaxLevel} />
+              <stop offset="0%" stopColor="#fff" stopOpacity={0.12 * climaxLevel} />
+              <stop offset="10%" stopColor={auraColors.dominant} stopOpacity={0.45 * climaxLevel} />
+              <stop offset="30%" stopColor={auraColors.dominant} stopOpacity={0.3 * climaxLevel} />
+              <stop offset="55%" stopColor={auraColors.secondary} stopOpacity={0.15 * climaxLevel} />
+              <stop offset="80%" stopColor={auraColors.tertiary} stopOpacity={0.06 * climaxLevel} />
               <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
