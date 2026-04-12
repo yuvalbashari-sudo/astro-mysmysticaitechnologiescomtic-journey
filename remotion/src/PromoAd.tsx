@@ -483,24 +483,44 @@ export const PromoAd = () => {
             );
           })}
 
-          {/* ═══ HUMAN FIGURE — ALWAYS VISIBLE AFTER APPEAR, NEVER FADES ═══ */}
+          {/* ═══ VOLUMETRIC HUMAN FIGURE — Real anatomy, not flat ═══ */}
           <g opacity={figAppear} style={{
-            filter: `drop-shadow(0 0 ${5 + bodyEnergy * 22}px rgba(90,210,250,${0.25 + bodyEnergy * 0.4}))`,
+            filter: `drop-shadow(0 0 ${8 + bodyEnergy * 25}px rgba(90,210,250,${0.2 + bodyEnergy * 0.35}))`,
           }}>
-            {/* Body fill */}
-            {BODY_FILLS.map((p, pi) => (
-              <path key={`bf-${pi}`} d={p} fill="url(#v2-figfill)" stroke="none" />
+            {/* Layer 1: Deep body volume fill */}
+            {BODY_VOLUMES.map((p, pi) => (
+              <path key={`bv-${pi}`} d={p} fill="url(#v2-figfill)" stroke="none" />
             ))}
-            {/* Outline — all parts */}
-            {BODY_STROKES.map((p, pi) => (
-              <path key={`bo-${pi}`} d={p}
+            {/* Layer 2: Depth shading — left side shadow for 3D effect */}
+            {BODY_VOLUMES.map((p, pi) => (
+              <path key={`bd-${pi}`} d={p} fill="url(#v2-depth-l)" stroke="none" />
+            ))}
+            {/* Layer 3: Inner light — center glow for volume */}
+            {BODY_VOLUMES.map((p, pi) => (
+              <path key={`bi-${pi}`} d={p} fill="url(#v2-inner)" stroke="none" />
+            ))}
+            {/* Layer 4: Muscle contour lines — anatomical definition */}
+            {MUSCLE_CONTOURS.map((p, mi) => (
+              <path key={`mc-${mi}`} d={p}
                 fill="none" stroke="#60D8F0"
-                strokeWidth={1 + bodyEnergy * 0.8}
+                strokeWidth={0.6 + bodyEnergy * 0.4}
+                strokeOpacity={0.12 + bodyEnergy * 0.25}
+                strokeLinecap="round" strokeLinejoin="round" />
+            ))}
+            {/* Layer 5: Outer silhouette edges */}
+            {BODY_OUTLINES.map((p, pi) => (
+              <path key={`bo-${pi}`} d={p}
+                fill="none" stroke="#70E0F8"
+                strokeWidth={1.2 + bodyEnergy * 0.6}
                 strokeOpacity={outlineGlow}
                 strokeLinecap="round" strokeLinejoin="round" />
             ))}
-            {/* Torso highlight overlay */}
-            <path d={UPPER_TORSO} fill="url(#v2-heart)" stroke="none" opacity={0.5} />
+            {/* Layer 6: Torso heart-glow overlay */}
+            <path d={TORSO_FILL} fill="url(#v2-heart)" stroke="none" opacity={0.4} />
+            {/* Layer 7: Face hint — eyes and third eye */}
+            <circle cx={530} cy={478} r={2.5} fill="#A0E0FF" opacity={figAppear * bodyEnergy * 0.5} />
+            <circle cx={550} cy={478} r={2.5} fill="#A0E0FF" opacity={figAppear * bodyEnergy * 0.5} />
+            <circle cx={540} cy={462} r={1.8} fill="#C070FF" opacity={figAppear * bodyEnergy * 0.4} filter="url(#v2-gsm)" />
           </g>
 
           {/* ═══ INTERNAL ENERGY MERIDIANS ═══ */}
