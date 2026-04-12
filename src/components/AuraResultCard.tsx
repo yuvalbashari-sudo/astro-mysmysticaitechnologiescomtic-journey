@@ -124,7 +124,18 @@ const AuraResultCard = ({ result }: Props) => {
           transition={{ duration: 0.6, delay: 1.0 }}
         />
 
-        {/* ═══ MEANING — Personal reading ═══ */}
+        {/* ═══ IDENTITY LINE — emotional one-liner ═══ */}
+        <motion.p
+          className="font-body text-sm md:text-base text-center italic max-w-[340px] mx-auto"
+          style={{ color: `${vis.accent}CC` }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 1.0 }}
+        >
+          {meaning.identityLine}
+        </motion.p>
+
+        {/* ═══ CORE MEANING — composed from modifier + secondary nuance ═══ */}
         <motion.p
           className="font-body text-sm md:text-base text-center leading-relaxed max-w-[360px] mx-auto"
           style={{
@@ -133,10 +144,33 @@ const AuraResultCard = ({ result }: Props) => {
           }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 1.1 }}
+          transition={{ duration: 0.7, delay: 1.15 }}
         >
-          {meaning}
+          {meaning.coreParagraph}
         </motion.p>
+
+        {/* ═══ STRENGTHS ROW — 3 key traits ═══ */}
+        <motion.div
+          className="flex justify-center gap-3 flex-wrap"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 1.3 }}
+        >
+          {meaning.strengths.map((s, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-[11px] tracking-wide"
+              style={{
+                color: `${vis.accent}DD`,
+                background: `${vis.accent}0A`,
+                border: `1px solid ${vis.accent}15`,
+              }}
+            >
+              <Star size={10} style={{ color: vis.accent, opacity: 0.7 }} />
+              {s}
+            </span>
+          ))}
+        </motion.div>
 
         {/* ═══ ENERGY SIGNATURE SECTION ═══ */}
         <motion.div
