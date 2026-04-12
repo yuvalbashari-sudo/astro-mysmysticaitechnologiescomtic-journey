@@ -728,4 +728,10 @@ export const ru: TranslationKeys = {
   daily_horoscope_energy: "Энергия",
   daily_horoscope_no_sign: "Введите дату рождения для персонального гороскопа",
   daily_horoscope_cta: "Погрузиться глубже",
+  daily_horoscope_setup_title: "✦ Ваш ежедневный гороскоп ждёт",
+  daily_horoscope_setup_desc: "Чтобы составить персональный гороскоп, нам нужно ваше имя и дата рождения",
+  daily_horoscope_setup_name_label: "Ваше имя",
+  daily_horoscope_setup_name_placeholder: "Введите ваше имя",
+  daily_horoscope_setup_birthdate_label: "Дата рождения",
+  daily_horoscope_setup_cta: "✦ Узнать свой гороскоп ✦",
 };
