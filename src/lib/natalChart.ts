@@ -38,7 +38,84 @@ const ASPECT_META: Record<string, string> = {
   quincunx: "קווינקונקס",
 };
 
-const ISRAEL_ALIASES = ["Israel", "ישראל", "Израиль", "إسرائيل"];
+const ISRAEL_ALIASES = ["Israel", "ישראל", "Израиль", "إسرائيل", "IL"];
+
+/* ── Israeli city canonical names + common English spelling variants ── */
+const ISRAELI_CITY_ALIASES: Record<string, string[]> = {
+  "Tel Aviv": ["Tel-Aviv", "Tel Aviv-Yafo", "Tel Aviv Yafo", "Tel-Aviv-Yafo", "TelAviv", "Telaviv"],
+  "Jerusalem": ["Yerushalayim", "Yerusalem", "Yerushalaim"],
+  "Haifa": ["Hefa", "Heifa"],
+  "Rishon LeZion": ["Rishon Lezion", "Rishon Le Zion", "Rishon Letsion", "Rishon Le-Zion", "RishonLeZion"],
+  "Petah Tikva": ["Petach Tikva", "Petach Tikvah", "Petah Tikvah", "PetahTikva", "Petakh Tikva"],
+  "Ashdod": [],
+  "Beersheba": ["Beer Sheva", "Be'er Sheva", "Beer-Sheva", "Beersheva", "Be'er Sheva", "BeerSheva"],
+  "Netanya": ["Netania", "Nathanya"],
+  "Holon": [],
+  "Bat Yam": ["Bat-Yam", "BatYam"],
+  "Herzliya": ["Hertsliya", "Hertzliya", "Herzlia"],
+  "Ashkelon": ["Ashqelon"],
+  "Rehovot": ["Rechovot", "Rehovoth"],
+  "Eilat": ["Elat", "Eilath"],
+  "Bnei Brak": ["Bne Brak", "Bnei-Brak", "BneiBrak", "Bney Brak"],
+  "Ramat Gan": ["Ramat-Gan", "RamatGan"],
+  "Nazareth": ["Natzeret", "Natzrath"],
+  "Tiberias": ["Tveria", "Tverya", "Tveriya"],
+  "Safed": ["Tzfat", "Sfat", "Zefat", "Tsfat"],
+  "Acre": ["Akko", "Acco", "Ako"],
+  "Kfar Saba": ["Kfar Sava", "Kfar-Saba", "KfarSaba"],
+  "Ra'anana": ["Raanana", "Ra'anana", "Raananah"],
+  "Modiin": ["Modi'in", "Modiin-Maccabim-Reut", "Modiin Maccabim Reut"],
+  "Givatayim": ["Givataim", "Givatayim"],
+  "Kiryat Ata": ["Qiryat Ata", "Kiryat-Ata"],
+  "Kiryat Gat": ["Qiryat Gat", "Kiryat-Gat"],
+  "Kiryat Motzkin": ["Kiryat Mozkin", "Qiryat Motzkin"],
+  "Lod": ["Lydda"],
+  "Ramla": ["Ramleh", "Ramle"],
+  "Nahariya": ["Nahariyya", "Naharia"],
+  "Yokneam": ["Yokne'am"],
+  "Dimona": [],
+  "Arad": [],
+  "Sderot": ["Sderot", "Sederot"],
+  "Beit Shemesh": ["Bet Shemesh", "Beit-Shemesh", "BeitShemesh"],
+};
+
+/** Build a lowercase lookup: variant → canonical name */
+const _israeliCityLookup: Map<string, string> = new Map();
+for (const [canonical, aliases] of Object.entries(ISRAELI_CITY_ALIASES)) {
+  _israeliCityLookup.set(canonical.toLowerCase(), canonical);
+  for (const alias of aliases) {
+    _israeliCityLookup.set(alias.toLowerCase(), canonical);
+  }
+}
+
+/**
+ * Attempt to match user input against known Israeli city aliases.
+ * Returns the canonical English name if matched, or null.
+ */
+function matchIsraeliCity(input: string): string | null {
+  const cleaned = input
+    .replace(/[''`\u2019\u2018]/g, "'")
+    .replace(/[-–—]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+  // Direct lookup
+  if (_israeliCityLookup.has(cleaned)) return _israeliCityLookup.get(cleaned)!;
+
+  // Try without apostrophes
+  const noApostrophe = cleaned.replace(/'/g, "");
+  if (_israeliCityLookup.has(noApostrophe)) return _israeliCityLookup.get(noApostrophe)!;
+
+  // Try without spaces
+  const noSpaces = cleaned.replace(/\s/g, "");
+  const entries = Array.from(_israeliCityLookup.entries());
+  for (const [key, canonical] of entries) {
+    if (key.replace(/[\s']/g, "") === noSpaces) return canonical;
+  }
+
+  return null;
+}
 
 const SUPPORTED_PLANETS = Object.keys(PLANET_META) as Array<keyof typeof PLANET_META>;
 
@@ -165,6 +242,31 @@ function buildGeocodeCandidates(query: string) {
     addCandidate(`${parts.slice(0, -1).join(" ")}, ${parts[parts.length - 1]}`);
   }
 
+  /* ── Israeli city alias resolution ── */
+  // Extract city part (before comma if present, or full query)
+  const commaIdx = normalizedQuery.indexOf(",");
+  const cityInput = commaIdx >= 0 ? normalizedQuery.slice(0, commaIdx).trim() : normalizedQuery;
+  const countryInput = commaIdx >= 0 ? normalizedQuery.slice(commaIdx + 1).trim() : "";
+
+  // Check if country part matches Israel
+  const isIsraelCountry = countryInput
+    ? ISRAEL_ALIASES.some(a => a.toLowerCase() === countryInput.toLowerCase())
+    : false;
+
+  // Try to match the city against known Israeli cities
+  const matchedCity = matchIsraeliCity(cityInput);
+  if (matchedCity) {
+    // Prioritize canonical name with Israel suffix — add at the front
+    addCandidate(`${matchedCity}, Israel`);
+    addCandidate(matchedCity);
+    addCandidate(`${matchedCity}, ישראל`);
+  } else if (isIsraelCountry) {
+    // Country is Israel but city didn't match aliases — still try variations
+    addCandidate(`${cityInput}, Israel`);
+    addCandidate(cityInput);
+    addCandidate(`${cityInput}, ישראל`);
+  }
+
   for (const alias of ISRAEL_ALIASES) {
     const exactCountryPattern = new RegExp(`^${escapeRegExp(alias)}$`, "i");
     const suffixCountryPattern = new RegExp(`^(.+?)(?:,\\s*|\\s+)${escapeRegExp(alias)}$`, "i");
@@ -178,10 +280,11 @@ function buildGeocodeCandidates(query: string) {
     if (!suffixMatch) continue;
 
     const cityPart = suffixMatch[1].trim();
-    addCandidate(cityPart);
-    addCandidate(`${cityPart}, ${alias}`);
-    addCandidate(`${cityPart}, Israel`);
-    addCandidate(`${cityPart}, ישראל`);
+    const resolvedCity = matchIsraeliCity(cityPart);
+    addCandidate(resolvedCity || cityPart);
+    addCandidate(`${resolvedCity || cityPart}, ${alias}`);
+    addCandidate(`${resolvedCity || cityPart}, Israel`);
+    addCandidate(`${resolvedCity || cityPart}, ישראל`);
   }
 
   const firstWord = parts[0] || normalizedQuery;
