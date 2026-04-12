@@ -530,27 +530,30 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
           {absorptionLevel > 0 && (
             <g>
-              {/* Pulse rings from chest */}
-              {[0, 1, 2].map((ring) => (
-                <motion.circle
-                  key={`pulse-${ring}`}
-                  cx={FIG_CX} cy={FIG_CHEST_Y}
-                  fill="none"
-                  stroke={dominantColor}
-                  strokeWidth={0.8}
-                  initial={{ r: 5, opacity: 0 }}
-                  animate={{
-                    r: [5, 35 + ring * 15, 50 + ring * 20],
-                    opacity: [0.5 * absorptionLevel, 0.3 * absorptionLevel, 0],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    delay: ring * 0.6,
-                    ease: "easeOut",
-                  }}
-                />
-              ))}
+              {/* Pulse rings from chest — each ring uses a different planet color */}
+              {[0, 1, 2].map((ring) => {
+                const ringColor = planetColors.colors[ring] || dominantColor;
+                return (
+                  <motion.circle
+                    key={`pulse-${ring}`}
+                    cx={FIG_CX} cy={FIG_CHEST_Y}
+                    fill="none"
+                    stroke={ringColor}
+                    strokeWidth={0.8}
+                    initial={{ r: 5, opacity: 0 }}
+                    animate={{
+                      r: [5, 35 + ring * 15, 50 + ring * 20],
+                      opacity: [0.5 * absorptionLevel, 0.3 * absorptionLevel, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: ring * 0.6,
+                      ease: "easeOut",
+                    }}
+                  />
+                );
+              })}
 
               {/* Internal energy veins — anatomical meridians */}
               {/* Spine (central) */}
