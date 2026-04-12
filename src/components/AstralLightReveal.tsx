@@ -212,6 +212,17 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   /* ── Compute structured aura result (deterministic, memo'd) ── */
   const auraResult = useMemo(() => getAuraResult(influences), [influences]);
 
+  /* ── Ref to always hold the latest auraResult (avoids stale closures in timers) ── */
+  const auraResultRef = useRef(auraResult);
+  useEffect(() => { auraResultRef.current = auraResult; }, [auraResult]);
+
+  /* ── Live sync: push updated result to parent whenever it changes post-reveal ── */
+  useEffect(() => {
+    if (showInfluences) {
+      onAuraResult?.(auraResult);
+    }
+  }, [auraResult, showInfluences]);
+
   const sortedPlanets = useMemo(
     () => [...PLANETS].sort((a, b) => (influences[b.key] || 0) - (influences[a.key] || 0)),
     [influences],
@@ -296,7 +307,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
     const infTimer = setTimeout(() => setShowInfluences(true), CPK + 500 * S);
     const doneTimer = setTimeout(() => {
-      onAuraResult?.(auraResult);
+      onAuraResult?.(auraResultRef.current);
       onComplete();
     }, T);
     const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);

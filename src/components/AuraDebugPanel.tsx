@@ -93,7 +93,7 @@ const AuraDebugPanel = ({
       ? "cached"
       : "real_user";
 
-  const usedAdminOverride = subscriptionManager.isAdminOverride();
+  const usedAdminOverride = isForced;
   const direction = ["he", "ar"].includes(language) ? "rtl" : "ltr";
 
   // Binding source detection
