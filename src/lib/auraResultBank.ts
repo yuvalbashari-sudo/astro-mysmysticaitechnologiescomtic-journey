@@ -486,6 +486,8 @@ export function resolveAuraResult(
     topSecondary,
   );
 
+  const titleKey = `${classification.modifier}_${classification.primaryAura}`;
+
   return {
     title,
     subtitle,
@@ -498,6 +500,7 @@ export function resolveAuraResult(
     secondaryPlanets: classification.secondaryPlanets,
     blendMode: classification.blendMode,
     modifier: classification.modifier,
+    titleKey,
     shareableIdentity,
     visualProfile,
   };
