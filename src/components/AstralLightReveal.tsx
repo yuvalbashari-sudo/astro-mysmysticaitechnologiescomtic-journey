@@ -173,6 +173,7 @@ const FIG_CHEST_Y = 255;    // where beams target (chest area in scene coords)
 const FIG_CORE_Y = 240;     // energy core center
 
 const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
+  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
   const { language } = useLanguage();
 
   const [constellationsLit, setConstellationsLit] = useState(0);
