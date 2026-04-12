@@ -1,13 +1,18 @@
 /**
- * Aura Result Bank — deterministic mapping from planetary influence analysis
- * to structured, personalized result objects.
+ * Aura Result Bank v3 — Layered Energetic Identity System
  *
  * Architecture:
  *  1. `classifyAura()`      – reads sorted planet influences → AuraClassification
  *  2. `resolveAuraResult()` – classification → final AuraResult via the bank
  *
- * v2: Layered identity system with energy modifiers, visual profiles,
- *     and shareable identity strings for large-scale personalization.
+ * Each user receives a layered aura identity:
+ *   - 1 primary aura family (dominant)
+ *   - 1–2 secondary aura families (supporting)
+ *   - 1 energy modifier (how the aura behaves)
+ *   - 1 shareable identity label (e.g. "Radiant Solar Gold")
+ *   - 1 visual profile (rendering hints for UI)
+ *
+ * 10 families × 10 modifiers × secondary blends = 600+ unique identities.
  */
 
 /* ═══════════════════════════════════════════
@@ -15,16 +20,16 @@
    ═══════════════════════════════════════════ */
 
 export type AuraFamily =
-  | "gold"
-  | "blue"
-  | "green"
-  | "purple"
-  | "red"
-  | "pink"
-  | "turquoise"
-  | "indigo"
-  | "orange"
-  | "white";
+  | "solar_gold"
+  | "lunar_blue"
+  | "healing_green"
+  | "mystical_purple"
+  | "vital_red"
+  | "venus_pink"
+  | "astral_turquoise"
+  | "deep_indigo"
+  | "expansive_orange"
+  | "pure_white";
 
 export type EnergyModifier =
   | "radiant"
@@ -39,6 +44,8 @@ export type EnergyModifier =
   | "ethereal";
 
 export interface AuraBankEntry {
+  /** Short display name: "Solar Gold" */
+  displayName: string;
   title: string;
   subtitle: string;
   shortMeaning: string;
@@ -50,7 +57,7 @@ export interface VisualProfile {
   coreColor: string;
   auraColor: string;
   accentColor: string;
-  intensity: "soft" | "medium" | "strong" | "radiant";
+  intensity: "low" | "medium" | "high";
 }
 
 export interface AuraClassification {
@@ -74,9 +81,9 @@ export interface AuraResult {
   dominantPlanet: string;
   secondaryPlanets: string[];
   blendMode: boolean;
-  /** Energy modifier describing the quality of the aura */
+  /** Energy modifier — how the aura behaves */
   modifier: EnergyModifier;
-  /** Human-readable shareable identity line */
+  /** Human-readable shareable identity, e.g. "Radiant Solar Gold" */
   shareableIdentity: string;
   /** Visual rendering hints for UI layers */
   visualProfile: VisualProfile;
@@ -87,58 +94,73 @@ export interface AuraResult {
    ═══════════════════════════════════════════ */
 
 const PLANET_AURA_MAP: Record<string, AuraFamily> = {
-  sun: "gold",
-  moon: "blue",
-  mercury: "green",
-  venus: "pink",
-  mars: "red",
-  jupiter: "orange",
-  saturn: "indigo",
-  uranus: "turquoise",
-  neptune: "purple",
-  pluto: "white",
+  sun:     "solar_gold",
+  moon:    "lunar_blue",
+  mercury: "healing_green",
+  venus:   "venus_pink",
+  mars:    "vital_red",
+  jupiter: "expansive_orange",
+  saturn:  "deep_indigo",
+  uranus:  "astral_turquoise",
+  neptune: "mystical_purple",
+  pluto:   "pure_white",
 };
 
 /* ═══════════════════════════════════════════
    Energy modifier system
    ═══════════════════════════════════════════ */
 
-/** Planet-pair affinities that determine the energy modifier */
+/**
+ * Planet-pair affinities determine the modifier.
+ * Order matters: first match wins, most specific rules first.
+ */
 const MODIFIER_RULES: Array<{
   condition: (dom: string, secs: string[], profile: string) => boolean;
   modifier: EnergyModifier;
 }> = [
-  { condition: (d, s) => d === "sun" && s.includes("jupiter"),              modifier: "radiant" },
-  { condition: (d, s) => d === "sun" && s.includes("mars"),                 modifier: "intense" },
-  { condition: (d, s) => d === "moon" && s.includes("neptune"),             modifier: "ethereal" },
-  { condition: (d, s) => d === "moon" && s.includes("venus"),               modifier: "soft" },
-  { condition: (d, s) => d === "venus" && s.includes("neptune"),            modifier: "fluid" },
-  { condition: (d, s) => d === "venus" && s.includes("pluto"),              modifier: "magnetic" },
-  { condition: (d, s) => d === "mars" && s.includes("pluto"),               modifier: "transformative" },
-  { condition: (d, s) => d === "saturn" && s.includes("mars"),              modifier: "grounded" },
-  { condition: (d, s) => d === "saturn" && s.includes("jupiter"),           modifier: "balanced" },
-  { condition: (d, s) => d === "pluto" && s.includes("neptune"),            modifier: "deep" },
-  { condition: (d, s) => d === "mercury" && s.includes("uranus"),           modifier: "magnetic" },
-  { condition: (d, s) => d === "uranus" && s.includes("mercury"),           modifier: "fluid" },
-  { condition: (d, s) => d === "jupiter" && s.includes("neptune"),          modifier: "ethereal" },
-  { condition: (d, s) => d === "neptune" && s.includes("moon"),             modifier: "soft" },
-  // Intensity-profile fallbacks
-  { condition: (_d, _s, p) => p === "dominant",   modifier: "intense" },
-  { condition: (_d, _s, p) => p === "diffused",   modifier: "balanced" },
+  // Specific planet-pair affinities
+  { condition: (d, s) => d === "sun" && s.includes("jupiter"),    modifier: "radiant" },
+  { condition: (d, s) => d === "sun" && s.includes("mars"),       modifier: "intense" },
+  { condition: (d, s) => d === "sun" && s.includes("venus"),      modifier: "magnetic" },
+  { condition: (d, s) => d === "moon" && s.includes("neptune"),   modifier: "ethereal" },
+  { condition: (d, s) => d === "moon" && s.includes("venus"),     modifier: "soft" },
+  { condition: (d, s) => d === "moon" && s.includes("pluto"),     modifier: "deep" },
+  { condition: (d, s) => d === "venus" && s.includes("neptune"),  modifier: "fluid" },
+  { condition: (d, s) => d === "venus" && s.includes("pluto"),    modifier: "magnetic" },
+  { condition: (d, s) => d === "venus" && s.includes("moon"),     modifier: "soft" },
+  { condition: (d, s) => d === "mars" && s.includes("pluto"),     modifier: "transformative" },
+  { condition: (d, s) => d === "mars" && s.includes("saturn"),    modifier: "grounded" },
+  { condition: (d, s) => d === "mars" && s.includes("jupiter"),   modifier: "radiant" },
+  { condition: (d, s) => d === "saturn" && s.includes("mars"),    modifier: "grounded" },
+  { condition: (d, s) => d === "saturn" && s.includes("jupiter"), modifier: "balanced" },
+  { condition: (d, s) => d === "saturn" && s.includes("pluto"),   modifier: "deep" },
+  { condition: (d, s) => d === "pluto" && s.includes("neptune"),  modifier: "deep" },
+  { condition: (d, s) => d === "pluto" && s.includes("mars"),     modifier: "transformative" },
+  { condition: (d, s) => d === "mercury" && s.includes("uranus"), modifier: "magnetic" },
+  { condition: (d, s) => d === "mercury" && s.includes("neptune"),modifier: "fluid" },
+  { condition: (d, s) => d === "uranus" && s.includes("mercury"), modifier: "fluid" },
+  { condition: (d, s) => d === "uranus" && s.includes("neptune"), modifier: "ethereal" },
+  { condition: (d, s) => d === "jupiter" && s.includes("neptune"),modifier: "ethereal" },
+  { condition: (d, s) => d === "jupiter" && s.includes("sun"),    modifier: "radiant" },
+  { condition: (d, s) => d === "neptune" && s.includes("moon"),   modifier: "soft" },
+  { condition: (d, s) => d === "neptune" && s.includes("pluto"),  modifier: "deep" },
+  // Intensity-profile fallbacks (when no planet-pair matched)
+  { condition: (_d, _s, p) => p === "dominant",  modifier: "intense" },
+  { condition: (_d, _s, p) => p === "diffused",  modifier: "balanced" },
 ];
 
 /** Fallback modifier by planet when no rule matches */
 const PLANET_DEFAULT_MODIFIER: Record<string, EnergyModifier> = {
-  sun: "radiant",
-  moon: "soft",
+  sun:     "radiant",
+  moon:    "soft",
   mercury: "fluid",
-  venus: "magnetic",
-  mars: "intense",
+  venus:   "magnetic",
+  mars:    "intense",
   jupiter: "radiant",
-  saturn: "grounded",
-  uranus: "transformative",
+  saturn:  "grounded",
+  uranus:  "transformative",
   neptune: "ethereal",
-  pluto: "deep",
+  pluto:   "deep",
 };
 
 function resolveModifier(
@@ -155,20 +177,20 @@ function resolveModifier(
 }
 
 /* ═══════════════════════════════════════════
-   Modifier display names (for shareable identity)
+   Modifier display names
    ═══════════════════════════════════════════ */
 
 const MODIFIER_LABELS: Record<EnergyModifier, string> = {
-  radiant: "Radiant",
-  soft: "Soft",
-  magnetic: "Magnetic",
-  deep: "Deep",
-  balanced: "Balanced",
+  radiant:        "Radiant",
+  soft:           "Soft",
+  magnetic:       "Magnetic",
+  deep:           "Deep",
+  balanced:       "Balanced",
   transformative: "Transformative",
-  grounded: "Grounded",
-  fluid: "Fluid",
-  intense: "Intense",
-  ethereal: "Ethereal",
+  grounded:       "Grounded",
+  fluid:          "Fluid",
+  intense:        "Intense",
+  ethereal:       "Ethereal",
 };
 
 /* ═══════════════════════════════════════════
@@ -176,16 +198,16 @@ const MODIFIER_LABELS: Record<EnergyModifier, string> = {
    ═══════════════════════════════════════════ */
 
 const AURA_VISUAL_PROFILES: Record<AuraFamily, { core: string; aura: string; accent: string }> = {
-  gold:      { core: "#F5C842", aura: "#DAA520", accent: "#FFE4A0" },
-  blue:      { core: "#8AAFC8", aura: "#5B8BA8", accent: "#D0E8F5" },
-  green:     { core: "#5AAF7A", aura: "#3D8B5E", accent: "#A8E6C0" },
-  purple:    { core: "#9060B8", aura: "#6B3FA0", accent: "#CBA8E8" },
-  red:       { core: "#D04848", aura: "#A03030", accent: "#F0A0A0" },
-  pink:      { core: "#E878B0", aura: "#C05888", accent: "#F8C8E0" },
-  turquoise: { core: "#48B8D8", aura: "#2898B8", accent: "#A0E8F8" },
-  indigo:    { core: "#5060C8", aura: "#3848A8", accent: "#A0A8E8" },
-  orange:    { core: "#D89038", aura: "#B87020", accent: "#F0C888" },
-  white:     { core: "#D8D0C4", aura: "#B8B0A0", accent: "#F0ECE4" },
+  solar_gold:        { core: "#F5C842", aura: "#DAA520", accent: "#FFE4A0" },
+  lunar_blue:        { core: "#8AAFC8", aura: "#5B8BA8", accent: "#D0E8F5" },
+  healing_green:     { core: "#5AAF7A", aura: "#3D8B5E", accent: "#A8E6C0" },
+  mystical_purple:   { core: "#9060B8", aura: "#6B3FA0", accent: "#CBA8E8" },
+  vital_red:         { core: "#D04848", aura: "#A03030", accent: "#F0A0A0" },
+  venus_pink:        { core: "#E878B0", aura: "#C05888", accent: "#F8C8E0" },
+  astral_turquoise:  { core: "#48B8D8", aura: "#2898B8", accent: "#A0E8F8" },
+  deep_indigo:       { core: "#5060C8", aura: "#3848A8", accent: "#A0A8E8" },
+  expansive_orange:  { core: "#D89038", aura: "#B87020", accent: "#F0C888" },
+  pure_white:        { core: "#D8D0C4", aura: "#B8B0A0", accent: "#F0ECE4" },
 };
 
 function resolveVisualProfile(
@@ -197,9 +219,9 @@ function resolveVisualProfile(
   const accentSource = secondary ? AURA_VISUAL_PROFILES[secondary] : base;
 
   const intensity: VisualProfile["intensity"] =
-    intensityProfile === "dominant" ? "radiant"
+    intensityProfile === "dominant" ? "high"
     : intensityProfile === "balanced" ? "medium"
-    : "soft";
+    : "low";
 
   return {
     coreColor: base.core,
@@ -214,7 +236,8 @@ function resolveVisualProfile(
    ═══════════════════════════════════════════ */
 
 const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
-  gold: {
+  solar_gold: {
+    displayName: "Solar Gold",
     title: "Solar Radiance",
     subtitle: "Your essence burns with sovereign light",
     shortMeaning:
@@ -222,7 +245,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "commanding, warm, charismatic",
     visualTone: "golden glow, amber warmth, radiant center",
   },
-  blue: {
+  lunar_blue: {
+    displayName: "Lunar Blue",
     title: "Lunar Depths",
     subtitle: "Your soul speaks in tides and whispers",
     shortMeaning:
@@ -230,7 +254,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "empathic, reflective, nurturing",
     visualTone: "silver-blue shimmer, moonlit serenity, cool luminance",
   },
-  green: {
+  healing_green: {
+    displayName: "Healing Green",
     title: "Emerald Current",
     subtitle: "Your mind weaves patterns others overlook",
     shortMeaning:
@@ -238,7 +263,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "analytical, articulate, adaptive",
     visualTone: "jade pulse, verdant clarity, mercurial spark",
   },
-  purple: {
+  mystical_purple: {
+    displayName: "Mystical Purple",
     title: "Mystic Veil",
     subtitle: "You dwell where dreams meet vision",
     shortMeaning:
@@ -246,7 +272,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "visionary, ethereal, transcendent",
     visualTone: "deep violet mist, amethyst haze, otherworldly glow",
   },
-  red: {
+  vital_red: {
+    displayName: "Vital Red",
     title: "Vital Flame",
     subtitle: "Your will is forged in fire",
     shortMeaning:
@@ -254,7 +281,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "bold, passionate, decisive",
     visualTone: "crimson pulse, ember glow, fierce radiance",
   },
-  pink: {
+  venus_pink: {
+    displayName: "Venus Pink",
     title: "Venusian Grace",
     subtitle: "Beauty and harmony flow through your being",
     shortMeaning:
@@ -262,7 +290,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "romantic, aesthetic, diplomatic",
     visualTone: "rose blush, soft magenta, warm luminescence",
   },
-  turquoise: {
+  astral_turquoise: {
+    displayName: "Astral Turquoise",
     title: "Astral Current",
     subtitle: "You ride the edge of tomorrow",
     shortMeaning:
@@ -270,7 +299,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "innovative, independent, electric",
     visualTone: "cyan flash, aqua surge, electric shimmer",
   },
-  indigo: {
+  deep_indigo: {
+    displayName: "Deep Indigo",
     title: "Deep Anchor",
     subtitle: "Your strength is carved from ancient stone",
     shortMeaning:
@@ -278,7 +308,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "disciplined, stoic, enduring",
     visualTone: "midnight indigo, deep navy, crystalline weight",
   },
-  orange: {
+  expansive_orange: {
+    displayName: "Expansive Orange",
     title: "Expansive Light",
     subtitle: "Your spirit seeks the horizon",
     shortMeaning:
@@ -286,7 +317,8 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "optimistic, philosophical, generous",
     visualTone: "warm amber, sunset glow, expansive warmth",
   },
-  white: {
+  pure_white: {
+    displayName: "Pure White",
     title: "Pure Transmutation",
     subtitle: "You transform everything you touch",
     shortMeaning:
@@ -302,29 +334,29 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
    ═══════════════════════════════════════════ */
 
 const BLEND_SUBTITLE_MODIFIERS: Record<AuraFamily, string> = {
-  gold: "tempered by inner radiance",
-  blue: "deepened by lunar intuition",
-  green: "sharpened by mercurial wit",
-  purple: "veiled in mystic vision",
-  red: "ignited by primal fire",
-  pink: "softened by Venusian grace",
-  turquoise: "electrified by future sight",
-  indigo: "anchored in timeless discipline",
-  orange: "expanded by boundless optimism",
-  white: "refined through transformation",
+  solar_gold:       "tempered by inner radiance",
+  lunar_blue:       "deepened by lunar intuition",
+  healing_green:    "sharpened by mercurial wit",
+  mystical_purple:  "veiled in mystic vision",
+  vital_red:        "ignited by primal fire",
+  venus_pink:       "softened by Venusian grace",
+  astral_turquoise: "electrified by future sight",
+  deep_indigo:      "anchored in timeless discipline",
+  expansive_orange: "expanded by boundless optimism",
+  pure_white:       "refined through transformation",
 };
 
 const BLEND_MEANING_SUFFIXES: Record<AuraFamily, string> = {
-  gold: "This radiant warmth amplifies your natural authority.",
-  blue: "Your emotional depth adds a layer of rare empathy.",
-  green: "A sharp mind sharpens every instinct you carry.",
-  purple: "Mystical sensitivity colors your perception with hidden insight.",
-  red: "An undercurrent of raw courage fuels your every move.",
-  pink: "A gift for harmony softens even your boldest expressions.",
-  turquoise: "Flashes of innovation keep your path unpredictable and alive.",
-  indigo: "Deep patience grounds your energy with enduring strength.",
-  orange: "A generous spirit lifts your vision beyond the immediate.",
-  white: "The power of reinvention ensures nothing holds you back.",
+  solar_gold:       "This radiant warmth amplifies your natural authority.",
+  lunar_blue:       "Your emotional depth adds a layer of rare empathy.",
+  healing_green:    "A sharp mind sharpens every instinct you carry.",
+  mystical_purple:  "Mystical sensitivity colors your perception with hidden insight.",
+  vital_red:        "An undercurrent of raw courage fuels your every move.",
+  venus_pink:       "A gift for harmony softens even your boldest expressions.",
+  astral_turquoise: "Flashes of innovation keep your path unpredictable and alive.",
+  deep_indigo:      "Deep patience grounds your energy with enduring strength.",
+  expansive_orange: "A generous spirit lifts your vision beyond the immediate.",
+  pure_white:       "The power of reinvention ensures nothing holds you back.",
 };
 
 /* ═══════════════════════════════════════════
@@ -334,13 +366,13 @@ const BLEND_MEANING_SUFFIXES: Record<AuraFamily, string> = {
 function buildShareableIdentity(
   primary: AuraBankEntry,
   modifier: EnergyModifier,
-  secondary?: AuraFamily,
+  secondaryFamily?: AuraFamily,
 ): string {
   const modLabel = MODIFIER_LABELS[modifier];
-  const base = `${modLabel} ${primary.title}`;
-  if (secondary) {
-    const secTitle = AURA_BANK[secondary].title.split(" ")[0]; // first word
-    return `${base} with ${secTitle} Undertones`;
+  const base = `${modLabel} ${primary.displayName}`;
+  if (secondaryFamily) {
+    const secName = AURA_BANK[secondaryFamily].displayName;
+    return `${base} · ${secName} Undertone`;
   }
   return base;
 }
@@ -364,7 +396,7 @@ export function classifyAura(
   const top = sortedInfluences.slice(0, 5);
   if (top.length === 0) {
     return {
-      primaryAura: "gold",
+      primaryAura: "solar_gold",
       secondaryAuras: [],
       dominantPlanet: "sun",
       secondaryPlanets: [],
@@ -375,7 +407,7 @@ export function classifyAura(
   }
 
   const dominantPlanet = top[0].key;
-  const primaryAura = PLANET_AURA_MAP[dominantPlanet] || "gold";
+  const primaryAura = PLANET_AURA_MAP[dominantPlanet] || "solar_gold";
 
   const secondaryPlanets = top.slice(1).map((p) => p.key);
   const secondaryAuras = secondaryPlanets
@@ -396,10 +428,10 @@ export function classifyAura(
     intensityProfile = "diffused";
   }
 
-  // Blend mode activates when the top two are close in strength
+  // Blend mode: true only when top two are genuinely close
   const blendMode = ratio < 1.4 && secondaryAuras.length > 0;
 
-  // Resolve energy modifier
+  // Resolve energy modifier from planetary dynamics
   const modifier = resolveModifier(dominantPlanet, secondaryPlanets, intensityProfile);
 
   return {
