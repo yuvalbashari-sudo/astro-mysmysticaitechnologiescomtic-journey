@@ -188,8 +188,9 @@ export const PromoAd = () => {
     phase: i * 0.7,
   }));
 
-  const coreGlow = 0.15 + climaxIntensity * 0.7;
-  const coreR = 30 + climaxIntensity * 80 + Math.sin(frame * 0.1) * 8 * climaxIntensity;
+  // Core glow: builds during climax, then stays strong with gentle breathing
+  const coreGlow = 0.15 + climaxIntensity * 0.5 + holdGlow * 0.35 + holdBreath;
+  const coreR = 30 + climaxIntensity * 60 + holdGlow * 30 + Math.sin(frame * 0.1) * 8 * Math.max(climaxIntensity, holdGlow);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#020510" }}>
