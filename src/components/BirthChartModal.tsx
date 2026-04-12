@@ -626,6 +626,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 )}
 
 
+                {chartData && (
                 <div className="grid xl:grid-cols-3 gap-4 w-full">
                   <div className="mystical-card p-4">
                     <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_birth_location}</div>
