@@ -13,6 +13,8 @@ import {
 } from "@/lib/auraLocale";
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
+import { isAdminTestMode } from "@/lib/adminTestMode";
+import AuraDebugPanel from "@/components/AuraDebugPanel";
 
 /* ═══════════════════════════════════════════════════════
    AstralLightReveal — Cinematic Astral Energy Animation
