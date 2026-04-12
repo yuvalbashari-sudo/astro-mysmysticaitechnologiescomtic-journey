@@ -411,11 +411,21 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </defs>
 
 
-          {/* ─── Human figure — AI-generated astral image (rendered first = behind stars) ─── */}
+          {/* ─── Halo ellipse behind figure — colorful aura envelope ─── */}
+          <ellipse
+            cx={FIG_CX}
+            cy={FIG_CORE_Y + 40}
+            rx={75 + absorptionLevel * 15 + climaxLevel * 10}
+            ry={110 + absorptionLevel * 20 + climaxLevel * 15}
+            fill="url(#climax-radial)"
+            opacity={absorptionLevel * 0.6 + climaxLevel * 0.35}
+          />
+
+          {/* ─── Human figure — outline with colorful aura glow ─── */}
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
-              filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'}) drop-shadow(0 0 ${climaxLevel * 12}px ${secondaryColor}40)`,
+              filter: `drop-shadow(0 0 ${6 + absorptionLevel * 12 + climaxLevel * 26}px ${dominantColor}${climaxLevel > 0.5 ? 'c0' : '70'}) drop-shadow(0 0 ${4 + climaxLevel * 18}px ${secondaryColor}60)`,
             }}
           >
             <image
@@ -424,7 +434,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               y="0"
               width={FIG_VB_W}
               height={FIG_VB_H}
-              opacity={0.15 + absorptionLevel * 0.55 + climaxLevel * 0.3}
+              opacity={0.25 + absorptionLevel * 0.5 + climaxLevel * 0.25}
               style={{ mixBlendMode: 'screen' }}
             />
             {climaxLevel > 0 && (
@@ -434,8 +444,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 y="0"
                 width={FIG_VB_W}
                 height={FIG_VB_H}
-                opacity={climaxLevel * 0.4}
-                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 3}px) brightness(${1.5 + climaxLevel})` }}
+                opacity={climaxLevel * 0.5}
+                style={{ mixBlendMode: 'screen', filter: `blur(${climaxLevel * 4}px) brightness(${1.6 + climaxLevel * 0.8})` }}
               />
             )}
           </g>
