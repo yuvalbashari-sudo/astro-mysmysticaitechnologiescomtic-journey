@@ -65,11 +65,19 @@ supabase.auth.onAuthStateChange((_event, session) => {
 })();
 
 /**
- * Check if the authenticated user is an admin.
+ * Check if the authenticated user is an admin,
+ * OR if preview admin override is active.
  */
 function isAdminEmail(): boolean {
-  if (!_cachedAuthEmail) return false;
-  return (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail);
+  // 1. Real auth admin
+  if (_cachedAuthEmail && (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail)) {
+    return true;
+  }
+  // 2. Preview override — only works in preview/dev environments
+  if (IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true") {
+    return true;
+  }
+  return false;
 }
 
 interface PlanData {
