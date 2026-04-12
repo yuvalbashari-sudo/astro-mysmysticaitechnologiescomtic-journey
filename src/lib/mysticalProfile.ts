@@ -242,6 +242,9 @@ function buildContextForAI(): string | null {
   if (profile.risingSign) {
     lines.push(`מזל עולה: ${profile.risingSign} ${profile.risingSymbol || ""} (יסוד: ${profile.risingElement || "לא ידוע"})`);
   }
+  if (profile.birthLocation) {
+    lines.push(`מקום לידה: ${profile.birthLocation}`);
+  }
 
   // Reading count
   lines.push(`מספר קריאות כולל: ${profile.totalReadings}`);

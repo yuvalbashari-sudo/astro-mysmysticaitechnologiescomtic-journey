@@ -162,6 +162,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
     if (effectiveGender) mysticalProfile.recordGender(effectiveGender);
+    if (effectiveBirthCity) mysticalProfile.recordBirthLocation(effectiveBirthCity);
 
     setPreparingChart(true);
 
