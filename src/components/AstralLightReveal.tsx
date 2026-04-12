@@ -384,11 +384,11 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
             {/* Climax radial — aura-driven color blend */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fff" stopOpacity={0.2 * climaxLevel} />
-              <stop offset="20%" stopColor={auraColors.dominant} stopOpacity={0.7 * climaxLevel} />
-              <stop offset="45%" stopColor={auraColors.dominant} stopOpacity={0.4 * climaxLevel} />
-              <stop offset="65%" stopColor={auraColors.secondary} stopOpacity={0.15 * climaxLevel} />
-              <stop offset="85%" stopColor={auraColors.tertiary} stopOpacity={0.05 * climaxLevel} />
+              <stop offset="0%" stopColor="#fff" stopOpacity={0.3 * climaxLevel} />
+              <stop offset="15%" stopColor={auraColors.dominant} stopOpacity={0.85 * climaxLevel} />
+              <stop offset="40%" stopColor={auraColors.dominant} stopOpacity={0.55 * climaxLevel} />
+              <stop offset="60%" stopColor={auraColors.secondary} stopOpacity={0.3 * climaxLevel} />
+              <stop offset="80%" stopColor={auraColors.tertiary} stopOpacity={0.12 * climaxLevel} />
               <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
