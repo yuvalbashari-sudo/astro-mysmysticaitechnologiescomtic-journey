@@ -1,526 +1,516 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate, spring } from "remotion";
 
-/* ═══════════════════════════════════════════════════════
-   Cinematic Astrology Promo — Reference-matched composition
-   Large centered astral figure with zodiac beam system
-   6 seconds @ 30fps = 180 frames
-   ═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   NEW ASTRAL SCENE — Complete replacement (v2)
+   Hard override: zero reuse from previous implementation
+   300 frames @ 30fps = 10 seconds
+   ═══════════════════════════════════════════════════════════ */
 
-const CX = 540;   // center X of 1080
-const CY = 900;   // center Y — figure centered in upper 2/3
-const CHEST_Y = 730; // beam convergence — center of torso
+// Debug confirmation
+console.log("NEW ASTRAL SCENE ACTIVE");
 
-// Zodiac constellations arranged in a wide arc around the figure
-// Colors follow a rainbow spectrum matching the reference
-const ZODIAC: { name: string; symbol: string; color: string; angle: number; dist: number; stars: [number, number][] }[] = [
-  { name: "ARIES",       symbol: "♈", color: "#E8A030", angle: -120, dist: 460, stars: [[0,0],[15,-20],[35,-15],[25,10],[45,-5]] },
-  { name: "TAURUS",      symbol: "♉", color: "#40D880", angle: -100, dist: 470, stars: [[0,0],[20,-15],[10,15],[30,5],[-10,20]] },
-  { name: "GEMINI",      symbol: "♊", color: "#30E8B0", angle: -75,  dist: 450, stars: [[0,0],[15,20],[-15,20],[20,-10],[-10,-15]] },
-  { name: "CANCER",      symbol: "♋", color: "#40C8F0", angle: -55,  dist: 460, stars: [[0,0],[20,10],[-15,15],[10,-20]] },
-  { name: "LEO",         symbol: "♌", color: "#A060E0", angle: -35,  dist: 480, stars: [[0,0],[25,-10],[15,15],[-10,20],[30,10]] },
-  { name: "VIRGO",       symbol: "♍", color: "#C050D0", angle: -15,  dist: 470, stars: [[0,0],[20,15],[-20,10],[15,-15],[-15,-20],[25,25]] },
-  { name: "LIBRA",       symbol: "♎", color: "#E04080", angle: 15,   dist: 470, stars: [[0,0],[20,-15],[-15,-10],[25,10],[-20,15]] },
-  { name: "SCORPIO",     symbol: "♏", color: "#E06040", angle: 35,   dist: 480, stars: [[0,0],[15,20],[30,15],[25,-10],[-10,15]] },
-  { name: "SAGITTARIUS", symbol: "♐", color: "#D040D0", angle: 55,   dist: 460, stars: [[0,0],[-20,15],[20,10],[-15,-15],[15,-20]] },
-  { name: "CAPRICORN",   symbol: "♑", color: "#6080E0", angle: 75,   dist: 450, stars: [[0,0],[20,-10],[-10,-20],[15,15],[-20,10]] },
-  { name: "AQUARIUS",    symbol: "♒", color: "#30B0E8", angle: 100,  dist: 470, stars: [[0,0],[25,10],[-15,15],[10,-20],[-20,-10]] },
-  { name: "PISCES",      symbol: "♓", color: "#5060E8", angle: 120,  dist: 460, stars: [[0,0],[20,15],[-20,20],[15,-10],[-10,-15]] },
+const W = 1080;
+const H = 1920;
+const MX = W / 2; // 540
+const MY = 780;   // figure vertical center (upper portion)
+
+// ═══════════════════════════════════════
+// BRAND NEW HUMAN FIGURE — Da Vinci style
+// Vitruvian proportions, ~700px tall
+// Completely new geometry
+// ═══════════════════════════════════════
+
+// Head: smooth oval, natural skull, no crest
+const SKULL = `M 540,440 C 558,440 572,450 578,468 C 584,486 582,510 576,524
+  C 572,534 564,542 554,546 L 540,550 L 526,546
+  C 516,542 508,534 504,524 C 498,510 496,486 502,468
+  C 508,450 522,440 540,440 Z`;
+
+// Neck: clean cylindrical
+const NECK_PATH = `M 528,548 C 530,558 532,572 532,580 L 548,580 C 548,572 550,558 552,548`;
+
+// Shoulders + Upper torso: athletic, tapered
+const UPPER_TORSO = `M 532,580 C 520,582 490,590 462,608
+  C 448,618 440,632 438,650 L 436,680 L 436,720
+  C 436,732 438,744 442,754 L 540,754
+  L 638,754 C 642,744 644,732 644,720 L 644,680
+  L 642,650 C 640,632 632,618 618,608
+  C 590,590 560,582 548,580 Z`;
+
+// Lower torso: waist to hips
+const LOWER_TORSO = `M 442,754 C 446,772 452,790 460,808
+  L 470,830 C 478,844 490,856 504,862
+  L 540,870 L 576,862 C 590,856 602,844 610,830
+  L 620,808 C 628,790 634,772 638,754 Z`;
+
+// Left arm: natural hang, relaxed hand
+const L_ARM = `M 462,608 C 448,616 432,636 420,660
+  C 408,688 398,720 392,756 L 388,790
+  C 384,818 382,846 381,870 C 380,888 380,902 383,910
+  C 385,916 390,920 396,920 L 404,918
+  C 410,916 414,910 414,902 L 416,876 L 420,840
+  L 428,800 L 436,760 L 438,720`;
+
+// Right arm: mirrored
+const R_ARM = `M 618,608 C 632,616 648,636 660,660
+  C 672,688 682,720 688,756 L 692,790
+  C 696,818 698,846 699,870 C 700,888 700,902 697,910
+  C 695,916 690,920 684,920 L 676,918
+  C 670,916 666,910 666,902 L 664,876 L 660,840
+  L 652,800 L 644,760 L 642,720`;
+
+// Left leg
+const L_LEG = `M 504,862 L 500,900 C 496,940 492,980 490,1024
+  L 488,1070 L 486,1120 L 484,1160 L 483,1190
+  C 483,1200 486,1208 492,1212 L 518,1215
+  C 526,1215 530,1210 530,1202 L 529,1180
+  L 528,1130 L 528,1080 L 530,1024 L 534,960 L 540,900`;
+
+// Right leg
+const R_LEG = `M 576,862 L 580,900 C 584,940 588,980 590,1024
+  L 592,1070 L 594,1120 L 596,1160 L 597,1190
+  C 597,1200 594,1208 588,1212 L 562,1215
+  C 554,1215 550,1210 550,1202 L 551,1180
+  L 552,1130 L 552,1080 L 550,1024 L 546,960 L 540,900`;
+
+const BODY_FILLS = [SKULL, UPPER_TORSO, LOWER_TORSO];
+const BODY_STROKES = [SKULL, NECK_PATH, UPPER_TORSO, LOWER_TORSO, L_ARM, R_ARM, L_LEG, R_LEG];
+
+// ═══ INTERNAL ENERGY MERIDIANS ═══
+const MERIDIANS = [
+  // Central channel (sushumna) — crown to root
+  `M 540,445 L 540,500 L 540,580 C 540,640 540,700 540,754 L 540,862`,
+  // Heart horizontal
+  `M 460,700 C 480,690 510,685 540,685 C 570,685 600,690 620,700`,
+  // Left arm flow
+  `M 540,640 C 510,650 470,670 440,700 C 420,730 400,780 388,830`,
+  // Right arm flow
+  `M 540,640 C 570,650 610,670 640,700 C 660,730 680,780 692,830`,
+  // Left leg flow
+  `M 540,862 C 525,890 510,940 495,1020 C 488,1060 485,1110 484,1170`,
+  // Right leg flow
+  `M 540,862 C 555,890 570,940 585,1020 C 592,1060 595,1110 596,1170`,
+  // Solar plexus ring
+  `M 465,770 C 490,760 515,756 540,756 C 565,756 590,760 615,770`,
+  // Third eye
+  `M 520,470 C 528,464 534,462 540,462 C 546,462 552,464 560,470`,
 ];
 
-// ═══ NEW FULL-BODY ASTRAL FIGURE ═══
-// Large dominant figure: head ~500, feet ~1300, ~800px tall
-// 7.5-head proportion, centered at CX=540
-// Constructed from multiple body-part paths for anatomical clarity
+// Chakra points along central channel
+const CHAKRAS = [
+  { y: 458, color: "#C070FF", r: 6, name: "Crown" },
+  { y: 480, color: "#6060FF", r: 5, name: "ThirdEye" },
+  { y: 570, color: "#40C0FF", r: 5, name: "Throat" },
+  { y: 690, color: "#40E080", r: 7, name: "Heart" },
+  { y: 756, color: "#E0E040", r: 6, name: "Solar" },
+  { y: 830, color: "#F0A030", r: 5, name: "Sacral" },
+  { y: 862, color: "#E04040", r: 5, name: "Root" },
+];
 
-const HEAD = `
-M 540,500
-C 520,500 505,515 502,535
-C 499,555 503,575 515,585
-C 520,590 528,594 540,594
-C 552,594 560,590 565,585
-C 577,575 581,555 578,535
-C 575,515 560,500 540,500 Z`;
+// ═══ ZODIAC RING ═══
+const SIGNS: { name: string; sym: string; col: string; angle: number }[] = [
+  { name: "ARIES",       sym: "♈", col: "#E8A030", angle: -150 },
+  { name: "TAURUS",      sym: "♉", col: "#40D880", angle: -120 },
+  { name: "GEMINI",      sym: "♊", col: "#30E8B0", angle: -95 },
+  { name: "CANCER",      sym: "♋", col: "#40C8F0", angle: -70 },
+  { name: "LEO",         sym: "♌", col: "#A060E0", angle: -45 },
+  { name: "VIRGO",       sym: "♍", col: "#C050D0", angle: -20 },
+  { name: "LIBRA",       sym: "♎", col: "#E04080", angle: 20 },
+  { name: "SCORPIO",     sym: "♏", col: "#E06040", angle: 45 },
+  { name: "SAGITTARIUS", sym: "♐", col: "#D040D0", angle: 70 },
+  { name: "CAPRICORN",   sym: "♑", col: "#6080E0", angle: 95 },
+  { name: "AQUARIUS",    sym: "♒", col: "#30B0E8", angle: 120 },
+  { name: "PISCES",      sym: "♓", col: "#5060E8", angle: 150 },
+];
 
-const NECK = `
-M 530,594 L 528,618
-M 550,594 L 552,618`;
+const ORBIT_RADIUS = 480;
+const BEAM_TARGET_Y = 690; // heart chakra
 
-const TORSO = `
-M 528,618
-C 510,622 475,640 458,670
-C 445,695 440,730 442,760
-L 445,810
-C 447,835 455,860 465,880
-L 478,920
-C 485,932 498,942 515,948
-L 525,952 L 540,954 L 555,952 L 565,948
-C 582,942 595,932 602,920
-L 615,880
-C 625,860 633,835 635,810
-L 638,760
-C 640,730 635,695 622,670
-C 605,640 570,622 552,618 Z`;
-
-const LEFT_ARM = `
-M 458,670
-C 445,678 425,700 410,730
-C 395,762 385,800 378,835
-L 370,875
-C 365,892 360,910 358,925
-C 356,938 358,948 365,952
-L 375,955
-C 382,955 387,950 388,942
-L 395,905
-L 405,865
-L 418,828
-L 435,790
-L 445,760`;
-
-const RIGHT_ARM = `
-M 622,670
-C 635,678 655,700 670,730
-C 685,762 695,800 702,835
-L 710,875
-C 715,892 720,910 722,925
-C 724,938 722,948 715,952
-L 705,955
-C 698,955 693,950 692,942
-L 685,905
-L 675,865
-L 662,828
-L 645,790
-L 635,760`;
-
-const LEFT_LEG = `
-M 515,948
-L 510,985
-C 505,1020 500,1060 497,1100
-L 493,1150
-L 490,1200
-L 488,1250
-L 486,1285
-C 486,1295 490,1302 498,1305
-L 525,1308
-C 533,1308 538,1303 538,1295
-L 536,1260
-L 534,1200
-L 533,1150
-L 534,1100
-L 537,1040
-L 540,985`;
-
-const RIGHT_LEG = `
-M 565,948
-L 570,985
-C 575,1020 580,1060 583,1100
-L 587,1150
-L 590,1200
-L 592,1250
-L 594,1285
-C 594,1295 590,1302 582,1305
-L 555,1308
-C 547,1308 542,1303 542,1295
-L 544,1260
-L 546,1200
-L 547,1150
-L 546,1100
-L 543,1040
-L 540,985`;
-
-const FIGURE_PARTS = [HEAD, TORSO, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
-const FIGURE_OUTLINE = [HEAD, NECK, TORSO, LEFT_ARM, RIGHT_ARM, LEFT_LEG, RIGHT_LEG];
-
-// Internal energy channels — meridian-like paths through the body
-const ENERGY_CHANNELS = [
-  // Central spine — crown to root
-  `M 540,510 C 540,550 540,600 540,700 C 540,780 540,860 540,954`,
-  // Left arm meridian
-  `M 540,670 C 520,680 490,700 458,670 C 440,690 410,730 378,835`,
-  // Right arm meridian
-  `M 540,670 C 560,680 590,700 622,670 C 640,690 670,730 702,835`,
-  // Left leg meridian
-  `M 540,954 C 530,980 515,1020 497,1100 C 493,1150 490,1200 488,1250`,
-  // Right leg meridian
-  `M 540,954 C 550,980 565,1020 583,1100 C 587,1150 590,1200 592,1250`,
-  // Heart cross-channel
-  `M 480,730 C 500,720 520,715 540,718 C 560,715 580,720 600,730`,
-  // Solar plexus ring
-  `M 475,810 C 490,800 520,795 540,795 C 560,795 590,800 605,810`,
-  // Sacral
-  `M 500,920 C 515,912 530,910 540,910 C 550,910 565,912 580,920`,
-  // Third eye
-  `M 525,530 C 530,525 535,523 540,523 C 545,523 550,525 555,530`,
-  // Throat
-  `M 530,610 C 535,606 540,605 540,605 C 540,605 545,606 550,610`,
+// Constellation star patterns (small clusters)
+const STAR_PATTERNS: [number, number][][] = [
+  [[0,0],[18,-22],[38,-12],[28,14],[48,-2]],
+  [[0,0],[22,-18],[12,18],[32,8],[-12,22]],
+  [[0,0],[16,22],[-16,22],[22,-12],[-12,-18]],
+  [[0,0],[22,12],[-18,16],[12,-22]],
+  [[0,0],[28,-12],[18,18],[-12,22],[32,12]],
+  [[0,0],[22,18],[-22,12],[18,-18],[-18,-22],[28,28]],
+  [[0,0],[22,-18],[-18,-12],[28,12],[-22,18]],
+  [[0,0],[18,22],[32,18],[28,-12],[-12,18]],
+  [[0,0],[-22,18],[22,12],[-18,-18],[18,-22]],
+  [[0,0],[22,-12],[-12,-22],[18,18],[-22,12]],
+  [[0,0],[28,12],[-18,18],[12,-22],[-22,-12]],
+  [[0,0],[22,18],[-22,22],[18,-12],[-12,-18]],
 ];
 
 export const PromoAd = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // ── Scene 1: Constellation activation + beams (0–70) ──
-  const constellationProg = interpolate(frame, [0, 40], [0, 1], { extrapolateRight: "clamp" });
-  const beamProg = interpolate(frame, [15, 60], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ═══ PHASE 1: Constellation reveal (0–50) ═══
+  const starsIn = interpolate(frame, [0, 45], [0, 1], { extrapolateRight: "clamp" });
 
-  // ── Scene 2: Absorption + energy fill + climax (50–120) ──
-  const absorptionRamp = interpolate(frame, [50, 80], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  const climaxIntensity = interpolate(frame, [80, 105], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  // Beams sustain but dim slightly after climax
-  const beamSustain = interpolate(frame, [60, 130], [1, 0.5], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ═══ PHASE 2: Figure materializes (20–60) ═══
+  const figAppear = interpolate(frame, [20, 55], [0, 1], { extrapolateRight: "clamp" });
 
-  // ── Scene 3: Map emergence (130–170), then HOLD everything (170–300) ──
-  const mapReveal = spring({ frame: frame - 135, fps, config: { damping: 30, stiffness: 80 } });
-  const mapOpacity = interpolate(frame, [135, 160], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ═══ PHASE 3: Beams fire + energy absorption (40–100) ═══
+  const beamPower = interpolate(frame, [40, 80], [0, 1], { extrapolateRight: "clamp" });
+  const absorption = interpolate(frame, [60, 100], [0, 1], { extrapolateRight: "clamp" });
 
-  // Figure: fades in early, NEVER fades out — stays at full opacity forever
-  const figureOpacity = interpolate(frame, [5, 30], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+  // ═══ PHASE 4: Climax — full energy (100–140) ═══
+  const climax = interpolate(frame, [100, 130], [0, 1], { extrapolateRight: "clamp" });
 
-  // Final hold glow — intensifies after climax and stays permanently bright
-  const holdGlow = interpolate(frame, [105, 130], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-  // Gentle breathing pulse during hold phase (frame > 130)
-  const holdBreath = frame > 130 ? Math.sin((frame - 130) * 0.04) * 0.08 : 0;
+  // ═══ PHASE 5: HOLD — persistent final state (140–300) ═══
+  // Figure stays at FULL opacity, glowing, alive
+  const isHold = frame >= 140;
+  const holdPulse = isHold ? Math.sin((frame - 140) * 0.035) * 0.06 : 0;
+  const finalGlow = interpolate(frame, [100, 140], [0, 1], { extrapolateRight: "clamp" });
 
-  // Star field
-  const stars = Array.from({ length: 120 }, (_, i) => ({
-    x: ((i * 137.5) % 1080),
-    y: ((i * 97.3 + i * i * 3.7) % 1920),
-    r: (i % 4 === 0) ? 2.5 : (i % 3 === 0) ? 1.8 : 1,
+  // Map emerges BELOW figure during hold
+  const mapIn = spring({ frame: Math.max(0, frame - 150), fps, config: { damping: 30, stiffness: 60 } });
+  const mapOp = interpolate(frame, [150, 180], [0, 1], { extrapolateRight: "clamp" });
+
+  // Beams sustain but soften slightly during hold
+  const beamHold = interpolate(frame, [100, 160], [1, 0.6], { extrapolateRight: "clamp" });
+
+  // Body energy intensity
+  const bodyEnergy = Math.min(1, absorption * 0.5 + climax * 0.5 + (isHold ? 0.95 + holdPulse : 0));
+  const outlineGlow = 0.2 + bodyEnergy * 0.65;
+
+  // Core chest glow radius
+  const coreR = 20 + climax * 50 + finalGlow * 30 + (isHold ? Math.sin(frame * 0.08) * 8 : 0);
+  const coreOp = 0.1 + climax * 0.5 + finalGlow * 0.4 + holdPulse;
+
+  // Background stars
+  const bgStars = Array.from({ length: 140 }, (_, i) => ({
+    x: (i * 137.5) % W,
+    y: (i * 97.3 + i * i * 3.7) % H,
+    r: i % 5 === 0 ? 2.2 : i % 3 === 0 ? 1.5 : 0.8,
     phase: i * 0.7,
   }));
 
-  // Core glow: builds during climax, then stays strong with gentle breathing
-  const coreGlow = 0.15 + climaxIntensity * 0.5 + holdGlow * 0.35 + holdBreath;
-  const coreR = 30 + climaxIntensity * 60 + holdGlow * 30 + Math.sin(frame * 0.1) * 8 * Math.max(climaxIntensity, holdGlow);
-
   return (
     <AbsoluteFill style={{ backgroundColor: "#020510" }}>
-      {/* Deep space background */}
+      {/* ═══ DEEP SPACE BACKGROUND ═══ */}
       <AbsoluteFill>
-        <svg viewBox="0 0 1080 1920" width="100%" height="100%">
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
           <defs>
-            <radialGradient id="space-bg" cx="50%" cy="45%" r="70%">
-              <stop offset="0%" stopColor="#0a1030" />
-              <stop offset="50%" stopColor="#060a20" />
+            <radialGradient id="v2-space" cx="50%" cy="42%" r="70%">
+              <stop offset="0%" stopColor="#0c1235" />
+              <stop offset="45%" stopColor="#060a22" />
               <stop offset="100%" stopColor="#020510" />
             </radialGradient>
-            <radialGradient id="neb1" cx="25%" cy="30%" r="35%">
-              <stop offset="0%" stopColor="#1a0840" stopOpacity="0.35" />
+            <radialGradient id="v2-neb1" cx="20%" cy="28%" r="30%">
+              <stop offset="0%" stopColor="#180640" stopOpacity="0.3" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
-            <radialGradient id="neb2" cx="75%" cy="55%" r="30%">
-              <stop offset="0%" stopColor="#081838" stopOpacity="0.3" />
-              <stop offset="100%" stopColor="transparent" />
-            </radialGradient>
-            <radialGradient id="neb3" cx="60%" cy="25%" r="25%">
-              <stop offset="0%" stopColor="#200830" stopOpacity="0.2" />
+            <radialGradient id="v2-neb2" cx="80%" cy="50%" r="28%">
+              <stop offset="0%" stopColor="#061838" stopOpacity="0.25" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
           </defs>
-          <rect width="1080" height="1920" fill="url(#space-bg)" />
-          <rect width="1080" height="1920" fill="url(#neb1)" />
-          <rect width="1080" height="1920" fill="url(#neb2)" />
-          <rect width="1080" height="1920" fill="url(#neb3)" />
+          <rect width={W} height={H} fill="url(#v2-space)" />
+          <rect width={W} height={H} fill="url(#v2-neb1)" />
+          <rect width={W} height={H} fill="url(#v2-neb2)" />
         </svg>
       </AbsoluteFill>
 
-      {/* Star field */}
+      {/* ═══ STAR FIELD ═══ */}
       <AbsoluteFill>
-        <svg viewBox="0 0 1080 1920" width="100%" height="100%">
-          {stars.map((s, i) => {
-            const twinkle = Math.sin(frame * 0.06 + s.phase) * 0.35 + 0.65;
-            return (
-              <circle key={i} cx={s.x} cy={s.y} r={s.r}
-                fill="#ffffff" opacity={twinkle * 0.6} />
-            );
-          })}
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
+          {bgStars.map((s, i) => (
+            <circle key={i} cx={s.x} cy={s.y} r={s.r}
+              fill="#fff"
+              opacity={(Math.sin(frame * 0.05 + s.phase) * 0.3 + 0.55) * 0.5} />
+          ))}
         </svg>
       </AbsoluteFill>
 
-      {/* Main composition */}
+      {/* ═══ MAIN SCENE ═══ */}
       <AbsoluteFill>
-        <svg viewBox="0 0 1080 1920" width="100%" height="100%">
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
           <defs>
-            {/* Filters */}
-            <filter id="glow-sm"><feGaussianBlur stdDeviation="3" /></filter>
-            <filter id="glow-md">
+            <filter id="v2-gsm"><feGaussianBlur stdDeviation="3" /></filter>
+            <filter id="v2-gmd">
               <feGaussianBlur stdDeviation="6" result="b1" />
               <feGaussianBlur stdDeviation="14" in="SourceGraphic" result="b2" />
               <feMerge><feMergeNode in="b2" /><feMergeNode in="b1" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
-            <filter id="glow-lg">
-              <feGaussianBlur stdDeviation="20" result="b1" />
-              <feGaussianBlur stdDeviation="8" in="SourceGraphic" result="b2" />
+            <filter id="v2-glg">
+              <feGaussianBlur stdDeviation="18" result="b1" />
+              <feGaussianBlur stdDeviation="6" in="SourceGraphic" result="b2" />
               <feMerge><feMergeNode in="b1" /><feMergeNode in="b2" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
-            <filter id="body-glow">
-              <feGaussianBlur stdDeviation="5" result="blur" />
-              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            <filter id="v2-body">
+              <feGaussianBlur stdDeviation="4" result="bl" />
+              <feMerge><feMergeNode in="bl" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
 
-            {/* Figure fill — translucent with energy */}
-            <linearGradient id="fig-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#60D0F0" stopOpacity={0.05 + absorptionRamp * 0.15 + Math.max(climaxIntensity, holdGlow) * 0.3 + holdBreath * 0.1} />
-              <stop offset="30%" stopColor="#F0C840" stopOpacity={0.08 + absorptionRamp * 0.2 + Math.max(climaxIntensity, holdGlow) * 0.4 + holdBreath * 0.1} />
-              <stop offset="60%" stopColor="#50E0A0" stopOpacity={0.06 + absorptionRamp * 0.12 + Math.max(climaxIntensity, holdGlow) * 0.25} />
-              <stop offset="100%" stopColor="#8060E0" stopOpacity={0.03 + absorptionRamp * 0.05 + holdGlow * 0.1} />
+            {/* Figure body fill — builds energy over time */}
+            <linearGradient id="v2-figfill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#70D4F8" stopOpacity={0.04 + bodyEnergy * 0.28} />
+              <stop offset="25%" stopColor="#E8D060" stopOpacity={0.06 + bodyEnergy * 0.32} />
+              <stop offset="55%" stopColor="#50E8A8" stopOpacity={0.04 + bodyEnergy * 0.22} />
+              <stop offset="85%" stopColor="#9070E8" stopOpacity={0.03 + bodyEnergy * 0.14} />
+              <stop offset="100%" stopColor="#E06090" stopOpacity={0.02 + bodyEnergy * 0.08} />
             </linearGradient>
 
-            {/* Chest core radial — stays bright during hold */}
-            <radialGradient id="chest-core" cx="50%" cy="42%" r="25%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.5 * Math.max(climaxIntensity, holdGlow) + holdBreath * 0.15} />
-              <stop offset="20%" stopColor="#F0E060" stopOpacity={0.6 * Math.max(climaxIntensity, holdGlow)} />
-              <stop offset="50%" stopColor="#40D8C0" stopOpacity={0.3 * Math.max(climaxIntensity, holdGlow)} />
+            {/* Heart core gradient */}
+            <radialGradient id="v2-heart" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={coreOp * 0.8} />
+              <stop offset="25%" stopColor="#F0E868" stopOpacity={coreOp * 0.6} />
+              <stop offset="50%" stopColor="#50E0C0" stopOpacity={coreOp * 0.3} />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
 
             {/* Beam gradients */}
-            {ZODIAC.map((z, i) => {
+            {SIGNS.map((z, i) => {
               const rad = (z.angle * Math.PI) / 180;
-              const sx = CX + Math.cos(rad) * z.dist;
-              const sy = CY + Math.sin(rad) * z.dist;
+              const sx = MX + Math.cos(rad) * ORBIT_RADIUS;
+              const sy = MY + Math.sin(rad) * ORBIT_RADIUS;
               return (
-                <linearGradient key={`bg-${i}`} id={`beam-${i}`}
-                  x1={sx} y1={sy} x2={CX} y2={CHEST_Y}
+                <linearGradient key={`v2bg-${i}`} id={`v2-beam-${i}`}
+                  x1={sx} y1={sy} x2={MX} y2={BEAM_TARGET_Y}
                   gradientUnits="userSpaceOnUse">
-                  <stop offset="0%" stopColor={z.color} stopOpacity="0.85" />
-                  <stop offset="40%" stopColor={z.color} stopOpacity="0.5" />
-                  <stop offset="80%" stopColor={z.color} stopOpacity="0.15" />
-                  <stop offset="100%" stopColor="#ffffff" stopOpacity="0.3" />
+                  <stop offset="0%" stopColor={z.col} stopOpacity="0.9" />
+                  <stop offset="50%" stopColor={z.col} stopOpacity="0.4" />
+                  <stop offset="85%" stopColor={z.col} stopOpacity="0.1" />
+                  <stop offset="100%" stopColor="#ffffff" stopOpacity="0.35" />
                 </linearGradient>
               );
             })}
 
-            {/* Map gradient */}
-            <radialGradient id="map-glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#F0C840" stopOpacity="0.12" />
-              <stop offset="60%" stopColor="#6080E0" stopOpacity="0.06" />
+            {/* Map glow */}
+            <radialGradient id="v2-mapglow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#F0C840" stopOpacity="0.1" />
+              <stop offset="60%" stopColor="#5070E0" stopOpacity="0.05" />
               <stop offset="100%" stopColor="transparent" />
             </radialGradient>
           </defs>
 
           {/* ═══ ZODIAC CONSTELLATIONS ═══ */}
-          {ZODIAC.map((z, i) => {
+          {SIGNS.map((z, i) => {
             const rad = (z.angle * Math.PI) / 180;
-            const cx = CX + Math.cos(rad) * z.dist;
-            const cy = CY + Math.sin(rad) * z.dist;
-            const delay = i * (35 / 12);
-            const opacity = interpolate(frame, [delay, delay + 15], [0, 1], { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-            const pulse = Math.sin(frame * 0.05 + i * 0.5) * 0.15 + 0.85;
+            const cx = MX + Math.cos(rad) * ORBIT_RADIUS;
+            const cy = MY + Math.sin(rad) * ORBIT_RADIUS;
+            const delay = i * 3;
+            const op = interpolate(frame, [delay, delay + 18], [0, 1],
+              { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+            const pulse = Math.sin(frame * 0.045 + i * 0.52) * 0.12 + 0.88;
+            const stars = STAR_PATTERNS[i];
 
             return (
-              <g key={`const-${i}`} opacity={opacity}>
-                {/* Constellation star pattern */}
-                {z.stars.map((s, si) => (
-                  <g key={`star-${i}-${si}`}>
-                    <circle cx={cx + s[0] * 1.8} cy={cy + s[1] * 1.8} r={3}
-                      fill={z.color} opacity={0.9 * pulse} filter="url(#glow-sm)" />
+              <g key={`zc-${i}`} opacity={op * starsIn}>
+                {/* Nebula haze */}
+                <circle cx={cx} cy={cy} r={55} fill={z.col}
+                  opacity={0.05 * pulse} filter="url(#v2-gsm)" />
+                {/* Stars + lines */}
+                {stars.map((s, si) => (
+                  <g key={si}>
+                    <circle cx={cx + s[0] * 2} cy={cy + s[1] * 2} r={3.5}
+                      fill={z.col} opacity={0.85 * pulse} filter="url(#v2-gsm)" />
                     {si > 0 && (
                       <line
-                        x1={cx + z.stars[si - 1][0] * 1.8} y1={cy + z.stars[si - 1][1] * 1.8}
-                        x2={cx + s[0] * 1.8} y2={cy + s[1] * 1.8}
-                        stroke={z.color} strokeWidth={1.2} opacity={0.5 * pulse} />
+                        x1={cx + stars[si - 1][0] * 2} y1={cy + stars[si - 1][1] * 2}
+                        x2={cx + s[0] * 2} y2={cy + s[1] * 2}
+                        stroke={z.col} strokeWidth={1.2} opacity={0.4 * pulse} />
                     )}
                   </g>
                 ))}
-                {/* Outer glow halo */}
-                <circle cx={cx} cy={cy} r={50} fill={z.color} opacity={0.06 * pulse}
-                  filter="url(#glow-sm)" />
-                {/* Constellation name */}
-                <text x={cx} y={cy - 40} textAnchor="middle" fill={z.color}
-                  fontSize={16} fontFamily="serif" letterSpacing={3} opacity={0.7 * pulse}>
+                {/* Label */}
+                <text x={cx} y={cy - 45} textAnchor="middle" fill={z.col}
+                  fontSize={15} fontFamily="serif" letterSpacing={3}
+                  opacity={0.6 * pulse}>
                   {z.name}
                 </text>
               </g>
             );
           })}
 
-          {/* ═══ BEAMS — constellation → chest ═══ */}
-          {ZODIAC.map((z, i) => {
+          {/* ═══ ENERGY BEAMS → Heart ═══ */}
+          {SIGNS.map((z, i) => {
             const rad = (z.angle * Math.PI) / 180;
-            const sx = CX + Math.cos(rad) * z.dist;
-            const sy = CY + Math.sin(rad) * z.dist;
-            const beamDelay = 15 + i * (40 / 12);
-            const beamOp = interpolate(frame, [beamDelay, beamDelay + 12], [0, 1],
-              { extrapolateRight: "clamp", extrapolateLeft: "clamp" }) * beamSustain;
+            const sx = MX + Math.cos(rad) * ORBIT_RADIUS;
+            const sy = MY + Math.sin(rad) * ORBIT_RADIUS;
+            const bDelay = 40 + i * 3;
+            const bOp = interpolate(frame, [bDelay, bDelay + 14], [0, 1],
+              { extrapolateRight: "clamp", extrapolateLeft: "clamp" }) * beamHold;
 
-            // Traveling energy particle
-            const particleT = interpolate(frame, [beamDelay + 5, beamDelay + 30], [0, 1],
-              { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
-            // Continuous particles after initial
-            const loopT = frame > beamDelay + 30 ? ((frame - beamDelay) % 40) / 40 : particleT;
-            const px = sx + (CX - sx) * loopT;
-            const py = sy + (CHEST_Y - sy) * loopT;
+            // Traveling particle
+            const pCycle = frame > bDelay + 10 ? ((frame - bDelay) % 35) / 35 : 
+              interpolate(frame, [bDelay + 5, bDelay + 28], [0, 1],
+                { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
+            const px = sx + (MX - sx) * pCycle;
+            const py = sy + (BEAM_TARGET_Y - sy) * pCycle;
 
             return (
-              <g key={`beam-${i}`}>
-                {/* Wide outer glow beam */}
-                <line x1={sx} y1={sy} x2={CX} y2={CHEST_Y}
-                  stroke={z.color} strokeWidth={8} strokeLinecap="round"
-                  opacity={beamOp * 0.15} filter="url(#glow-md)" />
+              <g key={`vb-${i}`}>
+                {/* Wide glow */}
+                <line x1={sx} y1={sy} x2={MX} y2={BEAM_TARGET_Y}
+                  stroke={z.col} strokeWidth={10} strokeLinecap="round"
+                  opacity={bOp * 0.12} filter="url(#v2-gmd)" />
                 {/* Core beam */}
-                <line x1={sx} y1={sy} x2={CX} y2={CHEST_Y}
-                  stroke={`url(#beam-${i})`} strokeWidth={3}
-                  strokeLinecap="round" opacity={beamOp * 0.8}
-                  filter="url(#glow-sm)" />
-                {/* Bright inner beam */}
-                <line x1={sx} y1={sy} x2={CX} y2={CHEST_Y}
-                  stroke="#ffffff" strokeWidth={1} strokeLinecap="round"
-                  opacity={beamOp * 0.25} />
-                {/* Traveling particle */}
-                {beamOp > 0.2 && (
-                  <circle cx={px} cy={py} r={5}
-                    fill={z.color} opacity={0.9} filter="url(#glow-sm)" />
+                <line x1={sx} y1={sy} x2={MX} y2={BEAM_TARGET_Y}
+                  stroke={`url(#v2-beam-${i})`} strokeWidth={3.5}
+                  strokeLinecap="round" opacity={bOp * 0.75} filter="url(#v2-gsm)" />
+                {/* Inner bright */}
+                <line x1={sx} y1={sy} x2={MX} y2={BEAM_TARGET_Y}
+                  stroke="#ffffff" strokeWidth={1.2} strokeLinecap="round"
+                  opacity={bOp * 0.2} />
+                {/* Particle */}
+                {bOp > 0.15 && (
+                  <circle cx={px} cy={py} r={5.5}
+                    fill={z.col} opacity={0.85} filter="url(#v2-gsm)" />
                 )}
               </g>
             );
           })}
 
-          {/* ═══ CENTRAL CHEST ENERGY CORE ═══ */}
-          {/* Large ambient glow */}
-          <circle cx={CX} cy={CHEST_Y} r={coreR * 1.5}
-            fill={`rgba(240,200,80,${coreGlow * 0.15})`}
-            filter="url(#glow-lg)" />
-          {/* Multi-color energy sphere */}
-          <circle cx={CX} cy={CHEST_Y} r={coreR * 0.6}
-            fill={`rgba(255,255,255,${coreGlow * 0.5})`}
-            filter="url(#glow-md)" />
-          {/* Hot white core */}
-          <circle cx={CX} cy={CHEST_Y}
-            r={12 + climaxIntensity * 20 + Math.sin(frame * 0.12) * 4}
-            fill="#ffffff" opacity={0.3 + climaxIntensity * 0.5}
-            filter="url(#body-glow)" />
-          {/* Radiating energy lines from core */}
-          {climaxIntensity > 0.1 && Array.from({ length: 16 }).map((_, ri) => {
-            const a = (ri * 22.5 * Math.PI) / 180;
-            const innerR = 15;
-            const outerR = 35 + climaxIntensity * 50 + Math.sin(frame * 0.08 + ri * 0.4) * 10;
+          {/* ═══ CHEST ENERGY CORE ═══ */}
+          <circle cx={MX} cy={BEAM_TARGET_Y} r={coreR * 1.6}
+            fill={`rgba(240,210,80,${coreOp * 0.12})`} filter="url(#v2-glg)" />
+          <circle cx={MX} cy={BEAM_TARGET_Y} r={coreR * 0.7}
+            fill={`rgba(255,255,255,${coreOp * 0.45})`} filter="url(#v2-gmd)" />
+          <circle cx={MX} cy={BEAM_TARGET_Y}
+            r={10 + climax * 18 + finalGlow * 8 + (isHold ? Math.sin(frame * 0.1) * 4 : 0)}
+            fill="#ffffff" opacity={0.2 + coreOp * 0.5} filter="url(#v2-body)" />
+          {/* Radiating spikes */}
+          {(climax > 0.1 || isHold) && Array.from({ length: 14 }).map((_, ri) => {
+            const a = (ri * (360 / 14) * Math.PI) / 180;
+            const inner = 14;
+            const outer = 30 + (climax + finalGlow) * 40 + (isHold ? Math.sin(frame * 0.07 + ri * 0.4) * 8 : 0);
             return (
               <line key={`ray-${ri}`}
-                x1={CX + Math.cos(a) * innerR} y1={CHEST_Y + Math.sin(a) * innerR}
-                x2={CX + Math.cos(a) * outerR} y2={CHEST_Y + Math.sin(a) * outerR}
-                stroke="#F0E060" strokeWidth={1.5} strokeLinecap="round"
-                opacity={climaxIntensity * (Math.sin(frame * 0.06 + ri * 0.3) * 0.3 + 0.5)} />
+                x1={MX + Math.cos(a) * inner} y1={BEAM_TARGET_Y + Math.sin(a) * inner}
+                x2={MX + Math.cos(a) * outer} y2={BEAM_TARGET_Y + Math.sin(a) * outer}
+                stroke="#F0E868" strokeWidth={1.5} strokeLinecap="round"
+                opacity={(climax + finalGlow) * 0.3 * (Math.sin(frame * 0.05 + ri) * 0.3 + 0.7)} />
             );
           })}
 
-          {/* ═══ HUMAN FIGURE — multi-part anatomical body ═══ */}
-          <g opacity={figureOpacity} style={{
-            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + Math.max(climaxIntensity, holdGlow) * 25}px rgba(80,200,240,${0.3 + Math.max(climaxIntensity, holdGlow) * 0.4}))`,
+          {/* ═══ HUMAN FIGURE — ALWAYS VISIBLE AFTER APPEAR, NEVER FADES ═══ */}
+          <g opacity={figAppear} style={{
+            filter: `drop-shadow(0 0 ${5 + bodyEnergy * 22}px rgba(90,210,250,${0.25 + bodyEnergy * 0.4}))`,
           }}>
             {/* Body fill */}
-            {FIGURE_PARTS.map((p, pi) => (
-              <path key={`fill-${pi}`} d={p}
-                fill="url(#fig-fill)"
-                stroke="none" />
+            {BODY_FILLS.map((p, pi) => (
+              <path key={`bf-${pi}`} d={p} fill="url(#v2-figfill)" stroke="none" />
             ))}
-            {/* Body outline glow */}
-            {FIGURE_OUTLINE.map((p, pi) => (
-              <path key={`outline-${pi}`} d={p}
-                fill="none"
-                stroke="#60D0F0"
-                strokeWidth={1.2 + Math.max(climaxIntensity, holdGlow) * 0.8}
-                strokeOpacity={0.25 + absorptionRamp * 0.25 + Math.max(climaxIntensity, holdGlow) * 0.35}
-                strokeLinecap="round"
-                strokeLinejoin="round" />
+            {/* Outline — all parts */}
+            {BODY_STROKES.map((p, pi) => (
+              <path key={`bo-${pi}`} d={p}
+                fill="none" stroke="#60D8F0"
+                strokeWidth={1 + bodyEnergy * 0.8}
+                strokeOpacity={outlineGlow}
+                strokeLinecap="round" strokeLinejoin="round" />
             ))}
-            {/* Subtle inner body highlight */}
-            <path d={TORSO}
-              fill="url(#chest-core)"
-              stroke="none" opacity={0.6} />
+            {/* Torso highlight overlay */}
+            <path d={UPPER_TORSO} fill="url(#v2-heart)" stroke="none" opacity={0.5} />
           </g>
 
-          {/* ═══ INTERNAL ENERGY CHANNELS ═══ */}
-          {absorptionRamp > 0.15 && ENERGY_CHANNELS.map((path, ci) => {
-            const channelPulse = Math.sin(frame * 0.1 + ci * 1.3) * 0.3 + 0.7;
-            const colors = ["#60D0F0", "#F0C840", "#50E0A0", "#A060E0", "#E06080", "#40D880", "#F0A040", "#C050D0", "#30E8B0", "#E8A030"];
-            const isChakra = ci >= 5; // chakra channels get extra glow
+          {/* ═══ INTERNAL ENERGY MERIDIANS ═══ */}
+          {absorption > 0.1 && MERIDIANS.map((mp, mi) => {
+            const mPulse = Math.sin(frame * 0.09 + mi * 1.4) * 0.3 + 0.7;
+            const mColors = ["#60D8F0","#F0D040","#50E8A0","#A060E0","#E06888","#40D880","#E0A040","#C060D0"];
             return (
-              <path key={`ch-${ci}`} d={path}
-                fill="none" stroke={colors[ci % colors.length]}
-                strokeWidth={1.5 + climaxIntensity * 0.8}
+              <path key={`mer-${mi}`} d={mp}
+                fill="none" stroke={mColors[mi % mColors.length]}
+                strokeWidth={1.4 + climax * 0.6}
                 strokeLinecap="round"
-                opacity={absorptionRamp * 0.4 * channelPulse * figureOpacity}
-                filter="url(#body-glow)" />
+                opacity={absorption * 0.35 * mPulse * figAppear}
+                filter="url(#v2-body)" />
             );
           })}
 
-          {/* ═══ ABSORPTION PULSE RINGS at chest ═══ */}
-          {absorptionRamp > 0 && [0, 1, 2].map((ring) => {
-            const phase = ((frame - 50) * 0.05 + ring * 2.1) % (Math.PI * 2);
-            const r = 25 + Math.sin(phase) * 40 + ring * 25;
+          {/* ═══ CHAKRA POINTS ═══ */}
+          {absorption > 0.2 && CHAKRAS.map((ch, ci) => {
+            const chPulse = Math.sin(frame * 0.08 + ci * 0.9) * 0.2 + 0.8;
+            const chOp = absorption * 0.6 * chPulse * figAppear;
             return (
-              <circle key={`pulse-${ring}`} cx={CX} cy={CHEST_Y} r={r}
-                fill="none" stroke="#F0E060" strokeWidth={1}
-                opacity={absorptionRamp * 0.25 * (Math.sin(phase) * 0.5 + 0.5)} />
+              <g key={`ch-${ci}`}>
+                <circle cx={MX} cy={ch.y} r={ch.r + climax * 3}
+                  fill={ch.color} opacity={chOp * 0.7} filter="url(#v2-gsm)" />
+                <circle cx={MX} cy={ch.y} r={ch.r * 0.5}
+                  fill="#ffffff" opacity={chOp * 0.5} />
+              </g>
             );
           })}
 
-          {/* ═══ BASE ENERGY RINGS (feet platform) ═══ */}
-          {figureOpacity > 0.5 && [0, 1, 2].map((ring) => {
-            const r = 80 + ring * 40;
-            const ringPulse = Math.sin(frame * 0.04 + ring * 1.0) * 0.2 + 0.5;
+          {/* ═══ ABSORPTION PULSE RINGS ═══ */}
+          {absorption > 0 && [0, 1, 2].map((r) => {
+            const ph = ((frame - 60) * 0.05 + r * 2.1) % (Math.PI * 2);
+            const radius = 22 + Math.sin(ph) * 35 + r * 22;
             return (
-              <ellipse key={`base-${ring}`} cx={CX} cy={1310} rx={r} ry={r * 0.3}
-                fill="none" stroke="#40D8E0" strokeWidth={1}
-                opacity={figureOpacity * 0.2 * ringPulse} />
+              <circle key={`apr-${r}`} cx={MX} cy={BEAM_TARGET_Y} r={radius}
+                fill="none" stroke="#F0E868" strokeWidth={1}
+                opacity={absorption * 0.2 * (Math.sin(ph) * 0.5 + 0.5)} />
             );
           })}
 
-          {/* ═══ ASTROLOGICAL MAP (Scene 3) ═══ */}
-          {frame > 120 && (
-            <g opacity={mapOpacity} transform={`translate(0, ${(1 - mapReveal) * 200})`}>
-              <ellipse cx={CX} cy={1550} rx={300} ry={220}
-                fill="url(#map-glow)" opacity={mapReveal * 0.5} />
-              <circle cx={CX} cy={1550} r={200 * mapReveal}
-                fill="none" stroke="#F0C840" strokeWidth={1.5} opacity={mapReveal * 0.4} />
-              <circle cx={CX} cy={1550} r={180 * mapReveal}
-                fill="none" stroke="#F0C840" strokeWidth={0.8} opacity={mapReveal * 0.25} />
-              <circle cx={CX} cy={1550} r={160 * mapReveal}
-                fill="none" stroke="#6080E0" strokeWidth={0.5} opacity={mapReveal * 0.2} />
-              {/* House divisions */}
+          {/* ═══ FEET PLATFORM RINGS ═══ */}
+          {figAppear > 0.5 && [0, 1, 2].map((r) => {
+            const rr = 75 + r * 38;
+            const rp = Math.sin(frame * 0.035 + r) * 0.2 + 0.5;
+            return (
+              <ellipse key={`fp-${r}`} cx={MX} cy={1220} rx={rr} ry={rr * 0.28}
+                fill="none" stroke="#40D8E8" strokeWidth={1}
+                opacity={figAppear * 0.18 * rp} />
+            );
+          })}
+
+          {/* ═══ ASTROLOGICAL MAP — BELOW figure, NEVER replaces it ═══ */}
+          {frame > 140 && (
+            <g opacity={mapOp} transform={`translate(0, ${(1 - mapIn) * 180})`}>
+              <ellipse cx={MX} cy={1500} rx={280} ry={200}
+                fill="url(#v2-mapglow)" opacity={mapIn * 0.45} />
+              <circle cx={MX} cy={1500} r={190 * mapIn}
+                fill="none" stroke="#F0C840" strokeWidth={1.4} opacity={mapIn * 0.35} />
+              <circle cx={MX} cy={1500} r={170 * mapIn}
+                fill="none" stroke="#F0C840" strokeWidth={0.7} opacity={mapIn * 0.22} />
+              <circle cx={MX} cy={1500} r={150 * mapIn}
+                fill="none" stroke="#6080E0" strokeWidth={0.5} opacity={mapIn * 0.18} />
+              {/* House lines */}
               {Array.from({ length: 12 }).map((_, i) => {
-                const a = (i * 30 - 90) * (Math.PI / 180);
+                const a = (i * 30 - 90) * Math.PI / 180;
                 return (
-                  <line key={`h-${i}`}
-                    x1={CX + Math.cos(a) * 50 * mapReveal} y1={1550 + Math.sin(a) * 50 * mapReveal}
-                    x2={CX + Math.cos(a) * 200 * mapReveal} y2={1550 + Math.sin(a) * 200 * mapReveal}
-                    stroke="#F0C840" strokeWidth={0.5} opacity={mapReveal * 0.25} />
+                  <line key={`hl-${i}`}
+                    x1={MX + Math.cos(a) * 45 * mapIn} y1={1500 + Math.sin(a) * 45 * mapIn}
+                    x2={MX + Math.cos(a) * 190 * mapIn} y2={1500 + Math.sin(a) * 190 * mapIn}
+                    stroke="#F0C840" strokeWidth={0.5} opacity={mapIn * 0.22} />
                 );
               })}
-              {/* Zodiac symbols on map */}
-              {ZODIAC.map((z, i) => {
-                const a = (i * 30 - 75) * (Math.PI / 180);
-                const d = 175 * mapReveal;
-                const symDelay = interpolate(frame, [132 + i * 2, 138 + i * 2], [0, 1],
+              {/* Zodiac symbols on map rim */}
+              {SIGNS.map((z, i) => {
+                const a = (i * 30 - 75) * Math.PI / 180;
+                const d = 168 * mapIn;
+                const sOp = interpolate(frame, [150 + i * 2, 158 + i * 2], [0, 1],
                   { extrapolateRight: "clamp", extrapolateLeft: "clamp" });
                 return (
                   <text key={`ms-${i}`}
-                    x={CX + Math.cos(a) * d} y={1550 + Math.sin(a) * d}
+                    x={MX + Math.cos(a) * d} y={1500 + Math.sin(a) * d}
                     textAnchor="middle" dominantBaseline="central"
-                    fill={z.color} fontSize={14}
-                    opacity={symDelay * mapReveal * 0.7}>
-                    {z.symbol}
+                    fill={z.col} fontSize={13} opacity={sOp * mapIn * 0.65}>
+                    {z.sym}
                   </text>
                 );
               })}
-              <circle cx={CX} cy={1550} r={12 * mapReveal}
-                fill="#F0C840" opacity={mapReveal * 0.2} filter="url(#glow-sm)" />
+              <circle cx={MX} cy={1500} r={10 * mapIn}
+                fill="#F0C840" opacity={mapIn * 0.18} filter="url(#v2-gsm)" />
             </g>
           )}
         </svg>
       </AbsoluteFill>
 
-      {/* Vignette */}
+      {/* ═══ VIGNETTE ═══ */}
       <AbsoluteFill>
-        <svg viewBox="0 0 1080 1920" width="100%" height="100%">
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
           <defs>
-            <radialGradient id="vig" cx="50%" cy="47%" r="55%">
+            <radialGradient id="v2-vig" cx="50%" cy="45%" r="55%">
               <stop offset="0%" stopColor="transparent" />
               <stop offset="65%" stopColor="transparent" />
-              <stop offset="100%" stopColor="#000000" stopOpacity="0.65" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0.6" />
             </radialGradient>
           </defs>
-          <rect width="1080" height="1920" fill="url(#vig)" />
+          <rect width={W} height={H} fill="url(#v2-vig)" />
         </svg>
       </AbsoluteFill>
     </AbsoluteFill>
