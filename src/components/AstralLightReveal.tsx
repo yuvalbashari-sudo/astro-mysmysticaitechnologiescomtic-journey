@@ -615,9 +615,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 fill="url(#climax-radial)"
                 filter="url(#climax-mega)"
                 animate={{
-                  rx: [45 + climaxLevel * 20, 55 + climaxLevel * 30, 45 + climaxLevel * 20],
-                  ry: [120 + climaxLevel * 40, 140 + climaxLevel * 55, 120 + climaxLevel * 40],
-                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
+                  rx: [50 + climaxLevel * 25, 65 + climaxLevel * 35, 50 + climaxLevel * 25],
+                  ry: [130 + climaxLevel * 50, 155 + climaxLevel * 65, 130 + climaxLevel * 50],
+                  opacity: [climaxLevel * 0.25, climaxLevel * 0.5, climaxLevel * 0.25],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -626,14 +626,14 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
-                  x="-3"
-                  y="-4"
-                  width={FIG_VB_W + 6}
-                  height={FIG_VB_H + 8}
-                  opacity={climaxLevel * 0.35}
+                  x="-5"
+                  y="-6"
+                  width={FIG_VB_W + 10}
+                  height={FIG_VB_H + 12}
+                  opacity={climaxLevel * 0.5}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.4})`,
+                    filter: `blur(10px) brightness(${1.2 + climaxLevel * 0.6})`,
                   }}
                 />
               </g>
