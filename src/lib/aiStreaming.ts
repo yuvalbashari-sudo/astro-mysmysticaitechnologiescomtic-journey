@@ -27,13 +27,21 @@ export async function streamMysticalReading(
     authToken = sessionData?.session?.access_token ?? null;
   } catch { /* ignore */ }
 
+  // Pass admin email header for server-side admin verification
+  const adminEmail = localStorage.getItem("astrologai_admin_email") || undefined;
+
   try {
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    };
+    if (adminEmail) {
+      headers["x-admin-email"] = adminEmail;
+    }
+
     const resp = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-      },
+      headers,
       body: JSON.stringify({ type, data, profileContext, language, userName }),
     });
 
