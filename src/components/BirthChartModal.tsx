@@ -297,6 +297,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
         });
+        // Cache chart + result for instant restore on return
+        setResultText((finalText) => {
+          saveCachedChart({
+            chartData,
+            resultText: finalText,
+            details: { userName, gender, birthDate, birthTime, birthCity },
+            savedAt: new Date().toISOString(),
+          });
+          return finalText;
+        });
       },
       (error) => {
         if (error === "DAILY_LIMIT_REACHED") {
