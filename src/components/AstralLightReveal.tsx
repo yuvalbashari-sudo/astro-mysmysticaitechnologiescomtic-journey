@@ -1015,34 +1015,37 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
       {/* ── Admin Debug Panel ── */}
       {isAdminTestMode() && (
-        <AuraDebugPanel
-          realInfluences={realInfluences}
-          activeInfluences={influences}
-          auraResult={auraResult}
-          language={language}
-          isForced={isForced}
-          presetName={forcedPresetName}
-          onPresetChange={(name, map) => {
-            const json = JSON.stringify(map);
-            sessionStorage.setItem(PRESET_KEY, json);
-            sessionStorage.setItem(PRESET_NAME_KEY, name);
-            setForcedPreset(json);
-            setForcedPresetName(name);
-          }}
-          onPresetClear={() => {
-            sessionStorage.removeItem(PRESET_KEY);
-            sessionStorage.removeItem(PRESET_NAME_KEY);
-            setForcedPreset(null);
-            setForcedPresetName(null);
-          }}
-          onRestoreReal={() => {
-            sessionStorage.removeItem(PRESET_KEY);
-            sessionStorage.removeItem(PRESET_NAME_KEY);
-            setForcedPreset(null);
-            setForcedPresetName(null);
-            localStorage.removeItem("astrologai_birthchart_cache");
-          }}
-        />
+        {createPortal(
+          <AuraDebugPanel
+            realInfluences={realInfluences}
+            activeInfluences={influences}
+            auraResult={auraResult}
+            language={language}
+            isForced={isForced}
+            presetName={forcedPresetName}
+            onPresetChange={(name, map) => {
+              const json = JSON.stringify(map);
+              sessionStorage.setItem(PRESET_KEY, json);
+              sessionStorage.setItem(PRESET_NAME_KEY, name);
+              setForcedPreset(json);
+              setForcedPresetName(name);
+            }}
+            onPresetClear={() => {
+              sessionStorage.removeItem(PRESET_KEY);
+              sessionStorage.removeItem(PRESET_NAME_KEY);
+              setForcedPreset(null);
+              setForcedPresetName(null);
+            }}
+            onRestoreReal={() => {
+              sessionStorage.removeItem(PRESET_KEY);
+              sessionStorage.removeItem(PRESET_NAME_KEY);
+              setForcedPreset(null);
+              setForcedPresetName(null);
+              localStorage.removeItem("astrologai_birthchart_cache");
+            }}
+          />,
+          document.body
+        )}
       )}
     </div>
   );
