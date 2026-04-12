@@ -722,41 +722,112 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </AnimatePresence>
 
 
-          {/* ─── Phase 3: CLIMAX — refined layered glow + breathing ─── */}
+          {/* ─── Phase 3: CLIMAX — dramatic layered glow + breathing ─── */}
           {climaxLevel > 0 && (
             <motion.g
               animate={!showConstellations ? { opacity: [1, 0.7, 1] } : undefined}
               transition={!showConstellations ? { duration: 3.5, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
-              {/* Outer aura bloom — gentle pulsing ellipse */}
+              {/* Expanding halo ring 1 — outermost, faint */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 30}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.5}
+                animate={{
+                  rx: [80 + climaxLevel * 30, 100 + climaxLevel * 40, 80 + climaxLevel * 30],
+                  ry: [140 + climaxLevel * 40, 170 + climaxLevel * 55, 140 + climaxLevel * 40],
+                  opacity: [climaxLevel * 0.06, climaxLevel * 0.15, climaxLevel * 0.06],
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Expanding halo ring 2 — mid, slightly brighter */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 35}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.8}
+                animate={{
+                  rx: [60 + climaxLevel * 20, 75 + climaxLevel * 30, 60 + climaxLevel * 20],
+                  ry: [110 + climaxLevel * 30, 130 + climaxLevel * 40, 110 + climaxLevel * 30],
+                  opacity: [climaxLevel * 0.08, climaxLevel * 0.2, climaxLevel * 0.08],
+                }}
+                transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              />
+
+              {/* Outer aura bloom — intense pulsing */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 40}
                 fill="url(#climax-radial)"
                 filter="url(#climax-mega)"
                 animate={{
-                  rx: [50 + climaxLevel * 20, 60 + climaxLevel * 28, 50 + climaxLevel * 20],
-                  ry: [120 + climaxLevel * 35, 140 + climaxLevel * 45, 120 + climaxLevel * 35],
-                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
+                  rx: [55 + climaxLevel * 25, 70 + climaxLevel * 35, 55 + climaxLevel * 25],
+                  ry: [130 + climaxLevel * 40, 155 + climaxLevel * 55, 130 + climaxLevel * 40],
+                  opacity: [climaxLevel * 0.25, climaxLevel * 0.5, climaxLevel * 0.25],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Secondary color ambient glow — soft atmospheric layer */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 50}
+                fill={secondaryColor}
+                filter="url(#climax-mega)"
+                animate={{
+                  rx: [40 + climaxLevel * 15, 55 + climaxLevel * 22, 40 + climaxLevel * 15],
+                  ry: [90 + climaxLevel * 25, 110 + climaxLevel * 35, 90 + climaxLevel * 25],
+                  opacity: [climaxLevel * 0.06, climaxLevel * 0.12, climaxLevel * 0.06],
+                }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
               />
 
               {/* Soft body-shaped aura — follows figure silhouette */}
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
-                  x="-4"
-                  y="-4"
-                  width={FIG_VB_W + 8}
-                  height={FIG_VB_H + 8}
-                  opacity={climaxLevel * 0.3}
+                  x="-6"
+                  y="-6"
+                  width={FIG_VB_W + 12}
+                  height={FIG_VB_H + 12}
+                  opacity={climaxLevel * 0.4}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.3})`,
+                    filter: `blur(10px) brightness(${1.2 + climaxLevel * 0.4})`,
                   }}
                 />
               </g>
+
+              {/* Floating energy particles near figure */}
+              {Array.from({ length: 8 }).map((_, i) => {
+                const angle = (i / 8) * Math.PI * 2;
+                const rr = 50 + (i % 3) * 20;
+                const px = FIG_CX + rr * Math.cos(angle);
+                const py = FIG_CORE_Y + rr * 0.7 * Math.sin(angle);
+                return (
+                  <motion.circle
+                    key={`ep-${i}`}
+                    cx={px}
+                    cy={py}
+                    r={1 + (i % 2)}
+                    fill={i % 3 === 0 ? secondaryColor : dominantColor}
+                    animate={{
+                      opacity: [0, climaxLevel * 0.6, 0],
+                      cy: [py, py - 8 - i * 2, py],
+                    }}
+                    transition={{
+                      duration: 2.5 + i * 0.3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: i * 0.4,
+                    }}
+                  />
+                );
+              })}
             </motion.g>
           )}
         </svg>
