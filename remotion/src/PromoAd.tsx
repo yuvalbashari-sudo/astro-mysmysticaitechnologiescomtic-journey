@@ -320,13 +320,34 @@ export const PromoAd = () => {
               <feMerge><feMergeNode in="bl" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
 
-            {/* Figure body fill — builds energy over time */}
-            <linearGradient id="v2-figfill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#70D4F8" stopOpacity={0.04 + bodyEnergy * 0.28} />
-              <stop offset="25%" stopColor="#E8D060" stopOpacity={0.06 + bodyEnergy * 0.32} />
-              <stop offset="55%" stopColor="#50E8A8" stopOpacity={0.04 + bodyEnergy * 0.22} />
-              <stop offset="85%" stopColor="#9070E8" stopOpacity={0.03 + bodyEnergy * 0.14} />
-              <stop offset="100%" stopColor="#E06090" stopOpacity={0.02 + bodyEnergy * 0.08} />
+            {/* Figure body fill — volumetric depth with multiple gradients */}
+            <linearGradient id="v2-figfill" x1="0.3" y1="0" x2="0.7" y2="1">
+              <stop offset="0%" stopColor="#90E0F8" stopOpacity={0.06 + bodyEnergy * 0.3} />
+              <stop offset="20%" stopColor="#70C8E8" stopOpacity={0.08 + bodyEnergy * 0.35} />
+              <stop offset="45%" stopColor="#E8D860" stopOpacity={0.06 + bodyEnergy * 0.28} />
+              <stop offset="70%" stopColor="#50E8A8" stopOpacity={0.05 + bodyEnergy * 0.2} />
+              <stop offset="90%" stopColor="#9070E8" stopOpacity={0.04 + bodyEnergy * 0.14} />
+              <stop offset="100%" stopColor="#E06090" stopOpacity={0.03 + bodyEnergy * 0.1} />
+            </linearGradient>
+
+            {/* Depth shading — creates volume on left side */}
+            <linearGradient id="v2-depth-l" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#40A0D0" stopOpacity={0.02 + bodyEnergy * 0.12} />
+              <stop offset="50%" stopColor="#60D0F0" stopOpacity={0.04 + bodyEnergy * 0.18} />
+              <stop offset="100%" stopColor="transparent" />
+            </linearGradient>
+
+            {/* Inner light — center highlight for volume */}
+            <radialGradient id="v2-inner" cx="50%" cy="45%" r="40%">
+              <stop offset="0%" stopColor="#B0E8FF" stopOpacity={0.03 + bodyEnergy * 0.2} />
+              <stop offset="40%" stopColor="#80D0F0" stopOpacity={0.02 + bodyEnergy * 0.1} />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+
+            {/* Muscle highlight gradient */}
+            <linearGradient id="v2-muscle" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#70D8F8" stopOpacity={bodyEnergy * 0.15} />
+              <stop offset="100%" stopColor="#A0F0D0" stopOpacity={bodyEnergy * 0.08} />
             </linearGradient>
 
             {/* Heart core gradient */}
