@@ -21,6 +21,26 @@ const AURA_SUBTITLE_I18N: Record<string, Record<AuraFamily, string>> = {
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 
+/* English-first identity labels */
+const MODIFIER_LABELS_EN: Record<string, string> = {
+  radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep",
+  balanced: "Balanced", transformative: "Transformative", grounded: "Grounded",
+  fluid: "Fluid", intense: "Intense", ethereal: "Ethereal",
+};
+
+const AURA_DISPLAY_EN: Record<string, string> = {
+  solar_gold: "Solar Gold", lunar_blue: "Lunar Blue", healing_green: "Healing Green",
+  mystical_purple: "Mystical Purple", vital_red: "Vital Red", venus_pink: "Venus Pink",
+  astral_turquoise: "Astral Turquoise", deep_indigo: "Deep Indigo",
+  expansive_orange: "Expansive Orange", pure_white: "Pure White",
+};
+
+const MOD_I18N_MAP: Record<string, Record<string, string>> = {
+  he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
+  ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
+  ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
+};
+
 /* ═══════════════════════════════════════════════════════
    AstralLightReveal — Cinematic Astral Energy Animation
    ═══════════════════════════════════════════════════════
