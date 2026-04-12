@@ -1014,8 +1014,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
       </motion.div>
 
       {/* ── Admin Debug Panel ── */}
-      {isAdminTestMode() && (
-        {createPortal(
+      {isAdminTestMode() && createPortal(
           <AuraDebugPanel
             realInfluences={realInfluences}
             activeInfluences={influences}
@@ -1045,7 +1044,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             }}
           />,
           document.body
-        )}
       )}
     </div>
   );
