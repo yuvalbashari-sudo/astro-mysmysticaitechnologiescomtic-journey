@@ -405,7 +405,7 @@ export const PromoAd = () => {
 
           {/* ═══ HUMAN FIGURE — multi-part anatomical body ═══ */}
           <g opacity={figureOpacity} style={{
-            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + climaxIntensity * 20}px rgba(80,200,240,${0.3 + climaxIntensity * 0.3}))`,
+            filter: `drop-shadow(0 0 ${6 + absorptionRamp * 10 + Math.max(climaxIntensity, holdGlow) * 25}px rgba(80,200,240,${0.3 + Math.max(climaxIntensity, holdGlow) * 0.4}))`,
           }}>
             {/* Body fill */}
             {FIGURE_PARTS.map((p, pi) => (
@@ -418,8 +418,8 @@ export const PromoAd = () => {
               <path key={`outline-${pi}`} d={p}
                 fill="none"
                 stroke="#60D0F0"
-                strokeWidth={1.2 + climaxIntensity * 0.6}
-                strokeOpacity={0.25 + absorptionRamp * 0.25 + climaxIntensity * 0.3}
+                strokeWidth={1.2 + Math.max(climaxIntensity, holdGlow) * 0.8}
+                strokeOpacity={0.25 + absorptionRamp * 0.25 + Math.max(climaxIntensity, holdGlow) * 0.35}
                 strokeLinecap="round"
                 strokeLinejoin="round" />
             ))}
