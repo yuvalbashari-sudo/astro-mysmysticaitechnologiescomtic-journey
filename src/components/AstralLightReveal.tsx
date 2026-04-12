@@ -20,6 +20,7 @@ interface Props {
   userName?: string;
   chartData: NatalChartResult;
   onComplete: () => void;
+  fastMode?: boolean;
 }
 
 /* ── Planet visual config ── */
@@ -123,8 +124,8 @@ const FIG_CX = W / 2;       // 160 — perfectly centered
 const FIG_CHEST_Y = 255;    // where beams target (chest area in scene coords)
 const FIG_CORE_Y = 240;     // energy core center
 
-const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
-  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
+const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }: Props) => {
+  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure", fastMode ? "(fast)" : "");
   const { language } = useLanguage();
 
   const [constellationsLit, setConstellationsLit] = useState(0);
@@ -182,24 +183,31 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
   const secondaryColor = planetColors.secondary;
 
   useEffect(() => {
-    const progTimer = setInterval(() => setProgress((p) => Math.min(p + 1, 100)), TOTAL / 100);
-    const statusInterval = TOTAL / statusTexts.length;
+    const S = fastMode ? 0.45 : 1; // speed multiplier
+    const T = TOTAL * S;
+    const CP = CONSTELLATION_PHASE * S;
+    const AP = ABSORPTION_PHASE * S;
+    const CS = CLIMAX_START * S;
+    const CPK = CLIMAX_PEAK * S;
+
+    const progTimer = setInterval(() => setProgress((p) => Math.min(p + 1, 100)), T / 100);
+    const statusInterval = T / statusTexts.length;
     const statusTimer = setInterval(() => setStatusIdx((s) => Math.min(s + 1, statusTexts.length - 1)), statusInterval);
 
-    const constInterval = 1800 / PLANETS.length;
+    const constInterval = (1800 * S) / PLANETS.length;
     const constTimer = setInterval(() => {
       setConstellationsLit((c) => { if (c >= PLANETS.length) { clearInterval(constTimer); return c; } return c + 1; });
     }, constInterval);
 
     const beamDelay = setTimeout(() => {
-      const beamInterval = 1800 / PLANETS.length;
+      const beamInterval = (1800 * S) / PLANETS.length;
       const bTimer = setInterval(() => {
         setBeamsFired((b) => { if (b >= PLANETS.length) { clearInterval(bTimer); return b; } return b + 1; });
       }, beamInterval);
-    }, 1800);
+    }, 1800 * S);
 
     const absStart = setTimeout(() => {
-      const dur = ABSORPTION_PHASE - CONSTELLATION_PHASE;
+      const dur = AP - CP;
       const steps = 40;
       let i = 0;
       const at = setInterval(() => {
@@ -207,10 +215,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
         setAbsorptionLevel(Math.min(i / steps, 1));
         if (i >= steps) clearInterval(at);
       }, dur / steps);
-    }, CONSTELLATION_PHASE);
+    }, CP);
 
     const clxStart = setTimeout(() => {
-      const rampDur = CLIMAX_PEAK - CLIMAX_START;
+      const rampDur = CPK - CS;
       const steps = 25;
       let i = 0;
       const ct = setInterval(() => {
@@ -218,10 +226,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
         setClimaxLevel(Math.min(i / steps, 1));
         if (i >= steps) clearInterval(ct);
       }, rampDur / steps);
-    }, CLIMAX_START);
+    }, CS);
 
-    const infTimer = setTimeout(() => setShowInfluences(true), CLIMAX_PEAK + 500);
-    const doneTimer = setTimeout(onComplete, TOTAL);
+    const infTimer = setTimeout(() => setShowInfluences(true), CPK + 500 * S);
+    const doneTimer = setTimeout(onComplete, T);
 
     return () => {
       clearInterval(progTimer);

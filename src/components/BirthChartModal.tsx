@@ -140,7 +140,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
 
-  // Auto-restore cached chart for returning users
+  // Auto-restore cached chart for returning users — play shortened animation
   useEffect(() => {
     if (!isOpen || phase !== "form") return;
     const cached = loadCachedChart();
@@ -149,7 +149,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
-    setPhase("result");
+    // Go through loading phase so astral animation plays (shortened)
+    setPhase("loading");
     if (cached.details.userName?.trim()) {
       setShowWelcomeBack(true);
       setTimeout(() => setShowWelcomeBack(false), 4000);
@@ -468,7 +469,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {(phase === "loading" || showResult) && chartData && !restoredFromCache && (
+            {(phase === "loading" || showResult) && chartData && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -477,7 +478,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="pointer-events-none"
                 style={{ position: showResult ? 'relative' : undefined, zIndex: showResult ? 10 : undefined }}
               >
-                <AstralLightReveal userName={userName.trim() || undefined} chartData={chartData} onComplete={startAIInterpretation} />
+                <AstralLightReveal
+                  userName={userName.trim() || undefined}
+                  chartData={chartData}
+                  onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
+                  fastMode={restoredFromCache}
+                />
               </motion.div>
             )}
 
