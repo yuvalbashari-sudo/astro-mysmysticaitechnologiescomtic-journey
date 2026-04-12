@@ -617,29 +617,47 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 />
               ))}
 
-              {/* Internal energy veins */}
-              {[-8, 0, 8].map((offset, vi) => (
+              {/* Internal energy veins — anatomical meridians */}
+              {/* Spine (central) */}
+              <motion.line
+                x1={FIG_CX} y1={FIG_CORE_Y - 45}
+                x2={FIG_CX} y2={FIG_CORE_Y + 80}
+                stroke={dominantColor}
+                strokeWidth={1.2}
+                strokeOpacity={absorptionLevel * 0.5}
+                filter="url(#body-glow)"
+                animate={{ strokeOpacity: [absorptionLevel * 0.25, absorptionLevel * 0.55, absorptionLevel * 0.25] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              {/* Left/right spine parallels */}
+              {[-6, 6].map((offset, vi) => (
                 <motion.line
                   key={`vein-${vi}`}
-                  x1={FIG_CX + offset} y1={FIG_CORE_Y - 40}
-                  x2={FIG_CX + offset} y2={FIG_CORE_Y + 80}
+                  x1={FIG_CX + offset} y1={FIG_CORE_Y - 35}
+                  x2={FIG_CX + offset} y2={FIG_CORE_Y + 70}
                   stroke={dominantColor}
-                  strokeWidth={1}
-                  strokeOpacity={absorptionLevel * 0.4}
+                  strokeWidth={0.6}
+                  strokeOpacity={absorptionLevel * 0.3}
                   filter="url(#body-glow)"
-                  animate={{
-                    strokeOpacity: [absorptionLevel * 0.2, absorptionLevel * 0.5, absorptionLevel * 0.2],
-                  }}
+                  animate={{ strokeOpacity: [absorptionLevel * 0.15, absorptionLevel * 0.35, absorptionLevel * 0.15] }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: vi * 0.3 }}
                 />
               ))}
 
-              {/* Energy spreading through limbs */}
+              {/* Energy through arms and legs — following anatomy */}
               {[
-                { x1: FIG_CX, y1: FIG_CHEST_Y, x2: FIG_CX - 25, y2: FIG_CHEST_Y + 10 },
-                { x1: FIG_CX, y1: FIG_CHEST_Y, x2: FIG_CX + 25, y2: FIG_CHEST_Y + 10 },
-                { x1: FIG_CX - 5, y1: FIG_CORE_Y + 50, x2: FIG_CX - 15, y2: FIG_CORE_Y + 110 },
-                { x1: FIG_CX + 5, y1: FIG_CORE_Y + 50, x2: FIG_CX + 15, y2: FIG_CORE_Y + 110 },
+                // Left arm meridian (shoulder to hand)
+                { x1: FIG_CX - 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX - 40, y2: FIG_CHEST_Y + 38 },
+                // Right arm meridian
+                { x1: FIG_CX + 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX + 40, y2: FIG_CHEST_Y + 38 },
+                // Left leg meridian (hip to foot)
+                { x1: FIG_CX - 8, y1: FIG_CORE_Y + 55, x2: FIG_CX - 18, y2: FIG_CORE_Y + 120 },
+                // Right leg meridian
+                { x1: FIG_CX + 8, y1: FIG_CORE_Y + 55, x2: FIG_CX + 18, y2: FIG_CORE_Y + 120 },
+                // Cross-chest horizontal
+                { x1: FIG_CX - 18, y1: FIG_CHEST_Y, x2: FIG_CX + 18, y2: FIG_CHEST_Y },
+                // Solar plexus horizontal
+                { x1: FIG_CX - 12, y1: FIG_CORE_Y + 20, x2: FIG_CX + 12, y2: FIG_CORE_Y + 20 },
               ].map((line, li) => (
                 <motion.line
                   key={`limb-${li}`}
@@ -652,7 +670,33 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                     opacity: absorptionLevel * 0.35,
                     pathLength: absorptionLevel,
                   }}
-                  transition={{ duration: 1.2, delay: li * 0.2 }}
+                  transition={{ duration: 1.2, delay: li * 0.15 }}
+                />
+              ))}
+
+              {/* Chakra points along spine */}
+              {[
+                { cy: FIG_CORE_Y - 42, color: "#9B59B6" }, // Crown
+                { cy: FIG_CORE_Y - 30, color: "#5B6AB8" }, // Third eye
+                { cy: FIG_CORE_Y - 15, color: "#3498DB" }, // Throat
+                { cy: FIG_CORE_Y, color: "#2ECC71" },       // Heart
+                { cy: FIG_CORE_Y + 18, color: "#F1C40F" },  // Solar plexus
+                { cy: FIG_CORE_Y + 35, color: "#E67E22" },  // Sacral
+                { cy: FIG_CORE_Y + 50, color: "#E74C3C" },  // Root
+              ].map((chakra, ci) => (
+                <motion.circle
+                  key={`chakra-${ci}`}
+                  cx={FIG_CX}
+                  cy={chakra.cy}
+                  r={2}
+                  fill={chakra.color}
+                  opacity={absorptionLevel * 0.4}
+                  filter="url(#const-glow)"
+                  animate={{
+                    r: [1.5, 3, 1.5],
+                    opacity: [absorptionLevel * 0.2, absorptionLevel * 0.5, absorptionLevel * 0.2],
+                  }}
+                  transition={{ duration: 1.8, repeat: Infinity, delay: ci * 0.15 }}
                 />
               ))}
             </g>
