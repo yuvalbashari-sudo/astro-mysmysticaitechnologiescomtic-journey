@@ -21,6 +21,26 @@ const AURA_SUBTITLE_I18N: Record<string, Record<AuraFamily, string>> = {
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 
+/* English-first identity labels */
+const MODIFIER_LABELS_EN: Record<string, string> = {
+  radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep",
+  balanced: "Balanced", transformative: "Transformative", grounded: "Grounded",
+  fluid: "Fluid", intense: "Intense", ethereal: "Ethereal",
+};
+
+const AURA_DISPLAY_EN: Record<string, string> = {
+  solar_gold: "Solar Gold", lunar_blue: "Lunar Blue", healing_green: "Healing Green",
+  mystical_purple: "Mystical Purple", vital_red: "Vital Red", venus_pink: "Venus Pink",
+  astral_turquoise: "Astral Turquoise", deep_indigo: "Deep Indigo",
+  expansive_orange: "Expansive Orange", pure_white: "Pure White",
+};
+
+const MOD_I18N_MAP: Record<string, Record<string, string>> = {
+  he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
+  ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
+  ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
+};
+
 /* ═══════════════════════════════════════════════════════
    AstralLightReveal — Cinematic Astral Energy Animation
    ═══════════════════════════════════════════════════════
@@ -547,7 +567,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 y="0"
                 width={FIG_VB_W}
                 height={FIG_VB_H}
-                opacity={0.35 + absorptionLevel * 0.4 + climaxLevel * 0.25}
+                opacity={0.28 + absorptionLevel * 0.32 + climaxLevel * 0.2}
                 style={{ mixBlendMode: 'screen' }}
               />
             </g>
@@ -722,41 +742,112 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </AnimatePresence>
 
 
-          {/* ─── Phase 3: CLIMAX — refined layered glow + breathing ─── */}
+          {/* ─── Phase 3: CLIMAX — dramatic layered glow + breathing ─── */}
           {climaxLevel > 0 && (
             <motion.g
               animate={!showConstellations ? { opacity: [1, 0.7, 1] } : undefined}
               transition={!showConstellations ? { duration: 3.5, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
-              {/* Outer aura bloom — gentle pulsing ellipse */}
+              {/* Expanding halo ring 1 — outermost, faint */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 30}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.5}
+                animate={{
+                  rx: [80 + climaxLevel * 30, 100 + climaxLevel * 40, 80 + climaxLevel * 30],
+                  ry: [140 + climaxLevel * 40, 170 + climaxLevel * 55, 140 + climaxLevel * 40],
+                  opacity: [climaxLevel * 0.06, climaxLevel * 0.15, climaxLevel * 0.06],
+                }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Expanding halo ring 2 — mid, slightly brighter */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 35}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.8}
+                animate={{
+                  rx: [60 + climaxLevel * 20, 75 + climaxLevel * 30, 60 + climaxLevel * 20],
+                  ry: [110 + climaxLevel * 30, 130 + climaxLevel * 40, 110 + climaxLevel * 30],
+                  opacity: [climaxLevel * 0.08, climaxLevel * 0.2, climaxLevel * 0.08],
+                }}
+                transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              />
+
+              {/* Outer aura bloom — intense pulsing */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 40}
                 fill="url(#climax-radial)"
                 filter="url(#climax-mega)"
                 animate={{
-                  rx: [50 + climaxLevel * 20, 60 + climaxLevel * 28, 50 + climaxLevel * 20],
-                  ry: [120 + climaxLevel * 35, 140 + climaxLevel * 45, 120 + climaxLevel * 35],
-                  opacity: [climaxLevel * 0.15, climaxLevel * 0.3, climaxLevel * 0.15],
+                  rx: [55 + climaxLevel * 25, 70 + climaxLevel * 35, 55 + climaxLevel * 25],
+                  ry: [130 + climaxLevel * 40, 155 + climaxLevel * 55, 130 + climaxLevel * 40],
+                  opacity: [climaxLevel * 0.25, climaxLevel * 0.5, climaxLevel * 0.25],
                 }}
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+
+              {/* Secondary color ambient glow — soft atmospheric layer */}
+              <motion.ellipse
+                cx={FIG_CX}
+                cy={FIG_CORE_Y + 50}
+                fill={secondaryColor}
+                filter="url(#climax-mega)"
+                animate={{
+                  rx: [40 + climaxLevel * 15, 55 + climaxLevel * 22, 40 + climaxLevel * 15],
+                  ry: [90 + climaxLevel * 25, 110 + climaxLevel * 35, 90 + climaxLevel * 25],
+                  opacity: [climaxLevel * 0.06, climaxLevel * 0.12, climaxLevel * 0.06],
+                }}
+                transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
               />
 
               {/* Soft body-shaped aura — follows figure silhouette */}
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
-                  x="-4"
-                  y="-4"
-                  width={FIG_VB_W + 8}
-                  height={FIG_VB_H + 8}
-                  opacity={climaxLevel * 0.3}
+                  x="-6"
+                  y="-6"
+                  width={FIG_VB_W + 12}
+                  height={FIG_VB_H + 12}
+                  opacity={climaxLevel * 0.4}
                   style={{
                     mixBlendMode: 'screen',
-                    filter: `blur(8px) brightness(${1.1 + climaxLevel * 0.3})`,
+                    filter: `blur(10px) brightness(${1.2 + climaxLevel * 0.4})`,
                   }}
                 />
               </g>
+
+              {/* Floating energy particles near figure */}
+              {Array.from({ length: 8 }).map((_, i) => {
+                const angle = (i / 8) * Math.PI * 2;
+                const rr = 50 + (i % 3) * 20;
+                const px = FIG_CX + rr * Math.cos(angle);
+                const py = FIG_CORE_Y + rr * 0.7 * Math.sin(angle);
+                return (
+                  <motion.circle
+                    key={`ep-${i}`}
+                    cx={px}
+                    cy={py}
+                    r={1 + (i % 2)}
+                    fill={i % 3 === 0 ? secondaryColor : dominantColor}
+                    animate={{
+                      opacity: [0, climaxLevel * 0.6, 0],
+                      cy: [py, py - 8 - i * 2, py],
+                    }}
+                    transition={{
+                      duration: 2.5 + i * 0.3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: i * 0.4,
+                    }}
+                  />
+                );
+              })}
             </motion.g>
           )}
         </svg>
@@ -824,19 +915,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
                 {(() => {
-                  const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.title;
-                  const modI18n: Record<string, Record<string, string>> = {
-                    he: { radiant: "זורח", soft: "רך", magnetic: "מגנטי", deep: "עמוק", balanced: "מאוזן", transformative: "טרנספורמטיבי", grounded: "מעוגן", fluid: "זורם", intense: "אינטנסיבי", ethereal: "אתרי" },
-                    ru: { radiant: "Сияющий", soft: "Мягкий", magnetic: "Магнетический", deep: "Глубокий", balanced: "Сбалансированный", transformative: "Трансформативный", grounded: "Заземлённый", fluid: "Текучий", intense: "Интенсивный", ethereal: "Эфирный" },
-                    ar: { radiant: "مشع", soft: "ناعم", magnetic: "مغناطيسي", deep: "عميق", balanced: "متوازن", transformative: "تحويلي", grounded: "راسخ", fluid: "سائل", intense: "مكثّف", ethereal: "أثيري" },
-                    en: { radiant: "Radiant", soft: "Soft", magnetic: "Magnetic", deep: "Deep", balanced: "Balanced", transformative: "Transformative", grounded: "Grounded", fluid: "Fluid", intense: "Intense", ethereal: "Ethereal" },
-                  };
-                  const mod = modI18n[language]?.[auraResult.modifier] ?? modI18n.en[auraResult.modifier] ?? "";
-                  return `${mod} ${localTitle}`;
+                  const mod = MODIFIER_LABELS_EN[auraResult.modifier] ?? "Radiant";
+                  const displayName = AURA_DISPLAY_EN[auraResult.primaryAura] ?? "Solar Gold";
+                  return `${mod} ${displayName}`;
                 })()}
               </motion.h2>
 
-              {/* Emotional subtitle */}
+              {/* Localized subtitle — smaller, supporting */}
               <motion.p
                 className="font-body text-sm text-center italic max-w-[280px]"
                 style={{ color: `${dominantColor}AA`, lineHeight: 1.7 }}
@@ -846,6 +931,23 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               >
                 {AURA_SUBTITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.subtitle}
               </motion.p>
+
+              {/* Localized aura name — in user's language, smaller */}
+              {language !== "en" && (
+                <motion.p
+                  className="font-heading text-base text-center"
+                  style={{ color: `${dominantColor}88` }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9, duration: 0.5 }}
+                >
+                  {(() => {
+                    const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? "";
+                    const localMod = MOD_I18N_MAP[language]?.[auraResult.modifier] ?? "";
+                    return localTitle && localMod ? `${localMod} ${localTitle}` : localTitle;
+                  })()}
+                </motion.p>
+              )}
 
               {/* Glowing divider */}
               <div
