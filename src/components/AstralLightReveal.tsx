@@ -379,10 +379,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
 
           {/* Slow cosmic rotation wrapper for constellation + beams */}
           <motion.g
-            style={{ originX: `${FIG_CX}px`, originY: `${FIG_CORE_Y}px` }}
             animate={{ rotate: [0, 360] }}
             transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            transformTemplate={(_, gen) => `rotate(${gen.rotate}, ${FIG_CX}, ${FIG_CORE_Y})`}
+            style={{ transformOrigin: `${FIG_CX}px ${FIG_CORE_Y}px` }}
           >
           {/* ─── Phase 1: Constellation nodes ─── */}
           {beamPositions.map((bp, idx) => {
