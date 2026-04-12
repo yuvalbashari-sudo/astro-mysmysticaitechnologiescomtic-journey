@@ -235,22 +235,35 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
     };
   }, []);
 
+  /* ── Slow orbit rotation state ── */
+  const [orbitAngle, setOrbitAngle] = useState(0);
+  useEffect(() => {
+    const speed = 0.15; // degrees per frame (~9°/sec → full rotation in ~40s)
+    let raf: number;
+    const tick = () => {
+      setOrbitAngle((a) => (a + speed) % 360);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   /* ── Beam positions: elliptical orbit around figure ── */
   const beamPositions = useMemo(() => {
     const count = sortedPlanets.length;
-    const rx = 110; // horizontal radius of orbit ellipse
-    const ry = 130; // vertical radius of orbit ellipse
-    // Deterministic jitter per planet for organic feel
+    const rx = 110;
+    const ry = 130;
     const jitters = [0.12, -0.08, 0.15, -0.05, 0.1, -0.13, 0.07, -0.11, 0.09, -0.06];
+    const orbitRad = (orbitAngle * Math.PI) / 180;
     return sortedPlanets.map((planet, idx) => {
-      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2; // start from top
+      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2;
       const jitter = jitters[idx % jitters.length];
-      const angle = baseAngle + jitter;
+      const angle = baseAngle + jitter + orbitRad;
       const x = FIG_CX + rx * Math.cos(angle);
       const y = FIG_CORE_Y + ry * Math.sin(angle);
       return { key: planet.key, symbol: planet.symbol, x, y };
     });
-  }, [sortedPlanets]);
+  }, [sortedPlanets, orbitAngle]);
 
   /* ── Figure transform: place SVG centered at FIG_CX, lower-middle ── */
   const figScale = 1.7;
@@ -518,6 +531,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               </g>
             );
           })}
+          
 
           {/* ─── Human figure — AI-generated astral image ─── */}
           <g
