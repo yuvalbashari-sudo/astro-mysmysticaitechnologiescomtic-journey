@@ -13,6 +13,8 @@ import {
 } from "@/lib/auraLocale";
 import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
+import { isAdminTestMode } from "@/lib/adminTestMode";
+import AuraDebugPanel from "@/components/AuraDebugPanel";
 
 /* ═══════════════════════════════════════════════════════
    AstralLightReveal — Cinematic Astral Energy Animation
@@ -105,7 +107,7 @@ const STATUS_TEXT: Record<Language, string[]> = {
 };
 
 /* Influence weights — balanced so different charts produce different dominant planets */
-function computeInfluences(chartData: NatalChartResult): Record<string, number> {
+export function computeInfluences(chartData: NatalChartResult): Record<string, number> {
   const w: Record<string, number> = {};
   /* Base weights are intentionally close so aspects & houses can shift dominance */
   const base: Record<string, number> = {
@@ -186,8 +188,26 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   const [showInfluences, setShowInfluences] = useState(false);
   const [showConstellations, setShowConstellations] = useState(true);
 
+  /* ── Admin forced preset state ── */
+  const PRESET_KEY = "astrologai_admin_forced_preset";
+  const PRESET_NAME_KEY = "astrologai_admin_forced_preset_name";
+  const [forcedPreset, setForcedPreset] = useState<string | null>(() => sessionStorage.getItem(PRESET_KEY));
+  const [forcedPresetName, setForcedPresetName] = useState<string | null>(() => sessionStorage.getItem(PRESET_NAME_KEY));
+
   const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
-  const influences = useMemo(() => computeInfluences(chartData), [chartData]);
+
+  /* ── Real influences from chart data ── */
+  const realInfluences = useMemo(() => computeInfluences(chartData), [chartData]);
+
+  /* ── Active influences: forced preset overrides real in admin mode ── */
+  const isForced = isAdminTestMode() && forcedPreset !== null;
+  const influences = useMemo(() => {
+    if (isForced) {
+      try { return JSON.parse(forcedPreset!) as Record<string, number>; }
+      catch { return realInfluences; }
+    }
+    return realInfluences;
+  }, [realInfluences, forcedPreset, isForced]);
 
   /* ── Compute structured aura result (deterministic, memo'd) ── */
   const auraResult = useMemo(() => getAuraResult(influences), [influences]);
@@ -980,6 +1000,38 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </>
         )}
       </motion.div>
+
+      {/* ── Admin Debug Panel ── */}
+      {isAdminTestMode() && (
+        <AuraDebugPanel
+          realInfluences={realInfluences}
+          activeInfluences={influences}
+          auraResult={auraResult}
+          language={language}
+          isForced={isForced}
+          presetName={forcedPresetName}
+          onPresetChange={(name, map) => {
+            const json = JSON.stringify(map);
+            sessionStorage.setItem(PRESET_KEY, json);
+            sessionStorage.setItem(PRESET_NAME_KEY, name);
+            setForcedPreset(json);
+            setForcedPresetName(name);
+          }}
+          onPresetClear={() => {
+            sessionStorage.removeItem(PRESET_KEY);
+            sessionStorage.removeItem(PRESET_NAME_KEY);
+            setForcedPreset(null);
+            setForcedPresetName(null);
+          }}
+          onRestoreReal={() => {
+            sessionStorage.removeItem(PRESET_KEY);
+            sessionStorage.removeItem(PRESET_NAME_KEY);
+            setForcedPreset(null);
+            setForcedPresetName(null);
+            localStorage.removeItem("astrologai_birthchart_cache");
+          }}
+        />
+      )}
     </div>
   );
 };
