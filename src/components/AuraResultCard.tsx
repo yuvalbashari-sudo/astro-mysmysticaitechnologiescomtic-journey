@@ -126,8 +126,11 @@ const AuraResultCard = ({ result }: Props) => {
   const modifierName = MODIFIER_I18N[language]?.[result.modifier] ?? MODIFIER_I18N.en[result.modifier];
   const getAuraTitle = (a: AuraFamily) => AURA_I18N[language]?.[a]?.title ?? AURA_BANK[a].title;
 
-  // Shareable identity in current language
-  const shareableIdentity = `${modifierName} ${title}`;
+  // English-first shareable identity
+  const enModifier = MODIFIER_I18N.en[result.modifier];
+  const enDisplayName = AURA_BANK[result.primaryAura].displayName;
+  const shareableIdentity = `${enModifier} ${enDisplayName}`;
+  const localizedIdentity = language !== "en" ? `${modifierName} ${title}` : "";
 
   // Secondary visuals
   const secondaryVis = result.secondaryAuras.slice(0, 2).map(a => AURA_VISUALS[a]);
