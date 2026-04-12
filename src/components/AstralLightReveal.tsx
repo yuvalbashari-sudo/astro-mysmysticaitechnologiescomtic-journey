@@ -732,13 +732,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           transition={{ duration: 0.5 }}
         >
           {statusIdx === statusTexts.length - 1 && auraResult
-            ? (language === "he"
-                ? `ההילה הדומיננטית שלך: ${auraResult.title}`
-                : language === "ar"
-                  ? `هالتك المهيمنة: ${auraResult.title}`
-                  : language === "ru"
-                    ? `Ваша доминирующая аура: ${auraResult.title}`
-                    : `Your dominant aura: ${auraResult.title}`)
+            ? (() => {
+                const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.title;
+                return language === "he" ? `ההילה הדומיננטית שלך: ${localTitle}`
+                  : language === "ar" ? `هالتك المهيمنة: ${localTitle}`
+                  : language === "ru" ? `Ваша доминирующая аура: ${localTitle}`
+                  : `Your dominant aura: ${localTitle}`;
+              })()
             : statusTexts[statusIdx]}
         </motion.p>
       </AnimatePresence>
