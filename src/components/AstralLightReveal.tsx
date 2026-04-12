@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { PLANETS } from "@/components/NatalChartWheel";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { getPlanetName } from "@/lib/astroLocale";
