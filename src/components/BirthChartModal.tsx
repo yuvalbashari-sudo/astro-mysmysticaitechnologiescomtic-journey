@@ -487,8 +487,51 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.5 }}
+                transition={{ duration: restoredFromCache ? 0.4 : 0.6, delay: restoredFromCache ? 0 : 1.5 }}
               >
+
+                {/* Welcome back + edit for cached results */}
+                {restoredFromCache && (
+                  <motion.div
+                    className="flex items-center justify-between"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <AnimatePresence>
+                      {showWelcomeBack && userName.trim() && (
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="font-body text-sm"
+                          style={{ color: "hsl(var(--gold) / 0.7)" }}
+                        >
+                          {t.chart_welcome_back.replace("{name}", userName.trim())}
+                        </motion.p>
+                      )}
+                    </AnimatePresence>
+                    <motion.button
+                      onClick={() => {
+                        setRestoredFromCache(false);
+                        setPhase("form");
+                        setChartData(null);
+                        setResultText("");
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-xs transition-colors"
+                      style={{
+                        color: "hsl(var(--gold) / 0.6)",
+                        border: "1px solid hsl(var(--gold) / 0.15)",
+                        background: "hsl(var(--gold) / 0.05)",
+                      }}
+                      whileHover={{ scale: 1.03, borderColor: "hsl(var(--gold) / 0.3)" }}
+                      whileTap={{ scale: 0.97 }}
+                    >
+                      <Pencil className="w-3 h-3" />
+                      {t.chart_edit_details}
+                    </motion.button>
+                  </motion.div>
+                )}
 
                 {/* Chart wheel emerges from below */}
                 <motion.div
