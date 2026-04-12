@@ -1,46 +1,29 @@
 
 
-# Arrange Constellation Nodes in an Organic Orbit Around the Figure
+# Why the Astral Animation Disappeared
 
-## Problem
-The planet constellation nodes are placed in a straight horizontal line at `y = 40` (top of the scene), far from the figure. The beams descend as rigid straight lines, creating an unnatural, distant look.
+## Root Cause
+The "returning user" feature added in the last update stores the full chart result in `localStorage` (`astrologai_birthchart_cache`). When the modal opens, it detects cached data and **skips directly to the result phase** (line 152: `setPhase("result")`), bypassing the `"loading"` phase where AstralLightReveal plays.
 
-## Changes (all in `src/components/AstralLightReveal.tsx`)
+Reverting code versions doesn't fix this because the cached data lives in **your browser**, not in the code.
 
-### 1. Replace linear spread with elliptical orbit positioning (lines 238-246)
-- Instead of `y = 40` for all nodes, compute positions on an **elliptical orbit** centered around the figure (`FIG_CX`, `~FIG_CORE_Y`)
-- Use an ellipse with `rx ≈ 110, ry ≈ 130` — close enough to surround the figure but with enough clearance to not overlap
-- Distribute planets at angular intervals around the ellipse (not evenly — add slight randomized angular offsets for organic feel)
-- Each planet gets a unique angle: `baseAngle = (idx / count) * 2π + smallRandomOffset`
+## Fix (in `src/components/BirthChartModal.tsx`)
 
-### 2. Adjust constellation mini-star offsets (lines 40-51)
-- Reduce the star offset ranges from ±6 to ±4 so mini constellation patterns stay tighter around each node at closer range
+### Option chosen: Show the astral animation even for cached results, but shorter
 
-### 3. Curve the energy beams (lines 441-498)
-- Replace straight `<line>` beams with `<path>` using a quadratic Bézier curve (`Q` command)
-- Control point offset perpendicular to the beam direction for a natural arc
-- This makes beams flow organically toward the chest instead of rigid straight lines
+1. **When cache is found, go through `"loading"` phase instead of jumping to `"result"`**
+   - Change the auto-restore logic (lines 144-157) to set `phase = "loading"` instead of `phase = "result"`
+   - Pre-fill `chartData` and `resultText` from cache so no recalculation is needed
+   - The AstralLightReveal plays its sequence, then transitions to the result as normal
 
-### 4. Keep beam gradient and animation logic identical
-- Same gradient definitions, same traveling particle, same impact flash — just follow the curved path instead of straight line
+2. **Add a `fastMode` flag for cached restores**
+   - Pass a prop or use a ref to tell AstralLightReveal to use a shorter duration (e.g. 5s instead of 10s) for returning users
+   - This keeps the premium feel without making users wait the full animation every time
 
-## Technical detail
-
-Ellipse formula for node positions:
-```
-angle = (index / total) * 2π + jitter
-x = FIG_CX + rx * cos(angle)
-y = FIG_CORE_Y + ry * sin(angle)
-```
-
-Bézier control point for curved beams:
-```
-midX = (nodeX + FIG_CX) / 2 + perpOffset
-midY = (nodeY + FIG_CHEST_Y) / 2 + perpOffset
-path = `M ${nodeX} ${nodeY} Q ${midX} ${midY} ${FIG_CX} ${FIG_CHEST_Y}`
-```
+3. **Keep the welcome-back message**
+   - Show "Welcome back" during the shortened loading phase instead of on the result screen
 
 ## Scope
-- Only `src/components/AstralLightReveal.tsx` modified
-- No changes to figure, timing, colors, or other components
+- Only `src/components/BirthChartModal.tsx` modified
+- No changes to AstralLightReveal, layout, or other components
 
