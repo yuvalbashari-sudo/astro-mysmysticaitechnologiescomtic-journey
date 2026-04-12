@@ -453,7 +453,7 @@ export const PromoAd = () => {
             const r = 80 + ring * 40;
             const ringPulse = Math.sin(frame * 0.04 + ring * 1.0) * 0.2 + 0.5;
             return (
-              <ellipse key={`base-${ring}`} cx={CX} cy={1180} rx={r} ry={r * 0.3}
+              <ellipse key={`base-${ring}`} cx={CX} cy={1310} rx={r} ry={r * 0.3}
                 fill="none" stroke="#40D8E0" strokeWidth={1}
                 opacity={figureOpacity * 0.2 * ringPulse} />
             );
