@@ -582,25 +582,19 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 />
               ))}
 
-              {/* Energy through arms and legs — following anatomy */}
+              {/* Energy through arms and legs — tertiary planet color */}
               {[
-                // Left arm meridian (shoulder to hand)
                 { x1: FIG_CX - 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX - 40, y2: FIG_CHEST_Y + 38 },
-                // Right arm meridian
                 { x1: FIG_CX + 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX + 40, y2: FIG_CHEST_Y + 38 },
-                // Left leg meridian (hip to foot)
                 { x1: FIG_CX - 8, y1: FIG_CORE_Y + 55, x2: FIG_CX - 18, y2: FIG_CORE_Y + 120 },
-                // Right leg meridian
                 { x1: FIG_CX + 8, y1: FIG_CORE_Y + 55, x2: FIG_CX + 18, y2: FIG_CORE_Y + 120 },
-                // Cross-chest horizontal
                 { x1: FIG_CX - 18, y1: FIG_CHEST_Y, x2: FIG_CX + 18, y2: FIG_CHEST_Y },
-                // Solar plexus horizontal
                 { x1: FIG_CX - 12, y1: FIG_CORE_Y + 20, x2: FIG_CX + 12, y2: FIG_CORE_Y + 20 },
               ].map((line, li) => (
                 <motion.line
                   key={`limb-${li}`}
                   {...line}
-                  stroke={secondaryColor}
+                  stroke={planetColors.colors[li % planetColors.colors.length] || secondaryColor}
                   strokeWidth={0.8}
                   strokeLinecap="round"
                   initial={{ opacity: 0, pathLength: 0 }}
