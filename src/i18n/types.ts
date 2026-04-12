@@ -791,4 +791,7 @@ export type TranslationKeys = {
   daily_horoscope_setup_birthdate_label: string;
   daily_horoscope_setup_cta: string;
   welcome_back_greeting: string;
+  chart_welcome_back: string;
+  chart_edit_details: string;
+  chart_loading_cached: string;
 };

@@ -735,4 +735,7 @@ export const en: TranslationKeys = {
   daily_horoscope_setup_birthdate_label: "Birth Date",
   daily_horoscope_setup_cta: "✦ Reveal Your Horoscope ✦",
   welcome_back_greeting: "Welcome back, {name} ✦",
+  chart_welcome_back: "Welcome back, {name} ✨",
+  chart_edit_details: "Edit details",
+  chart_loading_cached: "Restoring your chart…",
 };

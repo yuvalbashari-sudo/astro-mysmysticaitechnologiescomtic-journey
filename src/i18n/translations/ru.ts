@@ -735,4 +735,7 @@ export const ru: TranslationKeys = {
   daily_horoscope_setup_birthdate_label: "Дата рождения",
   daily_horoscope_setup_cta: "✦ Узнать свой гороскоп ✦",
   welcome_back_greeting: "С возвращением, {name} ✦",
+  chart_welcome_back: "С возвращением, {name} ✨",
+  chart_edit_details: "Изменить данные",
+  chart_loading_cached: "Восстанавливаем вашу карту…",
 };
