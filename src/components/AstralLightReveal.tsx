@@ -501,7 +501,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
-              filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'})`,
+              filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'}) drop-shadow(0 0 ${climaxLevel * 12}px ${secondaryColor}40)`,
             }}
           >
             <image
