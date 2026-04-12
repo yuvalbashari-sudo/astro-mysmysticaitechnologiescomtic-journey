@@ -22,6 +22,7 @@ import AstrologyGuidesPage from "./pages/AstrologyGuidesPage";
 import GuideDetailPage from "./pages/GuideDetailPage";
 import FloatingOracleButton from "./components/FloatingOracleButton";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
+import AdminDebugBadge from "./components/AdminDebugBadge";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
             </BrowserRouter>
             <FloatingOracleButton />
             <WhatsAppFloatingButton />
+            <AdminDebugBadge />
           </TooltipProvider>
         </FontScaleProvider>
       </ReadingProvider>
