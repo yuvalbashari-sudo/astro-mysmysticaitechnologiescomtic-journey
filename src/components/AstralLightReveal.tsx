@@ -876,7 +876,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 </motion.p>
               )}
 
-              {/* MAIN IDENTITY — always English: "Balanced Deep Indigo" */}
+              {/* MAIN IDENTITY — locale-aware title */}
               <motion.h2
                 className="font-heading text-2xl md:text-3xl text-center tracking-wide leading-tight"
                 style={{
@@ -887,21 +887,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                {`${MODIFIER_LABELS_EN[auraResult.modifier] || "Radiant"} ${AURA_DISPLAY_EN[auraResult.primaryAura] || "Solar Gold"}`}
+                {buildLocalizedTitle(language, auraResult.primaryAura, auraResult.modifier)}
               </motion.h2>
-
-              {/* Hebrew/localized translation — smaller, below */}
-              {language !== "en" && AURA_TITLE_I18N[language]?.[auraResult.primaryAura] && (
-                <motion.p
-                  className="font-heading text-base text-center"
-                  style={{ color: `${dominantColor}80` }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.7, duration: 0.5 }}
-                >
-                  {`${MOD_I18N_MAP[language]?.[auraResult.modifier] || ""} ${AURA_TITLE_I18N[language]?.[auraResult.primaryAura] || ""}`.trim()}
-                </motion.p>
-              )}
 
               {/* Emotional subtitle in user's language */}
               <motion.p
@@ -911,7 +898,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.9, duration: 0.6 }}
               >
-                {AURA_SUBTITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.subtitle}
+                {getAuraSubtitle(language, auraResult.primaryAura)}
               </motion.p>
 
               {/* Glowing divider */}
