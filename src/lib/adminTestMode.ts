@@ -3,6 +3,8 @@
  * 
  * When active, provides fallback test data so admins can test
  * every feature without filling forms or hitting limits.
+ * 
+ * Uses a reactive pattern: components can subscribe to changes.
  */
 
 import { subscriptionManager } from "./subscriptionManager";
@@ -21,7 +23,7 @@ const ADMIN_DEFAULTS = {
 
 /**
  * Whether admin test mode is currently active.
- * True only when the authenticated user is a recognized admin.
+ * True when: real admin auth OR preview override is enabled.
  */
 export function isAdminTestMode(): boolean {
   return subscriptionManager.isAdmin();
@@ -70,6 +72,36 @@ export function getAdminSafeZodiac(): { sign: string | null; symbol: string } {
 export function shouldBlockForMissing(...fields: (string | undefined | null)[]): boolean {
   if (isAdminTestMode()) return false;
   return fields.some((f) => !f || f.trim() === "");
+}
+
+/**
+ * Log admin debug state to console (preview/dev only).
+ */
+export function logAdminDebugState(): void {
+  const isPreview = window.location.hostname.includes("preview") ||
+    window.location.hostname.includes("lovableproject.com") ||
+    window.location.hostname === "localhost" ||
+    import.meta.env.DEV;
+
+  if (!isPreview) return;
+
+  const state = {
+    adminTestMode: isAdminTestMode(),
+    overrideFlag: subscriptionManager.isAdminOverride(),
+    effectiveIsAdmin: subscriptionManager.isAdmin(),
+    bypassActive: isAdminTestMode(),
+    currentTier: subscriptionManager.getCurrentTier(),
+    authReady: subscriptionManager.isAuthReady(),
+    userEmail: subscriptionManager.getUserEmail() || "(none)",
+    storedAdminEmail: localStorage.getItem("astrologai_admin_email") || "(none)",
+    overrideKey: localStorage.getItem("astrologai_admin_override") || "(none)",
+  };
+
+  console.log(
+    "%c[ADMIN DEBUG]%c " + JSON.stringify(state, null, 2),
+    "background: #c9a84c; color: #000; font-weight: bold; padding: 2px 6px; border-radius: 3px;",
+    "color: #c9a84c;"
+  );
 }
 
 export { ADMIN_DEFAULTS };
