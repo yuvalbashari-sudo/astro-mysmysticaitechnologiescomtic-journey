@@ -1,15 +1,15 @@
 import { motion } from "framer-motion";
-import { Download, Sparkles } from "lucide-react";
+import { Download, Sparkles, Star } from "lucide-react";
 import type { AuraResult, AuraFamily, EnergyModifier } from "@/lib/auraResultBank";
 import { useLanguage } from "@/i18n/LanguageContext";
 import {
   buildLocalizedTitle,
   getAuraName,
   getAuraSubtitle,
-  getAuraMeaning,
   getModifierName,
   getSectionLabels,
 } from "@/lib/auraLocale";
+import { composeAuraMeaning } from "@/lib/auraMeaning";
 
 /* ── Visual mapping per aura family ── */
 const AURA_VISUALS: Record<AuraFamily, { accent: string; glow: string; gradient: string }> = {
