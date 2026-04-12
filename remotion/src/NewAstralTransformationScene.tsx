@@ -87,6 +87,7 @@ const AstralFigure = ({ frame }: { frame: number }) => {
   const energyLineOpacity = 0.1 + glowIntensity * 0.8;
   const chestCoreRadius = 26 + beamAbsorption * 34 + climax * 24;
   const outlineOpacity = 0.35 + glowIntensity * 0.55;
+  const diagnosticOutlineOpacity = 0.22 + glowIntensity * 0.38 + stableHold * 0.18;
 
   return (
     <g opacity={figureOpacity}>
@@ -156,6 +157,22 @@ const AstralFigure = ({ frame }: { frame: number }) => {
         <path d="M 610 932 C 588 968 570 1008 558 1060 C 548 1114 544 1186 544 1296" strokeWidth={3.8} filter="url(#new-astral-glow)" />
         <path d="M 422 596 C 392 660 376 738 370 836 C 366 896 364 948 364 998" strokeWidth={3.6} filter="url(#new-astral-glow)" />
         <path d="M 658 596 C 688 660 704 738 710 836 C 714 896 716 948 716 998" strokeWidth={3.6} filter="url(#new-astral-glow)" />
+      </g>
+
+      <g fill="none" opacity={diagnosticOutlineOpacity} strokeLinecap="round" strokeLinejoin="round">
+        <ellipse cx={540} cy={430} rx={88} ry={108} stroke="hsl(188 100% 82%)" strokeWidth={8} filter="url(#new-astral-glow)" />
+        <path d="M 412 580 C 456 534 624 534 668 580 C 664 666 650 748 626 830 C 610 880 586 930 540 978 C 494 930 470 880 454 830 C 430 748 416 666 412 580 Z" stroke="hsl(188 100% 82%)" strokeWidth={9.5} filter="url(#new-astral-glow)" />
+        <path d="M 470 932 C 492 968 510 1008 522 1060 C 532 1114 536 1186 536 1296" stroke="hsl(188 100% 82%)" strokeWidth={8.5} filter="url(#new-astral-glow)" />
+        <path d="M 610 932 C 588 968 570 1008 558 1060 C 548 1114 544 1186 544 1296" stroke="hsl(188 100% 82%)" strokeWidth={8.5} filter="url(#new-astral-glow)" />
+        <path d="M 422 596 C 392 660 376 738 370 836 C 366 896 364 948 364 998" stroke="hsl(188 100% 82%)" strokeWidth={7.5} filter="url(#new-astral-glow)" />
+        <path d="M 658 596 C 688 660 704 738 710 836 C 714 896 716 948 716 998" stroke="hsl(188 100% 82%)" strokeWidth={7.5} filter="url(#new-astral-glow)" />
+      </g>
+
+      <g fill="none" opacity={0.16 + climax * 0.25 + stableHold * 0.2} stroke="hsl(28 96% 72%)" strokeLinecap="round">
+        <path d="M 540 446 C 530 520 520 594 540 706 C 558 806 558 888 540 978" strokeWidth={4.2} filter="url(#new-astral-glow)" />
+        <path d="M 472 684 C 500 716 520 760 540 820 C 562 760 584 716 612 684" strokeWidth={3.2} filter="url(#new-astral-glow)" />
+        <path d="M 470 940 C 500 976 520 1028 532 1106" strokeWidth={2.8} filter="url(#new-astral-glow)" />
+        <path d="M 610 940 C 580 976 560 1028 548 1106" strokeWidth={2.8} filter="url(#new-astral-glow)" />
       </g>
 
       <g fill="none" strokeLinecap="round" opacity={energyLineOpacity}>
@@ -237,6 +254,7 @@ export const NewAstralTransformationScene = () => {
   const figureLift = spring({ frame: frame - 10, fps, config: { damping: 18, stiffness: 60, mass: 1.2 } });
   const backgroundGlow = interpolate(frame, [88, 172], [0.14, 0.38], clamp);
   const holdState = frame >= 210;
+  const finalStateLabel = interpolate(frame, [180, 220], [0, 1], clamp);
 
   const backgroundStars = Array.from({ length: 120 }, (_, index) => ({
     x: (index * 137.3) % W,
@@ -361,20 +379,46 @@ export const NewAstralTransformationScene = () => {
       <div
         style={{
           position: "absolute",
-          top: 22,
-          right: 22,
+          top: 320,
+          right: 120,
           padding: "8px 12px",
           borderRadius: 999,
           background: "hsl(230 30% 12% / 0.85)",
-          color: "hsl(50 92% 78%)",
-          border: "1px solid hsl(50 92% 78% / 0.35)",
+          color: "hsl(188 100% 82%)",
+          border: "1px solid hsl(188 100% 82% / 0.5)",
           fontFamily: "system-ui, sans-serif",
-          fontSize: 20,
-          letterSpacing: 1.6,
+          fontSize: 18,
+          fontWeight: 700,
+          letterSpacing: 1.2,
           zIndex: 10,
+          boxShadow: "0 0 30px hsl(188 100% 82% / 0.25)",
         }}
       >
         NEW ASTRAL SCENE ACTIVE
+      </div>
+
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: 220,
+          transform: `translateX(-50%) translateY(${18 - finalStateLabel * 18}px)`,
+          opacity: finalStateLabel,
+          padding: "10px 18px",
+          borderRadius: 999,
+          background: "hsl(230 28% 10% / 0.88)",
+          color: "hsl(28 96% 72%)",
+          border: "1px solid hsl(28 96% 72% / 0.45)",
+          fontFamily: "system-ui, sans-serif",
+          fontSize: 20,
+          fontWeight: 700,
+          letterSpacing: 1.4,
+          zIndex: 10,
+          boxShadow: "0 0 36px hsl(28 96% 72% / 0.2)",
+          whiteSpace: "nowrap",
+        }}
+      >
+        FINAL FIGURE SHOULD STILL BE VISIBLE
       </div>
     </AbsoluteFill>
   );
