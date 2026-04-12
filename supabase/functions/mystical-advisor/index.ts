@@ -226,13 +226,23 @@ serve(async (req) => {
 
   try {
     const clientIp = getClientIp(req);
-    const { messages, readingContext, readingsHistory, language, userName } = await req.json();
+    const { messages: rawMessages, readingContext, readingsHistory, language, userName } = await req.json();
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     const lang = language || "he";
     const langName = LANG_NAMES[lang] || "Hebrew";
+
+    // Detect if the latest user message is free-form text vs a button click
+    const lastMsg = rawMessages?.[rawMessages.length - 1];
+    const isLastMessageFreeText = lastMsg?.role === "user" && lastMsg?.source !== "button";
+
+    // Strip source metadata before sending to AI — only pass role + content
+    const messages = (rawMessages || []).map((m: { role: string; content: string }) => ({
+      role: m.role,
+      content: m.content,
+    }));
 
     const langInstruction = lang === "he"
       ? "אתה כותב בעברית בלבד — לא מתרגם מאנגלית, אלא יוצר ישירות בעברית. אל תכניס מילים באנגלית, ברוסית או בערבית — הכל בעברית בלבד."
