@@ -81,9 +81,8 @@ const AuraResultCard = ({ result }: Props) => {
 
       <div className="relative px-5 py-7 md:px-8 md:py-10 space-y-6">
 
-        {/* ═══ HERO IDENTITY — English-first premium label ═══ */}
+        {/* ═══ HERO IDENTITY — locale-aware premium label ═══ */}
         <div className="text-center space-y-2">
-          {/* English identity — dominant focal point */}
           <motion.h2
             className="font-heading text-2xl md:text-3xl tracking-wide font-bold"
             style={{
@@ -94,21 +93,8 @@ const AuraResultCard = ({ result }: Props) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            {shareableIdentity}
+            {title}
           </motion.h2>
-
-          {/* Localized translation — smaller, below English identity */}
-          {localizedIdentity && (
-            <motion.p
-              className="font-heading text-base md:text-lg"
-              style={{ color: `${vis.accent}80` }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-            >
-              {localizedIdentity}
-            </motion.p>
-          )}
 
           {/* Emotional subtitle */}
           <motion.p
