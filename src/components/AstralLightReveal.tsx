@@ -903,7 +903,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 </motion.p>
               )}
 
-              {/* SHAREABLE IDENTITY — the hero headline */}
+              {/* SHAREABLE IDENTITY — in user's language */}
               <motion.h2
                 className="font-heading text-2xl md:text-3xl text-center tracking-wide leading-tight"
                 style={{
@@ -915,13 +915,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 0.9, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
                 {(() => {
-                  const mod = MODIFIER_LABELS_EN[auraResult.modifier] ?? "Radiant";
-                  const displayName = AURA_DISPLAY_EN[auraResult.primaryAura] ?? "Solar Gold";
-                  return `${mod} ${displayName}`;
+                  const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? AURA_DISPLAY_EN[auraResult.primaryAura] ?? auraResult.title;
+                  const localMod = MOD_I18N_MAP[language]?.[auraResult.modifier] ?? MODIFIER_LABELS_EN[auraResult.modifier] ?? "";
+                  return `${localMod} ${localTitle}`;
                 })()}
               </motion.h2>
 
-              {/* Localized subtitle — smaller, supporting */}
+              {/* Localized subtitle */}
               <motion.p
                 className="font-body text-sm text-center italic max-w-[280px]"
                 style={{ color: `${dominantColor}AA`, lineHeight: 1.7 }}
@@ -931,23 +931,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               >
                 {AURA_SUBTITLE_I18N[language]?.[auraResult.primaryAura] ?? auraResult.subtitle}
               </motion.p>
-
-              {/* Localized aura name — in user's language, smaller */}
-              {language !== "en" && (
-                <motion.p
-                  className="font-heading text-base text-center"
-                  style={{ color: `${dominantColor}88` }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.9, duration: 0.5 }}
-                >
-                  {(() => {
-                    const localTitle = AURA_TITLE_I18N[language]?.[auraResult.primaryAura] ?? "";
-                    const localMod = MOD_I18N_MAP[language]?.[auraResult.modifier] ?? "";
-                    return localTitle && localMod ? `${localMod} ${localTitle}` : localTitle;
-                  })()}
-                </motion.p>
-              )}
 
               {/* Glowing divider */}
               <div

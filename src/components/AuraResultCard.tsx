@@ -126,11 +126,8 @@ const AuraResultCard = ({ result }: Props) => {
   const modifierName = MODIFIER_I18N[language]?.[result.modifier] ?? MODIFIER_I18N.en[result.modifier];
   const getAuraTitle = (a: AuraFamily) => AURA_I18N[language]?.[a]?.title ?? AURA_BANK[a].title;
 
-  // English-first shareable identity
-  const enModifier = MODIFIER_I18N.en[result.modifier];
-  const enDisplayName = AURA_BANK[result.primaryAura].displayName;
-  const shareableIdentity = `${enModifier} ${enDisplayName}`;
-  const localizedIdentity = language !== "en" ? `${modifierName} ${title}` : "";
+  // Shareable identity in user's language
+  const shareableIdentity = `${modifierName} ${title}`;
 
   // Secondary visuals
   const secondaryVis = result.secondaryAuras.slice(0, 2).map(a => AURA_VISUALS[a]);
@@ -188,18 +185,7 @@ const AuraResultCard = ({ result }: Props) => {
             {shareableIdentity}
           </motion.h2>
 
-          {/* Localized name — smaller, supporting */}
-          {localizedIdentity && (
-            <motion.p
-              className="font-heading text-base md:text-lg"
-              style={{ color: `${vis.accent}80` }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-            >
-              {localizedIdentity}
-            </motion.p>
-          )}
+
 
           {/* Emotional subtitle */}
           <motion.p
