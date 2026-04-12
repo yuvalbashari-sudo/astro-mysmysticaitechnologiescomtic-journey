@@ -685,11 +685,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
 
               {/* Core circles removed — no more "sun" effect */}
 
-              {/* Radiating energy lines from core — extended reach */}
-              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => {
+              {/* Radiating energy lines — each ray colored by a different planet */}
+              {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, ri) => {
                 const rad = (angle - 90) * (Math.PI / 180);
                 const innerR = 12;
                 const outerR = 60 + climaxLevel * 50;
+                const rayColor = planetColors.colors[ri % planetColors.colors.length] || dominantColor;
                 return (
                   <motion.line
                     key={`ray-${angle}`}
@@ -697,7 +698,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                     y1={FIG_CORE_Y + Math.sin(rad) * innerR}
                     x2={FIG_CX + Math.cos(rad) * outerR}
                     y2={FIG_CORE_Y + Math.sin(rad) * outerR}
-                    stroke={dominantColor}
+                    stroke={rayColor}
                     strokeWidth={0.8}
                     strokeLinecap="round"
                     initial={{ opacity: 0 }}
