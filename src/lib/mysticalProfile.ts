@@ -17,6 +17,8 @@ export interface MysticalProfileData {
   risingElement?: string;
   birthDate?: string;
   birthTime?: string;
+  birthLocation?: string;
+  languagePreference?: string;
 
   // Relationship patterns
   compatibilityHistory: Array<{
