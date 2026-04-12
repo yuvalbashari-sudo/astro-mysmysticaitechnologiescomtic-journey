@@ -157,6 +157,31 @@ function recordRising(sign: string, symbol: string, element: string, birthTime: 
   saveProfile(profile);
 }
 
+function recordBirthLocation(location: string): void {
+  const profile = getProfile();
+  profile.birthLocation = location.trim();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function getBirthLocation(): string | undefined {
+  return getProfile().birthLocation;
+}
+
+function recordLanguagePreference(lang: string): void {
+  const profile = getProfile();
+  profile.languagePreference = lang;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function getLanguagePreference(): string | undefined {
+  return getProfile().languagePreference;
+}
+
+function isReturningUser(): boolean {
+  const profile = getProfile();
+  return !!(profile.userName && profile.zodiacSign);
+}
+
 function recordCompatibility(partnerSign: string, partnerSymbol: string, score: number): void {
   const profile = getProfile();
   profile.compatibilityHistory.unshift({

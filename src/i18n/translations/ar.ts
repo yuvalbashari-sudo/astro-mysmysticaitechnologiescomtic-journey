@@ -734,4 +734,5 @@ export const ar: TranslationKeys = {
   daily_horoscope_setup_name_placeholder: "أدخل اسمك",
   daily_horoscope_setup_birthdate_label: "تاريخ الميلاد",
   daily_horoscope_setup_cta: "✦ اكتشف برجك ✦",
+  welcome_back_greeting: "مرحبًا بعودتك، {name} ✦",
 };

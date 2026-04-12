@@ -734,4 +734,5 @@ export const ru: TranslationKeys = {
   daily_horoscope_setup_name_placeholder: "Введите ваше имя",
   daily_horoscope_setup_birthdate_label: "Дата рождения",
   daily_horoscope_setup_cta: "✦ Узнать свой гороскоп ✦",
+  welcome_back_greeting: "С возвращением, {name} ✦",
 };
