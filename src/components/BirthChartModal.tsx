@@ -140,7 +140,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
 
-  // Auto-restore cached chart for returning users
+  // Auto-restore cached chart for returning users — play shortened animation
   useEffect(() => {
     if (!isOpen || phase !== "form") return;
     const cached = loadCachedChart();
@@ -149,7 +149,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
-    setPhase("result");
+    // Go through loading phase so astral animation plays (shortened)
+    setPhase("loading");
     if (cached.details.userName?.trim()) {
       setShowWelcomeBack(true);
       setTimeout(() => setShowWelcomeBack(false), 4000);
