@@ -100,20 +100,58 @@ function computeInfluences(chartData: NatalChartResult): Record<string, number> 
   return w;
 }
 
-/* ── Clean anatomical human silhouette ── */
-const SILHOUETTE = `
-M 50,18 C 50,12 45,5 50,2 C 55,-1 60,5 60,12 C 60,18 58,22 57,24
-C 62,26 66,30 66,40 L 66,48
-L 78,52 L 86,68 L 90,80
-L 84,82 L 76,68 L 68,58
-L 68,92 L 72,130 L 74,170
-L 68,172 L 60,130 L 55,106
-L 50,130 L 42,172 L 36,170
-L 38,130 L 42,92 L 42,58
-L 34,68 L 26,82 L 20,80
-L 24,68 L 32,52 L 44,48
-L 44,40 C 44,30 48,26 53,24
-C 52,22 50,18 50,18 Z`;
+/* ── Anatomically correct human figure — multi-part paths ── */
+/* viewBox 0 0 110 175, centered at ~55, proportions: 7.5-head height */
+
+// Head: smooth oval skull, no spike/crest
+const HEAD = `M 55,6 C 61,6 66,11 66,18 C 66,25 62,30 58,32 L 52,32 C 48,30 44,25 44,18 C 44,11 49,6 55,6 Z`;
+
+// Neck: tapered cylinder
+const NECK = `M 50,32 L 50,38 C 50,40 52,41 55,41 C 58,41 60,40 60,38 L 60,32`;
+
+// Torso: broad shoulders tapering to waist with natural lateral curves
+const TORSO = `M 55,41 C 60,41 68,43 73,46 C 76,48 77,51 76,54 L 74,60 C 73,64 72,70 71,76 C 70,82 68,86 66,90 L 64,94 C 62,97 58,98 55,98 C 52,98 48,97 46,94 L 44,90 C 42,86 40,82 39,76 C 38,70 37,64 36,60 L 34,54 C 33,51 34,48 37,46 C 42,43 50,41 55,41 Z`;
+
+// Left arm: natural curve with elbow bend, forearm, hand
+const LEFT_ARM = `M 34,48 C 30,50 26,54 24,60 C 22,66 20,72 19,78 C 18,82 17,86 18,88 C 18,90 20,92 22,93 C 23,93 24,92 24,90 C 24,87 25,82 26,78 C 27,74 29,68 31,64 C 33,60 35,56 36,54`;
+
+// Right arm: mirror of left
+const RIGHT_ARM = `M 76,48 C 80,50 84,54 86,60 C 88,66 90,72 91,78 C 92,82 93,86 92,88 C 92,90 90,92 88,93 C 87,93 86,92 86,90 C 86,87 85,82 84,78 C 83,74 81,68 79,64 C 77,60 75,56 74,54`;
+
+// Left leg: hip to knee to ankle to foot
+const LEFT_LEG = `M 48,96 C 47,100 46,106 45,112 C 44,120 43,128 42,136 C 41,144 40,152 40,158 C 40,162 40,166 41,168 C 41,170 43,172 46,172 C 48,172 49,171 49,169 C 49,166 48,162 48,158 C 48,152 48,144 49,136 C 49,128 50,120 50,112 C 50,106 50,100 50,96`;
+
+// Right leg: mirror of left
+const RIGHT_LEG = `M 62,96 C 63,100 64,106 65,112 C 66,120 67,128 68,136 C 69,144 70,152 70,158 C 70,162 70,166 69,168 C 69,170 67,172 64,172 C 62,172 61,171 61,169 C 61,166 62,162 62,158 C 62,152 62,144 61,136 C 61,128 60,120 60,112 C 60,106 60,100 60,96`;
+
+// All body parts for rendering
+const BODY_PARTS = [
+  { id: "head", d: HEAD },
+  { id: "neck", d: NECK },
+  { id: "torso", d: TORSO },
+  { id: "left-arm", d: LEFT_ARM },
+  { id: "right-arm", d: RIGHT_ARM },
+  { id: "left-leg", d: LEFT_LEG },
+  { id: "right-leg", d: RIGHT_LEG },
+];
+
+// Muscle contour hints (subtle anatomical detail lines)
+const CONTOURS = [
+  // Collar bones
+  `M 44,44 C 48,42 52,42 55,42 C 58,42 62,42 66,44`,
+  // Pectoral line
+  `M 42,52 C 46,56 50,57 55,57 C 60,57 64,56 68,52`,
+  // Abdominal midline
+  `M 55,58 L 55,92`,
+  // Hip line
+  `M 44,92 C 48,95 52,96 55,96 C 58,96 62,95 66,92`,
+  // Shoulder caps
+  `M 34,48 C 36,44 40,42 44,43`,
+  `M 76,48 C 74,44 70,42 66,43`,
+  // Knee hints
+  `M 44,134 C 46,136 48,136 49,134`,
+  `M 66,134 C 64,136 62,136 61,134`,
+];
 
 /* figure SVG viewBox: 0 0 110 175 — figure centered at (55, 87) */
 const FIG_VB_W = 110;
@@ -135,6 +173,7 @@ const FIG_CHEST_Y = 255;    // where beams target (chest area in scene coords)
 const FIG_CORE_Y = 240;     // energy core center
 
 const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
+  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
   const { language } = useLanguage();
 
   const [constellationsLit, setConstellationsLit] = useState(0);
@@ -146,6 +185,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
   const [showInfluences, setShowInfluences] = useState(false);
 
   const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
+  console.log("NEW ASTRAL SCENE ACTIVE — anatomical multi-part figure");
   const influences = useMemo(() => computeInfluences(chartData), [chartData]);
 
   const sortedPlanets = useMemo(
@@ -299,13 +339,28 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
               <feGaussianBlur stdDeviation="3" />
             </filter>
 
-            {/* Silhouette gradient */}
+            {/* Figure volume gradient */}
             <linearGradient id="sil-fill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.25 + climaxLevel * 0.35} />
               <stop offset="35%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.35 + climaxLevel * 0.45} />
               <stop offset="65%" stopColor={secondaryColor} stopOpacity={0.08 + absorptionLevel * 0.2 + climaxLevel * 0.3} />
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02} />
             </linearGradient>
+
+            {/* Depth shading — darker edges for 3D volume */}
+            <linearGradient id="fig-depth" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
+              <stop offset="30%" stopColor={dominantColor} stopOpacity={0.02} />
+              <stop offset="70%" stopColor={dominantColor} stopOpacity={0.02} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0.15 + absorptionLevel * 0.15} />
+            </linearGradient>
+
+            {/* Inner glow — radial from chest */}
+            <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="50%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.2} />
+              <stop offset="50%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.06} />
+              <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
+            </radialGradient>
 
             {/* Climax radial */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
@@ -460,31 +515,83 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
             );
           })}
 
-          {/* ─── Human silhouette — centered, clean anatomy ─── */}
+          {/* ─── Human figure — anatomically correct, multi-part ─── */}
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
               filter: `drop-shadow(0 0 ${4 + absorptionLevel * 8 + climaxLevel * 20}px ${dominantColor}${climaxLevel > 0.5 ? 'a0' : '50'})`,
             }}
           >
-            <path
-              d={SILHOUETTE}
-              fill="url(#sil-fill)"
-              stroke={dominantColor}
-              strokeWidth={0.4 + climaxLevel * 0.4}
-              strokeOpacity={0.3 + absorptionLevel * 0.3 + climaxLevel * 0.4}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-            {/* Secondary outline for depth */}
-            <path
-              d={SILHOUETTE}
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth={0.15}
-              strokeOpacity={0.08 + absorptionLevel * 0.08 + climaxLevel * 0.12}
-              strokeLinejoin="round"
-            />
+            {/* Base fill layer — all body parts */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`fill-${part.id}`}
+                d={part.d}
+                fill="url(#sil-fill)"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            ))}
+
+            {/* Depth shading layer — 3D volume */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`depth-${part.id}`}
+                d={part.d}
+                fill="url(#fig-depth)"
+                opacity={0.5 + absorptionLevel * 0.3}
+              />
+            ))}
+
+            {/* Inner glow layer */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`glow-${part.id}`}
+                d={part.d}
+                fill="url(#fig-inner-glow)"
+                opacity={absorptionLevel * 0.6 + climaxLevel * 0.4}
+              />
+            ))}
+
+            {/* Outline stroke — all body parts */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`stroke-${part.id}`}
+                d={part.d}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.4 + climaxLevel * 0.4}
+                strokeOpacity={0.3 + absorptionLevel * 0.3 + climaxLevel * 0.4}
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            ))}
+
+            {/* White highlight outline for depth */}
+            {BODY_PARTS.map((part) => (
+              <path
+                key={`highlight-${part.id}`}
+                d={part.d}
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={0.15}
+                strokeOpacity={0.08 + absorptionLevel * 0.08 + climaxLevel * 0.12}
+                strokeLinejoin="round"
+              />
+            ))}
+
+            {/* Muscle contour hints */}
+            {CONTOURS.map((d, i) => (
+              <path
+                key={`contour-${i}`}
+                d={d}
+                fill="none"
+                stroke={dominantColor}
+                strokeWidth={0.3}
+                strokeOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.1}
+                strokeLinecap="round"
+              />
+            ))}
           </g>
 
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
@@ -512,29 +619,47 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                 />
               ))}
 
-              {/* Internal energy veins */}
-              {[-8, 0, 8].map((offset, vi) => (
+              {/* Internal energy veins — anatomical meridians */}
+              {/* Spine (central) */}
+              <motion.line
+                x1={FIG_CX} y1={FIG_CORE_Y - 45}
+                x2={FIG_CX} y2={FIG_CORE_Y + 80}
+                stroke={dominantColor}
+                strokeWidth={1.2}
+                strokeOpacity={absorptionLevel * 0.5}
+                filter="url(#body-glow)"
+                animate={{ strokeOpacity: [absorptionLevel * 0.25, absorptionLevel * 0.55, absorptionLevel * 0.25] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+              {/* Left/right spine parallels */}
+              {[-6, 6].map((offset, vi) => (
                 <motion.line
                   key={`vein-${vi}`}
-                  x1={FIG_CX + offset} y1={FIG_CORE_Y - 40}
-                  x2={FIG_CX + offset} y2={FIG_CORE_Y + 80}
+                  x1={FIG_CX + offset} y1={FIG_CORE_Y - 35}
+                  x2={FIG_CX + offset} y2={FIG_CORE_Y + 70}
                   stroke={dominantColor}
-                  strokeWidth={1}
-                  strokeOpacity={absorptionLevel * 0.4}
+                  strokeWidth={0.6}
+                  strokeOpacity={absorptionLevel * 0.3}
                   filter="url(#body-glow)"
-                  animate={{
-                    strokeOpacity: [absorptionLevel * 0.2, absorptionLevel * 0.5, absorptionLevel * 0.2],
-                  }}
+                  animate={{ strokeOpacity: [absorptionLevel * 0.15, absorptionLevel * 0.35, absorptionLevel * 0.15] }}
                   transition={{ duration: 1.5, repeat: Infinity, delay: vi * 0.3 }}
                 />
               ))}
 
-              {/* Energy spreading through limbs */}
+              {/* Energy through arms and legs — following anatomy */}
               {[
-                { x1: FIG_CX, y1: FIG_CHEST_Y, x2: FIG_CX - 25, y2: FIG_CHEST_Y + 10 },
-                { x1: FIG_CX, y1: FIG_CHEST_Y, x2: FIG_CX + 25, y2: FIG_CHEST_Y + 10 },
-                { x1: FIG_CX - 5, y1: FIG_CORE_Y + 50, x2: FIG_CX - 15, y2: FIG_CORE_Y + 110 },
-                { x1: FIG_CX + 5, y1: FIG_CORE_Y + 50, x2: FIG_CX + 15, y2: FIG_CORE_Y + 110 },
+                // Left arm meridian (shoulder to hand)
+                { x1: FIG_CX - 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX - 40, y2: FIG_CHEST_Y + 38 },
+                // Right arm meridian
+                { x1: FIG_CX + 20, y1: FIG_CHEST_Y - 8, x2: FIG_CX + 40, y2: FIG_CHEST_Y + 38 },
+                // Left leg meridian (hip to foot)
+                { x1: FIG_CX - 8, y1: FIG_CORE_Y + 55, x2: FIG_CX - 18, y2: FIG_CORE_Y + 120 },
+                // Right leg meridian
+                { x1: FIG_CX + 8, y1: FIG_CORE_Y + 55, x2: FIG_CX + 18, y2: FIG_CORE_Y + 120 },
+                // Cross-chest horizontal
+                { x1: FIG_CX - 18, y1: FIG_CHEST_Y, x2: FIG_CX + 18, y2: FIG_CHEST_Y },
+                // Solar plexus horizontal
+                { x1: FIG_CX - 12, y1: FIG_CORE_Y + 20, x2: FIG_CX + 12, y2: FIG_CORE_Y + 20 },
               ].map((line, li) => (
                 <motion.line
                   key={`limb-${li}`}
@@ -547,7 +672,33 @@ const AstralLightReveal = ({ userName, chartData, onComplete }: Props) => {
                     opacity: absorptionLevel * 0.35,
                     pathLength: absorptionLevel,
                   }}
-                  transition={{ duration: 1.2, delay: li * 0.2 }}
+                  transition={{ duration: 1.2, delay: li * 0.15 }}
+                />
+              ))}
+
+              {/* Chakra points along spine */}
+              {[
+                { cy: FIG_CORE_Y - 42, color: "#9B59B6" }, // Crown
+                { cy: FIG_CORE_Y - 30, color: "#5B6AB8" }, // Third eye
+                { cy: FIG_CORE_Y - 15, color: "#3498DB" }, // Throat
+                { cy: FIG_CORE_Y, color: "#2ECC71" },       // Heart
+                { cy: FIG_CORE_Y + 18, color: "#F1C40F" },  // Solar plexus
+                { cy: FIG_CORE_Y + 35, color: "#E67E22" },  // Sacral
+                { cy: FIG_CORE_Y + 50, color: "#E74C3C" },  // Root
+              ].map((chakra, ci) => (
+                <motion.circle
+                  key={`chakra-${ci}`}
+                  cx={FIG_CX}
+                  cy={chakra.cy}
+                  r={2}
+                  fill={chakra.color}
+                  opacity={absorptionLevel * 0.4}
+                  filter="url(#const-glow)"
+                  animate={{
+                    r: [1.5, 3, 1.5],
+                    opacity: [absorptionLevel * 0.2, absorptionLevel * 0.5, absorptionLevel * 0.2],
+                  }}
+                  transition={{ duration: 1.8, repeat: Infinity, delay: ci * 0.15 }}
                 />
               ))}
             </g>
