@@ -21,7 +21,7 @@
 
 export type AuraFamily =
   | "solar_gold"
-  | "lunar_blue"
+  | "moon_silver_blue"
   | "healing_green"
   | "mystical_purple"
   | "vital_red"
@@ -83,7 +83,9 @@ export interface AuraResult {
   blendMode: boolean;
   /** Energy modifier — how the aura behaves */
   modifier: EnergyModifier;
-  /** Human-readable shareable identity, e.g. "Radiant Solar Gold" */
+  /** Stable internal title key: "soft_moon_silver_blue" */
+  titleKey: string;
+  /** Human-readable shareable identity (English fallback) */
   shareableIdentity: string;
   /** Visual rendering hints for UI layers */
   visualProfile: VisualProfile;
@@ -95,7 +97,7 @@ export interface AuraResult {
 
 const PLANET_AURA_MAP: Record<string, AuraFamily> = {
   sun:     "solar_gold",
-  moon:    "lunar_blue",
+  moon:    "moon_silver_blue",
   mercury: "healing_green",
   venus:   "venus_pink",
   mars:    "vital_red",
@@ -199,7 +201,7 @@ const MODIFIER_LABELS: Record<EnergyModifier, string> = {
 
 const AURA_VISUAL_PROFILES: Record<AuraFamily, { core: string; aura: string; accent: string }> = {
   solar_gold:        { core: "#F5C842", aura: "#DAA520", accent: "#FFE4A0" },
-  lunar_blue:        { core: "#8AAFC8", aura: "#5B8BA8", accent: "#D0E8F5" },
+  moon_silver_blue:  { core: "#A8C4D8", aura: "#7AAFE0", accent: "#D0E8F5" },
   healing_green:     { core: "#5AAF7A", aura: "#3D8B5E", accent: "#A8E6C0" },
   mystical_purple:   { core: "#9060B8", aura: "#6B3FA0", accent: "#CBA8E8" },
   vital_red:         { core: "#D04848", aura: "#A03030", accent: "#F0A0A0" },
@@ -245,7 +247,7 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
     personalityTone: "commanding, warm, charismatic",
     visualTone: "golden glow, amber warmth, radiant center",
   },
-  lunar_blue: {
+  moon_silver_blue: {
     displayName: "Lunar Blue",
     title: "Lunar Depths",
     subtitle: "Your soul speaks in tides and whispers",
@@ -335,7 +337,7 @@ const AURA_BANK: Record<AuraFamily, AuraBankEntry> = {
 
 const BLEND_SUBTITLE_MODIFIERS: Record<AuraFamily, string> = {
   solar_gold:       "tempered by inner radiance",
-  lunar_blue:       "deepened by lunar intuition",
+  moon_silver_blue:       "deepened by lunar intuition",
   healing_green:    "sharpened by mercurial wit",
   mystical_purple:  "veiled in mystic vision",
   vital_red:        "ignited by primal fire",
@@ -348,7 +350,7 @@ const BLEND_SUBTITLE_MODIFIERS: Record<AuraFamily, string> = {
 
 const BLEND_MEANING_SUFFIXES: Record<AuraFamily, string> = {
   solar_gold:       "This radiant warmth amplifies your natural authority.",
-  lunar_blue:       "Your emotional depth adds a layer of rare empathy.",
+  moon_silver_blue:       "Your emotional depth adds a layer of rare empathy.",
   healing_green:    "A sharp mind sharpens every instinct you carry.",
   mystical_purple:  "Mystical sensitivity colors your perception with hidden insight.",
   vital_red:        "An undercurrent of raw courage fuels your every move.",
@@ -484,6 +486,8 @@ export function resolveAuraResult(
     topSecondary,
   );
 
+  const titleKey = `${classification.modifier}_${classification.primaryAura}`;
+
   return {
     title,
     subtitle,
@@ -496,6 +500,7 @@ export function resolveAuraResult(
     secondaryPlanets: classification.secondaryPlanets,
     blendMode: classification.blendMode,
     modifier: classification.modifier,
+    titleKey,
     shareableIdentity,
     visualProfile,
   };
