@@ -1,24 +1,6 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/i18n";
 import { getChartLabels } from "@/lib/astroLocale";
-
-import ariesIcon from "@/assets/zodiac-icons/aries.png";
-import taurusIcon from "@/assets/zodiac-icons/taurus.png";
-import geminiIcon from "@/assets/zodiac-icons/gemini.png";
-import cancerIcon from "@/assets/zodiac-icons/cancer.png";
-import leoIcon from "@/assets/zodiac-icons/leo.png";
-import virgoIcon from "@/assets/zodiac-icons/virgo.png";
-import libraIcon from "@/assets/zodiac-icons/libra.png";
-import scorpioIcon from "@/assets/zodiac-icons/scorpio.png";
-import sagittariusIcon from "@/assets/zodiac-icons/sagittarius.png";
-import capricornIcon from "@/assets/zodiac-icons/capricorn.png";
-import aquariusIcon from "@/assets/zodiac-icons/aquarius.png";
-import piscesIcon from "@/assets/zodiac-icons/pisces.png";
-
-const ZODIAC_ICONS = [
-  ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon,
-  libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon,
-];
 const FALLBACK_PLANET_POSITIONS: Record<string, number> = {
   sun: 42,
   moon: 118,
@@ -254,23 +236,23 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
           );
         })}
 
-        {/* Zodiac icons */}
+        {/* Zodiac symbols */}
         {ZODIAC_SIGNS.map((sign, i) => {
           const angle = ((i * 30 + 15) - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const x = cx + signR * Math.cos(angle);
           const y = cy + signR * Math.sin(angle);
-          const iconSize = size * 0.065;
           return (
-            <image
+            <text
               key={sign.symbol}
-              href={ZODIAC_ICONS[i]}
-              x={x - iconSize / 2}
-              y={y - iconSize / 2}
-              width={iconSize}
-              height={iconSize}
+              x={x} y={y}
+              textAnchor="middle" dominantBaseline="central"
+              fontSize={size * 0.04}
+              fill="hsl(43, 80%, 55%)"
+              fillOpacity="0.75"
               filter="url(#softGlow)"
-              opacity={0.85}
-            />
+            >
+              {sign.symbol}
+            </text>
           );
         })}
 
