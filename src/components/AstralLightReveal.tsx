@@ -880,7 +880,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             </div>
           </motion.div>
         ) : (
-          /* During loading — show status text + progress as before */}
+          /* During loading — show status text + progress as before */
           <>
             {userName && (
               <motion.p
