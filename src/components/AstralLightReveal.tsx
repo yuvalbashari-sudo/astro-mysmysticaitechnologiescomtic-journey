@@ -188,8 +188,26 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   const [showInfluences, setShowInfluences] = useState(false);
   const [showConstellations, setShowConstellations] = useState(true);
 
+  /* ── Admin forced preset state ── */
+  const PRESET_KEY = "astrologai_admin_forced_preset";
+  const PRESET_NAME_KEY = "astrologai_admin_forced_preset_name";
+  const [forcedPreset, setForcedPreset] = useState<string | null>(() => sessionStorage.getItem(PRESET_KEY));
+  const [forcedPresetName, setForcedPresetName] = useState<string | null>(() => sessionStorage.getItem(PRESET_NAME_KEY));
+
   const statusTexts = STATUS_TEXT[language] || STATUS_TEXT.en;
-  const influences = useMemo(() => computeInfluences(chartData), [chartData]);
+
+  /* ── Real influences from chart data ── */
+  const realInfluences = useMemo(() => computeInfluences(chartData), [chartData]);
+
+  /* ── Active influences: forced preset overrides real in admin mode ── */
+  const isForced = isAdminTestMode() && forcedPreset !== null;
+  const influences = useMemo(() => {
+    if (isForced) {
+      try { return JSON.parse(forcedPreset!) as Record<string, number>; }
+      catch { return realInfluences; }
+    }
+    return realInfluences;
+  }, [realInfluences, forcedPreset, isForced]);
 
   /* ── Compute structured aura result (deterministic, memo'd) ── */
   const auraResult = useMemo(() => getAuraResult(influences), [influences]);
