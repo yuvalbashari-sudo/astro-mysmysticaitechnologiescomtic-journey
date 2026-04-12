@@ -425,7 +425,8 @@ export const PromoAd = () => {
           {/* ═══ INTERNAL ENERGY CHANNELS ═══ */}
           {absorptionRamp > 0.15 && ENERGY_CHANNELS.map((path, ci) => {
             const channelPulse = Math.sin(frame * 0.1 + ci * 1.3) * 0.3 + 0.7;
-            const colors = ["#60D0F0", "#F0C840", "#50E0A0", "#A060E0", "#E06080", "#40D880", "#F0A040"];
+            const colors = ["#60D0F0", "#F0C840", "#50E0A0", "#A060E0", "#E06080", "#40D880", "#F0A040", "#C050D0", "#30E8B0", "#E8A030"];
+            const isChakra = ci >= 5; // chakra channels get extra glow
             return (
               <path key={`ch-${ci}`} d={path}
                 fill="none" stroke={colors[ci % colors.length]}
