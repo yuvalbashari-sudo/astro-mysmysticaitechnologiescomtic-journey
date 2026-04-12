@@ -92,6 +92,7 @@ const DailyHoroscopeCard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const { scale, setScale } = useFontScale();
   const ts = TEXT_SIZE_CLASSES[scale];
 
@@ -106,7 +107,17 @@ const DailyHoroscopeCard = () => {
   const [setupName, setSetupName] = useState("");
   const [setupBirthDate, setSetupBirthDate] = useState("");
   // Admin users skip setup entirely
+  const isReturning = mysticalProfile.isReturningUser();
   const [needsSetup, setNeedsSetup] = useState(!zodiacSign && !adminMode);
+
+  // Show welcome-back greeting for returning users
+  useEffect(() => {
+    if (isReturning && userName && !needsSetup) {
+      setShowWelcomeBack(true);
+      const timer = setTimeout(() => setShowWelcomeBack(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const fetchHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
