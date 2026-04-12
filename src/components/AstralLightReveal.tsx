@@ -231,6 +231,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
 
     const infTimer = setTimeout(() => setShowInfluences(true), CPK + 500 * S);
     const doneTimer = setTimeout(onComplete, T);
+    const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
 
     return () => {
       clearInterval(progTimer);
@@ -241,6 +242,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
       clearTimeout(clxStart);
       clearTimeout(infTimer);
       clearTimeout(doneTimer);
+      clearTimeout(constFadeTimer);
     };
   }, []);
 
