@@ -415,149 +415,149 @@ const AstralLightReveal = ({ userName, chartData, onComplete, fastMode = false }
             )}
           </g>
 
-          {/* ─── Phase 1: Constellation nodes (ABOVE figure, with gentle orbit) ─── */}
+          {/* ─── Phase 1: Constellation nodes + beams (ABOVE figure, with gentle orbit) ─── */}
           <motion.g
             animate={{ rotate: [0, 360] }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
             style={{ transformOrigin: `${FIG_CX}px ${FIG_CORE_Y}px` }}
           >
             {beamPositions.map((bp, idx) => {
               const vis = PLANET_VIS[bp.key];
-              if (!vis || idx >= constellationsLit) return null;
+              if (!vis) return null;
               const stars = CONSTELLATION_STARS[idx % CONSTELLATION_STARS.length];
+              const inf = (influences[bp.key] || 5) / 100;
+
+              const midX = (bp.x + FIG_CX) / 2;
+              const midY = (bp.y + FIG_CHEST_Y) / 2;
+              const dx = FIG_CX - bp.x;
+              const dy = FIG_CHEST_Y - bp.y;
+              const len = Math.sqrt(dx * dx + dy * dy) || 1;
+              const perpSign = idx % 2 === 0 ? 1 : -1;
+              const perpMag = 25 + (idx % 3) * 10;
+              const ctrlX = midX + (-dy / len) * perpMag * perpSign;
+              const ctrlY = midY + (dx / len) * perpMag * perpSign;
+              const pathD = `M ${bp.x} ${bp.y} Q ${ctrlX} ${ctrlY} ${FIG_CX} ${FIG_CHEST_Y}`;
 
               return (
-                <g key={`const-${bp.key}`}>
-                  {stars.length >= 4 && (
-                    <motion.g
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.4 }}
-                      transition={{ duration: 0.8, delay: idx * 0.05 }}
-                    >
-                      {Array.from({ length: Math.floor(stars.length / 2) - 1 }).map((_, si) => (
-                        <line
-                          key={si}
-                          x1={bp.x + stars[si * 2]}
-                          y1={bp.y + stars[si * 2 + 1]}
-                          x2={bp.x + stars[(si + 1) * 2]}
-                          y2={bp.y + stars[(si + 1) * 2 + 1]}
-                          stroke={vis.color}
-                          strokeWidth="0.4"
-                          strokeOpacity="0.5"
+                <g key={`const-beam-${bp.key}`}>
+                  {/* Constellation node */}
+                  {idx < constellationsLit && (
+                    <>
+                      {stars.length >= 4 && (
+                        <motion.g
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 0.4 }}
+                          transition={{ duration: 0.8, delay: idx * 0.05 }}
+                        >
+                          {Array.from({ length: Math.floor(stars.length / 2) - 1 }).map((_, si) => (
+                            <line
+                              key={si}
+                              x1={bp.x + stars[si * 2]}
+                              y1={bp.y + stars[si * 2 + 1]}
+                              x2={bp.x + stars[(si + 1) * 2]}
+                              y2={bp.y + stars[(si + 1) * 2 + 1]}
+                              stroke={vis.color}
+                              strokeWidth="0.4"
+                              strokeOpacity="0.5"
+                            />
+                          ))}
+                        </motion.g>
+                      )}
+
+                      {Array.from({ length: Math.floor(stars.length / 2) }).map((_, si) => (
+                        <motion.circle
+                          key={`star-${si}`}
+                          cx={bp.x + stars[si * 2]}
+                          cy={bp.y + stars[si * 2 + 1]}
+                          r={2}
+                          fill={vis.color}
+                          initial={{ opacity: 0, r: 0 }}
+                          animate={{ opacity: [0, 1, 0.7], r: [0, 3, 2] }}
+                          transition={{ duration: 0.6, delay: idx * 0.06 + si * 0.08 }}
                         />
                       ))}
-                    </motion.g>
+
+                      <motion.circle
+                        cx={bp.x} cy={bp.y}
+                        r={12}
+                        fill={vis.color}
+                        filter="url(#const-glow)"
+                        initial={{ opacity: 0, r: 4 }}
+                        animate={{ opacity: [0, 0.9, 0.7], r: [4, 14, 10] }}
+                        transition={{ duration: 0.8, delay: idx * 0.06 }}
+                      />
+                      <motion.text
+                        x={bp.x} y={bp.y + 1}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fill="#fff"
+                        fontSize={8}
+                        fontWeight="bold"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 1, 0.9] }}
+                        transition={{ duration: 0.6, delay: idx * 0.06 + 0.2 }}
+                      >
+                        {bp.symbol}
+                      </motion.text>
+                    </>
                   )}
 
-                  {Array.from({ length: Math.floor(stars.length / 2) }).map((_, si) => (
-                    <motion.circle
-                      key={`star-${si}`}
-                      cx={bp.x + stars[si * 2]}
-                      cy={bp.y + stars[si * 2 + 1]}
-                      r={2}
-                      fill={vis.color}
-                      initial={{ opacity: 0, r: 0 }}
-                      animate={{ opacity: [0, 1, 0.7], r: [0, 3, 2] }}
-                      transition={{ duration: 0.6, delay: idx * 0.06 + si * 0.08 }}
-                    />
-                  ))}
+                  {/* Beam from this star */}
+                  {idx < beamsFired && (
+                    <>
+                      <motion.path
+                        d={pathD}
+                        stroke={`url(#beam-g-${bp.key})`}
+                        strokeWidth={4 + inf * 10}
+                        strokeLinecap="round"
+                        fill="none"
+                        filter="url(#beam-glow-strong)"
+                        initial={{ opacity: 0, pathLength: 0 }}
+                        animate={{
+                          opacity: [0, 1, 0.95, absorptionLevel > 0.5 ? 0.3 : 0.8],
+                          pathLength: 1,
+                        }}
+                        transition={{
+                          opacity: { duration: 3, times: [0, 0.15, 0.5, 1] },
+                          pathLength: { duration: 1.2, ease: "easeOut" },
+                        }}
+                      />
 
-                  <motion.circle
-                    cx={bp.x} cy={bp.y}
-                    r={12}
-                    fill={vis.color}
-                    filter="url(#const-glow)"
-                    initial={{ opacity: 0, r: 4 }}
-                    animate={{ opacity: [0, 0.9, 0.7], r: [4, 14, 10] }}
-                    transition={{ duration: 0.8, delay: idx * 0.06 }}
-                  />
-                  <motion.text
-                    x={bp.x} y={bp.y + 1}
-                    textAnchor="middle"
-                    dominantBaseline="central"
-                    fill="#fff"
-                    fontSize={8}
-                    fontWeight="bold"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 1, 0.9] }}
-                    transition={{ duration: 0.6, delay: idx * 0.06 + 0.2 }}
-                  >
-                    {bp.symbol}
-                  </motion.text>
+                      <motion.circle
+                        r={4 + inf * 4}
+                        fill={vis.color}
+                        filter="url(#const-glow)"
+                        initial={{ cx: bp.x, cy: bp.y, opacity: 0 }}
+                        animate={{
+                          cx: [bp.x, ctrlX, FIG_CX],
+                          cy: [bp.y, ctrlY, FIG_CHEST_Y],
+                          opacity: [0, 1, 0.8, 0],
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          delay: 0.3,
+                          ease: "easeIn",
+                          cx: { times: [0, 0.5, 1] },
+                          cy: { times: [0, 0.5, 1] },
+                          opacity: { times: [0, 0.1, 0.8, 1] },
+                        }}
+                      />
+
+                      <motion.circle
+                        cx={FIG_CX}
+                        cy={FIG_CHEST_Y}
+                        r={5}
+                        fill={vis.color}
+                        initial={{ opacity: 0, r: 3 }}
+                        animate={{ opacity: [0, 0.8, 0], r: [3, 14, 5] }}
+                        transition={{ duration: 0.8, delay: 1.6 }}
+                      />
+                    </>
+                  )}
                 </g>
               );
             })}
           </motion.g>
-
-          {/* ─── Phase 1b: Curved beams flowing to figure chest ─── */}
-          {beamPositions.map((bp, idx) => {
-            const vis = PLANET_VIS[bp.key];
-            if (!vis || idx >= beamsFired) return null;
-            const inf = (influences[bp.key] || 5) / 100;
-
-            const midX = (bp.x + FIG_CX) / 2;
-            const midY = (bp.y + FIG_CHEST_Y) / 2;
-            const dx = FIG_CX - bp.x;
-            const dy = FIG_CHEST_Y - bp.y;
-            const len = Math.sqrt(dx * dx + dy * dy) || 1;
-            const perpSign = idx % 2 === 0 ? 1 : -1;
-            const perpMag = 25 + (idx % 3) * 10;
-            const ctrlX = midX + (-dy / len) * perpMag * perpSign;
-            const ctrlY = midY + (dx / len) * perpMag * perpSign;
-            const pathD = `M ${bp.x} ${bp.y} Q ${ctrlX} ${ctrlY} ${FIG_CX} ${FIG_CHEST_Y}`;
-
-            return (
-              <g key={`beam-${bp.key}`}>
-                <motion.path
-                  d={pathD}
-                  stroke={`url(#beam-g-${bp.key})`}
-                  strokeWidth={4 + inf * 10}
-                  strokeLinecap="round"
-                  fill="none"
-                  filter="url(#beam-glow-strong)"
-                  initial={{ opacity: 0, pathLength: 0 }}
-                  animate={{
-                    opacity: [0, 1, 0.95, absorptionLevel > 0.5 ? 0.3 : 0.8],
-                    pathLength: 1,
-                  }}
-                  transition={{
-                    opacity: { duration: 3, times: [0, 0.15, 0.5, 1] },
-                    pathLength: { duration: 1.2, ease: "easeOut" },
-                  }}
-                />
-
-                <motion.circle
-                  r={4 + inf * 4}
-                  fill={vis.color}
-                  filter="url(#const-glow)"
-                  initial={{ cx: bp.x, cy: bp.y, opacity: 0 }}
-                  animate={{
-                    cx: [bp.x, ctrlX, FIG_CX],
-                    cy: [bp.y, ctrlY, FIG_CHEST_Y],
-                    opacity: [0, 1, 0.8, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    delay: 0.3,
-                    ease: "easeIn",
-                    cx: { times: [0, 0.5, 1] },
-                    cy: { times: [0, 0.5, 1] },
-                    opacity: { times: [0, 0.1, 0.8, 1] },
-                  }}
-                />
-
-                <motion.circle
-                  cx={FIG_CX}
-                  cy={FIG_CHEST_Y}
-                  r={5}
-                  fill={vis.color}
-                  initial={{ opacity: 0, r: 3 }}
-                  animate={{ opacity: [0, 0.8, 0], r: [3, 14, 5] }}
-                  transition={{ duration: 0.8, delay: 1.6 }}
-                />
-              </g>
-            );
-          })}
 
           {/* ─── Phase 2: Absorption effects inside figure ─── */}
           {absorptionLevel > 0 && (
