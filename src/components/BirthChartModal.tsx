@@ -263,7 +263,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       },
       language,
     );
-  }, [birthDate, birthTime, chartData, chartLabels, elementSummary, gender, houseSummary, language, userName]);
+  }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
