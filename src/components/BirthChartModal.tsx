@@ -7,6 +7,7 @@ import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsFo
 import { PLANETS } from "@/components/NatalChartWheel";
 import SimpleNatalChart from "@/components/SimpleNatalChart";
 import AstralLightReveal from "@/components/AstralLightReveal";
+import { SHOW_AURA_REVEAL } from "@/lib/auraVisualMode";
 import AuraResultCard from "@/components/AuraResultCard";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { subscriptionManager } from "@/lib/subscriptionManager";
@@ -143,6 +144,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
 
+
   // Auto-restore cached chart for returning users — play shortened animation
   useEffect(() => {
     if (!isOpen || phase !== "form") return;
@@ -152,8 +154,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
-    // Go through loading phase so astral animation plays (shortened)
-    setPhase("loading");
+    // Go through loading phase so astral animation plays (shortened) — or skip to result if reveal disabled
+    setPhase(SHOW_AURA_REVEAL ? "loading" : "result");
     if (cached.details.userName?.trim()) {
       setShowWelcomeBack(true);
       setTimeout(() => setShowWelcomeBack(false), 4000);
@@ -223,7 +225,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       setChartData(natalChart);
       mysticalProfile.recordZodiac(getSignNameByKey(natalChart.sunSign.key, language), natalChart.sunSign.symbol, natalChart.sunSign.element, birthDate);
       mysticalProfile.recordRising(`${getSignNameByKey(natalChart.risingSign.key, language)} ${chartLabels.rising}`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
-      setPhase("loading");
+      if (SHOW_AURA_REVEAL) {
+        setPhase("loading");
+      } else {
+        // Skip aura reveal — set phase to trigger direct interpretation
+        setPhase("loading");
+      }
     } catch (error) {
       const msg = error instanceof Error ? error.message : "";
       const geocodeErrors: Record<string, string> = {
@@ -330,6 +337,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       language,
     );
   }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
+
+  // When aura reveal is disabled, auto-start AI interpretation from loading phase
+  useEffect(() => {
+    if (SHOW_AURA_REVEAL) return;
+    if (phase !== "loading" || !chartData || restoredFromCache) return;
+    startAIInterpretation();
+  }, [phase, chartData, restoredFromCache, startAIInterpretation]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
@@ -474,7 +488,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {(phase === "loading" || showResult) && chartData && (
+            {SHOW_AURA_REVEAL && (phase === "loading" || showResult) && chartData && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -623,7 +637,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
                 )}
 
-                {auraResult && (
+                {SHOW_AURA_REVEAL && auraResult && (
                   <AuraResultCard result={auraResult} />
                 )}
 
