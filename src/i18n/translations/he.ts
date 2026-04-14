@@ -391,6 +391,7 @@ export const he: TranslationKeys = {
   share_copied: "הועתק!",
   share_instagram_toast: "הטקסט הועתק — שתפו בסטורי שלכם ✦",
   share_copy_toast: "הטקסט הועתק ✦",
+  result_share: "שתף",
 
   onboarding_step1_title: "המסע המיסטי שלך מתחיל",
   onboarding_step1_text: "קחו רגע של שקט פנימי. עצמו את העיניים לרגע, נשמו עמוק — ופתחו את עצמכם לתובנות שמחכות להתגלות.",
