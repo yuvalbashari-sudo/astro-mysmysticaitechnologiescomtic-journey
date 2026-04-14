@@ -16,6 +16,7 @@ import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { renderMysticalText } from "@/lib/aiStreaming";
+import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
