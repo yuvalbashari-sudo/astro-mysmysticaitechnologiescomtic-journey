@@ -173,6 +173,15 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
           data: { ...info, date1, date2, aiReading: aiTextRef.current },
         });
+        // Save to session cache for reuse on reopen
+        saveCompatCache({
+          date: new Date().toISOString().split("T")[0],
+          language,
+          matchInfo: info,
+          aiText: aiTextRef.current,
+          inputHash: `${date1}-${date2}`,
+        });
+        sessionStorage.setItem("_dbg_compat_source", "fresh");
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
       language,
