@@ -154,8 +154,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
-    // Go through loading phase so astral animation plays (shortened) — or skip if reveal disabled
-    setPhase(SHOW_AURA_REVEAL ? "loading" : "chart");
+    // Go through loading phase so astral animation plays (shortened) — or skip to result if reveal disabled
+    setPhase(SHOW_AURA_REVEAL ? "loading" : "result");
     if (cached.details.userName?.trim()) {
       setShowWelcomeBack(true);
       setTimeout(() => setShowWelcomeBack(false), 4000);
