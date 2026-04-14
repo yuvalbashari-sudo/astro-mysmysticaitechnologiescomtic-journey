@@ -3,21 +3,7 @@ import type { NatalChartResult } from "@/lib/natalChart";
 import { useLanguage } from "@/i18n";
 import { getPlanetName, signFromDeg, getChartLabels, getSignNameByKey } from "@/lib/astroLocale";
 
-import ariesIcon from "@/assets/zodiac-icons/aries.png";
-import taurusIcon from "@/assets/zodiac-icons/taurus.png";
-import geminiIcon from "@/assets/zodiac-icons/gemini.png";
-import cancerIcon from "@/assets/zodiac-icons/cancer.png";
-import leoIcon from "@/assets/zodiac-icons/leo.png";
-import virgoIcon from "@/assets/zodiac-icons/virgo.png";
-import libraIcon from "@/assets/zodiac-icons/libra.png";
-import scorpioIcon from "@/assets/zodiac-icons/scorpio.png";
-import sagittariusIcon from "@/assets/zodiac-icons/sagittarius.png";
-import capricornIcon from "@/assets/zodiac-icons/capricorn.png";
-import aquariusIcon from "@/assets/zodiac-icons/aquarius.png";
-import piscesIcon from "@/assets/zodiac-icons/pisces.png";
-
 /* ── Constants ── */
-const ZODIAC_ICONS = [ariesIcon, taurusIcon, geminiIcon, cancerIcon, leoIcon, virgoIcon, libraIcon, scorpioIcon, sagittariusIcon, capricornIcon, aquariusIcon, piscesIcon];
 const ZODIAC_COLORS = [
   "#E85D5D", "#6ECB63", "#F0C040", "#6BB5E8", "#F5A623", "#6ECB63",
   "#E8A0BF", "#C75050", "#A855F7", "#7B8794", "#58C4DD", "#8B9DC3",
@@ -456,19 +442,39 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
                   strokeWidth="5"
                 />
               )}
-              {/* Zodiac icon */}
+              {/* Zodiac celestial glyph medallion */}
               {(() => {
-                const iconSize = size * 0.082;
+                const glyphR = size * 0.038;
+                const ZODIAC_GLYPHS = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
                 return (
-                  <image
-                    href={ZODIAC_ICONS[i]}
-                    x={zodiacPos.x - iconSize / 2}
-                    y={zodiacPos.y - iconSize / 2}
-                    width={iconSize}
-                    height={iconSize}
-                    filter="url(#zodiac-glow)"
-                    style={{ opacity: 0.95 }}
-                  />
+                  <g>
+                    {/* Outer halo ring */}
+                    <circle
+                      cx={zodiacPos.x} cy={zodiacPos.y} r={glyphR + 5}
+                      fill="none"
+                      stroke="rgba(212,175,55,0.08)"
+                      strokeWidth="0.5"
+                      filter="url(#zodiac-glow)"
+                    />
+                    {/* Medallion background */}
+                    <circle
+                      cx={zodiacPos.x} cy={zodiacPos.y} r={glyphR}
+                      fill="rgba(212,175,55,0.08)"
+                      stroke="rgba(212,175,55,0.3)"
+                      strokeWidth="0.8"
+                    />
+                    {/* Zodiac glyph */}
+                    <text
+                      x={zodiacPos.x} y={zodiacPos.y}
+                      textAnchor="middle" dominantBaseline="central"
+                      fontSize={size * 0.04}
+                      fill="rgba(212,175,55,0.92)"
+                      filter="url(#zodiac-glow)"
+                      fontFamily="'Cinzel', serif"
+                    >
+                      {ZODIAC_GLYPHS[i]}
+                    </text>
+                  </g>
                 );
               })()}
               {/* House number — refined typography */}
