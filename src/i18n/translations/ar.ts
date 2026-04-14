@@ -391,6 +391,7 @@ export const ar: TranslationKeys = {
   share_copied: "تم النسخ!",
   share_instagram_toast: "تم نسخ النص — شاركوا في قصتكم ✦",
   share_copy_toast: "تم نسخ النص ✦",
+  result_share: "مشاركة",
 
   onboarding_step1_title: "رحلتكم الروحية تبدأ",
   onboarding_step1_text: "خذوا لحظة من الهدوء الداخلي. أغلقوا عيونكم للحظة، تنفسوا بعمق — وافتحوا أنفسكم للرؤى التي تنتظر أن تُكشف.",

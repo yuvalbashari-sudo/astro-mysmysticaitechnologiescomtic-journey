@@ -391,6 +391,7 @@ export const ru: TranslationKeys = {
   share_copied: "Скопировано!",
   share_instagram_toast: "Текст скопирован — поделитесь в сторис ✦",
   share_copy_toast: "Текст скопирован ✦",
+  result_share: "Поделиться",
 
   onboarding_step1_title: "Ваше мистическое путешествие начинается",
   onboarding_step1_text: "Уделите момент внутренней тишине. Закройте глаза на мгновение, глубоко вдохните — и откройтесь озарениям, ждущим раскрытия.",

@@ -391,6 +391,7 @@ export const en: TranslationKeys = {
   share_copied: "Copied!",
   share_instagram_toast: "Text copied — share in your story ✦",
   share_copy_toast: "Text copied ✦",
+  result_share: "Share",
 
   onboarding_step1_title: "Your mystical journey begins",
   onboarding_step1_text: "Take a moment of inner quiet. Close your eyes for a moment, breathe deeply — and open yourself to insights waiting to be revealed.",

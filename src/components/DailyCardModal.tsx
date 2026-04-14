@@ -360,11 +360,15 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     }
   }, [aiLoading]);
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (!card) return;
     const displayName = card.name[language] || card.name.en;
     const text = `🔮 ${t.daily_title}: ${card.symbol} ${displayName}\n\n✨ ${window.location.origin}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    if (navigator.share) {
+      try { await navigator.share({ text }); return; } catch {}
+    }
+    await navigator.clipboard.writeText(text);
+    toast(t.share_copy_toast);
   };
 
   const handleCopy = async () => {
@@ -1114,7 +1118,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
                           >
-                            <Share2 className="h-4 w-4" />{t.forecast_share}
+                            <Share2 className="h-4 w-4" />{t.result_share}
                           </motion.button>
                           <motion.button
                             onClick={handleCopy}

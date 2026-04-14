@@ -16,6 +16,7 @@ import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { renderMysticalText } from "@/lib/aiStreaming";
+import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
@@ -1198,10 +1199,17 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       </motion.div>
 
                       {!aiLoading && aiText && (
-                        <motion.div className="mt-6 text-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                          <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
-                            {t.imm_tarot_finish}
-                          </motion.button>
+                        <motion.div className="mt-6 space-y-4" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                          <ResultShareBar
+                            resultText={aiText}
+                            shareTitle={`${t.readings_type_tarot}`}
+                            compact
+                          />
+                          <div className="text-center">
+                            <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
+                              {t.imm_tarot_finish}
+                            </motion.button>
+                          </div>
                         </motion.div>
                       )}
                     </div>
@@ -1434,7 +1442,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 {t.imm_tarot_breathe_message}
                               </motion.p>
 
-                              <div className="text-center">
+                              <div className="space-y-5 text-center">
+                                <ResultShareBar
+                                  resultText={aiText}
+                                  shareTitle={`${t.readings_type_tarot}`}
+                                />
                                 <motion.button
                                   type="button"
                                   className="font-heading text-sm tracking-[0.2em] cursor-pointer px-8 py-3 rounded-full"
