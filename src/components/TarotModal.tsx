@@ -351,7 +351,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
-        // Usage already recorded in handleDraw — no duplicate recording needed
+        // Save to session cache for reuse on reopen
+        saveTarotCache({
+          date: new Date().toISOString().split("T")[0],
+          language,
+          spreadKey: selectedSpread.key,
+          cards: drawnCards,
+          aiText: aiTextRef.current,
+        });
+        sessionStorage.setItem("_dbg_tarot_source", "fresh");
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
