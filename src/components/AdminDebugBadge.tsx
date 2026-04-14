@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Shield, ShieldOff } from "lucide-react";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { logAdminDebugState } from "@/lib/adminTestMode";
+import { usageTracker } from "@/lib/usageTracker";
 
 const IS_PREVIEW =
   window.location.hostname.includes("preview") ||
