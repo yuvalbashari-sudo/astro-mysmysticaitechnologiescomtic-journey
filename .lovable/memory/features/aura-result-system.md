@@ -16,3 +16,13 @@ The `AuraResult` type includes a `titleKey` field (e.g., `"soft_moon_silver_blue
 Moon's aura family was renamed from `lunar_blue` to `moon_silver_blue` with updated silver-blue visual colors (#A8C4D8).
 
 UI components (`AstralLightReveal`, `AuraResultCard`) import from `auraLocale.ts` — no inline i18n dictionaries.
+
+## Visual Mode System (v5)
+
+A centralized visual mode config (`src/lib/auraVisualMode.ts`) controls the astral figure rendering complexity:
+- `AURA_VISUAL_MODE`: `"off"` | `"minimal"` | `"subtle"` | `"full"`
+- Currently set to `"minimal"` — disables the heavy astral figure SVG scene
+- `"full"` restores the complete astral figure, constellations, beams, and climax effects
+- `"subtle"` is reserved for future partial astral presence
+
+In minimal mode, `MinimalAuraEffect` renders a lightweight aura glow layer using CSS-based animations, radial gradients colored by primaryAura/secondaryAuras, and modifier-influenced pulse speed. All heavy SVG/filter/particle code is preserved but gated behind `renderFullScene` in `AstralLightReveal.tsx`.
