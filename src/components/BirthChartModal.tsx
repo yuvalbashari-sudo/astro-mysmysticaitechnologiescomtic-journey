@@ -755,11 +755,11 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
 
                 {phase === "result" && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5 pb-8">
+                    <ResultShareBar
+                      resultText={resultText}
+                      shareTitle={t.chart_title || chartLabels.birthChart}
+                    />
                     <div className="flex flex-wrap justify-center gap-3">
-                      <button onClick={handleCopy} className="btn-outline-gold flex items-center gap-2 text-sm px-5 py-2.5">
-                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                        {copied ? t.chart_copied : t.chart_copy_interp}
-                      </button>
                       <button onClick={handleDownloadImage} disabled={downloading} className="btn-outline-gold flex items-center gap-2 text-sm px-5 py-2.5">
                         {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImageIcon className="w-4 h-4" />}
                         {t.chart_save_image}
