@@ -27,6 +27,32 @@ import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
+const TAROT_CACHE_KEY = "astrologai_tarot_session";
+
+interface TarotCacheData {
+  date: string;
+  language: string;
+  spreadKey: string;
+  cards: ReadingCard[];
+  aiText: string;
+}
+
+function getTarotCache(lang: string): TarotCacheData | null {
+  try {
+    const raw = sessionStorage.getItem(TAROT_CACHE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as TarotCacheData;
+    const today = new Date().toISOString().split("T")[0];
+    if (data.date !== today) { sessionStorage.removeItem(TAROT_CACHE_KEY); return null; }
+    if (data.language !== lang) return null;
+    return data;
+  } catch { return null; }
+}
+
+function saveTarotCache(data: TarotCacheData) {
+  try { sessionStorage.setItem(TAROT_CACHE_KEY, JSON.stringify(data)); } catch {}
+}
+
 type SpreadType = "love" | "career" | "decision" | "timeline";
 
 interface SpreadOption {
@@ -325,7 +351,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
           selectedSpread.key
         );
-        // Usage already recorded in handleDraw — no duplicate recording needed
+        // Save to session cache for reuse on reopen
+        saveTarotCache({
+          date: new Date().toISOString().split("T")[0],
+          language,
+          spreadKey: selectedSpread.key,
+          cards: drawnCards,
+          aiText: aiTextRef.current,
+        });
+        sessionStorage.setItem("_dbg_tarot_source", "fresh");
       },
       (err) => { setAiLoading(false); toast(err); },
       userQuestion,
@@ -365,9 +399,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }, 300);
   };
 
-  // Pre-check entitlements when modal opens — wait for auth before blocking
+  // Pre-check entitlements when modal opens — restore cached result if available
   useEffect(() => {
     if (!isOpen) return;
+    // Check for cached tarot result first
+    const cached = getTarotCache(language);
+    if (cached && cached.aiText) {
+      setCards(cached.cards);
+      setAiText(cached.aiText);
+      aiTextRef.current = cached.aiText;
+      setSelectedSpreadKey(cached.spreadKey as SpreadType);
+      sessionStorage.setItem("_dbg_tarot_source", "cached");
+      return; // skip entitlement check — already used
+    }
+    sessionStorage.setItem("_dbg_tarot_source", "pending");
     const doCheck = () => {
       const access = entitlements.checkAccess("tarot_reading");
       if (!access.allowed && 'promptKey' in access) {

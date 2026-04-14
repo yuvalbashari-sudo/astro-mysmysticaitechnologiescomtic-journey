@@ -147,6 +147,7 @@ const DailyHoroscopeCard = () => {
           energy_score: cached.energy_score ?? 3,
         });
         setLoading(false);
+        sessionStorage.setItem("_dbg_horoscope_source", "cached");
         return;
       }
 
@@ -178,6 +179,7 @@ const DailyHoroscopeCard = () => {
       };
 
       setData(horoscope);
+      sessionStorage.setItem("_dbg_horoscope_source", "fresh");
 
       // Save to DB (fire-and-forget)
       supabase.from("daily_horoscopes").insert({

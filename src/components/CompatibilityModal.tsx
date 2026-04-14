@@ -24,6 +24,32 @@ import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
+const COMPAT_CACHE_KEY = "astrologai_compat_session";
+
+interface CompatCacheData {
+  date: string;
+  language: string;
+  matchInfo: { sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number };
+  aiText: string;
+  inputHash: string;
+}
+
+function getCompatCache(lang: string): CompatCacheData | null {
+  try {
+    const raw = sessionStorage.getItem(COMPAT_CACHE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as CompatCacheData;
+    const today = new Date().toISOString().split("T")[0];
+    if (data.date !== today) { sessionStorage.removeItem(COMPAT_CACHE_KEY); return null; }
+    if (data.language !== lang) return null; // different language, don't reuse
+    return data;
+  } catch { return null; }
+}
+
+function saveCompatCache(data: CompatCacheData) {
+  try { sessionStorage.setItem(COMPAT_CACHE_KEY, JSON.stringify(data)); } catch {}
+}
+
 const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
@@ -54,9 +80,19 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
 
-  // Pre-check entitlements when modal opens — wait for auth before blocking
+  // Restore cached result on open
   useEffect(() => {
     if (!isOpen) return;
+    const cached = getCompatCache(language);
+    if (cached) {
+      setMatchInfo(cached.matchInfo);
+      setAiText(cached.aiText);
+      aiTextRef.current = cached.aiText;
+      sessionStorage.setItem("_dbg_compat_source", "cached");
+      return; // skip entitlement check — already used
+    }
+    sessionStorage.setItem("_dbg_compat_source", "pending");
+    // Pre-check entitlements when modal opens — wait for auth before blocking
     const doCheck = () => {
       const access = entitlements.checkAccess("compatibility_reading");
       if (!access.allowed && 'promptKey' in access) {
@@ -137,6 +173,15 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
           data: { ...info, date1, date2, aiReading: aiTextRef.current },
         });
+        // Save to session cache for reuse on reopen
+        saveCompatCache({
+          date: new Date().toISOString().split("T")[0],
+          language,
+          matchInfo: info,
+          aiText: aiTextRef.current,
+          inputHash: `${date1}-${date2}`,
+        });
+        sessionStorage.setItem("_dbg_compat_source", "fresh");
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
       language,
