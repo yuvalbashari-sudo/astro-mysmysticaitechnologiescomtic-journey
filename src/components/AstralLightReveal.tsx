@@ -331,29 +331,29 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
     };
   }, []);
 
-  /* ── Beam positions: elliptical orbit around figure ── */
+  /* ── Beam positions: elliptical orbit around figure (only needed in full mode) ── */
   const beamPositions = useMemo(() => {
+    if (!renderFullScene) return [];
     const count = sortedPlanets.length;
-    const rx = 110; // horizontal radius of orbit ellipse
-    const ry = 130; // vertical radius of orbit ellipse
-    // Deterministic jitter per planet for organic feel
+    const rx = 110;
+    const ry = 130;
     const jitters = [0.12, -0.08, 0.15, -0.05, 0.1, -0.13, 0.07, -0.11, 0.09, -0.06];
     return sortedPlanets.map((planet, idx) => {
-      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2; // start from top
+      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2;
       const jitter = jitters[idx % jitters.length];
       const angle = baseAngle + jitter;
       const x = FIG_CX + rx * Math.cos(angle);
       const y = FIG_CORE_Y + ry * Math.sin(angle);
       return { key: planet.key, symbol: planet.symbol, x, y };
     });
-  }, [sortedPlanets]);
+  }, [sortedPlanets, renderFullScene]);
 
-  /* ── Figure transform: place SVG centered at FIG_CX, lower-middle ── */
+  /* ── Figure transform (only needed in full mode) ── */
   const figScale = 1.7;
   const figW = FIG_VB_W * figScale;
   const figH = FIG_VB_H * figScale;
   const figX = FIG_CX - figW / 2;
-  const figY = 175; // top of scaled figure in scene coords
+  const figY = 175;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 relative overflow-hidden">
