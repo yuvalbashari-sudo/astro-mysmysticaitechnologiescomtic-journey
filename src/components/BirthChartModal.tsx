@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield, Pencil } from "lucide-react";
+import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield, Pencil, Share2 } from "lucide-react";
+import ResultShareBar from "./ResultShareBar";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";

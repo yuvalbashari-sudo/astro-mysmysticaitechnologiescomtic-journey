@@ -1442,7 +1442,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                                 {t.imm_tarot_breathe_message}
                               </motion.p>
 
-                              <div className="text-center">
+                              <div className="space-y-5 text-center">
+                                <ResultShareBar
+                                  resultText={aiText}
+                                  shareTitle={`${t.readings_type_tarot}`}
+                                />
                                 <motion.button
                                   type="button"
                                   className="font-heading text-sm tracking-[0.2em] cursor-pointer px-8 py-3 rounded-full"
