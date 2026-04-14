@@ -150,6 +150,11 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
             <stop offset="0%" stopColor="hsl(222, 47%, 10%)" />
             <stop offset="100%" stopColor="hsl(222, 47%, 6%)" />
           </radialGradient>
+          <radialGradient id="zodiacMedallionW" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="hsl(43 80% 55%)" stopOpacity="0.14" />
+            <stop offset="60%" stopColor="hsl(43 80% 55%)" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          </radialGradient>
           <filter id="planetGlow">
             <feGaussianBlur stdDeviation="2.5" result="blur" />
             <feMerge>
@@ -163,6 +168,17 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
+          </filter>
+          <filter id="haloGlowW">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="zodiacGlowW">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
         </defs>
 
