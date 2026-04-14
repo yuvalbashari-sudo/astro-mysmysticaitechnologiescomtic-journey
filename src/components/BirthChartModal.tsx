@@ -144,6 +144,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
 
+  // When aura reveal is disabled, auto-start AI interpretation from loading phase
+  useEffect(() => {
+    if (SHOW_AURA_REVEAL) return;
+    if (phase !== "loading" || !chartData || restoredFromCache) return;
+    startAIInterpretation();
+  }, [phase, chartData, restoredFromCache, startAIInterpretation]);
+
   // Auto-restore cached chart for returning users — play shortened animation
   useEffect(() => {
     if (!isOpen || phase !== "form") return;
