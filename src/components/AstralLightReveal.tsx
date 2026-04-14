@@ -16,6 +16,8 @@ import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 import { isAdminTestMode } from "@/lib/adminTestMode";
 import AuraDebugPanel from "@/components/AuraDebugPanel";
+import { AURA_VISUAL_MODE } from "@/lib/auraVisualMode";
+import MinimalAuraEffect from "@/components/MinimalAuraEffect";
 
 /* ═══════════════════════════════════════════════════════
    AstralLightReveal — Cinematic Astral Energy Animation
@@ -260,6 +262,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   const dominantColor = auraColors.dominant;
   const secondaryColor = auraColors.secondary;
 
+  /** Whether the full astral figure + heavy SVG scene should render */
+  const renderFullScene = AURA_VISUAL_MODE === "full";
+
   useEffect(() => {
     const S = fastMode ? 0.45 : 1; // speed multiplier
     const T = TOTAL * S;
@@ -326,32 +331,45 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
     };
   }, []);
 
-  /* ── Beam positions: elliptical orbit around figure ── */
+  /* ── Beam positions: elliptical orbit around figure (only needed in full mode) ── */
   const beamPositions = useMemo(() => {
+    if (!renderFullScene) return [];
     const count = sortedPlanets.length;
-    const rx = 110; // horizontal radius of orbit ellipse
-    const ry = 130; // vertical radius of orbit ellipse
-    // Deterministic jitter per planet for organic feel
+    const rx = 110;
+    const ry = 130;
     const jitters = [0.12, -0.08, 0.15, -0.05, 0.1, -0.13, 0.07, -0.11, 0.09, -0.06];
     return sortedPlanets.map((planet, idx) => {
-      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2; // start from top
+      const baseAngle = (idx / count) * Math.PI * 2 - Math.PI / 2;
       const jitter = jitters[idx % jitters.length];
       const angle = baseAngle + jitter;
       const x = FIG_CX + rx * Math.cos(angle);
       const y = FIG_CORE_Y + ry * Math.sin(angle);
       return { key: planet.key, symbol: planet.symbol, x, y };
     });
-  }, [sortedPlanets]);
+  }, [sortedPlanets, renderFullScene]);
 
-  /* ── Figure transform: place SVG centered at FIG_CX, lower-middle ── */
+  /* ── Figure transform (only needed in full mode) ── */
   const figScale = 1.7;
   const figW = FIG_VB_W * figScale;
   const figH = FIG_VB_H * figScale;
   const figX = FIG_CX - figW / 2;
-  const figY = 175; // top of scaled figure in scene coords
+  const figY = 175;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 relative overflow-hidden">
+      {/* ═══ MINIMAL MODE: lightweight aura glow ═══ */}
+      {!renderFullScene && AURA_VISUAL_MODE !== "off" && (
+        <MinimalAuraEffect
+          primaryAura={auraResult.primaryAura}
+          secondaryAuras={auraResult.secondaryAuras}
+          modifier={auraResult.modifier}
+          intensity={Math.max(absorptionLevel, climaxLevel, 0.5)}
+        />
+      )}
+
+      {/* ═══ FULL MODE: Complete astral figure SVG scene ═══ */}
+      {renderFullScene && (
+      <>
       {/* Deep space background with aura-tinted glow */}
       <div className="absolute inset-0 pointer-events-none" style={{
         background: `radial-gradient(ellipse 80% 60% at 50% 40%, ${dominantColor}18, ${dominantColor}08 40%, transparent 70%)`,
@@ -418,19 +436,14 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
             {/* Soft edge glow — no hard outlines, just a gentle luminous fringe */}
             <filter id="soft-edge-glow" x="-20%" y="-20%" width="140%" height="140%">
-              {/* Extract the alpha silhouette */}
               <feGaussianBlur stdDeviation="2.5" in="SourceAlpha" result="soft-spread" />
-              {/* Tint it with the dominant aura color */}
               <feFlood floodColor={dominantColor} floodOpacity={0.25 + absorptionLevel * 0.2} result="edge-color" />
               <feComposite in="edge-color" in2="soft-spread" operator="in" result="soft-colored-edge" />
-              {/* Subtract the original shape to keep only the outer fringe */}
               <feComposite in="soft-colored-edge" in2="SourceAlpha" operator="out" result="fringe-only" />
-              {/* Add a second, wider but fainter layer for cinematic depth */}
               <feGaussianBlur stdDeviation="5" in="SourceAlpha" result="wide-spread" />
               <feFlood floodColor={dominantColor} floodOpacity={0.1 + absorptionLevel * 0.08} result="wide-color" />
               <feComposite in="wide-color" in2="wide-spread" operator="in" result="wide-fringe" />
               <feComposite in="wide-fringe" in2="SourceAlpha" operator="out" result="wide-fringe-only" />
-              {/* Merge: wide fringe → tight fringe → original figure */}
               <feMerge>
                 <feMergeNode in="wide-fringe-only" />
                 <feMergeNode in="fringe-only" />
@@ -438,12 +451,10 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               </feMerge>
             </filter>
 
-            {/* Soft outer aura filter — very diffuse */}
             <filter id="outer-aura-blur">
               <feGaussianBlur stdDeviation="14" />
             </filter>
 
-            {/* Body fill gradient — soft semi-transparent color across whole figure */}
             <linearGradient id="sil-fill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={dominantColor} stopOpacity={0.03 + absorptionLevel * 0.08} />
               <stop offset="25%" stopColor={dominantColor} stopOpacity={0.06 + absorptionLevel * 0.12 + climaxLevel * 0.1} />
@@ -452,7 +463,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0.02 + absorptionLevel * 0.05} />
             </linearGradient>
 
-            {/* Depth shading — darker edges for 3D volume */}
             <linearGradient id="fig-depth" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor={dominantColor} stopOpacity={0.12 + absorptionLevel * 0.12} />
               <stop offset="25%" stopColor={dominantColor} stopOpacity={0.03} />
@@ -460,7 +470,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0.12 + absorptionLevel * 0.12} />
             </linearGradient>
 
-            {/* Core chest glow — concentrated but controlled */}
             <radialGradient id="fig-core-glow" cx="50%" cy="38%" r="30%">
               <stop offset="0%" stopColor="#ffffff" stopOpacity={0.04 + absorptionLevel * 0.08 + climaxLevel * 0.12} />
               <stop offset="20%" stopColor={dominantColor} stopOpacity={0.08 + absorptionLevel * 0.15 + climaxLevel * 0.18} />
@@ -468,14 +477,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <stop offset="100%" stopColor={dominantColor} stopOpacity={0} />
             </radialGradient>
 
-            {/* Inner glow — radial from chest, uses top 3 aura colors */}
             <radialGradient id="fig-inner-glow" cx="50%" cy="40%" r="55%">
               <stop offset="0%" stopColor={auraColors.dominant} stopOpacity={0.02 + absorptionLevel * 0.06} />
               <stop offset="40%" stopColor={auraColors.secondary} stopOpacity={0.01 + absorptionLevel * 0.03} />
               <stop offset="100%" stopColor={auraColors.tertiary} stopOpacity={0} />
             </radialGradient>
 
-            {/* Climax radial — controlled aura bloom */}
             <radialGradient id="climax-radial" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="#fff" stopOpacity={0.12 * climaxLevel} />
               <stop offset="10%" stopColor={auraColors.dominant} stopOpacity={0.45 * climaxLevel} />
@@ -485,7 +492,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               <stop offset="100%" stopColor={auraColors.dominant} stopOpacity={0} />
             </radialGradient>
 
-            {/* Beam gradients — all target figure chest */}
             {beamPositions.map((bp, idx) => {
               const vis = PLANET_VIS[bp.key];
               if (!vis || idx >= beamsFired) return null;
@@ -504,7 +510,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </defs>
 
 
-          {/* ─── Layer 3: Outer aura — very soft diffuse glow behind everything ─── */}
+          {/* ─── Layer 3: Outer aura ─── */}
           <g transform={`translate(${figX}, ${figY}) scale(${figScale})`} filter="url(#outer-aura-blur)">
             <image
               href={astralFigureImg}
@@ -517,7 +523,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             />
           </g>
 
-          {/* ─── Halo ellipse behind figure — subtle aura envelope ─── */}
+          {/* ─── Halo ellipse ─── */}
           <ellipse
             cx={FIG_CX}
             cy={FIG_CORE_Y + 40}
@@ -527,7 +533,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             opacity={absorptionLevel * 0.35 + climaxLevel * 0.2}
           />
 
-          {/* ─── Layer 2: Body fill — soft semi-transparent color across the figure ─── */}
+          {/* ─── Layer 2: Body fill ─── */}
           <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
             <image
               href={astralFigureImg}
@@ -540,14 +546,13 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
             />
           </g>
 
-          {/* ─── Layer 1: Core figure — crisp outline with edge definition ─── */}
+          {/* ─── Layer 1: Core figure ─── */}
           <g
             transform={`translate(${figX}, ${figY}) scale(${figScale})`}
             style={{
               filter: `drop-shadow(0 0 ${2 + absorptionLevel * 4 + climaxLevel * 6}px ${dominantColor}${climaxLevel > 0.5 ? '80' : '50'}) drop-shadow(0 0 ${1 + climaxLevel * 3}px ${secondaryColor}30)`,
             }}
           >
-            {/* Breathing edge fringe — pulsing soft glow around the body */}
             {absorptionLevel > 0.2 && (
               <motion.g
                 filter="url(#soft-edge-glow)"
@@ -564,7 +569,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               </motion.g>
             )}
 
-            {/* Core figure with soft edge glow — stable layer */}
             <g filter="url(#soft-edge-glow)">
               <image
                 href={astralFigureImg}
@@ -577,7 +581,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               />
             </g>
 
-            {/* Core chest glow — concentrated energy center */}
             <rect
               x="0" y="0" width={FIG_VB_W} height={FIG_VB_H}
               fill="url(#fig-core-glow)"
@@ -585,7 +588,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
               style={{ mixBlendMode: 'screen' }}
             />
 
-            {/* Depth shading — 3D volume on edges */}
             <rect
               x="0" y="0" width={FIG_VB_W} height={FIG_VB_H}
               fill="url(#fig-depth)"
@@ -595,7 +597,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
           </g>
 
-          {/* ─── Phase 1: Constellation nodes + beams (ABOVE figure, with gentle orbit) ─── */}
+          {/* ─── Phase 1: Constellation nodes + beams ─── */}
           <AnimatePresence>
           {showConstellations && (
           <motion.g
@@ -625,7 +627,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
 
               return (
                 <g key={`const-beam-${bp.key}`}>
-                  {/* Constellation node */}
                   {idx < constellationsLit && (
                     <>
                       {stars.length >= 4 && (
@@ -687,7 +688,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                     </>
                   )}
 
-                  {/* Beam from this star */}
                   {idx < beamsFired && (
                     <>
                       <motion.path
@@ -747,13 +747,12 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           </AnimatePresence>
 
 
-          {/* ─── Phase 3: CLIMAX — dramatic layered glow + breathing ─── */}
+          {/* ─── Phase 3: CLIMAX ─── */}
           {climaxLevel > 0 && (
             <motion.g
               animate={!showConstellations ? { opacity: [1, 0.7, 1] } : undefined}
               transition={!showConstellations ? { duration: 3.5, repeat: Infinity, ease: "easeInOut" } : undefined}
             >
-              {/* Expanding halo ring 1 — outermost, faint */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 30}
@@ -768,7 +767,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Expanding halo ring 2 — mid, slightly brighter */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 35}
@@ -783,7 +781,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
               />
 
-              {/* Outer aura bloom — intense pulsing */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 40}
@@ -797,7 +794,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               />
 
-              {/* Secondary color ambient glow — soft atmospheric layer */}
               <motion.ellipse
                 cx={FIG_CX}
                 cy={FIG_CORE_Y + 50}
@@ -811,7 +807,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
               />
 
-              {/* Soft body-shaped aura — follows figure silhouette */}
               <g transform={`translate(${figX}, ${figY}) scale(${figScale})`}>
                 <image
                   href={astralFigureImg}
@@ -827,7 +822,6 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                 />
               </g>
 
-              {/* Floating energy particles near figure */}
               {Array.from({ length: 8 }).map((_, i) => {
                 const angle = (i / 8) * Math.PI * 2;
                 const rr = 50 + (i % 3) * 20;
@@ -857,6 +851,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
           )}
         </svg>
       </div>
+      </>
+      )}
 
       {/* ─── CINEMATIC IDENTITY REVEAL PANEL ─── */}
       <motion.div
