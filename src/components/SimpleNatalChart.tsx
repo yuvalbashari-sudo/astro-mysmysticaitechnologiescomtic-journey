@@ -76,7 +76,7 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
         height={size}
         role="img"
         aria-label={labels.astroWheel}
-        style={{ display: "block", width: size, height: size, maxWidth: "100%", overflow: "visible" }}
+        style={{ display: "block", width: size, height: size, maxWidth: "100%", overflow: "visible", fontFamily: "'Cinzel', serif" }}
       >
         <circle cx={cx} cy={cy} r={outerRadius + 10} fill="hsl(var(--deep-blue) / 0.9)" stroke="hsl(var(--gold) / 0.2)" strokeWidth="2" />
         <circle cx={cx} cy={cy} r={outerRadius} fill="hsl(var(--deep-blue-light) / 0.45)" stroke="hsl(var(--gold) / 0.45)" strokeWidth="1.5" />
