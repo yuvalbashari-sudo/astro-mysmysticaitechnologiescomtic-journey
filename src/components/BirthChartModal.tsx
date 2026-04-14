@@ -144,12 +144,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     return () => cancelAnimationFrame(frame);
   }, [isOpen, phase]);
 
-  // When aura reveal is disabled, auto-start AI interpretation from loading phase
-  useEffect(() => {
-    if (SHOW_AURA_REVEAL) return;
-    if (phase !== "loading" || !chartData || restoredFromCache) return;
-    startAIInterpretation();
-  }, [phase, chartData, restoredFromCache, startAIInterpretation]);
 
   // Auto-restore cached chart for returning users — play shortened animation
   useEffect(() => {
@@ -343,6 +337,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       language,
     );
   }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
+
+  // When aura reveal is disabled, auto-start AI interpretation from loading phase
+  useEffect(() => {
+    if (SHOW_AURA_REVEAL) return;
+    if (phase !== "loading" || !chartData || restoredFromCache) return;
+    startAIInterpretation();
+  }, [phase, chartData, restoredFromCache, startAIInterpretation]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
