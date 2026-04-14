@@ -155,10 +155,14 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0;
   }, [aiText, aiLoading]);
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (!matchInfo) return;
     const text = `💕 ${t.readings_type_compatibility}: ${matchInfo.sign1Name} ${matchInfo.sign1Symbol} + ${matchInfo.sign2Name} ${matchInfo.sign2Symbol}\n${matchInfo.score}%\n\n🔮 ${window.location.origin}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    if (navigator.share) {
+      try { await navigator.share({ text }); return; } catch {}
+    }
+    await navigator.clipboard.writeText(text);
+    toast(t.share_copy_toast);
   };
 
   const handleCopy = async () => {
