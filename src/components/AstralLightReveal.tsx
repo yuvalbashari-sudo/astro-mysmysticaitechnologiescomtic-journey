@@ -16,6 +16,8 @@ import astralFigureImg from "@/assets/astral-figure.png";
 import type { Language } from "@/i18n/types";
 import { isAdminTestMode } from "@/lib/adminTestMode";
 import AuraDebugPanel from "@/components/AuraDebugPanel";
+import { AURA_VISUAL_MODE } from "@/lib/auraVisualMode";
+import MinimalAuraEffect from "@/components/MinimalAuraEffect";
 
 /* ═══════════════════════════════════════════════════════
    AstralLightReveal — Cinematic Astral Energy Animation
