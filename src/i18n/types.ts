@@ -419,6 +419,7 @@ export type TranslationKeys = {
   share_copied: string;
   share_instagram_toast: string;
   share_copy_toast: string;
+  result_share: string;
 
   // Onboarding
   onboarding_step1_title: string;
