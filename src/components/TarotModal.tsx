@@ -391,9 +391,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }, 300);
   };
 
-  // Pre-check entitlements when modal opens — wait for auth before blocking
+  // Pre-check entitlements when modal opens — restore cached result if available
   useEffect(() => {
     if (!isOpen) return;
+    // Check for cached tarot result first
+    const cached = getTarotCache(language);
+    if (cached && cached.aiText) {
+      setCards(cached.cards);
+      setAiText(cached.aiText);
+      aiTextRef.current = cached.aiText;
+      setSelectedSpreadKey(cached.spreadKey as SpreadType);
+      sessionStorage.setItem("_dbg_tarot_source", "cached");
+      return; // skip entitlement check — already used
+    }
+    sessionStorage.setItem("_dbg_tarot_source", "pending");
     const doCheck = () => {
       const access = entitlements.checkAccess("tarot_reading");
       if (!access.allowed && 'promptKey' in access) {
