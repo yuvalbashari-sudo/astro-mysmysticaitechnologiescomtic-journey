@@ -7,7 +7,8 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
-import { getSignFromDate, getSignHebrew, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
+import { getSignFromDate, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
+import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -92,7 +93,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     const rising1 = getRisingSign(s1, time1);
     const rising2 = getRisingSign(s2, time2);
     const compat = getCompatibility(s1, s2);
-    const info = { sign1: s1, sign2: s2, sign1Name: getSignHebrew(s1), sign2Name: getSignHebrew(s2), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
+    const info = { sign1: s1, sign2: s2, sign1Name: getSignNameByKey(s1, language), sign2Name: getSignNameByKey(s2, language), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
     setIsLoading(false);
     setAiLoading(true);
@@ -109,7 +110,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
         sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
         sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
         sign1BirthTime: time1 || null,
-        sign1Rising: rising1 ? getSignHebrew(rising1) : null,
+        sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
         sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
         sign1RisingElement: rising1 ? getSignElement(rising1) : null,
         sign1Gender: gender1 || null,
@@ -118,7 +119,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
         sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
         sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
         sign2BirthTime: time2 || null,
-        sign2Rising: rising2 ? getSignHebrew(rising2) : null,
+        sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
         sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
         sign2RisingElement: rising2 ? getSignElement(rising2) : null,
         sign2Gender: gender2 || null,

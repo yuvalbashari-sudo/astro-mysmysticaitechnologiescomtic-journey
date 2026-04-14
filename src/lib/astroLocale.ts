@@ -118,10 +118,10 @@ export function getSignName(index: number, lang: Language): string {
   return SIGN_NAMES[lang]?.[index] ?? SIGN_NAMES.en[index] ?? "";
 }
 
-/** Get localized sign name by English key (e.g. "Aries") */
+/** Get localized sign name by English key (e.g. "Aries" or "aries") */
 export function getSignNameByKey(key: string, lang: Language): string {
-  const SIGN_KEYS = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
-  const idx = SIGN_KEYS.indexOf(key);
+  const SIGN_KEYS = ["aries", "taurus", "gemini", "cancer", "leo", "virgo", "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces"];
+  const idx = SIGN_KEYS.indexOf(key.toLowerCase());
   if (idx === -1) return key;
   return getSignName(idx, lang);
 }
