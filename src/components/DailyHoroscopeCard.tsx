@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Heart, Briefcase, Zap, RefreshCw, Sparkles, Star } from "lucide-react";
+import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n";
 import { formatFullDate } from "@/lib/dateTimeFormat";
 import { supabase } from "@/integrations/supabase/client";
@@ -478,6 +479,15 @@ const DailyHoroscopeCard = () => {
                     <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_energy}</span>
                     <ScoreValue score={data.energy_score} />
                   </div>
+                </div>
+
+                {/* Share / Copy bar */}
+                <div className="mt-4 pt-3 border-t border-foreground/5">
+                  <ResultShareBar
+                    resultText={data.content}
+                    shareTitle={`${t.daily_horoscope_title} — ${ZODIAC_SYMBOLS[zodiacSign] || "✦"}`}
+                    compact
+                  />
                 </div>
               </motion.div>
             )}
