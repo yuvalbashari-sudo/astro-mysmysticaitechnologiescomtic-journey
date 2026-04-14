@@ -94,6 +94,8 @@ const AdminDebugBadge = () => {
             lang: {document.documentElement.lang} | dir: {document.documentElement.dir}
             <br />
             tarot: {usageTracker.getUsageCount("tarot_reading", "daily")}/day | compat: {usageTracker.getUsageCount("compatibility_reading", "daily")}/day
+            <br />
+            src: card={sessionStorage.getItem("_dbg_dailycard_source") || "—"} | tarot={sessionStorage.getItem("_dbg_tarot_source") || "—"} | compat={sessionStorage.getItem("_dbg_compat_source") || "—"}
           </div>
         )}
       </div>
