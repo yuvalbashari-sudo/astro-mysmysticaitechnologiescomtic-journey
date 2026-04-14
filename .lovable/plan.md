@@ -1,39 +1,22 @@
 
 
-## Fix: Live Aura Result Sync
+## Plan: Extend Star/Light Ray Effect Duration from 5s to 10s
 
-### Root Cause
-Line 298-301 in `AstralLightReveal.tsx`: the completion timer runs inside a `useEffect` with `[]` deps, capturing the initial `auraResult` in a stale closure. When admin presets change `influences` → `auraResult` updates locally, but `onAuraResult` in the parent is never re-called. The `AuraResultCard` at line 625 renders from the parent's stale `auraResult` state.
+### Problem
+The constellation and light beam effects disappear after 5 seconds, which is too fast — users don't have time to understand what's happening.
 
-### Changes
+### Change
 
-**`src/components/AstralLightReveal.tsx`**
-1. Add a ref to track the latest `auraResult`:
-   ```typescript
-   const auraResultRef = useRef(auraResult);
-   useEffect(() => { auraResultRef.current = auraResult; }, [auraResult]);
-   ```
-2. Fix the timer to use the ref instead of the stale closure:
-   ```typescript
-   onAuraResult?.(auraResultRef.current);
-   ```
-3. Add a live sync effect for admin mode — whenever `auraResult` changes and reveal is already complete, push it to the parent immediately:
-   ```typescript
-   useEffect(() => {
-     if (showInfluences) {
-       onAuraResult?.(auraResult);
-     }
-   }, [auraResult, showInfluences]);
-   ```
-4. On preset clear/restore, reset reveal-related animation state (`showInfluences` stays true so the sync effect keeps working).
+**`src/components/AstralLightReveal.tsx` — Line 314**
 
-**`src/components/BirthChartModal.tsx`**
-- On `handleClose`, reset `auraResult` to `null` so stale identities don't persist across sessions.
+Change:
+```typescript
+const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
+```
+To:
+```typescript
+const constFadeTimer = setTimeout(() => setShowConstellations(false), 10000 * S);
+```
 
-**`src/components/AuraDebugPanel.tsx`**
-- Change `usedAdminOverride` to reflect whether a forced preset is active (use `isForced` prop) instead of subscription admin status.
-
-### What Does NOT Change
-- Normal user flow, UI design, product copy, onboarding — all untouched.
-- Non-admin users see no difference.
+Single line change. No other files affected.
 
