@@ -445,7 +445,7 @@ const AlwaysVisibleNatalChart = ({ chartData, size: sizeProp }: Props) => {
               {/* Zodiac celestial glyph medallion */}
               {(() => {
                 const glyphR = size * 0.038;
-                const ZODIAC_GLYPHS = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+                const ZODIAC_GLYPHS = ["♈\uFE0E", "♉\uFE0E", "♊\uFE0E", "♋\uFE0E", "♌\uFE0E", "♍\uFE0E", "♎\uFE0E", "♏\uFE0E", "♐\uFE0E", "♑\uFE0E", "♒\uFE0E", "♓\uFE0E"];
                 return (
                   <g>
                     {/* Outer halo ring */}
