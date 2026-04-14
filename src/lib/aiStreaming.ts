@@ -46,8 +46,8 @@ export async function streamMysticalReading(
     });
 
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: "שגיאה לא צפויה" }));
-      onError(errData.error || "שגיאה בשירות");
+      const errData = await resp.json().catch(() => ({}));
+      onError(errData.error || "Service error");
       return;
     }
 
@@ -105,7 +105,7 @@ export async function streamMysticalReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "שגיאה בחיבור");
+    onError(e instanceof Error ? e.message : "Connection error");
   }
 }
 

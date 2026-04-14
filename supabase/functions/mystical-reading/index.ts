@@ -1338,19 +1338,26 @@ CONVERSION-SENSITIVE QUALITY:
       if (logCostFn && getFeatureCostsFn) {
         await logCostFn({ clientIp, feature: type || "generic", status: "failed", userTier: "unknown", aiCost: 0, imageCost: 0, metadata: { httpStatus: response.status } });
       }
+      const ERROR_MSGS: Record<string, Record<number, string>> = {
+        he: { 429: "יותר מדי בקשות, נסו שוב בעוד רגע", 402: "נדרש תשלום נוסף", 500: "שגיאה בשירות ה-AI" },
+        en: { 429: "Too many requests, please try again shortly", 402: "Additional payment required", 500: "AI service error" },
+        ru: { 429: "Слишком много запросов, попробуйте позже", 402: "Требуется дополнительная оплата", 500: "Ошибка сервиса ИИ" },
+        ar: { 429: "طلبات كثيرة جداً، حاول مجدداً بعد قليل", 402: "يلزم دفع إضافي", 500: "خطأ في خدمة الذكاء الاصطناعي" },
+      };
+      const errMsgs = ERROR_MSGS[lang] || ERROR_MSGS.en;
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "יותר מדי בקשות, נסו שוב בעוד רגע" }), {
+        return new Response(JSON.stringify({ error: errMsgs[429] }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "נדרש תשלום נוסף" }), {
+        return new Response(JSON.stringify({ error: errMsgs[402] }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       const t = await response.text();
       console.error("AI gateway error:", response.status, t);
-      return new Response(JSON.stringify({ error: "שגיאה בשירות ה-AI" }), {
+      return new Response(JSON.stringify({ error: errMsgs[500] }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Shield, ShieldOff } from "lucide-react";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { logAdminDebugState } from "@/lib/adminTestMode";
+import { usageTracker } from "@/lib/usageTracker";
 
 const IS_PREVIEW =
   window.location.hostname.includes("preview") ||
@@ -89,6 +90,10 @@ const AdminDebugBadge = () => {
             className="text-[8px] font-mono text-foreground/30 px-2 leading-tight pointer-events-none"
           >
             override: {isOverride ? "ON" : "off"} | tier: {subscriptionManager.getCurrentTier()} | bypass: active
+            <br />
+            lang: {document.documentElement.lang} | dir: {document.documentElement.dir}
+            <br />
+            tarot: {usageTracker.getUsageCount("tarot_reading", "daily")}/day | compat: {usageTracker.getUsageCount("compatibility_reading", "daily")}/day
           </div>
         )}
       </div>
