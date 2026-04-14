@@ -1,22 +1,30 @@
 
+בעיה מזוהה:
+הסמלים הסגולים שאתה רואה לא מגיעים מ-`SimpleNatalChart` ולא מ-`NatalChartWheel`. במסך מפת הלידה הגלוי כרגע (`BirthChartModal`) נטען `SimpleNatalChart`, אבל יש בקוד גם רכיב אחר בשם `AlwaysVisibleNatalChart` שעדיין מצייר את סמלי המזלות מתוך קבצי PNG דרך תגית `<image>` — וזה בדיוק המקור לסטייל הישן/הסגול שדומה למה שמופיע בצילום. לכן הניסיון הקודם שיפר רכיב אחד, אבל לא החליף את מקור הרינדור הישן שמייצר את ה-marker הוויזואלי בפועל.
 
-## Plan: Extend Star/Light Ray Effect Duration from 5s to 10s
+מה אעדכן:
+1. אאתר ואעדכן את רינדור הסמלים ברכיב הפעיל/הרלוונטי כך שהסמלים לא יגיעו יותר מ-`zodiac-icons/*.png` כאריחים סגולים.
+2. אחליף את בלוק ה-`<image href={ZODIAC_ICONS[i]}>` ב-`AlwaysVisibleNatalChart.tsx` למבנה SVG של medallion/glow, באותה שפה ויזואלית של ההירו:
+   - בסיס כהה שקוף/חצי שקוף
+   - טבעת זהובה עדינה
+   - inner glow
+   - halo רך
+   - glyph זודיאק נקי במרכז
+3. אשמור בדיוק על אותם מיקומים (`zodiacPos`) ועל אותה לוגיקת chart, בתים, כוכבים, זוויות ו-ascendant.
+4. אאחד את מקור הסגנון כך שלא יישאר fallback ישן של PNG סגול ברכיב הפעיל.
+5. אם צריך, אחלץ helper/constant קטן משותף כדי שגם הרכיב של ההירו וגם רכיב מפת הלידה ישתמשו באותה שפת glyphs, בלי רידיזיין רחב.
 
-### Problem
-The constellation and light beam effects disappear after 5 seconds, which is too fast — users don't have time to understand what's happening.
+קבצים רלוונטיים:
+- `src/components/BirthChartModal.tsx` — מאשר איזה chart מוצג בזרימה הראשית
+- `src/components/AlwaysVisibleNatalChart.tsx` — כאן עדיין קיים רינדור ישיר של סמלי PNG סגולים
+- `src/components/SimpleNatalChart.tsx` — כבר מכיל כיוון ויזואלי יותר נכון ויכול לשמש כרפרנס
+- `src/components/HeroSection.tsx` — מקור השפה העיצובית שאליה צריך להתיישר
 
-### Change
+תוצאה צפויה אחרי היישום:
+- האריחים/סמלים הסגולים הישנים ייעלמו מהגלגל הגלוי
+- במקומם יופיעו סמלי מזלות זוהרים, עגולים/מדליוניים, באסתטיקה פרימיום כמו בהירו
+- לא יהיו שינויים בפריסת הגלגל, במיקומים או בלוגיקה האסטרולוגית
+- יהיה קל להמשיך לכוונן את אותו סגנון בהמשך בלי לגעת שוב בלוגיקת המפה
 
-**`src/components/AstralLightReveal.tsx` — Line 314**
-
-Change:
-```typescript
-const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
-```
-To:
-```typescript
-const constFadeTimer = setTimeout(() => setShowConstellations(false), 10000 * S);
-```
-
-Single line change. No other files affected.
-
+פרט טכני חשוב:
+כרגע יש פער בין “רכיב שעוצב” לבין “רכיב שמצייר את הסמלים הישנים”. התיקון צריך להיות surgical: לעדכן את source של הרינדור הישן עצמו, לא רק לשפר רכיב אחר.
