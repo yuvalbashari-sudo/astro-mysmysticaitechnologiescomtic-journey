@@ -76,8 +76,27 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
         height={size}
         role="img"
         aria-label={labels.astroWheel}
-        style={{ display: "block", width: size, height: size, maxWidth: "100%", overflow: "visible" }}
+        style={{ display: "block", width: size, height: size, maxWidth: "100%", overflow: "visible", fontFamily: "'Cinzel', serif" }}
       >
+        <defs>
+          <radialGradient id="zodiacMedallion" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="hsl(43 80% 55%)" stopOpacity="0.12" />
+            <stop offset="60%" stopColor="hsl(43 80% 55%)" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          </radialGradient>
+          <filter id="zodiacGlow">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+          <filter id="haloGlow">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
         <circle cx={cx} cy={cy} r={outerRadius + 10} fill="hsl(var(--deep-blue) / 0.9)" stroke="hsl(var(--gold) / 0.2)" strokeWidth="2" />
         <circle cx={cx} cy={cy} r={outerRadius} fill="hsl(var(--deep-blue-light) / 0.45)" stroke="hsl(var(--gold) / 0.45)" strokeWidth="1.5" />
         <circle cx={cx} cy={cy} r={zodiacRadius + 20} fill="none" stroke="hsl(var(--gold) / 0.18)" strokeWidth="1" />
@@ -89,7 +108,8 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
           const lineStart = polarToCartesian(cx, cy, innerRadius + 34, angle);
           const lineEnd = polarToCartesian(cx, cy, outerRadius, angle);
           const houseLabel = polarToCartesian(cx, cy, innerRadius + 18, angle + 15);
-          const zodiacLabel = polarToCartesian(cx, cy, zodiacRadius + 6, angle + 15);
+          const zodiacPos = polarToCartesian(cx, cy, zodiacRadius + 6, angle + 15);
+          const glyphR = size * 0.038;
 
           return (
             <g key={index}>
@@ -107,16 +127,38 @@ const SimpleNatalChart = ({ planetPositions, ascendantAngle, size = 420 }: Props
                 stroke="hsl(var(--gold) / 0.22)"
                 strokeWidth={index % 3 === 0 ? 1.4 : 0.8}
               />
+
+              {/* Zodiac celestial glyph medallion */}
+              <circle
+                cx={zodiacPos.x}
+                cy={zodiacPos.y}
+                r={glyphR + 4}
+                fill="none"
+                stroke="hsl(43 80% 55% / 0.08)"
+                strokeWidth="0.5"
+                filter="url(#haloGlow)"
+              />
+              <circle
+                cx={zodiacPos.x}
+                cy={zodiacPos.y}
+                r={glyphR}
+                fill="url(#zodiacMedallion)"
+                stroke="hsl(43 80% 55% / 0.25)"
+                strokeWidth="0.8"
+              />
               <text
-                x={zodiacLabel.x}
-                y={zodiacLabel.y}
+                x={zodiacPos.x}
+                y={zodiacPos.y}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize={size * 0.05}
-                fill="hsl(var(--gold) / 0.9)"
+                fontSize={size * 0.042}
+                fill="hsl(43 80% 55% / 0.92)"
+                filter="url(#zodiacGlow)"
+                style={{ fontFamily: "'Cinzel', serif" }}
               >
                 {ZODIAC_SIGNS[index]}
               </text>
+
               <text
                 x={houseLabel.x}
                 y={houseLabel.y}

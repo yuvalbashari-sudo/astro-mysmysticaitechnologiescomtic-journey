@@ -150,6 +150,11 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
             <stop offset="0%" stopColor="hsl(222, 47%, 10%)" />
             <stop offset="100%" stopColor="hsl(222, 47%, 6%)" />
           </radialGradient>
+          <radialGradient id="zodiacMedallionW" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="hsl(43 80% 55%)" stopOpacity="0.14" />
+            <stop offset="60%" stopColor="hsl(43 80% 55%)" stopOpacity="0.04" />
+            <stop offset="100%" stopColor="transparent" stopOpacity="0" />
+          </radialGradient>
           <filter id="planetGlow">
             <feGaussianBlur stdDeviation="2.5" result="blur" />
             <feMerge>
@@ -163,6 +168,17 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
+          </filter>
+          <filter id="haloGlowW">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="zodiacGlowW">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
         </defs>
 
@@ -236,23 +252,41 @@ const NatalChartWheel = ({ planetPositions, ascendantAngle, size = 400 }: Props)
           );
         })}
 
-        {/* Zodiac symbols */}
+        {/* Zodiac celestial glyph medallions */}
         {ZODIAC_SIGNS.map((sign, i) => {
           const angle = ((i * 30 + 15) - 90 + resolvedAscendantAngle) * (Math.PI / 180);
           const x = cx + signR * Math.cos(angle);
           const y = cy + signR * Math.sin(angle);
+          const glyphR = size * 0.032;
           return (
-            <text
-              key={sign.symbol}
-              x={x} y={y}
-              textAnchor="middle" dominantBaseline="central"
-              fontSize={size * 0.04}
-              fill="hsl(43, 80%, 55%)"
-              fillOpacity="0.75"
-              filter="url(#softGlow)"
-            >
-              {sign.symbol}
-            </text>
+            <g key={sign.symbol}>
+              {/* Outer halo ring */}
+              <circle
+                cx={x} cy={y} r={glyphR + 4}
+                fill="none"
+                stroke="hsl(43 80% 55% / 0.08)"
+                strokeWidth="0.5"
+                filter="url(#haloGlowW)"
+              />
+              {/* Medallion background */}
+              <circle
+                cx={x} cy={y} r={glyphR}
+                fill="url(#zodiacMedallionW)"
+                stroke="hsl(43 80% 55% / 0.25)"
+                strokeWidth="0.8"
+              />
+              {/* Glyph */}
+              <text
+                x={x} y={y}
+                textAnchor="middle" dominantBaseline="central"
+                fontSize={size * 0.036}
+                fill="hsl(43 80% 55% / 0.9)"
+                filter="url(#zodiacGlowW)"
+                style={{ fontFamily: "'Cinzel', serif" }}
+              >
+                {sign.symbol}
+              </text>
+            </g>
           );
         })}
 
