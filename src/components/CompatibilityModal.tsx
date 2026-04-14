@@ -7,7 +7,7 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Heart, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
-import { getSignFromDate, getSignHebrew, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
+import { getSignFromDate, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
 import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 
 import { toast } from "@/components/ui/sonner";
