@@ -227,8 +227,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       if (SHOW_AURA_REVEAL) {
         setPhase("loading");
       } else {
-        // Skip aura reveal — trigger interpretation directly after a tick
-        setTimeout(() => startAIInterpretation(), 50);
+        // Skip aura reveal — set phase to trigger direct interpretation
+        setPhase("loading");
       }
     } catch (error) {
       const msg = error instanceof Error ? error.message : "";
