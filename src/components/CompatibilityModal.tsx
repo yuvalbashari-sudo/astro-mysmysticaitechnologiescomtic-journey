@@ -80,9 +80,19 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
 
-  // Pre-check entitlements when modal opens — wait for auth before blocking
+  // Restore cached result on open
   useEffect(() => {
     if (!isOpen) return;
+    const cached = getCompatCache(language);
+    if (cached) {
+      setMatchInfo(cached.matchInfo);
+      setAiText(cached.aiText);
+      aiTextRef.current = cached.aiText;
+      sessionStorage.setItem("_dbg_compat_source", "cached");
+      return; // skip entitlement check — already used
+    }
+    sessionStorage.setItem("_dbg_compat_source", "pending");
+    // Pre-check entitlements when modal opens — wait for auth before blocking
     const doCheck = () => {
       const access = entitlements.checkAccess("compatibility_reading");
       if (!access.allowed && 'promptKey' in access) {
