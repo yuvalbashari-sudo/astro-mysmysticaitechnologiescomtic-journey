@@ -262,6 +262,9 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
   const dominantColor = auraColors.dominant;
   const secondaryColor = auraColors.secondary;
 
+  /** Whether the full astral figure + heavy SVG scene should render */
+  const renderFullScene = AURA_VISUAL_MODE === "full";
+
   useEffect(() => {
     const S = fastMode ? 0.45 : 1; // speed multiplier
     const T = TOTAL * S;
