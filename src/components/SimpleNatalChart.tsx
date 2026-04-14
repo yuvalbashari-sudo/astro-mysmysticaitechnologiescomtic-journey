@@ -21,7 +21,7 @@ const FALLBACK_PLANET_POSITIONS: Record<string, number> = {
   pluto: 264,
 };
 
-const ZODIAC_SIGNS = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+const ZODIAC_SIGNS = ["♈\uFE0E", "♉\uFE0E", "♊\uFE0E", "♋\uFE0E", "♌\uFE0E", "♍\uFE0E", "♎\uFE0E", "♏\uFE0E", "♐\uFE0E", "♑\uFE0E", "♒\uFE0E", "♓\uFE0E"];
 const DEFAULT_ASCENDANT = 18;
 
 const normalizeAngle = (angle: number) => ((angle % 360) + 360) % 360;

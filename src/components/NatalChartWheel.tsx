@@ -19,18 +19,18 @@ const FALLBACK_ASCENDANT_ANGLE = 18;
 const normalizeAngle = (angle: number) => ((angle % 360) + 360) % 360;
 
 const ZODIAC_SIGNS = [
-  { symbol: "♈", name: "Aries", angle: 0 },
-  { symbol: "♉", name: "Taurus", angle: 30 },
-  { symbol: "♊", name: "Gemini", angle: 60 },
-  { symbol: "♋", name: "Cancer", angle: 90 },
-  { symbol: "♌", name: "Leo", angle: 120 },
-  { symbol: "♍", name: "Virgo", angle: 150 },
-  { symbol: "♎", name: "Libra", angle: 180 },
-  { symbol: "♏", name: "Scorpio", angle: 210 },
-  { symbol: "♐", name: "Sagittarius", angle: 240 },
-  { symbol: "♑", name: "Capricorn", angle: 270 },
-  { symbol: "♒", name: "Aquarius", angle: 300 },
-  { symbol: "♓", name: "Pisces", angle: 330 },
+  { symbol: "♈\uFE0E", name: "Aries", angle: 0 },
+  { symbol: "♉\uFE0E", name: "Taurus", angle: 30 },
+  { symbol: "♊\uFE0E", name: "Gemini", angle: 60 },
+  { symbol: "♋\uFE0E", name: "Cancer", angle: 90 },
+  { symbol: "♌\uFE0E", name: "Leo", angle: 120 },
+  { symbol: "♍\uFE0E", name: "Virgo", angle: 150 },
+  { symbol: "♎\uFE0E", name: "Libra", angle: 180 },
+  { symbol: "♏\uFE0E", name: "Scorpio", angle: 210 },
+  { symbol: "♐\uFE0E", name: "Sagittarius", angle: 240 },
+  { symbol: "♑\uFE0E", name: "Capricorn", angle: 270 },
+  { symbol: "♒\uFE0E", name: "Aquarius", angle: 300 },
+  { symbol: "♓\uFE0E", name: "Pisces", angle: 330 },
 ];
 
 export const PLANETS = [
