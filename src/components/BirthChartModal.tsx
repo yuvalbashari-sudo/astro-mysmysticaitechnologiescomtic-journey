@@ -153,8 +153,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
-    // Go through loading phase so astral animation plays (shortened)
-    setPhase("loading");
+    // Go through loading phase so astral animation plays (shortened) — or skip if reveal disabled
+    setPhase(SHOW_AURA_REVEAL ? "loading" : "chart");
     if (cached.details.userName?.trim()) {
       setShowWelcomeBack(true);
       setTimeout(() => setShowWelcomeBack(false), 4000);
@@ -224,7 +224,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       setChartData(natalChart);
       mysticalProfile.recordZodiac(getSignNameByKey(natalChart.sunSign.key, language), natalChart.sunSign.symbol, natalChart.sunSign.element, birthDate);
       mysticalProfile.recordRising(`${getSignNameByKey(natalChart.risingSign.key, language)} ${chartLabels.rising}`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
-      setPhase("loading");
+      if (SHOW_AURA_REVEAL) {
+        setPhase("loading");
+      } else {
+        // Skip aura reveal — go straight to chart
+        setPhase("chart");
+      }
     } catch (error) {
       const msg = error instanceof Error ? error.message : "";
       const geocodeErrors: Record<string, string> = {
@@ -475,7 +480,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             )}
 
-            {(phase === "loading" || showResult) && chartData && (
+            {SHOW_AURA_REVEAL && (phase === "loading" || showResult) && chartData && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -624,7 +629,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
                 )}
 
-                {auraResult && (
+                {SHOW_AURA_REVEAL && auraResult && (
                   <AuraResultCard result={auraResult} />
                 )}
 
