@@ -27,6 +27,32 @@ import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
+const TAROT_CACHE_KEY = "astrologai_tarot_session";
+
+interface TarotCacheData {
+  date: string;
+  language: string;
+  spreadKey: string;
+  cards: ReadingCard[];
+  aiText: string;
+}
+
+function getTarotCache(lang: string): TarotCacheData | null {
+  try {
+    const raw = sessionStorage.getItem(TAROT_CACHE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as TarotCacheData;
+    const today = new Date().toISOString().split("T")[0];
+    if (data.date !== today) { sessionStorage.removeItem(TAROT_CACHE_KEY); return null; }
+    if (data.language !== lang) return null;
+    return data;
+  } catch { return null; }
+}
+
+function saveTarotCache(data: TarotCacheData) {
+  try { sessionStorage.setItem(TAROT_CACHE_KEY, JSON.stringify(data)); } catch {}
+}
+
 type SpreadType = "love" | "career" | "decision" | "timeline";
 
 interface SpreadOption {
