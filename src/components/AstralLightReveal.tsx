@@ -311,7 +311,7 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
       onAuraResult?.(auraResultRef.current);
       onComplete();
     }, T);
-    const constFadeTimer = setTimeout(() => setShowConstellations(false), 5000 * S);
+    const constFadeTimer = setTimeout(() => setShowConstellations(false), 10000 * S);
 
     return () => {
       clearInterval(progTimer);
