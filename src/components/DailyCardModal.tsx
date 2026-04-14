@@ -29,6 +29,8 @@ interface DailyCardData {
   date: string;
   aiText?: string;
   language?: string;
+  /** Per-language AI text cache to avoid re-generation on locale switch */
+  aiTextByLang?: Record<string, string>;
 }
 
 function getUserSeed(): string {
@@ -163,18 +165,28 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       if (saved) {
         setCard(saved.card);
         setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
-        if (saved.aiText && saved.language === language) {
-          // Restore stored interpretation — always go straight to locked/result
+        // Check per-language cache first
+        const cachedForLang = saved.aiTextByLang?.[language];
+        if (cachedForLang) {
+          // Restore stored interpretation for this language — no AI call needed
+          setAiText(cachedForLang);
+          aiTextRef.current = cachedForLang;
+          setPhase("locked");
+          sessionStorage.setItem("_dbg_dailycard_source", "cached");
+        } else if (saved.aiText && saved.language === language) {
+          // Legacy format — same language match
           setAiText(saved.aiText);
           aiTextRef.current = saved.aiText;
           setPhase("locked");
-        } else if (saved.aiText && saved.language !== language) {
-          // Language changed — re-generate AI text
+          sessionStorage.setItem("_dbg_dailycard_source", "cached");
+        } else if (saved.aiText || cachedForLang === undefined) {
+          // Language changed and no cache for this locale — re-generate AI text
           setPhase("result");
           startAiReading(saved.card);
+          sessionStorage.setItem("_dbg_dailycard_source", "fresh-lang-switch");
         } else {
-          // Card exists but no AI text yet — show locked (no interpretation available)
           setPhase("locked");
+          sessionStorage.setItem("_dbg_dailycard_source", "cached-no-text");
         }
       } else {
         setPhase("ready");
@@ -314,8 +326,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         setActiveReading({ type: "dailyCard", label, summary: aiTextRef.current });
         const saved = getSavedDailyCard();
         if (saved) {
-          saveDailyCard({ ...saved, aiText: aiTextRef.current, language });
+          const updatedByLang = { ...(saved.aiTextByLang || {}), [language]: aiTextRef.current };
+          saveDailyCard({ ...saved, aiText: aiTextRef.current, language, aiTextByLang: updatedByLang });
         }
+        sessionStorage.setItem("_dbg_dailycard_source", "fresh");
         mysticalProfile.recordDailyCard(localizedName, selectedCard.symbol);
         readingsStorage.save({
           type: "tarot",
