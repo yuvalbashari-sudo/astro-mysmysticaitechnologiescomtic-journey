@@ -1,15 +1,15 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { assistantName } from "@/lib/assistantConfig";
 import { useLanguage } from "@/i18n";
 
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
-  /** Override default Hebrew CTA text */
+  /** Override default CTA text */
   text?: string;
   /** Override the gold highlighted portion */
   highlightText?: string;
-  /** Disable teaser (e.g. on mobile) */
+  /** Disable teaser */
   disabled?: boolean;
   /** Force tooltip anchor side. If omitted, auto-detects based on screen position */
   anchor?: "left" | "right" | "auto";
@@ -20,8 +20,8 @@ interface AvatarHoverTeaserProps {
 }
 
 /**
- * Wraps any avatar button with a premium micro-tooltip on desktop hover.
- * Auto-detects whether to show tooltip left or right based on screen position.
+ * Wraps any avatar button with a premium micro-tooltip.
+ * Desktop: appears on hover. Mobile: appears briefly on tap (auto-hides), without blocking the click.
  * Children (the avatar button) remain fully clickable.
  */
 const AvatarHoverTeaser = ({
@@ -34,22 +34,45 @@ const AvatarHoverTeaser = ({
   style,
 }: AvatarHoverTeaserProps) => {
   const { language } = useLanguage();
+
+  // Warm, guide-oriented microcopy. Short (1-2 lines), with a soft CTA toward a guided choice.
   const defaults = useMemo(() => ({
-    he: { t: `${assistantName} – רוצים הכוונה?`, h: "לחצו לשיחה" },
-    en: { t: `${assistantName} – Want guidance?`, h: "Click to chat" },
-    ru: { t: `${assistantName} – Нужна помощь?`, h: "Нажмите для чата" },
-    ar: { t: `${assistantName} – تريد إرشادًا؟`, h: "اضغط للمحادثة" },
+    he: {
+      t: `${assistantName} כאן כדי להאיר לך את הדרך.`,
+      h: "בחר נושא להתחלה",
+    },
+    en: {
+      t: `${assistantName} is here to guide your next step.`,
+      h: "Choose a topic to begin",
+    },
+    ru: {
+      t: `${assistantName} рядом, чтобы подсветить ваш путь.`,
+      h: "Выберите тему, чтобы начать",
+    },
+    ar: {
+      t: `${assistantName} هنا لترشدك في خطوتك التالية.`,
+      h: "اختر موضوعًا للبدء",
+    },
   }[language]), [language]);
 
   const resolvedText = text ?? defaults.t;
   const resolvedHighlight = highlightText ?? defaults.h;
 
-  const [hovered, setHovered] = useState(false);
+  const [visible, setVisible] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const hideTimerRef = useRef<number | null>(null);
+
+  const clearHideTimer = () => {
+    if (hideTimerRef.current !== null) {
+      window.clearTimeout(hideTimerRef.current);
+      hideTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => () => clearHideTimer(), []);
 
   const getAnchorSide = useCallback((): "left" | "right" => {
     if (anchor !== "auto") return anchor;
-    // Auto-detect: if avatar is in the left half of screen, show tooltip on right
     const el = wrapperRef.current;
     if (!el) return "left";
     const rect = el.getBoundingClientRect();
@@ -57,7 +80,7 @@ const AvatarHoverTeaser = ({
     return centerX < window.innerWidth / 2 ? "right" : "left";
   }, [anchor]);
 
-  const side = hovered ? getAnchorSide() : "left";
+  const side = visible ? getAnchorSide() : "left";
   const isLeft = side === "left";
 
   const tooltipPosition: React.CSSProperties = isLeft
@@ -80,57 +103,77 @@ const AvatarHoverTeaser = ({
         borderRight: "none",
       };
 
+  // Mobile tap: show teaser briefly without preventing the underlying button click.
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (disabled) return;
+    if (e.pointerType === "touch") {
+      clearHideTimer();
+      setVisible(true);
+      hideTimerRef.current = window.setTimeout(() => setVisible(false), 2200);
+    }
+  };
+
   return (
     <div
       ref={wrapperRef}
       className={`relative ${className}`}
       style={{ ...style, overflow: "visible" }}
-      onMouseEnter={() => !disabled && setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => !disabled && setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+      onPointerDown={handlePointerDown}
     >
       <AnimatePresence>
-        {hovered && !disabled && (
+        {visible && !disabled && (
           <motion.div
             className="absolute pointer-events-none z-[200]"
             style={{
               ...tooltipPosition,
-              whiteSpace: "nowrap",
-              padding: "12px 20px",
-              borderRadius: 12,
-              background: "hsl(222 47% 8% / 0.75)",
+              maxWidth: 260,
+              padding: "12px 18px",
+              borderRadius: 14,
+              background: "hsl(222 47% 8% / 0.78)",
               backdropFilter: "blur(14px)",
               WebkitBackdropFilter: "blur(14px)",
-              border: "1px solid hsl(var(--gold) / 0.18)",
+              border: "1px solid hsl(var(--gold) / 0.22)",
               boxShadow:
-                "0 6px 20px hsl(222 47% 4% / 0.4), 0 0 12px hsl(var(--gold) / 0.04)",
-              
+                "0 8px 24px hsl(222 47% 4% / 0.45), 0 0 16px hsl(var(--gold) / 0.06)",
             }}
-            initial={{ opacity: 0, scale: 0.92, x: isLeft ? 4 : -4 }}
+            initial={{ opacity: 0, scale: 0.94, x: isLeft ? 4 : -4 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.92, x: isLeft ? 4 : -4 }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            exit={{ opacity: 0, scale: 0.94, x: isLeft ? 4 : -4 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
           >
             <p
               className="font-body"
               style={{
                 margin: 0,
-                fontSize: 17,
+                fontSize: 15,
                 lineHeight: 1.5,
-                color: "hsl(var(--foreground) / 0.8)",
+                color: "hsl(var(--foreground) / 0.85)",
               }}
             >
-              {resolvedText}{" "}
-              <span style={{ color: "hsl(var(--gold))" }}>{resolvedHighlight}</span>
+              {resolvedText}
             </p>
-            {/* Directional arrow */}
+            <p
+              className="font-body"
+              style={{
+                margin: "4px 0 0",
+                fontSize: 14,
+                lineHeight: 1.4,
+                color: "hsl(var(--gold))",
+                fontWeight: 500,
+              }}
+            >
+              {resolvedHighlight}
+            </p>
             <div
               className="absolute"
               style={{
                 ...arrowPosition,
                 width: 8,
                 height: 8,
-                background: "hsl(222 47% 8% / 0.75)",
-                border: "1px solid hsl(var(--gold) / 0.18)",
+                background: "hsl(222 47% 8% / 0.78)",
+                border: "1px solid hsl(var(--gold) / 0.22)",
               }}
             />
           </motion.div>

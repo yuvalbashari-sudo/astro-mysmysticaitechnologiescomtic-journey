@@ -1560,7 +1560,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* Persistent Astrologer avatar — always visible across all phases */}
           <AvatarHoverTeaser
-            disabled={isMobile}
+            disabled={false}
             anchor="left"
             className="fixed flex items-center justify-center pointer-events-auto"
             style={{
