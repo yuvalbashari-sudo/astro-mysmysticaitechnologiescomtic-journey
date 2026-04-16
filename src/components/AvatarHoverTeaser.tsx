@@ -87,6 +87,11 @@ const AvatarHoverTeaser = ({
   const [cardWidth, setCardWidth] = useState(320);
   const [verticalShift, setVerticalShift] = useState(0);
 
+  // Horizontal offset (slightly to the left of the avatar) and vertical gap above it.
+  const LEFT_OFFSET = 24;
+  const GAP_ABOVE = 16;
+  const [horizontalShift, setHorizontalShift] = useState(0);
+
   useEffect(() => {
     if (!visible) return;
     const compute = () => {
@@ -95,21 +100,32 @@ const AvatarHoverTeaser = ({
       const rect = el.getBoundingClientRect();
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const GAP = 16;
       const SAFE_MARGIN = 12;
-      // Available horizontal space on the chosen side
-      const available = isLeft
-        ? rect.left - GAP - SAFE_MARGIN
-        : vw - rect.right - GAP - SAFE_MARGIN;
-      const next = Math.max(240, Math.min(320, available));
+
+      // Card sits ABOVE the avatar — width is bounded by full viewport minus margins,
+      // not by horizontal distance to a side edge.
+      const maxByViewport = vw - SAFE_MARGIN * 2;
+      const next = Math.max(240, Math.min(320, maxByViewport));
       setCardWidth(next);
 
-      // Vertical clipping guard — if the card (anchored to bottom of avatar) would
-      // extend above the viewport top, push it down. Estimated card height ~140px.
+      // Compute the card's natural left edge (avatar left - LEFT_OFFSET) and nudge
+      // right if it would clip the left edge, or left if it would clip the right edge.
+      const naturalLeft = rect.left - LEFT_OFFSET;
+      const naturalRight = naturalLeft + next;
+      let shift = 0;
+      if (naturalLeft < SAFE_MARGIN) {
+        shift = SAFE_MARGIN - naturalLeft;
+      } else if (naturalRight > vw - SAFE_MARGIN) {
+        shift = vw - SAFE_MARGIN - naturalRight;
+      }
+      setHorizontalShift(shift);
+
+      // Vertical clipping guard — card sits above avatar; if it would clip the top,
+      // reduce the gap (allow the card to sit closer to the avatar).
       const ESTIMATED_HEIGHT = 160;
-      const cardTopIfBottomAligned = rect.bottom - ESTIMATED_HEIGHT;
-      if (cardTopIfBottomAligned < SAFE_MARGIN) {
-        setVerticalShift(SAFE_MARGIN - cardTopIfBottomAligned);
+      const cardTop = rect.top - GAP_ABOVE - ESTIMATED_HEIGHT;
+      if (cardTop < SAFE_MARGIN) {
+        setVerticalShift(SAFE_MARGIN - cardTop);
       } else {
         setVerticalShift(0);
       }
@@ -121,11 +137,13 @@ const AvatarHoverTeaser = ({
       window.removeEventListener("resize", compute);
       window.removeEventListener("scroll", compute, true);
     };
-  }, [visible, isLeft]);
+  }, [visible]);
 
-  const cardPosition: React.CSSProperties = isLeft
-    ? { right: "calc(100% + 16px)", bottom: -verticalShift }
-    : { left: "calc(100% + 16px)", bottom: -verticalShift };
+  // Card is positioned ABOVE the avatar, with a small left offset for balance.
+  const cardPosition: React.CSSProperties = {
+    bottom: `calc(100% + ${GAP_ABOVE - verticalShift}px)`,
+    right: `calc(${LEFT_OFFSET - horizontalShift}px)`,
+  };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
   const handleMouseEnter = () => {
