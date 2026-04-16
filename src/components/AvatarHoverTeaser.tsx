@@ -35,28 +35,44 @@ const AvatarHoverTeaser = ({
 }: AvatarHoverTeaserProps) => {
   const { language } = useLanguage();
 
-  // Warm, guide-oriented microcopy. Short (1-2 lines), with a soft CTA toward a guided choice.
-  const defaults = useMemo(() => ({
-    he: {
-      t: `${assistantName} כאן כדי להאיר לך את הדרך.`,
-      h: "בחר נושא להתחלה",
-    },
-    en: {
-      t: `${assistantName} is here to guide your next step.`,
-      h: "Choose a topic to begin",
-    },
-    ru: {
-      t: `${assistantName} рядом, чтобы подсветить ваш путь.`,
-      h: "Выберите тему, чтобы начать",
-    },
-    ar: {
-      t: `${assistantName} هنا لترشدك في خطوتك التالية.`,
-      h: "اختر موضوعًا للبدء",
-    },
+  // Warm, guide-oriented one-liners. A variant is picked per mount for subtle freshness.
+  const variants = useMemo(() => ({
+    he: [
+      `${assistantName} כאן כדי להאיר לך את הדרך`,
+      `רוצה תובנה אישית למה שמגיע עכשיו?`,
+      `בוא נראה מה הכוכבים מספרים על המסע שלך`,
+    ],
+    en: [
+      `${assistantName} is here to help you find your direction`,
+      `Want a personal insight for what's coming next?`,
+      `Let's see what the stars say about your path`,
+    ],
+    ru: [
+      `${assistantName} рядом, чтобы подсветить ваш путь`,
+      `Хотите личный взгляд на то, что впереди?`,
+      `Посмотрим, что звёзды говорят о вашем пути`,
+    ],
+    ar: [
+      `${assistantName} هنا ليرشدك في طريقك`,
+      `تريد إضاءة شخصية لما هو قادم؟`,
+      `لنرَ ما تقوله النجوم عن مسارك`,
+    ],
   }[language]), [language]);
 
-  const resolvedText = text ?? defaults.t;
-  const resolvedHighlight = highlightText ?? defaults.h;
+  const ctaByLang = useMemo(() => ({
+    he: "בחר נושא להתחלה",
+    en: "Choose a topic to begin",
+    ru: "Выберите тему, чтобы начать",
+    ar: "اختر موضوعًا للبدء",
+  }[language]), [language]);
+
+  const pickedText = useMemo(
+    () => variants[Math.floor(Math.random() * variants.length)],
+    [variants]
+  );
+
+  const resolvedText = text ?? pickedText;
+  const resolvedHighlight = highlightText ?? ctaByLang;
 
   const [visible, setVisible] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
