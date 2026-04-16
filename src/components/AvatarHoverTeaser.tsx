@@ -164,7 +164,7 @@ const AvatarHoverTeaser = ({
             className="absolute pointer-events-none z-[200]"
             style={{
               ...cardPosition,
-              width: CARD_WIDTH,
+              width: cardWidth,
               padding: "24px 26px",
               borderRadius: 20,
               background:
