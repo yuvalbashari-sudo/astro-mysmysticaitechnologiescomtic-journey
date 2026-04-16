@@ -179,7 +179,7 @@ const AvatarHoverTeaser = ({
       <AnimatePresence>
         {visible && !disabled && (
           <motion.div
-            className="absolute pointer-events-none z-[200]"
+            className="absolute pointer-events-none z-[300]"
             style={{
               ...cardPosition,
               width: cardWidth,
