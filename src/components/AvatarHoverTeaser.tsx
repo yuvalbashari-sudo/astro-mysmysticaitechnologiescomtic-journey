@@ -82,12 +82,50 @@ const AvatarHoverTeaser = ({
   const side = visible ? getAnchorSide() : "left";
   const isLeft = side === "left";
 
-  // Card dimensions: wider, more spacious
-  const CARD_WIDTH = 320;
+  // Responsive card width: shrinks on small viewports so it never clips off-screen.
+  // Reserve ~24px for outer margin + 16px gap + avatar width (~64px on mobile).
+  const [cardWidth, setCardWidth] = useState(320);
+  const [verticalShift, setVerticalShift] = useState(0);
+
+  useEffect(() => {
+    if (!visible) return;
+    const compute = () => {
+      const el = wrapperRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const GAP = 16;
+      const SAFE_MARGIN = 12;
+      // Available horizontal space on the chosen side
+      const available = isLeft
+        ? rect.left - GAP - SAFE_MARGIN
+        : vw - rect.right - GAP - SAFE_MARGIN;
+      const next = Math.max(240, Math.min(320, available));
+      setCardWidth(next);
+
+      // Vertical clipping guard — if the card (anchored to bottom of avatar) would
+      // extend above the viewport top, push it down. Estimated card height ~140px.
+      const ESTIMATED_HEIGHT = 160;
+      const cardTopIfBottomAligned = rect.bottom - ESTIMATED_HEIGHT;
+      if (cardTopIfBottomAligned < SAFE_MARGIN) {
+        setVerticalShift(SAFE_MARGIN - cardTopIfBottomAligned);
+      } else {
+        setVerticalShift(0);
+      }
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    window.addEventListener("scroll", compute, true);
+    return () => {
+      window.removeEventListener("resize", compute);
+      window.removeEventListener("scroll", compute, true);
+    };
+  }, [visible, isLeft]);
 
   const cardPosition: React.CSSProperties = isLeft
-    ? { right: "calc(100% + 16px)", bottom: 0 }
-    : { left: "calc(100% + 16px)", bottom: 0 };
+    ? { right: "calc(100% + 16px)", bottom: -verticalShift }
+    : { left: "calc(100% + 16px)", bottom: -verticalShift };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
   const handleMouseEnter = () => {
@@ -126,7 +164,7 @@ const AvatarHoverTeaser = ({
             className="absolute pointer-events-none z-[200]"
             style={{
               ...cardPosition,
-              width: CARD_WIDTH,
+              width: cardWidth,
               padding: "24px 26px",
               borderRadius: 20,
               background:
