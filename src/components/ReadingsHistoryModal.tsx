@@ -69,7 +69,7 @@ const ReadingsHistoryModal = ({ isOpen, onClose }: Props) => {
     <CinematicModalShell isOpen={isOpen} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} wide hideAdvisor>
         {/* Avatar pinned to bottom-right of this screen */}
         <AvatarHoverTeaser
-          disabled={isMobile}
+          disabled={false}
           className="fixed z-[106]"
           style={{
             bottom: 10,
