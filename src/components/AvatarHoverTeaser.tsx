@@ -1,13 +1,12 @@
 import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { assistantName } from "@/lib/assistantConfig";
 import { useLanguage } from "@/i18n";
 
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
-  /** Override default CTA text */
+  /** Override default headline */
   text?: string;
-  /** Override the gold highlighted portion */
+  /** Override default supporting line */
   highlightText?: string;
   /** Disable teaser */
   disabled?: boolean;
@@ -20,9 +19,9 @@ interface AvatarHoverTeaserProps {
 }
 
 /**
- * Wraps any avatar button with a premium micro-tooltip.
- * Desktop: appears on hover. Mobile: appears briefly on tap (auto-hides), without blocking the click.
- * Children (the avatar button) remain fully clickable.
+ * Premium floating insight card that appears next to the avatar.
+ * Desktop: appears on hover (with intentional delay). Mobile: appears briefly on tap.
+ * Children remain fully clickable.
  */
 const AvatarHoverTeaser = ({
   children,
@@ -34,58 +33,42 @@ const AvatarHoverTeaser = ({
   style,
 }: AvatarHoverTeaserProps) => {
   const { language } = useLanguage();
+  const isRTL = language === "he" || language === "ar";
 
-  // Warm, guide-oriented one-liners. A variant is picked per mount for subtle freshness.
-  const variants = useMemo(() => ({
-    he: [
-      `${assistantName} כאן כדי להאיר לך את הדרך`,
-      `רוצה תובנה אישית למה שמגיע עכשיו?`,
-      `בוא נראה מה הכוכבים מספרים על המסע שלך`,
-    ],
-    en: [
-      `${assistantName} is here to help you find your direction`,
-      `Want a personal insight for what's coming next?`,
-      `Let's see what the stars say about your path`,
-    ],
-    ru: [
-      `${assistantName} рядом, чтобы подсветить ваш путь`,
-      `Хотите личный взгляд на то, что впереди?`,
-      `Посмотрим, что звёзды говорят о вашем пути`,
-    ],
-    ar: [
-      `${assistantName} هنا ليرشدك في طريقك`,
-      `تريد إضاءة شخصية لما هو قادم؟`,
-      `لنرَ ما تقوله النجوم عن مسارك`,
-    ],
+  const headlineByLang = useMemo(() => ({
+    he: "תובנה אישית מחכה לך",
+    en: "A personal insight is waiting for you",
+    ru: "Персональное озарение ждёт вас",
+    ar: "بصيرة شخصية بانتظارك",
   }[language]), [language]);
 
-  const ctaByLang = useMemo(() => ({
-    he: "בחר נושא להתחלה",
-    en: "Choose a topic to begin",
-    ru: "Выберите тему, чтобы начать",
-    ar: "اختر موضوعًا للبدء",
+  const supportingByLang = useMemo(() => ({
+    he: "מבט מדויק על מה שמשפיע עליך עכשיו",
+    en: "A precise look at what's influencing you right now",
+    ru: "Точный взгляд на то, что влияет на вас сейчас",
+    ar: "نظرة دقيقة على ما يؤثر عليك الآن",
   }[language]), [language]);
 
-  const pickedText = useMemo(
-    () => variants[Math.floor(Math.random() * variants.length)],
-    [variants]
-  );
-
-  const resolvedText = text ?? pickedText;
-  const resolvedHighlight = highlightText ?? ctaByLang;
+  const resolvedHeadline = text ?? headlineByLang;
+  const resolvedSupporting = highlightText ?? supportingByLang;
 
   const [visible, setVisible] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const hideTimerRef = useRef<number | null>(null);
+  const showTimerRef = useRef<number | null>(null);
 
-  const clearHideTimer = () => {
+  const clearTimers = () => {
     if (hideTimerRef.current !== null) {
       window.clearTimeout(hideTimerRef.current);
       hideTimerRef.current = null;
     }
+    if (showTimerRef.current !== null) {
+      window.clearTimeout(showTimerRef.current);
+      showTimerRef.current = null;
+    }
   };
 
-  useEffect(() => () => clearHideTimer(), []);
+  useEffect(() => () => clearTimers(), []);
 
   const getAnchorSide = useCallback((): "left" | "right" => {
     if (anchor !== "auto") return anchor;
@@ -99,33 +82,32 @@ const AvatarHoverTeaser = ({
   const side = visible ? getAnchorSide() : "left";
   const isLeft = side === "left";
 
-  const tooltipPosition: React.CSSProperties = isLeft
-    ? { right: "calc(100% + 10px)", bottom: 12 }
-    : { left: "calc(100% + 10px)", bottom: 12 };
+  // Card dimensions: wider, more spacious
+  const CARD_WIDTH = 320;
 
-  const arrowPosition: React.CSSProperties = isLeft
-    ? {
-        right: -4,
-        bottom: 14,
-        transform: "rotate(45deg)",
-        borderBottom: "none",
-        borderLeft: "none",
-      }
-    : {
-        left: -4,
-        bottom: 14,
-        transform: "rotate(45deg)",
-        borderTop: "none",
-        borderRight: "none",
-      };
+  const cardPosition: React.CSSProperties = isLeft
+    ? { right: "calc(100% + 16px)", bottom: 0 }
+    : { left: "calc(100% + 16px)", bottom: 0 };
 
-  // Mobile tap: show teaser briefly without preventing the underlying button click.
+  // Desktop: intentional delay before appearing (feels considered, not reactive)
+  const handleMouseEnter = () => {
+    if (disabled) return;
+    clearTimers();
+    showTimerRef.current = window.setTimeout(() => setVisible(true), 280);
+  };
+
+  const handleMouseLeave = () => {
+    clearTimers();
+    setVisible(false);
+  };
+
+  // Mobile tap: show insight card briefly without preventing the underlying button click.
   const handlePointerDown = (e: React.PointerEvent) => {
     if (disabled) return;
     if (e.pointerType === "touch") {
-      clearHideTimer();
+      clearTimers();
       setVisible(true);
-      hideTimerRef.current = window.setTimeout(() => setVisible(false), 2200);
+      hideTimerRef.current = window.setTimeout(() => setVisible(false), 2600);
     }
   };
 
@@ -134,8 +116,8 @@ const AvatarHoverTeaser = ({
       ref={wrapperRef}
       className={`relative ${className}`}
       style={{ ...style, overflow: "visible" }}
-      onMouseEnter={() => !disabled && setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onPointerDown={handlePointerDown}
     >
       <AnimatePresence>
@@ -143,55 +125,83 @@ const AvatarHoverTeaser = ({
           <motion.div
             className="absolute pointer-events-none z-[200]"
             style={{
-              ...tooltipPosition,
-              maxWidth: 260,
-              padding: "12px 18px",
-              borderRadius: 14,
-              background: "hsl(222 47% 8% / 0.78)",
-              backdropFilter: "blur(14px)",
-              WebkitBackdropFilter: "blur(14px)",
-              border: "1px solid hsl(var(--gold) / 0.22)",
+              ...cardPosition,
+              width: CARD_WIDTH,
+              padding: "24px 26px",
+              borderRadius: 20,
+              background:
+                "radial-gradient(120% 100% at 0% 0%, hsl(43 60% 18% / 0.32) 0%, transparent 55%), linear-gradient(155deg, hsl(222 47% 9% / 0.88) 0%, hsl(222 50% 6% / 0.92) 100%)",
+              backdropFilter: "blur(20px) saturate(140%)",
+              WebkitBackdropFilter: "blur(20px) saturate(140%)",
+              border: "1px solid hsl(var(--gold) / 0.28)",
               boxShadow:
-                "0 8px 24px hsl(222 47% 4% / 0.45), 0 0 16px hsl(var(--gold) / 0.06)",
+                "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+              direction: isRTL ? "rtl" : "ltr",
+              textAlign: isRTL ? "right" : "left",
             }}
-            initial={{ opacity: 0, scale: 0.94, x: isLeft ? 4 : -4 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.94, x: isLeft ? 4 : -4 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              boxShadow: [
+                "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 56px hsl(var(--gold) / 0.14), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+                "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.12)",
+              ],
+            }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            transition={{
+              opacity: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+              y: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+              scale: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
+              boxShadow: { duration: 4.2, repeat: Infinity, ease: "easeInOut" },
+            }}
           >
-            <p
-              className="font-body"
-              style={{
-                margin: 0,
-                fontSize: 15,
-                lineHeight: 1.5,
-                color: "hsl(var(--foreground) / 0.85)",
-              }}
-            >
-              {resolvedText}
-            </p>
-            <p
-              className="font-body"
-              style={{
-                margin: "4px 0 0",
-                fontSize: 14,
-                lineHeight: 1.4,
-                color: "hsl(var(--gold))",
-                fontWeight: 500,
-              }}
-            >
-              {resolvedHighlight}
-            </p>
+            {/* Subtle ornamental glow accent */}
             <div
-              className="absolute"
+              aria-hidden
               style={{
-                ...arrowPosition,
-                width: 8,
-                height: 8,
-                background: "hsl(222 47% 8% / 0.78)",
-                border: "1px solid hsl(var(--gold) / 0.22)",
+                position: "absolute",
+                top: -1,
+                left: "10%",
+                right: "10%",
+                height: 1,
+                background:
+                  "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.5), transparent)",
               }}
             />
+
+            <h3
+              className="font-heading"
+              style={{
+                margin: 0,
+                fontSize: 20,
+                lineHeight: 1.3,
+                fontWeight: 600,
+                letterSpacing: "0.01em",
+                background:
+                  "linear-gradient(135deg, hsl(var(--gold-light)) 0%, hsl(var(--gold)) 60%, hsl(var(--gold-dark)) 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
+              {resolvedHeadline}
+            </h3>
+
+            <p
+              className="font-body"
+              style={{
+                margin: "10px 0 0",
+                fontSize: 14,
+                lineHeight: 1.6,
+                color: "hsl(var(--foreground) / 0.72)",
+                fontWeight: 400,
+              }}
+            >
+              {resolvedSupporting}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
