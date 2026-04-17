@@ -502,7 +502,7 @@ const MobileAiInsightOverlay = () => {
                   transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                   aria-hidden
                 >
-                  <ChevronDown size={18} strokeWidth={1.5} />
+                  <ChevronDown size={22} strokeWidth={1.6} />
                 </motion.span>
               </motion.button>
             </div>
