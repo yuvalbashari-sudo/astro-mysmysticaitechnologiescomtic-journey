@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useLanguage, useT } from "@/i18n";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import MobileOptionsSheet from "./MobileOptionsSheet";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 
