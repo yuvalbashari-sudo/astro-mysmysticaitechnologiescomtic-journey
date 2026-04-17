@@ -1,32 +1,47 @@
 
+
 ## Goal
-Replace the central Sparkles orb block at the top of `MobileAiInsightOverlay` with an in-hero top row (logo + utility icons) that occupies the same vertical space, so headline/CTA/composition stay put. Hide global `MysticalTopBar` on mobile to avoid duplication. Keep full 4-language support with RTL/LTR.
+In the **Norielle chat panel** (the floating chat shown in screenshot), remove the yellow star icon from the header, enlarge the Norielle name, and add the existing `A / A+ / A++` text-size control directly below it — mirroring exactly what was already done in `AstrologerIntroModal`.
+
+## Target file
+`src/components/AdvisorChatPanel.tsx` — header block (lines ~390–444)
 
 ## Changes
 
-### 1. `src/components/MysticalTopBar.tsx`
-- Early-return `null` when `isMobile` is true. Desktop untouched.
+**1. Remove star icon**
+Delete the entire `motion.div` (lines 400–416) containing the gold-gradient circle and `<Sparkles>` icon.
 
-### 2. `src/components/MobileAiInsightOverlay.tsx`
-Replace the existing top "AI orb mark + Norielle • AI label" block (the circular Sparkles badge) with a single in-hero row of the **same approximate height** (~64–72px including label area).
+**2. Restructure header to vertical, centered layout**
+Replace the current `flex items-center justify-between` row (with avatar + name on left, X on right) with:
+- A centered vertical stack: enlarged Norielle name on top, `TextSizeControl` directly below
+- The X close button absolutely positioned to the top-end corner so it doesn't disrupt the centered composition
+- Keep the active reading label (e.g. "Tarot reading") as a small subtitle under the name when present
 
-Layout (inside the existing hero container, no extra padding added):
+**3. Enlarge the name**
+Change `text-[17px]` → `text-2xl md:text-3xl` with the same gold gradient styling already in place.
+
+**4. Wire up `TextSizeControl`**
+- Import `TextSizeControl` from `@/components/TextSizeControl`
+- Import `useFontScale` from `@/contexts/FontScaleContext`
+- Read `{ scale, setScale }` and render `<TextSizeControl value={scale} onChange={setScale} />` directly under the name (same pattern as `AstrologerIntroModal.tsx` lines 218–223)
+
+**5. Cleanup**
+Remove the now-unused `Sparkles` import from the lucide-react import line if no other reference uses it (a quick scan of the file is needed — Sparkles may also be used in the empty state, in which case keep the import).
+
+## Preserved (do NOT touch)
+- Panel container, gradients, border, shadow, animation
+- Backdrop, positioning logic (`forceRightAnchor`)
+- Messages area, input field, send button, suggestion chips, limit-reached card
+- Avatar image (`norielleAvatar`) used elsewhere in the panel body
+- All chat / streaming logic
+
+## Result
+The Norielle floating chat header becomes:
 ```
-[ 🌐 lang ] [ ♿ ]      ASTROLOGAI      [ 📖 guide ] [ 💬 wa ]
+              [Norielle – Your Personal Guide]   [X]
+                       A   A+   A++
+              ────────────────────────────────
+                       (chat content)
 ```
+Consistent with the already-redesigned `AstrologerIntroModal` header.
 
-- Container: `flex items-center justify-between gap-2`, height ~56px + ~12px bottom margin → matches the previous orb+label vertical footprint.
-- Center: "ASTROLOGAI" wordmark, gold gradient (reuse styling from `MysticalTopBar`), `fontSize: 22px`, `letter-spacing: 0.18em`, single line.
-- Left cluster: `<MysticalLanguageDropdown />` (already supports HE/EN/AR/RU + RTL/LTR via `LanguageContext`) + accessibility `Link` to `/accessibility` (♿ icon, 36×36 round).
-- Right cluster: Guides icon `BookOpen` → `Link to="/tarot-guides"` (36×36 round) + WhatsApp icon button (36×36 round, green gradient — reuse existing `whatsappBtn` styles).
-- Icon style: 36×36, `hsl(var(--deep-blue-light)/0.5)` bg, `hsl(var(--gold)/0.2)` border, `hsl(var(--gold)/0.7)` icon — lighter than topbar so it reads as overlay, not chrome.
-- `dir` is inherited from `LanguageContext` so the row mirrors automatically in HE/AR vs LTR for EN/RU. `justify-between` keeps logo centered visually in both directions.
-- z-index: `z-10` within hero stack, `pointer-events-auto`.
-
-### 3. Vertical preservation
-Measure replaced block: orb (~56px) + label (~16px) + gap (~8px) ≈ 80px. New row height ~56px + 16px bottom spacing ≈ 72px — within ±10px tolerance, headline/CTA stay in the same position. No changes to `paddingTop`, no changes to anything below the row.
-
-### 4. Out of scope
-- Hero headline, CTA, Norielle bubble, scroll cue — untouched.
-- Desktop `MysticalTopBar`, HeroSection, SeoContentSection, chat panel — untouched.
-- Language logic — already complete in `MysticalLanguageDropdown` + `LanguageContext`; just reused.
