@@ -2,11 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, ArrowLeft, ArrowRight, X } from "lucide-react";
 import StarField from "@/components/StarField";
+import TextSizeControl from "@/components/TextSizeControl";
 import { getTarotGuides, type GuideEntry } from "@/data/guideContent";
 import { useLanguage } from "@/i18n";
+import { useFontScale } from "@/contexts/FontScaleContext";
 
 const TarotGuidesPage = () => {
   const { language, dir, isRTL } = useLanguage();
+  const { scale, setScale } = useFontScale();
   const navigate = useNavigate();
   const guides = getTarotGuides(language);
   const BackArrow = isRTL ? ArrowLeft : ArrowRight;
@@ -43,6 +46,9 @@ const TarotGuidesPage = () => {
           <BookOpen className="w-10 h-10 text-gold mx-auto mb-5" />
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl gold-gradient-text mb-4 tracking-wide">{labels.heading}</h1>
           <p className="text-foreground/55 font-body text-base md:text-lg max-w-lg mx-auto leading-relaxed">{labels.sub}</p>
+          <div className="mt-6 flex justify-center">
+            <TextSizeControl value={scale} onChange={setScale} />
+          </div>
         </motion.div>
       </section>
 

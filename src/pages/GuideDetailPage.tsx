@@ -2,13 +2,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Sparkles, BookOpen, Sun } from "lucide-react";
 import StarField from "@/components/StarField";
+import TextSizeControl from "@/components/TextSizeControl";
 import { getGuideBySlug } from "@/data/guideContent";
 import { useLanguage } from "@/i18n";
+import { useFontScale } from "@/contexts/FontScaleContext";
 
 const GuideDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { language, dir, isRTL } = useLanguage();
+  const { scale, setScale } = useFontScale();
   const guide = getGuideBySlug(slug || "", language);
 
   const notFoundLabel = { he: "המדריך לא נמצא", en: "Guide not found", ru: "Руководство не найдено", ar: "الدليل غير موجود" }[language];
@@ -41,6 +44,9 @@ const GuideDetailPage = () => {
           <span className="text-4xl block mb-4">{guide.heroEmoji}</span>
           <h1 className="font-heading text-4xl md:text-5xl gold-gradient-text mb-4 leading-tight">{guide.title}</h1>
           <p className="text-foreground/70 text-xl md:text-2xl leading-relaxed max-w-lg mx-auto">{guide.subtitle}</p>
+          <div className="mt-6 flex justify-center">
+            <TextSizeControl value={scale} onChange={setScale} />
+          </div>
         </motion.div>
       </section>
 
