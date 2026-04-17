@@ -24,6 +24,7 @@ import GuideDetailPage from "./pages/GuideDetailPage";
 import FloatingOracleButton from "./components/FloatingOracleButton";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 import AdminDebugBadge from "./components/AdminDebugBadge";
+import MobileAccessibilityFab from "./components/MobileAccessibilityFab";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
             </BrowserRouter>
             <FloatingOracleButton />
             <WhatsAppFloatingButton />
+            <MobileAccessibilityFab />
             <AdminDebugBadge />
           </TooltipProvider>
         </FontScaleProvider>
