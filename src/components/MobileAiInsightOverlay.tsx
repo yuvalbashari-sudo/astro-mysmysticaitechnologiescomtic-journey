@@ -47,6 +47,7 @@ const MobileAiInsightOverlay = () => {
 
   const [visible, setVisible] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [variant, setVariant] = useState<Variant>("A");
 
   // Show on first session only; sessionStorage so it returns next visit.
   useEffect(() => {
