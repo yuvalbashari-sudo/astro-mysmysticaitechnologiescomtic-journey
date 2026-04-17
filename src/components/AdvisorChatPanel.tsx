@@ -418,21 +418,64 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               aria-live="polite"
             >
               {messages.length === 0 && (
-                <div className="text-center py-10 space-y-4">
-                  <div
-                    className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
+                <div className="text-center py-8 space-y-5">
+                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                    {/* Outer pulsing aura */}
+                    <motion.div
+                      aria-hidden
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background:
+                          "radial-gradient(circle, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 45%, transparent 75%)",
+                      }}
+                      animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0.95, 0.6] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    {/* Mid ring */}
+                    <motion.div
+                      aria-hidden
+                      className="absolute rounded-full"
+                      style={{
+                        inset: "14%",
+                        border: "1px solid hsl(var(--gold) / 0.22)",
+                      }}
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+                    />
+                    {/* Inner orb */}
+                    <motion.div
+                      className="relative w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{
+                        background:
+                          "radial-gradient(circle at 35% 30%, hsl(43 95% 78%) 0%, hsl(43 85% 55%) 45%, hsl(38 80% 38%) 100%)",
+                        border: "1px solid hsl(var(--gold) / 0.55)",
+                      }}
+                      animate={{
+                        boxShadow: [
+                          "0 0 24px hsl(var(--gold) / 0.35), inset 0 1px 6px hsl(43 100% 90% / 0.5)",
+                          "0 0 38px hsl(var(--gold) / 0.55), inset 0 1px 6px hsl(43 100% 90% / 0.5)",
+                          "0 0 24px hsl(var(--gold) / 0.35), inset 0 1px 6px hsl(43 100% 90% / 0.5)",
+                        ],
+                      }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Sparkles className="w-7 h-7 text-primary-foreground" strokeWidth={1.6} />
+                    </motion.div>
+                  </div>
+                  <p
+                    className="font-body mx-auto whitespace-pre-line"
                     style={{
-                      background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
-                      border: "1px solid hsl(var(--gold) / 0.12)",
+                      color: "hsl(var(--foreground) / 0.78)",
+                      fontSize: "16px",
+                      lineHeight: 1.85,
+                      maxWidth: 520,
+                      letterSpacing: "0.005em",
                     }}
                   >
-                    <Sparkles className="w-9 h-9 text-gold/50" />
-                  </div>
-                  <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[500px] md:max-w-[500px] max-md:max-w-none mx-auto whitespace-pre-line">
                     {welcomeMessage}
                   </p>
                   {activeReading && suggestions.length > 0 && (
-                    <div className="flex flex-wrap gap-2.5 justify-center mt-4">
+                    <div className="flex flex-wrap gap-2.5 justify-center mt-5 px-2">
                       {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
@@ -440,9 +483,9 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                           disabled={isStreaming || isLimitReached}
                           className="text-sm px-4 py-2.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100 text-start leading-snug"
                           style={{
-                            background: "hsl(var(--gold) / 0.06)",
-                            border: "1px solid hsl(var(--gold) / 0.1)",
-                            color: "hsl(var(--gold) / 0.6)",
+                            background: "hsl(var(--gold) / 0.08)",
+                            border: "1px solid hsl(var(--gold) / 0.18)",
+                            color: "hsl(var(--gold) / 0.85)",
                             maxWidth: "100%",
                             wordBreak: "break-word",
                           }}
