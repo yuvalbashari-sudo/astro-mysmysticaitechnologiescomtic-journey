@@ -628,19 +628,19 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               }}
             >
               <motion.div
-                className={`flex items-center gap-2.5 rounded-2xl pl-3 pr-2 py-2 transition-all ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+                className={`flex items-center gap-2 rounded-2xl pl-3 pr-2 py-2 transition-all ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
                 animate={{
                   borderColor: inputFocused
-                    ? "hsl(var(--gold) / 0.6)"
-                    : "hsl(var(--gold) / 0.22)",
+                    ? "hsl(var(--gold) / 0.65)"
+                    : "hsl(var(--gold) / 0.28)",
                   boxShadow: inputFocused
-                    ? "0 0 0 3px hsl(var(--gold) / 0.12), 0 0 30px hsl(var(--gold) / 0.28), 0 4px 18px hsl(0 0% 0% / 0.35), inset 0 1px 0 hsl(var(--gold) / 0.12)"
-                    : "0 4px 18px hsl(0 0% 0% / 0.32), 0 0 14px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                    ? "0 0 0 3px hsl(var(--gold) / 0.14), 0 0 32px hsl(var(--gold) / 0.32), 0 6px 22px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.14)"
+                    : "0 4px 18px hsl(0 0% 0% / 0.35), 0 0 18px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.1)",
                 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 style={{
                   background:
-                    "linear-gradient(180deg, hsl(225 50% 9% / 0.95) 0%, hsl(228 55% 6% / 0.97) 100%)",
+                    "linear-gradient(180deg, hsl(225 50% 10% / 0.96) 0%, hsl(228 55% 6% / 0.98) 100%)",
                   border: "1px solid",
                   minHeight: 60,
                 }}
@@ -654,11 +654,12 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   onBlur={() => setInputFocused(false)}
                   placeholder={placeholderText}
                   disabled={isStreaming || isLimitReached}
-                  className="flex-1 bg-transparent font-body text-foreground outline-none focus:ring-0 px-2"
+                  className="flex-1 bg-transparent font-body outline-none focus:ring-0 px-2 placeholder:text-foreground/40"
                   style={{
                     fontSize: 16,
                     lineHeight: 1.5,
                     letterSpacing: "0.005em",
+                    color: "hsl(var(--foreground) / 0.95)",
                   }}
                   dir={dir}
                   aria-label={placeholderText}
@@ -697,6 +698,27 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   )}
                 </motion.button>
               </motion.div>
+
+              {/* Subtle writing-guidance hint — only on focus when empty */}
+              <AnimatePresence>
+                {inputFocused && !input.trim() && !isLimitReached && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="font-body mt-2.5 px-2 text-center"
+                    style={{
+                      fontSize: 12.5,
+                      color: "hsl(var(--gold) / 0.55)",
+                      letterSpacing: "0.01em",
+                    }}
+                    dir={dir}
+                  >
+                    {writingHint}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         </>
