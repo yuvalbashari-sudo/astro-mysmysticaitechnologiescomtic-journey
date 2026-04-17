@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ChevronDown } from "lucide-react";
-import { useLanguage } from "@/i18n";
+import { ChevronDown, BookOpen, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useLanguage, useT } from "@/i18n";
+import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
