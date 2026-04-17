@@ -295,8 +295,14 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
           </motion.div>
         </motion.div>
       )}
+    </AnimatePresence>
+  );
 
-      {/* Nested option modals */}
+  return (
+    <>
+      {createPortal(sheet, document.body)}
+      {/* Nested option modals — rendered as siblings outside AnimatePresence
+          so they animate independently and aren't covered by the sheet's z-[120]. */}
       <DailyHoroscopeModal
         isOpen={active === "daily_horoscope"}
         onClose={() => setActive(null)}
@@ -319,10 +325,8 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
         isOpen={active === "daily_card"}
         onClose={() => setActive(null)}
       />
-    </AnimatePresence>
+    </>
   );
-
-  return createPortal(sheet, document.body);
 };
 
 export default MobileOptionsSheet;
