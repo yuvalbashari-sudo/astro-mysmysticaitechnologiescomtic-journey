@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Compass, Sparkles, MessageCircle, Heart, Sparkle, Globe2, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/i18n";
 
