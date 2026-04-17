@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map } from "lucide-react";
+import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map, Wand2 } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
 import DailyHoroscopeModal from "./DailyHoroscopeModal";
 import MonthlyForecastModal from "./MonthlyForecastModal";
@@ -9,6 +9,7 @@ import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import RisingSignModal from "./RisingSignModal";
 import BirthChartModal from "./BirthChartModal";
+import DailyCardModal from "./DailyCardModal";
 
 interface Props {
   isOpen: boolean;
