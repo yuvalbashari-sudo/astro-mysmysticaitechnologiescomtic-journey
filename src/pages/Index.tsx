@@ -45,7 +45,6 @@ const Index = () => {
           hasHistory={hasHistory}
         />
         <div className="md:hidden pointer-events-none">
-          <div style={{ height: "100dvh" }} aria-hidden="true" />
           <div className="pointer-events-auto">
             <div className="flex justify-center py-4">
               <TextSizeControl value={scale as any} onChange={(s) => setScale(s as any)} />
