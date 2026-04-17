@@ -70,7 +70,11 @@ const MobileAiInsightOverlay = () => {
 
   const dismiss = () => {
     try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignore */ }
-    setVisible(false);
+    // Scroll past the hero so users discover the rest of the homepage
+    // (feature sections, SEO content, etc.) instead of unmounting it.
+    try {
+      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+    } catch { /* ignore */ }
   };
 
   const copy = useMemo(() => {
