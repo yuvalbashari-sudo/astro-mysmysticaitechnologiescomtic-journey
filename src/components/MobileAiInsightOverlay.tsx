@@ -160,8 +160,8 @@ const MobileAiInsightOverlay = () => {
               background: "hsl(225 50% 3%)",
               paddingTop: "calc(env(safe-area-inset-top, 0px) + 24px)",
               paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 28px)",
-              paddingLeft: 24,
-              paddingRight: 24,
+              paddingLeft: 16,
+              paddingRight: 16,
             }}
           >
             {/* ── Original mystical illustration as background (70% impact) ── */}
