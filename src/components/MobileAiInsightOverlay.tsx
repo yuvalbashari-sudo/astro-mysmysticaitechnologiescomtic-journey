@@ -159,7 +159,7 @@ const MobileAiInsightOverlay = () => {
               minHeight: "100dvh",
               width: "100%",
               background: "hsl(225 50% 3%)",
-              paddingTop: "calc(env(safe-area-inset-top, 0px) + 24px)",
+              paddingTop: "calc(env(safe-area-inset-top, 0px) + 88px)",
               paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 28px)",
               paddingLeft: 24,
               paddingRight: 24,
