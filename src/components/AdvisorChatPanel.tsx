@@ -28,6 +28,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
   const t = useT();
   const { language, dir } = useLanguage();
   const { activeReading } = useReadingContext();
+  const { scale, setScale } = useFontScale();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
