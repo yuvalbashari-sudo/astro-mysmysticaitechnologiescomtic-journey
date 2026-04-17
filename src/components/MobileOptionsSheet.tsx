@@ -233,7 +233,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
               className="flex-1 overflow-y-auto scrollbar-hide"
               style={{ WebkitOverflowScrolling: "touch" }}
             >
-              <div className="grid grid-cols-2 gap-3 pb-4">
+              <div className="grid grid-cols-2 gap-2.5 pb-4">
                 {options.map((opt, idx) => (
                   <motion.button
                     key={opt.key}
@@ -245,25 +245,26 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     whileTap={{ scale: 0.97 }}
                     className="relative flex flex-col items-center justify-center text-center"
                     style={{
-                      minHeight: 130,
-                      padding: "18px 14px",
-                      borderRadius: 18,
+                      minHeight: 158,
+                      padding: "24px 16px",
+                      borderRadius: 20,
                       background:
                         "linear-gradient(160deg, hsl(225 50% 9% / 0.92) 0%, hsl(225 55% 5% / 0.94) 100%)",
-                      border: `1px solid hsl(${opt.accent} / 0.28)`,
-                      boxShadow: `0 6px 22px hsl(${opt.accent} / 0.12), inset 0 1px 0 hsl(var(--gold) / 0.06)`,
+                      border: `1px solid hsl(${opt.accent} / 0.32)`,
+                      boxShadow: `0 8px 26px hsl(${opt.accent} / 0.14), inset 0 1px 0 hsl(var(--gold) / 0.07)`,
                       WebkitTapHighlightColor: "transparent",
                       cursor: "pointer",
                     }}
                   >
                     <span
-                      className="flex items-center justify-center rounded-full mb-3"
+                      className="flex items-center justify-center rounded-full mb-4"
                       style={{
-                        width: 48,
-                        height: 48,
-                        background: `radial-gradient(circle at 30% 30%, hsl(${opt.accent} / 0.35) 0%, hsl(${opt.accent} / 0.08) 70%)`,
-                        border: `1px solid hsl(${opt.accent} / 0.4)`,
+                        width: 56,
+                        height: 56,
+                        background: `radial-gradient(circle at 30% 30%, hsl(${opt.accent} / 0.38) 0%, hsl(${opt.accent} / 0.08) 72%)`,
+                        border: `1px solid hsl(${opt.accent} / 0.45)`,
                         color: `hsl(${opt.accent})`,
+                        boxShadow: `0 0 18px hsl(${opt.accent} / 0.18)`,
                       }}
                     >
                       {opt.icon}
@@ -271,10 +272,10 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     <span
                       className="font-heading"
                       style={{
-                        fontSize: 14,
-                        lineHeight: 1.3,
+                        fontSize: 15,
+                        lineHeight: 1.32,
                         fontWeight: 600,
-                        color: "hsl(var(--foreground) / 0.92)",
+                        color: "hsl(var(--foreground) / 0.94)",
                       }}
                     >
                       {opt.label}
