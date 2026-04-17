@@ -29,7 +29,7 @@ const HowItWorksSection = () => {
         { icon: Sparkle, label: "ממשק פשוט ונעים לשימוש" },
         { icon: Globe2, label: "זמין ב-4 שפות" },
       ],
-      scrollCue: "גלו עוד על החוויה שלנו ✨",
+      scrollCue: "רוצה להבין איך זה עובד? ✨",
     },
     en: {
       eyebrow: "Your experience",
