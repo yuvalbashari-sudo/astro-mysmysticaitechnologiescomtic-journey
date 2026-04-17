@@ -8,6 +8,7 @@ import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
 import MobileAiInsightOverlay from "@/components/MobileAiInsightOverlay";
+import HowItWorksSection from "@/components/HowItWorksSection";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -51,10 +52,10 @@ const Index = () => {
             style={{
               background: "hsl(225 60% 3%)",
               borderTop: "1px solid hsl(var(--gold) / 0.12)",
-              paddingTop: 28,
             }}
           >
-            <div className="flex justify-center px-4 mb-2">
+            <HowItWorksSection />
+            <div className="flex justify-center px-4 mb-2" style={{ paddingTop: 20 }}>
               <TextSizeControl value={scale as any} onChange={(s) => setScale(s as any)} />
             </div>
             <SeoContentSection />
