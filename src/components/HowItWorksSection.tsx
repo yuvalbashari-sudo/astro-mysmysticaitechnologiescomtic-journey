@@ -108,18 +108,22 @@ const HowItWorksSection = () => {
       />
 
       <div className="relative z-10 max-w-[460px] mx-auto">
-        {/* eyebrow */}
+        {/* eyebrow — promoted to a strong section title */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center justify-center gap-2 mb-3"
+          className="flex items-center justify-center gap-2 mb-4"
           style={{ textAlign: "center" }}
         >
           <span
-            className="font-heading uppercase tracking-[0.32em] text-gold/70"
-            style={{ fontSize: 11 }}
+            className="font-heading uppercase tracking-[0.28em] text-gold"
+            style={{
+              fontSize: 20,
+              lineHeight: 1.2,
+              textShadow: "0 2px 14px hsl(var(--gold) / 0.35)",
+            }}
           >
             {copy.eyebrow}
           </span>
