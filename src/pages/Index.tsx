@@ -45,12 +45,20 @@ const Index = () => {
           hasHistory={hasHistory}
         />
         <div className="md:hidden pointer-events-none">
-          <div className="pointer-events-auto">
-            <div className="flex justify-center py-4">
+          <section
+            aria-label="Explore ASTROLOGAI"
+            className="pointer-events-auto relative"
+            style={{
+              background: "hsl(225 60% 3%)",
+              borderTop: "1px solid hsl(var(--gold) / 0.12)",
+              paddingTop: 28,
+            }}
+          >
+            <div className="flex justify-center px-4 mb-2">
               <TextSizeControl value={scale as any} onChange={(s) => setScale(s as any)} />
             </div>
             <SeoContentSection />
-          </div>
+          </section>
         </div>
       </div>
       <MysticalDashboard isOpen={dashboardOpen} onClose={() => setDashboardOpen(false)} />
