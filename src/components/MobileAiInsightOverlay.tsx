@@ -68,16 +68,6 @@ const MobileAiInsightOverlay = () => {
     }
   }, []);
 
-  // Lock body scroll while overlay is up
-  useEffect(() => {
-    if (!visible) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prev;
-    };
-  }, [visible]);
-
   const dismiss = () => {
     try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignore */ }
     setVisible(false);
