@@ -98,6 +98,17 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   const isLimitReached = userMessageCount >= FREE_MESSAGE_LIMIT;
 
+  // Subtle writing-guidance example shown on focus
+  const writingHint = useMemo(() => {
+    const map: Record<string, string> = {
+      he: "למשל: האם אני בדרך הנכונה בזוגיות שלי?",
+      en: "For example: Am I on the right path in my relationship?",
+      ru: "Например: я на правильном пути в моих отношениях?",
+      ar: "مثلاً: هل أنا على الطريق الصحيح في علاقتي؟",
+    };
+    return map[language] || map.en;
+  }, [language]);
+
   const sendMessage = async (prefilledText?: string) => {
     const text = (prefilledText ?? input).trim();
     if (!text || isStreaming || isLimitReached) return;
