@@ -54,10 +54,10 @@ const Index = () => {
               borderTop: "1px solid hsl(var(--gold) / 0.12)",
             }}
           >
-            <HowItWorksSection />
-            <div className="flex justify-center px-4 mb-2" style={{ paddingTop: 20 }}>
+            <div className="flex justify-center px-4" style={{ paddingTop: 20, paddingBottom: 8 }}>
               <TextSizeControl value={scale as any} onChange={(s) => setScale(s as any)} />
             </div>
+            <HowItWorksSection />
             <SeoContentSection />
           </section>
         </div>
