@@ -39,6 +39,13 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
     }
   }, [isOpen]);
 
+  const handleSelect = (key: OptionKey) => {
+    // Close the sheet first so its z-[120] overlay doesn't sit on top of
+    // the nested modal (which uses CinematicModalShell at z-[100]).
+    setActive(key);
+    onClose();
+  };
+
   const options: {
     key: OptionKey;
     label: string;
@@ -238,11 +245,12 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                   <motion.button
                     key={opt.key}
                     type="button"
-                    onClick={() => setActive(opt.key)}
+                    onClick={() => handleSelect(opt.key)}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25 + idx * 0.05, duration: 0.45 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileTap={{ scale: 0.96, boxShadow: `0 0 24px hsl(${opt.accent} / 0.45)` }}
+                    whileHover={{ scale: 1.02 }}
                     className="relative flex flex-col items-center justify-center text-center"
                     style={{
                       minHeight: 158,
@@ -287,8 +295,14 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
           </motion.div>
         </motion.div>
       )}
+    </AnimatePresence>
+  );
 
-      {/* Nested option modals */}
+  return (
+    <>
+      {createPortal(sheet, document.body)}
+      {/* Nested option modals — rendered as siblings outside AnimatePresence
+          so they animate independently and aren't covered by the sheet's z-[120]. */}
       <DailyHoroscopeModal
         isOpen={active === "daily_horoscope"}
         onClose={() => setActive(null)}
@@ -311,10 +325,8 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
         isOpen={active === "daily_card"}
         onClose={() => setActive(null)}
       />
-    </AnimatePresence>
+    </>
   );
-
-  return createPortal(sheet, document.body);
 };
 
 export default MobileOptionsSheet;
