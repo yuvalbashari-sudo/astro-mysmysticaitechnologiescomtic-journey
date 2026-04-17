@@ -134,10 +134,7 @@ const MobileAiInsightOverlay = () => {
 
   const goToOptions = () => {
     trackEvent("ai_insight_hero_cta_click", variant);
-    try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignore */ }
-    try {
-      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
-    } catch { /* ignore */ }
+    setOptionsOpen(true);
   };
 
   return (
