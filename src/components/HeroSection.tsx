@@ -3624,7 +3624,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
 
 
     {/* ── Fortune CTA — fixed at bottom center, above all hero layers ── */}
-    {entranceComplete && !isUniverseMessageOpen && !guideOpen && (
+    {entranceComplete && !isUniverseMessageOpen && !guideOpen && !isMobile && (
       <motion.button
         type="button"
         aria-label={language === "he" ? "חשפו את המסר שלכם" : language === "ar" ? "اكشف رسالتك" : language === "ru" ? "Откройте своё послание" : "Reveal your message"}
