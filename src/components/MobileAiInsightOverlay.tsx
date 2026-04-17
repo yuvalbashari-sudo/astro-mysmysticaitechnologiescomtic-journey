@@ -51,11 +51,15 @@ const MobileAiInsightOverlay = () => {
 
   // Show on first session only; sessionStorage so it returns next visit.
   useEffect(() => {
+    const v = getOrAssignVariant();
+    setVariant(v);
     try {
       const dismissed = sessionStorage.getItem(STORAGE_KEY) === "1";
       if (!dismissed) {
-        // Tiny delay so initial paint feels deliberate, not instant.
-        const t = window.setTimeout(() => setVisible(true), 150);
+        const t = window.setTimeout(() => {
+          setVisible(true);
+          trackEvent("ai_insight_hero_view", v);
+        }, 150);
         return () => window.clearTimeout(t);
       }
     } catch {
