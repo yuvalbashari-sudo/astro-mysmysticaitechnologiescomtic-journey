@@ -353,7 +353,7 @@ const MobileAiInsightOverlay = () => {
               {/* ── Glowing CTA ── */}
               <motion.button
                 type="button"
-                onClick={() => openChat("cta")}
+                onClick={goToOptions}
                 initial={{ opacity: 0, y: 16, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 0.85, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
