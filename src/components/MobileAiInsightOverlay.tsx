@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useLanguage, useT } from "@/i18n";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
+import MobileOptionsSheet from "./MobileOptionsSheet";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 
@@ -51,6 +52,7 @@ const MobileAiInsightOverlay = () => {
 
   const [visible, setVisible] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
   const [variant, setVariant] = useState<Variant>("A");
 
   // Show on first session only; sessionStorage so it returns next visit.
@@ -132,15 +134,13 @@ const MobileAiInsightOverlay = () => {
 
   const goToOptions = () => {
     trackEvent("ai_insight_hero_cta_click", variant);
-    try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignore */ }
-    try {
-      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
-    } catch { /* ignore */ }
+    setOptionsOpen(true);
   };
 
   return (
     <>
       <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+      <MobileOptionsSheet isOpen={optionsOpen} onClose={() => setOptionsOpen(false)} />
 
       <AnimatePresence>
         {visible && (
