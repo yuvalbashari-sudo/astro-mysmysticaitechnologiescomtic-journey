@@ -263,49 +263,87 @@ const MobileAiInsightOverlay = () => {
               })}
             </div>
 
-            {/* ── Top: glowing AI orb mark ── */}
+            {/* ── Top in-hero row: utility icons + ASTROLOGAI wordmark ── */}
             <motion.div
-              className="relative z-10 flex flex-col items-center"
+              className="relative z-10 w-full flex items-center justify-between gap-2"
+              style={{ minHeight: 56, marginBottom: 12 }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              <motion.div
-                className="relative flex items-center justify-center rounded-full"
+              {/* Left cluster: language + accessibility */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <MysticalLanguageDropdown />
+                <Link
+                  to="/accessibility"
+                  aria-label={t.a11y_link_label}
+                  title={t.a11y_link_label}
+                  className="flex items-center justify-center rounded-full transition-all text-sm"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    background: "hsl(var(--deep-blue-light) / 0.5)",
+                    border: "1px solid hsl(var(--gold) / 0.2)",
+                    color: "hsl(var(--gold) / 0.7)",
+                  }}
+                >
+                  ♿
+                </Link>
+              </div>
+
+              {/* Center: ASTROLOGAI wordmark */}
+              <motion.h1
+                className="font-heading uppercase pointer-events-none select-none whitespace-nowrap"
                 style={{
-                  width: 92,
-                  height: 92,
+                  fontSize: 22,
+                  fontWeight: 700,
+                  letterSpacing: "0.18em",
+                  lineHeight: 1,
                   background:
-                    "radial-gradient(circle at 50% 40%, hsl(43 80% 60% / 0.25) 0%, hsl(215 70% 35% / 0.15) 55%, transparent 75%)",
-                  border: "1px solid hsl(var(--gold) / 0.35)",
+                    "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
+                  backgroundSize: "200% 200%",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
                 }}
-                animate={{
-                  boxShadow: [
-                    "0 0 30px hsl(var(--gold) / 0.18), inset 0 0 20px hsl(215 70% 50% / 0.15)",
-                    "0 0 50px hsl(var(--gold) / 0.32), inset 0 0 28px hsl(215 70% 50% / 0.22)",
-                    "0 0 30px hsl(var(--gold) / 0.18), inset 0 0 20px hsl(215 70% 50% / 0.15)",
-                  ],
-                }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Sparkles
-                  size={32}
-                  strokeWidth={1.5}
-                  style={{ color: "hsl(var(--gold))" }}
-                />
-              </motion.div>
-              <p
-                className="font-body mt-3"
-                style={{
-                  fontSize: 12,
-                  letterSpacing: "0.28em",
-                  textTransform: "uppercase",
-                  color: "hsl(var(--gold) / 0.7)",
-                  fontWeight: 500,
-                }}
-              >
-                Norielle • AI
-              </p>
+                ASTROLOGAI
+              </motion.h1>
+
+              {/* Right cluster: guides + WhatsApp */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Link
+                  to="/tarot-guides"
+                  aria-label={t.topbar_guide_label}
+                  title={t.topbar_guide_label}
+                  className="flex items-center justify-center rounded-full transition-all"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    background: "hsl(var(--deep-blue-light) / 0.5)",
+                    border: "1px solid hsl(var(--gold) / 0.2)",
+                    color: "hsl(var(--gold) / 0.7)",
+                  }}
+                >
+                  <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => window.open("https://wa.me/972500000000", "_blank", "noopener,noreferrer")}
+                  aria-label={t.a11y_whatsapp_contact}
+                  className="flex items-center justify-center rounded-full transition-all"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
+                    boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
+                  }}
+                >
+                  <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
+                </button>
+              </div>
             </motion.div>
 
             {/* ── Center: headline + supporting + CTA ── */}
