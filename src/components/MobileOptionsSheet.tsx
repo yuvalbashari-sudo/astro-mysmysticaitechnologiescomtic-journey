@@ -245,11 +245,12 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                   <motion.button
                     key={opt.key}
                     type="button"
-                    onClick={() => setActive(opt.key)}
+                    onClick={() => handleSelect(opt.key)}
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25 + idx * 0.05, duration: 0.45 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileTap={{ scale: 0.96, boxShadow: `0 0 24px hsl(${opt.accent} / 0.45)` }}
+                    whileHover={{ scale: 1.02 }}
                     className="relative flex flex-col items-center justify-center text-center"
                     style={{
                       minHeight: 158,
