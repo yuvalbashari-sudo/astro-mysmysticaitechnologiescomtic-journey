@@ -160,8 +160,8 @@ const MobileAiInsightOverlay = () => {
               background: "hsl(225 50% 3%)",
               paddingTop: "calc(env(safe-area-inset-top, 0px) + 24px)",
               paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 28px)",
-              paddingLeft: 24,
-              paddingRight: 24,
+              paddingLeft: 16,
+              paddingRight: 16,
             }}
           >
             {/* ── Original mystical illustration as background (70% impact) ── */}
@@ -272,7 +272,7 @@ const MobileAiInsightOverlay = () => {
               transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Left cluster: language + accessibility */}
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <MysticalLanguageDropdown />
                 <Link
                   to="/accessibility"
@@ -280,8 +280,8 @@ const MobileAiInsightOverlay = () => {
                   title={t.a11y_link_label}
                   className="flex items-center justify-center rounded-full transition-all text-sm"
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     background: "hsl(var(--deep-blue-light) / 0.5)",
                     border: "1px solid hsl(var(--gold) / 0.2)",
                     color: "hsl(var(--gold) / 0.7)",
@@ -313,21 +313,21 @@ const MobileAiInsightOverlay = () => {
               </motion.h1>
 
               {/* Right cluster: guides + WhatsApp */}
-              <div className="flex items-center gap-1.5 shrink-0">
+              <div className="flex items-center gap-1 shrink-0">
                 <Link
                   to="/tarot-guides"
                   aria-label={t.topbar_guide_label}
                   title={t.topbar_guide_label}
                   className="flex items-center justify-center rounded-full transition-all"
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     background: "hsl(var(--deep-blue-light) / 0.5)",
                     border: "1px solid hsl(var(--gold) / 0.2)",
                     color: "hsl(var(--gold) / 0.7)",
                   }}
                 >
-                  <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
+                  <BookOpen className="w-4 h-4" aria-hidden="true" />
                 </Link>
                 <button
                   type="button"
@@ -335,13 +335,13 @@ const MobileAiInsightOverlay = () => {
                   aria-label={t.a11y_whatsapp_contact}
                   className="flex items-center justify-center rounded-full transition-all"
                   style={{
-                    width: 36,
-                    height: 36,
+                    width: 32,
+                    height: 32,
                     background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
                     boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
                   }}
                 >
-                  <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
+                  <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
                 </button>
               </div>
             </motion.div>
