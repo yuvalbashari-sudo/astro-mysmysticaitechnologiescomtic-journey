@@ -140,6 +140,7 @@ const MobileAiInsightOverlay = () => {
   return (
     <>
       <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
+      <MobileOptionsSheet isOpen={optionsOpen} onClose={() => setOptionsOpen(false)} />
 
       <AnimatePresence>
         {visible && (
