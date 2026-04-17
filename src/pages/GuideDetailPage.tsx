@@ -2,13 +2,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Sparkles, BookOpen, Sun } from "lucide-react";
 import StarField from "@/components/StarField";
+import TextSizeControl from "@/components/TextSizeControl";
 import { getGuideBySlug } from "@/data/guideContent";
 import { useLanguage } from "@/i18n";
+import { useFontScale } from "@/contexts/FontScaleContext";
 
 const GuideDetailPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { language, dir, isRTL } = useLanguage();
+  const { scale, setScale } = useFontScale();
   const guide = getGuideBySlug(slug || "", language);
 
   const notFoundLabel = { he: "המדריך לא נמצא", en: "Guide not found", ru: "Руководство не найдено", ar: "الدليل غير موجود" }[language];
