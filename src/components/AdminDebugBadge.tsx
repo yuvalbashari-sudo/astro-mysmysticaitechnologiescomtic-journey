@@ -16,6 +16,10 @@ const IS_PREVIEW =
  * Toggling forces a page reload so ALL components pick up the new state.
  */
 const AdminDebugBadge = () => {
+  // Visually hidden — debug overlay disabled to keep hero clean.
+  // Code preserved for future opt-in via ?admin_debug=1 if needed.
+  return null;
+  // eslint-disable-next-line no-unreachable
   const [isAdmin, setIsAdmin] = useState(subscriptionManager.isAdmin());
   const [isOverride, setIsOverride] = useState(subscriptionManager.isAdminOverride());
 
