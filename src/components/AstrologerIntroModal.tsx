@@ -7,6 +7,8 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import TextSizeControl from "@/components/TextSizeControl";
+import { useFontScale } from "@/contexts/FontScaleContext";
 
 interface Props {
   isOpen: boolean;
