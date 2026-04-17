@@ -7,6 +7,7 @@ import MysticalTopBar from "@/components/MysticalTopBar";
 import ReadingsHistoryModal from "@/components/ReadingsHistoryModal";
 import SeoStructuredData from "@/components/SeoStructuredData";
 import SeoContentSection from "@/components/SeoContentSection";
+import MobileAiInsightOverlay from "@/components/MobileAiInsightOverlay";
 
 import { useLanguage, useT } from "@/i18n";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -28,6 +29,7 @@ const Index = () => {
     <>
       <SeoStructuredData />
       <HeroSection cosmicGuideOpen={cosmicGuideOpen} onCosmicGuideChange={setCosmicGuideOpen} />
+      <MobileAiInsightOverlay />
 
       <div className="relative z-10 md:h-screen md:overflow-hidden pointer-events-none" dir={dir} style={{ background: "transparent" }}>
         <a
