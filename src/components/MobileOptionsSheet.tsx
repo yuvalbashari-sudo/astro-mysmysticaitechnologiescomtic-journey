@@ -307,6 +307,10 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
         isOpen={active === "birthchart"}
         onClose={() => setActive(null)}
       />
+      <DailyCardModal
+        isOpen={active === "daily_card"}
+        onClose={() => setActive(null)}
+      />
     </AnimatePresence>
   );
 
