@@ -624,6 +624,12 @@ export type TranslationKeys = {
   advisor_suggestion_1: string;
   advisor_suggestion_2: string;
   advisor_suggestion_3: string;
+  // Guide mode (no active reading) — Norielle as recommender
+  advisor_welcome_guide: string;
+  advisor_guide_chip_astrology: string;
+  advisor_guide_chip_tarot: string;
+  advisor_guide_placeholder: string;
+  advisor_guide_hint: string;
   // Tarot suggestions
   advisor_tarot_s1: string;
   advisor_tarot_s2: string;
