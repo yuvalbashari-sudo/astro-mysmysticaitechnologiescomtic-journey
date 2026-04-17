@@ -174,68 +174,86 @@ const HowItWorksSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.55, delay: 0.05 + idx * 0.08 }}
-                className="relative flex items-start gap-3"
-                style={{
-                  background:
-                    "linear-gradient(180deg, hsl(225 50% 8% / 0.85), hsl(225 50% 5% / 0.85))",
-                  border: "1px solid hsl(var(--gold) / 0.22)",
-                  borderRadius: 18,
-                  padding: "16px 16px",
-                  boxShadow:
-                    "0 8px 24px hsl(225 60% 2% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-                  flexDirection: isRTL ? "row-reverse" : "row",
-                  textAlign: isRTL ? "right" : "left",
-                }}
+                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.015 }}
               >
-                {/* icon circle */}
-                <div
-                  className="shrink-0 flex items-center justify-center relative"
+                <Link
+                  to={step.href}
+                  aria-label={step.title}
+                  className="relative flex items-start gap-3 group focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2 rounded-[18px] transition-shadow duration-300"
                   style={{
-                    width: 46,
-                    height: 46,
-                    borderRadius: "50%",
                     background:
-                      "radial-gradient(circle at 30% 30%, hsl(var(--gold) / 0.28), hsl(var(--gold) / 0.06) 70%)",
-                    border: "1px solid hsl(var(--gold) / 0.4)",
+                      "linear-gradient(180deg, hsl(225 50% 8% / 0.85), hsl(225 50% 5% / 0.85))",
+                    border: "1px solid hsl(var(--gold) / 0.22)",
+                    borderRadius: 18,
+                    padding: "16px 16px",
                     boxShadow:
-                      "0 0 18px hsl(var(--gold) / 0.18), inset 0 0 8px hsl(var(--gold) / 0.12)",
+                      "0 8px 24px hsl(225 60% 2% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                    flexDirection: isRTL ? "row-reverse" : "row",
+                    textAlign: isRTL ? "right" : "left",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.boxShadow =
+                      "0 12px 32px hsl(225 60% 2% / 0.6), 0 0 22px hsl(var(--gold) / 0.22), inset 0 1px 0 hsl(var(--gold) / 0.14)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--gold) / 0.45)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.boxShadow =
+                      "0 8px 24px hsl(225 60% 2% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--gold) / 0.22)";
                   }}
                 >
-                  <Icon className="w-5 h-5 text-gold" strokeWidth={1.6} />
-                  {/* step number */}
-                  <span
-                    className="absolute font-heading text-gold/90"
+                  {/* icon circle */}
+                  <div
+                    className="shrink-0 flex items-center justify-center relative"
                     style={{
-                      top: -6,
-                      [isRTL ? "left" : "right"]: -6,
-                      width: 18,
-                      height: 18,
+                      width: 46,
+                      height: 46,
                       borderRadius: "50%",
-                      background: "hsl(225 60% 4%)",
-                      border: "1px solid hsl(var(--gold) / 0.5)",
-                      fontSize: 10,
-                      lineHeight: "16px",
-                      textAlign: "center",
+                      background:
+                        "radial-gradient(circle at 30% 30%, hsl(var(--gold) / 0.28), hsl(var(--gold) / 0.06) 70%)",
+                      border: "1px solid hsl(var(--gold) / 0.4)",
+                      boxShadow:
+                        "0 0 18px hsl(var(--gold) / 0.18), inset 0 0 8px hsl(var(--gold) / 0.12)",
                     }}
                   >
-                    {idx + 1}
-                  </span>
-                </div>
+                    <Icon className="w-5 h-5 text-gold" strokeWidth={1.6} />
+                    {/* step number */}
+                    <span
+                      className="absolute font-heading text-gold/90"
+                      style={{
+                        top: -6,
+                        [isRTL ? "left" : "right"]: -6,
+                        width: 18,
+                        height: 18,
+                        borderRadius: "50%",
+                        background: "hsl(225 60% 4%)",
+                        border: "1px solid hsl(var(--gold) / 0.5)",
+                        fontSize: 10,
+                        lineHeight: "16px",
+                        textAlign: "center",
+                      }}
+                    >
+                      {idx + 1}
+                    </span>
+                  </div>
 
-                <div className="flex-1 min-w-0">
-                  <h3
-                    className="font-heading text-foreground"
-                    style={{ fontSize: 17, lineHeight: 1.3, marginBottom: 4 }}
-                  >
-                    {step.title}
-                  </h3>
-                  <p
-                    className="font-body text-foreground/65"
-                    style={{ fontSize: 14, lineHeight: 1.6 }}
-                  >
-                    {step.desc}
-                  </p>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <h3
+                      className="font-heading text-foreground"
+                      style={{ fontSize: 17, lineHeight: 1.3, marginBottom: 4 }}
+                    >
+                      {step.title}
+                    </h3>
+                    <p
+                      className="font-body text-foreground/65"
+                      style={{ fontSize: 14, lineHeight: 1.6 }}
+                    >
+                      {step.desc}
+                    </p>
+                  </div>
+                </Link>
               </motion.li>
             );
           })}
