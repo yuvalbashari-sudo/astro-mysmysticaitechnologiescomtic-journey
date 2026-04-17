@@ -351,7 +351,7 @@ const MobileAiInsightOverlay = () => {
                 {/* Avatar */}
                 <button
                   type="button"
-                  onClick={() => setChatOpen(true)}
+                  onClick={() => openChat("avatar")}
                   aria-label="Norielle"
                   className="relative rounded-full overflow-hidden"
                   style={{
