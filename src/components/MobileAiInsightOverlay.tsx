@@ -6,6 +6,33 @@ import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 
 const STORAGE_KEY = "astrologai_ai_insight_dismissed_v1";
+const VARIANT_KEY = "astrologai_ai_insight_variant_v1";
+
+type Variant = "A" | "B";
+
+const getOrAssignVariant = (): Variant => {
+  try {
+    const existing = sessionStorage.getItem(VARIANT_KEY) as Variant | null;
+    if (existing === "A" || existing === "B") return existing;
+    const next: Variant = Math.random() < 0.5 ? "A" : "B";
+    sessionStorage.setItem(VARIANT_KEY, next);
+    return next;
+  } catch {
+    return Math.random() < 0.5 ? "A" : "B";
+  }
+};
+
+const trackEvent = (name: string, variant: Variant) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any;
+    if (typeof w.gtag === "function") {
+      w.gtag("event", name, { variant, surface: "mobile_ai_insight_hero" });
+    }
+    // Always log for debugging / manual analytics scraping
+    console.info("[ai-insight-hero]", name, { variant });
+  } catch { /* ignore */ }
+};
 
 /**
  * Mobile-only "AI insight" intro screen layered on top of the existing hero.
