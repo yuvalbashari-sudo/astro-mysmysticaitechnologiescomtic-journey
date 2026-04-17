@@ -1,0 +1,311 @@
+import { motion } from "framer-motion";
+import { Compass, Sparkles, MessageCircle, Heart, Sparkle, Globe2, ChevronDown } from "lucide-react";
+import { useLanguage } from "@/i18n";
+
+/**
+ * Mobile-first "How it works" trust section.
+ * Sits directly below the mobile hero. Does NOT duplicate the CTA popup cards —
+ * this is an explanation + trust block to encourage continued scrolling.
+ */
+const HowItWorksSection = () => {
+  const { language, dir } = useLanguage();
+  const isRTL = dir === "rtl";
+
+  const l = <T,>(map: Record<string, T>): T => (map as any)[language] ?? (map as any).en;
+
+  const copy = l({
+    he: {
+      eyebrow: "החוויה שלכם",
+      title: "איך זה עובד?",
+      intro: "קבלו הכוונה אישית דרך אסטרולוגיה, טארוט ותובנות רוחניות — בדרך חכמה, מדויקת ונגישה.",
+      steps: [
+        { icon: Compass, title: "בוחרים את סוג ההכוונה", desc: "הורוסקופ יומי, תחזית חודשית, טארוט, התאמה זוגית ועוד." },
+        { icon: Sparkles, title: "מקבלים תובנה אישית", desc: "המערכת מתאימה עבורכם מסר מדויק, ברור ומעורר מחשבה." },
+        { icon: MessageCircle, title: "מעמיקים עם נוריאל", desc: "אם תרצו, נוריאל תעזור לכם לבחור את הדרך שהכי מתאימה לכם." },
+      ],
+      trust: [
+        { icon: Heart, label: "חוויה אישית ומותאמת" },
+        { icon: Sparkle, label: "ממשק פשוט ונעים לשימוש" },
+        { icon: Globe2, label: "זמין ב-4 שפות" },
+      ],
+      scrollCue: "גלו עוד על החוויה שלנו ✨",
+    },
+    en: {
+      eyebrow: "Your experience",
+      title: "How does it work?",
+      intro: "Receive personal guidance through astrology, tarot, and spiritual insights — in a smart, accurate, and accessible way.",
+      steps: [
+        { icon: Compass, title: "Choose your guidance", desc: "Daily horoscope, monthly forecast, tarot, compatibility and more." },
+        { icon: Sparkles, title: "Receive a personal insight", desc: "The system crafts a precise, clear, and thought-provoking message just for you." },
+        { icon: MessageCircle, title: "Go deeper with Norielle", desc: "If you'd like, Norielle will help you choose the path that suits you most." },
+      ],
+      trust: [
+        { icon: Heart, label: "Personal & tailored" },
+        { icon: Sparkle, label: "Simple, elegant interface" },
+        { icon: Globe2, label: "Available in 4 languages" },
+      ],
+      scrollCue: "Discover more about the experience ✨",
+    },
+    ru: {
+      eyebrow: "Ваш опыт",
+      title: "Как это работает?",
+      intro: "Получите персональное руководство через астрологию, таро и духовные откровения — умно, точно и доступно.",
+      steps: [
+        { icon: Compass, title: "Выберите тип руководства", desc: "Ежедневный гороскоп, месячный прогноз, таро, совместимость и больше." },
+        { icon: Sparkles, title: "Получите личное послание", desc: "Система подбирает для вас точное, ясное и вдохновляющее сообщение." },
+        { icon: MessageCircle, title: "Углубитесь с Нориэль", desc: "Если хотите, Нориэль поможет выбрать путь, который подходит именно вам." },
+      ],
+      trust: [
+        { icon: Heart, label: "Лично и индивидуально" },
+        { icon: Sparkle, label: "Простой и приятный интерфейс" },
+        { icon: Globe2, label: "Доступно на 4 языках" },
+      ],
+      scrollCue: "Узнайте больше о нашем опыте ✨",
+    },
+    ar: {
+      eyebrow: "تجربتك",
+      title: "كيف يعمل هذا؟",
+      intro: "احصل على إرشاد شخصي من خلال علم التنجيم والتاروت والرؤى الروحية — بطريقة ذكية ودقيقة وسهلة الوصول.",
+      steps: [
+        { icon: Compass, title: "اختر نوع الإرشاد", desc: "الأبراج اليومية، التوقعات الشهرية، التاروت، التوافق والمزيد." },
+        { icon: Sparkles, title: "احصل على رؤية شخصية", desc: "يصمم النظام لك رسالة دقيقة وواضحة ومُلهمة." },
+        { icon: MessageCircle, title: "تعمّق مع نورييل", desc: "إذا أردت، ستساعدك نورييل في اختيار المسار الأنسب لك." },
+      ],
+      trust: [
+        { icon: Heart, label: "تجربة شخصية ومخصصة" },
+        { icon: Sparkle, label: "واجهة بسيطة وأنيقة" },
+        { icon: Globe2, label: "متاح بـ 4 لغات" },
+      ],
+      scrollCue: "اكتشف المزيد عن تجربتنا ✨",
+    },
+  });
+
+  return (
+    <section
+      dir={dir}
+      aria-label={copy.title}
+      className="md:hidden relative pointer-events-auto"
+      style={{
+        background: "radial-gradient(120% 80% at 50% 0%, hsl(225 60% 7%) 0%, hsl(225 60% 3%) 70%)",
+        borderTop: "1px solid hsl(var(--gold) / 0.18)",
+        paddingTop: 36,
+        paddingBottom: 28,
+        paddingLeft: 18,
+        paddingRight: 18,
+      }}
+    >
+      {/* subtle starlight backdrop */}
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 20% 10%, hsl(var(--gold) / 0.08), transparent 40%)," +
+            "radial-gradient(circle at 80% 60%, hsl(280 60% 50% / 0.08), transparent 45%)",
+          opacity: 0.9,
+        }}
+      />
+
+      <div className="relative z-10 max-w-[460px] mx-auto">
+        {/* eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-center gap-2 mb-3"
+          style={{ textAlign: "center" }}
+        >
+          <span
+            className="font-heading uppercase tracking-[0.32em] text-gold/70"
+            style={{ fontSize: 11 }}
+          >
+            {copy.eyebrow}
+          </span>
+        </motion.div>
+
+        {/* headline */}
+        <motion.h2
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6 }}
+          className="font-heading text-foreground text-center"
+          style={{
+            fontSize: 30,
+            lineHeight: 1.2,
+            letterSpacing: "-0.01em",
+            marginBottom: 12,
+            textShadow: "0 2px 18px hsl(var(--gold) / 0.15)",
+          }}
+        >
+          {copy.title}
+        </motion.h2>
+
+        {/* intro */}
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.05 }}
+          className="font-body text-foreground/75 text-center"
+          style={{
+            fontSize: 16,
+            lineHeight: 1.7,
+            marginBottom: 28,
+          }}
+        >
+          {copy.intro}
+        </motion.p>
+
+        {/* steps */}
+        <ol className="flex flex-col gap-3" style={{ marginBottom: 28 }}>
+          {copy.steps.map((step, idx) => {
+            const Icon = step.icon;
+            return (
+              <motion.li
+                key={idx}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.55, delay: 0.05 + idx * 0.08 }}
+                className="relative flex items-start gap-3"
+                style={{
+                  background:
+                    "linear-gradient(180deg, hsl(225 50% 8% / 0.85), hsl(225 50% 5% / 0.85))",
+                  border: "1px solid hsl(var(--gold) / 0.22)",
+                  borderRadius: 18,
+                  padding: "16px 16px",
+                  boxShadow:
+                    "0 8px 24px hsl(225 60% 2% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                  flexDirection: isRTL ? "row-reverse" : "row",
+                  textAlign: isRTL ? "right" : "left",
+                }}
+              >
+                {/* icon circle */}
+                <div
+                  className="shrink-0 flex items-center justify-center relative"
+                  style={{
+                    width: 46,
+                    height: 46,
+                    borderRadius: "50%",
+                    background:
+                      "radial-gradient(circle at 30% 30%, hsl(var(--gold) / 0.28), hsl(var(--gold) / 0.06) 70%)",
+                    border: "1px solid hsl(var(--gold) / 0.4)",
+                    boxShadow:
+                      "0 0 18px hsl(var(--gold) / 0.18), inset 0 0 8px hsl(var(--gold) / 0.12)",
+                  }}
+                >
+                  <Icon className="w-5 h-5 text-gold" strokeWidth={1.6} />
+                  {/* step number */}
+                  <span
+                    className="absolute font-heading text-gold/90"
+                    style={{
+                      top: -6,
+                      [isRTL ? "left" : "right"]: -6,
+                      width: 18,
+                      height: 18,
+                      borderRadius: "50%",
+                      background: "hsl(225 60% 4%)",
+                      border: "1px solid hsl(var(--gold) / 0.5)",
+                      fontSize: 10,
+                      lineHeight: "16px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {idx + 1}
+                  </span>
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <h3
+                    className="font-heading text-foreground"
+                    style={{ fontSize: 17, lineHeight: 1.3, marginBottom: 4 }}
+                  >
+                    {step.title}
+                  </h3>
+                  <p
+                    className="font-body text-foreground/65"
+                    style={{ fontSize: 14, lineHeight: 1.6 }}
+                  >
+                    {step.desc}
+                  </p>
+                </div>
+              </motion.li>
+            );
+          })}
+        </ol>
+
+        {/* gold divider */}
+        <div
+          aria-hidden
+          style={{
+            height: 1,
+            background:
+              "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent)",
+            marginBottom: 20,
+          }}
+        />
+
+        {/* trust mini-row */}
+        <motion.ul
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="grid grid-cols-3 gap-2"
+          style={{ marginBottom: 24 }}
+        >
+          {copy.trust.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <li
+                key={idx}
+                className="flex flex-col items-center justify-start text-center gap-2"
+                style={{
+                  background: "hsl(225 50% 6% / 0.7)",
+                  border: "1px solid hsl(var(--gold) / 0.16)",
+                  borderRadius: 14,
+                  padding: "12px 6px",
+                }}
+              >
+                <Icon className="w-4 h-4 text-gold" strokeWidth={1.6} />
+                <span
+                  className="font-body text-foreground/75"
+                  style={{ fontSize: 11.5, lineHeight: 1.35 }}
+                >
+                  {item.label}
+                </span>
+              </li>
+            );
+          })}
+        </motion.ul>
+
+        {/* scroll cue */}
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="flex flex-col items-center justify-center gap-1.5"
+          style={{ paddingTop: 4 }}
+        >
+          <span
+            className="font-body text-gold/80"
+            style={{ fontSize: 13, letterSpacing: "0.02em" }}
+          >
+            {copy.scrollCue}
+          </span>
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-4 h-4 text-gold/60" strokeWidth={1.6} />
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default HowItWorksSection;
