@@ -52,6 +52,10 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     return () => document.removeEventListener("pointerdown", handler);
   }, [guideOpen]);
 
+  // Mobile: identity + utility icons are integrated into MobileAiInsightOverlay
+  // hero itself, so the global top bar must not render on mobile.
+  if (isMobile) return null;
+
   /* ── Shared icon elements ── */
   const dashboardBtn = (
     <motion.button
