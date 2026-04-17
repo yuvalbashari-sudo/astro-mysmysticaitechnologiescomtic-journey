@@ -86,7 +86,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   // Dynamic welcome message based on reading type
   const welcomeMessage = useMemo(() => {
-    if (!activeReading) return t.advisor_welcome_general;
+    if (!activeReading) return t.advisor_welcome_guide || t.advisor_welcome_general;
     switch (readingCategory) {
       case "tarot": return t.advisor_welcome_tarot;
       case "astrology": return t.advisor_welcome_astrology;
@@ -100,6 +100,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   // Subtle writing-guidance example shown on focus
   const writingHint = useMemo(() => {
+    // In guide mode, use the recommendation-oriented hint
+    if (!activeReading && t.advisor_guide_hint) return t.advisor_guide_hint;
     const map: Record<string, string> = {
       he: "למשל: האם אני בדרך הנכונה בזוגיות שלי?",
       en: "For example: Am I on the right path in my relationship?",
@@ -107,7 +109,25 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
       ar: "مثلاً: هل أنا على الطريق الصحيح في علاقتي؟",
     };
     return map[language] || map.en;
-  }, [language]);
+  }, [language, activeReading, t]);
+
+  // Guide-mode chip handler: dispatches a global event so the homepage hero
+  // can react (deep-link to the right entry), and falls back to scroll+close.
+  const handleGuideChip = useCallback(
+    (feature: "astrology" | "tarot") => {
+      try {
+        window.dispatchEvent(
+          new CustomEvent("astrologai:open-feature", { detail: { feature } })
+        );
+      } catch { /* ignore */ }
+      // Smooth-scroll to top so the hero entry points are visible, then close.
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch { /* ignore */ }
+      onClose();
+    },
+    [onClose]
+  );
 
   const sendMessage = async (prefilledText?: string) => {
     const text = (prefilledText ?? input).trim();
@@ -312,7 +332,9 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
     return parts.length === 1 ? parts[0] : <>{parts}</>;
   };
 
-  const placeholderText = activeReading ? t.advisor_placeholder_context : t.advisor_placeholder_general;
+  const placeholderText = activeReading
+    ? t.advisor_placeholder_context
+    : (t.advisor_guide_placeholder || t.advisor_placeholder_general);
 
   return (
     <AnimatePresence>
@@ -525,6 +547,40 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   >
                     {welcomeMessage}
                   </p>
+                  {/* Guide mode (no active reading): elegant 2-option chips */}
+                  {!activeReading && (
+                    <div className="flex flex-wrap gap-3 justify-center mt-6 px-2" dir={dir}>
+                      {([
+                        { feature: "astrology" as const, label: t.advisor_guide_chip_astrology, glyph: "✦" },
+                        { feature: "tarot" as const, label: t.advisor_guide_chip_tarot, glyph: "🜂" },
+                      ]).map((opt) => (
+                        <motion.button
+                          key={opt.feature}
+                          onClick={() => handleGuideChip(opt.feature)}
+                          whileHover={{ scale: 1.04 }}
+                          whileTap={{ scale: 0.97 }}
+                          className="font-heading focus:outline-none focus:ring-2 focus:ring-gold/40"
+                          style={{
+                            minWidth: 138,
+                            padding: "12px 22px",
+                            borderRadius: 999,
+                            background:
+                              "linear-gradient(135deg, hsl(var(--gold) / 0.16) 0%, hsl(var(--gold) / 0.06) 100%)",
+                            border: "1px solid hsl(var(--gold) / 0.42)",
+                            color: "hsl(43 95% 82%)",
+                            fontSize: 15,
+                            letterSpacing: "0.02em",
+                            boxShadow:
+                              "0 6px 20px hsl(0 0% 0% / 0.3), 0 0 18px hsl(var(--gold) / 0.12), inset 0 1px 0 hsl(var(--gold) / 0.18)",
+                          }}
+                        >
+                          <span className="opacity-70 me-2" aria-hidden>{opt.glyph}</span>
+                          {opt.label}
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
+
                   {activeReading && suggestions.length > 0 && (
                     <div className="flex flex-wrap gap-2.5 justify-center mt-5 px-2">
                       {suggestions.map((suggestion, i) => (
