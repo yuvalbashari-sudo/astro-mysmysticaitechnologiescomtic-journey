@@ -569,14 +569,29 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
             {/* Input */}
             <div
-              className="flex-shrink-0 px-6 py-5"
-              style={{ borderTop: "1px solid hsl(var(--gold) / 0.06)" }}
+              className="flex-shrink-0 px-5 pt-4 pb-5"
+              style={{
+                borderTop: "1px solid hsl(var(--gold) / 0.1)",
+                background:
+                  "linear-gradient(0deg, hsl(228 60% 4% / 0.6) 0%, transparent 100%)",
+              }}
             >
-              <div
-                className={`flex items-center gap-3 rounded-xl px-5 py-3 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+              <motion.div
+                className={`flex items-center gap-2.5 rounded-2xl pl-3 pr-2 py-2 transition-all ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+                animate={{
+                  borderColor: inputFocused
+                    ? "hsl(var(--gold) / 0.45)"
+                    : "hsl(var(--gold) / 0.14)",
+                  boxShadow: inputFocused
+                    ? "0 0 0 3px hsl(var(--gold) / 0.08), 0 0 22px hsl(var(--gold) / 0.18), inset 0 1px 0 hsl(var(--gold) / 0.08)"
+                    : "0 2px 12px hsl(0 0% 0% / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.04)",
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 style={{
-                  background: "hsl(var(--deep-blue-light) / 0.3)",
-                  border: "1px solid hsl(var(--gold) / 0.08)",
+                  background:
+                    "linear-gradient(180deg, hsl(225 50% 7% / 0.85) 0%, hsl(228 55% 5% / 0.9) 100%)",
+                  border: "1px solid",
+                  minHeight: 56,
                 }}
               >
                 <input
@@ -584,28 +599,53 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  onFocus={() => setInputFocused(true)}
+                  onBlur={() => setInputFocused(false)}
                   placeholder={placeholderText}
                   disabled={isStreaming || isLimitReached}
-                  className="flex-1 bg-transparent text-base font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
+                  className="flex-1 bg-transparent font-body text-foreground outline-none focus:ring-0 px-2"
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.5,
+                    letterSpacing: "0.005em",
+                  }}
                   dir={dir}
                   aria-label={placeholderText}
                 />
-                <button
+                <motion.button
                   onClick={() => void sendMessage()}
                   disabled={!input.trim() || isStreaming || isLimitReached}
-                  className="w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  whileTap={{ scale: 0.94 }}
+                  className="relative w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/40 flex-shrink-0"
                   style={{
-                    background: input.trim() ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))" : "transparent",
+                    background: input.trim()
+                      ? "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-dark)) 100%)"
+                      : "hsl(var(--gold) / 0.1)",
+                    border: input.trim()
+                      ? "1px solid hsl(var(--gold) / 0.5)"
+                      : "1px solid hsl(var(--gold) / 0.18)",
+                    boxShadow: input.trim()
+                      ? "0 4px 16px hsl(var(--gold) / 0.35), inset 0 1px 0 hsl(43 100% 90% / 0.4)"
+                      : "none",
                   }}
                   aria-label={t.advisor_send}
                 >
                   {isStreaming ? (
-                    <Loader2 className="w-5 h-5 animate-spin text-gold/60" />
+                    <Loader2 className="w-5 h-5 animate-spin text-gold/70" />
                   ) : (
-                    <Send className="w-4.5 h-4.5 text-primary-foreground" style={{ transform: dir === "rtl" ? "scaleX(-1)" : undefined }} />
+                    <Send
+                      className="w-4 h-4"
+                      strokeWidth={2.4}
+                      style={{
+                        color: input.trim()
+                          ? "hsl(var(--primary-foreground))"
+                          : "hsl(var(--gold) / 0.5)",
+                        transform: dir === "rtl" ? "scaleX(-1)" : undefined,
+                      }}
+                    />
                   )}
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             </div>
           </motion.div>
         </>
