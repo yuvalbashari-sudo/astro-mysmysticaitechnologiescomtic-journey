@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map, Wand2 } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
