@@ -4,6 +4,7 @@ import { Sparkles, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/i18n";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
+import heroFigure from "@/assets/hero-mystic-figure.jpg";
 
 const STORAGE_KEY = "astrologai_ai_insight_dismissed_v1";
 const VARIANT_KEY = "astrologai_ai_insight_variant_v1";
@@ -152,14 +153,46 @@ const MobileAiInsightOverlay = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              background:
-                "radial-gradient(ellipse 80% 60% at 50% 30%, hsl(222 60% 12%) 0%, hsl(225 55% 7%) 55%, hsl(225 50% 4%) 100%)",
+              background: "hsl(225 50% 3%)",
               paddingTop: "calc(env(safe-area-inset-top, 0px) + 24px)",
               paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 28px)",
               paddingLeft: 24,
               paddingRight: 24,
             }}
           >
+            {/* ── Original mystical illustration as background ── */}
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                backgroundImage: `url(${heroFigure})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center 30%",
+                backgroundRepeat: "no-repeat",
+                filter: "brightness(0.55) contrast(0.92) saturate(0.95) blur(1.5px)",
+                opacity: 0.62,
+                transform: "scale(1.05)",
+              }}
+            />
+            {/* ── Soft dark wash for text readability ── */}
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(ellipse 90% 70% at 50% 35%, hsl(225 50% 4% / 0.55) 0%, hsl(225 55% 4% / 0.78) 55%, hsl(225 60% 3% / 0.92) 100%)",
+              }}
+            />
+            {/* ── Top + bottom vignette to anchor headline & bubble ── */}
+            <div
+              aria-hidden
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(180deg, hsl(225 60% 3% / 0.55) 0%, transparent 22%, transparent 70%, hsl(225 60% 3% / 0.7) 100%)",
+              }}
+            />
+
             {/* ── Cosmic depth: stars ── */}
             <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
               {Array.from({ length: 40 }).map((_, i) => {
