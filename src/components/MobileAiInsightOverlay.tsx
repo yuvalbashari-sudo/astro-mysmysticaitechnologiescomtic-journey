@@ -134,8 +134,9 @@ const MobileAiInsightOverlay = () => {
       <AnimatePresence>
         {visible && (
           <motion.div
-            // md:hidden → mobile only, fully respects desktop visual lock.
-            className="fixed inset-0 z-[80] md:hidden flex flex-col items-center justify-between"
+            // md:hidden → mobile only. Relative (not fixed) so existing
+            // homepage sections below the hero remain reachable by scroll.
+            className="relative z-[80] md:hidden flex flex-col items-center justify-between overflow-hidden"
             data-ab-variant={variant}
             dir={dir}
             initial={{ opacity: 0 }}
@@ -143,6 +144,8 @@ const MobileAiInsightOverlay = () => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             style={{
+              minHeight: "100dvh",
+              width: "100%",
               background: "hsl(225 50% 3%)",
               paddingTop: "calc(env(safe-area-inset-top, 0px) + 24px)",
               paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 28px)",
