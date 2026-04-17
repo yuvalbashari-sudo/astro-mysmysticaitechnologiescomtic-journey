@@ -21,8 +21,9 @@ type OptionKey =
   | "monthly_forecast"
   | "compatibility"
   | "tarot"
-  | "rising"
-  | "birthchart";
+    | "rising"
+    | "birthchart"
+    | "daily_card";
 
 const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
   const t = useT();
