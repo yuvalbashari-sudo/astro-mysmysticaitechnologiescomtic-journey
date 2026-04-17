@@ -620,18 +620,18 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                 className={`flex items-center gap-2.5 rounded-2xl pl-3 pr-2 py-2 transition-all ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
                 animate={{
                   borderColor: inputFocused
-                    ? "hsl(var(--gold) / 0.45)"
-                    : "hsl(var(--gold) / 0.14)",
+                    ? "hsl(var(--gold) / 0.6)"
+                    : "hsl(var(--gold) / 0.22)",
                   boxShadow: inputFocused
-                    ? "0 0 0 3px hsl(var(--gold) / 0.08), 0 0 22px hsl(var(--gold) / 0.18), inset 0 1px 0 hsl(var(--gold) / 0.08)"
-                    : "0 2px 12px hsl(0 0% 0% / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.04)",
+                    ? "0 0 0 3px hsl(var(--gold) / 0.12), 0 0 30px hsl(var(--gold) / 0.28), 0 4px 18px hsl(0 0% 0% / 0.35), inset 0 1px 0 hsl(var(--gold) / 0.12)"
+                    : "0 4px 18px hsl(0 0% 0% / 0.32), 0 0 14px hsl(var(--gold) / 0.06), inset 0 1px 0 hsl(var(--gold) / 0.08)",
                 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 style={{
                   background:
-                    "linear-gradient(180deg, hsl(225 50% 7% / 0.85) 0%, hsl(228 55% 5% / 0.9) 100%)",
+                    "linear-gradient(180deg, hsl(225 50% 9% / 0.95) 0%, hsl(228 55% 6% / 0.97) 100%)",
                   border: "1px solid",
-                  minHeight: 56,
+                  minHeight: 60,
                 }}
               >
                 <input
