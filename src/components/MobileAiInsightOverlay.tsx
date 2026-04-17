@@ -4,6 +4,7 @@ import { Sparkles, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/i18n";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
+import heroFigure from "@/assets/hero-mystic-figure.jpg";
 
 const STORAGE_KEY = "astrologai_ai_insight_dismissed_v1";
 const VARIANT_KEY = "astrologai_ai_insight_variant_v1";
