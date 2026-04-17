@@ -332,7 +332,9 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
     return parts.length === 1 ? parts[0] : <>{parts}</>;
   };
 
-  const placeholderText = activeReading ? t.advisor_placeholder_context : t.advisor_placeholder_general;
+  const placeholderText = activeReading
+    ? t.advisor_placeholder_context
+    : (t.advisor_guide_placeholder || t.advisor_placeholder_general);
 
   return (
     <AnimatePresence>
