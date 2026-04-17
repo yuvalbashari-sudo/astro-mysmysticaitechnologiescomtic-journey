@@ -392,53 +392,33 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
             {/* Header */}
             <div
-              className="flex items-center justify-between px-6 py-4 flex-shrink-0 relative"
+              className="flex flex-col items-center gap-2 px-6 py-4 flex-shrink-0 relative"
               style={{
                 borderBottom: "1px solid hsl(var(--gold) / 0.1)",
                 background:
                   "linear-gradient(180deg, hsl(var(--gold) / 0.04) 0%, transparent 100%)",
               }}
             >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <motion.div
-                  className="relative w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, hsl(var(--gold-dark)) 0%, hsl(var(--gold)) 100%)",
-                  }}
-                  animate={{
-                    boxShadow: [
-                      "0 0 14px hsl(var(--gold) / 0.35), inset 0 1px 0 hsl(43 100% 90% / 0.4)",
-                      "0 0 22px hsl(var(--gold) / 0.55), inset 0 1px 0 hsl(43 100% 90% / 0.4)",
-                      "0 0 14px hsl(var(--gold) / 0.35), inset 0 1px 0 hsl(43 100% 90% / 0.4)",
-                    ],
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Sparkles className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
-                </motion.div>
-                <div className="min-w-0">
-                  <h3
-                    className="font-heading text-[17px] leading-tight truncate"
-                    style={{
-                      background:
-                        "linear-gradient(180deg, hsl(43 95% 88%) 0%, hsl(43 80% 60%) 100%)",
-                      WebkitBackgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      backgroundClip: "text",
-                      letterSpacing: "0.01em",
-                    }}
-                  >
-                    {t.advisor_title}
-                  </h3>
-                  {activeReading && (
-                    <p className="text-xs text-foreground/45 font-body mt-1 truncate">{activeReading.label}</p>
-                  )}
-                </div>
-              </div>
+              <h3
+                className="font-heading text-2xl md:text-3xl leading-tight text-center px-12"
+                style={{
+                  background:
+                    "linear-gradient(180deg, hsl(43 95% 88%) 0%, hsl(43 80% 60%) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  letterSpacing: "0.01em",
+                }}
+              >
+                {t.advisor_title}
+              </h3>
+              {activeReading && (
+                <p className="text-xs text-foreground/45 font-body truncate max-w-full px-12">{activeReading.label}</p>
+              )}
+              <TextSizeControl value={scale} onChange={setScale} />
               <button
                 onClick={onClose}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-gold/40 flex-shrink-0"
+                className={`absolute top-3 ${dir === "rtl" ? "left-3" : "right-3"} w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-gold/40 flex-shrink-0`}
                 style={{ border: "1px solid hsl(var(--gold) / 0.1)" }}
                 aria-label={t.a11y_close_modal}
               >
