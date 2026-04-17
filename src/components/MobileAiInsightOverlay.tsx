@@ -83,20 +83,29 @@ const MobileAiInsightOverlay = () => {
   };
 
   const copy = useMemo(() => {
-    const map: Record<string, {
-      headline: string;
-      sub: string;
-      cta: string;
-      bubble: string;
-      explore: string;
+    const heVariants: Record<Variant, {
+      headline: string; sub: string; cta: string; bubble: string; explore: string;
     }> = {
-      he: {
-        headline: "גיליתי משהו על הדרך שלך",
-        sub: "תובנה אישית על האנרגיה שלך עכשיו",
-        cta: "חשפו את התובנה האישית שלי",
-        bubble: "יש כאן משהו חשוב עבורך",
+      A: {
+        headline: "מצאתי משהו שחשוב שתראה",
+        sub: "תובנה אישית שמבוססת על האנרגיה שלך כרגע",
+        cta: "גלה את התובנה שלך",
+        bubble: "יש כאן משהו שלא כדאי לפספס",
         explore: "המשך לגלות",
       },
+      B: {
+        headline: "קבל תובנה אישית להיום",
+        sub: "מסר מדויק שיעזור לך להבין מה משפיע עליך עכשיו",
+        cta: "קבל תובנה אישית עכשיו",
+        bubble: "אני יכולה לעזור לך לראות את זה ברור יותר",
+        explore: "המשך לגלות",
+      },
+    };
+
+    const map: Record<string, {
+      headline: string; sub: string; cta: string; bubble: string; explore: string;
+    }> = {
+      he: heVariants[variant],
       en: {
         headline: "I found something about your path",
         sub: "A personal insight based on your current energy",
@@ -120,7 +129,12 @@ const MobileAiInsightOverlay = () => {
       },
     };
     return map[language] || map.en;
-  }, [language]);
+  }, [language, variant]);
+
+  const openChat = (source: "cta" | "bubble" | "avatar") => {
+    trackEvent(`ai_insight_hero_${source}_click`, variant);
+    setChatOpen(true);
+  };
 
   return (
     <>
