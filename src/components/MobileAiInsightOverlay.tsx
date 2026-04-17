@@ -209,6 +209,16 @@ const MobileAiInsightOverlay = () => {
                 mixBlendMode: "screen",
               }}
             />
+            {/* ── Soft fade at the very bottom edge → suggests scroll continuation ── */}
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 pointer-events-none"
+              style={{
+                height: "14%",
+                background:
+                  "linear-gradient(0deg, hsl(225 60% 3%) 0%, hsl(225 60% 3% / 0.85) 45%, transparent 100%)",
+              }}
+            />
 
             {/* ── Cosmic depth: stars ── */}
             <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none">
