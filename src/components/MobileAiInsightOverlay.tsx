@@ -83,16 +83,16 @@ const MobileAiInsightOverlay = () => {
     }> = {
       A: {
         headline: "מצאתי משהו שחשוב שתראה",
-        sub: "תובנה אישית שמבוססת על האנרגיה שלך כרגע",
-        cta: "גלה את התובנה שלך",
-        bubble: "יש כאן משהו שלא כדאי לפספס",
+        sub: "בחר/י את סוג ההכוונה שמתאים לך — הורוסקופ יומי, תחזית חודשית, התאמה זוגית ועוד",
+        cta: "גלה את התובנות שלך",
+        bubble: "רוצה שאמליץ לך מה הכי מתאים? דברי איתי",
         explore: "גלול למטה כדי לגלות עוד אפשרויות ✨",
       },
       B: {
         headline: "קבל תובנה אישית להיום",
-        sub: "מסר מדויק שיעזור לך להבין מה משפיע עליך עכשיו",
-        cta: "קבל תובנה אישית עכשיו",
-        bubble: "אני יכולה לעזור לך לראות את זה ברור יותר",
+        sub: "כל סוגי ההכוונה במקום אחד — בחר/י את מה שמדבר אליך",
+        cta: "גלה את התובנות שלך",
+        bubble: "לא בטוח/ה מה לבחור? אני כאן להמליץ",
         explore: "גלול למטה כדי לגלות עוד אפשרויות ✨",
       },
     };
@@ -102,33 +102,41 @@ const MobileAiInsightOverlay = () => {
     }> = {
       he: heVariants[variant],
       en: {
-        headline: "I found something about your path",
-        sub: "A personal insight based on your current energy",
-        cta: "Reveal My Personal Insight",
-        bubble: "There's something important here",
+        headline: "Discover what the stars hold for you",
+        sub: "Choose your guidance — Daily Horoscope, Monthly Forecast, Compatibility & more",
+        cta: "Explore Your Readings",
+        bubble: "Not sure which to pick? I can guide you",
         explore: "Continue exploring",
       },
       ru: {
-        headline: "Я нашла кое-что о вашем пути",
-        sub: "Личное озарение на основе вашей энергии сейчас",
-        cta: "Раскрыть моё личное озарение",
-        bubble: "Здесь есть нечто важное для вас",
+        headline: "Откройте, что говорят звёзды",
+        sub: "Выберите свой путь — гороскоп, прогноз, совместимость и многое другое",
+        cta: "Открыть мои чтения",
+        bubble: "Не знаете, что выбрать? Я подскажу",
         explore: "Продолжить исследование",
       },
       ar: {
-        headline: "وجدتُ شيئًا عن مسارك",
-        sub: "بصيرة شخصية مبنية على طاقتك الحالية",
-        cta: "اكشف بصيرتي الشخصية",
-        bubble: "هناك شيء مهم هنا",
+        headline: "اكتشف ما تخبّئه لك النجوم",
+        sub: "اختر نوع الإرشاد — الأبراج اليومية، التوقعات الشهرية، التوافق والمزيد",
+        cta: "اكتشف قراءاتك",
+        bubble: "لست متأكدًا؟ يمكنني إرشادك",
         explore: "تابع الاستكشاف",
       },
     };
     return map[language] || map.en;
   }, [language, variant]);
 
-  const openChat = (source: "cta" | "bubble" | "avatar") => {
+  const openChat = (source: "bubble" | "avatar") => {
     trackEvent(`ai_insight_hero_${source}_click`, variant);
     setChatOpen(true);
+  };
+
+  const goToOptions = () => {
+    trackEvent("ai_insight_hero_cta_click", variant);
+    try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignore */ }
+    try {
+      window.scrollTo({ top: window.innerHeight, behavior: "smooth" });
+    } catch { /* ignore */ }
   };
 
   return (
@@ -345,7 +353,7 @@ const MobileAiInsightOverlay = () => {
               {/* ── Glowing CTA ── */}
               <motion.button
                 type="button"
-                onClick={() => openChat("cta")}
+                onClick={goToOptions}
                 initial={{ opacity: 0, y: 16, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 0.85, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
