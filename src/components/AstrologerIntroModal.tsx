@@ -25,6 +25,7 @@ const FREE_MESSAGE_LIMIT = 5;
 const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { language, dir } = useLanguage();
+  const { scale, setScale } = useFontScale();
   const { activeReading, setActiveReading } = useReadingContext();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
