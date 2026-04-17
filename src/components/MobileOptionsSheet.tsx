@@ -39,6 +39,13 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
     }
   }, [isOpen]);
 
+  const handleSelect = (key: OptionKey) => {
+    // Close the sheet first so its z-[120] overlay doesn't sit on top of
+    // the nested modal (which uses CinematicModalShell at z-[100]).
+    setActive(key);
+    onClose();
+  };
+
   const options: {
     key: OptionKey;
     label: string;
