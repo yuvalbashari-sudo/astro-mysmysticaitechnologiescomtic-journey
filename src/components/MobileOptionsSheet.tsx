@@ -70,6 +70,12 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
       accent: "200 80% 60%",
     },
     {
+      key: "daily_card",
+      label: t.free_tarot_title,
+      icon: <Wand2 className="w-6 h-6" aria-hidden="true" />,
+      accent: "290 70% 65%",
+    },
+    {
       key: "rising",
       label: t.hero_menu_rising,
       icon: <Star className="w-6 h-6" aria-hidden="true" />,
