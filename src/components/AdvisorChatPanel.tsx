@@ -6,6 +6,7 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import norielleAvatar from "@/assets/astrologer-avatar-cta.png";
 
 interface Message {
   role: "user" | "assistant";
