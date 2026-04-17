@@ -86,14 +86,14 @@ const MobileAiInsightOverlay = () => {
         sub: "תובנה אישית שמבוססת על האנרגיה שלך כרגע",
         cta: "גלה את התובנה שלך",
         bubble: "יש כאן משהו שלא כדאי לפספס",
-        explore: "המשך לגלות",
+        explore: "גלול למטה כדי לגלות עוד אפשרויות ✨",
       },
       B: {
         headline: "קבל תובנה אישית להיום",
         sub: "מסר מדויק שיעזור לך להבין מה משפיע עליך עכשיו",
         cta: "קבל תובנה אישית עכשיו",
         bubble: "אני יכולה לעזור לך לראות את זה ברור יותר",
-        explore: "המשך לגלות",
+        explore: "גלול למטה כדי לגלות עוד אפשרויות ✨",
       },
     };
 
@@ -207,6 +207,16 @@ const MobileAiInsightOverlay = () => {
                 background:
                   "radial-gradient(ellipse 50% 30% at 50% 62%, hsl(43 80% 55% / 0.12) 0%, transparent 70%)",
                 mixBlendMode: "screen",
+              }}
+            />
+            {/* ── Soft fade at the very bottom edge → suggests scroll continuation ── */}
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 pointer-events-none"
+              style={{
+                height: "14%",
+                background:
+                  "linear-gradient(0deg, hsl(225 60% 3%) 0%, hsl(225 60% 3% / 0.85) 45%, transparent 100%)",
               }}
             />
 
