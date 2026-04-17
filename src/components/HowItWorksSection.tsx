@@ -20,9 +20,9 @@ const HowItWorksSection = () => {
       title: "איך זה עובד?",
       intro: "קבלו הכוונה אישית דרך אסטרולוגיה, טארוט ותובנות רוחניות — בדרך חכמה, מדויקת ונגישה.",
       steps: [
-        { icon: Compass, title: "בוחרים את סוג ההכוונה", desc: "הורוסקופ יומי, תחזית חודשית, טארוט, התאמה זוגית ועוד." },
-        { icon: Sparkles, title: "מקבלים תובנה אישית", desc: "המערכת מתאימה עבורכם מסר מדויק, ברור ומעורר מחשבה." },
-        { icon: MessageCircle, title: "מעמיקים עם נוריאל", desc: "אם תרצו, נוריאל תעזור לכם לבחור את הדרך שהכי מתאימה לכם." },
+        { icon: Compass, title: "בוחרים את סוג ההכוונה", desc: "הורוסקופ יומי, תחזית חודשית, טארוט, התאמה זוגית ועוד.", href: "/astrology-guides" },
+        { icon: Sparkles, title: "מקבלים תובנה אישית", desc: "המערכת מתאימה עבורכם מסר מדויק, ברור ומעורר מחשבה.", href: "/tarot-guides" },
+        { icon: MessageCircle, title: "מעמיקים עם נוריאל", desc: "אם תרצו, נוריאל תעזור לכם לבחור את הדרך שהכי מתאימה לכם.", href: "/astrology-guides" },
       ],
       trust: [
         { icon: Heart, label: "חוויה אישית ומותאמת" },
@@ -36,9 +36,9 @@ const HowItWorksSection = () => {
       title: "How does it work?",
       intro: "Receive personal guidance through astrology, tarot, and spiritual insights — in a smart, accurate, and accessible way.",
       steps: [
-        { icon: Compass, title: "Choose your guidance", desc: "Daily horoscope, monthly forecast, tarot, compatibility and more." },
-        { icon: Sparkles, title: "Receive a personal insight", desc: "The system crafts a precise, clear, and thought-provoking message just for you." },
-        { icon: MessageCircle, title: "Go deeper with Norielle", desc: "If you'd like, Norielle will help you choose the path that suits you most." },
+        { icon: Compass, title: "Choose your guidance", desc: "Daily horoscope, monthly forecast, tarot, compatibility and more.", href: "/astrology-guides" },
+        { icon: Sparkles, title: "Receive a personal insight", desc: "The system crafts a precise, clear, and thought-provoking message just for you.", href: "/tarot-guides" },
+        { icon: MessageCircle, title: "Go deeper with Norielle", desc: "If you'd like, Norielle will help you choose the path that suits you most.", href: "/astrology-guides" },
       ],
       trust: [
         { icon: Heart, label: "Personal & tailored" },
@@ -52,9 +52,9 @@ const HowItWorksSection = () => {
       title: "Как это работает?",
       intro: "Получите персональное руководство через астрологию, таро и духовные откровения — умно, точно и доступно.",
       steps: [
-        { icon: Compass, title: "Выберите тип руководства", desc: "Ежедневный гороскоп, месячный прогноз, таро, совместимость и больше." },
-        { icon: Sparkles, title: "Получите личное послание", desc: "Система подбирает для вас точное, ясное и вдохновляющее сообщение." },
-        { icon: MessageCircle, title: "Углубитесь с Нориэль", desc: "Если хотите, Нориэль поможет выбрать путь, который подходит именно вам." },
+        { icon: Compass, title: "Выберите тип руководства", desc: "Ежедневный гороскоп, месячный прогноз, таро, совместимость и больше.", href: "/astrology-guides" },
+        { icon: Sparkles, title: "Получите личное послание", desc: "Система подбирает для вас точное, ясное и вдохновляющее сообщение.", href: "/tarot-guides" },
+        { icon: MessageCircle, title: "Углубитесь с Нориэль", desc: "Если хотите, Нориэль поможет выбрать путь, который подходит именно вам.", href: "/astrology-guides" },
       ],
       trust: [
         { icon: Heart, label: "Лично и индивидуально" },
@@ -68,9 +68,9 @@ const HowItWorksSection = () => {
       title: "كيف يعمل هذا؟",
       intro: "احصل على إرشاد شخصي من خلال علم التنجيم والتاروت والرؤى الروحية — بطريقة ذكية ودقيقة وسهلة الوصول.",
       steps: [
-        { icon: Compass, title: "اختر نوع الإرشاد", desc: "الأبراج اليومية، التوقعات الشهرية، التاروت، التوافق والمزيد." },
-        { icon: Sparkles, title: "احصل على رؤية شخصية", desc: "يصمم النظام لك رسالة دقيقة وواضحة ومُلهمة." },
-        { icon: MessageCircle, title: "تعمّق مع نورييل", desc: "إذا أردت، ستساعدك نورييل في اختيار المسار الأنسب لك." },
+        { icon: Compass, title: "اختر نوع الإرشاد", desc: "الأبراج اليومية، التوقعات الشهرية، التاروت، التوافق والمزيد.", href: "/astrology-guides" },
+        { icon: Sparkles, title: "احصل على رؤية شخصية", desc: "يصمم النظام لك رسالة دقيقة وواضحة ومُلهمة.", href: "/tarot-guides" },
+        { icon: MessageCircle, title: "تعمّق مع نورييل", desc: "إذا أردت، ستساعدك نورييل في اختيار المسار الأنسب لك.", href: "/astrology-guides" },
       ],
       trust: [
         { icon: Heart, label: "تجربة شخصية ومخصصة" },
