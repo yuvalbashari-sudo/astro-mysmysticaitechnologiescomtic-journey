@@ -54,22 +54,18 @@ const MobileAiInsightOverlay = () => {
   useEffect(() => {
     const v = getOrAssignVariant();
     setVariant(v);
-    try {
-      const dismissed = sessionStorage.getItem(STORAGE_KEY) === "1";
-      if (!dismissed) {
-        const t = window.setTimeout(() => {
-          setVisible(true);
-          trackEvent("ai_insight_hero_view", v);
-        }, 150);
-        return () => window.clearTimeout(t);
-      }
-    } catch {
+    // Always show the hero overlay on every visit. Dismissal only scrolls
+    // past it for the current page-load so users can re-enter by scrolling up
+    // or reloading. Clear any stale persisted dismissal from earlier builds.
+    try { sessionStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
+    const t = window.setTimeout(() => {
       setVisible(true);
-    }
+      trackEvent("ai_insight_hero_view", v);
+    }, 150);
+    return () => window.clearTimeout(t);
   }, []);
 
   const dismiss = () => {
-    try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignore */ }
     // Scroll past the hero so users discover the rest of the homepage
     // (feature sections, SEO content, etc.) instead of unmounting it.
     try {
