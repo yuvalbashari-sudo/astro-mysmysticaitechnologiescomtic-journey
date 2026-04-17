@@ -419,47 +419,59 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               aria-live="polite"
             >
               {messages.length === 0 && (
-                <div className="text-center py-8 space-y-5">
+                <div className="text-center py-8 space-y-7">
                   <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
-                    {/* Outer pulsing aura */}
+                    {/* Ambient cosmic aura — soft blue/purple atmospheric glow */}
+                    <motion.div
+                      aria-hidden
+                      className="absolute -inset-6 rounded-full"
+                      style={{
+                        background:
+                          "radial-gradient(circle, hsl(255 70% 55% / 0.14) 0%, hsl(225 80% 45% / 0.1) 40%, transparent 72%)",
+                        filter: "blur(8px)",
+                      }}
+                      animate={{ opacity: [0.55, 0.85, 0.55], scale: [1, 1.06, 1] }}
+                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    {/* Soft golden halo — refined, not flashy */}
                     <motion.div
                       aria-hidden
                       className="absolute inset-0 rounded-full"
                       style={{
                         background:
-                          "radial-gradient(circle, hsl(var(--gold) / 0.22) 0%, hsl(215 70% 35% / 0.12) 45%, transparent 75%)",
+                          "radial-gradient(circle, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.05) 50%, transparent 78%)",
                       }}
-                      animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0.95, 0.6] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.04, 1] }}
+                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                     />
-                    {/* Slowly rotating mystical ring */}
+                    {/* Slowly rotating mystical ring — thinner */}
                     <motion.div
                       aria-hidden
                       className="absolute rounded-full"
                       style={{
-                        inset: "6%",
-                        border: "1px solid hsl(var(--gold) / 0.28)",
+                        inset: "4%",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
                       }}
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 32, repeat: Infinity, ease: "linear" }}
+                      transition={{ duration: 38, repeat: Infinity, ease: "linear" }}
                     />
-                    {/* Norielle portrait — circular framed */}
+                    {/* Norielle portrait — refined thin frame */}
                     <motion.div
                       className="relative rounded-full overflow-hidden"
                       style={{
                         width: 152,
                         height: 152,
-                        border: "1.5px solid hsl(var(--gold) / 0.55)",
+                        border: "1px solid hsl(var(--gold) / 0.42)",
                         background: "hsl(225 50% 8%)",
                       }}
                       animate={{
                         boxShadow: [
-                          "0 0 26px hsl(var(--gold) / 0.32), 0 0 52px hsl(215 70% 40% / 0.2), inset 0 1px 0 hsl(43 100% 90% / 0.18)",
-                          "0 0 42px hsl(var(--gold) / 0.5), 0 0 70px hsl(215 70% 40% / 0.28), inset 0 1px 0 hsl(43 100% 90% / 0.18)",
-                          "0 0 26px hsl(var(--gold) / 0.32), 0 0 52px hsl(215 70% 40% / 0.2), inset 0 1px 0 hsl(43 100% 90% / 0.18)",
+                          "0 0 18px hsl(var(--gold) / 0.22), 0 0 38px hsl(255 70% 50% / 0.12), inset 0 1px 0 hsl(43 100% 90% / 0.22), inset 0 0 24px hsl(43 90% 60% / 0.08)",
+                          "0 0 26px hsl(var(--gold) / 0.32), 0 0 52px hsl(255 70% 50% / 0.18), inset 0 1px 0 hsl(43 100% 90% / 0.22), inset 0 0 30px hsl(43 90% 60% / 0.12)",
+                          "0 0 18px hsl(var(--gold) / 0.22), 0 0 38px hsl(255 70% 50% / 0.12), inset 0 1px 0 hsl(43 100% 90% / 0.22), inset 0 0 24px hsl(43 90% 60% / 0.08)",
                         ],
                       }}
-                      transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                     >
                       <img
                         src={norielleAvatar}
@@ -467,23 +479,35 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                         className="w-full h-full object-cover"
                         draggable={false}
                       />
-                      {/* Soft inner light wash to blend with the gold ring */}
+                      {/* Subtle inner light from below (warm) */}
                       <div
                         aria-hidden
                         className="absolute inset-0 pointer-events-none"
                         style={{
                           background:
-                            "radial-gradient(circle at 50% 110%, hsl(43 90% 65% / 0.18) 0%, transparent 55%)",
+                            "radial-gradient(circle at 50% 105%, hsl(43 90% 65% / 0.22) 0%, transparent 55%)",
                         }}
+                      />
+                      {/* Slow shimmer sweep across the portrait */}
+                      <motion.div
+                        aria-hidden
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background:
+                            "linear-gradient(115deg, transparent 35%, hsl(43 100% 92% / 0.14) 50%, transparent 65%)",
+                          mixBlendMode: "screen",
+                        }}
+                        animate={{ x: ["-60%", "60%"] }}
+                        transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 1.5 }}
                       />
                     </motion.div>
                   </div>
                   <p
                     className="font-body mx-auto whitespace-pre-line"
                     style={{
-                      color: "hsl(var(--foreground) / 0.78)",
+                      color: "hsl(var(--foreground) / 0.82)",
                       fontSize: "16px",
-                      lineHeight: 1.85,
+                      lineHeight: 1.9,
                       maxWidth: 520,
                       letterSpacing: "0.005em",
                     }}
