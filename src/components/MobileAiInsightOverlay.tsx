@@ -6,6 +6,33 @@ import AdvisorChatPanel from "./AdvisorChatPanel";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 
 const STORAGE_KEY = "astrologai_ai_insight_dismissed_v1";
+const VARIANT_KEY = "astrologai_ai_insight_variant_v1";
+
+type Variant = "A" | "B";
+
+const getOrAssignVariant = (): Variant => {
+  try {
+    const existing = sessionStorage.getItem(VARIANT_KEY) as Variant | null;
+    if (existing === "A" || existing === "B") return existing;
+    const next: Variant = Math.random() < 0.5 ? "A" : "B";
+    sessionStorage.setItem(VARIANT_KEY, next);
+    return next;
+  } catch {
+    return Math.random() < 0.5 ? "A" : "B";
+  }
+};
+
+const trackEvent = (name: string, variant: Variant) => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const w = window as any;
+    if (typeof w.gtag === "function") {
+      w.gtag("event", name, { variant, surface: "mobile_ai_insight_hero" });
+    }
+    // Always log for debugging / manual analytics scraping
+    console.info("[ai-insight-hero]", name, { variant });
+  } catch { /* ignore */ }
+};
 
 /**
  * Mobile-only "AI insight" intro screen layered on top of the existing hero.
@@ -20,14 +47,19 @@ const MobileAiInsightOverlay = () => {
 
   const [visible, setVisible] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [variant, setVariant] = useState<Variant>("A");
 
   // Show on first session only; sessionStorage so it returns next visit.
   useEffect(() => {
+    const v = getOrAssignVariant();
+    setVariant(v);
     try {
       const dismissed = sessionStorage.getItem(STORAGE_KEY) === "1";
       if (!dismissed) {
-        // Tiny delay so initial paint feels deliberate, not instant.
-        const t = window.setTimeout(() => setVisible(true), 150);
+        const t = window.setTimeout(() => {
+          setVisible(true);
+          trackEvent("ai_insight_hero_view", v);
+        }, 150);
         return () => window.clearTimeout(t);
       }
     } catch {
@@ -51,20 +83,29 @@ const MobileAiInsightOverlay = () => {
   };
 
   const copy = useMemo(() => {
-    const map: Record<string, {
-      headline: string;
-      sub: string;
-      cta: string;
-      bubble: string;
-      explore: string;
+    const heVariants: Record<Variant, {
+      headline: string; sub: string; cta: string; bubble: string; explore: string;
     }> = {
-      he: {
-        headline: "גיליתי משהו על הדרך שלך",
-        sub: "תובנה אישית על האנרגיה שלך עכשיו",
-        cta: "חשפו את התובנה האישית שלי",
-        bubble: "יש כאן משהו חשוב עבורך",
+      A: {
+        headline: "מצאתי משהו שחשוב שתראה",
+        sub: "תובנה אישית שמבוססת על האנרגיה שלך כרגע",
+        cta: "גלה את התובנה שלך",
+        bubble: "יש כאן משהו שלא כדאי לפספס",
         explore: "המשך לגלות",
       },
+      B: {
+        headline: "קבל תובנה אישית להיום",
+        sub: "מסר מדויק שיעזור לך להבין מה משפיע עליך עכשיו",
+        cta: "קבל תובנה אישית עכשיו",
+        bubble: "אני יכולה לעזור לך לראות את זה ברור יותר",
+        explore: "המשך לגלות",
+      },
+    };
+
+    const map: Record<string, {
+      headline: string; sub: string; cta: string; bubble: string; explore: string;
+    }> = {
+      he: heVariants[variant],
       en: {
         headline: "I found something about your path",
         sub: "A personal insight based on your current energy",
@@ -88,7 +129,12 @@ const MobileAiInsightOverlay = () => {
       },
     };
     return map[language] || map.en;
-  }, [language]);
+  }, [language, variant]);
+
+  const openChat = (source: "cta" | "bubble" | "avatar") => {
+    trackEvent(`ai_insight_hero_${source}_click`, variant);
+    setChatOpen(true);
+  };
 
   return (
     <>
@@ -99,6 +145,7 @@ const MobileAiInsightOverlay = () => {
           <motion.div
             // md:hidden → mobile only, fully respects desktop visual lock.
             className="fixed inset-0 z-[80] md:hidden flex flex-col items-center justify-between"
+            data-ab-variant={variant}
             dir={dir}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -238,7 +285,7 @@ const MobileAiInsightOverlay = () => {
               {/* ── Glowing CTA ── */}
               <motion.button
                 type="button"
-                onClick={() => setChatOpen(true)}
+                onClick={() => openChat("cta")}
                 initial={{ opacity: 0, y: 16, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ delay: 0.85, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -305,7 +352,7 @@ const MobileAiInsightOverlay = () => {
                 {/* Avatar */}
                 <button
                   type="button"
-                  onClick={() => setChatOpen(true)}
+                  onClick={() => openChat("avatar")}
                   aria-label="Norielle"
                   className="relative rounded-full overflow-hidden"
                   style={{
