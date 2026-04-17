@@ -155,7 +155,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
               <button
                 type="button"
                 onClick={onClose}
-                aria-label={t.tarot_close ?? "Close"}
+                aria-label={t.a11y_close_modal}
                 className="flex items-center justify-center rounded-full"
                 style={{
                   width: 44,
