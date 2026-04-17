@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map, Wand2 } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
@@ -196,7 +197,25 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
               >
                 ASTROLOGAI
               </span>
-              <span style={{ width: 44 }} aria-hidden />
+              <Link
+                to="/accessibility"
+                onClick={onClose}
+                aria-label={t.a11y_link_label}
+                title={t.a11y_link_label}
+                className="flex items-center justify-center rounded-full"
+                style={{
+                  width: 44,
+                  height: 44,
+                  background: "hsl(var(--deep-blue-light) / 0.6)",
+                  border: "1px solid hsl(var(--gold) / 0.28)",
+                  color: "hsl(var(--gold) / 0.9)",
+                  fontSize: 18,
+                  lineHeight: 1,
+                  textDecoration: "none",
+                }}
+              >
+                ♿
+              </Link>
             </div>
 
             {/* Title */}
