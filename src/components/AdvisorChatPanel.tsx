@@ -29,6 +29,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [userMessageCount, setUserMessageCount] = useState(0);
+  const [inputFocused, setInputFocused] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const assistantTextRef = useRef("");
