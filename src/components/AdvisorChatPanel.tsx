@@ -29,6 +29,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
   const [input, setInput] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [userMessageCount, setUserMessageCount] = useState(0);
+  const [inputFocused, setInputFocused] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const assistantTextRef = useRef("");
@@ -323,17 +324,14 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               left: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "auto") : dir === "rtl" ? "1.25rem" : "auto",
               width: forceRightAnchor ? (window.innerWidth < 768 ? "100vw" : "min(685px, calc(100vw - 2rem - 80px))") : "min(765px, calc(100vw - 2rem))",
               maxHeight: forceRightAnchor ? (window.innerWidth < 768 ? "calc(100vh - 60px)" : "min(600px, calc(100vh - 200px))") : "min(1080px, calc(100vh - 7rem))",
-              borderRadius: forceRightAnchor && window.innerWidth < 768 ? "1.25rem 1.25rem 0 0" : "1.25rem",
-              background: forceRightAnchor
-                ? "linear-gradient(170deg, hsl(222 47% 9% / 0.55), hsl(222 47% 5% / 0.60))"
-                : "linear-gradient(170deg, hsl(222 47% 9% / 0.90), hsl(222 47% 5% / 0.94))",
-              backdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
-              WebkitBackdropFilter: forceRightAnchor ? "blur(20px) saturate(1.2)" : "blur(28px) saturate(1.3)",
-              border: forceRightAnchor ? "1px solid hsl(var(--gold) / 0.2)" : "1px solid hsl(var(--gold) / 0.14)",
-              
-              boxShadow: forceRightAnchor
-                ? "0 8px 32px hsl(0 0% 0% / 0.3), 0 0 16px hsl(var(--gold) / 0.04)"
-                : "0 16px 50px hsl(0 0% 0% / 0.5), 0 0 24px hsl(var(--gold) / 0.05), inset 0 1px 0 hsl(var(--gold) / 0.07)",
+              borderRadius: forceRightAnchor && window.innerWidth < 768 ? "1.75rem 1.75rem 0 0" : "1.5rem",
+              background:
+                "linear-gradient(165deg, hsl(225 50% 9% / 0.92) 0%, hsl(228 55% 5% / 0.96) 55%, hsl(230 60% 4% / 0.97) 100%)",
+              backdropFilter: "blur(32px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(32px) saturate(1.4)",
+              border: "1px solid hsl(var(--gold) / 0.22)",
+              boxShadow:
+                "0 24px 70px hsl(0 0% 0% / 0.55), 0 0 0 1px hsl(var(--gold) / 0.04), 0 0 60px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.12)",
             }}
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -344,37 +342,70 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
             aria-label={t.advisor_title}
             aria-modal="true"
           >
+            {/* Decorative top edge glow — premium mystical accent */}
+            <div
+              aria-hidden
+              className="absolute inset-x-0 top-0 pointer-events-none"
+              style={{
+                height: 1,
+                background:
+                  "linear-gradient(90deg, transparent 0%, hsl(var(--gold) / 0.6) 50%, transparent 100%)",
+              }}
+            />
+
             {/* Header */}
             <div
-              className="flex items-center justify-between px-8 py-5 flex-shrink-0"
+              className="flex items-center justify-between px-6 py-4 flex-shrink-0 relative"
               style={{
-                borderBottom: "1px solid hsl(var(--gold) / 0.08)",
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.03), transparent)",
+                borderBottom: "1px solid hsl(var(--gold) / 0.1)",
+                background:
+                  "linear-gradient(180deg, hsl(var(--gold) / 0.04) 0%, transparent 100%)",
               }}
             >
-              <div className="flex items-center gap-4">
-                <div
-                  className="w-12 h-12 rounded-full flex items-center justify-center"
+              <div className="flex items-center gap-3.5 min-w-0">
+                <motion.div
+                  className="relative w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{
-                    background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
-                    boxShadow: "0 0 14px hsl(var(--gold) / 0.3)",
+                    background:
+                      "linear-gradient(135deg, hsl(var(--gold-dark)) 0%, hsl(var(--gold)) 100%)",
                   }}
+                  animate={{
+                    boxShadow: [
+                      "0 0 14px hsl(var(--gold) / 0.35), inset 0 1px 0 hsl(43 100% 90% / 0.4)",
+                      "0 0 22px hsl(var(--gold) / 0.55), inset 0 1px 0 hsl(43 100% 90% / 0.4)",
+                      "0 0 14px hsl(var(--gold) / 0.35), inset 0 1px 0 hsl(43 100% 90% / 0.4)",
+                    ],
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <Sparkles className="w-6 h-6 text-primary-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-heading text-base text-gold">{t.advisor_title}</h3>
+                  <Sparkles className="w-5 h-5 text-primary-foreground" strokeWidth={2} />
+                </motion.div>
+                <div className="min-w-0">
+                  <h3
+                    className="font-heading text-[17px] leading-tight truncate"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, hsl(43 95% 88%) 0%, hsl(43 80% 60%) 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    {t.advisor_title}
+                  </h3>
                   {activeReading && (
-                    <p className="text-sm text-foreground/40 font-body mt-0.5">{activeReading.label}</p>
+                    <p className="text-xs text-foreground/45 font-body mt-1 truncate">{activeReading.label}</p>
                   )}
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-foreground/8 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                className="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-gold/40 flex-shrink-0"
+                style={{ border: "1px solid hsl(var(--gold) / 0.1)" }}
                 aria-label={t.a11y_close_modal}
               >
-                <X className="w-5 h-5 text-foreground/50" />
+                <X className="w-4.5 h-4.5 text-foreground/60" />
               </button>
             </div>
 
@@ -387,21 +418,64 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               aria-live="polite"
             >
               {messages.length === 0 && (
-                <div className="text-center py-10 space-y-4">
-                  <div
-                    className="w-20 h-20 rounded-full flex items-center justify-center mx-auto"
+                <div className="text-center py-8 space-y-5">
+                  <div className="relative w-24 h-24 mx-auto flex items-center justify-center">
+                    {/* Outer pulsing aura */}
+                    <motion.div
+                      aria-hidden
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        background:
+                          "radial-gradient(circle, hsl(var(--gold) / 0.18) 0%, hsl(var(--gold) / 0.06) 45%, transparent 75%)",
+                      }}
+                      animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0.95, 0.6] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                    {/* Mid ring */}
+                    <motion.div
+                      aria-hidden
+                      className="absolute rounded-full"
+                      style={{
+                        inset: "14%",
+                        border: "1px solid hsl(var(--gold) / 0.22)",
+                      }}
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+                    />
+                    {/* Inner orb */}
+                    <motion.div
+                      className="relative w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{
+                        background:
+                          "radial-gradient(circle at 35% 30%, hsl(43 95% 78%) 0%, hsl(43 85% 55%) 45%, hsl(38 80% 38%) 100%)",
+                        border: "1px solid hsl(var(--gold) / 0.55)",
+                      }}
+                      animate={{
+                        boxShadow: [
+                          "0 0 24px hsl(var(--gold) / 0.35), inset 0 1px 6px hsl(43 100% 90% / 0.5)",
+                          "0 0 38px hsl(var(--gold) / 0.55), inset 0 1px 6px hsl(43 100% 90% / 0.5)",
+                          "0 0 24px hsl(var(--gold) / 0.35), inset 0 1px 6px hsl(43 100% 90% / 0.5)",
+                        ],
+                      }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Sparkles className="w-7 h-7 text-primary-foreground" strokeWidth={1.6} />
+                    </motion.div>
+                  </div>
+                  <p
+                    className="font-body mx-auto whitespace-pre-line"
                     style={{
-                      background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
-                      border: "1px solid hsl(var(--gold) / 0.12)",
+                      color: "hsl(var(--foreground) / 0.78)",
+                      fontSize: "16px",
+                      lineHeight: 1.85,
+                      maxWidth: 520,
+                      letterSpacing: "0.005em",
                     }}
                   >
-                    <Sparkles className="w-9 h-9 text-gold/50" />
-                  </div>
-                  <p className="text-foreground/40 font-body text-base leading-relaxed max-w-[500px] md:max-w-[500px] max-md:max-w-none mx-auto whitespace-pre-line">
                     {welcomeMessage}
                   </p>
                   {activeReading && suggestions.length > 0 && (
-                    <div className="flex flex-wrap gap-2.5 justify-center mt-4">
+                    <div className="flex flex-wrap gap-2.5 justify-center mt-5 px-2">
                       {suggestions.map((suggestion, i) => (
                         <button
                           key={i}
@@ -409,9 +483,9 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                           disabled={isStreaming || isLimitReached}
                           className="text-sm px-4 py-2.5 rounded-full font-body transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold/30 disabled:opacity-40 disabled:hover:scale-100 text-start leading-snug"
                           style={{
-                            background: "hsl(var(--gold) / 0.06)",
-                            border: "1px solid hsl(var(--gold) / 0.1)",
-                            color: "hsl(var(--gold) / 0.6)",
+                            background: "hsl(var(--gold) / 0.08)",
+                            border: "1px solid hsl(var(--gold) / 0.18)",
+                            color: "hsl(var(--gold) / 0.85)",
                             maxWidth: "100%",
                             wordBreak: "break-word",
                           }}
@@ -495,14 +569,29 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
             {/* Input */}
             <div
-              className="flex-shrink-0 px-6 py-5"
-              style={{ borderTop: "1px solid hsl(var(--gold) / 0.06)" }}
+              className="flex-shrink-0 px-5 pt-4 pb-5"
+              style={{
+                borderTop: "1px solid hsl(var(--gold) / 0.1)",
+                background:
+                  "linear-gradient(0deg, hsl(228 60% 4% / 0.6) 0%, transparent 100%)",
+              }}
             >
-              <div
-                className={`flex items-center gap-3 rounded-xl px-5 py-3 transition-opacity ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+              <motion.div
+                className={`flex items-center gap-2.5 rounded-2xl pl-3 pr-2 py-2 transition-all ${isLimitReached ? "opacity-40 pointer-events-none" : ""}`}
+                animate={{
+                  borderColor: inputFocused
+                    ? "hsl(var(--gold) / 0.45)"
+                    : "hsl(var(--gold) / 0.14)",
+                  boxShadow: inputFocused
+                    ? "0 0 0 3px hsl(var(--gold) / 0.08), 0 0 22px hsl(var(--gold) / 0.18), inset 0 1px 0 hsl(var(--gold) / 0.08)"
+                    : "0 2px 12px hsl(0 0% 0% / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.04)",
+                }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
                 style={{
-                  background: "hsl(var(--deep-blue-light) / 0.3)",
-                  border: "1px solid hsl(var(--gold) / 0.08)",
+                  background:
+                    "linear-gradient(180deg, hsl(225 50% 7% / 0.85) 0%, hsl(228 55% 5% / 0.9) 100%)",
+                  border: "1px solid",
+                  minHeight: 56,
                 }}
               >
                 <input
@@ -510,28 +599,53 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
+                  onFocus={() => setInputFocused(true)}
+                  onBlur={() => setInputFocused(false)}
                   placeholder={placeholderText}
                   disabled={isStreaming || isLimitReached}
-                  className="flex-1 bg-transparent text-base font-body text-foreground/80 placeholder:text-foreground/25 outline-none focus:ring-0"
+                  className="flex-1 bg-transparent font-body text-foreground outline-none focus:ring-0 px-2"
+                  style={{
+                    fontSize: 16,
+                    lineHeight: 1.5,
+                    letterSpacing: "0.005em",
+                  }}
                   dir={dir}
                   aria-label={placeholderText}
                 />
-                <button
+                <motion.button
                   onClick={() => void sendMessage()}
                   disabled={!input.trim() || isStreaming || isLimitReached}
-                  className="w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  whileTap={{ scale: 0.94 }}
+                  className="relative w-11 h-11 rounded-full flex items-center justify-center transition-all disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-gold/40 flex-shrink-0"
                   style={{
-                    background: input.trim() ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))" : "transparent",
+                    background: input.trim()
+                      ? "linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(var(--gold-dark)) 100%)"
+                      : "hsl(var(--gold) / 0.1)",
+                    border: input.trim()
+                      ? "1px solid hsl(var(--gold) / 0.5)"
+                      : "1px solid hsl(var(--gold) / 0.18)",
+                    boxShadow: input.trim()
+                      ? "0 4px 16px hsl(var(--gold) / 0.35), inset 0 1px 0 hsl(43 100% 90% / 0.4)"
+                      : "none",
                   }}
                   aria-label={t.advisor_send}
                 >
                   {isStreaming ? (
-                    <Loader2 className="w-5 h-5 animate-spin text-gold/60" />
+                    <Loader2 className="w-5 h-5 animate-spin text-gold/70" />
                   ) : (
-                    <Send className="w-4.5 h-4.5 text-primary-foreground" style={{ transform: dir === "rtl" ? "scaleX(-1)" : undefined }} />
+                    <Send
+                      className="w-4 h-4"
+                      strokeWidth={2.4}
+                      style={{
+                        color: input.trim()
+                          ? "hsl(var(--primary-foreground))"
+                          : "hsl(var(--gold) / 0.5)",
+                        transform: dir === "rtl" ? "scaleX(-1)" : undefined,
+                      }}
+                    />
                   )}
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             </div>
           </motion.div>
         </>
