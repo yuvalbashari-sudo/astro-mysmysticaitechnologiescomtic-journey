@@ -270,27 +270,16 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
         >
           {/* Chat header */}
           <div
-            className="flex items-center gap-4 px-7 py-5 flex-shrink-0"
+            className="flex flex-col items-center gap-3 px-7 py-5 flex-shrink-0"
             style={{
               borderBottom: "1px solid hsl(var(--gold) / 0.1)",
               background: "linear-gradient(135deg, hsl(var(--gold) / 0.04), transparent)",
             }}
           >
-            <div
-              className="w-11 h-11 rounded-full flex items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
-                boxShadow: "0 0 15px hsl(var(--gold) / 0.3)",
-              }}
-            >
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <div>
-              <h3 className="font-heading text-base text-gold">{t.advisor_title}</h3>
-              <p className="text-sm text-foreground/40 font-body mt-0.5">
-                {t.astrologer_personal_guidance}
-              </p>
-            </div>
+            <h3 className="font-heading text-3xl md:text-4xl gold-gradient-text text-center leading-tight">
+              {t.advisor_title}
+            </h3>
+            <TextSizeControl value={scale} onChange={setScale} />
           </div>
 
           {/* Messages area */}
