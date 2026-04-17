@@ -484,15 +484,15 @@ const MobileAiInsightOverlay = () => {
                 transition={{ delay: 1.6, duration: 0.6 }}
                 className="font-body mt-6 inline-flex flex-col items-center gap-1"
                 style={{
-                  color: "hsl(var(--foreground) / 0.5)",
-                  fontSize: 12,
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
+                  color: "hsl(var(--foreground) / 0.7)",
+                  fontSize: 16,
+                  fontWeight: 500,
+                  letterSpacing: "0.12em",
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
                   WebkitTapHighlightColor: "transparent",
-                  padding: "8px 16px",
+                  padding: "10px 18px",
                 }}
                 aria-label={copy.explore}
               >
@@ -502,7 +502,7 @@ const MobileAiInsightOverlay = () => {
                   transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                   aria-hidden
                 >
-                  <ChevronDown size={18} strokeWidth={1.5} />
+                  <ChevronDown size={22} strokeWidth={1.6} />
                 </motion.span>
               </motion.button>
             </div>
