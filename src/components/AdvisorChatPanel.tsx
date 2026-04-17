@@ -420,7 +420,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
             >
               {messages.length === 0 && (
                 <div className="text-center py-8 space-y-5">
-                  <div className="relative w-28 h-28 mx-auto flex items-center justify-center">
+                  <div className="relative w-44 h-44 mx-auto flex items-center justify-center">
                     {/* Outer pulsing aura */}
                     <motion.div
                       aria-hidden
@@ -447,8 +447,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                     <motion.div
                       className="relative rounded-full overflow-hidden"
                       style={{
-                        width: 92,
-                        height: 92,
+                        width: 152,
+                        height: 152,
                         border: "1.5px solid hsl(var(--gold) / 0.55)",
                         background: "hsl(225 50% 8%)",
                       }}
