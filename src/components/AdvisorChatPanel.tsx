@@ -447,8 +447,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
                     <motion.div
                       className="relative rounded-full overflow-hidden"
                       style={{
-                        width: 92,
-                        height: 92,
+                        width: 152,
+                        height: 152,
                         border: "1.5px solid hsl(var(--gold) / 0.55)",
                         background: "hsl(225 50% 8%)",
                       }}
