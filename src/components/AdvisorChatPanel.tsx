@@ -392,7 +392,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
             {/* Header */}
             <div
-              className="flex flex-col items-center gap-2 px-6 py-4 flex-shrink-0 relative"
+              className="flex flex-col items-center px-6 pt-4 pb-5 flex-shrink-0 relative"
               style={{
                 borderBottom: "1px solid hsl(var(--gold) / 0.1)",
                 background:
@@ -400,22 +400,24 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
               }}
             >
               <h3
-                className="font-heading text-2xl md:text-3xl leading-tight text-center px-12"
+                className="font-heading text-base md:text-lg leading-tight text-center px-12"
                 style={{
                   background:
                     "linear-gradient(180deg, hsl(43 95% 88%) 0%, hsl(43 80% 60%) 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  letterSpacing: "0.01em",
+                  letterSpacing: "0.02em",
                 }}
               >
                 {t.advisor_title}
               </h3>
               {activeReading && (
-                <p className="text-xs text-foreground/45 font-body truncate max-w-full px-12">{activeReading.label}</p>
+                <p className="text-[11px] text-foreground/45 font-body truncate max-w-full px-12 mt-1">{activeReading.label}</p>
               )}
-              <TextSizeControl value={scale} onChange={setScale} />
+              <div className="mt-4 scale-90 origin-top">
+                <TextSizeControl value={scale} onChange={setScale} />
+              </div>
               <button
                 onClick={onClose}
                 className={`absolute top-3 ${dir === "rtl" ? "left-3" : "right-3"} w-10 h-10 rounded-full flex items-center justify-center transition-all hover:bg-foreground/10 focus:outline-none focus:ring-2 focus:ring-gold/40 flex-shrink-0`}
