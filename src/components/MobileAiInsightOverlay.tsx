@@ -46,6 +46,7 @@ const trackEvent = (name: string, variant: Variant) => {
  */
 const MobileAiInsightOverlay = () => {
   const { language, dir } = useLanguage();
+  const t = useT();
   const isRTL = language === "he" || language === "ar";
 
   const [visible, setVisible] = useState(false);
