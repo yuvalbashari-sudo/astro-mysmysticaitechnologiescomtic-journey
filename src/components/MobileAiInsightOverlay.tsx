@@ -401,7 +401,7 @@ const MobileAiInsightOverlay = () => {
                   }}
                 />
                 <span className="relative inline-flex items-center justify-center gap-2">
-                  <Sparkles size={18} strokeWidth={2.2} />
+                  <span aria-hidden style={{ fontSize: 18, lineHeight: 1 }}>✦</span>
                   {copy.cta}
                 </span>
               </motion.button>
