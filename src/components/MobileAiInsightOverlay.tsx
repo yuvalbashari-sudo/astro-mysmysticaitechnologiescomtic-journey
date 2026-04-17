@@ -145,6 +145,7 @@ const MobileAiInsightOverlay = () => {
           <motion.div
             // md:hidden → mobile only, fully respects desktop visual lock.
             className="fixed inset-0 z-[80] md:hidden flex flex-col items-center justify-between"
+            data-ab-variant={variant}
             dir={dir}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
