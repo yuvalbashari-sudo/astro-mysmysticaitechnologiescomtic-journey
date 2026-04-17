@@ -160,7 +160,7 @@ const MobileAiInsightOverlay = () => {
               paddingRight: 24,
             }}
           >
-            {/* ── Original mystical illustration as background ── */}
+            {/* ── Original mystical illustration as background (70% impact) ── */}
             <div
               aria-hidden
               className="absolute inset-0 pointer-events-none"
@@ -169,27 +169,47 @@ const MobileAiInsightOverlay = () => {
                 backgroundSize: "cover",
                 backgroundPosition: "center 30%",
                 backgroundRepeat: "no-repeat",
-                filter: "brightness(0.55) contrast(0.92) saturate(0.95) blur(1.5px)",
-                opacity: 0.62,
-                transform: "scale(1.05)",
+                filter: "brightness(0.95) contrast(1.15) saturate(1.1)",
+                opacity: 1,
+                transform: "scale(1.04)",
               }}
             />
-            {/* ── Soft dark wash for text readability ── */}
+            {/* ── Very light global wash — keeps illustration vivid ── */}
             <div
               aria-hidden
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "radial-gradient(ellipse 90% 70% at 50% 35%, hsl(225 50% 4% / 0.55) 0%, hsl(225 55% 4% / 0.78) 55%, hsl(225 60% 3% / 0.92) 100%)",
+                  "radial-gradient(ellipse 110% 90% at 50% 45%, transparent 0%, hsl(225 55% 4% / 0.18) 60%, hsl(225 60% 3% / 0.4) 100%)",
               }}
             />
-            {/* ── Top + bottom vignette to anchor headline & bubble ── */}
+            {/* ── Targeted gradients ONLY behind text zones (top headline + bottom bubble) ── */}
+            <div
+              aria-hidden
+              className="absolute inset-x-0 top-0 pointer-events-none"
+              style={{
+                height: "46%",
+                background:
+                  "linear-gradient(180deg, hsl(225 60% 3% / 0.72) 0%, hsl(225 60% 3% / 0.55) 35%, hsl(225 60% 3% / 0.25) 75%, transparent 100%)",
+              }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-x-0 bottom-0 pointer-events-none"
+              style={{
+                height: "30%",
+                background:
+                  "linear-gradient(0deg, hsl(225 60% 3% / 0.78) 0%, hsl(225 60% 3% / 0.5) 50%, transparent 100%)",
+              }}
+            />
+            {/* ── Subtle warm glow behind crystal ball area for magical feel ── */}
             <div
               aria-hidden
               className="absolute inset-0 pointer-events-none"
               style={{
                 background:
-                  "linear-gradient(180deg, hsl(225 60% 3% / 0.55) 0%, transparent 22%, transparent 70%, hsl(225 60% 3% / 0.7) 100%)",
+                  "radial-gradient(ellipse 50% 30% at 50% 62%, hsl(43 80% 55% / 0.12) 0%, transparent 70%)",
+                mixBlendMode: "screen",
               }}
             />
 
