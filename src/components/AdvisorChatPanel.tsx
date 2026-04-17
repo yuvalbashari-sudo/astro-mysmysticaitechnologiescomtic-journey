@@ -86,7 +86,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   // Dynamic welcome message based on reading type
   const welcomeMessage = useMemo(() => {
-    if (!activeReading) return t.advisor_welcome_general;
+    if (!activeReading) return t.advisor_welcome_guide || t.advisor_welcome_general;
     switch (readingCategory) {
       case "tarot": return t.advisor_welcome_tarot;
       case "astrology": return t.advisor_welcome_astrology;
@@ -100,6 +100,8 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
   // Subtle writing-guidance example shown on focus
   const writingHint = useMemo(() => {
+    // In guide mode, use the recommendation-oriented hint
+    if (!activeReading && t.advisor_guide_hint) return t.advisor_guide_hint;
     const map: Record<string, string> = {
       he: "למשל: האם אני בדרך הנכונה בזוגיות שלי?",
       en: "For example: Am I on the right path in my relationship?",
@@ -107,7 +109,25 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
       ar: "مثلاً: هل أنا على الطريق الصحيح في علاقتي؟",
     };
     return map[language] || map.en;
-  }, [language]);
+  }, [language, activeReading, t]);
+
+  // Guide-mode chip handler: dispatches a global event so the homepage hero
+  // can react (deep-link to the right entry), and falls back to scroll+close.
+  const handleGuideChip = useCallback(
+    (feature: "astrology" | "tarot") => {
+      try {
+        window.dispatchEvent(
+          new CustomEvent("astrologai:open-feature", { detail: { feature } })
+        );
+      } catch { /* ignore */ }
+      // Smooth-scroll to top so the hero entry points are visible, then close.
+      try {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } catch { /* ignore */ }
+      onClose();
+    },
+    [onClose]
+  );
 
   const sendMessage = async (prefilledText?: string) => {
     const text = (prefilledText ?? input).trim();
