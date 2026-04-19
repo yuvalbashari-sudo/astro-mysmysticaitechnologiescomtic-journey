@@ -360,6 +360,8 @@ export const mysticalProfile = {
   getUserName,
   recordGender,
   getUserGender,
+  detectGenderFromText,
+  autoDetectAndRecordGender,
   recordZodiac,
   recordRising,
   recordBirthLocation,
