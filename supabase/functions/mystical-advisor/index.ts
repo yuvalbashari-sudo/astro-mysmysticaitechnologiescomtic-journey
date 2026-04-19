@@ -396,6 +396,11 @@ You may reference the user's past readings when relevant to show patterns or con
       ? `\n${(LANG_NAME_GUIDES[lang] || LANG_NAME_GUIDES["he"])(userName)}`
       : `\n${LANG_NO_NAME_GUIDES[lang] || LANG_NO_NAME_GUIDES["he"]}`;
 
+    // Build gender personalization instruction — critical for Hebrew/Arabic/Russian grammar
+    const genderKey = userGender === "male" || userGender === "female" ? userGender : "unknown";
+    const genderGuides = LANG_GENDER_GUIDES[lang] || LANG_GENDER_GUIDES["he"];
+    const genderBlock = `\n${genderGuides[genderKey]}`;
+
     const toneGuide = LANG_TONE_GUIDES[lang] || LANG_TONE_GUIDES["he"];
 
     // Prepend hard language override for non-Hebrew
