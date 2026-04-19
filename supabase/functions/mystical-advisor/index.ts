@@ -180,6 +180,8 @@ const LANG_GENDER_GUIDES: Record<string, Record<string, string>> = {
     unknown: "GENDER NOTE: User's gender is unknown. Use neutral language and they/them when needed.",
   },
 };
+
+const DOMAIN_PROMPTS: Record<string, string> = {
   tarot: `TAROT MODE — You are interpreting a specific tarot reading result.
 Rules:
 - Identify the exact card(s) drawn and the spread type from the reading context
