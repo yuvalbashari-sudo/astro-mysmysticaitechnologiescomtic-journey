@@ -139,6 +139,51 @@ function getUserGender(): "male" | "female" | "other" | "prefer_not_to_say" | un
   return getProfile().gender;
 }
 
+/**
+ * Detects gender from a free-text user message (Hebrew + light multilingual).
+ * Returns "male" | "female" if confidently detected, else undefined.
+ * Uses word-boundary matching to avoid false positives inside other words.
+ */
+function detectGenderFromText(text: string): "male" | "female" | undefined {
+  if (!text) return undefined;
+  const t = ` ${text.toLowerCase().replace(/[.,!?״"׳']/g, " ")} `;
+
+  // Hebrew explicit declarations
+  const malePatterns = [
+    /\sאני\s+(זכר|גבר|בחור|בן)\s/,
+    /\s(זכר|גבר)\s/,
+    /\bi\s+am\s+(a\s+)?(man|male|guy|boy)\b/,
+    /\bя\s+(мужчина|парень)\b/,
+    /\bأنا\s+(ذكر|رجل|ولد)\b/,
+  ];
+  const femalePatterns = [
+    /\sאני\s+(נקבה|אישה|אשה|בחורה|בת)\s/,
+    /\s(נקבה|אישה|אשה)\s/,
+    /\bi\s+am\s+(a\s+)?(woman|female|girl)\b/,
+    /\bя\s+(женщина|девушка)\b/,
+    /\bأنا\s+(أنثى|امرأة|بنت|فتاة)\b/,
+  ];
+
+  if (malePatterns.some(r => r.test(t))) return "male";
+  if (femalePatterns.some(r => r.test(t))) return "female";
+  return undefined;
+}
+
+/**
+ * Auto-detects gender from a user message and records it ONLY if
+ * not already known. Returns the resulting gender (existing or new).
+ */
+function autoDetectAndRecordGender(text: string): "male" | "female" | "other" | "prefer_not_to_say" | undefined {
+  const existing = getUserGender();
+  if (existing) return existing;
+  const detected = detectGenderFromText(text);
+  if (detected) {
+    recordGender(detected);
+    return detected;
+  }
+  return undefined;
+}
+
 function recordZodiac(sign: string, symbol: string, element: string, birthDate: string): void {
   const profile = getProfile();
   profile.zodiacSign = sign;
