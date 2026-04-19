@@ -164,6 +164,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
           })),
           language,
           userName: mysticalProfile.getUserName() || undefined,
+          userGender: mysticalProfile.autoDetectAndRecordGender(text) || undefined,
         }),
       });
 

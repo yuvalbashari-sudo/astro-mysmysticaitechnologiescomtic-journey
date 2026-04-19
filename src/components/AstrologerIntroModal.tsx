@@ -99,6 +99,7 @@ const AstrologerIntroModal = ({ isOpen, onClose }: Props) => {
           })),
           language,
           userName: mysticalProfile.getUserName() || undefined,
+          userGender: mysticalProfile.autoDetectAndRecordGender(text) || undefined,
         }),
       });
 

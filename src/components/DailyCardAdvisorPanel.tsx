@@ -99,6 +99,7 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
           })),
           language,
           userName: mysticalProfile.getUserName() || undefined,
+          userGender: mysticalProfile.autoDetectAndRecordGender(msgText) || undefined,
         }),
       });
 
