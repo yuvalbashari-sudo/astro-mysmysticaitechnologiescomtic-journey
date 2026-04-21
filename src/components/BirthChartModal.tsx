@@ -765,6 +765,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                         {t.chart_save_image}
                       </button>
                     </div>
+                    <AstrocartographySection />
                   </motion.div>
                 )}
               </motion.div>
