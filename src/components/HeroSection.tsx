@@ -13,6 +13,7 @@ import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmComingSoonModal from "./PalmComingSoonModal";
 import BirthChartModal from "./BirthChartModal";
+import AstrocartographyModal from "./AstrocartographyModal";
 import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
@@ -2175,6 +2176,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
   const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
+  const [astrocartoOpen, setAstrocartoOpen] = useState(false);
   const guideOpen = cosmicGuideOpen ?? false;
   const setGuideOpen = (open: boolean) => onCosmicGuideChange?.(open);
   const guideInfluence = useMemo(() => getDailyInfluence(), []);
@@ -2226,6 +2228,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Star, label: t.hero_menu_fullchart, side: "right" as const, index: 1 },
     { icon: Sun, label: t.hero_menu_daily_horoscope, side: "right" as const, index: 2 },
+    { icon: MapPin, label: t.hero_menu_astrocarto, side: "left" as const, index: 2 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
