@@ -111,6 +111,15 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                     background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.45), transparent)",
                   }}
                 />
+                {topOverlay && (
+                  <div
+                    className="absolute top-0 left-0 right-0"
+                    style={{
+                      height: "32%",
+                      background: "linear-gradient(to bottom, hsl(222 47% 3% / 0.85) 0%, hsl(222 47% 4% / 0.7) 55%, transparent 100%)",
+                    }}
+                  />
+                )}
               </div>
 
               {/* ── Layer 2: Floating particles ── */}
