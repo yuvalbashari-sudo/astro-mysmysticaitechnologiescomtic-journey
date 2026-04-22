@@ -219,10 +219,11 @@ const AstrocartographySection = () => {
                     }}
                   >
                     <Icon className="w-3.5 h-3.5" />
-                  {f.label}
-                </button>
-              );
-            })}
+                    {f.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
