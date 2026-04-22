@@ -127,6 +127,24 @@ const AstrocartographySection = () => {
     [selectedCityId]
   );
 
+  // Nearest planetary line to the selected city (by longitude distance, wrap-aware)
+  const nearestLine = useMemo(() => {
+    let best = PLANET_LINES[0];
+    let bestDist = Infinity;
+    for (const p of PLANET_LINES) {
+      const d = Math.min(
+        Math.abs(p.lon - selectedCity.lon),
+        360 - Math.abs(p.lon - selectedCity.lon)
+      );
+      if (d < bestDist) {
+        bestDist = d;
+        best = p;
+      }
+    }
+    return { line: best, distance: bestDist };
+  }, [selectedCity]);
+
+
   const sortedRecommendations = useMemo(() => {
     return [...CITIES]
       .map((c) => ({
