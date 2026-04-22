@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, Clock, Sparkles, BookOpen } from "lucide-react";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -28,6 +28,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   const { dir, language } = useLanguage();
   const t = useT();
   const isMobile = useIsMobile();
+  const { pathname } = useLocation();
+  const isHomepage = pathname === "/";
   const [isTablet, setIsTablet] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
 
@@ -132,7 +134,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     </div>
   );
 
-  const a11yLink = (
+  const a11yLink = isHomepage ? null : (
     <Link
       to="/accessibility"
       className={`${iconBtn} w-9 h-9 md:w-12 md:h-12 text-gold/50 hover:text-gold text-sm md:text-lg`}
