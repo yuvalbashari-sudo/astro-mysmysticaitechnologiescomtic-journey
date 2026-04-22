@@ -112,13 +112,26 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                   }}
                 />
                 {topOverlay && (
-                  <div
-                    className="absolute top-0 left-0 right-0"
-                    style={{
-                      height: "32%",
-                      background: "linear-gradient(to bottom, hsl(222 47% 3% / 0.85) 0%, hsl(222 47% 4% / 0.7) 55%, transparent 100%)",
-                    }}
-                  />
+                  <>
+                    {/* Heavy dark gradient — almost black at top, fading down */}
+                    <div
+                      className="absolute top-0 left-0 right-0"
+                      style={{
+                        height: "55%",
+                        background:
+                          "linear-gradient(to bottom, rgba(2, 6, 14, 0.97) 0%, rgba(2, 6, 14, 0.92) 45%, rgba(2, 6, 14, 0.85) 75%, transparent 100%)",
+                      }}
+                    />
+                    {/* Radial reading zone — extra darkening behind the title */}
+                    <div
+                      className="absolute top-0 left-0 right-0 pointer-events-none"
+                      style={{
+                        height: "55%",
+                        background:
+                          "radial-gradient(circle at 50% 30%, rgba(0,0,0,0.6) 0%, transparent 70%)",
+                      }}
+                    />
+                  </>
                 )}
               </div>
 
