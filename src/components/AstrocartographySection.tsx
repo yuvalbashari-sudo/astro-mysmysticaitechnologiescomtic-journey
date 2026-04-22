@@ -1,23 +1,40 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, Coins } from "lucide-react";
+import { CONTINENT_PATHS } from "@/data/worldMapPaths";
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
+type LineType = "MC" | "IC" | "ASC" | "DSC";
 
 // Equirectangular projection: lon [-180,180] → x [0,100], lat [85,-85] → y [0,60]
 const projX = (lon: number) => ((lon + 180) / 360) * 100;
 const projY = (lat: number) => ((85 - lat) / 170) * 60;
 
-type Planet = { key: string; name: string; lon: number; color: string; line: LineKey };
+type PlanetLine = {
+  key: string;
+  symbol: string;
+  name: string;
+  lon: number;
+  lineType: LineType;
+  color: string;
+  line: LineKey;
+  curve?: number; // -3..3 horizontal bow at equator (ASC/DSC are slightly curved)
+  mobile?: boolean; // show on mobile
+};
 
-// Mock planet meridian lines (real astrocartography MC lines are vertical at planet's longitude)
-const PLANET_LINES: Planet[] = [
-  { key: "sun", name: "שמש", lon: -75, color: "hsl(43 90% 60%)", line: "career" },
-  { key: "moon", name: "ירח", lon: -20, color: "hsl(210 40% 88%)", line: "home" },
-  { key: "venus", name: "ונוס", lon: 25, color: "hsl(340 75% 65%)", line: "love" },
-  { key: "mars", name: "מאדים", lon: 70, color: "hsl(0 75% 58%)", line: "abundance" },
-  { key: "jupiter", name: "צדק", lon: 130, color: "hsl(270 55% 65%)", line: "spirit" },
-  { key: "saturn", name: "שבתאי", lon: 155, color: "hsl(215 30% 60%)", line: "home" },
+// Real astrocartography: MC/IC = vertical meridian at planet's longitude.
+// ASC/DSC = curved horizon lines (we approximate with subtle horizontal bow).
+const PLANET_LINES: PlanetLine[] = [
+  { key: "sun-mc", symbol: "☉", name: "שמש", lon: -75, lineType: "MC", color: "hsl(43 90% 60%)", line: "career", mobile: true },
+  { key: "sun-ic", symbol: "☉", name: "שמש", lon: 105, lineType: "IC", color: "hsl(43 90% 60%)", line: "career" },
+  { key: "moon-mc", symbol: "☽", name: "ירח", lon: -20, lineType: "MC", color: "hsl(210 35% 88%)", line: "home", mobile: true },
+  { key: "venus-asc", symbol: "♀", name: "ונוס", lon: 25, lineType: "ASC", color: "hsl(340 75% 65%)", line: "love", curve: 1.6, mobile: true },
+  { key: "venus-mc", symbol: "♀", name: "ונוס", lon: -110, lineType: "MC", color: "hsl(340 75% 65%)", line: "love" },
+  { key: "mars-mc", symbol: "♂", name: "מאדים", lon: 70, lineType: "MC", color: "hsl(0 75% 58%)", line: "abundance" },
+  { key: "mars-dsc", symbol: "♂", name: "מאדים", lon: -130, lineType: "DSC", color: "hsl(0 75% 58%)", line: "abundance", curve: -1.4 },
+  { key: "jupiter-ic", symbol: "♃", name: "צדק", lon: 130, lineType: "IC", color: "hsl(270 55% 68%)", line: "spirit", mobile: true },
+  { key: "jupiter-asc", symbol: "♃", name: "צדק", lon: 55, lineType: "ASC", color: "hsl(270 55% 68%)", line: "spirit", curve: 1.2 },
+  { key: "saturn-mc", symbol: "♄", name: "שבתאי", lon: 155, lineType: "MC", color: "hsl(215 28% 62%)", line: "home" },
 ];
 
 const FILTERS: { label: string; key: LineKey; icon: typeof Heart }[] = [
@@ -66,33 +83,8 @@ const PLANET_MEANINGS = [
   { symbol: "♃", name: "צדק", meaning: "שפע, הזדמנויות, התרחבות והצלחה." },
 ];
 
-// Equirectangular continent silhouettes (lon -180..180 → x 0..100, lat 85..-85 → y 0..60)
-const CONTINENT_PATHS = [
-  // North America
-  "M 12 9 L 20 7 L 27 9 L 31 13 L 30 18 L 27 22 L 23 26 L 19 28 L 15 26 L 11 22 L 9 16 Z",
-  // Greenland
-  "M 33 6 L 39 5 L 41 10 L 36 13 L 33 11 Z",
-  // Central America
-  "M 23 28 L 27 28 L 28 32 L 25 33 L 22 31 Z",
-  // South America
-  "M 26 32 L 31 31 L 33 36 L 32 44 L 29 50 L 26 52 L 24 49 L 23 42 L 24 36 Z",
-  // Europe
-  "M 47 13 L 54 12 L 58 14 L 60 18 L 56 21 L 51 22 L 47 19 Z",
-  // Africa
-  "M 49 23 L 57 22 L 60 27 L 61 33 L 58 41 L 54 47 L 51 47 L 49 42 L 48 34 L 48 27 Z",
-  // Middle East
-  "M 58 18 L 65 17 L 67 22 L 63 24 L 59 22 Z",
-  // Asia main
-  "M 60 9 L 72 7 L 84 8 L 90 12 L 91 18 L 86 23 L 80 25 L 73 24 L 67 22 L 62 18 L 60 13 Z",
-  // India
-  "M 70 24 L 75 24 L 74 32 L 71 33 Z",
-  // Indonesia / SE Asia
-  "M 78 31 L 84 31 L 86 35 L 82 37 L 78 36 Z",
-  // Japan
-  "M 86 17 L 89 17 L 89 22 L 87 22 Z",
-  // Australia
-  "M 82 41 L 90 41 L 92 46 L 88 50 L 83 49 L 81 45 Z",
-];
+// CONTINENT_PATHS imported from '@/data/worldMapPaths'
+
 
 const FILTER_KEYWORDS: Record<LineKey, string[]> = {
   love: ["אהבה", "להתאהב", "הלב", "יופי"],
@@ -134,6 +126,24 @@ const AstrocartographySection = () => {
     () => CITIES.find((c) => c.id === selectedCityId) ?? CITIES[0],
     [selectedCityId]
   );
+
+  // Nearest planetary line to the selected city (by longitude distance, wrap-aware)
+  const nearestLine = useMemo(() => {
+    let best = PLANET_LINES[0];
+    let bestDist = Infinity;
+    for (const p of PLANET_LINES) {
+      const d = Math.min(
+        Math.abs(p.lon - selectedCity.lon),
+        360 - Math.abs(p.lon - selectedCity.lon)
+      );
+      if (d < bestDist) {
+        bestDist = d;
+        best = p;
+      }
+    }
+    return { line: best, distance: bestDist };
+  }, [selectedCity]);
+
 
   const sortedRecommendations = useMemo(() => {
     return [...CITIES]
@@ -223,56 +233,125 @@ const AstrocartographySection = () => {
           <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 60" preserveAspectRatio="none">
             <defs>
               <radialGradient id="cityGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="hsl(43 80% 65%)" stopOpacity="0.6" />
+                <stop offset="0%" stopColor="hsl(43 80% 65%)" stopOpacity="0.55" />
                 <stop offset="100%" stopColor="hsl(43 80% 65%)" stopOpacity="0" />
               </radialGradient>
+              {PLANET_LINES.map((p) => (
+                <linearGradient key={`grad-${p.key}`} id={`band-${p.key}`} x1="0" x2="1" y1="0" y2="0">
+                  <stop offset="0%" stopColor={p.color} stopOpacity="0" />
+                  <stop offset="50%" stopColor={p.color} stopOpacity="0.45" />
+                  <stop offset="100%" stopColor={p.color} stopOpacity="0" />
+                </linearGradient>
+              ))}
             </defs>
 
-            {[10, 20, 30, 40, 50].map((y) => (
-              <line key={`h${y}`} x1="0" y1={y} x2="100" y2={y} stroke="hsl(var(--gold))" strokeOpacity="0.07" strokeWidth="0.12" />
+            {/* Latitude grid (parallels) — every 15° */}
+            {[60, 45, 30, 15, -15, -30, -45, -60].map((lat) => (
+              <line
+                key={`lat${lat}`}
+                x1="0"
+                y1={projY(lat)}
+                x2="100"
+                y2={projY(lat)}
+                stroke="hsl(215 30% 60%)"
+                strokeOpacity="0.06"
+                strokeWidth="0.1"
+              />
             ))}
-            {[10, 20, 30, 40, 50, 60, 70, 80, 90].map((x) => (
-              <line key={`v${x}`} x1={x} y1="0" x2={x} y2="60" stroke="hsl(var(--gold))" strokeOpacity="0.07" strokeWidth="0.12" />
-            ))}
-
-            {/* Continent silhouettes — filled, dark navy */}
-            {CONTINENT_PATHS.map((d, i) => (
-              <path
-                key={`c${i}`}
-                d={d}
-                fill="hsl(215 40% 22% / 0.55)"
-                stroke="hsl(215 50% 50% / 0.35)"
-                strokeWidth="0.18"
-                strokeLinejoin="round"
+            {/* Longitude grid (meridians) — every 30° */}
+            {[-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150].map((lon) => (
+              <line
+                key={`lon${lon}`}
+                x1={projX(lon)}
+                y1="0"
+                x2={projX(lon)}
+                y2="60"
+                stroke="hsl(215 30% 60%)"
+                strokeOpacity={lon === 0 ? 0.16 : 0.06}
+                strokeWidth={lon === 0 ? 0.13 : 0.1}
+                strokeDasharray={lon === 0 ? "0.8 0.8" : "none"}
               />
             ))}
 
-            {/* Equator */}
-            <line x1="0" y1={projY(0)} x2="100" y2={projY(0)} stroke="hsl(var(--gold))" strokeOpacity="0.18" strokeWidth="0.15" strokeDasharray="0.6 0.6" />
+            {/* Continent silhouettes — filled, layered (shadow + body + coastline) */}
+            {CONTINENT_PATHS.map((d, i) => (
+              <g key={`c${i}`}>
+                <path d={d} fill="hsl(215 45% 14%)" opacity="0.85" />
+                <path d={d} fill="none" stroke="hsl(215 50% 55%)" strokeOpacity="0.35" strokeWidth="0.16" strokeLinejoin="round" />
+              </g>
+            ))}
 
-            {/* Planetary meridian lines (vertical, like real astrocartography MC lines) */}
+            {/* Equator + Tropics + Polar circles (subtle astronomy markers) */}
+            <line x1="0" y1={projY(0)} x2="100" y2={projY(0)} stroke="hsl(var(--gold))" strokeOpacity="0.22" strokeWidth="0.14" strokeDasharray="0.6 0.6" />
+            <line x1="0" y1={projY(23.5)} x2="100" y2={projY(23.5)} stroke="hsl(var(--gold))" strokeOpacity="0.08" strokeWidth="0.08" strokeDasharray="0.4 0.6" />
+            <line x1="0" y1={projY(-23.5)} x2="100" y2={projY(-23.5)} stroke="hsl(var(--gold))" strokeOpacity="0.08" strokeWidth="0.08" strokeDasharray="0.4 0.6" />
+
+            {/* Planetary lines: glow influence band + main line.
+                MC/IC = vertical meridians; ASC/DSC = subtle bowed lines. */}
             {PLANET_LINES.map((p) => {
               const x = projX(p.lon);
               const isFocus = p.line === focusLine;
+              const isMobileLine = p.mobile === true;
+              const visibleClass = isMobileLine ? "" : "hidden md:block";
+              const curve = p.curve ?? 0;
+
+              // Path: vertical line for MC/IC, slightly curved for ASC/DSC
+              const d =
+                curve === 0
+                  ? `M ${x} 0 L ${x} 60`
+                  : `M ${x - curve} 0 Q ${x + curve * 1.2} 30, ${x - curve} 60`;
+
               return (
-                <g key={p.key}>
-                  <line
-                    x1={x}
-                    y1="0"
-                    x2={x}
-                    y2="60"
+                <g key={p.key} className={visibleClass}>
+                  {/* Influence glow band — wide, soft */}
+                  <path
+                    d={d}
+                    fill="none"
                     stroke={p.color}
-                    strokeWidth={isFocus ? 0.55 : 0.3}
-                    opacity={isFocus ? 0.95 : 0.32}
-                    strokeDasharray={isFocus ? "none" : "1.2 0.8"}
+                    strokeWidth={isFocus ? 3.2 : 1.8}
+                    opacity={isFocus ? 0.32 : 0.1}
+                    strokeLinecap="round"
                     style={{
-                      filter: isFocus ? `drop-shadow(0 0 1.6px ${p.color})` : "none",
+                      filter: `blur(${isFocus ? 1.6 : 1}px)`,
+                      transition: "opacity 0.4s ease, stroke-width 0.4s ease",
+                    }}
+                  />
+                  {/* Main line */}
+                  <path
+                    d={d}
+                    fill="none"
+                    stroke={p.color}
+                    strokeWidth={isFocus ? 0.45 : 0.25}
+                    opacity={isFocus ? 1 : 0.55}
+                    strokeDasharray={p.lineType === "IC" || p.lineType === "DSC" ? "1.2 0.6" : "none"}
+                    style={{
+                      filter: isFocus ? `drop-shadow(0 0 1.4px ${p.color})` : "none",
                       transition: "opacity 0.4s ease, stroke-width 0.4s ease",
                     }}
                   />
                 </g>
               );
             })}
+
+            {/* Connector from selected city to its nearest planetary line */}
+            {(() => {
+              const cx = projX(selectedCity.lon);
+              const cy = projY(selectedCity.lat);
+              const lx = projX(nearestLine.line.lon);
+              return (
+                <line
+                  x1={cx}
+                  y1={cy}
+                  x2={lx}
+                  y2={cy}
+                  stroke={nearestLine.line.color}
+                  strokeWidth="0.18"
+                  strokeOpacity="0.7"
+                  strokeDasharray="0.6 0.6"
+                  style={{ filter: `drop-shadow(0 0 1px ${nearestLine.line.color})` }}
+                />
+              );
+            })()}
 
             {/* City markers (halo/pulse) */}
             {CITIES.map((c) => {
@@ -283,39 +362,52 @@ const AstrocartographySection = () => {
               const emphasized = isSelected || isHover;
               return (
                 <g key={c.id} className={c.mobile ? "" : "hidden md:block"}>
-                  <circle cx={cx} cy={cy} r={emphasized ? 3.6 : 2.4} fill="url(#cityGlow)" style={{ transition: "all 0.3s ease" }} />
-                  <circle cx={cx} cy={cy} r={emphasized ? 1.1 : 0.75} fill="hsl(var(--gold))" style={{ transition: "all 0.3s ease" }}>
+                  <circle cx={cx} cy={cy} r={emphasized ? 3.4 : 2.2} fill="url(#cityGlow)" style={{ transition: "all 0.3s ease" }} />
+                  <circle cx={cx} cy={cy} r={emphasized ? 1.0 : 0.7} fill="hsl(var(--gold))" style={{ transition: "all 0.3s ease" }}>
                     <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx={cx} cy={cy} r={emphasized ? 2.0 : 1.3} fill="none" stroke="hsl(var(--gold))" strokeOpacity={emphasized ? 0.75 : 0.4} strokeWidth="0.16" style={{ transition: "all 0.3s ease" }} />
+                  <circle cx={cx} cy={cy} r={emphasized ? 1.9 : 1.2} fill="none" stroke="hsl(var(--gold))" strokeOpacity={emphasized ? 0.8 : 0.4} strokeWidth="0.15" style={{ transition: "all 0.3s ease" }} />
                 </g>
               );
             })}
           </svg>
 
-          {/* Planet labels along their meridians (HTML for crisp text) */}
+          {/* Planet line labels (HTML for crisp text). Format: "☉ MC" / "♀ ASC" */}
           {PLANET_LINES.map((p) => {
             const isFocus = p.line === focusLine;
+            const isMobileLine = p.mobile === true;
+            // Stagger vertical position so labels don't overlap
+            const lonBucket = Math.floor((p.lon + 180) / 30);
+            const topPx = 6 + (lonBucket % 2) * 14;
             return (
               <div
                 key={`label-${p.key}`}
-                className="absolute pointer-events-none font-heading whitespace-nowrap transition-all duration-300"
+                className={`absolute pointer-events-none font-heading whitespace-nowrap transition-all duration-300 ${isMobileLine ? "" : "hidden md:block"}`}
                 style={{
                   left: `${projX(p.lon)}%`,
-                  top: 6,
+                  top: topPx,
                   transform: "translateX(-50%)",
                   fontSize: 10,
-                  letterSpacing: "0.02em",
+                  letterSpacing: "0.04em",
                   color: p.color,
-                  opacity: isFocus ? 1 : 0.55,
+                  opacity: isFocus ? 1 : 0.65,
                   textShadow: `0 0 8px hsl(222 50% 4%), 0 0 4px hsl(222 50% 4%), 0 0 6px ${p.color}`,
                   zIndex: 4,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 3,
+                  padding: "2px 5px",
+                  borderRadius: 4,
+                  background: isFocus ? "hsl(222 50% 4% / 0.55)" : "transparent",
+                  border: isFocus ? `1px solid ${p.color}` : "1px solid transparent",
                 }}
               >
-                {p.name}
+                <span style={{ fontSize: 11 }}>{p.symbol}</span>
+                <span style={{ fontSize: 9, opacity: 0.85 }}>{p.lineType}</span>
               </div>
             );
           })}
+
 
           {/* Clickable city overlays */}
           {CITIES.map((c) => {
