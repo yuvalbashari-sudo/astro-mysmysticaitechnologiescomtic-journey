@@ -38,7 +38,7 @@ interface Props {
  * Children scroll naturally over a rising fog gradient that provides
  * text legibility without hiding the figure.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle, hideFreeBadge = false, topOverlay = false }: Props) => {
   const isMobile = useIsMobile();
   const t = useT();
   const [advisorOpen, setAdvisorOpen] = useState(false);
