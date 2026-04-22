@@ -24,6 +24,10 @@ interface Props {
   transparent?: boolean;
   /** Override default avatar positioning styles */
   avatarStyle?: React.CSSProperties;
+  /** Hide the floating "Free" badge in the top-right (use when modal owns its own header) */
+  hideFreeBadge?: boolean;
+  /** Strengthen dark overlay over the top portion to suppress background branding */
+  topOverlay?: boolean;
 }
 
 /**
