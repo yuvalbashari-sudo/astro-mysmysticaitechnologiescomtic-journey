@@ -3100,8 +3100,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
         <div className="grid grid-cols-2" style={{ gap: 12 }}>
-            {/* Left column: DailyHoroscope (i=4), Forecast (i=0) — Right column: Tarot (i=2), BirthChart (i=3), Compatibility (i=1) */}
-            {[[4, 0], [2, 3, 1]].map((colIndices, colIdx) => (
+            {/* Left column: DailyHoroscope (i=4), Forecast (i=0), Astrocarto (i=5) — Right column: Tarot (i=2), BirthChart (i=3), Compatibility (i=1) */}
+            {[[4, 0, 5], [2, 3, 1]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
@@ -3112,6 +3112,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     2: { neon: "rgba(220, 50, 50, 0.85)", neonLight: "rgba(220, 50, 50, 0.5)", iconColor: "rgba(255, 80, 80, 0.85)" },
                     3: { neon: ITEM_COLORS[3].glow, neonLight: ITEM_COLORS[3].glow, iconColor: ITEM_COLORS[3].glow },
                     4: { neon: "hsl(35, 90%, 58%)", neonLight: "hsl(35, 85%, 50%)", iconColor: "hsl(35, 90%, 60%)" },
+                    5: { neon: "hsl(180, 70%, 55%)", neonLight: "hsl(180, 65%, 48%)", iconColor: "hsl(180, 75%, 60%)" },
                   };
                   const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
@@ -3132,7 +3133,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       onFocus={() => { if (!isMobile) setHoveredItem(i); }}
                       onBlur={() => { if (!isMobile) setHoveredItem(null); }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); if (i === 4) setDailyHoroscopeOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); if (i === 4) setDailyHoroscopeOpen(true); if (i === 5) setAstrocartoOpen(true); }}
                       aria-label={item.label}
                     >
                       <div
