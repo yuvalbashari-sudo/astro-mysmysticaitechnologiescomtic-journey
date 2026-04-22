@@ -3620,8 +3620,59 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               );
             })()}
 
+            {/* Astrocartography tab */}
+            {(() => {
+              const i = 5;
+              const item = menuItems[i];
+              const itemColor = ITEM_COLORS[i];
+              const isHovered = hoveredItem === i;
+              return (
+                <motion.button
+                  key={i}
+                  type="button"
+                  className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none"
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: isHovered ? 1 : 0.82, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.92 }}
+                  onMouseEnter={() => setHoveredItem(i)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  onFocus={() => setHoveredItem(i)}
+                  onBlur={() => setHoveredItem(null)}
+                  whileHover={{ scale: 1.08, x: -4 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setAstrocartoOpen(true)}
+                  aria-label={item.label}
+                >
+                  <div
+                    className={`relative flex items-center gap-3 rounded-full transition-all duration-300 whitespace-nowrap backdrop-blur-md ${isTablet ? "px-5 py-3" : "px-9 py-5"}`}
+                    style={{
+                      borderWidth: "1px", borderStyle: "solid",
+                      borderColor: isHovered ? `${itemColor.glow}bb` : "hsl(var(--gold) / 0.12)",
+                      background: isHovered ? `${itemColor.glow}1a` : "hsl(var(--deep-blue) / 0.5)",
+                      boxShadow: isHovered
+                        ? `0 0 28px ${itemColor.glow}55, 0 0 56px ${itemColor.glow}1a, inset 0 1px 0 hsl(var(--gold) / 0.1)`
+                        : "0 2px 8px hsl(var(--deep-blue) / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.06)",
+                    }}
+                  >
+                    <item.icon
+                      className={`flex-shrink-0 transition-all duration-300 ${isTablet ? "w-5 h-5" : "w-8 h-8"}`}
+                      style={{
+                        color: isHovered ? itemColor.glow : "hsl(var(--gold) / 0.7)",
+                        filter: isHovered ? `drop-shadow(0 0 6px ${itemColor.glow})` : "none",
+                      }}
+                    />
+                    <span
+                      className={`font-body transition-colors duration-300 ${isTablet ? "text-[14px]" : "text-[18px]"} font-semibold`}
+                      style={{ color: isHovered ? itemColor.glow : "hsl(var(--foreground) / 0.88)" }}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                </motion.button>
+              );
+            })()}
 
-          </motion.div>
+
         </>
       )}
     </div>
