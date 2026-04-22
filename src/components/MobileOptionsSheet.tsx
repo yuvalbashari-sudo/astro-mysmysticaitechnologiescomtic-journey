@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map, Wand2 } from "lucide-react";
+import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map, Wand2, MapPin } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
 import DailyHoroscopeModal from "./DailyHoroscopeModal";
 import MonthlyForecastModal from "./MonthlyForecastModal";
@@ -11,6 +11,7 @@ import TarotModal from "./TarotModal";
 import RisingSignModal from "./RisingSignModal";
 import BirthChartModal from "./BirthChartModal";
 import DailyCardModal from "./DailyCardModal";
+import AstrocartographyModal from "./AstrocartographyModal";
 
 interface Props {
   isOpen: boolean;
@@ -24,7 +25,8 @@ type OptionKey =
   | "tarot"
     | "rising"
     | "birthchart"
-    | "daily_card";
+    | "daily_card"
+    | "astrocarto";
 
 const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -94,6 +96,12 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
       label: t.hero_menu_birthchart,
       icon: <Map className="w-6 h-6" aria-hidden="true" />,
       accent: "180 70% 55%",
+    },
+    {
+      key: "astrocarto",
+      label: t.hero_menu_astrocarto,
+      icon: <MapPin className="w-6 h-6" aria-hidden="true" />,
+      accent: "180 75% 60%",
     },
   ];
 
@@ -342,6 +350,10 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
       />
       <DailyCardModal
         isOpen={active === "daily_card"}
+        onClose={() => setActive(null)}
+      />
+      <AstrocartographyModal
+        isOpen={active === "astrocarto"}
         onClose={() => setActive(null)}
       />
     </>
