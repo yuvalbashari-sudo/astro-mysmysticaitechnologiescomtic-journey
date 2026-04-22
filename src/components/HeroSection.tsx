@@ -4170,6 +4170,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
       <DailyHoroscopeModal isOpen={dailyHoroscopeOpen} onClose={() => setDailyHoroscopeOpen(false)} />
+      <AstrocartographyModal isOpen={astrocartoOpen} onClose={() => setAstrocartoOpen(false)} />
     </>
   );
 };
