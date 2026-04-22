@@ -70,13 +70,8 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
     }
     // Persist whatever bits we have for cross-feature memory
     try {
-      mysticalProfile.update({
-        name: details.userName.trim(),
-        gender: details.gender as any,
-        birthDate: details.birthDate,
-        birthTime: details.birthTime,
-        birthCity: details.birthCity.trim(),
-      });
+      mysticalProfile.recordUserName(details.userName.trim());
+      if (details.gender) mysticalProfile.recordGender(details.gender as any);
     } catch { /* ignore */ }
     setPhase("analyzing");
   }, [details]);
