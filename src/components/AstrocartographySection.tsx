@@ -4,6 +4,22 @@ import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, C
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
 
+// Equirectangular projection: lon [-180,180] → x [0,100], lat [85,-85] → y [0,60]
+const projX = (lon: number) => ((lon + 180) / 360) * 100;
+const projY = (lat: number) => ((85 - lat) / 170) * 60;
+
+type Planet = { key: string; name: string; lon: number; color: string; line: LineKey };
+
+// Mock planet meridian lines (real astrocartography MC lines are vertical at planet's longitude)
+const PLANET_LINES: Planet[] = [
+  { key: "sun", name: "שמש", lon: -75, color: "hsl(43 90% 60%)", line: "career" },
+  { key: "moon", name: "ירח", lon: -20, color: "hsl(210 40% 88%)", line: "home" },
+  { key: "venus", name: "ונוס", lon: 25, color: "hsl(340 75% 65%)", line: "love" },
+  { key: "mars", name: "מאדים", lon: 70, color: "hsl(0 75% 58%)", line: "abundance" },
+  { key: "jupiter", name: "צדק", lon: 130, color: "hsl(270 55% 65%)", line: "spirit" },
+  { key: "saturn", name: "שבתאי", lon: 155, color: "hsl(215 30% 60%)", line: "home" },
+];
+
 const FILTERS: { label: string; key: LineKey; icon: typeof Heart }[] = [
   { label: "אהבה", key: "love", icon: Heart },
   { label: "קריירה", key: "career", icon: Briefcase },
