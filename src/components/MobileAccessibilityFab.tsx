@@ -19,6 +19,7 @@ const MobileAccessibilityFab = () => {
 
   if (!isMobile) return null;
   if (pathname === "/accessibility") return null;
+  if (pathname === "/") return null;
 
   return (
     <motion.div
