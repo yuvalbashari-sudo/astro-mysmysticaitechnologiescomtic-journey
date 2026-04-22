@@ -3672,7 +3672,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               );
             })()}
 
-
+          </motion.div>
         </>
       )}
     </div>
