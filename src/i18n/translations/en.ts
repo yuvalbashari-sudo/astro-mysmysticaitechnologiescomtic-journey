@@ -25,6 +25,17 @@ export const en: TranslationKeys = {
   hero_menu_birthchart: "Birth Chart",
   hero_menu_fullchart: "Full Astrological Chart",
   hero_menu_daily_horoscope: "Your Daily Horoscope",
+  hero_menu_astrocarto: "Astrocartography Map",
+
+  astrocarto_norielle_intro: "I'm here to guide you to the places in the world where your energy opens up.",
+  astrocarto_subtitle: "Discover where in the world your energy unfolds for love, success, and growth",
+  astrocarto_form_intro: "To reveal your personal energy map across the world, share your birth details",
+  astrocarto_form_cta: "Reveal my map",
+  astrocarto_analyzing: "Reading your energetic lines across the world...",
+  astrocarto_result_title: "Your Personal Astrocartography Map",
+  astrocarto_result_desc: "These lines show where in the world your energy strengthens across different life areas",
+  astrocarto_result_hint: "Tap a location on the map to discover its influence on you",
+  astrocarto_result_footer: "Perhaps your next place is already waiting for you",
 
   nav_title: "Mystical Gates",
   nav_subtitle: "Choose your gateway to the spiritual realm",

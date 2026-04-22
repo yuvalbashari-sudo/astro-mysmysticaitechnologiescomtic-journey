@@ -25,6 +25,17 @@ export const ru: TranslationKeys = {
   hero_menu_birthchart: "Натальная карта",
   hero_menu_fullchart: "Полная астрологическая карта",
   hero_menu_daily_horoscope: "Ваш ежедневный гороскоп",
+  hero_menu_astrocarto: "Карта астрокартографии",
+
+  astrocarto_norielle_intro: "Я здесь, чтобы провести вас к местам в мире, где ваша энергия раскрывается",
+  astrocarto_subtitle: "Узнайте, где в мире ваша энергия раскрывается для любви, успеха и развития",
+  astrocarto_form_intro: "Чтобы раскрыть вашу личную энергетическую карту мира, введите данные рождения",
+  astrocarto_form_cta: "Открыть мою карту",
+  astrocarto_analyzing: "Читаем ваши энергетические линии по всему миру...",
+  astrocarto_result_title: "Ваша личная карта астрокартографии",
+  astrocarto_result_desc: "Эти линии показывают, где в мире ваша энергия усиливается в разных сферах жизни",
+  astrocarto_result_hint: "Нажмите на место на карте, чтобы узнать его влияние на вас",
+  astrocarto_result_footer: "Возможно, ваше следующее место уже ждёт вас",
 
   nav_title: "Мистические врата",
   nav_subtitle: "Выберите свои врата в духовный мир",

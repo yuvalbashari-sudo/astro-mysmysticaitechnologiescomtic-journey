@@ -25,6 +25,17 @@ export const he: TranslationKeys = {
   hero_menu_birthchart: "מפת לידה",
   hero_menu_fullchart: "מפה אסטרולוגית מלאה",
   hero_menu_daily_horoscope: "ההורוסקופ היומי שלך",
+  hero_menu_astrocarto: "מפת אסטרו־קרטוגרפיה",
+
+  astrocarto_norielle_intro: "אני כאן ללוות אתכם לגילוי המקומות בעולם שבהם האנרגיה שלכם נפתחת",
+  astrocarto_subtitle: "גלו איפה בעולם האנרגיה שלכם נפתחת לאהבה, הצלחה והתפתחות",
+  astrocarto_form_intro: "כדי לחשוף את מפת האנרגיה האישית שלכם בעולם, הזינו את פרטי הלידה שלכם",
+  astrocarto_form_cta: "חשפו את המפה שלי",
+  astrocarto_analyzing: "מנתחים את הקווים האנרגטיים שלכם בעולם...",
+  astrocarto_result_title: "מפת האסטרו־קרטוגרפיה האישית שלכם",
+  astrocarto_result_desc: "קווים אלו מראים היכן בעולם האנרגיה שלכם מתחזקת בתחומים שונים",
+  astrocarto_result_hint: "לחצו על מיקום במפה כדי לגלות את ההשפעה עליו",
+  astrocarto_result_footer: "אולי המקום הבא שלכם כבר מחכה לכם",
 
   nav_title: "שערים מיסטיים",
   nav_subtitle: "בחרו את השער שלכם לעולם הרוחני",
