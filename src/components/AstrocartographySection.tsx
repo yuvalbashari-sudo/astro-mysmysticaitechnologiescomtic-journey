@@ -235,56 +235,89 @@ const AstrocartographySection = () => {
               <line key={`v${x}`} x1={x} y1="0" x2={x} y2="60" stroke="hsl(var(--gold))" strokeOpacity="0.07" strokeWidth="0.12" />
             ))}
 
+            {/* Continent silhouettes — filled, dark navy */}
             {CONTINENT_PATHS.map((d, i) => (
               <path
                 key={`c${i}`}
                 d={d}
-                fill="none"
-                stroke="hsl(215 50% 55%)"
-                strokeOpacity="0.18"
-                strokeWidth="3"
-                strokeLinecap="round"
+                fill="hsl(215 40% 22% / 0.55)"
+                stroke="hsl(215 50% 50% / 0.35)"
+                strokeWidth="0.18"
                 strokeLinejoin="round"
               />
             ))}
 
-            {/* Planetary lines with focus dimming */}
-            {LINES.map((l) => {
-              const isFocus = l.key === focusLine;
+            {/* Equator */}
+            <line x1="0" y1={projY(0)} x2="100" y2={projY(0)} stroke="hsl(var(--gold))" strokeOpacity="0.18" strokeWidth="0.15" strokeDasharray="0.6 0.6" />
+
+            {/* Planetary meridian lines (vertical, like real astrocartography MC lines) */}
+            {PLANET_LINES.map((p) => {
+              const x = projX(p.lon);
+              const isFocus = p.line === focusLine;
               return (
-                <path
-                  key={l.key}
-                  d={l.d}
-                  fill="none"
-                  stroke={LINE_COLORS[l.key]}
-                  strokeWidth={isFocus ? 0.85 : 0.45}
-                  opacity={isFocus ? 1 : 0.18}
-                  style={{
-                    filter: isFocus ? `drop-shadow(0 0 1.5px ${LINE_COLORS[l.key]})` : "none",
-                    transition: "opacity 0.4s ease, stroke-width 0.4s ease",
-                  }}
-                />
+                <g key={p.key}>
+                  <line
+                    x1={x}
+                    y1="0"
+                    x2={x}
+                    y2="60"
+                    stroke={p.color}
+                    strokeWidth={isFocus ? 0.55 : 0.3}
+                    opacity={isFocus ? 0.95 : 0.32}
+                    strokeDasharray={isFocus ? "none" : "1.2 0.8"}
+                    style={{
+                      filter: isFocus ? `drop-shadow(0 0 1.6px ${p.color})` : "none",
+                      transition: "opacity 0.4s ease, stroke-width 0.4s ease",
+                    }}
+                  />
+                </g>
               );
             })}
 
-            {/* City markers (non-interactive layer for halo/pulse) */}
+            {/* City markers (halo/pulse) */}
             {CITIES.map((c) => {
+              const cx = projX(c.lon);
+              const cy = projY(c.lat);
               const isSelected = c.id === selectedCityId;
               const isHover = c.id === hoveredCityId;
               const emphasized = isSelected || isHover;
               return (
                 <g key={c.id} className={c.mobile ? "" : "hidden md:block"}>
-                  <circle cx={c.x} cy={c.y * 0.6} r={emphasized ? 4.5 : 3} fill="url(#cityGlow)" style={{ transition: "all 0.3s ease" }} />
-                  <circle cx={c.x} cy={c.y * 0.6} r={emphasized ? 1.3 : 0.9} fill="hsl(var(--gold))" style={{ transition: "all 0.3s ease" }}>
-                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite" />
+                  <circle cx={cx} cy={cy} r={emphasized ? 3.6 : 2.4} fill="url(#cityGlow)" style={{ transition: "all 0.3s ease" }} />
+                  <circle cx={cx} cy={cy} r={emphasized ? 1.1 : 0.75} fill="hsl(var(--gold))" style={{ transition: "all 0.3s ease" }}>
+                    <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx={c.x} cy={c.y * 0.6} r={emphasized ? 2.4 : 1.6} fill="none" stroke="hsl(var(--gold))" strokeOpacity={emphasized ? 0.7 : 0.4} strokeWidth="0.18" style={{ transition: "all 0.3s ease" }} />
+                  <circle cx={cx} cy={cy} r={emphasized ? 2.0 : 1.3} fill="none" stroke="hsl(var(--gold))" strokeOpacity={emphasized ? 0.75 : 0.4} strokeWidth="0.16" style={{ transition: "all 0.3s ease" }} />
                 </g>
               );
             })}
           </svg>
 
-          {/* Clickable city overlays (HTML for tap targets + Hebrew label) */}
+          {/* Planet labels along their meridians (HTML for crisp text) */}
+          {PLANET_LINES.map((p) => {
+            const isFocus = p.line === focusLine;
+            return (
+              <div
+                key={`label-${p.key}`}
+                className="absolute pointer-events-none font-heading whitespace-nowrap transition-all duration-300"
+                style={{
+                  left: `${projX(p.lon)}%`,
+                  top: 6,
+                  transform: "translateX(-50%)",
+                  fontSize: 10,
+                  letterSpacing: "0.02em",
+                  color: p.color,
+                  opacity: isFocus ? 1 : 0.55,
+                  textShadow: `0 0 8px hsl(222 50% 4%), 0 0 4px hsl(222 50% 4%), 0 0 6px ${p.color}`,
+                  zIndex: 4,
+                }}
+              >
+                {p.name}
+              </div>
+            );
+          })}
+
+          {/* Clickable city overlays */}
           {CITIES.map((c) => {
             const isSelected = c.id === selectedCityId;
             return (
@@ -295,8 +328,8 @@ const AstrocartographySection = () => {
                 onMouseLeave={() => setHoveredCityId(null)}
                 className={`absolute group ${c.mobile ? "" : "hidden md:block"}`}
                 style={{
-                  left: `${c.x}%`,
-                  top: `${c.y * 0.6 / 60 * 100}%`,
+                  left: `${projX(c.lon)}%`,
+                  top: `${(projY(c.lat) / 60) * 100}%`,
                   transform: "translate(50%, -50%)",
                   width: 44,
                   height: 44,
@@ -312,7 +345,7 @@ const AstrocartographySection = () => {
                   style={{
                     bottom: "100%",
                     marginBottom: 6,
-                    color: isSelected ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.85)",
+                    color: isSelected ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.9)",
                     textShadow: "0 0 10px hsl(222 50% 4%), 0 0 6px hsl(222 50% 4%)",
                     fontWeight: isSelected ? 700 : 500,
                     transform: isSelected ? "translate(-50%, -2px) scale(1.05)" : "translate(-50%, 0) scale(1)",
