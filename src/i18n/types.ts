@@ -36,6 +36,18 @@ export type TranslationKeys = {
   hero_menu_birthchart: string;
   hero_menu_fullchart: string;
   hero_menu_daily_horoscope: string;
+  hero_menu_astrocarto: string;
+
+  // Astrocartography Modal
+  astrocarto_norielle_intro: string;
+  astrocarto_subtitle: string;
+  astrocarto_form_intro: string;
+  astrocarto_form_cta: string;
+  astrocarto_analyzing: string;
+  astrocarto_result_title: string;
+  astrocarto_result_desc: string;
+  astrocarto_result_hint: string;
+  astrocarto_result_footer: string;
 
   // MysticalNav
   nav_title: string;

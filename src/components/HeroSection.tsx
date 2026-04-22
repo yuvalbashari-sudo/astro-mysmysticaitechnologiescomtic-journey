@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
-import { Sparkles, Star, Eye, Hand, Sun, BookOpen, X } from "lucide-react";
+import { Sparkles, Star, Eye, Hand, Sun, BookOpen, X, MapPin } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
@@ -13,6 +13,7 @@ import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import PalmComingSoonModal from "./PalmComingSoonModal";
 import BirthChartModal from "./BirthChartModal";
+import AstrocartographyModal from "./AstrocartographyModal";
 import DailyCardModal from "./DailyCardModal";
 import ZodiacSignModal from "./ZodiacSignModal";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
@@ -2175,6 +2176,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
   const [dailyCardOpen, setDailyCardOpen] = useState(false);
   const [birthChartOpen, setBirthChartOpen] = useState(false);
   const [dailyHoroscopeOpen, setDailyHoroscopeOpen] = useState(false);
+  const [astrocartoOpen, setAstrocartoOpen] = useState(false);
   const guideOpen = cosmicGuideOpen ?? false;
   const setGuideOpen = (open: boolean) => onCosmicGuideChange?.(open);
   const guideInfluence = useMemo(() => getDailyInfluence(), []);
@@ -2226,6 +2228,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Star, label: t.hero_menu_fullchart, side: "right" as const, index: 1 },
     { icon: Sun, label: t.hero_menu_daily_horoscope, side: "right" as const, index: 2 },
+    { icon: MapPin, label: t.hero_menu_astrocarto, side: "left" as const, index: 2 },
   ], [t]);
 
   // Calculate tab positions: two arced columns on left/right sides
@@ -3097,8 +3100,8 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
         >
         <div className="grid grid-cols-2" style={{ gap: 12 }}>
-            {/* Left column: DailyHoroscope (i=4), Forecast (i=0) — Right column: Tarot (i=2), BirthChart (i=3), Compatibility (i=1) */}
-            {[[4, 0], [2, 3, 1]].map((colIndices, colIdx) => (
+            {/* Left column: DailyHoroscope (i=4), Forecast (i=0), Astrocarto (i=5) — Right column: Tarot (i=2), BirthChart (i=3), Compatibility (i=1) */}
+            {[[4, 0, 5], [2, 3, 1]].map((colIndices, colIdx) => (
               <div key={colIdx} className="flex flex-col gap-2.5">
                 {colIndices.map((i) => {
                   const item = menuItems[i];
@@ -3109,6 +3112,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                     2: { neon: "rgba(220, 50, 50, 0.85)", neonLight: "rgba(220, 50, 50, 0.5)", iconColor: "rgba(255, 80, 80, 0.85)" },
                     3: { neon: ITEM_COLORS[3].glow, neonLight: ITEM_COLORS[3].glow, iconColor: ITEM_COLORS[3].glow },
                     4: { neon: "hsl(35, 90%, 58%)", neonLight: "hsl(35, 85%, 50%)", iconColor: "hsl(35, 90%, 60%)" },
+                    5: { neon: "hsl(180, 70%, 55%)", neonLight: "hsl(180, 65%, 48%)", iconColor: "hsl(180, 75%, 60%)" },
                   };
                   const neon = MOBILE_NEON[i];
                   const isHovered = hoveredItem === i;
@@ -3129,7 +3133,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       onFocus={() => { if (!isMobile) setHoveredItem(i); }}
                       onBlur={() => { if (!isMobile) setHoveredItem(null); }}
                       whileTap={{ scale: 0.95 }}
-                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); if (i === 4) setDailyHoroscopeOpen(true); }}
+                      onClick={() => { if (i === 0) setForecastOpen(true); if (i === 1) setCompatibilityOpen(true); if (i === 2) setTarotOpen(true); if (i === 3) setBirthChartOpen(true); if (i === 4) setDailyHoroscopeOpen(true); if (i === 5) setAstrocartoOpen(true); }}
                       aria-label={item.label}
                     >
                       <div
@@ -4167,6 +4171,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
       <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
       <DailyHoroscopeModal isOpen={dailyHoroscopeOpen} onClose={() => setDailyHoroscopeOpen(false)} />
+      <AstrocartographyModal isOpen={astrocartoOpen} onClose={() => setAstrocartoOpen(false)} />
     </>
   );
 };

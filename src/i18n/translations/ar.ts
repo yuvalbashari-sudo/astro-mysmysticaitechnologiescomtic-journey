@@ -25,6 +25,17 @@ export const ar: TranslationKeys = {
   hero_menu_birthchart: "خريطة الميلاد",
   hero_menu_fullchart: "خريطة فلكية كاملة",
   hero_menu_daily_horoscope: "برجك اليومي",
+  hero_menu_astrocarto: "خريطة الجغرافيا الفلكية",
+
+  astrocarto_norielle_intro: "أنا هنا لأرافقكم لاكتشاف الأماكن في العالم التي تنفتح فيها طاقتكم",
+  astrocarto_subtitle: "اكتشفوا أين في العالم تنفتح طاقتكم للحب والنجاح والنمو",
+  astrocarto_form_intro: "لكشف خريطة طاقتكم الشخصية في العالم، أدخلوا تفاصيل ميلادكم",
+  astrocarto_form_cta: "اكشفوا خريطتي",
+  astrocarto_analyzing: "نحلل خطوط طاقتكم حول العالم...",
+  astrocarto_result_title: "خريطة الجغرافيا الفلكية الشخصية لكم",
+  astrocarto_result_desc: "تُظهر هذه الخطوط أين في العالم تتعزز طاقتكم في مجالات الحياة المختلفة",
+  astrocarto_result_hint: "اضغطوا على موقع في الخريطة لاكتشاف تأثيره عليكم",
+  astrocarto_result_footer: "ربما مكانكم القادم ينتظركم بالفعل",
 
   nav_title: "البوابات الروحية",
   nav_subtitle: "اختاروا بوابتكم إلى العالم الروحي",
