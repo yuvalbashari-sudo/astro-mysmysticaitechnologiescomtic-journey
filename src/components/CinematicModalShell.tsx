@@ -177,18 +177,20 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           >
             <X className="w-6 h-6 text-gold/80" />
           </motion.button>
-          <div className="fixed top-5 right-5 z-[105]">
-            <span
-              className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
-                border: "1px solid hsl(var(--gold) / 0.2)",
-                color: "hsl(var(--gold))",
-              }}
-            >
-              {t.free_badge_label}
-            </span>
-          </div>
+          {!hideFreeBadge && (
+            <div className="fixed top-5 right-5 z-[105]">
+              <span
+                className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+                  border: "1px solid hsl(var(--gold) / 0.2)",
+                  color: "hsl(var(--gold))",
+                }}
+              >
+                {t.free_badge_label}
+              </span>
+            </div>
+          )}
 
           {!hideAdvisor && (
             <AvatarHoverTeaser
