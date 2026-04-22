@@ -211,19 +211,27 @@ const AstrocartographySection = () => {
         </div>
       </div>
 
-      {/* Map — edge-to-edge on mobile for an immersive exploration surface */}
-      <div className="-mx-4 md:mx-0 md:px-0">
+      {/* Map — edge-to-edge, tall, immersive on mobile. Slight upward overlap blends with section above. */}
+      <div className="-mx-4 md:mx-0 md:px-0 -mt-4 md:mt-0">
         <div
           className="relative w-full overflow-hidden mystical-card-elevated mx-auto rounded-none md:rounded-2xl border-y md:border"
           style={{
-            // Lock the container to the map's true equirectangular ratio (100:60)
-            // so the raster world map renders without stretching on any viewport.
-            aspectRatio: "100 / 60",
-            maxHeight: 520,
+            // Mobile: tall immersive surface (65vh). Desktop: keep original equirectangular ratio.
+            height: "min(65vh, 560px)",
             boxShadow: "0 0 50px hsl(var(--gold) / 0.18), inset 0 0 80px hsl(222 50% 4% / 0.7)",
             borderColor: "hsl(var(--gold) / 0.35)",
           }}
         >
+          {/* Inner stage preserves true 100:60 geography. When container is taller than 100:60 of its width,
+              the stage scales to fill height and overflows horizontally — image + SVG crop together, identically. */}
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            style={{
+              height: "100%",
+              aspectRatio: "100 / 60",
+              minWidth: "100%",
+            }}
+          >
           <img
             src={worldMapNight}
             alt=""
