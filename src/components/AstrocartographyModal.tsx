@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, MapPin } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
+import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AstrocartographySection from "@/components/AstrocartographySection";
 import ResultShareBar from "@/components/ResultShareBar";
 import TextSizeControl, { type TextSize, TEXT_SIZE_CLASSES } from "@/components/TextSizeControl";
