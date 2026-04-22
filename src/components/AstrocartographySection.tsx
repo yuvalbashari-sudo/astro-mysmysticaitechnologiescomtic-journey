@@ -1,23 +1,40 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, Coins } from "lucide-react";
+import { CONTINENT_PATHS } from "@/data/worldMapPaths";
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
+type LineType = "MC" | "IC" | "ASC" | "DSC";
 
 // Equirectangular projection: lon [-180,180] → x [0,100], lat [85,-85] → y [0,60]
 const projX = (lon: number) => ((lon + 180) / 360) * 100;
 const projY = (lat: number) => ((85 - lat) / 170) * 60;
 
-type Planet = { key: string; name: string; lon: number; color: string; line: LineKey };
+type PlanetLine = {
+  key: string;
+  symbol: string;
+  name: string;
+  lon: number;
+  lineType: LineType;
+  color: string;
+  line: LineKey;
+  curve?: number; // -3..3 horizontal bow at equator (ASC/DSC are slightly curved)
+  mobile?: boolean; // show on mobile
+};
 
-// Mock planet meridian lines (real astrocartography MC lines are vertical at planet's longitude)
-const PLANET_LINES: Planet[] = [
-  { key: "sun", name: "שמש", lon: -75, color: "hsl(43 90% 60%)", line: "career" },
-  { key: "moon", name: "ירח", lon: -20, color: "hsl(210 40% 88%)", line: "home" },
-  { key: "venus", name: "ונוס", lon: 25, color: "hsl(340 75% 65%)", line: "love" },
-  { key: "mars", name: "מאדים", lon: 70, color: "hsl(0 75% 58%)", line: "abundance" },
-  { key: "jupiter", name: "צדק", lon: 130, color: "hsl(270 55% 65%)", line: "spirit" },
-  { key: "saturn", name: "שבתאי", lon: 155, color: "hsl(215 30% 60%)", line: "home" },
+// Real astrocartography: MC/IC = vertical meridian at planet's longitude.
+// ASC/DSC = curved horizon lines (we approximate with subtle horizontal bow).
+const PLANET_LINES: PlanetLine[] = [
+  { key: "sun-mc", symbol: "☉", name: "שמש", lon: -75, lineType: "MC", color: "hsl(43 90% 60%)", line: "career", mobile: true },
+  { key: "sun-ic", symbol: "☉", name: "שמש", lon: 105, lineType: "IC", color: "hsl(43 90% 60%)", line: "career" },
+  { key: "moon-mc", symbol: "☽", name: "ירח", lon: -20, lineType: "MC", color: "hsl(210 35% 88%)", line: "home", mobile: true },
+  { key: "venus-asc", symbol: "♀", name: "ונוס", lon: 25, lineType: "ASC", color: "hsl(340 75% 65%)", line: "love", curve: 1.6, mobile: true },
+  { key: "venus-mc", symbol: "♀", name: "ונוס", lon: -110, lineType: "MC", color: "hsl(340 75% 65%)", line: "love" },
+  { key: "mars-mc", symbol: "♂", name: "מאדים", lon: 70, lineType: "MC", color: "hsl(0 75% 58%)", line: "abundance" },
+  { key: "mars-dsc", symbol: "♂", name: "מאדים", lon: -130, lineType: "DSC", color: "hsl(0 75% 58%)", line: "abundance", curve: -1.4 },
+  { key: "jupiter-ic", symbol: "♃", name: "צדק", lon: 130, lineType: "IC", color: "hsl(270 55% 68%)", line: "spirit", mobile: true },
+  { key: "jupiter-asc", symbol: "♃", name: "צדק", lon: 55, lineType: "ASC", color: "hsl(270 55% 68%)", line: "spirit", curve: 1.2 },
+  { key: "saturn-mc", symbol: "♄", name: "שבתאי", lon: 155, lineType: "MC", color: "hsl(215 28% 62%)", line: "home" },
 ];
 
 const FILTERS: { label: string; key: LineKey; icon: typeof Heart }[] = [
