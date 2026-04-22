@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
 import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield, Pencil, Share2 } from "lucide-react";
 import ResultShareBar from "./ResultShareBar";
-import AstrocartographySection from "./AstrocartographySection";
+
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import { PLANETS } from "@/components/NatalChartWheel";
@@ -766,7 +766,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                         {t.chart_save_image}
                       </button>
                     </div>
-                    <AstrocartographySection />
                   </motion.div>
                 )}
               </motion.div>
