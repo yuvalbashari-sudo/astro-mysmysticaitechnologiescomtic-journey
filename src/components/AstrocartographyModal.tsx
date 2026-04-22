@@ -115,8 +115,8 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
               <div
                 className="relative rounded-full overflow-hidden"
                 style={{
-                  width: isMobile ? 72 : 88,
-                  height: isMobile ? 72 : 88,
+                  width: isMobile ? 86 : 106,
+                  height: isMobile ? 86 : 106,
                   border: "2px solid hsl(var(--gold) / 0.45)",
                   boxShadow:
                     "0 0 0 4px hsl(var(--gold) / 0.08), 0 4px 28px hsl(270 60% 45% / 0.35), 0 0 36px hsl(var(--gold) / 0.22)",
