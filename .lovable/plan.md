@@ -1,47 +1,32 @@
 
 
-## Goal
-In the **Norielle chat panel** (the floating chat shown in screenshot), remove the yellow star icon from the header, enlarge the Norielle name, and add the existing `A / A+ / A++` text-size control directly below it — mirroring exactly what was already done in `AstrologerIntroModal`.
+## Replace blocky continents with realistic world silhouettes
 
-## Target file
-`src/components/AdvisorChatPanel.tsx` — header block (lines ~390–444)
+### File 1 — Create `src/data/worldGeoData.ts`
+New file exporting `WORLD_LAND_PATHS: string[]` — realistic equirectangular landmass silhouettes pre-projected to the existing `0..100 × 0..60` viewBox (lon -180..180, lat 85..-85).
 
-## Changes
+Coverage with recognizable coastlines (curved Bezier paths, not straight polygons):
+- **North America**: Alaska panhandle, curved Canadian coast with Hudson Bay indent, US east/west coasts, Gulf of Mexico arc, Florida peninsula, Baja California, tapered Central America
+- **South America**: Brazil's eastern bulge, tapering Chilean coast to Tierra del Fuego
+- **Europe**: Iberian peninsula, France, Italy boot, Balkans, Scandinavian curve, British Isles, Ireland, Iceland
+- **Africa**: Mediterranean coast, Horn of Africa, Cape of Good Hope taper, Madagascar
+- **Asia**: Siberian arc, Arabian peninsula, Indian subcontinent triangle, Indochina, Korean peninsula, Kamchatka
+- **Oceania/Islands**: Australia with Cape York + Great Australian Bight, New Zealand (2 islands), Japan archipelago (curved), Philippines, Indonesia (Sumatra/Java/Borneo/Sulawesi/Papua)
+- **Greenland**
 
-**1. Remove star icon**
-Delete the entire `motion.div` (lines 400–416) containing the gold-gradient circle and `<Sparkles>` icon.
+Paths use SVG cubic/quadratic curves (`C`, `Q`) for organic coastlines. Total file size <15KB.
 
-**2. Restructure header to vertical, centered layout**
-Replace the current `flex items-center justify-between` row (with avatar + name on left, X on right) with:
-- A centered vertical stack: enlarged Norielle name on top, `TextSizeControl` directly below
-- The X close button absolutely positioned to the top-end corner so it doesn't disrupt the centered composition
-- Keep the active reading label (e.g. "Tarot reading") as a small subtitle under the name when present
+### File 2 — Update `src/components/AstrocartographySection.tsx`
+- Swap import: `CONTINENT_PATHS` from `@/data/worldMapPaths` → `WORLD_LAND_PATHS` from `@/data/worldGeoData`
+- Update the continents `.map()` render block to iterate `WORLD_LAND_PATHS`
+- Refine landmass styling for the higher detail:
+  - `fill="hsl(220 35% 14%)"` `fillOpacity="0.6"`
+  - `stroke="hsl(215 55% 62%)"` `strokeWidth="0.15"` `strokeOpacity="0.4"`
+  - `vectorEffect="non-scaling-stroke"` (crisp coastlines at any size)
 
-**3. Enlarge the name**
-Change `text-[17px]` → `text-2xl md:text-3xl` with the same gold gradient styling already in place.
+### Untouched (zero changes)
+Longitude/latitude grid, MC/IC/ASC/DSC planetary lines, glow bands, planet labels, city markers + click handlers, insight card, filters, recommendation cards, accordion, mobile responsive logic, RTL.
 
-**4. Wire up `TextSizeControl`**
-- Import `TextSizeControl` from `@/components/TextSizeControl`
-- Import `useFontScale` from `@/contexts/FontScaleContext`
-- Read `{ scale, setScale }` and render `<TextSizeControl value={scale} onChange={setScale} />` directly under the name (same pattern as `AstrologerIntroModal.tsx` lines 218–223)
-
-**5. Cleanup**
-Remove the now-unused `Sparkles` import from the lucide-react import line if no other reference uses it (a quick scan of the file is needed — Sparkles may also be used in the empty state, in which case keep the import).
-
-## Preserved (do NOT touch)
-- Panel container, gradients, border, shadow, animation
-- Backdrop, positioning logic (`forceRightAnchor`)
-- Messages area, input field, send button, suggestion chips, limit-reached card
-- Avatar image (`norielleAvatar`) used elsewhere in the panel body
-- All chat / streaming logic
-
-## Result
-The Norielle floating chat header becomes:
-```
-              [Norielle – Your Personal Guide]   [X]
-                       A   A+   A++
-              ────────────────────────────────
-                       (chat content)
-```
-Consistent with the already-redesigned `AstrologerIntroModal` header.
+### Result
+The map background becomes a recognizable world — curved coastlines, real peninsulas, island chains — in the same dark-navy / faint-gold-coastline palette. All astrocartography behavior identical.
 
