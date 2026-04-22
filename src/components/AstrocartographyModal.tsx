@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, MapPin } from "lucide-react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
+import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AstrocartographySection from "@/components/AstrocartographySection";
 import ResultShareBar from "@/components/ResultShareBar";
 import TextSizeControl, { type TextSize, TEXT_SIZE_CLASSES } from "@/components/TextSizeControl";
@@ -91,6 +92,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
       avatarStyle={avatarStyle}
       hideFreeBadge
       topOverlay
+      hideAdvisor={phase === "form"}
     >
       <AnimatePresence mode="wait">
         {/* ── FORM PHASE ─────────────────────────────────────────── */}
@@ -103,11 +105,44 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-6 md:space-y-7 pt-4 md:pt-6"
           >
+            {/* Norielle — centered above the title */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85, y: -6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="flex justify-center"
+            >
+              <div
+                className="relative rounded-full overflow-hidden"
+                style={{
+                  width: isMobile ? 72 : 88,
+                  height: isMobile ? 72 : 88,
+                  border: "2px solid hsl(var(--gold) / 0.45)",
+                  boxShadow:
+                    "0 0 0 4px hsl(var(--gold) / 0.08), 0 4px 28px hsl(270 60% 45% / 0.35), 0 0 36px hsl(var(--gold) / 0.22)",
+                }}
+              >
+                <img
+                  src={astrologerAvatar}
+                  alt=""
+                  className="w-full h-full object-cover scale-105"
+                  style={{ objectPosition: "center 42%" }}
+                  draggable={false}
+                />
+                <motion.div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
+                  animate={{ scale: [1, 1.45, 1.45], opacity: [0.55, 0, 0] }}
+                  transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
+                />
+              </div>
+            </motion.div>
+
             {/* Title — single dominant element */}
             <motion.h2
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
+              transition={{ duration: 0.7, delay: 0.18 }}
               className="font-heading leading-[1.15] text-3xl md:text-4xl text-center px-2"
               style={{
                 color: "hsl(var(--gold))",
