@@ -9,7 +9,6 @@ import TextSizeControl, { type TextSize, TEXT_SIZE_CLASSES } from "@/components/
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/i18n/LanguageContext";
 import { mysticalProfile } from "@/lib/mysticalProfile";
-import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 
 interface Props {
   isOpen: boolean;
