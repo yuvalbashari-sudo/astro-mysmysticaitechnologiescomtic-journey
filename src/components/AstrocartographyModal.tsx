@@ -89,6 +89,8 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
       isOpen={isOpen}
       onClose={onClose}
       avatarStyle={avatarStyle}
+      hideFreeBadge
+      topOverlay
     >
       <AnimatePresence mode="wait">
         {/* ── FORM PHASE ─────────────────────────────────────────── */}
