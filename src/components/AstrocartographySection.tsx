@@ -178,36 +178,51 @@ const AstrocartographySection = () => {
 
       {/* Filters */}
       <div className="md:flex md:flex-wrap md:justify-center md:gap-3 md:px-3">
-        <div
-          className="flex md:flex-wrap md:justify-center gap-2 md:gap-3 overflow-x-auto md:overflow-visible px-5 md:px-0 pb-1 md:pb-0 scrollbar-none"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          {FILTERS.map((f) => {
-            const active = f.key === activeFilter;
-            const Icon = f.icon;
-            return (
-              <button
-                key={f.key}
-                onClick={() => setActiveFilter(f.key)}
-                className="shrink-0 px-3.5 md:px-5 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm font-body transition-all duration-300 flex items-center gap-1.5 md:gap-2 whitespace-nowrap hover:scale-[1.04]"
-                style={{
-                  background: active
-                    ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))"
-                    : "hsl(var(--deep-blue-light) / 0.5)",
-                  color: active ? "hsl(var(--deep-blue))" : "hsl(var(--gold) / 0.85)",
-                  border: `1px solid hsl(var(--gold) / ${active ? 0.7 : 0.2})`,
-                  boxShadow: active
-                    ? "0 0 24px hsl(var(--gold) / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.2)"
-                    : "0 2px 8px hsl(222 50% 4% / 0.4)",
-                  fontWeight: active ? 700 : 500,
-                  minHeight: 36,
-                }}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {f.label}
-              </button>
-            );
-          })}
+        <div className="relative md:contents">
+          {/* Edge fade masks (mobile only) — signal scrollability */}
+          <div
+            className="md:hidden pointer-events-none absolute top-0 bottom-0 left-0 w-6 z-10"
+            style={{
+              background: "linear-gradient(to right, hsl(222 47% 6%) 0%, hsl(222 47% 6% / 0) 100%)",
+            }}
+          />
+          <div
+            className="md:hidden pointer-events-none absolute top-0 bottom-0 right-0 w-6 z-10"
+            style={{
+              background: "linear-gradient(to left, hsl(222 47% 6%) 0%, hsl(222 47% 6% / 0) 100%)",
+            }}
+          />
+          <div
+            className="flex md:flex-wrap md:justify-center justify-start gap-2.5 md:gap-3 overflow-x-auto md:overflow-visible px-6 scroll-px-6 md:px-0 md:scroll-px-0 pb-1 md:pb-0 scrollbar-none scroll-smooth snap-x snap-mandatory md:snap-none"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            {FILTERS.map((f) => {
+              const active = f.key === activeFilter;
+              const Icon = f.icon;
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => setActiveFilter(f.key)}
+                  className="shrink-0 snap-start px-3 md:px-5 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm font-body transition-all duration-300 flex items-center gap-1.5 md:gap-2 whitespace-nowrap hover:scale-[1.04]"
+                  style={{
+                    background: active
+                      ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))"
+                      : "hsl(var(--deep-blue-light) / 0.5)",
+                    color: active ? "hsl(var(--deep-blue))" : "hsl(var(--gold) / 0.85)",
+                    border: `1px solid hsl(var(--gold) / ${active ? 0.7 : 0.2})`,
+                    boxShadow: active
+                      ? "0 0 24px hsl(var(--gold) / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.2)"
+                      : "0 2px 8px hsl(222 50% 4% / 0.4)",
+                    fontWeight: active ? 700 : 500,
+                    minHeight: 36,
+                  }}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
