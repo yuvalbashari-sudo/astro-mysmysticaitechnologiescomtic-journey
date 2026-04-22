@@ -214,10 +214,12 @@ const AstrocartographySection = () => {
       {/* Map */}
       <div className="px-4 md:px-0">
         <div
-          className="relative w-full overflow-hidden rounded-2xl mystical-card-elevated"
+          className="relative w-full overflow-hidden rounded-2xl mystical-card-elevated mx-auto"
           style={{
-            height: "min(48vh, 520px)",
-            minHeight: 280,
+            // Lock the container to the map's true equirectangular ratio (100:60)
+            // so the raster world map renders without stretching on any viewport.
+            aspectRatio: "100 / 60",
+            maxHeight: 520,
             boxShadow: "0 0 50px hsl(var(--gold) / 0.18), inset 0 0 80px hsl(222 50% 4% / 0.7)",
             border: "1px solid hsl(var(--gold) / 0.35)",
           }}
@@ -231,6 +233,7 @@ const AstrocartographySection = () => {
             height={1080}
             className="absolute inset-0 w-full h-full pointer-events-none select-none"
             style={{
+              // Container matches map ratio → "fill" no longer distorts geography.
               objectFit: "fill",
               opacity: 0.88,
               filter: "saturate(0.75) brightness(0.9) contrast(1.05)",
