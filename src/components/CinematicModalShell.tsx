@@ -24,6 +24,10 @@ interface Props {
   transparent?: boolean;
   /** Override default avatar positioning styles */
   avatarStyle?: React.CSSProperties;
+  /** Hide the floating "Free" badge in the top-right (use when modal owns its own header) */
+  hideFreeBadge?: boolean;
+  /** Strengthen dark overlay over the top portion to suppress background branding */
+  topOverlay?: boolean;
 }
 
 /**
@@ -34,7 +38,7 @@ interface Props {
  * Children scroll naturally over a rising fog gradient that provides
  * text legibility without hiding the figure.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle, hideFreeBadge = false, topOverlay = false }: Props) => {
   const isMobile = useIsMobile();
   const t = useT();
   const [advisorOpen, setAdvisorOpen] = useState(false);
@@ -107,6 +111,15 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                     background: "linear-gradient(to bottom, hsl(var(--deep-blue) / 0.45), transparent)",
                   }}
                 />
+                {topOverlay && (
+                  <div
+                    className="absolute top-0 left-0 right-0"
+                    style={{
+                      height: "32%",
+                      background: "linear-gradient(to bottom, hsl(222 47% 3% / 0.85) 0%, hsl(222 47% 4% / 0.7) 55%, transparent 100%)",
+                    }}
+                  />
+                )}
               </div>
 
               {/* ── Layer 2: Floating particles ── */}
@@ -164,18 +177,20 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           >
             <X className="w-6 h-6 text-gold/80" />
           </motion.button>
-          <div className="fixed top-5 right-5 z-[105]">
-            <span
-              className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
-                border: "1px solid hsl(var(--gold) / 0.2)",
-                color: "hsl(var(--gold))",
-              }}
-            >
-              {t.free_badge_label}
-            </span>
-          </div>
+          {!hideFreeBadge && (
+            <div className="fixed top-5 right-5 z-[105]">
+              <span
+                className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
+                style={{
+                  background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+                  border: "1px solid hsl(var(--gold) / 0.2)",
+                  color: "hsl(var(--gold))",
+                }}
+              >
+                {t.free_badge_label}
+              </span>
+            </div>
+          )}
 
           {!hideAdvisor && (
             <AvatarHoverTeaser

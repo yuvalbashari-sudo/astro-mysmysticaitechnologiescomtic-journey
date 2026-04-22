@@ -9,7 +9,6 @@ import TextSizeControl, { type TextSize, TEXT_SIZE_CLASSES } from "@/components/
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/i18n/LanguageContext";
 import { mysticalProfile } from "@/lib/mysticalProfile";
-import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 
 interface Props {
   isOpen: boolean;
@@ -90,6 +89,8 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
       isOpen={isOpen}
       onClose={onClose}
       avatarStyle={avatarStyle}
+      hideFreeBadge
+      topOverlay
     >
       <AnimatePresence mode="wait">
         {/* ── FORM PHASE ─────────────────────────────────────────── */}
@@ -100,75 +101,52 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-4 md:space-y-5"
+            className="space-y-6 md:space-y-7 pt-4 md:pt-6"
           >
-            {/* Norielle whisper chip */}
-            <motion.div
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="inline-flex items-center gap-2.5 rounded-full px-3 py-2 max-w-fit backdrop-blur-md"
-              style={{
-                background: "hsl(var(--deep-blue-light) / 0.4)",
-                border: "1px solid hsl(var(--gold) / 0.2)",
-                boxShadow: "0 4px 18px hsl(var(--deep-blue) / 0.5), 0 0 16px hsl(var(--gold) / 0.08)",
-              }}
-            >
-              <div
-                className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0"
-                style={{
-                  border: "1.5px solid hsl(var(--gold) / 0.45)",
-                  boxShadow: "0 0 10px hsl(var(--gold) / 0.25)",
-                }}
-              >
-                <img
-                  src={astrologerAvatar}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  style={{ objectPosition: "center 35%" }}
-                  draggable={false}
-                />
-              </div>
-              <span
-                className="font-body italic text-xs md:text-sm leading-snug"
-                style={{ color: "hsl(var(--gold) / 0.85)" }}
-              >
-                {t.astrocarto_norielle_intro}
-              </span>
-            </motion.div>
-
-            {/* Title */}
+            {/* Title — single dominant element */}
             <motion.h2
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.18 }}
-              className="font-heading leading-tight text-3xl md:text-4xl"
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="font-heading leading-[1.15] text-3xl md:text-4xl text-center px-2"
               style={{
                 color: "hsl(var(--gold))",
-                textShadow: "0 2px 24px hsl(222 47% 6%), 0 0 32px hsl(var(--gold) / 0.15)",
+                textShadow: "0 2px 28px hsl(222 47% 4%), 0 0 36px hsl(var(--gold) / 0.18)",
               }}
             >
               {t.astrocarto_result_title}
             </motion.h2>
 
-            {/* Subtitle */}
+            {/* Subtitle — soft, 1-2 lines */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.26 }}
-              className="font-body text-base md:text-lg leading-relaxed"
-              style={{ color: "hsl(var(--gold) / 0.7)" }}
+              transition={{ duration: 0.7, delay: 0.22 }}
+              className="font-body text-sm md:text-base leading-relaxed text-center max-w-[34ch] mx-auto"
+              style={{ color: "hsl(var(--gold) / 0.72)" }}
             >
               {t.astrocarto_subtitle}
             </motion.p>
 
-            {/* Intro line */}
+            {/* Subtle gold divider */}
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 0.32 }}
+              className="mx-auto h-px w-16"
+              style={{
+                background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.45), transparent)",
+              }}
+              aria-hidden
+            />
+
+            {/* Intro guidance — quiet supporting line */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.34 }}
-              className="font-body text-sm md:text-base leading-relaxed pt-1"
-              style={{ color: "hsl(var(--foreground) / 0.75)" }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="font-body text-sm md:text-base leading-relaxed text-center"
+              style={{ color: "hsl(var(--foreground) / 0.7)" }}
             >
               {t.astrocarto_form_intro}
             </motion.p>
