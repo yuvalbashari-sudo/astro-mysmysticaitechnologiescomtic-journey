@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, Coins } from "lucide-react";
-import { WORLD_LAND_PATHS } from "@/data/worldGeoData";
+import worldMapNight from "@/assets/world-map-night.jpg";
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
 type LineType = "MC" | "IC" | "ASC" | "DSC";
@@ -222,11 +222,25 @@ const AstrocartographySection = () => {
             border: "1px solid hsl(var(--gold) / 0.35)",
           }}
         >
+          <img
+            src={worldMapNight}
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            width={1920}
+            height={1080}
+            className="absolute inset-0 w-full h-full pointer-events-none select-none"
+            style={{
+              objectFit: "fill",
+              opacity: 0.88,
+              filter: "saturate(0.75) brightness(0.9) contrast(1.05)",
+            }}
+          />
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse at 50% 50%, hsl(215 70% 18% / 0.45) 0%, hsl(222 50% 4%) 75%)",
+                "radial-gradient(ellipse at 50% 50%, hsl(222 50% 4% / 0.15) 0%, hsl(222 50% 4% / 0.55) 90%)",
             }}
           />
 
@@ -271,22 +285,6 @@ const AstrocartographySection = () => {
                 strokeWidth={lon === 0 ? 0.13 : 0.1}
                 strokeDasharray={lon === 0 ? "0.8 0.8" : "none"}
               />
-            ))}
-
-            {/* Realistic landmass silhouettes — body + coastline */}
-            {WORLD_LAND_PATHS.map((d, i) => (
-              <g key={`c${i}`}>
-                <path d={d} fill="hsl(220 35% 14%)" fillOpacity="0.6" />
-                <path
-                  d={d}
-                  fill="none"
-                  stroke="hsl(215 55% 62%)"
-                  strokeOpacity="0.4"
-                  strokeWidth="0.15"
-                  strokeLinejoin="round"
-                  vectorEffect="non-scaling-stroke"
-                />
-              </g>
             ))}
 
             {/* Equator + Tropics + Polar circles (subtle astronomy markers) */}
