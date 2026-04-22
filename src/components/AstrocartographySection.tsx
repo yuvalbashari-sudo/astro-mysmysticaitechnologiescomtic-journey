@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, Coins } from "lucide-react";
-import { CONTINENT_PATHS } from "@/data/worldMapPaths";
+import { WORLD_LAND_PATHS } from "@/data/worldGeoData";
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
 type LineType = "MC" | "IC" | "ASC" | "DSC";
@@ -273,11 +273,19 @@ const AstrocartographySection = () => {
               />
             ))}
 
-            {/* Continent silhouettes — filled, layered (shadow + body + coastline) */}
-            {CONTINENT_PATHS.map((d, i) => (
+            {/* Realistic landmass silhouettes — body + coastline */}
+            {WORLD_LAND_PATHS.map((d, i) => (
               <g key={`c${i}`}>
-                <path d={d} fill="hsl(215 45% 14%)" opacity="0.85" />
-                <path d={d} fill="none" stroke="hsl(215 50% 55%)" strokeOpacity="0.35" strokeWidth="0.16" strokeLinejoin="round" />
+                <path d={d} fill="hsl(220 35% 14%)" fillOpacity="0.6" />
+                <path
+                  d={d}
+                  fill="none"
+                  stroke="hsl(215 55% 62%)"
+                  strokeOpacity="0.4"
+                  strokeWidth="0.15"
+                  strokeLinejoin="round"
+                  vectorEffect="non-scaling-stroke"
+                />
               </g>
             ))}
 
