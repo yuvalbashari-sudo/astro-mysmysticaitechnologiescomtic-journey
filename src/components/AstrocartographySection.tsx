@@ -4,6 +4,22 @@ import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, C
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
 
+// Equirectangular projection: lon [-180,180] → x [0,100], lat [85,-85] → y [0,60]
+const projX = (lon: number) => ((lon + 180) / 360) * 100;
+const projY = (lat: number) => ((85 - lat) / 170) * 60;
+
+type Planet = { key: string; name: string; lon: number; color: string; line: LineKey };
+
+// Mock planet meridian lines (real astrocartography MC lines are vertical at planet's longitude)
+const PLANET_LINES: Planet[] = [
+  { key: "sun", name: "שמש", lon: -75, color: "hsl(43 90% 60%)", line: "career" },
+  { key: "moon", name: "ירח", lon: -20, color: "hsl(210 40% 88%)", line: "home" },
+  { key: "venus", name: "ונוס", lon: 25, color: "hsl(340 75% 65%)", line: "love" },
+  { key: "mars", name: "מאדים", lon: 70, color: "hsl(0 75% 58%)", line: "abundance" },
+  { key: "jupiter", name: "צדק", lon: 130, color: "hsl(270 55% 65%)", line: "spirit" },
+  { key: "saturn", name: "שבתאי", lon: 155, color: "hsl(215 30% 60%)", line: "home" },
+];
+
 const FILTERS: { label: string; key: LineKey; icon: typeof Heart }[] = [
   { label: "אהבה", key: "love", icon: Heart },
   { label: "קריירה", key: "career", icon: Briefcase },
@@ -24,8 +40,8 @@ type City = {
   id: string;
   name: string;
   country: string;
-  x: number;
-  y: number;
+  lon: number;
+  lat: number;
   mobile: boolean;
   planet: string;
   line: LineKey;
@@ -35,79 +51,11 @@ type City = {
 };
 
 const CITIES: City[] = [
-  {
-    id: "london",
-    name: "לונדון",
-    country: "אנגליה",
-    x: 49,
-    y: 30,
-    mobile: true,
-    planet: "צדק ♃",
-    line: "career",
-    theme: "קריירה והזדמנויות",
-    strength: 92,
-    blurb: "כאן האנרגיה שלכם מתחזקת בתחום הקריירה — שערים של נראות, הכרה והתרחבות מקצועית נפתחים בקלות.",
-  },
-  {
-    id: "newyork",
-    name: "ניו יורק",
-    country: "ארה״ב",
-    x: 26,
-    y: 38,
-    mobile: true,
-    planet: "מאדים ♂",
-    line: "abundance",
-    theme: "יוזמה ושפע",
-    strength: 84,
-    blurb: "המקום הזה פותח אצלכם דחף לפעולה, אומץ ליזום ויכולת להפוך חזון לכסף ולהצלחה מוחשית.",
-  },
-  {
-    id: "barcelona",
-    name: "ברצלונה",
-    country: "ספרד",
-    x: 48,
-    y: 38,
-    mobile: false,
-    planet: "ונוס ♀",
-    line: "love",
-    theme: "אהבה ויצירתיות",
-    strength: 89,
-    blurb: "זהו אזור שמעצים את היכולת שלכם לאהוב, להתאהב וליצור — הלב נפתח והיופי מוצא דרך לזרום.",
-  },
-  {
-    id: "bali",
-    name: "באלי",
-    country: "אינדונזיה",
-    x: 76,
-    y: 62,
-    mobile: true,
-    planet: "נפטון ♆",
-    line: "spirit",
-    theme: "התפתחות רוחנית",
-    strength: 95,
-    blurb: "כאן האנרגיה שלכם מתחזקת בתחום הרוחני — מרחב לריפוי עמוק, אינטואיציה והתחברות לעצמי הגבוה.",
-  },
-  {
-    id: "tokyo",
-    name: "טוקיו",
-    country: "יפן",
-    x: 86,
-    y: 40,
-    mobile: false,
-    planet: "שבתאי ♄",
-    line: "home",
-    theme: "מבנה ובית",
-    strength: 78,
-    blurb: "המקום הזה פותח אצלכם משמעת, סדר פנימי ויכולת לבנות בית יציב שמשרת את הצמיחה ארוכת הטווח.",
-  },
-];
-
-const LINES: { key: LineKey; d: string }[] = [
-  { key: "love", d: "M 0 35 Q 25 50, 50 38 T 100 42" },
-  { key: "career", d: "M 0 18 Q 30 8, 55 22 T 100 28" },
-  { key: "spirit", d: "M 0 48 Q 35 30, 65 50 T 100 38" },
-  { key: "abundance", d: "M 0 12 Q 40 28, 70 14 T 100 20" },
-  { key: "home", d: "M 0 28 Q 30 38, 60 32 T 100 36" },
+  { id: "london", name: "לונדון", country: "אנגליה", lon: -0.13, lat: 51.5, mobile: true, planet: "צדק ♃", line: "career", theme: "קריירה והזדמנויות", strength: 92, blurb: "כאן האנרגיה שלכם מתחזקת בתחום הקריירה — שערים של נראות, הכרה והתרחבות מקצועית נפתחים בקלות." },
+  { id: "newyork", name: "ניו יורק", country: "ארה״ב", lon: -74, lat: 40.7, mobile: true, planet: "מאדים ♂", line: "abundance", theme: "יוזמה ושפע", strength: 84, blurb: "המקום הזה פותח אצלכם דחף לפעולה, אומץ ליזום ויכולת להפוך חזון לכסף ולהצלחה מוחשית." },
+  { id: "barcelona", name: "ברצלונה", country: "ספרד", lon: 2.17, lat: 41.4, mobile: false, planet: "ונוס ♀", line: "love", theme: "אהבה ויצירתיות", strength: 89, blurb: "זהו אזור שמעצים את היכולת שלכם לאהוב, להתאהב וליצור — הלב נפתח והיופי מוצא דרך לזרום." },
+  { id: "bali", name: "באלי", country: "אינדונזיה", lon: 115.2, lat: -8.4, mobile: true, planet: "נפטון ♆", line: "spirit", theme: "התפתחות רוחנית", strength: 95, blurb: "כאן האנרגיה שלכם מתחזקת בתחום הרוחני — מרחב לריפוי עמוק, אינטואיציה והתחברות לעצמי הגבוה." },
+  { id: "tokyo", name: "טוקיו", country: "יפן", lon: 139.7, lat: 35.7, mobile: false, planet: "שבתאי ♄", line: "home", theme: "מבנה ובית", strength: 78, blurb: "המקום הזה פותח אצלכם משמעת, סדר פנימי ויכולת לבנות בית יציב שמשרת את הצמיחה ארוכת הטווח." },
 ];
 
 const PLANET_MEANINGS = [
@@ -118,10 +66,32 @@ const PLANET_MEANINGS = [
   { symbol: "♃", name: "צדק", meaning: "שפע, הזדמנויות, התרחבות והצלחה." },
 ];
 
+// Equirectangular continent silhouettes (lon -180..180 → x 0..100, lat 85..-85 → y 0..60)
 const CONTINENT_PATHS = [
-  "M 18 22 Q 22 18, 26 24 Q 28 32, 24 40 Q 20 46, 22 52 Q 26 56, 24 60",
-  "M 46 22 Q 52 20, 54 28 Q 52 34, 50 40 Q 48 50, 50 58",
-  "M 60 20 Q 72 18, 82 24 Q 88 30, 86 38 Q 80 42, 76 50 Q 78 58, 74 62",
+  // North America
+  "M 12 9 L 20 7 L 27 9 L 31 13 L 30 18 L 27 22 L 23 26 L 19 28 L 15 26 L 11 22 L 9 16 Z",
+  // Greenland
+  "M 33 6 L 39 5 L 41 10 L 36 13 L 33 11 Z",
+  // Central America
+  "M 23 28 L 27 28 L 28 32 L 25 33 L 22 31 Z",
+  // South America
+  "M 26 32 L 31 31 L 33 36 L 32 44 L 29 50 L 26 52 L 24 49 L 23 42 L 24 36 Z",
+  // Europe
+  "M 47 13 L 54 12 L 58 14 L 60 18 L 56 21 L 51 22 L 47 19 Z",
+  // Africa
+  "M 49 23 L 57 22 L 60 27 L 61 33 L 58 41 L 54 47 L 51 47 L 49 42 L 48 34 L 48 27 Z",
+  // Middle East
+  "M 58 18 L 65 17 L 67 22 L 63 24 L 59 22 Z",
+  // Asia main
+  "M 60 9 L 72 7 L 84 8 L 90 12 L 91 18 L 86 23 L 80 25 L 73 24 L 67 22 L 62 18 L 60 13 Z",
+  // India
+  "M 70 24 L 75 24 L 74 32 L 71 33 Z",
+  // Indonesia / SE Asia
+  "M 78 31 L 84 31 L 86 35 L 82 37 L 78 36 Z",
+  // Japan
+  "M 86 17 L 89 17 L 89 22 L 87 22 Z",
+  // Australia
+  "M 82 41 L 90 41 L 92 46 L 88 50 L 83 49 L 81 45 Z",
 ];
 
 const FILTER_KEYWORDS: Record<LineKey, string[]> = {
@@ -265,56 +235,89 @@ const AstrocartographySection = () => {
               <line key={`v${x}`} x1={x} y1="0" x2={x} y2="60" stroke="hsl(var(--gold))" strokeOpacity="0.07" strokeWidth="0.12" />
             ))}
 
+            {/* Continent silhouettes — filled, dark navy */}
             {CONTINENT_PATHS.map((d, i) => (
               <path
                 key={`c${i}`}
                 d={d}
-                fill="none"
-                stroke="hsl(215 50% 55%)"
-                strokeOpacity="0.18"
-                strokeWidth="3"
-                strokeLinecap="round"
+                fill="hsl(215 40% 22% / 0.55)"
+                stroke="hsl(215 50% 50% / 0.35)"
+                strokeWidth="0.18"
                 strokeLinejoin="round"
               />
             ))}
 
-            {/* Planetary lines with focus dimming */}
-            {LINES.map((l) => {
-              const isFocus = l.key === focusLine;
+            {/* Equator */}
+            <line x1="0" y1={projY(0)} x2="100" y2={projY(0)} stroke="hsl(var(--gold))" strokeOpacity="0.18" strokeWidth="0.15" strokeDasharray="0.6 0.6" />
+
+            {/* Planetary meridian lines (vertical, like real astrocartography MC lines) */}
+            {PLANET_LINES.map((p) => {
+              const x = projX(p.lon);
+              const isFocus = p.line === focusLine;
               return (
-                <path
-                  key={l.key}
-                  d={l.d}
-                  fill="none"
-                  stroke={LINE_COLORS[l.key]}
-                  strokeWidth={isFocus ? 0.85 : 0.45}
-                  opacity={isFocus ? 1 : 0.18}
-                  style={{
-                    filter: isFocus ? `drop-shadow(0 0 1.5px ${LINE_COLORS[l.key]})` : "none",
-                    transition: "opacity 0.4s ease, stroke-width 0.4s ease",
-                  }}
-                />
+                <g key={p.key}>
+                  <line
+                    x1={x}
+                    y1="0"
+                    x2={x}
+                    y2="60"
+                    stroke={p.color}
+                    strokeWidth={isFocus ? 0.55 : 0.3}
+                    opacity={isFocus ? 0.95 : 0.32}
+                    strokeDasharray={isFocus ? "none" : "1.2 0.8"}
+                    style={{
+                      filter: isFocus ? `drop-shadow(0 0 1.6px ${p.color})` : "none",
+                      transition: "opacity 0.4s ease, stroke-width 0.4s ease",
+                    }}
+                  />
+                </g>
               );
             })}
 
-            {/* City markers (non-interactive layer for halo/pulse) */}
+            {/* City markers (halo/pulse) */}
             {CITIES.map((c) => {
+              const cx = projX(c.lon);
+              const cy = projY(c.lat);
               const isSelected = c.id === selectedCityId;
               const isHover = c.id === hoveredCityId;
               const emphasized = isSelected || isHover;
               return (
                 <g key={c.id} className={c.mobile ? "" : "hidden md:block"}>
-                  <circle cx={c.x} cy={c.y * 0.6} r={emphasized ? 4.5 : 3} fill="url(#cityGlow)" style={{ transition: "all 0.3s ease" }} />
-                  <circle cx={c.x} cy={c.y * 0.6} r={emphasized ? 1.3 : 0.9} fill="hsl(var(--gold))" style={{ transition: "all 0.3s ease" }}>
-                    <animate attributeName="opacity" values="0.5;1;0.5" dur="2.4s" repeatCount="indefinite" />
+                  <circle cx={cx} cy={cy} r={emphasized ? 3.6 : 2.4} fill="url(#cityGlow)" style={{ transition: "all 0.3s ease" }} />
+                  <circle cx={cx} cy={cy} r={emphasized ? 1.1 : 0.75} fill="hsl(var(--gold))" style={{ transition: "all 0.3s ease" }}>
+                    <animate attributeName="opacity" values="0.55;1;0.55" dur="2.4s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx={c.x} cy={c.y * 0.6} r={emphasized ? 2.4 : 1.6} fill="none" stroke="hsl(var(--gold))" strokeOpacity={emphasized ? 0.7 : 0.4} strokeWidth="0.18" style={{ transition: "all 0.3s ease" }} />
+                  <circle cx={cx} cy={cy} r={emphasized ? 2.0 : 1.3} fill="none" stroke="hsl(var(--gold))" strokeOpacity={emphasized ? 0.75 : 0.4} strokeWidth="0.16" style={{ transition: "all 0.3s ease" }} />
                 </g>
               );
             })}
           </svg>
 
-          {/* Clickable city overlays (HTML for tap targets + Hebrew label) */}
+          {/* Planet labels along their meridians (HTML for crisp text) */}
+          {PLANET_LINES.map((p) => {
+            const isFocus = p.line === focusLine;
+            return (
+              <div
+                key={`label-${p.key}`}
+                className="absolute pointer-events-none font-heading whitespace-nowrap transition-all duration-300"
+                style={{
+                  left: `${projX(p.lon)}%`,
+                  top: 6,
+                  transform: "translateX(-50%)",
+                  fontSize: 10,
+                  letterSpacing: "0.02em",
+                  color: p.color,
+                  opacity: isFocus ? 1 : 0.55,
+                  textShadow: `0 0 8px hsl(222 50% 4%), 0 0 4px hsl(222 50% 4%), 0 0 6px ${p.color}`,
+                  zIndex: 4,
+                }}
+              >
+                {p.name}
+              </div>
+            );
+          })}
+
+          {/* Clickable city overlays */}
           {CITIES.map((c) => {
             const isSelected = c.id === selectedCityId;
             return (
@@ -325,8 +328,8 @@ const AstrocartographySection = () => {
                 onMouseLeave={() => setHoveredCityId(null)}
                 className={`absolute group ${c.mobile ? "" : "hidden md:block"}`}
                 style={{
-                  left: `${c.x}%`,
-                  top: `${c.y * 0.6 / 60 * 100}%`,
+                  left: `${projX(c.lon)}%`,
+                  top: `${(projY(c.lat) / 60) * 100}%`,
                   transform: "translate(50%, -50%)",
                   width: 44,
                   height: 44,
@@ -342,7 +345,7 @@ const AstrocartographySection = () => {
                   style={{
                     bottom: "100%",
                     marginBottom: 6,
-                    color: isSelected ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.85)",
+                    color: isSelected ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.9)",
                     textShadow: "0 0 10px hsl(222 50% 4%), 0 0 6px hsl(222 50% 4%)",
                     fontWeight: isSelected ? 700 : 500,
                     transform: isSelected ? "translate(-50%, -2px) scale(1.05)" : "translate(-50%, 0) scale(1)",
