@@ -158,7 +158,7 @@ const AstrocartographySection = () => {
   const topRecommendationId = sortedRecommendations[0]?.id;
 
   return (
-    <section dir="rtl" className="w-full pt-12 md:pt-16 pb-14 md:pb-16 space-y-10 md:space-y-12">
+    <section dir="rtl" className="w-full pt-12 md:pt-16 pb-14 md:pb-16 space-y-8 md:space-y-12">
       {/* Header */}
       <div className="text-center space-y-3 md:space-y-4 px-5 md:px-4 max-w-3xl mx-auto">
         <div className="flex items-center justify-center gap-2 md:gap-3">
@@ -179,7 +179,7 @@ const AstrocartographySection = () => {
       {/* Filters */}
       <div className="md:flex md:flex-wrap md:justify-center md:gap-3 md:px-3">
         <div
-          className="flex md:flex-wrap md:justify-center gap-2.5 md:gap-3 overflow-x-auto md:overflow-visible px-5 md:px-0 pb-2 md:pb-0 scrollbar-none"
+          className="flex md:flex-wrap md:justify-center gap-2 md:gap-3 overflow-x-auto md:overflow-visible px-5 md:px-0 pb-1 md:pb-0 scrollbar-none"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {FILTERS.map((f) => {
@@ -189,7 +189,7 @@ const AstrocartographySection = () => {
               <button
                 key={f.key}
                 onClick={() => setActiveFilter(f.key)}
-                className="shrink-0 px-4 md:px-5 py-2.5 rounded-full text-[13px] md:text-sm font-body transition-all duration-300 flex items-center gap-1.5 md:gap-2 whitespace-nowrap hover:scale-[1.04]"
+                className="shrink-0 px-3.5 md:px-5 py-2 md:py-2.5 rounded-full text-[12px] md:text-sm font-body transition-all duration-300 flex items-center gap-1.5 md:gap-2 whitespace-nowrap hover:scale-[1.04]"
                 style={{
                   background: active
                     ? "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))"
@@ -200,7 +200,7 @@ const AstrocartographySection = () => {
                     ? "0 0 24px hsl(var(--gold) / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.2)"
                     : "0 2px 8px hsl(222 50% 4% / 0.4)",
                   fontWeight: active ? 700 : 500,
-                  minHeight: 40,
+                  minHeight: 36,
                 }}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -211,13 +211,11 @@ const AstrocartographySection = () => {
         </div>
       </div>
 
-      {/* Map — edge-to-edge, tall, immersive on mobile. Slight upward overlap blends with section above. */}
-      <div className="-mx-4 md:mx-0 md:px-0 -mt-4 md:mt-0">
+      {/* Map — edge-to-edge, balanced height on mobile. Desktop keeps equirectangular ratio. */}
+      <div className="-mx-4 md:mx-0 md:px-0">
         <div
-          className="relative w-full overflow-hidden mystical-card-elevated mx-auto rounded-none md:rounded-2xl border-y md:border"
+          className="relative w-full overflow-hidden mystical-card-elevated mx-auto rounded-none md:rounded-2xl border-y md:border astro-map-frame"
           style={{
-            // Mobile: tall immersive surface (65vh). Desktop: keep original equirectangular ratio.
-            height: "min(65vh, 560px)",
             boxShadow: "0 0 50px hsl(var(--gold) / 0.18), inset 0 0 80px hsl(222 50% 4% / 0.7)",
             borderColor: "hsl(var(--gold) / 0.35)",
           }}
