@@ -87,6 +87,7 @@ const ITEM_COLORS = [
   { glow: "hsl(0, 65%, 50%)", bg: "hsl(0, 65%, 50%)", label: "red" },            // Tarot - red/gold
   { glow: "hsl(43, 90%, 50%)", bg: "hsl(43, 90%, 50%)", label: "sacred-gold" },  // Palm - sacred gold
   { glow: "hsl(35, 85%, 55%)", bg: "hsl(35, 85%, 55%)", label: "amber" },        // Daily Horoscope - amber
+  { glow: "hsl(180, 70%, 55%)", bg: "hsl(180, 70%, 55%)", label: "teal" },       // Astrocartography - teal
 ];
 
 /* ── Ambient particle ─────────────────────────────── */
