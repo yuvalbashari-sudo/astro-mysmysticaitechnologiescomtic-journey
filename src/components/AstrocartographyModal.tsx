@@ -103,7 +103,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6 md:space-y-7 pt-4 md:pt-6"
+            className="space-y-5 md:space-y-6 pt-10 md:pt-12"
           >
             {/* Norielle — centered above the title */}
             <motion.div
@@ -115,11 +115,11 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
               <div
                 className="relative rounded-full overflow-hidden"
                 style={{
-                  width: isMobile ? 86 : 106,
-                  height: isMobile ? 86 : 106,
-                  border: "2px solid hsl(var(--gold) / 0.45)",
+                  width: isMobile ? 108 : 128,
+                  height: isMobile ? 108 : 128,
+                  border: "2.5px solid hsl(var(--gold) / 0.55)",
                   boxShadow:
-                    "0 0 0 4px hsl(var(--gold) / 0.08), 0 4px 28px hsl(270 60% 45% / 0.35), 0 0 36px hsl(var(--gold) / 0.22)",
+                    "0 0 0 5px hsl(var(--gold) / 0.10), 0 0 0 1px hsl(var(--gold) / 0.25), 0 6px 32px hsl(270 65% 45% / 0.42), 0 0 44px hsl(var(--gold) / 0.28)",
                 }}
               >
                 <img
@@ -132,7 +132,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
                 <motion.div
                   className="absolute inset-0 rounded-full pointer-events-none"
                   style={{ border: "2px solid hsl(var(--gold) / 0.4)" }}
-                  animate={{ scale: [1, 1.45, 1.45], opacity: [0.55, 0, 0] }}
+                  animate={{ scale: [1, 1.5, 1.5], opacity: [0.6, 0, 0] }}
                   transition={{ duration: 2.6, repeat: Infinity, ease: "easeOut" }}
                 />
               </div>
