@@ -211,17 +211,17 @@ const AstrocartographySection = () => {
         </div>
       </div>
 
-      {/* Map */}
-      <div className="px-4 md:px-0">
+      {/* Map — edge-to-edge on mobile for an immersive exploration surface */}
+      <div className="-mx-4 md:mx-0 md:px-0">
         <div
-          className="relative w-full overflow-hidden rounded-2xl mystical-card-elevated mx-auto"
+          className="relative w-full overflow-hidden mystical-card-elevated mx-auto rounded-none md:rounded-2xl border-y md:border"
           style={{
             // Lock the container to the map's true equirectangular ratio (100:60)
             // so the raster world map renders without stretching on any viewport.
             aspectRatio: "100 / 60",
             maxHeight: 520,
             boxShadow: "0 0 50px hsl(var(--gold) / 0.18), inset 0 0 80px hsl(222 50% 4% / 0.7)",
-            border: "1px solid hsl(var(--gold) / 0.35)",
+            borderColor: "hsl(var(--gold) / 0.35)",
           }}
         >
           <img
