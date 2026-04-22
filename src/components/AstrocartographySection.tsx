@@ -466,6 +466,8 @@ const AstrocartographySection = () => {
               </button>
             );
           })}
+          </div>
+          {/* /inner stage */}
 
           {/* In-map legend */}
           <div
