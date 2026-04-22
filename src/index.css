@@ -384,3 +384,15 @@ input[type="time"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   opacity: 1;
 }
+
+/* Astrocartography map frame: balanced height per viewport */
+.astro-map-frame {
+  height: min(55vh, 520px);
+}
+@media (min-width: 768px) {
+  .astro-map-frame {
+    height: auto;
+    aspect-ratio: 100 / 60;
+    max-height: 520px;
+  }
+}
