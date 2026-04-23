@@ -10,6 +10,7 @@ import TextSizeControl, { type TextSize, TEXT_SIZE_CLASSES } from "@/components/
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/i18n/LanguageContext";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import { computeAstrocartography, type AstrocartographyData } from "@/lib/astrocartography";
 
 interface Props {
   isOpen: boolean;
