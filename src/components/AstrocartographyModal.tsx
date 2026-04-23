@@ -102,9 +102,10 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
 
   const sizes = TEXT_SIZE_CLASSES[textSize];
 
-  // Norielle avatar position — bottom-right on mobile (clear of close button + TextSizeControl)
+  // Norielle avatar position — bottom-right on mobile (clear of close button + TextSizeControl).
+  // Use the proven 64px in-frame size with safe margins so the teaser halo never bleeds off-screen.
   const avatarStyle = isMobile
-    ? { bottom: 18, right: 14, top: "auto" as const, left: "auto" as const, width: 88, height: 88 }
+    ? { bottom: 20, right: 20, top: "auto" as const, left: "auto" as const, width: 64, height: 64 }
     : undefined;
 
   // Register reading with advisor scope when result is shown
