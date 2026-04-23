@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, Coins } from "lucide-react";
 import worldMapNight from "@/assets/world-map-night.jpg";
+import type { AstrocartographyData, DerivedPlanetLine } from "@/lib/astrocartography";
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
 type LineType = "MC" | "IC" | "ASC" | "DSC";
@@ -109,29 +110,50 @@ function highlightKeywords(text: string, keywords: string[]) {
   );
 }
 
-const AstrocartographySection = () => {
+interface AstrocartographySectionProps {
+  /** Personalized lines/strengths derived from the user's birth details. When
+   *  omitted, falls back to the static reference set (e.g. previews). */
+  data?: AstrocartographyData | null;
+}
+
+const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) => {
   const [activeFilter, setActiveFilter] = useState<LineKey>("love");
   const [selectedCityId, setSelectedCityId] = useState<string>("london");
   const [hoveredCityId, setHoveredCityId] = useState<string | null>(null);
   const [legendOpen, setLegendOpen] = useState(false);
 
+  // Use personalized lines when available; otherwise the editorial fallback.
+  const activePlanetLines: (PlanetLine | DerivedPlanetLine)[] = useMemo(
+    () => (data?.planetLines && data.planetLines.length ? data.planetLines : PLANET_LINES),
+    [data],
+  );
+
+  // Apply per-birth strengths to the city catalog.
+  const personalizedCities = useMemo<City[]>(() => {
+    if (!data?.cityStrength) return CITIES;
+    return CITIES.map((c) => ({
+      ...c,
+      strength: data.cityStrength[c.id] ?? c.strength,
+    }));
+  }, [data]);
+
   const focusLine: LineKey = useMemo(() => {
     if (hoveredCityId) {
-      return CITIES.find((c) => c.id === hoveredCityId)!.line;
+      return personalizedCities.find((c) => c.id === hoveredCityId)!.line;
     }
     return activeFilter;
-  }, [hoveredCityId, activeFilter]);
+  }, [hoveredCityId, activeFilter, personalizedCities]);
 
   const selectedCity = useMemo(
-    () => CITIES.find((c) => c.id === selectedCityId) ?? CITIES[0],
-    [selectedCityId]
+    () => personalizedCities.find((c) => c.id === selectedCityId) ?? personalizedCities[0],
+    [selectedCityId, personalizedCities]
   );
 
   // Nearest planetary line to the selected city (by longitude distance, wrap-aware)
   const nearestLine = useMemo(() => {
-    let best = PLANET_LINES[0];
+    let best = activePlanetLines[0];
     let bestDist = Infinity;
-    for (const p of PLANET_LINES) {
+    for (const p of activePlanetLines) {
       const d = Math.min(
         Math.abs(p.lon - selectedCity.lon),
         360 - Math.abs(p.lon - selectedCity.lon)
@@ -142,18 +164,18 @@ const AstrocartographySection = () => {
       }
     }
     return { line: best, distance: bestDist };
-  }, [selectedCity]);
+  }, [selectedCity, activePlanetLines]);
 
 
   const sortedRecommendations = useMemo(() => {
-    return [...CITIES]
+    return [...personalizedCities]
       .map((c) => ({
         ...c,
         relevance: c.line === activeFilter ? c.strength + 100 : c.strength,
       }))
       .sort((a, b) => b.relevance - a.relevance)
       .slice(0, 3);
-  }, [activeFilter]);
+  }, [activeFilter, personalizedCities]);
 
   const topRecommendationId = sortedRecommendations[0]?.id;
 
@@ -256,7 +278,7 @@ const AstrocartographySection = () => {
                 <stop offset="0%" stopColor="hsl(43 80% 65%)" stopOpacity="0.55" />
                 <stop offset="100%" stopColor="hsl(43 80% 65%)" stopOpacity="0" />
               </radialGradient>
-              {PLANET_LINES.map((p) => (
+              {activePlanetLines.map((p) => (
                 <linearGradient key={`grad-${p.key}`} id={`band-${p.key}`} x1="0" x2="1" y1="0" y2="0">
                   <stop offset="0%" stopColor={p.color} stopOpacity="0" />
                   <stop offset="50%" stopColor={p.color} stopOpacity="0.45" />
@@ -300,7 +322,7 @@ const AstrocartographySection = () => {
 
             {/* Planetary lines: glow influence band + main line.
                 MC/IC = vertical meridians; ASC/DSC = subtle bowed lines. */}
-            {PLANET_LINES.map((p) => {
+            {activePlanetLines.map((p) => {
               const x = projX(p.lon);
               const isFocus = p.line === focusLine;
               const isMobileLine = p.mobile === true;
@@ -366,7 +388,7 @@ const AstrocartographySection = () => {
             })()}
 
             {/* City markers (halo/pulse) */}
-            {CITIES.map((c) => {
+            {personalizedCities.map((c) => {
               const cx = projX(c.lon);
               const cy = projY(c.lat);
               const isSelected = c.id === selectedCityId;
@@ -385,7 +407,7 @@ const AstrocartographySection = () => {
           </svg>
 
           {/* Planet line labels (HTML for crisp text). Format: "☉ MC" / "♀ ASC" */}
-          {PLANET_LINES.map((p) => {
+          {activePlanetLines.map((p) => {
             const isFocus = p.line === focusLine;
             const isMobileLine = p.mobile === true;
             // Stagger vertical position so labels don't overlap
@@ -422,7 +444,7 @@ const AstrocartographySection = () => {
 
 
           {/* Clickable city overlays */}
-          {CITIES.map((c) => {
+          {personalizedCities.map((c) => {
             const isSelected = c.id === selectedCityId;
             return (
               <button

@@ -10,6 +10,7 @@ import TextSizeControl, { type TextSize, TEXT_SIZE_CLASSES } from "@/components/
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/i18n/LanguageContext";
 import { mysticalProfile } from "@/lib/mysticalProfile";
+import { computeAstrocartography, type AstrocartographyData } from "@/lib/astrocartography";
 
 interface Props {
   isOpen: boolean;
@@ -31,6 +32,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
   const [phase, setPhase] = useState<Phase>("form");
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [attempted, setAttempted] = useState(false);
+  const [astroData, setAstroData] = useState<AstrocartographyData | null>(null);
   const [details, setDetails] = useState<BirthDetails>({
     userName: "",
     gender: mysticalProfile.getUserGender() || "",
@@ -45,17 +47,36 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
       const t = setTimeout(() => {
         setPhase("form");
         setAttempted(false);
+        setAstroData(null);
       }, 400);
       return () => clearTimeout(t);
     }
   }, [isOpen]);
 
-  // Auto-advance from analyzing → result
+  // Auto-advance from analyzing → result, but only after personalization completes.
   useEffect(() => {
     if (phase !== "analyzing") return;
-    const timer = setTimeout(() => setPhase("result"), ANALYZING_MS);
-    return () => clearTimeout(timer);
-  }, [phase]);
+    let cancelled = false;
+    const minDelay = new Promise((res) => setTimeout(res, ANALYZING_MS));
+    Promise.all([
+      minDelay,
+      computeAstrocartography({
+        birthDate: details.birthDate,
+        birthTime: details.birthTime,
+        birthCity: details.birthCity,
+      }).catch((err) => {
+        console.warn("[Astrocartography] computation failed, falling back to defaults:", err);
+        return null;
+      }),
+    ]).then(([, data]) => {
+      if (cancelled) return;
+      setAstroData(data as AstrocartographyData | null);
+      setPhase("result");
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [phase, details.birthDate, details.birthTime, details.birthCity]);
 
   const handleSubmit = useCallback(() => {
     setAttempted(true);
@@ -73,6 +94,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
       mysticalProfile.recordUserName(details.userName.trim());
       if (details.gender) mysticalProfile.recordGender(details.gender as any);
     } catch { /* ignore */ }
+    setAstroData(null);
     setPhase("analyzing");
   }, [details]);
 
@@ -334,7 +356,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
 
             {/* THE MAP — dominant hero */}
             <div className="pt-1">
-              <AstrocartographySection />
+              <AstrocartographySection key={astroData?.signature ?? "default"} data={astroData} />
             </div>
 
             {/* Emotional footer */}
