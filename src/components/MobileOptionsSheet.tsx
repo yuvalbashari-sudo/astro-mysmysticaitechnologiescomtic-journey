@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useT, useLanguage } from "@/i18n";
 import gatewaySun from "@/assets/gateway-sun.png";
 import gatewayMoonCalendar from "@/assets/gateway-moon-calendar.png";
@@ -39,7 +40,14 @@ type OptionKey =
 const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
+  const isMobile = useIsMobile();
   const [active, setActive] = useState<OptionKey | null>(null);
+
+  // Subtler glow on mobile (touch), richer on desktop (hover)
+  const glowFrameAlpha = isMobile ? 0.36 : 0.46;
+  const glowBlurPx = isMobile ? 28 : 36;
+  const glowInnerAlpha = isMobile ? 0.22 : 0.28;
+  const lightSpreadAlpha = isMobile ? 0.16 : 0.26;
 
   useEffect(() => {
     if (isOpen) {
@@ -302,7 +310,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                       className="flex items-center justify-center rounded-full mb-1 relative overflow-hidden"
                       variants={{
                         hover: {
-                          boxShadow: `0 0 32px hsl(${opt.accent} / 0.42), inset 0 1px 8px hsl(${opt.accent} / 0.24), inset 0 0 0 1px hsl(var(--gold) / 0.1)`,
+                          boxShadow: `0 0 ${glowBlurPx}px hsl(${opt.accent} / ${glowFrameAlpha}), inset 0 1px 8px hsl(${opt.accent} / ${glowInnerAlpha}), inset 0 0 0 1px hsl(var(--gold) / 0.1)`,
                         },
                       }}
                       animate={{ scale: [1, 1.03, 1] }}
@@ -330,7 +338,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                         initial={{ opacity: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         style={{
-                          background: `radial-gradient(circle at 50% 50%, hsl(${opt.accent} / 0.22) 0%, transparent 70%)`,
+                          background: `radial-gradient(circle at 50% 50%, hsl(${opt.accent} / ${lightSpreadAlpha}) 0%, transparent 70%)`,
                         }}
                       />
                       <img
