@@ -25,7 +25,7 @@ export const en: TranslationKeys = {
   hero_menu_birthchart: "Birth Chart",
   hero_menu_fullchart: "Full Astrological Chart",
   hero_menu_daily_horoscope: "Your Daily Horoscope",
-  hero_menu_astrocarto: "Astrocartography Map",
+  hero_menu_astrocarto: "Astro Map",
 
   astrocarto_norielle_intro: "I'm here to guide you to the places in the world where your energy opens up.",
   astrocarto_subtitle: "Discover where in the world your energy unfolds for love, success, and growth",
