@@ -386,9 +386,31 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 }
 
 /* Astrocartography map frame: balanced height per viewport */
+/* Mobile portrait: fit fully inside the screen — preserve geography ratio,
+   never exceed ~45vh so the map sits cleanly under the filters without overflow. */
 .astro-map-frame {
-  height: min(55vh, 520px);
+  aspect-ratio: 100 / 60;
+  height: auto;
+  max-height: 45vh;
+  width: 100%;
 }
+
+/* Mobile landscape: immersive full-viewport map */
+@media (max-width: 767px) and (orientation: landscape) {
+  .astro-map-frame {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    aspect-ratio: auto;
+    border-radius: 0;
+    margin: 0;
+  }
+}
+
 @media (min-width: 768px) {
   .astro-map-frame {
     height: auto;
@@ -396,3 +418,4 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     max-height: 520px;
   }
 }
+
