@@ -356,7 +356,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
 
             {/* THE MAP — dominant hero */}
             <div className="pt-1">
-              <AstrocartographySection />
+              <AstrocartographySection key={astroData?.signature ?? "default"} data={astroData} />
             </div>
 
             {/* Emotional footer */}
