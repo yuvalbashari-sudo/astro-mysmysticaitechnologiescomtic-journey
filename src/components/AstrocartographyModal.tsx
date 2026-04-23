@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/i18n/LanguageContext";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { computeAstrocartography, type AstrocartographyData } from "@/lib/astrocartography";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
   isOpen: boolean;
