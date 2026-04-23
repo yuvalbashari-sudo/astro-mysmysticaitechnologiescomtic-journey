@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n";
 
@@ -70,20 +70,27 @@ const AvatarHoverTeaser = ({
 
   useEffect(() => () => clearTimers(), []);
 
-  // `anchor` prop kept for API stability; positioning is now always centered below.
+  const getAnchorSide = useCallback((): "left" | "right" => {
+    if (anchor !== "auto") return anchor;
+    const el = wrapperRef.current;
+    if (!el) return "left";
+    const rect = el.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    return centerX < window.innerWidth / 2 ? "right" : "left";
+  }, [anchor]);
+
+  const side = visible ? getAnchorSide() : "left";
+  const isLeft = side === "left";
 
   // Responsive card width: shrinks on small viewports so it never clips off-screen.
+  // Reserve ~24px for outer margin + 16px gap + avatar width (~64px on mobile).
   const [cardWidth, setCardWidth] = useState(320);
+  const [verticalShift, setVerticalShift] = useState(0);
 
-  const GAP_BELOW = 14;
-  const MIN_GAP_BELOW = 6;
-  
-  const [effectiveGap, setEffectiveGap] = useState(GAP_BELOW);
-
-  // `cardLeft` is an absolute pixel offset relative to the wrapper's left edge.
-  // We compute it so the card is centered under the avatar by default, but
-  // clamped so it never crosses the 12px viewport safe-margin on either side.
-  const [cardLeft, setCardLeft] = useState(0);
+  // Horizontal offset (slightly to the left of the avatar) and vertical gap above it.
+  const LEFT_OFFSET = 24;
+  const GAP_ABOVE = 16;
+  const [horizontalShift, setHorizontalShift] = useState(0);
 
   useEffect(() => {
     if (!visible) return;
@@ -95,32 +102,32 @@ const AvatarHoverTeaser = ({
       const vh = window.innerHeight;
       const SAFE_MARGIN = 12;
 
+      // Card sits ABOVE the avatar — width is bounded by full viewport minus margins,
+      // not by horizontal distance to a side edge.
       const maxByViewport = vw - SAFE_MARGIN * 2;
       const next = Math.max(240, Math.min(320, maxByViewport));
       setCardWidth(next);
 
-      // Desired absolute viewport-left for the card (centered under avatar)
-      const avatarCenter = rect.left + rect.width / 2;
-      let desiredViewportLeft = avatarCenter - next / 2;
+      // Compute the card's natural left edge (avatar left - LEFT_OFFSET) and nudge
+      // right if it would clip the left edge, or left if it would clip the right edge.
+      const naturalLeft = rect.left - LEFT_OFFSET;
+      const naturalRight = naturalLeft + next;
+      let shift = 0;
+      if (naturalLeft < SAFE_MARGIN) {
+        shift = SAFE_MARGIN - naturalLeft;
+      } else if (naturalRight > vw - SAFE_MARGIN) {
+        shift = vw - SAFE_MARGIN - naturalRight;
+      }
+      setHorizontalShift(shift);
 
-      // Hard clamp inside viewport with safe margin
-      const minLeft = SAFE_MARGIN;
-      const maxLeft = vw - SAFE_MARGIN - next;
-      if (desiredViewportLeft < minLeft) desiredViewportLeft = minLeft;
-      if (desiredViewportLeft > maxLeft) desiredViewportLeft = maxLeft;
-
-      // Convert to wrapper-relative left offset
-      setCardLeft(desiredViewportLeft - rect.left);
-
-      // Vertical clamp — card sits BELOW avatar; if it would overflow the bottom,
-      // reduce the gap toward MIN_GAP_BELOW. Never flip above.
+      // Vertical clipping guard — card sits above avatar; if it would clip the top,
+      // reduce the gap (allow the card to sit closer to the avatar).
       const ESTIMATED_HEIGHT = 160;
-      const cardBottom = rect.bottom + GAP_BELOW + ESTIMATED_HEIGHT;
-      if (cardBottom > vh - SAFE_MARGIN) {
-        const overflow = cardBottom - (vh - SAFE_MARGIN);
-        setEffectiveGap(Math.max(MIN_GAP_BELOW, GAP_BELOW - overflow));
+      const cardTop = rect.top - GAP_ABOVE - ESTIMATED_HEIGHT;
+      if (cardTop < SAFE_MARGIN) {
+        setVerticalShift(SAFE_MARGIN - cardTop);
       } else {
-        setEffectiveGap(GAP_BELOW);
+        setVerticalShift(0);
       }
     };
     compute();
@@ -132,10 +139,10 @@ const AvatarHoverTeaser = ({
     };
   }, [visible]);
 
-  // Card is positioned BELOW the avatar at an absolute, viewport-clamped left.
+  // Card is positioned ABOVE the avatar, with a small left offset for balance.
   const cardPosition: React.CSSProperties = {
-    top: `calc(100% + ${effectiveGap}px)`,
-    left: `${cardLeft}px`,
+    bottom: `calc(100% + ${GAP_ABOVE - verticalShift}px)`,
+    right: `calc(${LEFT_OFFSET - horizontalShift}px)`,
   };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
@@ -164,23 +171,22 @@ const AvatarHoverTeaser = ({
     <div
       ref={wrapperRef}
       className={`relative ${className}`}
-      style={{ ...style, overflow: "visible", zIndex: 200, isolation: "isolate" }}
+      style={{ ...style, overflow: "visible", isolation: "isolate", zIndex: 50 }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onPointerDown={handlePointerDown}
     >
-      {/* Protective backing — isolates the circular avatar from any text/content
-          rendered behind it. Sits just under the children, slightly larger than
-          the avatar so no letters peek around the edges. */}
       <div
-        aria-hidden
-        className="absolute rounded-full pointer-events-none"
+        aria-hidden="true"
         style={{
-          inset: -8,
+          position: "absolute",
+          inset: -10,
+          borderRadius: "50%",
           background:
-            "radial-gradient(circle at 50% 50%, hsl(222 50% 4% / 0.92) 0%, hsl(222 50% 4% / 0.85) 60%, hsl(222 50% 4% / 0) 100%)",
-          backdropFilter: "blur(6px)",
-          WebkitBackdropFilter: "blur(6px)",
+            "radial-gradient(circle, hsl(222 50% 4% / 0.98) 0%, hsl(222 50% 4% / 0.88) 55%, hsl(222 50% 4% / 0) 100%)",
+          backdropFilter: "blur(8px) saturate(120%)",
+          WebkitBackdropFilter: "blur(8px) saturate(120%)",
+          pointerEvents: "none",
           zIndex: 0,
         }}
       />
@@ -203,7 +209,7 @@ const AvatarHoverTeaser = ({
               direction: isRTL ? "rtl" : "ltr",
               textAlign: isRTL ? "right" : "left",
             }}
-            initial={{ opacity: 0, y: -6, scale: 0.97 }}
+            initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{
               opacity: 1,
               y: 0,
@@ -214,7 +220,7 @@ const AvatarHoverTeaser = ({
                 "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.12)",
               ],
             }}
-            exit={{ opacity: 0, y: -4, scale: 0.97 }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
             transition={{
               opacity: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
               y: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
@@ -270,7 +276,7 @@ const AvatarHoverTeaser = ({
         )}
       </AnimatePresence>
 
-      <div className="relative" style={{ zIndex: 1, width: "100%", height: "100%" }}>
+      <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
         {children}
       </div>
     </div>

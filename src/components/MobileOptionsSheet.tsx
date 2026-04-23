@@ -365,8 +365,6 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                         lineHeight: 1.35,
                         fontWeight: 600,
                         color: "hsl(var(--foreground) / 0.96)",
-                        whiteSpace: "pre-line",
-                        textAlign: "center",
                       }}
                     >
                       {opt.label}

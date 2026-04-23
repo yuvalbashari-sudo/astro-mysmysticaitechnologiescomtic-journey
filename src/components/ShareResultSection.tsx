@@ -43,118 +43,22 @@ const ShareResultSection = ({ symbol, title, subtitle, quote, readingText }: Sha
   return (
     <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="mt-8">
       <div className="section-divider max-w-[200px] mx-auto mb-8" />
-      <motion.div
-        className="relative overflow-hidden rounded-3xl p-7 md:p-9 mb-6 text-center"
-        style={{
-          background:
-            "radial-gradient(120% 100% at 50% 0%, hsl(43 55% 18% / 0.35) 0%, transparent 55%), linear-gradient(155deg, hsl(222 50% 16%) 0%, hsl(240 45% 10%) 60%, hsl(260 40% 9%) 100%)",
-          border: "1px solid hsl(var(--gold) / 0.42)",
-          boxShadow:
-            "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 50px hsl(var(--gold) / 0.14), inset 0 1px 0 hsl(var(--gold) / 0.18), inset 0 0 80px hsl(222 40% 18% / 0.35)",
-        }}
-      >
-        {/* Top hairline accent */}
-        <div
-          aria-hidden
-          className="absolute inset-x-0 top-0 h-px pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.65), transparent)",
-          }}
-        />
-        {/* Ornamental corners */}
+      <motion.div className="relative overflow-hidden rounded-2xl p-6 md:p-8 mb-6 text-center" style={{ background: "linear-gradient(145deg, hsl(222 50% 12%), hsl(240 40% 8%))", border: "1px solid hsl(var(--gold) / 0.2)", boxShadow: "0 0 40px hsl(var(--gold) / 0.08), inset 0 0 60px hsl(222 40% 15% / 0.3)" }}>
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-3 left-5 text-xs text-gold/40">✦</div>
-          <div className="absolute top-7 right-9 text-[10px] text-gold/30">⋆</div>
-          <div className="absolute bottom-5 left-10 text-[10px] text-gold/30">✧</div>
-          <div className="absolute bottom-8 right-5 text-xs text-gold/40">⋆</div>
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full"
-            style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.10), transparent 70%)" }}
-            animate={{ scale: [1, 1.15, 1], opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-          />
+          <div className="absolute top-2 left-4 text-[10px] opacity-20">✦</div>
+          <div className="absolute top-6 right-8 text-[8px] opacity-15">⋆</div>
+          <div className="absolute bottom-4 left-10 text-[8px] opacity-15">✧</div>
+          <div className="absolute bottom-8 right-4 text-[10px] opacity-20">⋆</div>
+          <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.06), transparent)" }} animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity }} />
         </div>
-
         <div className="relative z-10">
-          {/* Brand wordmark — top, intentional */}
-          <div className="flex items-center justify-center gap-2 mb-5">
-            <span className="text-gold/50 text-sm">✦</span>
-            <span
-              className="font-heading uppercase"
-              style={{
-                fontSize: 12,
-                letterSpacing: "0.32em",
-                fontWeight: 600,
-                background:
-                  "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              ASTROLOGAI
-            </span>
-            <span className="text-gold/50 text-sm">✦</span>
+          <motion.div className="text-5xl mb-4" animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 3, repeat: Infinity }}>{symbol}</motion.div>
+          <p className="font-heading text-sm md:text-base text-gold/90 mb-2 max-w-xs mx-auto leading-relaxed">"{selectedQuote}"</p>
+          <p className="font-body text-[11px] text-foreground/40 mt-3">{symbol} {title}{subtitle ? ` — ${subtitle}` : ""}</p>
+          <div className="mt-4 flex items-center justify-center gap-1.5">
+            <span className="text-[10px] text-gold/30 font-body tracking-widest uppercase">ASTROLOGAI</span>
+            <span className="text-gold/20">✦</span>
           </div>
-
-          {/* Symbol — visual anchor */}
-          <motion.div
-            className="mb-4"
-            style={{
-              fontSize: 56,
-              lineHeight: 1,
-              filter: "drop-shadow(0 4px 18px hsl(var(--gold) / 0.35))",
-            }}
-            animate={{ scale: [1, 1.06, 1] }}
-            transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {symbol}
-          </motion.div>
-
-          {/* Quote — primary */}
-          <p
-            className="font-heading mx-auto"
-            style={{
-              fontSize: 18,
-              lineHeight: 1.55,
-              maxWidth: 320,
-              fontWeight: 500,
-              background:
-                "linear-gradient(180deg, hsl(43 90% 90%) 0%, hsl(43 80% 70%) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            "{selectedQuote}"
-          </p>
-
-          {/* Title — supporting */}
-          <p
-            className="font-body mt-5 mx-auto"
-            style={{
-              fontSize: 14,
-              lineHeight: 1.5,
-              color: "hsl(var(--foreground) / 0.78)",
-              maxWidth: 300,
-            }}
-          >
-            <span className="opacity-80 me-1">{symbol}</span>
-            <span style={{ fontWeight: 600 }}>{title}</span>
-            {subtitle ? <span className="text-foreground/55"> — {subtitle}</span> : null}
-          </p>
-
-          {/* Bottom hairline */}
-          <div
-            aria-hidden
-            className="mx-auto mt-6 h-px"
-            style={{
-              maxWidth: 120,
-              background:
-                "linear-gradient(90deg, transparent, hsl(var(--gold) / 0.5), transparent)",
-            }}
-          />
         </div>
       </motion.div>
       <h4 className="font-heading text-base md:text-lg text-gold text-center mb-2">{t.share_title}</h4>

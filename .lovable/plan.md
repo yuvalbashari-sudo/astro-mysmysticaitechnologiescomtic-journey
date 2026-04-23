@@ -1,50 +1,34 @@
 
-## Add protective circular backdrop behind Norielle avatar
+## Refine Norielle avatar in Astrocartography form phase
 
-Single-file edit: `src/components/AvatarHoverTeaser.tsx`.
+Single-file change: `src/components/AstrocartographyModal.tsx`. No shell, no other phases touched.
 
 ### Changes
 
-**1. Wrapper style update**
-Update the outer wrapper `style` from:
-```tsx
-style={{ ...style, overflow: "visible" }}
-```
-to:
-```tsx
-style={{ ...style, overflow: "visible", isolation: "isolate", zIndex: 50 }}
-```
+**1. Form wrapper top padding** (line 106)
+- `pt-4 md:pt-6` → `pt-10 md:pt-12`
+- Pushes avatar safely below close button into visible scroll area.
+- Tighter vertical rhythm: `space-y-6 md:space-y-7` → `space-y-5 md:space-y-6` so avatar/title/subtitle group as one block.
 
-**2. Insert circular backdrop before `<AnimatePresence>`**
-```tsx
-<div
-  aria-hidden="true"
-  style={{
-    position: "absolute",
-    inset: -10,
-    borderRadius: "50%",
-    background:
-      "radial-gradient(circle, hsl(222 50% 4% / 0.98) 0%, hsl(222 50% 4% / 0.88) 55%, hsl(222 50% 4% / 0) 100%)",
-    backdropFilter: "blur(8px) saturate(120%)",
-    WebkitBackdropFilter: "blur(8px) saturate(120%)",
-    pointerEvents: "none",
-    zIndex: 0,
-  }}
-/>
-```
+**2. Avatar size — moderate guide presence** (lines 118–119)
+- Mobile: `86px` → `108px`
+- Desktop: `106px` → `128px`
 
-**3. Wrap `{children}` for layering above the backdrop**
-```tsx
-<div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
-  {children}
-</div>
-```
+**3. Refined premium styling** (lines 120–122)
+- Border: `2px solid hsl(var(--gold) / 0.45)` → `2.5px solid hsl(var(--gold) / 0.55)`
+- boxShadow upgraded to layered halo:
+  ```
+  0 0 0 5px hsl(var(--gold) / 0.10),
+  0 0 0 1px hsl(var(--gold) / 0.25),
+  0 6px 32px hsl(270 65% 45% / 0.42),
+  0 0 44px hsl(var(--gold) / 0.28)
+  ```
+- Pulsing ring tweak (line 135): scale `[1, 1.5, 1.5]`, opacity `[0.6, 0, 0]` for a slightly stronger but still elegant bloom.
+
+### Hierarchy preserved
+- Title remains primary focal point (size, gold textShadow unchanged).
+- Avatar reads as warm guide above heading, fully visible on open at 390×844, no clipping.
+- Form CTA still appears within reasonable scroll on mobile.
 
 ### Untouched
-- Teaser card visuals, animation (motion offsets, box-shadow pulse), timing (280ms hover delay, 2.6s mobile auto-hide), content, gradient typography.
-- Avatar size, glow ring, hover/tap behavior.
-- All call sites (`HeroSection`, `TarotModal`, `CinematicModalShell`, `MonthlyForecastModal`, `ReadingsHistoryModal`, `BirthChartModal`, `AstrocartographyModal`, `CompatibilityModal`, `ImmersiveTarotExperience`).
-- `TarotModal` layout, title typography, badges, close button.
-
-### Result
-A clean, dark, blurred circular backing sits behind the avatar in every screen — masking any underlying title text or background content that would otherwise bleed through the PNG's transparent edges (including the gold "THE CARDS CHOSEN FOR YOU" title in the Tarot result screen).
+- Analyzing phase, result phase, `CinematicModalShell`, all other modals, localization, layout below the title.

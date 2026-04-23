@@ -263,23 +263,42 @@ const MobileAiInsightOverlay = () => {
               })}
             </div>
 
-            {/* ── Top in-hero header: ASTROLOGAI wordmark on top, icons row below ── */}
+            {/* ── Top in-hero row: utility icons + ASTROLOGAI wordmark ── */}
             <motion.div
-              className="relative z-10 w-full flex flex-col items-stretch"
-              style={{ marginBottom: 12 }}
+              className="relative z-10 w-full flex items-center justify-between gap-2"
+              style={{ minHeight: 56, marginBottom: 12 }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Centered ASTROLOGAI wordmark */}
+              {/* Left cluster: language + accessibility */}
+              <div className="flex items-center gap-1 shrink-0">
+                <MysticalLanguageDropdown />
+                <Link
+                  to="/accessibility"
+                  aria-label={t.a11y_link_label}
+                  title={t.a11y_link_label}
+                  className="flex items-center justify-center rounded-full transition-all text-sm"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    background: "hsl(var(--deep-blue-light) / 0.5)",
+                    border: "1px solid hsl(var(--gold) / 0.2)",
+                    color: "hsl(var(--gold) / 0.7)",
+                  }}
+                >
+                  ♿
+                </Link>
+              </div>
+
+              {/* Center: ASTROLOGAI wordmark */}
               <motion.h1
-                className="font-heading uppercase pointer-events-none select-none whitespace-nowrap text-center"
+                className="font-heading uppercase pointer-events-none select-none whitespace-nowrap"
                 style={{
-                  fontSize: 36,
+                  fontSize: 22,
                   fontWeight: 700,
                   letterSpacing: "0.18em",
                   lineHeight: 1,
-                  margin: 0,
                   background:
                     "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
                   backgroundSize: "200% 200%",
@@ -293,63 +312,37 @@ const MobileAiInsightOverlay = () => {
                 ASTROLOGAI
               </motion.h1>
 
-              {/* Icons row beneath title — split to edges */}
-              <div
-                className="flex items-center justify-between w-full"
-                style={{ marginTop: 14 }}
-              >
-                {/* Left cluster: language + accessibility */}
-                <div className="flex items-center gap-1.5">
-                  <MysticalLanguageDropdown />
-                  <Link
-                    to="/accessibility"
-                    aria-label={t.a11y_link_label}
-                    title={t.a11y_link_label}
-                    className="flex items-center justify-center rounded-full transition-all text-sm"
-                    style={{
-                      width: 32,
-                      height: 32,
-                      background: "hsl(var(--deep-blue-light) / 0.5)",
-                      border: "1px solid hsl(var(--gold) / 0.2)",
-                      color: "hsl(var(--gold) / 0.7)",
-                    }}
-                  >
-                    ♿
-                  </Link>
-                </div>
-
-                {/* Right cluster: guides + WhatsApp */}
-                <div className="flex items-center gap-1.5">
-                  <Link
-                    to="/tarot-guides"
-                    aria-label={t.topbar_guide_label}
-                    title={t.topbar_guide_label}
-                    className="flex items-center justify-center rounded-full transition-all"
-                    style={{
-                      width: 32,
-                      height: 32,
-                      background: "hsl(var(--deep-blue-light) / 0.5)",
-                      border: "1px solid hsl(var(--gold) / 0.2)",
-                      color: "hsl(var(--gold) / 0.7)",
-                    }}
-                  >
-                    <BookOpen className="w-4 h-4" aria-hidden="true" />
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => window.open("https://wa.me/972500000000", "_blank", "noopener,noreferrer")}
-                    aria-label={t.a11y_whatsapp_contact}
-                    className="flex items-center justify-center rounded-full transition-all"
-                    style={{
-                      width: 32,
-                      height: 32,
-                      background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
-                      boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
-                    }}
-                  >
-                    <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
-                  </button>
-                </div>
+              {/* Right cluster: guides + WhatsApp */}
+              <div className="flex items-center gap-1 shrink-0">
+                <Link
+                  to="/tarot-guides"
+                  aria-label={t.topbar_guide_label}
+                  title={t.topbar_guide_label}
+                  className="flex items-center justify-center rounded-full transition-all"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    background: "hsl(var(--deep-blue-light) / 0.5)",
+                    border: "1px solid hsl(var(--gold) / 0.2)",
+                    color: "hsl(var(--gold) / 0.7)",
+                  }}
+                >
+                  <BookOpen className="w-4 h-4" aria-hidden="true" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => window.open("https://wa.me/972500000000", "_blank", "noopener,noreferrer")}
+                  aria-label={t.a11y_whatsapp_contact}
+                  className="flex items-center justify-center rounded-full transition-all"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
+                    boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
+                  }}
+                >
+                  <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
+                </button>
               </div>
             </motion.div>
 
@@ -468,11 +461,11 @@ const MobileAiInsightOverlay = () => {
                   aria-label="Norielle"
                   className="relative rounded-full overflow-hidden"
                   style={{
-                    width: 100,
-                    height: 100,
-                    border: "1.5px solid hsl(var(--gold) / 0.5)",
+                    width: 56,
+                    height: 56,
+                    border: "1px solid hsl(var(--gold) / 0.45)",
                     boxShadow:
-                      "0 0 28px hsl(var(--gold) / 0.34), 0 0 56px hsl(43 70% 45% / 0.14), inset 0 0 16px hsl(43 60% 30% / 0.22)",
+                      "0 0 22px hsl(var(--gold) / 0.28), inset 0 0 14px hsl(43 60% 30% / 0.2)",
                     background: "hsl(225 45% 10%)",
                     flexShrink: 0,
                   }}
