@@ -107,9 +107,9 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
   const avatarStyle = isMobile
     ? {
         position: "absolute" as const,
-        bottom: 20,
+        top: 20,
         right: 16,
-        top: "auto" as const,
+        bottom: "auto" as const,
         left: "auto" as const,
         width: 88,
         height: 88,
