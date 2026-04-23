@@ -30,6 +30,7 @@ const ANALYZING_MS = 1600;
 const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const isMobile = useIsMobile();
+  const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("form");
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [attempted, setAttempted] = useState(false);
