@@ -266,22 +266,22 @@ const MobileAiInsightOverlay = () => {
             {/* ── Top in-hero row: utility icons + ASTROLOGAI wordmark ── */}
             <motion.div
               className="relative z-10 w-full flex items-center justify-between gap-2"
-              style={{ minHeight: 56, marginBottom: 12 }}
+              style={{ minHeight: 64, marginBottom: 16 }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
               {/* Left cluster: language + accessibility */}
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <MysticalLanguageDropdown />
                 <Link
                   to="/accessibility"
                   aria-label={t.a11y_link_label}
                   title={t.a11y_link_label}
-                  className="flex items-center justify-center rounded-full transition-all text-sm"
+                  className="flex items-center justify-center rounded-full transition-all text-base"
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     background: "hsl(var(--deep-blue-light) / 0.5)",
                     border: "1px solid hsl(var(--gold) / 0.2)",
                     color: "hsl(var(--gold) / 0.7)",
@@ -295,9 +295,9 @@ const MobileAiInsightOverlay = () => {
               <motion.h1
                 className="font-heading uppercase pointer-events-none select-none whitespace-nowrap"
                 style={{
-                  fontSize: 22,
+                  fontSize: 28,
                   fontWeight: 700,
-                  letterSpacing: "0.18em",
+                  letterSpacing: "0.1em",
                   lineHeight: 1,
                   background:
                     "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
@@ -313,21 +313,21 @@ const MobileAiInsightOverlay = () => {
               </motion.h1>
 
               {/* Right cluster: guides + WhatsApp */}
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-1.5 shrink-0">
                 <Link
                   to="/tarot-guides"
                   aria-label={t.topbar_guide_label}
                   title={t.topbar_guide_label}
                   className="flex items-center justify-center rounded-full transition-all"
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     background: "hsl(var(--deep-blue-light) / 0.5)",
                     border: "1px solid hsl(var(--gold) / 0.2)",
                     color: "hsl(var(--gold) / 0.7)",
                   }}
                 >
-                  <BookOpen className="w-4 h-4" aria-hidden="true" />
+                  <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
                 </Link>
                 <button
                   type="button"
@@ -335,13 +335,13 @@ const MobileAiInsightOverlay = () => {
                   aria-label={t.a11y_whatsapp_contact}
                   className="flex items-center justify-center rounded-full transition-all"
                   style={{
-                    width: 32,
-                    height: 32,
+                    width: 36,
+                    height: 36,
                     background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
                     boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
                   }}
                 >
-                  <MessageCircle className="w-4 h-4 text-white" aria-hidden="true" />
+                  <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
                 </button>
               </div>
             </motion.div>
