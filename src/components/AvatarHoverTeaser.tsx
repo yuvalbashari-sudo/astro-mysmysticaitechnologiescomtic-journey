@@ -77,7 +77,7 @@ const AvatarHoverTeaser = ({
 
   const GAP_BELOW = 14;
   const MIN_GAP_BELOW = 6;
-  const [horizontalShift, setHorizontalShift] = useState(0);
+  
   const [effectiveGap, setEffectiveGap] = useState(GAP_BELOW);
 
   // `cardLeft` is an absolute pixel offset relative to the wrapper's left edge.
