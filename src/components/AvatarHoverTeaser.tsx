@@ -85,6 +85,7 @@ const AvatarHoverTeaser = ({
   // Responsive card width: shrinks on small viewports so it never clips off-screen.
   const [cardWidth, setCardWidth] = useState(320);
   const [horizontalShift, setHorizontalShift] = useState(0);
+  const [mobileTop, setMobileTop] = useState<number | null>(null);
   // When true, the card flips back ABOVE the avatar (fallback when bottom would clip).
   const [placeAbove, setPlaceAbove] = useState(false);
 
@@ -99,10 +100,34 @@ const AvatarHoverTeaser = ({
       const vw = window.innerWidth;
       const vh = window.innerHeight;
       const SAFE_MARGIN = 12;
+      const ESTIMATED_HEIGHT = 160;
+      const isMobileViewport = vw < 768;
 
       const maxByViewport = vw - SAFE_MARGIN * 2;
       const next = Math.max(240, Math.min(320, maxByViewport));
       setCardWidth(next);
+
+      if (isMobileViewport) {
+        const belowTop = rect.bottom + GAP;
+        const aboveTop = rect.top - GAP - ESTIMATED_HEIGHT;
+        const maxTop = vh - ESTIMATED_HEIGHT - SAFE_MARGIN;
+
+        setHorizontalShift(0);
+
+        if (belowTop <= maxTop) {
+          setPlaceAbove(false);
+          setMobileTop(Math.max(SAFE_MARGIN, belowTop));
+        } else if (aboveTop >= SAFE_MARGIN) {
+          setPlaceAbove(true);
+          setMobileTop(aboveTop);
+        } else {
+          setPlaceAbove(false);
+          setMobileTop(Math.max(SAFE_MARGIN, Math.min(maxTop, (vh - ESTIMATED_HEIGHT) / 2)));
+        }
+        return;
+      }
+
+      setMobileTop(null);
 
       // Center the card horizontally under the avatar; clamp inside the viewport.
       const avatarCenter = rect.left + rect.width / 2;
@@ -118,7 +143,6 @@ const AvatarHoverTeaser = ({
 
       // Prefer rendering BELOW. Flip to above only if it would clip the bottom edge
       // and there is more room above than below.
-      const ESTIMATED_HEIGHT = 160;
       const spaceBelow = vh - rect.bottom - GAP;
       const spaceAbove = rect.top - GAP;
       setPlaceAbove(spaceBelow < ESTIMATED_HEIGHT && spaceAbove > spaceBelow);
@@ -132,18 +156,27 @@ const AvatarHoverTeaser = ({
     };
   }, [visible]);
 
-  // Card is positioned BELOW the avatar by default (centered), or above as a fallback.
-  const cardPosition: React.CSSProperties = placeAbove
+  const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
+
+  // On mobile, keep the teaser centered in the viewport so it never escapes sideways.
+  const cardPosition: React.CSSProperties = isMobileViewport
     ? {
-        bottom: `calc(100% + ${GAP}px)`,
+        position: "fixed",
+        top: mobileTop ?? 120,
         left: "50%",
-        transform: `translateX(calc(-50% + ${horizontalShift}px))`,
+        marginLeft: -(cardWidth / 2),
       }
-    : {
-        top: `calc(100% + ${GAP}px)`,
-        left: "50%",
-        transform: `translateX(calc(-50% + ${horizontalShift}px))`,
-      };
+    : placeAbove
+      ? {
+          bottom: `calc(100% + ${GAP}px)`,
+          left: `calc(50% + ${horizontalShift}px)`,
+          marginLeft: -(cardWidth / 2),
+        }
+      : {
+          top: `calc(100% + ${GAP}px)`,
+          left: `calc(50% + ${horizontalShift}px)`,
+          marginLeft: -(cardWidth / 2),
+        };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
   const handleMouseEnter = () => {
