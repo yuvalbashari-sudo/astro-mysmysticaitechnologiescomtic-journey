@@ -1,40 +1,50 @@
 
-## Fix Norielle teaser — anchor below avatar, viewport-clamped
+## Add protective circular backdrop behind Norielle avatar
 
-Single-file edit: **`src/components/AvatarHoverTeaser.tsx`**.
+Single-file edit: `src/components/AvatarHoverTeaser.tsx`.
 
 ### Changes
 
-1. **Flip anchor from above → below**
-   - Replace `bottom: calc(100% + ...)` with `top: calc(100% + GAP_BELOW)` where `GAP_BELOW = 14`.
-   - Remove `LEFT_OFFSET` side-bias and the `right:` based positioning.
+**1. Wrapper style update**
+Update the outer wrapper `style` from:
+```tsx
+style={{ ...style, overflow: "visible" }}
+```
+to:
+```tsx
+style={{ ...style, overflow: "visible", isolation: "isolate", zIndex: 50 }}
+```
 
-2. **Center horizontally under avatar**
-   - Default style: `left: 50%`, `transform: translateX(calc(-50% + ${horizontalShift}px))`.
-   - Direction-agnostic — works for RTL and LTR identically. Drop `getAnchorSide` logic (or keep `anchor` prop as a no-op for API stability).
+**2. Insert circular backdrop before `<AnimatePresence>`**
+```tsx
+<div
+  aria-hidden="true"
+  style={{
+    position: "absolute",
+    inset: -10,
+    borderRadius: "50%",
+    background:
+      "radial-gradient(circle, hsl(222 50% 4% / 0.98) 0%, hsl(222 50% 4% / 0.88) 55%, hsl(222 50% 4% / 0) 100%)",
+    backdropFilter: "blur(8px) saturate(120%)",
+    WebkitBackdropFilter: "blur(8px) saturate(120%)",
+    pointerEvents: "none",
+    zIndex: 0,
+  }}
+/>
+```
 
-3. **Horizontal viewport clamp**
-   - In the `compute()` effect, calculate the centered card's natural left/right edges from the avatar's `getBoundingClientRect()` center and the resolved `cardWidth`.
-   - If the natural left < 12px safe margin → `horizontalShift = SAFE_MARGIN - naturalLeft`.
-   - If the natural right > `vw - 12px` → `horizontalShift = (vw - SAFE_MARGIN) - naturalRight`.
-   - Otherwise `horizontalShift = 0`.
-
-4. **Vertical clamp (below-only)**
-   - Compute `cardBottom = rect.bottom + GAP_BELOW + ESTIMATED_HEIGHT` (height ~160).
-   - If `cardBottom > vh - SAFE_MARGIN`, reduce the effective gap toward a minimum of 6px (`effectiveGap = Math.max(6, GAP_BELOW - overflow)`).
-   - Never flip back above the avatar.
-
-5. **Responsive width** — preserve existing `Math.max(240, Math.min(320, vw - 24))`.
-
-6. **Animation**
-   - Change initial/exit `y` from `8`/`6` (drop-down feel above) to `-6`/`-4` so the card eases **downward** from the avatar to its resting position below.
-
-7. **Direction-safe text** — keep `direction` and `textAlign` driven by `isRTL` inside the card. No changes to copy, gradient, glow, hover/tap timing, or `disabled` behavior.
+**3. Wrap `{children}` for layering above the backdrop**
+```tsx
+<div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%" }}>
+  {children}
+</div>
+```
 
 ### Untouched
-- All call sites and the teaser API (`text`, `highlightText`, `anchor`, `disabled`, `className`, `style`).
-- Avatar button, modal shells, hero, tarot/forecast/history modals.
-- Card visual design, ornamental hairline, box-shadow pulse, 280ms hover delay, 2.6s mobile auto-hide.
+- Teaser card visuals, animation (motion offsets, box-shadow pulse), timing (280ms hover delay, 2.6s mobile auto-hide), content, gradient typography.
+- Avatar size, glow ring, hover/tap behavior.
+- All call sites (`HeroSection`, `TarotModal`, `CinematicModalShell`, `MonthlyForecastModal`, `ReadingsHistoryModal`, `BirthChartModal`, `AstrocartographyModal`, `CompatibilityModal`, `ImmersiveTarotExperience`).
+- `TarotModal` layout, title typography, badges, close button.
 
 ### Result
-Teaser always opens directly beneath Norielle's avatar, centered to it, and stays fully inside the viewport — including top-corner placements in modal scenes.
+A clean, dark, blurred circular backing sits behind the avatar in every screen — masking any underlying title text or background content that would otherwise bleed through the PNG's transparent edges (including the gold "THE CARDS CHOSEN FOR YOU" title in the Tarot result screen).
