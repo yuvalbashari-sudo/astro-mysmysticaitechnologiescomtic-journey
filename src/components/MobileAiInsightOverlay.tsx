@@ -275,7 +275,7 @@ const MobileAiInsightOverlay = () => {
               <motion.h1
                 className="font-heading uppercase pointer-events-none select-none whitespace-nowrap text-center"
                 style={{
-                  fontSize: 40,
+                  fontSize: 36,
                   fontWeight: 700,
                   letterSpacing: "0.18em",
                   lineHeight: 1,
