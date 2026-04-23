@@ -64,7 +64,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
     if (!activeReading) return null;
     const type = activeReading.type;
     if (type === "tarot" || type === "dailyCard" || type === "tarotWorld") return "tarot";
-    if (type === "forecast" || type === "rising" || type === "birthChart" || type === "astrologer") return "astrology";
+    if (type === "forecast" || type === "rising" || type === "birthChart" || type === "astrologer" || type === "astrocartography") return "astrology";
     if (type === "compatibility") return "compatibility";
     if (type === "palm") return "palm";
     return null;
