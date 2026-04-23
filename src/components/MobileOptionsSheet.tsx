@@ -192,19 +192,13 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                 <X className="w-5 h-5" aria-hidden="true" />
               </button>
               <span
-                className="font-heading uppercase select-none relative astrologai-shimmer"
+                className="font-heading uppercase select-none"
                 style={{
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: 600,
-                  letterSpacing: "0.32em",
-                  backgroundImage:
-                    "linear-gradient(90deg, #CDAF6E 0%, #F5E6B3 50%, #CDAF6E 100%)",
-                  backgroundSize: "200% 100%",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  textShadow:
-                    "0 0 8px rgba(212,175,55,0.4), 0 0 18px rgba(212,175,55,0.25)",
+                  letterSpacing: "0.28em",
+                  color: "hsl(43 75% 65%)",
+                  textShadow: "0 0 10px hsl(43 80% 55% / 0.35)",
                 }}
               >
                 ASTROLOGAI
@@ -229,28 +223,6 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                 ♿
               </Link>
             </div>
-            {/* Premium gold divider under brand */}
-            <div
-              aria-hidden
-              style={{
-                width: "60%",
-                height: 1,
-                margin: "0 auto",
-                marginBottom: 22,
-                background:
-                  "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.35) 50%, transparent 100%)",
-                opacity: 0.55,
-              }}
-            />
-            <style>{`
-              @keyframes astrologaiShimmer {
-                0% { background-position: 0% 50%; }
-                100% { background-position: 200% 50%; }
-              }
-              .astrologai-shimmer {
-                animation: astrologaiShimmer 6s linear infinite;
-              }
-            `}</style>
 
             {/* Title */}
             <motion.h2
