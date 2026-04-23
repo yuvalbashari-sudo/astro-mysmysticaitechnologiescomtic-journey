@@ -1,29 +1,55 @@
 
-## Fix Norielle avatar overflow in Astrocartography result view
 
-Single-file edit: `src/components/AstrocartographyModal.tsx` (lines 81–84).
+## Connect Norielle to the Astrocartography result + tactile tap feedback
 
-The mobile `avatarStyle` passed into `CinematicModalShell` for the Astrocartography modal currently anchors the Norielle avatar at `bottom: 14, right: 12` with size `78×78`. In the result view, the avatar visually overflows at the top edge near the close button and gold title, and the user wants it pushed **down 20px** (clear of the top edge, toward the gold title) and **enlarged to 98px**.
+### Changes — three surgical edits
 
-### Change
-Update the mobile avatar style to anchor from the top, shifted down so it no longer clips the modal edge:
+**1. `src/components/AstrocartographyModal.tsx` — register reading + reposition avatar**
 
-```ts
-const avatarStyle = isMobile
-  ? { top: 20, right: 12, bottom: "auto" as const, left: "auto" as const, width: 98, height: 98 }
-  : undefined;
+- Import `useReadingContext`. When `phase === "result"`, register the reading so the advisor opens with full context:
+  ```ts
+  setActiveReading({
+    type: "astrocartography",
+    label: t.astrocarto_result_title,
+    summary: `${t.astrocarto_result_title}\n\n${t.astrocarto_result_desc}${topCities ? `\n\nTop locations: ${topCities}` : ""}\n\n${t.astrocarto_result_footer}`,
+  });
+  ```
+  Cleanup resets to `null` on unmount / phase change.
+
+- Reposition the mobile avatar out of the top-right collision zone (currently overlaps `TextSizeControl` + close button):
+  ```ts
+  const avatarStyle = isMobile
+    ? { bottom: 18, right: 14, top: "auto" as const, left: "auto" as const, width: 88, height: 88 }
+    : undefined;
+  ```
+  This restores reliable tap targeting and gives `AvatarHoverTeaser` natural room to float above the avatar.
+
+- **No auto-pulse, no forced teaser.** The teaser surfaces only via natural hover/tap (existing `AvatarHoverTeaser` behavior).
+
+**2. `src/components/CinematicModalShell.tsx` — tactile tap micro-interaction**
+
+Replace the avatar button's brightness-only feedback with a felt scale + gold-glow burst, so the tap is visibly acknowledged the instant it happens (in parallel with the advisor panel mounting):
+
+```tsx
+whileTap={{
+  scale: 0.96,
+  boxShadow: "0 0 0 3px hsl(var(--gold) / 0.35), 0 6px 24px hsl(270 60% 45% / 0.35), 0 0 36px hsl(var(--gold) / 0.45)",
+}}
+whileHover={{ scale: 1.04, filter: "brightness(1.08)" }}
+transition={{ type: "spring", stiffness: 380, damping: 24 }}
 ```
 
-- `width / height`: `78` → `98`
-- Anchor flipped: `bottom: 14` → `top: 20` (avatar sits 20px from the top of the modal frame, toward the gold title — no longer overflowing)
-- `right: 12` preserved
-- Desktop (`undefined`) untouched — uses CinematicModalShell defaults
+Existing pulse ring stays. `setAdvisorOpen(true)` still fires immediately on click — the spring-back plays alongside the advisor's slide-in for a continuous tap → open feel.
+
+**3. `src/components/AdvisorChatPanel.tsx` — route astrocartography to astrology**
+
+One-line addition inside the existing `readingCategory` `useMemo`: treat `type === "astrocartography"` as the `"astrology"` domain so chat opens with astro-aware suggestion chips and Norielle's astrology persona — never a generic empty state.
 
 ### Untouched
-- Form-phase centered avatar (lines 108–138).
-- Analyzing and result phase content, title, CTA, map.
-- `CinematicModalShell`, `AvatarHoverTeaser`, all other modals and call sites.
-- Avatar glow, ring pulse, hover/tap behavior, teaser.
+`AvatarHoverTeaser` internals, the form-phase centered avatar, the analyzing phase, `AstrocartographySection`, `src/lib/astrocartography.ts`, filter buttons, map sizing in `index.css`, and every other modal/call site (the tap micro-interaction is a global polish — Tarot, Compatibility, Forecast all benefit identically).
 
 ### Result
-In the Astrocartography result view on mobile, the Norielle avatar appears 20px below the top edge (no longer overflowing) at a clearer 98×98 size, sitting cleanly to the right of the gold title.
+- Tap Norielle → instant scale-down + gold glow burst (clearly felt as a reaction to the user's action), spring-back as the advisor opens with the astrocartography reading in scope and astrology chips ready.
+- Teaser appears only on hover/tap — never auto-triggered on result load.
+- Avatar lives in the bottom-right of the result screen, free from the close button and `TextSizeControl`.
+
