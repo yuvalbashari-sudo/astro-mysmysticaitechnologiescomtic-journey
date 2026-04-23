@@ -87,6 +87,7 @@ export const ar: TranslationKeys = {
   free_taste_desc: "فحص توافق أولي بين برجين",
   free_tarot_title: "ورقة تاروت يومية",
   free_tarot_desc: "اسألوا سؤالاً واحصلوا على ورقة واحدة مع رسالة من الكون",
+  gateway_daily_card_title: "بطاقتك اليومية",
   free_cta: "احصلوا مجاناً",
   premium_label: "✦ بريميوم ✦",
   premium_launch_label: "✦ وصول مجاني بمناسبة الإطلاق ✦",
