@@ -70,14 +70,7 @@ const AvatarHoverTeaser = ({
 
   useEffect(() => () => clearTimers(), []);
 
-  const getAnchorSide = useCallback((): "left" | "right" => {
-    if (anchor !== "auto") return anchor;
-    const el = wrapperRef.current;
-    if (!el) return "left";
-    const rect = el.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    return centerX < window.innerWidth / 2 ? "right" : "left";
-  }, [anchor]);
+  // `anchor` prop kept for API stability; positioning is now always centered below.
 
   // Responsive card width: shrinks on small viewports so it never clips off-screen.
   const [cardWidth, setCardWidth] = useState(320);
