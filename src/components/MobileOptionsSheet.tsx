@@ -175,7 +175,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-3 pb-4 relative" style={{ borderBottom: "1px solid hsl(var(--gold) / 0.15)" }}>
               <button
                 type="button"
                 onClick={onClose}
@@ -192,15 +192,18 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                 <X className="w-5 h-5" aria-hidden="true" />
               </button>
               <span
-                className="font-heading uppercase select-none"
+                className="font-heading uppercase select-none relative"
                 style={{
-                  fontSize: 14,
-                  letterSpacing: "0.18em",
+                  fontSize: 19,
+                  fontWeight: 600,
+                  letterSpacing: "0.28em",
                   background:
-                    "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)))",
+                    "linear-gradient(180deg, hsl(43 95% 88%) 0%, hsl(43 85% 65%) 55%, hsl(38 75% 48%) 100%)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
+                  filter: "drop-shadow(0 0 8px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 18px hsl(43 75% 50% / 0.25))",
+                  textShadow: "0 1px 0 hsl(43 50% 20% / 0.3)",
                 }}
               >
                 ASTROLOGAI
