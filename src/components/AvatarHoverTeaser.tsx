@@ -171,7 +171,7 @@ const AvatarHoverTeaser = ({
     <div
       ref={wrapperRef}
       className={`relative ${className}`}
-      style={{ ...style, overflow: "visible", isolation: "isolate", zIndex: 50 }}
+      style={{ overflow: "visible", isolation: "isolate", zIndex: style?.zIndex ?? 50, ...style }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onPointerDown={handlePointerDown}
