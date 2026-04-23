@@ -87,6 +87,7 @@ export const he: TranslationKeys = {
   free_taste_desc: "בדיקת התאמה ראשונית בין שני מזלות",
   free_tarot_title: "קלף טארוט יומי",
   free_tarot_desc: "שאלו שאלה וקבלו קלף אחד עם מסר מהיקום",
+  gateway_daily_card_title: "הקלף היומי שלך",
   free_cta: "קבלו בחינם",
   premium_label: "✦ פרימיום ✦",
   premium_launch_label: "✦ פתוח בחינם לרגל ההשקה ✦",
