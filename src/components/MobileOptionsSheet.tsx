@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useT, useLanguage } from "@/i18n";
 import gatewaySun from "@/assets/gateway-sun.png";
 import gatewayMoonCalendar from "@/assets/gateway-moon-calendar.png";
