@@ -80,7 +80,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
 
   // Norielle avatar position — keep clear of the form CTA on mobile
   const avatarStyle = isMobile
-    ? { bottom: 14, right: 12, top: "auto" as const, left: "auto" as const, width: 78, height: 78 }
+    ? { top: 20, right: 12, bottom: "auto" as const, left: "auto" as const, width: 98, height: 98 }
     : undefined;
 
   const shareText = `${t.astrocarto_result_title}\n\n${t.astrocarto_result_desc}\n\n${t.astrocarto_result_footer}`;
