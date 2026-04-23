@@ -110,29 +110,50 @@ function highlightKeywords(text: string, keywords: string[]) {
   );
 }
 
-const AstrocartographySection = () => {
+interface AstrocartographySectionProps {
+  /** Personalized lines/strengths derived from the user's birth details. When
+   *  omitted, falls back to the static reference set (e.g. previews). */
+  data?: AstrocartographyData | null;
+}
+
+const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) => {
   const [activeFilter, setActiveFilter] = useState<LineKey>("love");
   const [selectedCityId, setSelectedCityId] = useState<string>("london");
   const [hoveredCityId, setHoveredCityId] = useState<string | null>(null);
   const [legendOpen, setLegendOpen] = useState(false);
 
+  // Use personalized lines when available; otherwise the editorial fallback.
+  const activePlanetLines: (PlanetLine | DerivedPlanetLine)[] = useMemo(
+    () => (data?.planetLines && data.planetLines.length ? data.planetLines : PLANET_LINES),
+    [data],
+  );
+
+  // Apply per-birth strengths to the city catalog.
+  const personalizedCities = useMemo<City[]>(() => {
+    if (!data?.cityStrength) return CITIES;
+    return CITIES.map((c) => ({
+      ...c,
+      strength: data.cityStrength[c.id] ?? c.strength,
+    }));
+  }, [data]);
+
   const focusLine: LineKey = useMemo(() => {
     if (hoveredCityId) {
-      return CITIES.find((c) => c.id === hoveredCityId)!.line;
+      return personalizedCities.find((c) => c.id === hoveredCityId)!.line;
     }
     return activeFilter;
-  }, [hoveredCityId, activeFilter]);
+  }, [hoveredCityId, activeFilter, personalizedCities]);
 
   const selectedCity = useMemo(
-    () => CITIES.find((c) => c.id === selectedCityId) ?? CITIES[0],
-    [selectedCityId]
+    () => personalizedCities.find((c) => c.id === selectedCityId) ?? personalizedCities[0],
+    [selectedCityId, personalizedCities]
   );
 
   // Nearest planetary line to the selected city (by longitude distance, wrap-aware)
   const nearestLine = useMemo(() => {
-    let best = PLANET_LINES[0];
+    let best = activePlanetLines[0];
     let bestDist = Infinity;
-    for (const p of PLANET_LINES) {
+    for (const p of activePlanetLines) {
       const d = Math.min(
         Math.abs(p.lon - selectedCity.lon),
         360 - Math.abs(p.lon - selectedCity.lon)
@@ -143,18 +164,18 @@ const AstrocartographySection = () => {
       }
     }
     return { line: best, distance: bestDist };
-  }, [selectedCity]);
+  }, [selectedCity, activePlanetLines]);
 
 
   const sortedRecommendations = useMemo(() => {
-    return [...CITIES]
+    return [...personalizedCities]
       .map((c) => ({
         ...c,
         relevance: c.line === activeFilter ? c.strength + 100 : c.strength,
       }))
       .sort((a, b) => b.relevance - a.relevance)
       .slice(0, 3);
-  }, [activeFilter]);
+  }, [activeFilter, personalizedCities]);
 
   const topRecommendationId = sortedRecommendations[0]?.id;
 
