@@ -11,6 +11,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useT } from "@/i18n/LanguageContext";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { computeAstrocartography, type AstrocartographyData } from "@/lib/astrocartography";
+import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const ANALYZING_MS = 1600;
 const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const isMobile = useIsMobile();
+  const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("form");
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [attempted, setAttempted] = useState(false);
@@ -100,10 +102,28 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
 
   const sizes = TEXT_SIZE_CLASSES[textSize];
 
-  // Norielle avatar position — keep clear of the form CTA on mobile
+  // Norielle avatar position — bottom-right on mobile (clear of close button + TextSizeControl)
   const avatarStyle = isMobile
-    ? { top: 20, right: 12, bottom: "auto" as const, left: "auto" as const, width: 98, height: 98 }
+    ? { bottom: 18, right: 14, top: "auto" as const, left: "auto" as const, width: 88, height: 88 }
     : undefined;
+
+  // Register reading with advisor scope when result is shown
+  useEffect(() => {
+    if (phase !== "result") return;
+    const topCities = astroData?.cityStrength
+      ? Object.entries(astroData.cityStrength)
+          .sort(([, a], [, b]) => (b as number) - (a as number))
+          .slice(0, 3)
+          .map(([id]) => id)
+          .join(", ")
+      : "";
+    setActiveReading({
+      type: "astrocartography",
+      label: t.astrocarto_result_title,
+      summary: `${t.astrocarto_result_title}\n\n${t.astrocarto_result_desc}${topCities ? `\n\nTop locations: ${topCities}` : ""}\n\n${t.astrocarto_result_footer}`,
+    });
+    return () => setActiveReading(null);
+  }, [phase, astroData, setActiveReading, t]);
 
   const shareText = `${t.astrocarto_result_title}\n\n${t.astrocarto_result_desc}\n\n${t.astrocarto_result_footer}`;
 
