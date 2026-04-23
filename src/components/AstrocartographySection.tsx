@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, MapPin, Sparkles, Star, Heart, Briefcase, Home, Flower2, Coins } from "lucide-react";
 import worldMapNight from "@/assets/world-map-night.jpg";
+import type { AstrocartographyData, DerivedPlanetLine } from "@/lib/astrocartography";
 
 type LineKey = "love" | "career" | "spirit" | "home" | "abundance";
 type LineType = "MC" | "IC" | "ASC" | "DSC";
