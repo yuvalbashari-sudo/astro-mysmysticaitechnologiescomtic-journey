@@ -299,7 +299,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     }}
                   >
                     <span
-                      className="flex items-center justify-center rounded-full mb-3 relative overflow-hidden"
+                      className="flex items-center justify-center rounded-full mb-1 relative overflow-hidden"
                       style={{
                         width: 96,
                         height: 96,
