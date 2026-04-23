@@ -175,7 +175,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-3 pb-4 relative" style={{ borderBottom: "1px solid hsl(var(--gold) / 0.15)" }}>
               <button
                 type="button"
                 onClick={onClose}
