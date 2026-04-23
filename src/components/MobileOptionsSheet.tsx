@@ -338,7 +338,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                         initial={{ opacity: 0 }}
                         transition={{ duration: 0.5, ease: "easeOut" }}
                         style={{
-                          background: `radial-gradient(circle at 50% 50%, hsl(${opt.accent} / 0.22) 0%, transparent 70%)`,
+                          background: `radial-gradient(circle at 50% 50%, hsl(${opt.accent} / ${lightSpreadAlpha}) 0%, transparent 70%)`,
                         }}
                       />
                       <img
