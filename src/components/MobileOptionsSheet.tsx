@@ -288,7 +288,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     className="relative flex flex-col items-center justify-center text-center"
                     style={{
                       minHeight: 158,
-                      padding: "24px 16px",
+                      padding: "18px 12px",
                       borderRadius: 20,
                       background:
                         "linear-gradient(160deg, hsl(225 50% 9% / 0.92) 0%, hsl(225 55% 5% / 0.94) 100%)",
@@ -299,10 +299,10 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     }}
                   >
                     <span
-                      className="flex items-center justify-center rounded-full mb-4 relative overflow-hidden"
+                      className="flex items-center justify-center rounded-full mb-3 relative overflow-hidden"
                       style={{
-                        width: 64,
-                        height: 64,
+                        width: 84,
+                        height: 84,
                         background: `radial-gradient(circle at 30% 28%, hsl(${opt.accent} / 0.32) 0%, hsl(225 50% 6% / 0.55) 70%)`,
                         border: `1px solid hsl(${opt.accent} / 0.5)`,
                         boxShadow: `0 0 22px hsl(${opt.accent} / 0.28), inset 0 1px 8px hsl(${opt.accent} / 0.18), inset 0 0 0 1px hsl(var(--gold) / 0.08)`,
@@ -313,11 +313,11 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                         alt=""
                         aria-hidden="true"
                         loading="lazy"
-                        width={56}
-                        height={56}
+                        width={74}
+                        height={74}
                         style={{
-                          width: 52,
-                          height: 52,
+                          width: 72,
+                          height: 72,
                           objectFit: "contain",
                           filter: `drop-shadow(0 0 6px hsl(${opt.accent} / 0.55)) drop-shadow(0 2px 4px hsl(225 60% 2% / 0.6))`,
                         }}
@@ -326,8 +326,8 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     <span
                       className="font-heading"
                       style={{
-                        fontSize: 15,
-                        lineHeight: 1.32,
+                        fontSize: 17,
+                        lineHeight: 1.4,
                         fontWeight: 600,
                         color: "hsl(var(--foreground) / 0.94)",
                       }}
