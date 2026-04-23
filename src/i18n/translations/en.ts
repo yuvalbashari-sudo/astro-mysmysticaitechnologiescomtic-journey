@@ -87,6 +87,7 @@ export const en: TranslationKeys = {
   free_taste_desc: "Basic compatibility check between two zodiac signs",
   free_tarot_title: "Daily tarot card",
   free_tarot_desc: "Ask a question and receive one card with a message from the universe",
+  gateway_daily_card_title: "Your Daily Card",
   free_cta: "Get it free",
   premium_label: "✦ Premium ✦",
   premium_launch_label: "✦ Free access for launch ✦",

@@ -103,6 +103,7 @@ export type TranslationKeys = {
   free_taste_desc: string;
   free_tarot_title: string;
   free_tarot_desc: string;
+  gateway_daily_card_title: string;
   free_cta: string;
   premium_label: string;
   premium_launch_label: string;

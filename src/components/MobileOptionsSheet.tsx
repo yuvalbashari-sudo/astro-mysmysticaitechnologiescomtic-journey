@@ -97,7 +97,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
     },
     {
       key: "daily_card",
-      label: t.free_tarot_title,
+      label: t.gateway_daily_card_title,
       image: gatewayDailyCard,
       accent: "290 70% 65%",
     },
