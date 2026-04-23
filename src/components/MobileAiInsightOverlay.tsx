@@ -461,11 +461,11 @@ const MobileAiInsightOverlay = () => {
                   aria-label="Norielle"
                   className="relative rounded-full overflow-hidden"
                   style={{
-                    width: 56,
-                    height: 56,
-                    border: "1px solid hsl(var(--gold) / 0.45)",
+                    width: 100,
+                    height: 100,
+                    border: "1.5px solid hsl(var(--gold) / 0.5)",
                     boxShadow:
-                      "0 0 22px hsl(var(--gold) / 0.28), inset 0 0 14px hsl(43 60% 30% / 0.2)",
+                      "0 0 32px hsl(var(--gold) / 0.32), 0 6px 22px hsl(270 60% 35% / 0.35), inset 0 0 18px hsl(43 60% 30% / 0.22)",
                     background: "hsl(225 45% 10%)",
                     flexShrink: 0,
                   }}
