@@ -77,8 +77,13 @@ const AvatarHoverTeaser = ({
 
   const GAP_BELOW = 14;
   const MIN_GAP_BELOW = 6;
-  const [horizontalShift, setHorizontalShift] = useState(0);
+  
   const [effectiveGap, setEffectiveGap] = useState(GAP_BELOW);
+
+  // `cardLeft` is an absolute pixel offset relative to the wrapper's left edge.
+  // We compute it so the card is centered under the avatar by default, but
+  // clamped so it never crosses the 12px viewport safe-margin on either side.
+  const [cardLeft, setCardLeft] = useState(0);
 
   useEffect(() => {
     if (!visible) return;
@@ -94,17 +99,18 @@ const AvatarHoverTeaser = ({
       const next = Math.max(240, Math.min(320, maxByViewport));
       setCardWidth(next);
 
-      // Centered horizontally under the avatar — clamp if it would overflow.
+      // Desired absolute viewport-left for the card (centered under avatar)
       const avatarCenter = rect.left + rect.width / 2;
-      const naturalLeft = avatarCenter - next / 2;
-      const naturalRight = naturalLeft + next;
-      let shift = 0;
-      if (naturalLeft < SAFE_MARGIN) {
-        shift = SAFE_MARGIN - naturalLeft;
-      } else if (naturalRight > vw - SAFE_MARGIN) {
-        shift = vw - SAFE_MARGIN - naturalRight;
-      }
-      setHorizontalShift(shift);
+      let desiredViewportLeft = avatarCenter - next / 2;
+
+      // Hard clamp inside viewport with safe margin
+      const minLeft = SAFE_MARGIN;
+      const maxLeft = vw - SAFE_MARGIN - next;
+      if (desiredViewportLeft < minLeft) desiredViewportLeft = minLeft;
+      if (desiredViewportLeft > maxLeft) desiredViewportLeft = maxLeft;
+
+      // Convert to wrapper-relative left offset
+      setCardLeft(desiredViewportLeft - rect.left);
 
       // Vertical clamp — card sits BELOW avatar; if it would overflow the bottom,
       // reduce the gap toward MIN_GAP_BELOW. Never flip above.
@@ -126,11 +132,10 @@ const AvatarHoverTeaser = ({
     };
   }, [visible]);
 
-  // Card is positioned BELOW the avatar, horizontally centered with viewport clamp.
+  // Card is positioned BELOW the avatar at an absolute, viewport-clamped left.
   const cardPosition: React.CSSProperties = {
     top: `calc(100% + ${effectiveGap}px)`,
-    left: "50%",
-    transform: `translateX(calc(-50% + ${horizontalShift}px))`,
+    left: `${cardLeft}px`,
   };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
