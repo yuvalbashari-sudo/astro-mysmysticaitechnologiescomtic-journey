@@ -190,7 +190,7 @@ const AvatarHoverTeaser = ({
               direction: isRTL ? "rtl" : "ltr",
               textAlign: isRTL ? "right" : "left",
             }}
-            initial={{ opacity: 0, y: 8, scale: 0.97 }}
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{
               opacity: 1,
               y: 0,
@@ -201,7 +201,7 @@ const AvatarHoverTeaser = ({
                 "0 20px 60px hsl(222 60% 2% / 0.6), 0 0 40px hsl(var(--gold) / 0.08), inset 0 1px 0 hsl(var(--gold) / 0.12)",
               ],
             }}
-            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            exit={{ opacity: 0, y: -4, scale: 0.97 }}
             transition={{
               opacity: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
               y: { duration: 0.42, ease: [0.22, 1, 0.36, 1] },
