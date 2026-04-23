@@ -283,9 +283,9 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.25 + idx * 0.05, duration: 0.45 }}
-                    whileTap={{ scale: 0.96, boxShadow: `0 0 24px hsl(${opt.accent} / 0.45)` }}
-                    whileHover={{ scale: 1.02 }}
-                    className="relative flex flex-col items-center text-center"
+                    whileTap={{ scale: 0.98, transition: { duration: 0.18, ease: [0.22, 1, 0.36, 1] } }}
+                    whileHover="hover"
+                    className="relative flex flex-col items-center text-center group"
                     style={{
                       minHeight: 162,
                       padding: "8px 12px 14px",
@@ -298,16 +298,41 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                       cursor: "pointer",
                     }}
                   >
-                    <span
+                    <motion.span
                       className="flex items-center justify-center rounded-full mb-1 relative overflow-hidden"
+                      variants={{
+                        hover: {
+                          boxShadow: `0 0 32px hsl(${opt.accent} / 0.42), inset 0 1px 8px hsl(${opt.accent} / 0.24), inset 0 0 0 1px hsl(var(--gold) / 0.1)`,
+                        },
+                      }}
+                      animate={{ scale: [1, 1.03, 1] }}
+                      transition={{
+                        scale: {
+                          duration: 5 + (idx % 3),
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                          delay: (idx % 4) * 0.4,
+                        },
+                      }}
                       style={{
                         width: 96,
                         height: 96,
                         background: `radial-gradient(circle at 30% 28%, hsl(${opt.accent} / 0.34) 0%, hsl(225 50% 6% / 0.55) 70%)`,
                         border: `1px solid hsl(${opt.accent} / 0.5)`,
                         boxShadow: `0 0 24px hsl(${opt.accent} / 0.3), inset 0 1px 8px hsl(${opt.accent} / 0.2), inset 0 0 0 1px hsl(var(--gold) / 0.08)`,
+                        willChange: "transform, box-shadow",
                       }}
                     >
+                      <motion.span
+                        aria-hidden
+                        className="absolute inset-0 pointer-events-none"
+                        variants={{ hover: { opacity: 1 } }}
+                        initial={{ opacity: 0 }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        style={{
+                          background: `radial-gradient(circle at 50% 50%, hsl(${opt.accent} / 0.22) 0%, transparent 70%)`,
+                        }}
+                      />
                       <img
                         src={opt.image}
                         alt=""
@@ -320,9 +345,11 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                           height: 84,
                           objectFit: "contain",
                           filter: `drop-shadow(0 0 6px hsl(${opt.accent} / 0.55)) drop-shadow(0 2px 4px hsl(225 60% 2% / 0.6))`,
+                          position: "relative",
+                          zIndex: 1,
                         }}
                       />
-                    </span>
+                    </motion.span>
                     <span
                       className="font-heading"
                       style={{
