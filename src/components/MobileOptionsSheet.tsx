@@ -310,7 +310,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                       className="flex items-center justify-center rounded-full mb-1 relative overflow-hidden"
                       variants={{
                         hover: {
-                          boxShadow: `0 0 32px hsl(${opt.accent} / 0.42), inset 0 1px 8px hsl(${opt.accent} / 0.24), inset 0 0 0 1px hsl(var(--gold) / 0.1)`,
+                          boxShadow: `0 0 ${glowBlurPx}px hsl(${opt.accent} / ${glowFrameAlpha}), inset 0 1px 8px hsl(${opt.accent} / ${glowInnerAlpha}), inset 0 0 0 1px hsl(var(--gold) / 0.1)`,
                         },
                       }}
                       animate={{ scale: [1, 1.03, 1] }}
