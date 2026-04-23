@@ -40,7 +40,14 @@ type OptionKey =
 const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
+  const isMobile = useIsMobile();
   const [active, setActive] = useState<OptionKey | null>(null);
+
+  // Subtler glow on mobile (touch), richer on desktop (hover)
+  const glowFrameAlpha = isMobile ? 0.36 : 0.46;
+  const glowBlurPx = isMobile ? 28 : 36;
+  const glowInnerAlpha = isMobile ? 0.22 : 0.28;
+  const lightSpreadAlpha = isMobile ? 0.16 : 0.26;
 
   useEffect(() => {
     if (isOpen) {
