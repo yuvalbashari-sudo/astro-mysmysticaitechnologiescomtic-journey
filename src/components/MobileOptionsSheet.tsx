@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, CalendarDays, Heart, Sparkles, Star, Map, Wand2, MapPin } from "lucide-react";
+import { X } from "lucide-react";
 import { useT, useLanguage } from "@/i18n";
+import gatewaySun from "@/assets/gateway-sun.png";
+import gatewayMoonCalendar from "@/assets/gateway-moon-calendar.png";
+import gatewayLove from "@/assets/gateway-love.png";
+import gatewayTarot from "@/assets/gateway-tarot.png";
+import gatewayDailyCard from "@/assets/gateway-daily-card.png";
+import gatewayRisingStar from "@/assets/gateway-rising-star.png";
+import gatewayBirthchart from "@/assets/gateway-birthchart.png";
+import gatewayAstrocarto from "@/assets/gateway-astrocarto.png";
 import DailyHoroscopeModal from "./DailyHoroscopeModal";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import CompatibilityModal from "./CompatibilityModal";
@@ -52,55 +60,55 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
   const options: {
     key: OptionKey;
     label: string;
-    icon: React.ReactNode;
+    image: string;
     accent: string;
   }[] = [
     {
       key: "daily_horoscope",
       label: t.hero_menu_daily_horoscope,
-      icon: <Sun className="w-6 h-6" aria-hidden="true" />,
+      image: gatewaySun,
       accent: "43 90% 60%",
     },
     {
       key: "monthly_forecast",
       label: t.hero_menu_forecast,
-      icon: <CalendarDays className="w-6 h-6" aria-hidden="true" />,
+      image: gatewayMoonCalendar,
       accent: "270 60% 65%",
     },
     {
       key: "compatibility",
       label: t.hero_menu_compatibility,
-      icon: <Heart className="w-6 h-6" aria-hidden="true" />,
+      image: gatewayLove,
       accent: "340 75% 60%",
     },
     {
       key: "tarot",
       label: t.hero_menu_tarot,
-      icon: <Sparkles className="w-6 h-6" aria-hidden="true" />,
-      accent: "200 80% 60%",
+      image: gatewayTarot,
+      accent: "270 70% 60%",
     },
     {
       key: "daily_card",
       label: t.free_tarot_title,
-      icon: <Wand2 className="w-6 h-6" aria-hidden="true" />,
+      image: gatewayDailyCard,
       accent: "290 70% 65%",
     },
     {
       key: "rising",
       label: t.hero_menu_rising,
-      icon: <Star className="w-6 h-6" aria-hidden="true" />,
+      image: gatewayRisingStar,
       accent: "50 90% 60%",
     },
     {
       key: "birthchart",
       label: t.hero_menu_birthchart,
-      icon: <Map className="w-6 h-6" aria-hidden="true" />,
+      image: gatewayBirthchart,
       accent: "180 70% 55%",
     },
     {
       key: "astrocarto",
       label: t.hero_menu_astrocarto,
-      icon: <MapPin className="w-6 h-6" aria-hidden="true" />,
+      image: gatewayAstrocarto,
       accent: "180 75% 60%",
     },
   ];
@@ -291,17 +299,29 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     }}
                   >
                     <span
-                      className="flex items-center justify-center rounded-full mb-4"
+                      className="flex items-center justify-center rounded-full mb-4 relative overflow-hidden"
                       style={{
-                        width: 56,
-                        height: 56,
-                        background: `radial-gradient(circle at 30% 30%, hsl(${opt.accent} / 0.38) 0%, hsl(${opt.accent} / 0.08) 72%)`,
-                        border: `1px solid hsl(${opt.accent} / 0.45)`,
-                        color: `hsl(${opt.accent})`,
-                        boxShadow: `0 0 18px hsl(${opt.accent} / 0.18)`,
+                        width: 64,
+                        height: 64,
+                        background: `radial-gradient(circle at 30% 28%, hsl(${opt.accent} / 0.32) 0%, hsl(225 50% 6% / 0.55) 70%)`,
+                        border: `1px solid hsl(${opt.accent} / 0.5)`,
+                        boxShadow: `0 0 22px hsl(${opt.accent} / 0.28), inset 0 1px 8px hsl(${opt.accent} / 0.18), inset 0 0 0 1px hsl(var(--gold) / 0.08)`,
                       }}
                     >
-                      {opt.icon}
+                      <img
+                        src={opt.image}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        width={56}
+                        height={56}
+                        style={{
+                          width: 52,
+                          height: 52,
+                          objectFit: "contain",
+                          filter: `drop-shadow(0 0 6px hsl(${opt.accent} / 0.55)) drop-shadow(0 2px 4px hsl(225 60% 2% / 0.6))`,
+                        }}
+                      />
                     </span>
                     <span
                       className="font-heading"
