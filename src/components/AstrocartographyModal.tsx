@@ -106,9 +106,8 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
   // Use the proven 64px in-frame size with safe margins so the teaser halo never bleeds off-screen.
   const avatarStyle = isMobile
     ? {
-        position: "fixed" as const,
-        bottom: 28,
-        right: 18,
+        bottom: 24,
+        right: 16,
         top: "auto" as const,
         left: "auto" as const,
         width: 88,
