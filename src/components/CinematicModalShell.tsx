@@ -233,8 +233,12 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                   border: "2px solid hsl(var(--gold) / 0.35)",
                 }}
                 onClick={() => setAdvisorOpen(true)}
-                whileHover={{ filter: "brightness(1.15)" }}
-                whileTap={{ filter: "brightness(0.9)" }}
+                whileHover={{ scale: 1.04, filter: "brightness(1.08)" }}
+                whileTap={{
+                  scale: 0.96,
+                  boxShadow: "0 0 0 3px hsl(var(--gold) / 0.35), 0 6px 24px hsl(270 60% 45% / 0.35), 0 0 36px hsl(var(--gold) / 0.45)",
+                }}
+                transition={{ type: "spring", stiffness: 380, damping: 24 }}
                 aria-label={t.astrologer_aria_label}
               >
                 <img
