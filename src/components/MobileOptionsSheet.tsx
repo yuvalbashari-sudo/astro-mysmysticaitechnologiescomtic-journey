@@ -175,7 +175,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between mb-3 pb-4 relative" style={{ borderBottom: "1px solid hsl(var(--gold) / 0.15)" }}>
+            <div className="flex items-center justify-between mb-2 relative">
               <button
                 type="button"
                 onClick={onClose}
@@ -192,18 +192,19 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                 <X className="w-5 h-5" aria-hidden="true" />
               </button>
               <span
-                className="font-heading uppercase select-none relative"
+                className="font-heading uppercase select-none relative astrologai-shimmer"
                 style={{
-                  fontSize: 19,
+                  fontSize: 20,
                   fontWeight: 600,
-                  letterSpacing: "0.28em",
-                  background:
-                    "linear-gradient(180deg, hsl(43 95% 88%) 0%, hsl(43 85% 65%) 55%, hsl(38 75% 48%) 100%)",
+                  letterSpacing: "0.32em",
+                  backgroundImage:
+                    "linear-gradient(90deg, #CDAF6E 0%, #F5E6B3 50%, #CDAF6E 100%)",
+                  backgroundSize: "200% 100%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  filter: "drop-shadow(0 0 8px hsl(43 80% 55% / 0.45)) drop-shadow(0 0 18px hsl(43 75% 50% / 0.25))",
-                  textShadow: "0 1px 0 hsl(43 50% 20% / 0.3)",
+                  textShadow:
+                    "0 0 8px rgba(212,175,55,0.4), 0 0 18px rgba(212,175,55,0.25)",
                 }}
               >
                 ASTROLOGAI
@@ -228,6 +229,28 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                 ♿
               </Link>
             </div>
+            {/* Premium gold divider under brand */}
+            <div
+              aria-hidden
+              style={{
+                width: "60%",
+                height: 1,
+                margin: "0 auto",
+                marginBottom: 22,
+                background:
+                  "linear-gradient(90deg, transparent 0%, rgba(212,175,55,0.35) 50%, transparent 100%)",
+                opacity: 0.55,
+              }}
+            />
+            <style>{`
+              @keyframes astrologaiShimmer {
+                0% { background-position: 0% 50%; }
+                100% { background-position: 200% 50%; }
+              }
+              .astrologai-shimmer {
+                animation: astrologaiShimmer 6s linear infinite;
+              }
+            `}</style>
 
             {/* Title */}
             <motion.h2
