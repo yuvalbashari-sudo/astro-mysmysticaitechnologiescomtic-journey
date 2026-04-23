@@ -83,14 +83,12 @@ const AvatarHoverTeaser = ({
   const isLeft = side === "left";
 
   // Responsive card width: shrinks on small viewports so it never clips off-screen.
-  // Reserve ~24px for outer margin + 16px gap + avatar width (~64px on mobile).
   const [cardWidth, setCardWidth] = useState(320);
-  const [verticalShift, setVerticalShift] = useState(0);
-
-  // Horizontal offset (slightly to the left of the avatar) and vertical gap above it.
-  const LEFT_OFFSET = 24;
-  const GAP_ABOVE = 16;
   const [horizontalShift, setHorizontalShift] = useState(0);
+  // When true, the card flips back ABOVE the avatar (fallback when bottom would clip).
+  const [placeAbove, setPlaceAbove] = useState(false);
+
+  const GAP = 12;
 
   useEffect(() => {
     if (!visible) return;
@@ -102,15 +100,13 @@ const AvatarHoverTeaser = ({
       const vh = window.innerHeight;
       const SAFE_MARGIN = 12;
 
-      // Card sits ABOVE the avatar — width is bounded by full viewport minus margins,
-      // not by horizontal distance to a side edge.
       const maxByViewport = vw - SAFE_MARGIN * 2;
       const next = Math.max(240, Math.min(320, maxByViewport));
       setCardWidth(next);
 
-      // Compute the card's natural left edge (avatar left - LEFT_OFFSET) and nudge
-      // right if it would clip the left edge, or left if it would clip the right edge.
-      const naturalLeft = rect.left - LEFT_OFFSET;
+      // Center the card horizontally under the avatar; clamp inside the viewport.
+      const avatarCenter = rect.left + rect.width / 2;
+      const naturalLeft = avatarCenter - next / 2;
       const naturalRight = naturalLeft + next;
       let shift = 0;
       if (naturalLeft < SAFE_MARGIN) {
@@ -120,15 +116,12 @@ const AvatarHoverTeaser = ({
       }
       setHorizontalShift(shift);
 
-      // Vertical clipping guard — card sits above avatar; if it would clip the top,
-      // reduce the gap (allow the card to sit closer to the avatar).
+      // Prefer rendering BELOW. Flip to above only if it would clip the bottom edge
+      // and there is more room above than below.
       const ESTIMATED_HEIGHT = 160;
-      const cardTop = rect.top - GAP_ABOVE - ESTIMATED_HEIGHT;
-      if (cardTop < SAFE_MARGIN) {
-        setVerticalShift(SAFE_MARGIN - cardTop);
-      } else {
-        setVerticalShift(0);
-      }
+      const spaceBelow = vh - rect.bottom - GAP;
+      const spaceAbove = rect.top - GAP;
+      setPlaceAbove(spaceBelow < ESTIMATED_HEIGHT && spaceAbove > spaceBelow);
     };
     compute();
     window.addEventListener("resize", compute);
@@ -139,11 +132,18 @@ const AvatarHoverTeaser = ({
     };
   }, [visible]);
 
-  // Card is positioned ABOVE the avatar, with a small left offset for balance.
-  const cardPosition: React.CSSProperties = {
-    bottom: `calc(100% + ${GAP_ABOVE - verticalShift}px)`,
-    right: `calc(${LEFT_OFFSET - horizontalShift}px)`,
-  };
+  // Card is positioned BELOW the avatar by default (centered), or above as a fallback.
+  const cardPosition: React.CSSProperties = placeAbove
+    ? {
+        bottom: `calc(100% + ${GAP}px)`,
+        left: "50%",
+        transform: `translateX(calc(-50% + ${horizontalShift}px))`,
+      }
+    : {
+        top: `calc(100% + ${GAP}px)`,
+        left: "50%",
+        transform: `translateX(calc(-50% + ${horizontalShift}px))`,
+      };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
   const handleMouseEnter = () => {
