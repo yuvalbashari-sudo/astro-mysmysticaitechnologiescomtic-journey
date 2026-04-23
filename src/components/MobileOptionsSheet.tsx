@@ -194,11 +194,12 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
               <span
                 className="font-heading uppercase select-none"
                 style={{
-                  fontSize: 18,
-                  fontWeight: 600,
-                  letterSpacing: "0.28em",
-                  color: "hsl(43 75% 65%)",
-                  textShadow: "0 0 10px hsl(43 80% 55% / 0.35)",
+                  fontSize: 20,
+                  fontWeight: 700,
+                  letterSpacing: "0.36em",
+                  color: "hsl(43 80% 72%)",
+                  textShadow:
+                    "0 0 12px hsl(43 80% 55% / 0.28), 0 0 24px hsl(43 75% 50% / 0.18)",
                 }}
               >
                 ASTROLOGAI
