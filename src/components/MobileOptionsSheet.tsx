@@ -285,10 +285,11 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
                     transition={{ delay: 0.25 + idx * 0.05, duration: 0.45 }}
                     whileTap={{ scale: 0.96, boxShadow: `0 0 24px hsl(${opt.accent} / 0.45)` }}
                     whileHover={{ scale: 1.02 }}
-                    className="relative flex flex-col items-center justify-center text-center"
+                    className="relative flex flex-col items-center text-center"
                     style={{
                       minHeight: 162,
-                      padding: "12px 12px 14px",
+                      padding: "8px 12px 14px",
+                      justifyContent: "flex-start",
                       borderRadius: 20,
                       background: `radial-gradient(ellipse 90% 70% at 50% 0%, hsl(${opt.accent} / 0.09) 0%, transparent 60%), linear-gradient(160deg, hsl(225 50% 10% / 0.94) 0%, hsl(225 55% 5% / 0.96) 100%)`,
                       border: `1px solid hsl(${opt.accent} / 0.34)`,
