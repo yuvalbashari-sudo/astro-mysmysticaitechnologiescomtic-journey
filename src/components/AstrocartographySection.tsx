@@ -278,7 +278,7 @@ const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) =>
                 <stop offset="0%" stopColor="hsl(43 80% 65%)" stopOpacity="0.55" />
                 <stop offset="100%" stopColor="hsl(43 80% 65%)" stopOpacity="0" />
               </radialGradient>
-              {PLANET_LINES.map((p) => (
+              {activePlanetLines.map((p) => (
                 <linearGradient key={`grad-${p.key}`} id={`band-${p.key}`} x1="0" x2="1" y1="0" y2="0">
                   <stop offset="0%" stopColor={p.color} stopOpacity="0" />
                   <stop offset="50%" stopColor={p.color} stopOpacity="0.45" />
@@ -322,7 +322,7 @@ const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) =>
 
             {/* Planetary lines: glow influence band + main line.
                 MC/IC = vertical meridians; ASC/DSC = subtle bowed lines. */}
-            {PLANET_LINES.map((p) => {
+            {activePlanetLines.map((p) => {
               const x = projX(p.lon);
               const isFocus = p.line === focusLine;
               const isMobileLine = p.mobile === true;
@@ -388,7 +388,7 @@ const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) =>
             })()}
 
             {/* City markers (halo/pulse) */}
-            {CITIES.map((c) => {
+            {personalizedCities.map((c) => {
               const cx = projX(c.lon);
               const cy = projY(c.lat);
               const isSelected = c.id === selectedCityId;
@@ -407,7 +407,7 @@ const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) =>
           </svg>
 
           {/* Planet line labels (HTML for crisp text). Format: "☉ MC" / "♀ ASC" */}
-          {PLANET_LINES.map((p) => {
+          {activePlanetLines.map((p) => {
             const isFocus = p.line === focusLine;
             const isMobileLine = p.mobile === true;
             // Stagger vertical position so labels don't overlap
@@ -444,7 +444,7 @@ const AstrocartographySection = ({ data }: AstrocartographySectionProps = {}) =>
 
 
           {/* Clickable city overlays */}
-          {CITIES.map((c) => {
+          {personalizedCities.map((c) => {
             const isSelected = c.id === selectedCityId;
             return (
               <button
