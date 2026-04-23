@@ -79,18 +79,13 @@ const AvatarHoverTeaser = ({
     return centerX < window.innerWidth / 2 ? "right" : "left";
   }, [anchor]);
 
-  const side = visible ? getAnchorSide() : "left";
-  const isLeft = side === "left";
-
   // Responsive card width: shrinks on small viewports so it never clips off-screen.
-  // Reserve ~24px for outer margin + 16px gap + avatar width (~64px on mobile).
   const [cardWidth, setCardWidth] = useState(320);
-  const [verticalShift, setVerticalShift] = useState(0);
 
-  // Horizontal offset (slightly to the left of the avatar) and vertical gap above it.
-  const LEFT_OFFSET = 24;
-  const GAP_ABOVE = 16;
+  const GAP_BELOW = 14;
+  const MIN_GAP_BELOW = 6;
   const [horizontalShift, setHorizontalShift] = useState(0);
+  const [effectiveGap, setEffectiveGap] = useState(GAP_BELOW);
 
   useEffect(() => {
     if (!visible) return;
@@ -102,15 +97,13 @@ const AvatarHoverTeaser = ({
       const vh = window.innerHeight;
       const SAFE_MARGIN = 12;
 
-      // Card sits ABOVE the avatar — width is bounded by full viewport minus margins,
-      // not by horizontal distance to a side edge.
       const maxByViewport = vw - SAFE_MARGIN * 2;
       const next = Math.max(240, Math.min(320, maxByViewport));
       setCardWidth(next);
 
-      // Compute the card's natural left edge (avatar left - LEFT_OFFSET) and nudge
-      // right if it would clip the left edge, or left if it would clip the right edge.
-      const naturalLeft = rect.left - LEFT_OFFSET;
+      // Centered horizontally under the avatar — clamp if it would overflow.
+      const avatarCenter = rect.left + rect.width / 2;
+      const naturalLeft = avatarCenter - next / 2;
       const naturalRight = naturalLeft + next;
       let shift = 0;
       if (naturalLeft < SAFE_MARGIN) {
@@ -120,14 +113,15 @@ const AvatarHoverTeaser = ({
       }
       setHorizontalShift(shift);
 
-      // Vertical clipping guard — card sits above avatar; if it would clip the top,
-      // reduce the gap (allow the card to sit closer to the avatar).
+      // Vertical clamp — card sits BELOW avatar; if it would overflow the bottom,
+      // reduce the gap toward MIN_GAP_BELOW. Never flip above.
       const ESTIMATED_HEIGHT = 160;
-      const cardTop = rect.top - GAP_ABOVE - ESTIMATED_HEIGHT;
-      if (cardTop < SAFE_MARGIN) {
-        setVerticalShift(SAFE_MARGIN - cardTop);
+      const cardBottom = rect.bottom + GAP_BELOW + ESTIMATED_HEIGHT;
+      if (cardBottom > vh - SAFE_MARGIN) {
+        const overflow = cardBottom - (vh - SAFE_MARGIN);
+        setEffectiveGap(Math.max(MIN_GAP_BELOW, GAP_BELOW - overflow));
       } else {
-        setVerticalShift(0);
+        setEffectiveGap(GAP_BELOW);
       }
     };
     compute();
@@ -139,10 +133,11 @@ const AvatarHoverTeaser = ({
     };
   }, [visible]);
 
-  // Card is positioned ABOVE the avatar, with a small left offset for balance.
+  // Card is positioned BELOW the avatar, horizontally centered with viewport clamp.
   const cardPosition: React.CSSProperties = {
-    bottom: `calc(100% + ${GAP_ABOVE - verticalShift}px)`,
-    right: `calc(${LEFT_OFFSET - horizontalShift}px)`,
+    top: `calc(100% + ${effectiveGap}px)`,
+    left: "50%",
+    transform: `translateX(calc(-50% + ${horizontalShift}px))`,
   };
 
   // Desktop: intentional delay before appearing (feels considered, not reactive)
