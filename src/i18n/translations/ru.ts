@@ -87,6 +87,7 @@ export const ru: TranslationKeys = {
   free_taste_desc: "Базовая проверка совместимости между двумя знаками",
   free_tarot_title: "Ежедневная карта Таро",
   free_tarot_desc: "Задайте вопрос и получите одну карту с посланием от Вселенной",
+  gateway_daily_card_title: "Ваша карта дня",
   free_cta: "Получить бесплатно",
   premium_label: "✦ Премиум ✦",
   premium_launch_label: "✦ Бесплатный доступ к запуску ✦",
