@@ -171,11 +171,25 @@ const AvatarHoverTeaser = ({
     <div
       ref={wrapperRef}
       className={`relative ${className}`}
-      style={{ ...style, overflow: "visible" }}
+      style={{ ...style, overflow: "visible", isolation: "isolate", zIndex: 50 }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onPointerDown={handlePointerDown}
     >
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: -10,
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, hsl(222 50% 4% / 0.98) 0%, hsl(222 50% 4% / 0.88) 55%, hsl(222 50% 4% / 0) 100%)",
+          backdropFilter: "blur(8px) saturate(120%)",
+          WebkitBackdropFilter: "blur(8px) saturate(120%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }}
+      />
       <AnimatePresence>
         {visible && !disabled && (
           <motion.div
