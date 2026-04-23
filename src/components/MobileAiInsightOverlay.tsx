@@ -263,42 +263,23 @@ const MobileAiInsightOverlay = () => {
               })}
             </div>
 
-            {/* ── Top in-hero row: utility icons + ASTROLOGAI wordmark ── */}
+            {/* ── Top in-hero header: ASTROLOGAI title (row 1) + icons (row 2) ── */}
             <motion.div
-              className="relative z-10 w-full flex items-center justify-between gap-2"
-              style={{ minHeight: 64, marginBottom: 16 }}
+              className="relative z-10 w-full flex flex-col items-center"
+              style={{ marginBottom: 28, paddingLeft: 16, paddingRight: 16 }}
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Left cluster: language + accessibility */}
-              <div className="flex items-center gap-1.5 shrink-0">
-                <MysticalLanguageDropdown />
-                <Link
-                  to="/accessibility"
-                  aria-label={t.a11y_link_label}
-                  title={t.a11y_link_label}
-                  className="flex items-center justify-center rounded-full transition-all text-base"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    background: "hsl(var(--deep-blue-light) / 0.5)",
-                    border: "1px solid hsl(var(--gold) / 0.2)",
-                    color: "hsl(var(--gold) / 0.7)",
-                  }}
-                >
-                  ♿
-                </Link>
-              </div>
-
-              {/* Center: ASTROLOGAI wordmark */}
+              {/* Row 1: ASTROLOGAI wordmark — large, centered, contained */}
               <motion.h1
-                className="font-heading uppercase pointer-events-none select-none whitespace-nowrap"
+                className="font-heading uppercase pointer-events-none select-none whitespace-nowrap text-center"
                 style={{
-                  fontSize: 28,
+                  fontSize: "clamp(28px, 9vw, 38px)",
                   fontWeight: 700,
-                  letterSpacing: "0.1em",
+                  letterSpacing: "0.14em",
                   lineHeight: 1,
+                  margin: 0,
                   background:
                     "linear-gradient(135deg, hsl(var(--gold-light)), hsl(var(--gold)), hsl(var(--gold-dark)), hsl(var(--gold-light)))",
                   backgroundSize: "200% 200%",
@@ -312,37 +293,61 @@ const MobileAiInsightOverlay = () => {
                 ASTROLOGAI
               </motion.h1>
 
-              {/* Right cluster: guides + WhatsApp */}
-              <div className="flex items-center gap-1.5 shrink-0">
-                <Link
-                  to="/tarot-guides"
-                  aria-label={t.topbar_guide_label}
-                  title={t.topbar_guide_label}
-                  className="flex items-center justify-center rounded-full transition-all"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    background: "hsl(var(--deep-blue-light) / 0.5)",
-                    border: "1px solid hsl(var(--gold) / 0.2)",
-                    color: "hsl(var(--gold) / 0.7)",
-                  }}
-                >
-                  <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => window.open("https://wa.me/972500000000", "_blank", "noopener,noreferrer")}
-                  aria-label={t.a11y_whatsapp_contact}
-                  className="flex items-center justify-center rounded-full transition-all"
-                  style={{
-                    width: 36,
-                    height: 36,
-                    background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
-                    boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
-                  }}
-                >
-                  <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
-                </button>
+              {/* Row 2: icons evenly spaced below the title */}
+              <div
+                className="flex items-center justify-between w-full"
+                style={{ marginTop: 14, maxWidth: 320 }}
+              >
+                <div className="flex items-center gap-2 shrink-0">
+                  <MysticalLanguageDropdown />
+                  <Link
+                    to="/accessibility"
+                    aria-label={t.a11y_link_label}
+                    title={t.a11y_link_label}
+                    className="flex items-center justify-center rounded-full transition-all text-base"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: "hsl(var(--deep-blue-light) / 0.5)",
+                      border: "1px solid hsl(var(--gold) / 0.2)",
+                      color: "hsl(var(--gold) / 0.7)",
+                    }}
+                  >
+                    ♿
+                  </Link>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <Link
+                    to="/tarot-guides"
+                    aria-label={t.topbar_guide_label}
+                    title={t.topbar_guide_label}
+                    className="flex items-center justify-center rounded-full transition-all"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: "hsl(var(--deep-blue-light) / 0.5)",
+                      border: "1px solid hsl(var(--gold) / 0.2)",
+                      color: "hsl(var(--gold) / 0.7)",
+                    }}
+                  >
+                    <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => window.open("https://wa.me/972500000000", "_blank", "noopener,noreferrer")}
+                    aria-label={t.a11y_whatsapp_contact}
+                    className="flex items-center justify-center rounded-full transition-all"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
+                      boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
+                    }}
+                  >
+                    <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
             </motion.div>
 
