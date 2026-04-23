@@ -1,34 +1,40 @@
 
-## Refine Norielle avatar in Astrocartography form phase
+## Fix Norielle teaser — anchor below avatar, viewport-clamped
 
-Single-file change: `src/components/AstrocartographyModal.tsx`. No shell, no other phases touched.
+Single-file edit: **`src/components/AvatarHoverTeaser.tsx`**.
 
 ### Changes
 
-**1. Form wrapper top padding** (line 106)
-- `pt-4 md:pt-6` → `pt-10 md:pt-12`
-- Pushes avatar safely below close button into visible scroll area.
-- Tighter vertical rhythm: `space-y-6 md:space-y-7` → `space-y-5 md:space-y-6` so avatar/title/subtitle group as one block.
+1. **Flip anchor from above → below**
+   - Replace `bottom: calc(100% + ...)` with `top: calc(100% + GAP_BELOW)` where `GAP_BELOW = 14`.
+   - Remove `LEFT_OFFSET` side-bias and the `right:` based positioning.
 
-**2. Avatar size — moderate guide presence** (lines 118–119)
-- Mobile: `86px` → `108px`
-- Desktop: `106px` → `128px`
+2. **Center horizontally under avatar**
+   - Default style: `left: 50%`, `transform: translateX(calc(-50% + ${horizontalShift}px))`.
+   - Direction-agnostic — works for RTL and LTR identically. Drop `getAnchorSide` logic (or keep `anchor` prop as a no-op for API stability).
 
-**3. Refined premium styling** (lines 120–122)
-- Border: `2px solid hsl(var(--gold) / 0.45)` → `2.5px solid hsl(var(--gold) / 0.55)`
-- boxShadow upgraded to layered halo:
-  ```
-  0 0 0 5px hsl(var(--gold) / 0.10),
-  0 0 0 1px hsl(var(--gold) / 0.25),
-  0 6px 32px hsl(270 65% 45% / 0.42),
-  0 0 44px hsl(var(--gold) / 0.28)
-  ```
-- Pulsing ring tweak (line 135): scale `[1, 1.5, 1.5]`, opacity `[0.6, 0, 0]` for a slightly stronger but still elegant bloom.
+3. **Horizontal viewport clamp**
+   - In the `compute()` effect, calculate the centered card's natural left/right edges from the avatar's `getBoundingClientRect()` center and the resolved `cardWidth`.
+   - If the natural left < 12px safe margin → `horizontalShift = SAFE_MARGIN - naturalLeft`.
+   - If the natural right > `vw - 12px` → `horizontalShift = (vw - SAFE_MARGIN) - naturalRight`.
+   - Otherwise `horizontalShift = 0`.
 
-### Hierarchy preserved
-- Title remains primary focal point (size, gold textShadow unchanged).
-- Avatar reads as warm guide above heading, fully visible on open at 390×844, no clipping.
-- Form CTA still appears within reasonable scroll on mobile.
+4. **Vertical clamp (below-only)**
+   - Compute `cardBottom = rect.bottom + GAP_BELOW + ESTIMATED_HEIGHT` (height ~160).
+   - If `cardBottom > vh - SAFE_MARGIN`, reduce the effective gap toward a minimum of 6px (`effectiveGap = Math.max(6, GAP_BELOW - overflow)`).
+   - Never flip back above the avatar.
+
+5. **Responsive width** — preserve existing `Math.max(240, Math.min(320, vw - 24))`.
+
+6. **Animation**
+   - Change initial/exit `y` from `8`/`6` (drop-down feel above) to `-6`/`-4` so the card eases **downward** from the avatar to its resting position below.
+
+7. **Direction-safe text** — keep `direction` and `textAlign` driven by `isRTL` inside the card. No changes to copy, gradient, glow, hover/tap timing, or `disabled` behavior.
 
 ### Untouched
-- Analyzing phase, result phase, `CinematicModalShell`, all other modals, localization, layout below the title.
+- All call sites and the teaser API (`text`, `highlightText`, `anchor`, `disabled`, `className`, `style`).
+- Avatar button, modal shells, hero, tarot/forecast/history modals.
+- Card visual design, ornamental hairline, box-shadow pulse, 280ms hover delay, 2.6s mobile auto-hide.
+
+### Result
+Teaser always opens directly beneath Norielle's avatar, centered to it, and stays fully inside the viewport — including top-corner placements in modal scenes.
