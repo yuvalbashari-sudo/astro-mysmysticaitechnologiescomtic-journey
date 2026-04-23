@@ -358,16 +358,18 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
             className={`fixed ${forceRightAnchor ? "z-[206]" : "z-[106]"} flex flex-col overflow-hidden ${forceRightAnchor ? "advisor-text-2x" : ""}`}
             style={{
               bottom: forceRightAnchor ? (window.innerWidth < 768 ? "0px" : "60px") : "5.5rem",
-              // LTR (default): horizontally centered to keep panel fully inside the viewport.
+              // LTR (default): horizontally centered via auto margins so framer-motion's
+              // animated transforms (scale/y) don't fight a translateX.
               // RTL: keep existing left-anchored placement.
-              // forceRightAnchor: keep existing right-anchored docked behavior.
+              // forceRightAnchor: keep existing right-docked behavior.
               right: forceRightAnchor
                 ? (window.innerWidth < 768 ? "0px" : "5px")
-                : dir === "rtl" ? "auto" : "auto",
+                : dir === "rtl" ? "auto" : 0,
               left: forceRightAnchor
                 ? (window.innerWidth < 768 ? "0px" : "auto")
-                : dir === "rtl" ? "1.25rem" : "50%",
-              transform: !forceRightAnchor && dir !== "rtl" ? "translateX(-50%)" : undefined,
+                : dir === "rtl" ? "1.25rem" : 0,
+              marginLeft: !forceRightAnchor && dir !== "rtl" ? "auto" : undefined,
+              marginRight: !forceRightAnchor && dir !== "rtl" ? "auto" : undefined,
               width: forceRightAnchor
                 ? (window.innerWidth < 768 ? "100vw" : "min(685px, calc(100vw - 2rem - 80px))")
                 : "min(765px, calc(100vw - 2rem))",
