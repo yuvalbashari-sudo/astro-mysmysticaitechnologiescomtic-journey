@@ -141,7 +141,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
             }}
           >
             {/* Integrated header — anchored to the panel */}
-            <div className="relative h-[88px] px-5 pt-4 border-b" style={{ borderColor: "hsl(var(--gold) / 0.12)" }}>
+            <div className="relative h-[104px] px-5 pt-4 border-b" style={{ borderColor: "hsl(var(--gold) / 0.12)" }}>
               {/* Left cluster: close + text size */}
               <div className="absolute top-4 left-4 flex flex-col items-start gap-2">
                 <button
