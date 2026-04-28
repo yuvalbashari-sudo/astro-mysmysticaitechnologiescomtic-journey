@@ -425,6 +425,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
         </div>
       )}
     </motion.header>
+    <LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
+    </>
   );
 };
 
