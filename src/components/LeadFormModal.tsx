@@ -105,9 +105,19 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
     ? { top: 68, right: 12, bottom: "auto", left: "auto", width: 64, height: 64 }
     : undefined;
 
+  const isDesktopSupport = isSupport && !isMobile;
+  const [advisorOpen, setAdvisorOpen] = useState(false);
+
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose} avatarStyle={supportAvatarStyle}>
-      {isSupport && (
+    <CinematicModalShell
+      isOpen={isOpen}
+      onClose={handleClose}
+      avatarStyle={supportAvatarStyle}
+      hideAdvisor={isDesktopSupport}
+      hideClose={isDesktopSupport}
+      hideFreeBadge={isDesktopSupport}
+    >
+      {isSupport && !isDesktopSupport && (
         <div
           className="fixed z-[106] flex flex-col items-center gap-1 pointer-events-auto"
           style={{ top: 68, left: 12 }}
@@ -116,7 +126,112 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
           <TextSizeControl value={scale} onChange={setScale} />
         </div>
       )}
+      {isDesktopSupport ? (
+        <div className="relative mx-auto w-full max-w-[520px]">
+          {/* Framed glass panel */}
+          <div
+            className="relative rounded-2xl backdrop-blur-xl overflow-hidden"
+            style={{
+              background: "linear-gradient(180deg, hsl(var(--deep-blue) / 0.78), hsl(var(--deep-blue) / 0.92))",
+              border: "1px solid hsl(var(--gold) / 0.22)",
+              boxShadow: "0 30px 80px -20px hsl(0 0% 0% / 0.6), 0 0 0 1px hsl(var(--gold) / 0.05), 0 0 60px hsl(var(--gold) / 0.08)",
+            }}
+          >
+            {/* Integrated header — anchored to the panel */}
+            <div className="relative h-[88px] px-5 pt-4 border-b" style={{ borderColor: "hsl(var(--gold) / 0.12)" }}>
+              {/* Left cluster: close + text size */}
+              <div className="absolute top-4 left-4 flex flex-col items-start gap-2">
+                <button
+                  onClick={handleClose}
+                  aria-label="Close"
+                  className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
+                  style={{
+                    background: "hsl(var(--deep-blue) / 0.65)",
+                    border: "1px solid hsl(var(--gold) / 0.25)",
+                  }}
+                >
+                  <X className="w-5 h-5 text-gold/80" />
+                </button>
+              </div>
+              {/* Right cluster: free badge + avatar */}
+              <div className="absolute top-4 right-4 flex items-center gap-3">
+                <span
+                  className="px-4 py-1.5 rounded-full text-sm font-bold font-body tracking-wider"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.08))",
+                    border: "1px solid hsl(var(--gold) / 0.25)",
+                    color: "hsl(var(--gold))",
+                  }}
+                >
+                  {t.free_badge_label}
+                </span>
+                <button
+                  onClick={() => setAdvisorOpen(true)}
+                  aria-label={t.astrologer_aria_label}
+                  className="w-12 h-12 rounded-full overflow-hidden cursor-pointer"
+                  style={{
+                    boxShadow: "0 4px 18px hsl(270 60% 45% / 0.3), 0 0 22px hsl(200 70% 50% / 0.12), 0 0 6px hsl(var(--gold) / 0.2)",
+                    border: "2px solid hsl(var(--gold) / 0.35)",
+                  }}
+                >
+                  <img
+                    src={astrologerAvatar}
+                    alt={t.astrologer_chat_title}
+                    className="w-full h-full object-cover scale-105"
+                    style={{ objectPosition: "center 42%" }}
+                    draggable={false}
+                  />
+                </button>
+              </div>
+              {/* Text size controls under close button */}
+              <div className="absolute top-[60px] left-4">
+                <TextSizeControl value={scale} onChange={setScale} />
+              </div>
+            </div>
+
+            {/* Body */}
             {isSubmitted ? (
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="px-10 py-12 text-center">
+                <CheckCircle className="w-14 h-14 text-gold mx-auto mb-5" />
+                <h3 className="font-heading text-2xl text-gold mb-3">{supportCopy.successTitle}</h3>
+                <p className="text-foreground/70 font-body leading-relaxed">{supportCopy.successMessage}</p>
+                <button onClick={handleClose} className="btn-outline-gold font-body text-sm mt-7">{supportCopy.closeLabel}</button>
+              </motion.div>
+            ) : (
+              <div className="px-8 pt-6 pb-8">
+                <div className="text-center mb-6">
+                  <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}>
+                    <Sparkles className="w-5 h-5 text-gold" />
+                  </div>
+                  <h2 className="font-heading text-2xl gold-gradient-text mb-2">{supportCopy.title}</h2>
+                  <p className="text-foreground/65 font-body text-sm max-w-sm mx-auto leading-relaxed">{supportCopy.subtitle}</p>
+                </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_name} *</label>
+                    <input type="text" required maxLength={100} className="mystical-input font-body" placeholder={t.lead_name_placeholder} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_email} *</label>
+                    <input type="email" required maxLength={255} className="mystical-input font-body" placeholder={t.lead_email_placeholder} dir="ltr" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{supportCopy.messageLabel} *</label>
+                    <textarea required maxLength={1000} rows={5} className="mystical-input font-body resize-none" placeholder={supportCopy.messagePlaceholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+                  </div>
+                  <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
+                    <input type="text" name="website_url" autoComplete="off" tabIndex={-1} value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                  </div>
+                  <button type="submit" disabled={isSubmitting} className="btn-gold font-body w-full flex items-center justify-center gap-2 disabled:opacity-50 mt-5">
+                    <Send className="w-4 h-4" />{isSubmitting ? t.lead_submitting : t.lead_submit}
+                  </button>
+                  <p className="text-center text-[11px] text-muted-foreground font-body mt-2">{t.lead_secure}</p>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 text-center">
                 <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
                 <h3 className="font-heading text-2xl text-gold mb-3">{isSupport ? supportCopy.successTitle : t.lead_success_title}</h3>
