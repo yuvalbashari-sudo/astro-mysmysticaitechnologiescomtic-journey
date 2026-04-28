@@ -288,6 +288,8 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                 </form>
               </div>
             )}
+        </>
+      )}
     </CinematicModalShell>
   );
 };
