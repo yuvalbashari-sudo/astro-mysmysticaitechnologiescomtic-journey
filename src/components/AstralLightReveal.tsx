@@ -657,8 +657,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                           cy={bp.y + stars[si * 2 + 1]}
                           r={2}
                           fill={vis.color}
-                          initial={{ opacity: 0, r: 0 }}
-                          animate={{ opacity: [0, 1, 0.7], r: [0, 3, 2] }}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: [0, 1, 0.7] }}
                           transition={{ duration: 0.6, delay: idx * 0.06 + si * 0.08 }}
                         />
                       ))}
@@ -668,8 +668,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                         r={12}
                         fill={vis.color}
                         filter="url(#const-glow)"
-                        initial={{ opacity: 0, r: 4 }}
-                        animate={{ opacity: [0, 0.9, 0.7], r: [4, 14, 10] }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.9, 0.7] }}
                         transition={{ duration: 0.8, delay: idx * 0.06 }}
                       />
                       <motion.text
@@ -733,8 +733,8 @@ const AstralLightReveal = ({ userName, chartData, onComplete, onAuraResult, fast
                         cy={FIG_CHEST_Y}
                         r={5}
                         fill={vis.color}
-                        initial={{ opacity: 0, r: 3 }}
-                        animate={{ opacity: [0, 0.8, 0], r: [3, 14, 5] }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.8, 0] }}
                         transition={{ duration: 0.8, delay: 1.6 }}
                       />
                     </>
