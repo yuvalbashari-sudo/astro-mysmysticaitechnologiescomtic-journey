@@ -6,7 +6,7 @@ import { useLanguage, useT } from "@/i18n";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import MobileOptionsSheet from "./MobileOptionsSheet";
-import LeadFormModal from "./LeadFormModal";
+import ContactButtonModal from "./ContactButtonModal";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 
@@ -54,7 +54,7 @@ const MobileAiInsightOverlay = () => {
   const [visible, setVisible] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
+  
   const [variant, setVariant] = useState<Variant>("A");
 
   // Show on first session only; sessionStorage so it returns next visit.
@@ -143,7 +143,7 @@ const MobileAiInsightOverlay = () => {
     <>
       <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
       <MobileOptionsSheet isOpen={optionsOpen} onClose={() => setOptionsOpen(false)} />
-      <LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
+      
 
       <AnimatePresence>
         {visible && (
@@ -336,20 +336,24 @@ const MobileAiInsightOverlay = () => {
                   >
                     <BookOpen className="w-[18px] h-[18px]" aria-hidden="true" />
                   </Link>
-                  <button
-                    type="button"
-                    onClick={() => setContactOpen(true)}
-                    aria-label={t.a11y_whatsapp_contact}
-                    className="flex items-center justify-center rounded-full transition-all"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
-                      boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
-                    }}
-                  >
-                    <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
-                  </button>
+                  <ContactButtonModal>
+                    {({ onClick }) => (
+                      <button
+                        type="button"
+                        onClick={onClick}
+                        aria-label={t.a11y_whatsapp_contact}
+                        className="flex items-center justify-center rounded-full transition-all"
+                        style={{
+                          width: 36,
+                          height: 36,
+                          background: "linear-gradient(135deg, hsl(142 70% 40% / 0.85), hsl(142 70% 32% / 0.85))",
+                          boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
+                        }}
+                      >
+                        <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
+                      </button>
+                    )}
+                  </ContactButtonModal>
                 </div>
               </div>
             </motion.div>
