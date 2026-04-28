@@ -171,7 +171,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                 <button
                   onClick={() => setAdvisorOpen(true)}
                   aria-label={t.astrologer_aria_label}
-                  className="w-12 h-12 rounded-full overflow-hidden cursor-pointer"
+                  className="w-[72px] h-[72px] rounded-full overflow-hidden cursor-pointer shrink-0"
                   style={{
                     boxShadow: "0 4px 18px hsl(270 60% 45% / 0.3), 0 0 22px hsl(200 70% 50% / 0.12), 0 0 6px hsl(var(--gold) / 0.2)",
                     border: "2px solid hsl(var(--gold) / 0.35)",
