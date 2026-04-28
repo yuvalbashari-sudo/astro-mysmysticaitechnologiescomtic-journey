@@ -33,6 +33,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   const isHomepage = pathname === "/";
   const [isTablet, setIsTablet] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   useEffect(() => {
     const check = () => {
