@@ -3244,12 +3244,12 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 1.5, duration: 0.7, ease: "easeOut" }}
           >
-            {/* Left CTA teaser — ABOVE tabs */}
+            {/* Left CTA teaser — ABOVE tabs (featured: Daily Horoscope) */}
             <motion.button
               type="button"
               className="cursor-pointer appearance-none border-0 bg-transparent p-0 outline-none mb-4"
-              onClick={() => setCompatibilityOpen(true)}
-              onMouseEnter={() => { setHoveredTeaser("left"); setHoveredItem(1); }}
+              onClick={() => setDailyHoroscopeOpen(true)}
+              onMouseEnter={() => { setHoveredTeaser("left"); setHoveredItem(4); }}
               onMouseLeave={() => { setHoveredTeaser(null); setHoveredItem(null); }}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.96 }}
@@ -3296,7 +3296,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   )}
                 </AnimatePresence>
                 <div className="flex items-center justify-center gap-3">
-                  <Sparkles className={`${isTablet ? "w-5 h-5" : "w-8 h-8"} flex-shrink-0`} style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
+                  <Sun className={`${isTablet ? "w-5 h-5" : "w-8 h-8"} flex-shrink-0`} style={{ color: "rgba(0, 170, 255, 0.85)", filter: "drop-shadow(0 0 4px rgba(0, 150, 255, 0.5))" }} />
                   <div
                     className={`${isTablet ? "text-[18px]" : "text-[32px]"} font-heading font-bold tracking-wide leading-tight`}
                     style={{
@@ -3304,11 +3304,11 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                       textShadow: "0 0 10px rgba(0, 150, 255, 0.65), 0 0 20px rgba(0, 150, 255, 0.35), 0 0 40px rgba(0, 150, 255, 0.15)",
                     }}
                   >
-                    {language === "he" ? "בדקו התאמה זוגית" : language === "ar" ? "اكتشفوا التوافق" : language === "ru" ? "Проверьте совместимость" : "Check compatibility"}
+                    {language === "he" ? "צפו בהורוסקופ היומי" : language === "ar" ? "شاهدوا الأبراج اليومية" : language === "ru" ? "Смотреть гороскоп дня" : "View Daily Horoscope"}
                   </div>
                 </div>
                 <div className={`${isTablet ? "text-[13px]" : "text-[17px]"} font-body mt-2.5`} style={{ color: "hsl(var(--foreground) / 0.6)" }}>
-                  {language === "he" ? "גלו מה באמת קורה ביניכם" : language === "ar" ? "اكتشفوا ما يحدث بينكما" : language === "ru" ? "Узнайте, что между вами" : "Discover what's between you"}
+                  {language === "he" ? "ההשפעות הקוסמיות של היום" : language === "ar" ? "تأثيرات اليوم الكونية" : language === "ru" ? "Космические влияния дня" : "Today's cosmic influences"}
                 </div>
                 <motion.div
                   className="mx-auto mt-3 rounded-full"
@@ -3391,9 +3391,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               );
             })}
 
-            {/* Daily Horoscope tab */}
+            {/* Compatibility tab */}
             {(() => {
-              const i = 4;
+              const i = 1;
               const item = menuItems[i];
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
@@ -3411,7 +3411,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: 4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setDailyHoroscopeOpen(true)}
+                  onClick={() => setCompatibilityOpen(true)}
                   aria-label={item.label}
                 >
                   <div
