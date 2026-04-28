@@ -117,6 +117,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
       hideAdvisor={isDesktopSupport}
       hideClose={isDesktopSupport}
       hideFreeBadge={isDesktopSupport}
+      wide={isDesktopSupport}
     >
       {isSupport && !isDesktopSupport && (
         <div
