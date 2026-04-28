@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import TextSizeControl from "@/components/TextSizeControl";
+import { useFontScale } from "@/contexts/FontScaleContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,6 +24,8 @@ const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePla
 const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { scale, setScale } = useFontScale();
+  const isMobile = useIsMobile();
   const isSupport = mode === "support";
   const supportCopy = SUPPORT_COPY[language] || SUPPORT_COPY.en;
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" });
@@ -89,8 +94,24 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
 
   const handleClose = () => { onClose(); setTimeout(() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" }); }, 300); };
 
+  // For the support modal we lower the advisor avatar on mobile so it visually
+  // clears the "Free" badge / title strip area, and we expose A/A+/A++ text
+  // size controls just under the close button (matching the wider site UX).
+  const supportAvatarStyle: React.CSSProperties | undefined = isSupport && isMobile
+    ? { bottom: 24, right: 12, top: "auto", left: "auto", width: 56, height: 56 }
+    : undefined;
+
   return (
-    <CinematicModalShell isOpen={isOpen} onClose={handleClose}>
+    <CinematicModalShell isOpen={isOpen} onClose={handleClose} avatarStyle={supportAvatarStyle}>
+      {isSupport && (
+        <div
+          className="fixed z-[106] flex flex-col items-center gap-1 pointer-events-auto"
+          style={{ top: 68, left: 12 }}
+          aria-label="Text size controls"
+        >
+          <TextSizeControl value={scale} onChange={setScale} />
+        </div>
+      )}
             {isSubmitted ? (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 text-center">
                 <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
