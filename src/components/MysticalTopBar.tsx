@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
 import { useIsMobile } from "@/hooks/use-mobile";
-import LeadFormModal from "@/components/LeadFormModal";
+import ContactButtonModal from "@/components/ContactButtonModal";
 
 interface Props {
   onOpenHistory?: () => void;
@@ -33,7 +33,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   const isHomepage = pathname === "/";
   const [isTablet, setIsTablet] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
-  const [contactOpen, setContactOpen] = useState(false);
 
   useEffect(() => {
     const check = () => {
@@ -228,24 +227,27 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   );
 
   const whatsappBtn = (
-    <motion.button
-      onClick={() => setContactOpen(true)}
-      className={`${iconBtn} w-9 h-9 md:w-12 md:h-12`}
-      style={{
-        background:
-          "linear-gradient(135deg, hsl(142 70% 40% / 0.8), hsl(142 70% 32% / 0.8))",
-        boxShadow: "0 2px 10px hsl(142 70% 35% / 0.3)",
-      }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      aria-label={t.a11y_whatsapp_contact}
-    >
-      <MessageCircle className="w-[18px] h-[18px] md:w-6 md:h-6 text-white" aria-hidden="true" />
-    </motion.button>
+    <ContactButtonModal>
+      {({ onClick }) => (
+        <motion.button
+          onClick={onClick}
+          className={`${iconBtn} w-9 h-9 md:w-12 md:h-12`}
+          style={{
+            background:
+              "linear-gradient(135deg, hsl(142 70% 40% / 0.8), hsl(142 70% 32% / 0.8))",
+            boxShadow: "0 2px 10px hsl(142 70% 35% / 0.3)",
+          }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label={t.a11y_whatsapp_contact}
+        >
+          <MessageCircle className="w-[18px] h-[18px] md:w-6 md:h-6 text-white" aria-hidden="true" />
+        </motion.button>
+      )}
+    </ContactButtonModal>
   );
 
   return (
-    <>
     <motion.header
       className="fixed top-0 left-0 right-0 z-[90] px-2 sm:px-4 md:px-8 py-1 md:py-3 pointer-events-auto"
       dir={dir}
@@ -425,8 +427,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
         </div>
       )}
     </motion.header>
-    <LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
-    </>
   );
 };
 
