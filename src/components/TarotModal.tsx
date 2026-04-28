@@ -422,6 +422,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       aiTextRef.current = cached.aiText;
       setSelectedSpreadKey(cached.spreadKey as SpreadType);
       sessionStorage.setItem("_dbg_tarot_source", "cached");
+      // Restore advisor context so Norielle opens with this Tarot reading in mind
+      const cachedSpread = SPREAD_OPTIONS.find(s => s.key === cached.spreadKey) || SPREAD_OPTIONS[0];
+      const cachedCardsLines = cached.cards
+        .map((c, i) => `${cachedSpread.positionLabels[i] || ""}: ${c.symbol} ${c.name[language] || c.name.en}`)
+        .join("\n");
+      const cachedSummary = `${t.readings_type_tarot} — ${SPREAD_LABELS[cached.spreadKey as SpreadType]}\n\n${cachedCardsLines}\n\n${cached.aiText}`;
+      setActiveReading({ type: "tarot", label: `${t.readings_type_tarot} — ${SPREAD_LABELS[cached.spreadKey as SpreadType]}`, summary: cachedSummary });
       return; // skip entitlement check — already used
     }
     sessionStorage.setItem("_dbg_tarot_source", "pending");
