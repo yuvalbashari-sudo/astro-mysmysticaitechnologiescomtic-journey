@@ -460,8 +460,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
         left: "50%",
         right: "auto" as const,
         bottom: "auto" as const,
-        insetInlineStart: "unset" as const,
-        insetInlineEnd: "unset" as const,
         marginInlineStart: 0,
         marginInlineEnd: 0,
         transform: "translateX(-50%)",
