@@ -11,11 +11,11 @@ interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: st
 
 // Localized copy for the support/contact variant. Inlined to avoid touching
 // the global i18n type surface — only this modal renders these strings.
-const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePlaceholder: string; interestTag: string }> = {
-  en: { title: "Contact Support", subtitle: "Send us your question and we'll get back to you by email.", messagePlaceholder: "How can we help?", interestTag: "Support request" },
-  he: { title: "פנייה לתמיכה", subtitle: "שלחו לנו את שאלתכם ונחזור אליכם במייל.", messagePlaceholder: "איך נוכל לעזור?", interestTag: "פנייה לתמיכה" },
-  ru: { title: "Связаться с поддержкой", subtitle: "Отправьте нам свой вопрос, и мы ответим по электронной почте.", messagePlaceholder: "Чем мы можем помочь?", interestTag: "Запрос в поддержку" },
-  ar: { title: "التواصل مع الدعم", subtitle: "أرسل لنا سؤالك وسنعود إليك عبر البريد الإلكتروني.", messagePlaceholder: "كيف يمكننا المساعدة؟", interestTag: "طلب دعم" },
+const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePlaceholder: string; interestTag: string; messageLabel: string }> = {
+  en: { title: "Contact Support", subtitle: "Send us your question and we'll get back to you by email.", messagePlaceholder: "How can we help?", interestTag: "Support request", messageLabel: "Message" },
+  he: { title: "פנייה לתמיכה", subtitle: "שלחו לנו את שאלתכם ונחזור אליכם במייל.", messagePlaceholder: "איך נוכל לעזור?", interestTag: "פנייה לתמיכה", messageLabel: "הודעה" },
+  ru: { title: "Связаться с поддержкой", subtitle: "Отправьте нам свой вопрос, и мы ответим по электронной почте.", messagePlaceholder: "Чем мы можем помочь?", interestTag: "Запрос в поддержку", messageLabel: "Сообщение" },
+  ar: { title: "التواصل مع الدعم", subtitle: "أرسل لنا سؤالك وسنعود إليك عبر البريد الإلكتروني.", messagePlaceholder: "كيف يمكننا المساعدة؟", interestTag: "طلب دعم", messageLabel: "رسالتك" },
 };
 
 const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: Props) => {
@@ -134,7 +134,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                     </div>
                   )}
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}{isSupport ? " *" : ""}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{isSupport ? `${supportCopy.messageLabel} *` : t.lead_message}</label>
                     <textarea required={isSupport} maxLength={1000} rows={isSupport ? 5 : 3} className="mystical-input font-body resize-none" placeholder={isSupport ? supportCopy.messagePlaceholder : t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
                   {/* Honeypot */}
