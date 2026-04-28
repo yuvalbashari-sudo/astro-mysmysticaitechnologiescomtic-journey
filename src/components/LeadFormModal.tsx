@@ -77,8 +77,8 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
           templateData: {
             name: formData.name.trim(),
             email: formData.email.trim(),
-            phone: formData.phone.trim() || '',
-            interest: formData.interest || '',
+            phone: isSupport ? '' : (formData.phone.trim() || ''),
+            interest: isSupport ? supportCopy.interestTag : (formData.interest || ''),
             message: formData.message.trim() || '',
             submittedAt,
           },
