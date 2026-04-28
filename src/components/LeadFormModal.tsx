@@ -234,6 +234,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
       ) : (
         <>
           {isSubmitted ? (
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 text-center">
                 <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
                 <h3 className="font-heading text-2xl text-gold mb-3">{isSupport ? supportCopy.successTitle : t.lead_success_title}</h3>
                 <p className="text-foreground/70 font-body leading-relaxed">{isSupport ? supportCopy.successMessage : t.lead_success_text}</p>
