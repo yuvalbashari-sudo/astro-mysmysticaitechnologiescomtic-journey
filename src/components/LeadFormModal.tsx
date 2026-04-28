@@ -4,13 +4,25 @@ import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { antiAbuse } from "@/lib/antiAbuse";
 
-interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: string; }
+interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: string; mode?: "lead" | "support"; }
 
-const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
+// Localized copy for the support/contact variant. Inlined to avoid touching
+// the global i18n type surface — only this modal renders these strings.
+const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePlaceholder: string; interestTag: string }> = {
+  en: { title: "Contact Support", subtitle: "Send us your question and we'll get back to you by email.", messagePlaceholder: "How can we help?", interestTag: "Support request" },
+  he: { title: "פנייה לתמיכה", subtitle: "שלחו לנו את שאלתכם ונחזור אליכם במייל.", messagePlaceholder: "איך נוכל לעזור?", interestTag: "פנייה לתמיכה" },
+  ru: { title: "Связаться с поддержкой", subtitle: "Отправьте нам свой вопрос, и мы ответим по электронной почте.", messagePlaceholder: "Чем мы можем помочь?", interestTag: "Запрос в поддержку" },
+  ar: { title: "التواصل مع الدعم", subtitle: "أرسل لنا سؤالك وسنعود إليك عبر البريد الإلكتروني.", messagePlaceholder: "كيف يمكننا المساعدة؟", interestTag: "طلب دعم" },
+};
+
+const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
+  const isSupport = mode === "support";
+  const supportCopy = SUPPORT_COPY[language] || SUPPORT_COPY.en;
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" });
   const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
