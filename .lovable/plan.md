@@ -1,47 +1,45 @@
+## Goal
+Make the green floating contact button open the existing protected `LeadFormModal` instead of opening WhatsApp, on both the mobile hero overlay and the desktop top bar. No layout, copy, translation, backend, or credential changes.
 
+## Verified facts from the codebase
+- `src/components/LeadFormModal.tsx` exports `default LeadFormModal` with props `{ isOpen, onClose, preselectedInterest? }`. It already:
+  - Inserts into `leads` table
+  - Sends `support-new-lead` template to `support@myastrologai.com` via `send-transactional-email` edge function
+  - Uses honeypot (`website_url`), `antiAbuse` cooldown / rate-limit / duplicate / timing checks
+- Existing working usage pattern across the project: `<LeadFormModal isOpen={...} onClose={() => ...} />` (e.g. matches the `isOpen`/`onClose` pattern used by all sibling modals).
+- Two green contact buttons currently call WhatsApp:
+  1. `src/components/MysticalTopBar.tsx` (desktop/tablet) — `whatsappBtn` using `whatsappUrl`
+  2. `src/components/MobileAiInsightOverlay.tsx` lines ~336–349 (mobile hero) — inline `<button onClick={() => window.open("https://wa.me/972500000000", ...)}>`
+- The standalone `src/components/WhatsAppFloatingButton.tsx` is already disabled (`return null;`) — no change needed.
+- Result-sharing WhatsApp links (ShareResultSection, RisingSignModal, TarotModal, etc.) are out of scope and will not be touched.
 
-## Lower Norielle + place teaser below the avatar (mobile Astrocartography)
+## Changes (surgical, 2 files)
 
-Two surgical edits. No redesign, no desktop changes, no logic changes, no size changes.
+### 1) `src/components/MysticalTopBar.tsx`
+- Add import: `import LeadFormModal from "@/components/LeadFormModal";`
+- Add state: `const [contactOpen, setContactOpen] = useState(false);`
+- Remove the `whatsappUrl` constant.
+- Change `whatsappBtn` `onClick` from `window.open(whatsappUrl, ...)` to `() => setContactOpen(true)`.
+- Wrap the returned `<motion.header>` in a fragment and append `<LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />` after the header.
+- Keep button class names, gradient style, box-shadow, sizes, `MessageCircle` icon, animations, and `aria-label` exactly as-is.
 
-### 1. `src/components/AstrocartographyModal.tsx` — lower the avatar
+### 2) `src/components/MobileAiInsightOverlay.tsx`
+- Add state: `const [contactOpen, setContactOpen] = useState(false);`
+- Already imports `LeadFormModal`? No — add: `import LeadFormModal from "@/components/LeadFormModal";`
+- Change the green `<button>` (lines ~336–349) `onClick` from `window.open("https://wa.me/972500000000", ...)` to `() => setContactOpen(true)`.
+- Render `<LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />` alongside the existing `<AdvisorChatPanel>` / `<MobileOptionsSheet>` near the top of the returned JSX (line ~142).
+- Keep the button's size, gradient, box-shadow, `MessageCircle` icon, and `aria-label` unchanged.
 
-Replace the mobile `avatarStyle` with the approved snippet (adds `position: "absolute"`, lowers to `bottom: 20`):
+## Out of scope (will NOT change)
+- WhatsApp share links inside ShareResultSection, RisingSignModal, MonthlyForecastModal, TarotModal, TarotWorldModal, FooterCTA, LeadSection, AccessibilityStatement, ZodiacSignPage, TarotCardPage.
+- Translation strings (`hero_cta_whatsapp`, `lead_whatsapp`, etc.) — only the button behavior changes; the labels remain.
+- Backend, edge functions, M365 credentials, RLS, or `support-new-lead` template.
+- Page layout, hero composition, or any other component.
 
-```ts
-const avatarStyle = isMobile
-  ? {
-      position: "absolute" as const,
-      bottom: 20,
-      right: 16,
-      top: "auto" as const,
-      left: "auto" as const,
-      width: 88,
-      height: 88,
-      zIndex: 110,
-      pointerEvents: "auto" as const,
-    }
-  : undefined;
-```
+## Verification after implementation
+- Run a quick `rg` to confirm no green-button onClick still uses `wa.me` / `api.whatsapp.com`.
+- Confirm the preview at `/` renders without a blank screen.
+- Confirm clicking the green button on both mobile and desktop opens the existing `LeadFormModal` (CinematicModalShell with the form), and does not navigate away.
 
-This anchors Norielle to the bottom-right of the shell viewport, fully inside the frame, same 88×88 size, same tap behavior.
-
-### 2. `src/components/AvatarHoverTeaser.tsx` — render teaser BELOW the avatar
-
-Currently the teaser card is positioned **above** the avatar via `bottom: calc(100% + GAP)` and right-anchored, which causes it to escape sideways near the right edge.
-
-Change to:
-- **Vertical**: `top: calc(100% + 12px)` (hangs below the avatar) instead of `bottom: calc(100% + ...)`.
-- **Horizontal**: center the card under the avatar with `left: 50%; transform: translateX(-50%)` and reuse the existing `horizontalShift` math (applied as an additional translateX) to clamp inside the viewport when the avatar is near a side edge.
-- **Clipping guard**: flip to "above the avatar" only as a fallback when the card would clip the bottom of the viewport (e.g. very short viewports). Default = below.
-- **Arrow/notch**: flip the existing pointer arrow so it points up (toward the avatar) when the card is below.
-
-This is a global teaser change — desired per the user's request — and safe because every shell modal already places the avatar in the bottom-right with the result content above it, leaving room for a short (~160px) card to hang below. The fallback guard preserves correctness on edge cases.
-
-### Untouched
-Astrocartography logic, the map, filters, result text, desktop avatar, the close button, `TextSizeControl`, reading-context wiring, advisor astrology routing, tactile tap micro-interaction in `CinematicModalShell`, avatar size, all other modals' avatar positions.
-
-### Result
-- Norielle sits a few pixels lower, fully inside the mobile Astrocartography result frame, bottom-right, same size, fully tappable.
-- The teaser card appears **directly below** Norielle, centered under her icon, clamped inside the viewport — never escapes sideways.
-
+## Rollback plan
+If integrating `LeadFormModal` into either file produces a render error or blank preview, revert that single file's button onClick back to the previous `window.open(...)` WhatsApp URL and remove the added state/import — restoring the working preview without touching anything else.
