@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles, X } from "lucide-react";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
@@ -116,6 +117,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
       hideAdvisor={isDesktopSupport}
       hideClose={isDesktopSupport}
       hideFreeBadge={isDesktopSupport}
+      wide={isDesktopSupport}
     >
       {isSupport && !isDesktopSupport && (
         <div
@@ -127,7 +129,8 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
         </div>
       )}
       {isDesktopSupport ? (
-        <div className="relative mx-auto w-full max-w-[520px]">
+        <div className="relative mx-auto w-full max-w-[640px] mt-12">
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
           {/* Framed glass panel */}
           <div
             className="relative rounded-2xl backdrop-blur-xl overflow-hidden"
@@ -191,14 +194,14 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
 
             {/* Body */}
             {isSubmitted ? (
-              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="px-10 py-12 text-center">
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="px-12 py-14 text-center">
                 <CheckCircle className="w-14 h-14 text-gold mx-auto mb-5" />
                 <h3 className="font-heading text-2xl text-gold mb-3">{supportCopy.successTitle}</h3>
                 <p className="text-foreground/70 font-body leading-relaxed">{supportCopy.successMessage}</p>
                 <button onClick={handleClose} className="btn-outline-gold font-body text-sm mt-7">{supportCopy.closeLabel}</button>
               </motion.div>
             ) : (
-              <div className="px-8 pt-6 pb-8">
+              <div className="px-12 pt-8 pb-10">
                 <div className="text-center mb-6">
                   <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}>
                     <Sparkles className="w-5 h-5 text-gold" />
