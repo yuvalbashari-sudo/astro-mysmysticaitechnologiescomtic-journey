@@ -26,6 +26,8 @@ interface Props {
   avatarStyle?: React.CSSProperties;
   /** Hide the floating "Free" badge in the top-right (use when modal owns its own header) */
   hideFreeBadge?: boolean;
+  /** Hide the floating close button in the top-left (use when modal owns its own header) */
+  hideClose?: boolean;
   /** Strengthen dark overlay over the top portion to suppress background branding */
   topOverlay?: boolean;
 }
@@ -38,7 +40,7 @@ interface Props {
  * Children scroll naturally over a rising fog gradient that provides
  * text legibility without hiding the figure.
  */
-const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle, hideFreeBadge = false, topOverlay = false }: Props) => {
+const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle, hideFreeBadge = false, hideClose = false, topOverlay = false }: Props) => {
   const isMobile = useIsMobile();
   const t = useT();
   const [advisorOpen, setAdvisorOpen] = useState(false);
@@ -180,6 +182,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           )}
 
           {/* ── Controls: close + badge ── */}
+          {!hideClose && (
           <motion.button
             className="fixed top-5 left-5 z-[105] w-[52px] h-[52px] min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer transition-colors duration-200"
             style={{
@@ -192,6 +195,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           >
             <X className="w-6 h-6 text-gold/80" />
           </motion.button>
+          )}
           {!hideFreeBadge && (
             <div className="fixed top-5 right-5 z-[105]">
               <span
