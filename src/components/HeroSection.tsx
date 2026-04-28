@@ -143,7 +143,7 @@ const Constellation = ({ stars, baseDelay }: { stars: number[][]; baseDelay: num
         cx={`${star[0]}%`} cy={`${star[1]}%`}
         r="1.5"
         fill="hsl(43, 80%, 70%)"
-        animate={{ opacity: [0, 0.9, 0.9, 0], r: [1, 2.5, 2.5, 1] }}
+        animate={{ opacity: [0, 0.9, 0.9, 0] }}
         transition={{ duration: 10, repeat: Infinity, delay: baseDelay + j * 0.25, ease: "easeInOut" }}
       />
     ))}
@@ -1794,7 +1794,6 @@ const EnergyLine = ({ fromX, fromY, color, isMobile }: { fromX: number; fromY: n
           cx: [fromX, centerX],
           cy: [fromY, centerY],
           opacity: [0.8, 0],
-          r: [3, 1],
         }}
         transition={{ duration: 1.2, repeat: Infinity, ease: "easeIn" }}
       />
