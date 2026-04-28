@@ -103,7 +103,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
   // "Free" badge area and never overlaps the badge, logo, title, or text controls.
   // Default mobile position is { bottom: 16 }; we shift down by 24px → bottom: -8.
   const supportAvatarStyle: React.CSSProperties | undefined = isSupport && isMobile
-    ? { top: 68, right: 12, bottom: "auto", left: "auto", width: 64, height: 64 }
+    ? { top: 60, right: 8, bottom: "auto", left: "auto", width: 96, height: 96 }
     : undefined;
 
   const isDesktopSupport = isSupport && !isMobile;
