@@ -5,7 +5,6 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
-import LeadFormModal from "@/components/LeadFormModal";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Props {
