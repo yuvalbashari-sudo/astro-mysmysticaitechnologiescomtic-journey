@@ -182,6 +182,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           )}
 
           {/* ── Controls: close + badge ── */}
+          {!hideClose && (
           <motion.button
             className="fixed top-5 left-5 z-[105] w-[52px] h-[52px] min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer transition-colors duration-200"
             style={{
@@ -194,6 +195,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           >
             <X className="w-6 h-6 text-gold/80" />
           </motion.button>
+          )}
           {!hideFreeBadge && (
             <div className="fixed top-5 right-5 z-[105]">
               <span
