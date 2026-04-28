@@ -103,7 +103,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
   // "Free" badge area and never overlaps the badge, logo, title, or text controls.
   // Default mobile position is { bottom: 16 }; we shift down by 24px → bottom: -8.
   const supportAvatarStyle: React.CSSProperties | undefined = isSupport && isMobile
-    ? { top: 68, right: 12, bottom: "auto", left: "auto", width: 64, height: 64 }
+    ? { top: 60, right: 8, bottom: "auto", left: "auto", width: 96, height: 96 }
     : undefined;
 
   const isDesktopSupport = isSupport && !isMobile;
@@ -141,7 +141,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
             }}
           >
             {/* Integrated header — anchored to the panel */}
-            <div className="relative h-[88px] px-5 pt-4 border-b" style={{ borderColor: "hsl(var(--gold) / 0.12)" }}>
+            <div className="relative h-[104px] px-5 pt-4 border-b" style={{ borderColor: "hsl(var(--gold) / 0.12)" }}>
               {/* Left cluster: close + text size */}
               <div className="absolute top-4 left-4 flex flex-col items-start gap-2">
                 <button
@@ -171,7 +171,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                 <button
                   onClick={() => setAdvisorOpen(true)}
                   aria-label={t.astrologer_aria_label}
-                  className="w-12 h-12 rounded-full overflow-hidden cursor-pointer"
+                  className="w-[72px] h-[72px] rounded-full overflow-hidden cursor-pointer shrink-0"
                   style={{
                     boxShadow: "0 4px 18px hsl(270 60% 45% / 0.3), 0 0 22px hsl(200 70% 50% / 0.12), 0 0 6px hsl(var(--gold) / 0.2)",
                     border: "2px solid hsl(var(--gold) / 0.35)",
