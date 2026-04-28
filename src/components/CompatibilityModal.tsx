@@ -222,15 +222,18 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const isDesktopInput = !isMobile && !matchInfo && !isLoading;
 
   const isLtr = dir === "ltr";
-  // Desktop: anchor avatar at the far top-right; render Free badge to its left with spacing.
+  // Desktop: force the advisor avatar to the modal's visual left, below the top-left controls.
   // Mobile keeps existing positioning.
   const compatAvatarStyle = !isMobile ? {
-    top: 80 as const,
+    position: "absolute" as const,
+    top: 88 as const,
     bottom: "auto" as const,
-    right: "auto" as const,
     left: 20 as const,
+    insetInlineStart: "unset" as const,
+    insetInlineEnd: "unset" as const,
     width: 140,
     height: 140,
+    zIndex: 106,
   } : (isLtr ? {
     top: "auto" as const,
     bottom: 16,
