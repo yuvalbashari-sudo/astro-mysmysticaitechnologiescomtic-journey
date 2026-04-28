@@ -4,13 +4,25 @@ import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
-import { useT } from "@/i18n/LanguageContext";
+import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { antiAbuse } from "@/lib/antiAbuse";
 
-interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: string; }
+interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: string; mode?: "lead" | "support"; }
 
-const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
+// Localized copy for the support/contact variant. Inlined to avoid touching
+// the global i18n type surface — only this modal renders these strings.
+const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePlaceholder: string; interestTag: string }> = {
+  en: { title: "Contact Support", subtitle: "Send us your question and we'll get back to you by email.", messagePlaceholder: "How can we help?", interestTag: "Support request" },
+  he: { title: "פנייה לתמיכה", subtitle: "שלחו לנו את שאלתכם ונחזור אליכם במייל.", messagePlaceholder: "איך נוכל לעזור?", interestTag: "פנייה לתמיכה" },
+  ru: { title: "Связаться с поддержкой", subtitle: "Отправьте нам свой вопрос, и мы ответим по электронной почте.", messagePlaceholder: "Чем мы можем помочь?", interestTag: "Запрос в поддержку" },
+  ar: { title: "التواصل مع الدعم", subtitle: "أرسل لنا سؤالك وسنعود إليك عبر البريد الإلكتروني.", messagePlaceholder: "كيف يمكننا المساعدة؟", interestTag: "طلب دعم" },
+};
+
+const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
+  const isSupport = mode === "support";
+  const supportCopy = SUPPORT_COPY[language] || SUPPORT_COPY.en;
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" });
   const [honeypot, setHoneypot] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +49,8 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
     if (!formData.name.trim() || !formData.email.trim()) { toast(t.lead_error_required); return; }
     setIsSubmitting(true);
     try {
-      const { error } = await supabase.from("leads").insert({ full_name: formData.name.trim().slice(0, 100), email: formData.email.trim().slice(0, 255), phone: formData.phone.trim().slice(0, 20) || null, interest: formData.interest || null, message: formData.message.trim().slice(0, 1000) || null });
+      const interestValue = isSupport ? "support" : (formData.interest || null);
+      const { error } = await supabase.from("leads").insert({ full_name: formData.name.trim().slice(0, 100), email: formData.email.trim().slice(0, 255), phone: isSupport ? null : (formData.phone.trim().slice(0, 20) || null), interest: interestValue, message: formData.message.trim().slice(0, 1000) || null });
       if (error) throw error;
       antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true); toast(`${t.lead_success_title}`);
@@ -64,8 +77,8 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
           templateData: {
             name: formData.name.trim(),
             email: formData.email.trim(),
-            phone: formData.phone.trim() || '',
-            interest: formData.interest || '',
+            phone: isSupport ? '' : (formData.phone.trim() || ''),
+            interest: isSupport ? supportCopy.interestTag : (formData.interest || ''),
             message: formData.message.trim() || '',
             submittedAt,
           },
@@ -89,36 +102,40 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
               <div className="p-8 md:p-10">
                 <div className="text-center mb-8">
                   <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Sparkles className="w-6 h-6 text-gold" /></motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.lead_modal_title}</h2>
-                  <p className="text-foreground/60 font-body text-sm max-w-sm mx-auto leading-relaxed">{t.lead_modal_subtitle}</p>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{isSupport ? supportCopy.title : t.lead_modal_title}</h2>
+                  <p className="text-foreground/60 font-body text-sm max-w-sm mx-auto leading-relaxed">{isSupport ? supportCopy.subtitle : t.lead_modal_subtitle}</p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_name} *</label>
                     <input type="text" required maxLength={100} className="mystical-input font-body" placeholder={t.lead_name_placeholder} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                   </div>
-                  <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
-                    <input type="tel" maxLength={20} className="mystical-input font-body" placeholder={t.lead_phone_placeholder} dir="ltr" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-                  </div>
+                  {!isSupport && (
+                    <div>
+                      <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
+                      <input type="tel" maxLength={20} className="mystical-input font-body" placeholder={t.lead_phone_placeholder} dir="ltr" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                    </div>
+                  )}
                   <div>
                     <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_email} *</label>
                     <input type="email" required maxLength={255} className="mystical-input font-body" placeholder={t.lead_email_placeholder} dir="ltr" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                   </div>
+                  {!isSupport && (
+                    <div>
+                      <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
+                      <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
+                        <option value="">{t.lead_interest_placeholder}</option>
+                        <option value="astrology">{t.lead_modal_interest_personal}</option>
+                        <option value="compatibility">{t.lead_modal_interest_couple}</option>
+                        <option value="full">{t.lead_modal_interest_full}</option>
+                        <option value="tarot">{t.lead_modal_interest_tarot}</option>
+                        <option value="palm">{t.lead_modal_interest_palm}</option>
+                      </select>
+                    </div>
+                  )}
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
-                    <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
-                      <option value="">{t.lead_interest_placeholder}</option>
-                      <option value="astrology">{t.lead_modal_interest_personal}</option>
-                      <option value="compatibility">{t.lead_modal_interest_couple}</option>
-                      <option value="full">{t.lead_modal_interest_full}</option>
-                      <option value="tarot">{t.lead_modal_interest_tarot}</option>
-                      <option value="palm">{t.lead_modal_interest_palm}</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}</label>
-                    <textarea maxLength={1000} rows={3} className="mystical-input font-body resize-none" placeholder={t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}{isSupport ? " *" : ""}</label>
+                    <textarea required={isSupport} maxLength={1000} rows={isSupport ? 5 : 3} className="mystical-input font-body resize-none" placeholder={isSupport ? supportCopy.messagePlaceholder : t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
                   {/* Honeypot */}
                   <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
