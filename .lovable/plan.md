@@ -1,46 +1,26 @@
-## Targeted fix
+Surgical fix to ensure the Norielle avatar no longer overlaps the close (X) button on the mobile/tablet Tarot selection screen, while keeping the result-screen behavior intact.
 
-Switch the mobile/tablet Tarot avatar from viewport-fixed to shell-absolute centering, so it renders consistently centered in both English (LTR) and Hebrew (RTL).
+## Changes
 
-### Change
+### 1. `src/components/TarotModal.tsx`
+- Keep `isTarotResultScreen` detection (cards present + not in any pre-result phase).
+- `tarotAvatarStyle` for `(isMobileTarot || isTablet)`:
+  - Selection screen: `top: 84` (below the close button row).
+  - Result screen: `top: 16` (centered in header between X and Free badge).
+  - Common: `position: "absolute"`, `left: "50%"`, `transform: "translateX(-50%)"`, `bottom/right/insetInlineStart/insetInlineEnd: "auto"/"unset"`, `width/height: 56`, `zIndex: 106`, `pointerEvents: "auto"`.
+- Desktop: `tarotAvatarStyle = undefined` → shell default.
 
-In `src/components/TarotModal.tsx`, line 459, update only the `avatarStyle` prop on `CinematicModalShell`:
+### 2. `src/components/CinematicModalShell.tsx`
+- Verify the avatar wrapper (`AvatarHoverTeaser`) honors the incoming `avatarStyle` exactly. The existing code already spreads `avatarStyle` and passes through `position: "absolute"`. No structural change unless needed; if the wrapper still defaults to `relative`, ensure `AvatarHoverTeaser` drops the `relative` class when `style.position` is set (already handled per prior edit).
 
-```tsx
-avatarStyle={(isMobileTarot || isTablet) ? {
-  position: "absolute" as const,
-  top: 16,
-  left: "50%",
-  transform: "translateX(-50%)",
-  bottom: "auto" as const,
-  right: "auto" as const,
-  insetInlineStart: "unset" as const,
-  insetInlineEnd: "unset" as const,
-  width: 56,
-  height: 56,
-  zIndex: 106,
-  pointerEvents: "auto" as const,
-} : undefined}
-```
-
-The only change vs. current code is `position: "fixed"` → `position: "absolute"`.
-
-### Why this fixes English drift
-
-The shell's outer wrapper is `fixed inset-0` and is mounted via portal directly under `<body>`. Using `position: absolute` anchors the avatar to that shell rather than to the viewport, sidestepping any transformed ancestor or scrollbar-width quirks that can shift a `fixed` element off-center on LTR layouts. RTL behavior is preserved because `left: 50%` + `translateX(-50%)` is a physical centering that ignores writing direction; Hebrew remains visually centered as before.
-
-### Out of scope (no changes)
-
-- Desktop branch (still `undefined`).
+## Out of scope (unchanged)
 - Avatar image, size, glow, border, click behavior, advisor chat panel.
-- Tarot cards, text, translations, share buttons, reading logic, result layout, CTA.
-- `CinematicModalShell.tsx`, `AvatarHoverTeaser.tsx`, tablet detection logic.
-- No auto-publish.
+- Tarot cards, buttons, text, translations, reading logic, result content, share buttons, CTA.
+- Desktop avatar position.
+- No publishing.
 
-### Verification
-
-- English mobile (<768px) and tablet (768–1023px): avatar visually centered between close button (left) and Free badge (right), above the result title.
-- Hebrew mobile/tablet: avatar still centered, no RTL drift.
-- Avatar remains tappable and opens the existing advisor chat.
-- Desktop (≥1024px): avatar position unchanged.
-- Cards, share buttons, AI interpretation, and CTA remain fully visible.
+## Verification
+- Mobile/tablet Tarot selection: avatar centered horizontally, sitting at `top: 84` — does NOT overlap the X button.
+- Mobile/tablet Tarot result: avatar centered horizontally at `top: 16`.
+- Avatar remains tappable and opens the advisor chat.
+- Desktop Tarot: avatar position unchanged (shell default bottom-right).
