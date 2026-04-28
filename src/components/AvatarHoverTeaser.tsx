@@ -157,6 +157,7 @@ const AvatarHoverTeaser = ({
   }, [visible]);
 
   const isMobileViewport = typeof window !== "undefined" && window.innerWidth < 768;
+  const hasExplicitPosition = Boolean(style?.position);
 
   // On mobile, keep the teaser centered in the viewport so it never escapes sideways.
   const cardPosition: React.CSSProperties = isMobileViewport
@@ -203,7 +204,7 @@ const AvatarHoverTeaser = ({
   return (
     <div
       ref={wrapperRef}
-      className={`relative ${className}`}
+      className={`${hasExplicitPosition ? "" : "relative"} ${className}`.trim()}
       style={{ overflow: "visible", isolation: "isolate", zIndex: style?.zIndex ?? 50, ...style }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
