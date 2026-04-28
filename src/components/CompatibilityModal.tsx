@@ -275,7 +275,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                     >
-                      <div className="text-center">
+                      <div className="text-center" style={{ zoom: textSize === "xl" ? 1.28 : textSize === "large" ? 1.14 : 1 }}>
                         <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }}>
                           <Heart className="w-6 h-6 text-crimson-light" />
                         </motion.div>
