@@ -24,6 +24,8 @@ const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePla
 const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: Props) => {
   const t = useT();
   const { language } = useLanguage();
+  const { scale, setScale } = useFontScale();
+  const isMobile = useIsMobile();
   const isSupport = mode === "support";
   const supportCopy = SUPPORT_COPY[language] || SUPPORT_COPY.en;
   const [formData, setFormData] = useState({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" });
