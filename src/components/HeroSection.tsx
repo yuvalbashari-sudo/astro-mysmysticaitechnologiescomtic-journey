@@ -3391,9 +3391,9 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
               );
             })}
 
-            {/* Daily Horoscope tab */}
+            {/* Compatibility tab */}
             {(() => {
-              const i = 4;
+              const i = 1;
               const item = menuItems[i];
               const itemColor = ITEM_COLORS[i];
               const isHovered = hoveredItem === i;
@@ -3411,7 +3411,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
                   onBlur={() => setHoveredItem(null)}
                   whileHover={{ scale: 1.08, x: 4 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setDailyHoroscopeOpen(true)}
+                  onClick={() => setCompatibilityOpen(true)}
                   aria-label={item.label}
                 >
                   <div
