@@ -102,36 +102,40 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
               <div className="p-8 md:p-10">
                 <div className="text-center mb-8">
                   <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Sparkles className="w-6 h-6 text-gold" /></motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.lead_modal_title}</h2>
-                  <p className="text-foreground/60 font-body text-sm max-w-sm mx-auto leading-relaxed">{t.lead_modal_subtitle}</p>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{isSupport ? supportCopy.title : t.lead_modal_title}</h2>
+                  <p className="text-foreground/60 font-body text-sm max-w-sm mx-auto leading-relaxed">{isSupport ? supportCopy.subtitle : t.lead_modal_subtitle}</p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
                     <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_name} *</label>
                     <input type="text" required maxLength={100} className="mystical-input font-body" placeholder={t.lead_name_placeholder} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                   </div>
-                  <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
-                    <input type="tel" maxLength={20} className="mystical-input font-body" placeholder={t.lead_phone_placeholder} dir="ltr" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
-                  </div>
+                  {!isSupport && (
+                    <div>
+                      <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_phone}</label>
+                      <input type="tel" maxLength={20} className="mystical-input font-body" placeholder={t.lead_phone_placeholder} dir="ltr" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
+                    </div>
+                  )}
                   <div>
                     <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_email} *</label>
                     <input type="email" required maxLength={255} className="mystical-input font-body" placeholder={t.lead_email_placeholder} dir="ltr" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                   </div>
+                  {!isSupport && (
+                    <div>
+                      <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
+                      <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
+                        <option value="">{t.lead_interest_placeholder}</option>
+                        <option value="astrology">{t.lead_modal_interest_personal}</option>
+                        <option value="compatibility">{t.lead_modal_interest_couple}</option>
+                        <option value="full">{t.lead_modal_interest_full}</option>
+                        <option value="tarot">{t.lead_modal_interest_tarot}</option>
+                        <option value="palm">{t.lead_modal_interest_palm}</option>
+                      </select>
+                    </div>
+                  )}
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
-                    <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
-                      <option value="">{t.lead_interest_placeholder}</option>
-                      <option value="astrology">{t.lead_modal_interest_personal}</option>
-                      <option value="compatibility">{t.lead_modal_interest_couple}</option>
-                      <option value="full">{t.lead_modal_interest_full}</option>
-                      <option value="tarot">{t.lead_modal_interest_tarot}</option>
-                      <option value="palm">{t.lead_modal_interest_palm}</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}</label>
-                    <textarea maxLength={1000} rows={3} className="mystical-input font-body resize-none" placeholder={t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
+                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}{isSupport ? " *" : ""}</label>
+                    <textarea required={isSupport} maxLength={1000} rows={isSupport ? 5 : 3} className="mystical-input font-body resize-none" placeholder={isSupport ? supportCopy.messagePlaceholder : t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
                   {/* Honeypot */}
                   <div className="absolute opacity-0 pointer-events-none h-0 overflow-hidden" aria-hidden="true" tabIndex={-1}>
