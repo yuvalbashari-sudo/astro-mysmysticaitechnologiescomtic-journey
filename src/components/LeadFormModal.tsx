@@ -42,13 +42,33 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest }: Props) => {
       antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true); toast(`${t.lead_success_title}`);
 
-      // Send confirmation email
+      const submissionId = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      const submittedAt = new Date().toISOString().replace("T", " ").slice(0, 16) + " UTC";
+
+      // Send confirmation email to the user
       supabase.functions.invoke('send-transactional-email', {
         body: {
           templateName: 'contact-confirmation',
           recipientEmail: formData.email.trim(),
-          idempotencyKey: `contact-confirm-${Date.now()}`,
+          idempotencyKey: `contact-confirm-${submissionId}`,
           templateData: { name: formData.name.trim() },
+        },
+      }).catch(() => { /* non-critical */ });
+
+      // Notify support of the new lead
+      supabase.functions.invoke('send-transactional-email', {
+        body: {
+          templateName: 'support-new-lead',
+          recipientEmail: 'support@myastrologai.com',
+          idempotencyKey: `support-new-lead-${submissionId}`,
+          templateData: {
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim() || '',
+            interest: formData.interest || '',
+            message: formData.message.trim() || '',
+            submittedAt,
+          },
         },
       }).catch(() => { /* non-critical */ });
     } catch { toast(t.lead_error_submit); } finally { setIsSubmitting(false); }
