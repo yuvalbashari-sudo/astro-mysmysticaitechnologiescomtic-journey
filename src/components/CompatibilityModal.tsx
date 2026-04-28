@@ -404,7 +404,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
                         {aiText ? (
                           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
-                            <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                            {isMobile && (<div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>)}
                             <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
                               {renderMysticalText(aiText, textSize)}
                             </div>
