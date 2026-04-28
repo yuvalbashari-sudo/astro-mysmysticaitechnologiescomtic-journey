@@ -245,7 +245,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   );
 
   return (
-    <>
     <motion.header
       className="fixed top-0 left-0 right-0 z-[90] px-2 sm:px-4 md:px-8 py-1 md:py-3 pointer-events-auto"
       dir={dir}
