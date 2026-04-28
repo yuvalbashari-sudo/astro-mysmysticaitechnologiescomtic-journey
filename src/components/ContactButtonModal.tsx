@@ -69,7 +69,7 @@ const ContactButtonModal = ({ children }: Props) => {
       {mounted && (
         <ModalErrorBoundary>
           <Suspense fallback={null}>
-            <LeadFormModal isOpen={open} onClose={() => setOpen(false)} />
+            <LeadFormModal isOpen={open} onClose={() => setOpen(false)} mode="support" />
           </Suspense>
         </ModalErrorBoundary>
       )}
