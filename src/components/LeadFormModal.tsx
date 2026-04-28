@@ -14,11 +14,11 @@ interface Props { isOpen: boolean; onClose: () => void; preselectedInterest?: st
 
 // Localized copy for the support/contact variant. Inlined to avoid touching
 // the global i18n type surface — only this modal renders these strings.
-const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePlaceholder: string; interestTag: string; messageLabel: string }> = {
-  en: { title: "Contact Support", subtitle: "Send us your question and we'll get back to you by email.", messagePlaceholder: "How can we help?", interestTag: "Support request", messageLabel: "Message" },
-  he: { title: "פנייה לתמיכה", subtitle: "שלחו לנו את שאלתכם ונחזור אליכם במייל.", messagePlaceholder: "איך נוכל לעזור?", interestTag: "פנייה לתמיכה", messageLabel: "הודעה" },
-  ru: { title: "Связаться с поддержкой", subtitle: "Отправьте нам свой вопрос, и мы ответим по электронной почте.", messagePlaceholder: "Чем мы можем помочь?", interestTag: "Запрос в поддержку", messageLabel: "Сообщение" },
-  ar: { title: "التواصل مع الدعم", subtitle: "أرسل لنا سؤالك وسنعود إليك عبر البريد الإلكتروني.", messagePlaceholder: "كيف يمكننا المساعدة؟", interestTag: "طلب دعم", messageLabel: "رسالتك" },
+const SUPPORT_COPY: Record<string, { title: string; subtitle: string; messagePlaceholder: string; interestTag: string; messageLabel: string; successTitle: string; successMessage: string; closeLabel: string }> = {
+  en: { title: "Contact Support", subtitle: "Send us your question and we'll get back to you by email.", messagePlaceholder: "How can we help?", interestTag: "Support request", messageLabel: "Message", successTitle: "Thank you!", successMessage: "We received your message and will get back to you by email as soon as possible.", closeLabel: "Close" },
+  he: { title: "פנייה לתמיכה", subtitle: "שלחו לנו את שאלתכם ונחזור אליכם במייל.", messagePlaceholder: "איך נוכל לעזור?", interestTag: "פנייה לתמיכה", messageLabel: "הודעה", successTitle: "תודה רבה!", successMessage: "קיבלנו את הפנייה שלך ונחזור אליך בהקדם במייל.", closeLabel: "סגירה" },
+  ru: { title: "Связаться с поддержкой", subtitle: "Отправьте нам свой вопрос, и мы ответим по электронной почте.", messagePlaceholder: "Чем мы можем помочь?", interestTag: "Запрос в поддержку", messageLabel: "Сообщение", successTitle: "Спасибо!", successMessage: "Мы получили ваше сообщение и ответим вам по электронной почте как можно скорее.", closeLabel: "Закрыть" },
+  ar: { title: "التواصل مع الدعم", subtitle: "أرسل لنا سؤالك وسنعود إليك عبر البريد الإلكتروني.", messagePlaceholder: "كيف يمكننا المساعدة؟", interestTag: "طلب دعم", messageLabel: "رسالتك", successTitle: "شكرًا لك!", successMessage: "لقد استلمنا رسالتك وسنرد عليك عبر البريد الإلكتروني في أقرب وقت ممكن.", closeLabel: "إغلاق" },
 };
 
 const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: Props) => {
@@ -118,9 +118,9 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
             {isSubmitted ? (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="p-12 text-center">
                 <CheckCircle className="w-16 h-16 text-gold mx-auto mb-6" />
-                <h3 className="font-heading text-2xl text-gold mb-3">{t.lead_success_title}</h3>
-                <p className="text-foreground/70 font-body leading-relaxed">{t.lead_success_text}</p>
-                <button onClick={handleClose} className="btn-outline-gold font-body text-sm mt-8">{t.lead_modal_close}</button>
+                <h3 className="font-heading text-2xl text-gold mb-3">{isSupport ? supportCopy.successTitle : t.lead_success_title}</h3>
+                <p className="text-foreground/70 font-body leading-relaxed">{isSupport ? supportCopy.successMessage : t.lead_success_text}</p>
+                <button onClick={handleClose} className="btn-outline-gold font-body text-sm mt-8">{isSupport ? supportCopy.closeLabel : t.lead_modal_close}</button>
               </motion.div>
             ) : (
               <div className="p-8 md:p-10">
