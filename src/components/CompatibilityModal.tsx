@@ -222,18 +222,47 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const isDesktopInput = !isMobile && !matchInfo && !isLoading;
 
   const isLtr = dir === "ltr";
-  const compatAvatarStyle = isLtr ? {
-    top: isMobile ? "auto" as const : 80,
-    bottom: isMobile ? 16 : ("auto" as const),
-    left: isMobile ? "auto" as const : 260,
-    right: isMobile ? 12 : ("auto" as const),
-    width: isMobile ? 64 : 140,
-    height: isMobile ? 64 : 140,
-  } : undefined;
+  // Desktop: anchor avatar at the far top-right; render Free badge to its left with spacing.
+  // Mobile keeps existing positioning.
+  const compatAvatarStyle = !isMobile ? {
+    top: 16 as const,
+    bottom: "auto" as const,
+    left: "auto" as const,
+    right: 20 as const,
+    width: 140,
+    height: 140,
+  } : (isLtr ? {
+    top: "auto" as const,
+    bottom: 16,
+    left: "auto" as const,
+    right: 12,
+    width: 64,
+    height: 64,
+  } : undefined);
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
+    <CinematicModalShell isOpen={isOpen && !gatingOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile} hideFreeBadge={!isMobile}>
+      {/* Desktop-only header overlay: TextSizeControl (top-left, beside close) + Free badge (right of avatar with spacing) */}
+      {!isMobile && (
+        <>
+          <div className="fixed top-5 left-[80px] z-[107] pointer-events-auto">
+            <TextSizeControl value={textSize} onChange={setTextSize} />
+          </div>
+          <div className="fixed top-[42px] z-[105] pointer-events-auto" style={{ right: 180 }}>
+            <span
+              className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
+              style={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
+                border: "1px solid hsl(var(--gold) / 0.2)",
+                color: "hsl(var(--gold))",
+              }}
+            >
+              {t.free_badge_label}
+            </span>
+          </div>
+        </>
+      )}
             <AnimatePresence mode="wait">
               {!matchInfo && !isLoading ? (
                 isDesktopInput ? (
@@ -375,7 +404,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
                         {aiText ? (
                           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
-                            <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                            {isMobile && (<div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>)}
                             <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
                               {renderMysticalText(aiText, textSize)}
                             </div>
