@@ -177,6 +177,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const SPREAD_LABELS = getSpreadLabels(t);
 
   const isMobileTarot = useIsMobile();
+  const [isTablet, setIsTablet] = useState<boolean>(() => typeof window !== "undefined" && window.innerWidth >= 768 && window.innerWidth < 1024);
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
+    const onChange = () => setIsTablet(mql.matches);
+    mql.addEventListener("change", onChange);
+    onChange();
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
   const [mobileTopicPhase, setMobileTopicPhase] = useState(false);
   const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
@@ -448,7 +456,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={isMobileTarot ? { position: "fixed" as const, bottom: "calc(env(safe-area-inset-bottom, 0px) + 88px)", right: 10, top: "auto", left: "auto", insetInlineStart: "unset" as const, insetInlineEnd: "unset" as const, transform: "none", width: 52, height: 52, zIndex: 90, pointerEvents: "auto" as const } : undefined}>
+    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={(isMobileTarot || isTablet) ? { position: "fixed" as const, top: 16, left: "50%", transform: "translateX(-50%)", bottom: "auto" as const, right: "auto" as const, insetInlineStart: "unset" as const, insetInlineEnd: "unset" as const, width: 56, height: 56, zIndex: 106, pointerEvents: "auto" as const } : undefined}>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
