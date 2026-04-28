@@ -1,56 +1,57 @@
-## Diagnosis
+## Targeted fix
 
-I inspected the two changed files and the supporting modules:
+Update only the `avatarStyle` prop passed to `CinematicModalShell` in `src/components/TarotModal.tsx` so the top-centered Norielle avatar applies to both mobile and tablet, but not desktop.
 
-- `src/components/MysticalTopBar.tsx` — adds `useState(contactOpen)` and renders `<LeadFormModal isOpen={contactOpen} onClose=... />` next to the header inside a fragment.
-- `src/components/MobileAiInsightOverlay.tsx` — same pattern.
-- `src/components/LeadFormModal.tsx` — uses `CinematicModalShell`, `useT`, `antiAbuse`, `supabase`, `toast`. All imports resolve. Default export is correct.
-- `src/components/CinematicModalShell.tsx` — calls `useReadingContext()` unconditionally before the `if (!isOpen) return null` guard. `ReadingProvider` does wrap the whole app in `App.tsx`, so this is fine.
-- All translation keys (`lead_*`, `a11y_whatsapp_contact`) exist in `src/i18n/types.ts` and `src/i18n/translations/*`.
-- `antiAbuse.createTimingCheck`, `fullCheck`, etc. all exist.
+### Changes
 
-On paper the code is correct and `<LeadFormModal isOpen={false} />` should render `null` and never crash. The most likely remaining cause of the blank screen is a subtle runtime issue introduced by mounting `LeadFormModal` (which transitively imports `CinematicModalShell` → `AdvisorChatPanel` and other heavy modules) inside the **always-rendered** top bar / mobile hero. Possibilities:
-1. A circular import created when `MysticalTopBar` (rendered very early) pulls in `LeadFormModal` → `CinematicModalShell` → `AdvisorChatPanel`, which itself may re-import something already in the top-bar chain.
-2. An error thrown deep in one of those modules at module-evaluation time on the homepage that wasn't visible before because `LeadFormModal` was never imported anywhere.
+1. Add tablet detection alongside the existing `isMobileTarot` (line 179). `useIsMobile` covers <768px; tablet covers 768-1023px:
 
-## Fix Strategy (surgical, no UI/UX changes)
+   ```ts
+   const isMobileTarot = useIsMobile();
+   const [isTablet, setIsTablet] = useState<boolean>(
+     () => typeof window !== "undefined" && window.innerWidth >= 768 && window.innerWidth < 1024
+   );
+   useEffect(() => {
+     const mql = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
+     const onChange = () => setIsTablet(mql.matches);
+     mql.addEventListener("change", onChange);
+     onChange();
+     return () => mql.removeEventListener("change", onChange);
+   }, []);
+   ```
 
-Isolate the contact-modal behavior into a tiny wrapper component so that:
-- The heavy `LeadFormModal` import chain does not load on initial render of `MysticalTopBar` / `MobileAiInsightOverlay`.
-- If the modal subtree throws, it cannot blank the whole page.
+2. Replace the `avatarStyle` prop on `CinematicModalShell` (line 451) with:
 
-### Steps
+   ```ts
+   avatarStyle={(isMobileTarot || isTablet) ? {
+     position: "fixed" as const,
+     top: 16,
+     left: "50%",
+     transform: "translateX(-50%)",
+     bottom: "auto" as const,
+     right: "auto" as const,
+     insetInlineStart: "unset" as const,
+     insetInlineEnd: "unset" as const,
+     width: 56,
+     height: 56,
+     zIndex: 106,
+     pointerEvents: "auto" as const,
+   } : undefined}
+   ```
 
-1. **Create `src/components/ContactButtonModal.tsx`** — a tiny self-contained wrapper that:
-   - Accepts `children` render-prop or `className`/`aria-label` props plus a trigger element.
-   - Holds its own `useState` for open/close.
-   - **Lazy-loads** `LeadFormModal` via `React.lazy` + `Suspense` (so the heavy chain only loads when the user clicks).
-   - Wraps the modal in a small error boundary that swallows render errors so a modal failure can never blank the page.
+   Desktop (≥1024px) keeps `undefined` → shell uses its existing default placement.
 
-2. **`MysticalTopBar.tsx`**:
-   - Remove the top-level `LeadFormModal` import and `contactOpen` state.
-   - Remove the trailing `<LeadFormModal ... />` mount and the wrapping fragment.
-   - Replace the `whatsappBtn` button body with `<ContactButtonModal>` rendering the same green `motion.button` exactly as it is today (same gradient, size, icon, aria-label, hover/tap animations).
+### Out of scope (no changes)
 
-3. **`MobileAiInsightOverlay.tsx`**:
-   - Remove the `LeadFormModal` import, the `contactOpen` state, and the `<LeadFormModal ... />` mount.
-   - Replace the existing in-line green contact `<button>` with `<ContactButtonModal>` rendering the same button markup unchanged.
+- Avatar image, glow, border, click behavior, advisor chat panel.
+- Tarot cards, text, translations, share buttons, reading logic, result layout, CTA.
+- Desktop placement.
+- No auto-publish.
 
-4. **Verify**:
-   - Preview renders normally (no white screen).
-   - Clicking either green button opens the existing `LeadFormModal` (same form, same `support-new-lead` route to `support@myastrologai.com`, same anti-spam, same email-not-shown-as-text guarantee).
-   - WhatsApp is not opened anywhere from these buttons.
-   - No layout, copy, color, animation, or backend change.
+### Verification
 
-### What stays untouched
-
-- Button visual design, position, size, color, icon, aria-label, animations.
-- All translations and copy.
-- `LeadFormModal.tsx` itself and its server-side flow (`send-transactional-email` → `support-new-lead` → `support@myastrologai.com`).
-- Microsoft 365 credentials and edge-function code.
-- `WhatsAppFloatingButton.tsx` (already returns `null`; left as-is).
-- All other unrelated files.
-
-### Rollback safety
-
-If the wrapper still produces a blank screen after the change, the error boundary inside `ContactButtonModal` will let the rest of the page render while logging the underlying error to the console, so we can pinpoint the real cause without leaving the user with a white page.
+- Mobile (<768px): Norielle avatar centered at the top, between close button (left) and Free badge (right), above "הקלפים שנבחרו עבורכם".
+- Tablet (768–1023px): same top-center placement.
+- Desktop (≥1024px): avatar remains in the existing default shell position.
+- Avatar tappable on all sizes; opens the existing advisor chat.
+- Cards, share buttons, AI interpretation, and CTA remain fully visible and unobstructed.

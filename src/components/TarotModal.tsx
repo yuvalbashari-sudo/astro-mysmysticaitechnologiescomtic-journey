@@ -177,6 +177,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const SPREAD_LABELS = getSpreadLabels(t);
 
   const isMobileTarot = useIsMobile();
+  const [isTablet, setIsTablet] = useState<boolean>(() => typeof window !== "undefined" && window.innerWidth >= 768 && window.innerWidth < 1024);
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
+    const onChange = () => setIsTablet(mql.matches);
+    mql.addEventListener("change", onChange);
+    onChange();
+    return () => mql.removeEventListener("change", onChange);
+  }, []);
   const [mobileTopicPhase, setMobileTopicPhase] = useState(false);
   const [selectedSpreadKey, setSelectedSpreadKey] = useState<SpreadType>("timeline");
   const selectedSpread = SPREAD_OPTIONS.find(s => s.key === selectedSpreadKey) || SPREAD_OPTIONS[0];
