@@ -225,10 +225,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   // Desktop: anchor avatar at the far top-right; render Free badge to its left with spacing.
   // Mobile keeps existing positioning.
   const compatAvatarStyle = !isMobile ? {
-    top: 16 as const,
+    top: 80 as const,
     bottom: "auto" as const,
-    left: "auto" as const,
-    right: 20 as const,
+    right: "auto" as const,
+    left: 20 as const,
     width: 140,
     height: 140,
   } : (isLtr ? {
