@@ -58,7 +58,11 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
     try {
       const interestValue = isSupport ? "support" : (formData.interest || null);
       const { error } = await supabase.from("leads").insert({ full_name: formData.name.trim().slice(0, 100), email: formData.email.trim().slice(0, 255), phone: isSupport ? null : (formData.phone.trim().slice(0, 20) || null), interest: interestValue, message: formData.message.trim().slice(0, 1000) || null });
-      if (error) throw error;
+      if (error) {
+        const isDailyLimit = error.code === "42501" || /row-level security/i.test(error.message || "");
+        if (isDailyLimit) { toast(t.lead_error_daily_limit); return; }
+        throw error;
+      }
       antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true); toast(`${t.lead_success_title}`);
 

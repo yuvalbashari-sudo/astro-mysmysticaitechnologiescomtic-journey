@@ -68,7 +68,14 @@ const LeadSection = () => {
         message: formData.message.trim().slice(0, 1000) || null,
       });
 
-      if (error) throw error;
+      if (error) {
+        const isDailyLimit = error.code === "42501" || /row-level security/i.test(error.message || "");
+        if (isDailyLimit) {
+          toast.error(t.lead_error_daily_limit);
+          return;
+        }
+        throw error;
+      }
 
       antiAbuse.recordSuccessfulAction("lead_form");
       setIsSubmitted(true);
