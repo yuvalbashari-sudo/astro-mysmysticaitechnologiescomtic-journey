@@ -134,7 +134,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                     </div>
                   )}
                   <div>
-                    <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_message}{isSupport ? " *" : ""}</label>
+                    <label className="block text-sm text-gold/80 font-body mb-2">{isSupport ? `${supportCopy.messageLabel} *` : t.lead_message}</label>
                     <textarea required={isSupport} maxLength={1000} rows={isSupport ? 5 : 3} className="mystical-input font-body resize-none" placeholder={isSupport ? supportCopy.messagePlaceholder : t.lead_message_placeholder} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} />
                   </div>
                   {/* Honeypot */}
