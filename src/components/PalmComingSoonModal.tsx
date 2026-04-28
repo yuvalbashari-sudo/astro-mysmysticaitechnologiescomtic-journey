@@ -29,7 +29,11 @@ const PalmComingSoonModal = ({ isOpen, onClose }: Props) => {
         interest: "palm",
         message: "Palm reading coming soon waitlist",
       });
-      if (error) throw error;
+      if (error) {
+        const isDailyLimit = error.code === "42501" || /row-level security/i.test(error.message || "");
+        if (isDailyLimit) { toast(t.lead_error_daily_limit); return; }
+        throw error;
+      }
       antiAbuse.recordSuccessfulAction("lead_form");
       setSubmitted(true);
     } catch {

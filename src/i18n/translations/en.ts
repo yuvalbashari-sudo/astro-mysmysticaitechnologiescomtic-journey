@@ -134,6 +134,7 @@ export const en: TranslationKeys = {
   lead_error_wait: "Please wait a moment before trying again",
   lead_error_rate_limit: "Too many submissions. Please try again later.",
   lead_error_duplicate: "This submission was already sent",
+  lead_error_daily_limit: "You've already sent a request today ✨ You can send another one tomorrow",
 
   testimonials_title: "What people experienced with ASTROLOGAI",
   testimonials_subtitle: "Real experiences of people who opened a gateway to their inner world",

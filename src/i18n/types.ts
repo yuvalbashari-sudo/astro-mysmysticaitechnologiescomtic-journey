@@ -151,6 +151,7 @@ export type TranslationKeys = {
   lead_error_wait: string;
   lead_error_rate_limit: string;
   lead_error_duplicate: string;
+  lead_error_daily_limit: string;
 
   // Testimonials
   testimonials_title: string;
