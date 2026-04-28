@@ -2227,7 +2227,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
     { icon: Sparkles, label: t.hero_menu_compatibility, side: "left" as const, index: 1 },
     { icon: Eye, label: t.hero_menu_tarot, side: "right" as const, index: 0 },
     { icon: Star, label: t.hero_menu_fullchart, side: "right" as const, index: 1 },
-    { icon: Sun, label: t.hero_menu_daily_horoscope, side: "right" as const, index: 2 },
+    { icon: Sun, label: t.hero_menu_daily_horoscope, side: "left" as const, index: 2 },
     { icon: MapPin, label: t.hero_menu_astrocarto, side: "left" as const, index: 2 },
   ], [t]);
 
