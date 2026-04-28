@@ -26,6 +26,8 @@ interface Props {
   avatarStyle?: React.CSSProperties;
   /** Hide the floating "Free" badge in the top-right (use when modal owns its own header) */
   hideFreeBadge?: boolean;
+  /** Hide the floating close button in the top-left (use when modal owns its own header) */
+  hideClose?: boolean;
   /** Strengthen dark overlay over the top portion to suppress background branding */
   topOverlay?: boolean;
 }
