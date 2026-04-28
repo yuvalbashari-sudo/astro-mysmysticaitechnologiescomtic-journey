@@ -97,8 +97,11 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
   // For the support modal we lower the advisor avatar on mobile so it visually
   // clears the "Free" badge / title strip area, and we expose A/A+/A++ text
   // size controls just under the close button (matching the wider site UX).
+  // Push the avatar 24px lower on mobile so it sits well below the top-right
+  // "Free" badge area and never overlaps the badge, logo, title, or text controls.
+  // Default mobile position is { bottom: 16 }; we shift down by 24px → bottom: -8.
   const supportAvatarStyle: React.CSSProperties | undefined = isSupport && isMobile
-    ? { bottom: 24, right: 12, top: "auto", left: "auto", width: 56, height: 56 }
+    ? { bottom: -8, right: 12, top: "auto", left: "auto", width: 64, height: 64 }
     : undefined;
 
   return (
