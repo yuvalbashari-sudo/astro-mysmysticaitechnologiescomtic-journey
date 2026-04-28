@@ -353,7 +353,11 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       },
       () => {
         setAiLoading(false);
-        setActiveReading({ type: "tarot", label: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`, summary: aiTextRef.current });
+        const cardsLines = drawnCards
+          .map((c, i) => `${selectedSpread.positionLabels[i]}: ${c.symbol} ${c.name[language] || c.name.en}`)
+          .join("\n");
+        const enrichedSummary = `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}\n${userQuestion ? `\n${userQuestion}\n` : ""}\n${cardsLines}\n\n${aiTextRef.current}`;
+        setActiveReading({ type: "tarot", label: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`, summary: enrichedSummary });
         tarotMemory.recordReading(selectedSpread.key, cardsPayload);
         mysticalProfile.recordTarotCards(
           cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
