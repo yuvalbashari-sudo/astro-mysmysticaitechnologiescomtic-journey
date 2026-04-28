@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import TextSizeControl from "@/components/TextSizeControl";
+import { useFontScale } from "@/contexts/FontScaleContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
