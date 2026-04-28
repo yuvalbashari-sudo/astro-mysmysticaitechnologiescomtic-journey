@@ -1,45 +1,56 @@
-## Goal
-Make the green floating contact button open the existing protected `LeadFormModal` instead of opening WhatsApp, on both the mobile hero overlay and the desktop top bar. No layout, copy, translation, backend, or credential changes.
+## Diagnosis
 
-## Verified facts from the codebase
-- `src/components/LeadFormModal.tsx` exports `default LeadFormModal` with props `{ isOpen, onClose, preselectedInterest? }`. It already:
-  - Inserts into `leads` table
-  - Sends `support-new-lead` template to `support@myastrologai.com` via `send-transactional-email` edge function
-  - Uses honeypot (`website_url`), `antiAbuse` cooldown / rate-limit / duplicate / timing checks
-- Existing working usage pattern across the project: `<LeadFormModal isOpen={...} onClose={() => ...} />` (e.g. matches the `isOpen`/`onClose` pattern used by all sibling modals).
-- Two green contact buttons currently call WhatsApp:
-  1. `src/components/MysticalTopBar.tsx` (desktop/tablet) — `whatsappBtn` using `whatsappUrl`
-  2. `src/components/MobileAiInsightOverlay.tsx` lines ~336–349 (mobile hero) — inline `<button onClick={() => window.open("https://wa.me/972500000000", ...)}>`
-- The standalone `src/components/WhatsAppFloatingButton.tsx` is already disabled (`return null;`) — no change needed.
-- Result-sharing WhatsApp links (ShareResultSection, RisingSignModal, TarotModal, etc.) are out of scope and will not be touched.
+I inspected the two changed files and the supporting modules:
 
-## Changes (surgical, 2 files)
+- `src/components/MysticalTopBar.tsx` — adds `useState(contactOpen)` and renders `<LeadFormModal isOpen={contactOpen} onClose=... />` next to the header inside a fragment.
+- `src/components/MobileAiInsightOverlay.tsx` — same pattern.
+- `src/components/LeadFormModal.tsx` — uses `CinematicModalShell`, `useT`, `antiAbuse`, `supabase`, `toast`. All imports resolve. Default export is correct.
+- `src/components/CinematicModalShell.tsx` — calls `useReadingContext()` unconditionally before the `if (!isOpen) return null` guard. `ReadingProvider` does wrap the whole app in `App.tsx`, so this is fine.
+- All translation keys (`lead_*`, `a11y_whatsapp_contact`) exist in `src/i18n/types.ts` and `src/i18n/translations/*`.
+- `antiAbuse.createTimingCheck`, `fullCheck`, etc. all exist.
 
-### 1) `src/components/MysticalTopBar.tsx`
-- Add import: `import LeadFormModal from "@/components/LeadFormModal";`
-- Add state: `const [contactOpen, setContactOpen] = useState(false);`
-- Remove the `whatsappUrl` constant.
-- Change `whatsappBtn` `onClick` from `window.open(whatsappUrl, ...)` to `() => setContactOpen(true)`.
-- Wrap the returned `<motion.header>` in a fragment and append `<LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />` after the header.
-- Keep button class names, gradient style, box-shadow, sizes, `MessageCircle` icon, animations, and `aria-label` exactly as-is.
+On paper the code is correct and `<LeadFormModal isOpen={false} />` should render `null` and never crash. The most likely remaining cause of the blank screen is a subtle runtime issue introduced by mounting `LeadFormModal` (which transitively imports `CinematicModalShell` → `AdvisorChatPanel` and other heavy modules) inside the **always-rendered** top bar / mobile hero. Possibilities:
+1. A circular import created when `MysticalTopBar` (rendered very early) pulls in `LeadFormModal` → `CinematicModalShell` → `AdvisorChatPanel`, which itself may re-import something already in the top-bar chain.
+2. An error thrown deep in one of those modules at module-evaluation time on the homepage that wasn't visible before because `LeadFormModal` was never imported anywhere.
 
-### 2) `src/components/MobileAiInsightOverlay.tsx`
-- Add state: `const [contactOpen, setContactOpen] = useState(false);`
-- Already imports `LeadFormModal`? No — add: `import LeadFormModal from "@/components/LeadFormModal";`
-- Change the green `<button>` (lines ~336–349) `onClick` from `window.open("https://wa.me/972500000000", ...)` to `() => setContactOpen(true)`.
-- Render `<LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />` alongside the existing `<AdvisorChatPanel>` / `<MobileOptionsSheet>` near the top of the returned JSX (line ~142).
-- Keep the button's size, gradient, box-shadow, `MessageCircle` icon, and `aria-label` unchanged.
+## Fix Strategy (surgical, no UI/UX changes)
 
-## Out of scope (will NOT change)
-- WhatsApp share links inside ShareResultSection, RisingSignModal, MonthlyForecastModal, TarotModal, TarotWorldModal, FooterCTA, LeadSection, AccessibilityStatement, ZodiacSignPage, TarotCardPage.
-- Translation strings (`hero_cta_whatsapp`, `lead_whatsapp`, etc.) — only the button behavior changes; the labels remain.
-- Backend, edge functions, M365 credentials, RLS, or `support-new-lead` template.
-- Page layout, hero composition, or any other component.
+Isolate the contact-modal behavior into a tiny wrapper component so that:
+- The heavy `LeadFormModal` import chain does not load on initial render of `MysticalTopBar` / `MobileAiInsightOverlay`.
+- If the modal subtree throws, it cannot blank the whole page.
 
-## Verification after implementation
-- Run a quick `rg` to confirm no green-button onClick still uses `wa.me` / `api.whatsapp.com`.
-- Confirm the preview at `/` renders without a blank screen.
-- Confirm clicking the green button on both mobile and desktop opens the existing `LeadFormModal` (CinematicModalShell with the form), and does not navigate away.
+### Steps
 
-## Rollback plan
-If integrating `LeadFormModal` into either file produces a render error or blank preview, revert that single file's button onClick back to the previous `window.open(...)` WhatsApp URL and remove the added state/import — restoring the working preview without touching anything else.
+1. **Create `src/components/ContactButtonModal.tsx`** — a tiny self-contained wrapper that:
+   - Accepts `children` render-prop or `className`/`aria-label` props plus a trigger element.
+   - Holds its own `useState` for open/close.
+   - **Lazy-loads** `LeadFormModal` via `React.lazy` + `Suspense` (so the heavy chain only loads when the user clicks).
+   - Wraps the modal in a small error boundary that swallows render errors so a modal failure can never blank the page.
+
+2. **`MysticalTopBar.tsx`**:
+   - Remove the top-level `LeadFormModal` import and `contactOpen` state.
+   - Remove the trailing `<LeadFormModal ... />` mount and the wrapping fragment.
+   - Replace the `whatsappBtn` button body with `<ContactButtonModal>` rendering the same green `motion.button` exactly as it is today (same gradient, size, icon, aria-label, hover/tap animations).
+
+3. **`MobileAiInsightOverlay.tsx`**:
+   - Remove the `LeadFormModal` import, the `contactOpen` state, and the `<LeadFormModal ... />` mount.
+   - Replace the existing in-line green contact `<button>` with `<ContactButtonModal>` rendering the same button markup unchanged.
+
+4. **Verify**:
+   - Preview renders normally (no white screen).
+   - Clicking either green button opens the existing `LeadFormModal` (same form, same `support-new-lead` route to `support@myastrologai.com`, same anti-spam, same email-not-shown-as-text guarantee).
+   - WhatsApp is not opened anywhere from these buttons.
+   - No layout, copy, color, animation, or backend change.
+
+### What stays untouched
+
+- Button visual design, position, size, color, icon, aria-label, animations.
+- All translations and copy.
+- `LeadFormModal.tsx` itself and its server-side flow (`send-transactional-email` → `support-new-lead` → `support@myastrologai.com`).
+- Microsoft 365 credentials and edge-function code.
+- `WhatsAppFloatingButton.tsx` (already returns `null`; left as-is).
+- All other unrelated files.
+
+### Rollback safety
+
+If the wrapper still produces a blank screen after the change, the error boundary inside `ContactButtonModal` will let the rest of the page render while logging the underlying error to the console, so we can pinpoint the real cause without leaving the user with a white page.
