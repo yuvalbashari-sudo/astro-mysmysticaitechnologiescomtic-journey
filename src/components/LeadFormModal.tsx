@@ -129,7 +129,8 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
         </div>
       )}
       {isDesktopSupport ? (
-        <div className="relative mx-auto w-full max-w-[520px]">
+        <div className="relative mx-auto w-full max-w-[640px] mt-12">
+          <AdvisorChatPanel isOpen={advisorOpen} onClose={() => setAdvisorOpen(false)} forceRightAnchor />
           {/* Framed glass panel */}
           <div
             className="relative rounded-2xl backdrop-blur-xl overflow-hidden"
