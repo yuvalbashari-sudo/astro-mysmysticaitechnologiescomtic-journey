@@ -1,57 +1,46 @@
 ## Targeted fix
 
-Update only the `avatarStyle` prop passed to `CinematicModalShell` in `src/components/TarotModal.tsx` so the top-centered Norielle avatar applies to both mobile and tablet, but not desktop.
+Switch the mobile/tablet Tarot avatar from viewport-fixed to shell-absolute centering, so it renders consistently centered in both English (LTR) and Hebrew (RTL).
 
-### Changes
+### Change
 
-1. Add tablet detection alongside the existing `isMobileTarot` (line 179). `useIsMobile` covers <768px; tablet covers 768-1023px:
+In `src/components/TarotModal.tsx`, line 459, update only the `avatarStyle` prop on `CinematicModalShell`:
 
-   ```ts
-   const isMobileTarot = useIsMobile();
-   const [isTablet, setIsTablet] = useState<boolean>(
-     () => typeof window !== "undefined" && window.innerWidth >= 768 && window.innerWidth < 1024
-   );
-   useEffect(() => {
-     const mql = window.matchMedia("(min-width: 768px) and (max-width: 1023px)");
-     const onChange = () => setIsTablet(mql.matches);
-     mql.addEventListener("change", onChange);
-     onChange();
-     return () => mql.removeEventListener("change", onChange);
-   }, []);
-   ```
+```tsx
+avatarStyle={(isMobileTarot || isTablet) ? {
+  position: "absolute" as const,
+  top: 16,
+  left: "50%",
+  transform: "translateX(-50%)",
+  bottom: "auto" as const,
+  right: "auto" as const,
+  insetInlineStart: "unset" as const,
+  insetInlineEnd: "unset" as const,
+  width: 56,
+  height: 56,
+  zIndex: 106,
+  pointerEvents: "auto" as const,
+} : undefined}
+```
 
-2. Replace the `avatarStyle` prop on `CinematicModalShell` (line 451) with:
+The only change vs. current code is `position: "fixed"` → `position: "absolute"`.
 
-   ```ts
-   avatarStyle={(isMobileTarot || isTablet) ? {
-     position: "fixed" as const,
-     top: 16,
-     left: "50%",
-     transform: "translateX(-50%)",
-     bottom: "auto" as const,
-     right: "auto" as const,
-     insetInlineStart: "unset" as const,
-     insetInlineEnd: "unset" as const,
-     width: 56,
-     height: 56,
-     zIndex: 106,
-     pointerEvents: "auto" as const,
-   } : undefined}
-   ```
+### Why this fixes English drift
 
-   Desktop (≥1024px) keeps `undefined` → shell uses its existing default placement.
+The shell's outer wrapper is `fixed inset-0` and is mounted via portal directly under `<body>`. Using `position: absolute` anchors the avatar to that shell rather than to the viewport, sidestepping any transformed ancestor or scrollbar-width quirks that can shift a `fixed` element off-center on LTR layouts. RTL behavior is preserved because `left: 50%` + `translateX(-50%)` is a physical centering that ignores writing direction; Hebrew remains visually centered as before.
 
 ### Out of scope (no changes)
 
-- Avatar image, glow, border, click behavior, advisor chat panel.
+- Desktop branch (still `undefined`).
+- Avatar image, size, glow, border, click behavior, advisor chat panel.
 - Tarot cards, text, translations, share buttons, reading logic, result layout, CTA.
-- Desktop placement.
+- `CinematicModalShell.tsx`, `AvatarHoverTeaser.tsx`, tablet detection logic.
 - No auto-publish.
 
 ### Verification
 
-- Mobile (<768px): Norielle avatar centered at the top, between close button (left) and Free badge (right), above "הקלפים שנבחרו עבורכם".
-- Tablet (768–1023px): same top-center placement.
-- Desktop (≥1024px): avatar remains in the existing default shell position.
-- Avatar tappable on all sizes; opens the existing advisor chat.
-- Cards, share buttons, AI interpretation, and CTA remain fully visible and unobstructed.
+- English mobile (<768px) and tablet (768–1023px): avatar visually centered between close button (left) and Free badge (right), above the result title.
+- Hebrew mobile/tablet: avatar still centered, no RTL drift.
+- Avatar remains tappable and opens the existing advisor chat.
+- Desktop (≥1024px): avatar position unchanged.
+- Cards, share buttons, AI interpretation, and CTA remain fully visible.
