@@ -227,11 +227,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     </div>
   );
 
-  const whatsappUrl = "https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI";
-
   const whatsappBtn = (
     <motion.button
-      onClick={() => window.open(whatsappUrl, "_blank", "noopener,noreferrer")}
+      onClick={() => setContactOpen(true)}
       className={`${iconBtn} w-9 h-9 md:w-12 md:h-12`}
       style={{
         background:
