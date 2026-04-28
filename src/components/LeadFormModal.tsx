@@ -201,7 +201,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                 <button onClick={handleClose} className="btn-outline-gold font-body text-sm mt-7">{supportCopy.closeLabel}</button>
               </motion.div>
             ) : (
-              <div className="px-8 pt-6 pb-8">
+              <div className="px-12 pt-8 pb-10">
                 <div className="text-center mb-6">
                   <div className="w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}>
                     <Sparkles className="w-5 h-5 text-gold" />
