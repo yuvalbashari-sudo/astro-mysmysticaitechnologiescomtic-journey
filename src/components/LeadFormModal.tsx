@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 import { Send, CheckCircle, Sparkles, X } from "lucide-react";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
+import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
