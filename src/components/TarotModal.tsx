@@ -448,7 +448,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={isMobileTarot ? { position: "absolute" as const, top: 8, left: "50%", right: "auto", bottom: "auto", transform: "translateX(-50%)", width: 73, height: 73, maxWidth: "calc(100% - 16px)", maxHeight: "calc(100% - 16px)" } : undefined}>
+    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={isMobileTarot ? { position: "fixed" as const, bottom: 16, right: 12, top: "auto", left: "auto", transform: "none", width: 72, height: 72, zIndex: 200 } : undefined}>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">
