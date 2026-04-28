@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
 import { useIsMobile } from "@/hooks/use-mobile";
+import LeadFormModal from "@/components/LeadFormModal";
 
 interface Props {
   onOpenHistory?: () => void;
@@ -32,6 +33,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   const isHomepage = pathname === "/";
   const [isTablet, setIsTablet] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   useEffect(() => {
     const check = () => {
@@ -225,11 +227,9 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     </div>
   );
 
-  const whatsappUrl = "https://wa.me/972500000000?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A2%D7%95%D7%93%20%D7%A2%D7%9C%20ASTROLOGAI";
-
   const whatsappBtn = (
     <motion.button
-      onClick={() => window.open(whatsappUrl, "_blank", "noopener,noreferrer")}
+      onClick={() => setContactOpen(true)}
       className={`${iconBtn} w-9 h-9 md:w-12 md:h-12`}
       style={{
         background:
@@ -245,6 +245,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
   );
 
   return (
+    <>
     <motion.header
       className="fixed top-0 left-0 right-0 z-[90] px-2 sm:px-4 md:px-8 py-1 md:py-3 pointer-events-auto"
       dir={dir}
@@ -424,6 +425,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
         </div>
       )}
     </motion.header>
+    <LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
+    </>
   );
 };
 

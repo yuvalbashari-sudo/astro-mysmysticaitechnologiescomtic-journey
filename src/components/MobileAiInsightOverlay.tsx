@@ -6,6 +6,7 @@ import { useLanguage, useT } from "@/i18n";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import MobileOptionsSheet from "./MobileOptionsSheet";
+import LeadFormModal from "./LeadFormModal";
 import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 
@@ -53,6 +54,7 @@ const MobileAiInsightOverlay = () => {
   const [visible, setVisible] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [optionsOpen, setOptionsOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
   const [variant, setVariant] = useState<Variant>("A");
 
   // Show on first session only; sessionStorage so it returns next visit.
@@ -141,6 +143,7 @@ const MobileAiInsightOverlay = () => {
     <>
       <AdvisorChatPanel isOpen={chatOpen} onClose={() => setChatOpen(false)} />
       <MobileOptionsSheet isOpen={optionsOpen} onClose={() => setOptionsOpen(false)} />
+      <LeadFormModal isOpen={contactOpen} onClose={() => setContactOpen(false)} />
 
       <AnimatePresence>
         {visible && (
@@ -335,7 +338,7 @@ const MobileAiInsightOverlay = () => {
                   </Link>
                   <button
                     type="button"
-                    onClick={() => window.open("https://wa.me/972500000000", "_blank", "noopener,noreferrer")}
+                    onClick={() => setContactOpen(true)}
                     aria-label={t.a11y_whatsapp_contact}
                     className="flex items-center justify-center rounded-full transition-all"
                     style={{
