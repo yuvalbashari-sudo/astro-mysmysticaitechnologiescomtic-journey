@@ -452,11 +452,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
-  // No pre-calculated vars needed — cards sized via CSS in the container
+  const isTarotResultScreen = Boolean(cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase);
+  const tarotAvatarStyle = (isMobileTarot || isTablet) ? { position: "absolute" as const, top: isTarotResultScreen ? 16 : 84, left: "50%", transform: "translateX(-50%)", bottom: "auto" as const, right: "auto" as const, insetInlineStart: "unset" as const, insetInlineEnd: "unset" as const, width: 56, height: 56, zIndex: 106, pointerEvents: "auto" as const } : undefined;
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={(isMobileTarot || isTablet) ? { position: "absolute" as const, top: (cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase) ? 16 : 84, left: "50%", transform: "translateX(-50%)", bottom: "auto" as const, right: "auto" as const, insetInlineStart: "unset" as const, insetInlineEnd: "unset" as const, width: 56, height: 56, zIndex: 106, pointerEvents: "auto" as const } : undefined}>
+    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={tarotAvatarStyle}>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <AnimatePresence mode="wait">

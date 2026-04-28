@@ -214,8 +214,9 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           {!hideAdvisor && (
             <AvatarHoverTeaser
               disabled={false}
-              className="absolute z-[106]"
+              className="z-[106]"
               style={avatarStyle ?? (isMobile ? {
+                position: "absolute",
                 bottom: 16,
                 right: 12,
                 top: "auto",
@@ -223,6 +224,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 width: 64,
                 height: 64,
               } : {
+                position: "absolute",
                 bottom: 32,
                 right: 40,
                 left: "auto",
