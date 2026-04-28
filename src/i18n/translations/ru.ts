@@ -134,6 +134,7 @@ export const ru: TranslationKeys = {
   lead_error_wait: "Подождите мгновение перед новой попыткой",
   lead_error_rate_limit: "Слишком много запросов. Попробуйте чуть позже.",
   lead_error_duplicate: "Эта заявка уже отправлена",
+  lead_error_daily_limit: "Вы уже отправили заявку сегодня ✨ Попробуйте снова завтра",
 
   testimonials_title: "Что люди прожили вместе с ASTROLOGAI",
   testimonials_subtitle: "Живые истории тех, кто открыл врата к своему внутреннему миру",

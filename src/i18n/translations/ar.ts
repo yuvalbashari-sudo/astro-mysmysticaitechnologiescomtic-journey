@@ -134,6 +134,7 @@ export const ar: TranslationKeys = {
   lead_error_wait: "انتظر لحظةً قبل المحاولة مجدّدًا",
   lead_error_rate_limit: "محاولات كثيرة في وقت قصير. حاول لاحقًا.",
   lead_error_duplicate: "هذه الرسالة أُرسلت بالفعل",
+  lead_error_daily_limit: "لقد أرسلت طلبًا اليوم بالفعل ✨ يمكنك المحاولة مرة أخرى غدًا",
 
   testimonials_title: "ما عاشه الناس مع ASTROLOGAI",
   testimonials_subtitle: "قصص حقيقية لأشخاصٍ فتحوا بوابةً إلى عالمهم الداخلي",

@@ -134,6 +134,7 @@ export const he: TranslationKeys = {
   lead_error_wait: "אנא המתינו רגע לפני ניסיון נוסף",
   lead_error_rate_limit: "יותר מדי פניות. נסו שוב מאוחר יותר",
   lead_error_duplicate: "הפנייה הזו כבר נשלחה",
+  lead_error_daily_limit: "כבר שלחת בקשה היום ✨ ניתן לשלוח שוב מחר",
 
   testimonials_title: "מה אנשים חוו עם ASTROLOGAI",
   testimonials_subtitle: "חוויות אמיתיות של אנשים שפתחו שער לעולם הפנימי שלהם",
