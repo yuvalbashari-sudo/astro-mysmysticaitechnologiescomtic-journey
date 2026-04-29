@@ -3,18 +3,31 @@ import { motion } from "framer-motion";
 import { Star, Heart, Briefcase, Coins, Sparkles, Activity, Flame } from "lucide-react";
 import CinematicModalShell from "./CinematicModalShell";
 import { zodiacData, type ZodiacSign } from "@/data/zodiacData";
-import { useT } from "@/i18n";
+import { useT, useLanguage } from "@/i18n";
+import { getSignName, getElementName } from "@/lib/astroLocale";
 
 const ZODIAC_KEYS = [
   "aries", "taurus", "gemini", "cancer", "leo", "virgo",
   "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
 ];
 
-const ELEMENT_COLORS: Record<string, string> = {
-  אש: "20 80% 55%",
-  אדמה: "85 50% 45%",
-  אוויר: "270 60% 60%",
-  מים: "210 70% 55%",
+/**
+ * Element key (English) → element accent hue. Element on `zodiacData` is
+ * stored in Hebrew, so we first map the literal to a stable English key,
+ * then look up both the color and the localized label.
+ */
+const ELEMENT_KEY_FROM_HE: Record<string, "fire" | "earth" | "air" | "water"> = {
+  אש: "fire",
+  אדמה: "earth",
+  אוויר: "air",
+  מים: "water",
+};
+
+const ELEMENT_COLORS: Record<"fire" | "earth" | "air" | "water", string> = {
+  fire: "20 80% 55%",
+  earth: "85 50% 45%",
+  air: "270 60% 60%",
+  water: "210 70% 55%",
 };
 
 interface Props {
