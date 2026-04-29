@@ -685,6 +685,9 @@ export const ru: TranslationKeys = {
   promo_video_wait_hint: "Продолжить можно через {s} с…",
   promo_video_continue_label: "Перейти к полному чтению",
   promo_video_skip_label: "Пропустить",
+  unlock_preview_label: "Предпросмотр",
+  unlock_cta_label: "Открыть полное чтение",
+  unlock_subtitle: "Посмотрите короткое сообщение от нас, затем откройте полное чтение.",
 
   chart_title: "Астрологическая натальная карта",
   chart_subtitle: "Раскройте полную карту рождения на основе даты, времени и места рождения — с личным колесом, планетами, домами и глубокой интерпретацией.",
