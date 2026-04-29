@@ -130,7 +130,7 @@ export function getLocalizedMonth(month: Date | string | number, locale: Languag
  * when the active locale is missing the key. NEVER falls back to Hebrew.
  */
 export function getLocalizedLabel(labelKey: string, locale: Language): string {
-  const table = translations as unknown as Record<Language, Record<string, string>>;
+  const table = translationTables;
   const localized = table[locale]?.[labelKey];
   if (typeof localized === "string" && localized.length > 0) {
     assertNoMixedLanguage(localized, locale, `label:${labelKey}`);
