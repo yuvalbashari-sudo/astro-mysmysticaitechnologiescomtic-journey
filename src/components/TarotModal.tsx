@@ -285,11 +285,16 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }
   };
 
+  // Lazy AI generation kickoff. Captured at card-selection time, fired only
+  // when the user clicks the unlock CTA so the model isn't called prematurely.
+  const startAIRef = useRef<null | (() => void)>(null);
+  const aiStartedRef = useRef(false);
+
   const handleFanSelectionComplete = (selectedCards: ReadingCard[]) => {
     // Flow B: fan spreads skip table phase, go directly to results
     setIsShufflePhase(false);
     setCards(selectedCards);
-    startAIReading(selectedCards);
+    prepareAIReading(selectedCards);
     readingsStorage.save({
       type: "tarot",
       title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpreadKey]}`,
@@ -325,7 +330,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           setTimeout(() => {
             setCards(tableCards);
             setIsTablePhase(false);
-            startAIReading(tableCards);
+            prepareAIReading(tableCards);
             readingsStorage.save({
               type: "tarot",
               title: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`,
@@ -340,10 +345,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
 
-  const startAIReading = (drawnCards: ReadingCard[]) => {
-    setAiLoading(true);
+  // Stages the AI request without firing it. The actual streamTarotReading
+  // call happens inside startAIRef.current(), invoked by the unlock overlay.
+  const prepareAIReading = (drawnCards: ReadingCard[]) => {
     aiTextRef.current = "";
     setAiText("");
+    setAiLoading(false);
+    aiStartedRef.current = false;
 
     const cardsPayload = drawnCards.map((c, i) => ({
       hebrewName: c.name.he,
@@ -352,40 +360,45 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       positionLabel: selectedSpread.positionLabels[i],
     }));
 
-    streamTarotReading(
-      selectedSpread.key,
-      cardsPayload,
-      (delta) => {
-        aiTextRef.current += delta;
-        setAiText(aiTextRef.current);
-      },
-      () => {
-        setAiLoading(false);
-        const cardsLines = drawnCards
-          .map((c, i) => `${selectedSpread.positionLabels[i]}: ${c.symbol} ${c.name[language] || c.name.en}`)
-          .join("\n");
-        const enrichedSummary = `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}\n${userQuestion ? `\n${userQuestion}\n` : ""}\n${cardsLines}\n\n${aiTextRef.current}`;
-        setActiveReading({ type: "tarot", label: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`, summary: enrichedSummary });
-        tarotMemory.recordReading(selectedSpread.key, cardsPayload);
-        mysticalProfile.recordTarotCards(
-          cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
-          selectedSpread.key
-        );
-        // Save to session cache for reuse on reopen
-        saveTarotCache({
-          date: new Date().toISOString().split("T")[0],
-          language,
-          spreadKey: selectedSpread.key,
-          cards: drawnCards,
-          aiText: aiTextRef.current,
-        });
-        sessionStorage.setItem("_dbg_tarot_source", "fresh");
-      },
-      (err) => { setAiLoading(false); toast(err); },
-      userQuestion,
-      { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
-      language,
-    );
+    startAIRef.current = () => {
+      if (aiStartedRef.current) return;
+      aiStartedRef.current = true;
+      setAiLoading(true);
+      streamTarotReading(
+        selectedSpread.key,
+        cardsPayload,
+        (delta) => {
+          aiTextRef.current += delta;
+          setAiText(aiTextRef.current);
+        },
+        () => {
+          setAiLoading(false);
+          const cardsLines = drawnCards
+            .map((c, i) => `${selectedSpread.positionLabels[i]}: ${c.symbol} ${c.name[language] || c.name.en}`)
+            .join("\n");
+          const enrichedSummary = `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}\n${userQuestion ? `\n${userQuestion}\n` : ""}\n${cardsLines}\n\n${aiTextRef.current}`;
+          setActiveReading({ type: "tarot", label: `${t.readings_type_tarot} — ${SPREAD_LABELS[selectedSpread.key]}`, summary: enrichedSummary });
+          tarotMemory.recordReading(selectedSpread.key, cardsPayload);
+          mysticalProfile.recordTarotCards(
+            cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
+            selectedSpread.key
+          );
+          // Save to session cache for reuse on reopen
+          saveTarotCache({
+            date: new Date().toISOString().split("T")[0],
+            language,
+            spreadKey: selectedSpread.key,
+            cards: drawnCards,
+            aiText: aiTextRef.current,
+          });
+          sessionStorage.setItem("_dbg_tarot_source", "fresh");
+        },
+        (err) => { setAiLoading(false); aiStartedRef.current = false; toast(err); },
+        userQuestion,
+        { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
+        language,
+      );
+    };
   };
 
   // Scroll to top when results appear
