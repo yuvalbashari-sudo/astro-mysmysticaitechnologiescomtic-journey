@@ -1,76 +1,45 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { Globe } from "lucide-react";
-import { createPortal } from "react-dom";
 import { languageConfig, useLanguage, useT, type Language } from "@/i18n";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
-const PORTAL_MENU_Z_INDEX = 2147483647;
-const VIEWPORT_PADDING = 12;
-const MENU_GAP = 8;
+const MENU_Z_INDEX = 2147483647;
 
 const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }) => {
-  const { language, setLanguage, dir } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const t = useT();
-  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { setMounted(true); }, []);
-
-  // Close on outside click / escape
   useEffect(() => {
     if (!open) return;
+
     const handlePointerDown = (e: PointerEvent) => {
-      const target = e.target as Node;
-      if (triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return;
+      if (rootRef.current?.contains(e.target as Node)) return;
       setOpen(false);
     };
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setOpen(false); triggerRef.current?.focus(); }
+      if (e.key === "Escape") setOpen(false);
     };
-    document.addEventListener("pointerdown", handlePointerDown, true);
+
+    document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleEscape);
+
     return () => {
-      document.removeEventListener("pointerdown", handlePointerDown, true);
+      document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleEscape);
     };
   }, [open]);
 
-  // Compute menu position from trigger rect
-  const getMenuPosition = useCallback(() => {
-    const el = triggerRef.current;
-    if (!el) return { top: 0, left: 0 };
-    const rect = el.getBoundingClientRect();
-    const menuWidth = 180;
-    const top = rect.bottom + MENU_GAP;
-    const idealLeft = dir === "rtl"
-      ? rect.left
-      : rect.right - menuWidth;
-    const left = Math.min(
-      Math.max(idealLeft, VIEWPORT_PADDING),
-      window.innerWidth - menuWidth - VIEWPORT_PADDING,
-    );
-    return { top, left };
-  }, [dir]);
-
-  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
-
-  useLayoutEffect(() => {
-    if (open) setMenuPos(getMenuPosition());
-  }, [open, getMenuPosition, language]);
-
   const labelText = language === "he" ? "שפות" : language === "ar" ? "اللغات" : language === "ru" ? "Языки" : "Languages";
 
   return (
-    <>
-      {/* Trigger */}
-      <motion.button
-        ref={triggerRef}
+    <div ref={rootRef} className="relative shrink-0" style={{ zIndex: open ? MENU_Z_INDEX : undefined }}>
+      <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className={`flex items-center justify-center shrink-0 backdrop-blur-md transition-all ${
+        className={`flex items-center justify-center shrink-0 backdrop-blur-md transition-transform active:scale-95 hover:scale-105 ${
           showLabel
             ? "gap-2 rounded-full px-4 py-2.5"
             : "rounded-full w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12"
@@ -80,8 +49,6 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
           border: "1px solid hsl(var(--gold) / 0.18)",
           color: "hsl(var(--gold) / 0.78)",
         }}
-        whileHover={{ scale: 1.05, borderColor: "hsl(var(--gold) / 0.35)" }}
-        whileTap={{ scale: 0.95 }}
         aria-label={t.a11y_language_selector}
         aria-expanded={open}
         aria-haspopup="listbox"
@@ -92,25 +59,20 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
             {labelText}
           </span>
         )}
-      </motion.button>
+      </button>
 
-      {/* Dropdown menu – portalled */}
-      {mounted && open && createPortal(
+      {open && (
         <div
-          ref={menuRef}
-          className="fixed overflow-hidden rounded-2xl p-1.5 text-foreground animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-150"
+          className={`absolute top-full mt-2 overflow-hidden rounded-2xl p-1.5 text-foreground animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-150 ${showLabel ? "end-0" : "start-0"}`}
           style={{
-            top: menuPos.top,
-            left: menuPos.left,
-            zIndex: PORTAL_MENU_Z_INDEX,
+            zIndex: MENU_Z_INDEX,
             width: 180,
-            maxHeight: mounted ? Math.max(160, window.innerHeight - menuPos.top - VIEWPORT_PADDING) : 320,
+            maxHeight: "min(320px, calc(100vh - 84px))",
             overflowY: "auto",
             overscrollBehavior: "contain",
             background: "hsl(var(--card))",
             border: "1px solid hsl(var(--gold) / 0.3)",
             boxShadow: "0 32px 80px hsl(var(--deep-blue) / 0.96), 0 0 0 1px hsl(var(--border))",
-            transformOrigin: dir === "rtl" ? "top left" : "top right",
             pointerEvents: "auto",
           }}
           role="listbox"
@@ -124,20 +86,11 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
                 type="button"
                 role="option"
                 aria-selected={isSelected}
-                onClick={() => { setLanguage(lang); setOpen(false); }}
-                onMouseEnter={(e) => {
-                  if (!isSelected) {
-                    e.currentTarget.style.background = "hsl(var(--muted))";
-                    e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.18)";
-                  }
+                onClick={() => {
+                  setLanguage(lang);
+                  setOpen(false);
                 }}
-                onMouseLeave={(e) => {
-                  if (!isSelected) {
-                    e.currentTarget.style.background = "hsl(var(--deep-blue))";
-                    e.currentTarget.style.borderColor = "hsl(var(--border))";
-                  }
-                }}
-                className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body transition-colors"
+                className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body transition-colors hover:bg-muted"
                 style={{
                   color: isSelected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.96)",
                   background: isSelected ? "hsl(var(--deep-blue-light))" : "hsl(var(--deep-blue))",
@@ -154,10 +107,9 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
               </button>
             );
           })}
-        </div>,
-        document.body,
+        </div>
       )}
-    </>
+    </div>
   );
 };
 
