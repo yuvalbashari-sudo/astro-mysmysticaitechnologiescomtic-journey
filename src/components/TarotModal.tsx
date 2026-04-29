@@ -1075,7 +1075,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                     {aiText && (
                       <PremiumUnlockOverlay
-                        readingId={`tarot:${selectedSpread.key}:${cards.map(c => c.id ?? c.symbol).join("-")}:${userQuestion || ""}`}
+                        readingId={`tarot:${selectedSpread.key}:${cards.map(c => c.id).join("-")}:${userQuestion || ""}`}
                         featureKey="tarot_reading"
                       >
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
