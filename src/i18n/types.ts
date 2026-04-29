@@ -698,6 +698,7 @@ export type TranslationKeys = {
   seo_section_spiritual: string;
   seo_section_advice: string;
   seo_section_personality: string;
+  zodiac_monthly_energy_label: string;
   seo_section_money: string;
   seo_section_health: string;
   seo_section_sensual: string;
