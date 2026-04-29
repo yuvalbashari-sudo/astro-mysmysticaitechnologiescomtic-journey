@@ -682,6 +682,9 @@ export const he: TranslationKeys = {
   gating_resets_in: "מתאפס בעוד {time}",
   gating_resets_in_days: "מתאפס בעוד {days} ימים ו-{hours} שעות",
   gating_or_pay_now: "צריכים קריאה עכשיו?",
+  promo_video_wait_hint: "אפשר להמשיך בעוד {s} שניות…",
+  promo_video_continue_label: "המשך לקריאה המלאה",
+  promo_video_skip_label: "דלג",
 
   chart_title: "מפת לידה אסטרולוגית",
   chart_subtitle: "חשפו מפת לידה מלאה המבוססת על תאריך, שעה ומקום הלידה שלכם — עם גלגל אישי, כוכבי לכת, בתים ופירוש עמוק.",

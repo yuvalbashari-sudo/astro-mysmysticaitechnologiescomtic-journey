@@ -682,6 +682,9 @@ export const en: TranslationKeys = {
   gating_resets_in: "Resets in {time}",
   gating_resets_in_days: "Resets in {days}d {hours}h",
   gating_or_pay_now: "Need a reading right now?",
+  promo_video_wait_hint: "Continue available in {s}s…",
+  promo_video_continue_label: "Continue to full reading",
+  promo_video_skip_label: "Skip",
 
   chart_title: "Birth chart",
   chart_subtitle: "Get your full birth chart from your date, time, and place of birth — with a personal wheel, planets, houses, and a deep reading.",

@@ -682,6 +682,9 @@ export const ru: TranslationKeys = {
   gating_resets_in: "Обновится через {time}",
   gating_resets_in_days: "Обновится через {days}д {hours}ч",
   gating_or_pay_now: "Нужно чтение прямо сейчас?",
+  promo_video_wait_hint: "Продолжить можно через {s} с…",
+  promo_video_continue_label: "Перейти к полному чтению",
+  promo_video_skip_label: "Пропустить",
 
   chart_title: "Астрологическая натальная карта",
   chart_subtitle: "Раскройте полную карту рождения на основе даты, времени и места рождения — с личным колесом, планетами, домами и глубокой интерпретацией.",

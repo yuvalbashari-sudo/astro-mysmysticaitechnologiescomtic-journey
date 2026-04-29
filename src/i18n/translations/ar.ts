@@ -682,6 +682,9 @@ export const ar: TranslationKeys = {
   gating_resets_in: "يتجدد خلال {time}",
   gating_resets_in_days: "يتجدد خلال {days} يوم و{hours} ساعة",
   gating_or_pay_now: "تحتاج قراءة الآن؟",
+  promo_video_wait_hint: "يمكن المتابعة خلال {s} ث…",
+  promo_video_continue_label: "متابعة إلى القراءة الكاملة",
+  promo_video_skip_label: "تخطّي",
 
   chart_title: "خريطة الميلاد الفلكية",
   chart_subtitle: "اكتشفوا خريطة ميلادكم الكاملة بناءً على تاريخ ووقت ومكان الولادة — مع عجلة شخصية وكواكب وبيوت وتفسير عميق.",
