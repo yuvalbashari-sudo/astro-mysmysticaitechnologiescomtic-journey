@@ -6,6 +6,7 @@ import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
 import { getZodiacSign } from "@/data/zodiacData";
+import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
