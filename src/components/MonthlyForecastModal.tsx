@@ -216,7 +216,14 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 {aiText ? (
                   <PremiumUnlockOverlay
                     readingId={`forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`}
-                    featureKey="compatibility_reading"
+                    featureKey="monthly_horoscope"
+                    customGatingMessage={{
+                      he: "פתח את התחזית החודשית המלאה תמורת ₪9.",
+                      en: "Unlock your full monthly forecast for ₪9.",
+                      ar: "افتح توقعاتك الشهرية الكاملة مقابل 9 ₪.",
+                      ru: "Откройте ваш полный месячный прогноз за ₪9.",
+                      priceILS: 9,
+                    }}
                   >
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
