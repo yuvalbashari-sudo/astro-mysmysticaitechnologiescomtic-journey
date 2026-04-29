@@ -13,6 +13,8 @@ import { useFontScale } from "@/contexts/FontScaleContext";
 import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
 import MysticalDateInput from "./MysticalDateInput";
 import { isAdminTestMode, getAdminSafeProfile, getAdminSafeZodiac } from "@/lib/adminTestMode";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
   { sign: "Capricorn", start: [1, 1], end: [1, 19] },
