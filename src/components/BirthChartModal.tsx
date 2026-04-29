@@ -23,6 +23,7 @@ import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
 import type { AuraResult } from "@/lib/auraResultBank";
 import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 
 const CHART_DAILY_KEY = "astrologai_birthchart_daily";
 const CHART_CACHE_KEY = "astrologai_birthchart_cache";
@@ -747,11 +748,23 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 )}
 
                 {resultText && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
-                    <div dir={dir} style={{ textAlign: isRTL ? "right" : "left", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
-                      {renderMysticalText(resultText, textSize)}
-                    </div>
-                  </motion.div>
+                  <PremiumUnlockOverlay
+                    readingId={`natal:${userName}:${birthDate}:${birthTime}:${birthCity}`}
+                    featureKey="monthly_horoscope"
+                    customGatingMessage={{
+                      he: "פתח את מפת הלידה השלמה והקריאה המעמיקה תמורת ₪19.",
+                      en: "Unlock your full birth chart and deep reading for ₪19.",
+                      ar: "افتح خريطتك الفلكية الكاملة وقراءتك العميقة مقابل 19 ₪.",
+                      ru: "Откройте вашу полную натальную карту и глубокое чтение за ₪19.",
+                      priceILS: 19,
+                    }}
+                  >
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
+                      <div dir={dir} style={{ textAlign: isRTL ? "right" : "left", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
+                        {renderMysticalText(resultText, textSize)}
+                      </div>
+                    </motion.div>
+                  </PremiumUnlockOverlay>
                 )}
 
                 {phase === "result" && (
