@@ -1095,16 +1095,20 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     )}
                   </motion.div>
 
-                  <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => localizedName(c)).join(" • ")} subtitle={t.readings_type_tarot} readingText={aiText || undefined} />
+                  {tarotUnlocked && (
+                    <>
+                      <ShareResultSection symbol={cards[0].symbol} title={cards.map(c => localizedName(c)).join(" • ")} subtitle={t.readings_type_tarot} readingText={aiText || undefined} />
 
-                  {/* Premium CTA */}
-                  <div className="section-divider max-w-[200px] mx-auto my-8" />
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-10 backdrop-blur-md relative z-10" style={{ background: "linear-gradient(165deg, hsl(222 35% 10% / 0.95), hsl(222 45% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.12)", boxShadow: "0 4px 24px hsl(0 0% 0% / 0.4)" }}>
-                    <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
-                    <h4 className="font-heading text-2xl text-gold mb-4">{t.tarot_premium_title}</h4>
-                    <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
-                    <a href="#premium" onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4"><Sparkles className="w-5 h-5" />{t.tarot_premium_cta}</a>
-                  </motion.div>
+                      {/* Premium CTA */}
+                      <div className="section-divider max-w-[200px] mx-auto my-8" />
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-center rounded-xl p-10 backdrop-blur-md relative z-10" style={{ background: "linear-gradient(165deg, hsl(222 35% 10% / 0.95), hsl(222 45% 6% / 0.98))", border: "1px solid hsl(var(--gold) / 0.12)", boxShadow: "0 4px 24px hsl(0 0% 0% / 0.4)" }}>
+                        <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
+                        <h4 className="font-heading text-2xl text-gold mb-4">{t.tarot_premium_title}</h4>
+                        <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
+                        <a href="#premium" onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4"><Sparkles className="w-5 h-5" />{t.tarot_premium_cta}</a>
+                      </motion.div>
+                    </>
+                  )}
                 </motion.div>
               ) : null}
             </AnimatePresence>
