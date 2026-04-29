@@ -184,7 +184,7 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
                 className="w-full flex flex-col items-center gap-2"
               >
                 <button
-                  onClick={handleContinue}
+                  onClick={() => handleContinue("continue_button")}
                   className="w-full sm:w-auto sm:min-w-[280px] btn-gold py-3.5 px-8 rounded-xl font-body font-bold text-sm tracking-wider flex items-center justify-center gap-2"
                   style={{
                     boxShadow:
