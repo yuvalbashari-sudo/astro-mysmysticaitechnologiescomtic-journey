@@ -189,24 +189,18 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
         </button>
       </motion.div>
 
-      {/* Promo video → on continue, open payment modal */}
+      {/*
+        Promo video IS the unlock mechanism (payment disabled for now).
+        Continuing or finishing the video unlocks the full reading directly.
+        PaymentGatingModal kept imported for future re-enablement.
+      */}
       <PromoVideoModal
         isOpen={promoOpen}
         onClose={() => setPromoOpen(false)}
         onContinue={() => {
           setPromoOpen(false);
-          setPaymentOpen(true);
+          handleUnlock();
         }}
-      />
-
-      {/* Payment / upgrade modal — promo already played, skip its inner video */}
-      <PaymentGatingModal
-        isOpen={paymentOpen}
-        onClose={() => setPaymentOpen(false)}
-        gatingMessage={gatingMessage}
-        resetCycle={resetCycle}
-        onPayPerUse={handleUnlock}
-        skipPromoVideo
       />
     </div>
   );
