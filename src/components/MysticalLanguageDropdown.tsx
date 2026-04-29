@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Globe } from "lucide-react";
 import { createPortal } from "react-dom";
 import { languageConfig, useLanguage, useT, type Language } from "@/i18n";
@@ -95,74 +95,66 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
       </motion.button>
 
       {/* Dropdown menu – portalled */}
-      {mounted && createPortal(
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              ref={menuRef}
-              initial={{ opacity: 0, y: -8, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -8, scale: 0.96 }}
-              transition={{ duration: 0.16, ease: "easeOut" }}
-              className="fixed overflow-hidden rounded-2xl p-1.5 text-foreground"
-              style={{
-                top: menuPos.top,
-                left: menuPos.left,
-                zIndex: PORTAL_MENU_Z_INDEX,
-                width: 180,
-                maxHeight: mounted ? Math.max(160, window.innerHeight - menuPos.top - VIEWPORT_PADDING) : 320,
-                overflowY: "auto",
-                overscrollBehavior: "contain",
-                background: "hsl(var(--card))",
-                border: "1px solid hsl(var(--gold) / 0.3)",
-                boxShadow: "0 32px 80px hsl(var(--deep-blue) / 0.96), 0 0 0 1px hsl(var(--border))",
-                transformOrigin: dir === "rtl" ? "top left" : "top right",
-                pointerEvents: "auto",
-              }}
-              role="listbox"
-              aria-label={t.a11y_language_selector}
-            >
-              {languages.map((lang) => {
-                const isSelected = lang === language;
-                return (
-                  <button
-                    key={lang}
-                    type="button"
-                    role="option"
-                    aria-selected={isSelected}
-                    onClick={() => { setLanguage(lang); setOpen(false); }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.background = "hsl(var(--muted))";
-                        e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.18)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) {
-                        e.currentTarget.style.background = "hsl(var(--deep-blue))";
-                        e.currentTarget.style.borderColor = "hsl(var(--border))";
-                      }
-                    }}
-                    className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body transition-colors"
-                    style={{
-                      color: isSelected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.96)",
-                      background: isSelected ? "hsl(var(--deep-blue-light))" : "hsl(var(--deep-blue))",
-                      border: isSelected ? "1px solid hsl(var(--gold) / 0.34)" : "1px solid hsl(var(--border))",
-                      boxShadow: isSelected ? "0 0 0 1px hsl(var(--gold) / 0.08) inset" : "none",
-                    }}
-                    aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
-                  >
-                    <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
-                    <span>{languageConfig[lang].label}</span>
-                    {isSelected && (
-                      <span className="ms-auto text-[10px]" style={{ color: "hsl(var(--gold) / 0.78)" }} aria-hidden="true">✦</span>
-                    )}
-                  </button>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>,
+      {mounted && open && createPortal(
+        <div
+          ref={menuRef}
+          className="fixed overflow-hidden rounded-2xl p-1.5 text-foreground animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-150"
+          style={{
+            top: menuPos.top,
+            left: menuPos.left,
+            zIndex: PORTAL_MENU_Z_INDEX,
+            width: 180,
+            maxHeight: mounted ? Math.max(160, window.innerHeight - menuPos.top - VIEWPORT_PADDING) : 320,
+            overflowY: "auto",
+            overscrollBehavior: "contain",
+            background: "hsl(var(--card))",
+            border: "1px solid hsl(var(--gold) / 0.3)",
+            boxShadow: "0 32px 80px hsl(var(--deep-blue) / 0.96), 0 0 0 1px hsl(var(--border))",
+            transformOrigin: dir === "rtl" ? "top left" : "top right",
+            pointerEvents: "auto",
+          }}
+          role="listbox"
+          aria-label={t.a11y_language_selector}
+        >
+          {languages.map((lang) => {
+            const isSelected = lang === language;
+            return (
+              <button
+                key={lang}
+                type="button"
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => { setLanguage(lang); setOpen(false); }}
+                onMouseEnter={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.background = "hsl(var(--muted))";
+                    e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.18)";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isSelected) {
+                    e.currentTarget.style.background = "hsl(var(--deep-blue))";
+                    e.currentTarget.style.borderColor = "hsl(var(--border))";
+                  }
+                }}
+                className="flex w-full items-center gap-3.5 rounded-xl px-4 py-3.5 text-sm font-body transition-colors"
+                style={{
+                  color: isSelected ? "hsl(var(--foreground))" : "hsl(var(--foreground) / 0.96)",
+                  background: isSelected ? "hsl(var(--deep-blue-light))" : "hsl(var(--deep-blue))",
+                  border: isSelected ? "1px solid hsl(var(--gold) / 0.34)" : "1px solid hsl(var(--border))",
+                  boxShadow: isSelected ? "0 0 0 1px hsl(var(--gold) / 0.08) inset" : "none",
+                }}
+                aria-label={`${t.a11y_change_language} ${languageConfig[lang].label}`}
+              >
+                <span className="text-base" aria-hidden="true">{languageConfig[lang].flag}</span>
+                <span>{languageConfig[lang].label}</span>
+                {isSelected && (
+                  <span className="ms-auto text-[10px]" style={{ color: "hsl(var(--gold) / 0.78)" }} aria-hidden="true">✦</span>
+                )}
+              </button>
+            );
+          })}
+        </div>,
         document.body,
       )}
     </>
