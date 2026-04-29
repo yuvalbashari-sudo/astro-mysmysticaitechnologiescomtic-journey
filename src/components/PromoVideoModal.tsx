@@ -195,7 +195,7 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
                   {t.promo_video_continue_label ?? "Continue to full reading"}
                 </button>
                 <button
-                  onClick={handleContinue}
+                  onClick={() => handleContinue("skip_button")}
                   className="text-xs text-foreground/60 hover:text-foreground/90 transition-colors font-body px-3 py-1 rounded-full"
                   style={{ background: "hsl(0 0% 0% / 0.4)" }}
                 >
