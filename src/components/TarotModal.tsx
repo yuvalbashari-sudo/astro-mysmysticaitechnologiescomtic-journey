@@ -232,6 +232,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
   const needsQuestion = selectedSpreadKey !== "timeline";
 
+  // Premium unlock id — must mirror the one used inside <PremiumUnlockOverlay> below.
+  const tarotReadingId = cards
+    ? `tarot:${selectedSpread.key}:${cards.map(c => c.id).join("-")}:${userQuestion || ""}`
+    : "";
+  const tarotUnlocked = usePremiumUnlocked(tarotReadingId);
+
   // handleDraw logic is now inline in the topic selection phase
 
   const handleQuestionSubmit = (question: string) => {
