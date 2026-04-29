@@ -2,6 +2,39 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n";
 
+/**
+ * Returns true once the user has unlocked at least one premium reading in
+ * this browser session. Drives the Norielle teaser copy: action-driving
+ * before unlock, neutral/helper after.
+ */
+function useHasUnlockedAny(): boolean {
+  const [has, setHas] = useState<boolean>(() => {
+    try {
+      const raw = sessionStorage.getItem("astrologai_unlocked_readings_v1");
+      if (!raw) return false;
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length > 0;
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    const sync = () => {
+      try {
+        const raw = sessionStorage.getItem("astrologai_unlocked_readings_v1");
+        const arr = raw ? JSON.parse(raw) : [];
+        setHas(Array.isArray(arr) && arr.length > 0);
+      } catch {
+        setHas(false);
+      }
+    };
+    window.addEventListener("astrologai:unlock-changed", sync);
+    return () => window.removeEventListener("astrologai:unlock-changed", sync);
+  }, []);
+  return has;
+}
+
+
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
   /** Override default headline */
@@ -35,19 +68,44 @@ const AvatarHoverTeaser = ({
   const { language } = useLanguage();
   const isRTL = language === "he" || language === "ar";
 
-  const headlineByLang = useMemo(() => ({
-    he: "תובנה אישית מחכה לך",
-    en: "A personal insight is waiting for you",
-    ru: "Персональное озарение ждёт вас",
-    ar: "بصيرة شخصية بانتظارك",
-  }[language]), [language]);
+  const hasUnlocked = useHasUnlockedAny();
 
-  const supportingByLang = useMemo(() => ({
-    he: "מבט מדויק על מה שמשפיע עליך עכשיו",
-    en: "A precise look at what's influencing you right now",
-    ru: "Точный взгляд на то, что влияет на вас сейчас",
-    ar: "نظرة دقيقة على ما يؤثر عليك الآن",
-  }[language]), [language]);
+  const headlineByLang = useMemo(() => {
+    if (hasUnlocked) {
+      // Neutral / helper copy after the user has unlocked at least one reading.
+      return {
+        he: "אני כאן אם תרצה לשאול עוד משהו",
+        en: "I'm here if you'd like to ask anything else",
+        ru: "Я рядом, если захотите спросить что-то ещё",
+        ar: "أنا هنا إذا أردت أن تسأل شيئاً آخر",
+      }[language];
+    }
+    // Action-driving copy before unlock.
+    return {
+      he: "יש לי מסר מיוחד בשבילך… רוצה לראות אותו? ✨",
+      en: "I have something important for you… want to see it? ✨",
+      ru: "У меня есть для вас особое послание… хотите увидеть? ✨",
+      ar: "لديّ رسالة خاصة لك… هل تريد رؤيتها؟ ✨",
+    }[language];
+  }, [language, hasUnlocked]);
+
+  const supportingByLang = useMemo(() => {
+    if (hasUnlocked) {
+      return {
+        he: "תובנות, הבהרות או קריאה נוספת — בקליק",
+        en: "Insights, clarifications, or another reading — one tap away",
+        ru: "Подсказки, уточнения или новое чтение — в один клик",
+        ar: "بصائر، توضيحات أو قراءة جديدة — بنقرة واحدة",
+      }[language];
+    }
+    return {
+      he: "הקלפים כבר חשפו משהו מעניין… אל תפספס את זה",
+      en: "The cards have already revealed something — don't miss it",
+      ru: "Карты уже раскрыли кое-что интересное… не упустите",
+      ar: "كشفت البطاقات شيئاً مثيراً… لا تفوّته",
+    }[language];
+  }, [language, hasUnlocked]);
+
 
   const resolvedHeadline = text ?? headlineByLang;
   const resolvedSupporting = highlightText ?? supportingByLang;
