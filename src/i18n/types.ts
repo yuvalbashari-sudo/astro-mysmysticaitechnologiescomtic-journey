@@ -794,6 +794,11 @@ export type TranslationKeys = {
   gating_resets_in_days: string;
   gating_or_pay_now: string;
 
+  // Promo video modal
+  promo_video_wait_hint: string;
+  promo_video_continue_label: string;
+  promo_video_skip_label: string;
+
   // Daily Horoscope
   daily_horoscope_title: string;
   daily_horoscope_subtitle: string;

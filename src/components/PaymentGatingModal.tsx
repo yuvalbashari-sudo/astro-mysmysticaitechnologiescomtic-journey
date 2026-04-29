@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Lock, X, Sparkles } from "lucide-react";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
@@ -5,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import type { GatingMessage } from "@/lib/entitlements";
 import type { ResetCycle } from "@/lib/pricingConfig";
 import UsageCountdown from "./UsageCountdown";
+import PromoVideoModal from "./PromoVideoModal";
 
 interface Props {
   isOpen: boolean;
@@ -20,6 +22,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
   const { language, dir } = useLanguage();
   const t = useT();
   const navigate = useNavigate();
+  const [promoOpen, setPromoOpen] = useState(false);
 
   if (!gatingMessage) return null;
 
@@ -123,12 +126,9 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
                 <div className="flex-1 h-px bg-gold/10" />
               </div>
 
-              {/* Pay-per-use CTA */}
+              {/* Pay-per-use CTA — opens promo video first, then proceeds */}
               <button
-                onClick={() => {
-                  onPayPerUse?.();
-                  onClose();
-                }}
+                onClick={() => setPromoOpen(true)}
                 className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider mb-3 flex items-center justify-center gap-2"
               >
                 <Sparkles className="w-4 h-4" />
@@ -169,6 +169,16 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
           </motion.div>
         </motion.div>
       )}
+
+      {/* Promotional video — shown before unlocking the full reading */}
+      <PromoVideoModal
+        isOpen={promoOpen}
+        onClose={() => setPromoOpen(false)}
+        onContinue={() => {
+          onPayPerUse?.();
+          onClose();
+        }}
+      />
     </AnimatePresence>
   );
 };
