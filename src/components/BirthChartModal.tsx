@@ -99,8 +99,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
   const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
-  const natalReadingId = `natal:${userName}:${birthDate}:${birthTime}:${birthCity}`;
-  const natalUnlocked = usePremiumUnlocked(natalReadingId);
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [restoredFromCache, setRestoredFromCache] = useState(false);
   const [auraResult, setAuraResult] = useState<AuraResult | null>(null);
