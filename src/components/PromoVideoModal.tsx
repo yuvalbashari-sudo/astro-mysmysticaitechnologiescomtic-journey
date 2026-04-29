@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
+import { analytics } from "@/lib/analytics";
 import promoVideo from "@/assets/promo.mp4";
 
 interface Props {
