@@ -23,15 +23,15 @@ const SeoContentSection = () => {
       trustItems: ["חוויה מיסטית פרימיום מותאמת אישית", "טכנולוגיית AI מתקדמת לקריאות מדויקות", "זמין בעברית, אנגלית, ערבית ורוסית", "קלף יומי והורוסקופ חודשי בחינם", "קריאות מותאמות לשם ולתאריך לידה"],
     },
     en: {
-      mainTitle: "Discover the Secrets of the Universe with ASTROLOGAI",
-      mainDesc: "ASTROLOGAI is the leading AI-powered astrology and mystical guidance platform. Get a personalized tarot reading, AI palm reading analysis, zodiac compatibility test, detailed birth chart, and monthly horoscope — all in one elegant, premium experience.",
+      mainTitle: "Astrology, Tarot & More — All in One Place",
+      mainDesc: "ASTROLOGAI is the easiest way to get a personal tarot reading, AI palm reading, zodiac compatibility check, full birth chart, and monthly horoscope — all in one simple, beautifully designed app.",
       services: [
-        { icon: Eye, title: "Online Tarot Reading", desc: "Ask a question and receive a personalized tarot spread with deep interpretation of each card.", link: "/tarot-gallery", linkText: "Browse all Tarot Cards →" },
-        { icon: Heart, title: "Zodiac Compatibility Test", desc: "Discover the cosmic chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your Zodiac Sign →" },
-        { icon: Sun, title: "Birth Chart & Monthly Horoscope", desc: "Enter your birth date and time to receive a personalized birth chart — completely free.", link: null, linkText: null },
+        { icon: Eye, title: "Online Tarot Reading", desc: "Ask a question and get a personal tarot spread with a clear, in-depth take on every card.", link: "/tarot-gallery", linkText: "Browse all tarot cards →" },
+        { icon: Heart, title: "Zodiac Compatibility", desc: "See the chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your zodiac sign →" },
+        { icon: Sun, title: "Birth Chart & Monthly Horoscope", desc: "Add your birth date and time to get a personal birth chart — free.", link: null, linkText: null },
       ],
-      trustTitle: "Why Choose ASTROLOGAI?",
-      trustItems: ["Premium personalized mystical experience", "Advanced AI technology for accurate readings", "Available in Hebrew, English, Arabic, and Russian", "Free daily card and monthly horoscope", "Readings personalized to your name and birth date"],
+      trustTitle: "Why people pick ASTROLOGAI",
+      trustItems: ["A personal experience, made for you", "Smart AI for accurate readings", "Available in Hebrew, English, Arabic, and Russian", "Free daily card and monthly horoscope", "Readings built around your name and birth date"],
     },
     ru: {
       mainTitle: "Откройте тайны Вселенной с ASTROLOGAI",
