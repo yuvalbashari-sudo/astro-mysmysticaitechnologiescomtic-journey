@@ -129,9 +129,16 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
                   <div className="flex-1 h-px bg-gold/10" />
                 </div>
 
-                {/* Pay-per-use CTA — opens promo video first, then proceeds */}
+                {/* Pay-per-use CTA — opens promo video first, unless skipped */}
                 <button
-                  onClick={() => setPromoOpen(true)}
+                  onClick={() => {
+                    if (skipPromoVideo) {
+                      onPayPerUse?.();
+                      onClose();
+                    } else {
+                      setPromoOpen(true);
+                    }
+                  }}
                   className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider mb-3 flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
