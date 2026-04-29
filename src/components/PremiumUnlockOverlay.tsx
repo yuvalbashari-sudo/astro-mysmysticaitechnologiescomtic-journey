@@ -111,8 +111,10 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     setPaymentOpen(false);
   };
 
-  // Admin or already-unlocked: render children straight.
-  if (unlocked || disabled) {
+  // Bypass paths: explicit forceUnlock prop, an already-unlocked reading, or
+  // an externally-controlled `disabled` flag (e.g. while the AI is still
+  // streaming). Nothing else bypasses — not tier, not email, not env.
+  if (forceUnlock || unlocked || disabled) {
     return <>{children}</>;
   }
 
