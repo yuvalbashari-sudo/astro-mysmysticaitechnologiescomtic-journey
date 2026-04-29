@@ -23,6 +23,7 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
@@ -424,6 +425,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  // Mirror PremiumUnlockOverlay readingId so we can hide the share bar before unlock.
+  const immReadingId = `imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`;
+  const immUnlocked = usePremiumUnlocked(immReadingId);
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   // Entitlements gating state
