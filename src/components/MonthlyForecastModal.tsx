@@ -20,6 +20,7 @@ import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import { isAdminTestMode, getAdminSafeProfile, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
