@@ -181,7 +181,7 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
             <span>{sign.dateRange}</span>
             <span style={{ color: `hsl(${elHue})` }}>•</span>
             <span className="px-3 py-0.5 rounded-full text-xs tracking-widest uppercase" style={{ color: `hsl(${elHue})`, background: `hsl(${elHue} / 0.1)`, border: `1px solid hsl(${elHue} / 0.2)` }}>
-              {sign.element}
+              {localizedElement}
             </span>
           </div>
           <div className="mx-auto mt-4" style={{ width: 80, height: 1, background: `linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)` }} />
