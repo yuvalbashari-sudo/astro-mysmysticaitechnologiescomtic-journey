@@ -146,7 +146,7 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
               <span style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{sign.dateRange}</span>
               <span style={{ color: `hsl(${elHue})` }}>•</span>
               <span className="px-3 py-0.5 rounded-full text-xs tracking-widest uppercase" style={{ color: `hsl(${elHue})`, background: `hsl(${elHue} / 0.1)`, border: `1px solid hsl(${elHue} / 0.2)`, backdropFilter: "blur(8px)" }}>
-                {sign.element}
+                {localizedElement}
               </span>
             </div>
           </motion.div>
