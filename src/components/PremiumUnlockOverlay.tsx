@@ -62,7 +62,7 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     }
     const access = entitlements.checkAccess(featureKey);
     // If quota is exhausted, use the real denied message.
-    if (!access.allowed) {
+    if (access.allowed === false) {
       return {
         gatingMessage: entitlements.getGatingMessage(access.promptKey, access.priceILS),
         resetCycle: access.resetCycle,
