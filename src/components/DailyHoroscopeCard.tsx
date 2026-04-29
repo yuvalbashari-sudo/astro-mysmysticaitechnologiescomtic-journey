@@ -106,6 +106,11 @@ const DailyHoroscopeCard = () => {
   const userName = safeProfile.userName;
   const gender = safeProfile.gender;
 
+  // Premium unlock id — one per (sign, day). New day = re-gate.
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const dailyReadingId = `daily-horoscope:${zodiacSign || "unknown"}:${todayKey}`;
+  const dailyUnlocked = usePremiumUnlocked(dailyReadingId);
+
   // Inline setup form state
   const [setupName, setSetupName] = useState("");
   const [setupBirthDate, setSetupBirthDate] = useState("");
