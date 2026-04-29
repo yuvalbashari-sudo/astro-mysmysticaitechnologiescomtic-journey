@@ -36,6 +36,20 @@ interface Props {
    * email, or environment. Defaults to false. Reserve for support tooling.
    */
   forceUnlock?: boolean;
+  /**
+   * Fires the moment the user clicks the unlock CTA — i.e. right before the
+   * promo video opens. Hosts use this hook to lazily kick off AI generation
+   * so the model isn't called until the user has actually committed to the
+   * unlock. Called at most once per gate cycle.
+   */
+  onUnlockStart?: () => void;
+  /**
+   * When false, the overlay refuses to flip to the unlocked state until the
+   * host signals readiness. The promo video keeps the user occupied with the
+   * "almost ready" message until both the video step AND the AI generation
+   * are complete. Defaults to true (legacy synchronous unlock).
+   */
+  isReady?: boolean;
 }
 
 /**
@@ -46,7 +60,7 @@ interface Props {
  * are blurred and an unlock panel sits on top. Admin tier and previously
  * unlocked readings render the children directly.
  */
-const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage, forceUnlock = false }: Props) => {
+const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage, forceUnlock = false, onUnlockStart, isReady = true }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
 
@@ -125,6 +139,10 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
       });
     }
     analytics.track("video_opened", { readingId, featureKey });
+    // Notify the host to begin generating the full AI reading in the
+    // background. We deliberately fire this BEFORE opening the video so
+    // generation overlaps with playback.
+    try { onUnlockStart?.(); } catch (e) { console.warn("[unlock] onUnlockStart threw", e); }
     setPromoOpen(true);
   };
 
@@ -218,6 +236,8 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
           setPromoOpen(false);
           handleUnlock();
         }}
+        holdUntilReady={!isReady}
+        isReady={isReady}
       />
     </div>
   );
