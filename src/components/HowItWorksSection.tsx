@@ -33,19 +33,19 @@ const HowItWorksSection = () => {
     },
     en: {
       eyebrow: "Your experience",
-      title: "How does it work?",
-      intro: "Receive personal guidance through astrology, tarot, and spiritual insights — in a smart, accurate, and accessible way.",
+      title: "How it works",
+      intro: "Get personal guidance from astrology, tarot, and real insight — in a way that's smart, easy, and made for you.",
       steps: [
-        { icon: Compass, title: "Choose your guidance", desc: "Daily horoscope, monthly forecast, tarot, compatibility and more.", href: "/astrology-guides" },
-        { icon: Sparkles, title: "Receive a personal insight", desc: "The system crafts a precise, clear, and thought-provoking message just for you.", href: "/tarot-guides" },
-        { icon: MessageCircle, title: "Go deeper with Norielle", desc: "If you'd like, Norielle will help you choose the path that suits you most.", href: "/astrology-guides" },
+        { icon: Compass, title: "Pick your reading", desc: "Daily horoscope, monthly forecast, tarot, compatibility, and more.", href: "/astrology-guides" },
+        { icon: Sparkles, title: "Get a personal insight", desc: "We put together a clear, personal message — just for you.", href: "/tarot-guides" },
+        { icon: MessageCircle, title: "Go deeper with Norielle", desc: "If you want, Norielle will help you find the path that fits you best.", href: "/astrology-guides" },
       ],
       trust: [
-        { icon: Heart, label: "Personal & tailored" },
-        { icon: Sparkle, label: "Simple, elegant interface" },
+        { icon: Heart, label: "Personal & made for you" },
+        { icon: Sparkle, label: "Simple, easy to use" },
         { icon: Globe2, label: "Available in 4 languages" },
       ],
-      scrollCue: "Discover more about the experience ✨",
+      scrollCue: "See how it works ✨",
     },
     ru: {
       eyebrow: "Ваш опыт",
