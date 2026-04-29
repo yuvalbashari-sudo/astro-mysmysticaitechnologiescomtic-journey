@@ -1,21 +1,49 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Globe } from "lucide-react";
 import { languageConfig, useLanguage, useT, type Language } from "@/i18n";
 
 const languages: Language[] = ["he", "ar", "ru", "en"];
 const MENU_Z_INDEX = 2147483647;
+const MENU_WIDTH = 180;
 
 const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }) => {
   const { language, setLanguage } = useLanguage();
   const t = useT();
   const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const updatePosition = () => {
+    const btn = buttonRef.current;
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const isRtl = document.documentElement.dir === "rtl";
+    let left: number;
+    if (showLabel) {
+      // align end edge
+      left = isRtl ? rect.left : rect.right - MENU_WIDTH;
+    } else {
+      left = isRtl ? rect.right - MENU_WIDTH : rect.left;
+    }
+    // Clamp inside viewport
+    const maxLeft = window.innerWidth - MENU_WIDTH - 8;
+    left = Math.min(Math.max(8, left), maxLeft);
+    setPos({ top: rect.bottom + 8, left });
+  };
+
+  useLayoutEffect(() => {
+    if (open) updatePosition();
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
 
     const handlePointerDown = (e: PointerEvent) => {
-      if (rootRef.current?.contains(e.target as Node)) return;
+      const target = e.target as Node;
+      if (buttonRef.current?.contains(target)) return;
+      if (menuRef.current?.contains(target)) return;
       setOpen(false);
     };
 
@@ -23,20 +51,27 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
       if (e.key === "Escape") setOpen(false);
     };
 
+    const handleReposition = () => updatePosition();
+
     document.addEventListener("pointerdown", handlePointerDown);
     document.addEventListener("keydown", handleEscape);
+    window.addEventListener("resize", handleReposition);
+    window.addEventListener("scroll", handleReposition, true);
 
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("resize", handleReposition);
+      window.removeEventListener("scroll", handleReposition, true);
     };
   }, [open]);
 
   const labelText = language === "he" ? "שפות" : language === "ar" ? "اللغات" : language === "ru" ? "Языки" : "Languages";
 
   return (
-    <div ref={rootRef} className="relative shrink-0" style={{ zIndex: open ? MENU_Z_INDEX : undefined }}>
+    <>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className={`flex items-center justify-center shrink-0 backdrop-blur-md transition-transform active:scale-95 hover:scale-105 ${
@@ -61,12 +96,16 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
         )}
       </button>
 
-      {open && (
+      {open && pos && createPortal(
         <div
-          className={`absolute top-full mt-2 overflow-hidden rounded-2xl p-1.5 text-foreground animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-150 ${showLabel ? "end-0" : "start-0"}`}
+          ref={menuRef}
+          className="overflow-hidden rounded-2xl p-1.5 text-foreground animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-150"
           style={{
+            position: "fixed",
+            top: pos.top,
+            left: pos.left,
             zIndex: MENU_Z_INDEX,
-            width: 180,
+            width: MENU_WIDTH,
             maxHeight: "min(320px, calc(100vh - 84px))",
             overflowY: "auto",
             overscrollBehavior: "contain",
@@ -107,9 +146,10 @@ const MysticalLanguageDropdown = ({ showLabel = false }: { showLabel?: boolean }
               </button>
             );
           })}
-        </div>
+        </div>,
+        document.body
       )}
-    </div>
+    </>
   );
 };
 
