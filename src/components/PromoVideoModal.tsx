@@ -13,6 +13,15 @@ interface Props {
   onContinue: () => void;
   /** Seconds before the continue/skip CTA appears (default 4s) */
   unlockAfterSeconds?: number;
+  /**
+   * If true, the modal will refuse to complete (continue / video-ended) until
+   * the host signals readiness via `isReady=true`. While waiting, the bottom
+   * CTA shows the "almost ready" hint instead of the Continue button.
+   * Defaults to false (legacy behavior — Continue immediately unlocks).
+   */
+  holdUntilReady?: boolean;
+  /** Required when `holdUntilReady` is true. */
+  isReady?: boolean;
 }
 
 /**
@@ -20,20 +29,35 @@ interface Props {
  * - Auto-plays muted, user can unmute.
  * - Continue/Skip CTA appears after `unlockAfterSeconds`.
  * - On continue, calls onContinue() and closes.
+ * - When `holdUntilReady` is true, completion is queued until `isReady` flips
+ *   true so the user never sees an empty reading.
  */
-const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }: Props) => {
+const PromoVideoModal = ({
+  isOpen,
+  onClose,
+  onContinue,
+  unlockAfterSeconds = 4,
+  holdUntilReady = false,
+  isReady = true,
+}: Props) => {
   const { dir } = useLanguage();
   const t = useT();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [unlocked, setUnlocked] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(unlockAfterSeconds);
+  // True once the user (or video-end) has requested completion but we are
+  // still waiting for `isReady` to flip true.
+  const [waitingForReady, setWaitingForReady] = useState(false);
+  const completionSourceRef = useRef<"ended" | "continue_button" | "skip_button" | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
     setUnlocked(false);
     setSecondsLeft(unlockAfterSeconds);
     setMuted(true);
+    setWaitingForReady(false);
+    completionSourceRef.current = null;
 
     document.body.style.overflow = "hidden";
 
@@ -70,11 +94,32 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
     if (!next) v.play().catch(() => {});
   };
 
-  const handleContinue = (source: "ended" | "continue_button" | "skip_button" = "continue_button") => {
+  const completeNow = (source: "ended" | "continue_button" | "skip_button") => {
     analytics.track("video_completed", { source });
     onContinue();
     onClose();
   };
+
+  const handleContinue = (source: "ended" | "continue_button" | "skip_button" = "continue_button") => {
+    if (holdUntilReady && !isReady) {
+      // Queue completion — wait for the host to flip isReady.
+      completionSourceRef.current = source;
+      setWaitingForReady(true);
+      return;
+    }
+    completeNow(source);
+  };
+
+  // If we're waiting for readiness and it just arrived, complete now.
+  useEffect(() => {
+    if (waitingForReady && isReady) {
+      const src = completionSourceRef.current ?? "continue_button";
+      completionSourceRef.current = null;
+      setWaitingForReady(false);
+      completeNow(src);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [waitingForReady, isReady]);
 
   if (!isOpen) return null;
 
