@@ -1182,7 +1182,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           </motion.h3>
                           {aiText ? (
                             <PremiumUnlockOverlay
-                              readingId={`imm-tarot:${selectedQuestion || "general"}:${selectedCards.map(c => c?.id).join("-")}`}
+                              readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
                               featureKey="tarot_reading"
                             >
                               <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
