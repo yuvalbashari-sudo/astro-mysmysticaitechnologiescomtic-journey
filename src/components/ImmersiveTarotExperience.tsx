@@ -557,11 +557,18 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     });
   }, []);
 
+  // Holds the lazy AI-generation kickoff that runs when the user clicks unlock.
+  // We capture all the inputs at reveal-time so the closure is stable even if
+  // state shifts mid-flight.
+  const startAIGenerationRef = useRef<null | (() => void)>(null);
+  const aiStartedRef = useRef(false);
+
   const handleRevealComplete = useCallback(() => {
     setPhase("interpretation");
-    setAiLoading(true);
     aiTextRef.current = "";
     setAiText("");
+    setAiLoading(false);
+    aiStartedRef.current = false;
 
     const posLabels = [
       t.tarot_pos_past,
@@ -581,38 +588,45 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     const spreadType = selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
     const selectedQuestionLabel = questionOptions.find((option) => option.key === selectedQuestion)?.label || selectedQuestion || t.imm_tarot_category_general;
 
-    streamTarotReading(
-      spreadType,
-      cardsPayload,
-      (delta) => {
-        aiTextRef.current += delta;
-        setAiText(aiTextRef.current);
-      },
-      () => {
-        setAiLoading(false);
-        setActiveReading({
-          type: "tarot",
-          label: `${t.readings_type_tarot} — ${selectedQuestionLabel}`,
-          summary: aiTextRef.current,
-        });
-        tarotMemory.recordReading(spreadType, cardsPayload);
-        mysticalProfile.recordTarotCards(
-          cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
-          spreadType
-        );
-        // Usage already recorded in handleSelectQuestion — no duplicate recording needed
-        readingsStorage.save({
-          type: "tarot",
-          title: `${t.readings_type_tarot}`,
-          subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
-          symbol: "🔮",
-          data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
-        });
-      },
-      (err) => { setAiLoading(false); toast(err); },
-      selectedQuestion || undefined,
-      language,
-    );
+    // Defer the actual AI request until the user clicks the unlock CTA. The
+    // promo-video flow will fire `onUnlockStart` which invokes this closure.
+    startAIGenerationRef.current = () => {
+      if (aiStartedRef.current) return;
+      aiStartedRef.current = true;
+      setAiLoading(true);
+      streamTarotReading(
+        spreadType,
+        cardsPayload,
+        (delta) => {
+          aiTextRef.current += delta;
+          setAiText(aiTextRef.current);
+        },
+        () => {
+          setAiLoading(false);
+          setActiveReading({
+            type: "tarot",
+            label: `${t.readings_type_tarot} — ${selectedQuestionLabel}`,
+            summary: aiTextRef.current,
+          });
+          tarotMemory.recordReading(spreadType, cardsPayload);
+          mysticalProfile.recordTarotCards(
+            cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
+            spreadType
+          );
+          // Usage already recorded in handleSelectQuestion — no duplicate recording needed
+          readingsStorage.save({
+            type: "tarot",
+            title: `${t.readings_type_tarot}`,
+            subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
+            symbol: "🔮",
+            data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
+          });
+        },
+        (err) => { setAiLoading(false); aiStartedRef.current = false; toast(err); },
+        selectedQuestion || undefined,
+        language,
+      );
+    };
   }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards, questionOptions]);
 
   useEffect(() => {
