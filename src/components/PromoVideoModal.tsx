@@ -70,7 +70,8 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
     if (!next) v.play().catch(() => {});
   };
 
-  const handleContinue = () => {
+  const handleContinue = (source: "ended" | "continue_button" | "skip_button" = "continue_button") => {
+    analytics.track("video_completed", { source });
     onContinue();
     onClose();
   };
