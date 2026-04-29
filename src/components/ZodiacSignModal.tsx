@@ -175,7 +175,7 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
             {sign.symbol}
           </motion.div>
           <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-wider" style={{ color: "hsl(var(--gold))", textShadow: "0 0 24px hsl(var(--gold) / 0.2)" }}>
-            {sign.hebrewName}
+            {localizedSignName}
           </h2>
           <div className="flex items-center justify-center gap-4 text-sm font-body" style={{ color: "hsl(var(--gold-light) / 0.7)" }}>
             <span>{sign.dateRange}</span>
