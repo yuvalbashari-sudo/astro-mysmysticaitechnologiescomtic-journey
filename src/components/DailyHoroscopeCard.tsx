@@ -452,7 +452,7 @@ const DailyHoroscopeCard = () => {
         {/* Content */}
         <div className="px-5 pb-4 min-h-[100px]">
           <AnimatePresence mode="wait">
-            {loading && (
+            {!hasAttemptedLoad && loading && (
               <motion.div
                 key="loading"
                 initial={{ opacity: 0 }}
@@ -489,7 +489,7 @@ const DailyHoroscopeCard = () => {
               </motion.div>
             )}
 
-            {data && !loading && !error && (
+            {hasAttemptedLoad && !error && (
               <motion.div
                 key="content"
                 initial={{ opacity: 0, y: 10 }}
@@ -500,33 +500,53 @@ const DailyHoroscopeCard = () => {
                 <PremiumUnlockOverlay
                   readingId={dailyReadingId}
                   featureKey="monthly_horoscope"
+                  onUnlockStart={() => {
+                    if (!data && !loading) generateHoroscope();
+                  }}
+                  isReady={!!data && !loading}
                 >
-                  <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
-                    {data.content}
-                  </p>
+                  {data ? (
+                    <>
+                      <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
+                        {data.content}
+                      </p>
 
-                  {/* Score indicators */}
-                  <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
-                    <div className="flex items-center gap-1.5">
-                      <Heart className="w-4 h-4 text-pink-400/70" />
-                      <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_love}</span>
-                      <ScoreValue score={data.love_score} />
+                      {/* Score indicators */}
+                      <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
+                        <div className="flex items-center gap-1.5">
+                          <Heart className="w-4 h-4 text-pink-400/70" />
+                          <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_love}</span>
+                          <ScoreValue score={data.love_score} />
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Briefcase className="w-4 h-4 text-blue-400/70" />
+                          <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_career}</span>
+                          <ScoreValue score={data.career_score} />
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Zap className="w-4 h-4 text-gold/70" />
+                          <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_energy}</span>
+                          <ScoreValue score={data.energy_score} />
+                        </div>
+                      </div>
+                    </>
+                  ) : loading ? (
+                    <div className="flex items-center justify-center py-8 gap-3">
+                      <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
+                        <Star className="w-5 h-5 text-gold/50" />
+                      </motion.div>
+                      <p className="text-foreground/50 text-sm font-body">{t.daily_horoscope_loading}</p>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <Briefcase className="w-4 h-4 text-blue-400/70" />
-                      <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_career}</span>
-                      <ScoreValue score={data.career_score} />
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Zap className="w-4 h-4 text-gold/70" />
-                      <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_energy}</span>
-                      <ScoreValue score={data.energy_score} />
-                    </div>
-                  </div>
+                  ) : (
+                    // Pre-unlock teaser. Blurred by overlay.
+                    <p className={`text-foreground/70 font-body leading-relaxed mb-4 ${ts.body}`}>
+                      ✦ ✦ ✦
+                    </p>
+                  )}
                 </PremiumUnlockOverlay>
 
                 {/* Share / Copy bar — only after unlock */}
-                {dailyUnlocked && (
+                {dailyUnlocked && data && (
                   <div className="mt-4 pt-3 border-t border-foreground/5">
                     <ResultShareBar
                       resultText={data.content}
