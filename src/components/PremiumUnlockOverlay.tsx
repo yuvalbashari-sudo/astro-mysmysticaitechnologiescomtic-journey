@@ -197,13 +197,14 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
         }}
       />
 
-      {/* Payment / upgrade modal — onPayPerUse unlocks the reading */}
+      {/* Payment / upgrade modal — promo already played, skip its inner video */}
       <PaymentGatingModal
         isOpen={paymentOpen}
         onClose={() => setPaymentOpen(false)}
         gatingMessage={gatingMessage}
         resetCycle={resetCycle}
         onPayPerUse={handleUnlock}
+        skipPromoVideo
       />
     </div>
   );
