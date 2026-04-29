@@ -110,6 +110,22 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     setUnlocked(true);
     setPromoOpen(false);
     setPaymentOpen(false);
+    analytics.track("reading_unlocked", { readingId, featureKey });
+  };
+
+  const handleOpenPromo = () => {
+    // If quota is exhausted for this feature, log a blocked event but still
+    // proceed with the video-as-unlock flow (payment is currently disabled).
+    const access = entitlements.checkAccess(featureKey);
+    if (access.allowed === false) {
+      analytics.track("unlock_blocked_due_to_limit", {
+        readingId,
+        featureKey,
+        reason: access.promptKey,
+      });
+    }
+    analytics.track("video_opened", { readingId, featureKey });
+    setPromoOpen(true);
   };
 
   // Bypass paths: explicit forceUnlock prop, an already-unlocked reading, or
