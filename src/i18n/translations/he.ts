@@ -645,6 +645,7 @@ export const he: TranslationKeys = {
   seo_section_spiritual: "מסר רוחני",
   seo_section_advice: "עצה",
   seo_section_personality: "אישיות",
+  zodiac_monthly_energy_label: "אנרגיית החודש",
   seo_section_money: "כסף ושפע",
   seo_section_health: "בריאות",
   seo_section_sensual: "אנרגיה סנסואלית",
