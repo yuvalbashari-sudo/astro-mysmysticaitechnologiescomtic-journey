@@ -658,6 +658,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     [selectedCardIndices, drawnCards]
   );
 
+  // Mirror PremiumUnlockOverlay readingId so we can hide the share bar before unlock.
+  const immReadingId = `imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`;
+  const immUnlocked = usePremiumUnlocked(immReadingId);
+
   if (!isOpen) return null;
 
   const overlay = (
