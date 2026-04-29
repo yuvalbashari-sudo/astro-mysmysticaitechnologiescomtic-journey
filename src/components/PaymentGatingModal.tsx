@@ -16,9 +16,11 @@ interface Props {
   onPayPerUse?: () => void;
   /** Reset cycle for countdown timer display */
   resetCycle?: ResetCycle;
+  /** When true, the inner promo video is skipped and pay CTA fires onPayPerUse directly. */
+  skipPromoVideo?: boolean;
 }
 
-const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, resetCycle = "daily" }: Props) => {
+const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, resetCycle = "daily", skipPromoVideo = false }: Props) => {
   const { language, dir } = useLanguage();
   const t = useT();
   const navigate = useNavigate();
