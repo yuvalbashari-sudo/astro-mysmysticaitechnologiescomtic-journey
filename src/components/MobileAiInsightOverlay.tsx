@@ -105,11 +105,11 @@ const MobileAiInsightOverlay = () => {
     }> = {
       he: heVariants[variant],
       en: {
-        headline: "Discover what the stars hold for you",
-        sub: "Choose your guidance — Daily Horoscope, Monthly Forecast, Compatibility & more",
-        cta: "Explore Your Readings",
-        bubble: "Not sure which to pick? I can guide you",
-        explore: "Continue exploring",
+        headline: "See what the stars say about you",
+        sub: "Pick your reading — daily horoscope, monthly forecast, compatibility, and more",
+        cta: "Explore readings",
+        bubble: "Not sure where to start? I'll help.",
+        explore: "See how it works ✨",
       },
       ru: {
         headline: "Откройте, что говорят звёзды",
