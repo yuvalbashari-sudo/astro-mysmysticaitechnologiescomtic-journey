@@ -645,6 +645,7 @@ export const ar: TranslationKeys = {
   seo_section_spiritual: "رسالة روحية",
   seo_section_advice: "نصيحة",
   seo_section_personality: "الشخصية",
+  zodiac_monthly_energy_label: "طاقة الشهر",
   seo_section_money: "المال والوفرة",
   seo_section_health: "الصحة",
   seo_section_sensual: "طاقة حسية",

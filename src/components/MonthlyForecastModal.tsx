@@ -6,6 +6,7 @@ import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Sparkles, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
 import { getZodiacSign } from "@/data/zodiacData";
+import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
@@ -74,14 +75,26 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     const date = new Date(birthDate);
     const sign = getZodiacSign(date);
 
-    setSignInfo({ name: sign.hebrewName, symbol: sign.symbol, dateRange: sign.dateRange, element: sign.element });
+    // Derive locale-aware sign + element from the canonical key (lowercase
+    // English name maps directly to zodiacData keys: aries, taurus, etc.).
+    const signKey = sign.name.toLowerCase();
+    // Element keys live in English: fire/earth/air/water. Map from the
+    // Hebrew literal stored in zodiacData so we can localize correctly.
+    const elementKeyMap: Record<string, "fire" | "earth" | "air" | "water"> = {
+      "אש": "fire", "אדמה": "earth", "אוויר": "air", "מים": "water",
+    };
+    const elementKey = elementKeyMap[sign.element] ?? "fire";
+    const localizedSignName = getSignNameByKey(signKey, language);
+    const localizedElement = getElementName(elementKey, language);
+
+    setSignInfo({ name: localizedSignName, symbol: sign.symbol, dateRange: sign.dateRange, element: localizedElement });
     setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
-    mysticalProfile.recordZodiac(sign.hebrewName, sign.symbol, sign.element, birthDate);
+    mysticalProfile.recordZodiac(localizedSignName, sign.symbol, localizedElement, birthDate);
 
     streamMysticalReading(
       "forecast",
       {
-        signName: sign.hebrewName, signSymbol: sign.symbol, birthDate, element: sign.element,
+        signName: localizedSignName, signSymbol: sign.symbol, birthDate, element: localizedElement,
         dateRange: sign.dateRange, monthName, gender, birthCity: "",
         risingSign: "", risingSymbol: "", risingElement: "",
         moonSign: "", planetPositions: "", majorAspects: "",
@@ -92,8 +105,8 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
       () => {
         setAiLoading(false);
-        setActiveReading({ type: "forecast", label: `${t.readings_type_forecast} — ${sign.hebrewName}`, summary: aiTextRef.current });
-        readingsStorage.save({ type: "forecast", title: `${t.readings_type_forecast} — ${sign.hebrewName}`, subtitle: sign.dateRange, symbol: sign.symbol, data: { signName: sign.hebrewName, birthDate, aiReading: aiTextRef.current } });
+        setActiveReading({ type: "forecast", label: `${t.readings_type_forecast} — ${localizedSignName}`, summary: aiTextRef.current });
+        readingsStorage.save({ type: "forecast", title: `${t.readings_type_forecast} — ${localizedSignName}`, subtitle: sign.dateRange, symbol: sign.symbol, data: { signName: localizedSignName, birthDate, aiReading: aiTextRef.current } });
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
       language,

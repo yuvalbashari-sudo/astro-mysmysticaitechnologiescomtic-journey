@@ -3,18 +3,31 @@ import { motion } from "framer-motion";
 import { Star, Heart, Briefcase, Coins, Sparkles, Activity, Flame } from "lucide-react";
 import CinematicModalShell from "./CinematicModalShell";
 import { zodiacData, type ZodiacSign } from "@/data/zodiacData";
-import { useT } from "@/i18n";
+import { useT, useLanguage } from "@/i18n";
+import { getSignName, getElementName } from "@/lib/astroLocale";
 
 const ZODIAC_KEYS = [
   "aries", "taurus", "gemini", "cancer", "leo", "virgo",
   "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
 ];
 
-const ELEMENT_COLORS: Record<string, string> = {
-  אש: "20 80% 55%",
-  אדמה: "85 50% 45%",
-  אוויר: "270 60% 60%",
-  מים: "210 70% 55%",
+/**
+ * Element key (English) → element accent hue. Element on `zodiacData` is
+ * stored in Hebrew, so we first map the literal to a stable English key,
+ * then look up both the color and the localized label.
+ */
+const ELEMENT_KEY_FROM_HE: Record<string, "fire" | "earth" | "air" | "water"> = {
+  אש: "fire",
+  אדמה: "earth",
+  אוויר: "air",
+  מים: "water",
+};
+
+const ELEMENT_COLORS: Record<"fire" | "earth" | "air" | "water", string> = {
+  fire: "20 80% 55%",
+  earth: "85 50% 45%",
+  air: "270 60% 60%",
+  water: "210 70% 55%",
 };
 
 interface Props {
@@ -57,6 +70,7 @@ const ReadingSection = ({ icon, title, content, delay, accentHue }: SectionProps
 
 const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
   const t = useT();
+  const { language } = useLanguage();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -72,16 +86,20 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
   const sign: ZodiacSign = zodiacData[key];
   if (!sign) return null;
 
-  const elHue = ELEMENT_COLORS[sign.element] || "43 80% 55%";
+  // Locale-aware sign label and element label/color.
+  const localizedSignName = getSignName(signIndex, language);
+  const elementKey = ELEMENT_KEY_FROM_HE[sign.element] ?? "fire";
+  const localizedElement = getElementName(elementKey, language);
+  const elHue = ELEMENT_COLORS[elementKey];
 
   const sections = [
-    { icon: <Star className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "אישיות", content: sign.personality, delay: 0.2 },
-    { icon: <Sparkles className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "אנרגיית החודש", content: sign.monthlyEnergy, delay: 0.3 },
-    { icon: <Heart className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "אהבה", content: sign.love, delay: 0.4 },
-    { icon: <Coins className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "כסף", content: sign.money, delay: 0.5 },
-    { icon: <Briefcase className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "קריירה", content: sign.career, delay: 0.6 },
-    { icon: <Activity className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "בריאות", content: sign.health, delay: 0.7 },
-    { icon: <Flame className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: "רוחניות", content: sign.spiritual, delay: 0.8 },
+    { icon: <Star className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_personality, content: sign.personality, delay: 0.2 },
+    { icon: <Sparkles className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.zodiac_monthly_energy_label, content: sign.monthlyEnergy, delay: 0.3 },
+    { icon: <Heart className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_love, content: sign.love, delay: 0.4 },
+    { icon: <Coins className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_money, content: sign.money, delay: 0.5 },
+    { icon: <Briefcase className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_career, content: sign.career, delay: 0.6 },
+    { icon: <Activity className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_health, content: sign.health, delay: 0.7 },
+    { icon: <Flame className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_spiritual, content: sign.spiritual, delay: 0.8 },
   ];
 
   if (!isMobile) {
@@ -122,13 +140,13 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
               {sign.symbol}
             </motion.div>
             <h2 className="font-heading text-3xl font-bold tracking-wider mb-3" style={{ color: "hsl(var(--gold))", textShadow: "0 0 30px hsl(var(--gold) / 0.2), 0 2px 20px hsl(222 47% 6%)" }}>
-              {sign.hebrewName}
+              {localizedSignName}
             </h2>
             <div className="flex items-center justify-center gap-4 text-sm font-body" style={{ color: "hsl(var(--gold-light) / 0.7)" }}>
               <span style={{ textShadow: "0 2px 10px hsl(222 47% 6%)" }}>{sign.dateRange}</span>
               <span style={{ color: `hsl(${elHue})` }}>•</span>
               <span className="px-3 py-0.5 rounded-full text-xs tracking-widest uppercase" style={{ color: `hsl(${elHue})`, background: `hsl(${elHue} / 0.1)`, border: `1px solid hsl(${elHue} / 0.2)`, backdropFilter: "blur(8px)" }}>
-                {sign.element}
+                {localizedElement}
               </span>
             </div>
           </motion.div>
@@ -157,13 +175,13 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
             {sign.symbol}
           </motion.div>
           <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-wider" style={{ color: "hsl(var(--gold))", textShadow: "0 0 24px hsl(var(--gold) / 0.2)" }}>
-            {sign.hebrewName}
+            {localizedSignName}
           </h2>
           <div className="flex items-center justify-center gap-4 text-sm font-body" style={{ color: "hsl(var(--gold-light) / 0.7)" }}>
             <span>{sign.dateRange}</span>
             <span style={{ color: `hsl(${elHue})` }}>•</span>
             <span className="px-3 py-0.5 rounded-full text-xs tracking-widest uppercase" style={{ color: `hsl(${elHue})`, background: `hsl(${elHue} / 0.1)`, border: `1px solid hsl(${elHue} / 0.2)` }}>
-              {sign.element}
+              {localizedElement}
             </span>
           </div>
           <div className="mx-auto mt-4" style={{ width: 80, height: 1, background: `linear-gradient(90deg, transparent, hsl(var(--gold) / 0.35), transparent)` }} />

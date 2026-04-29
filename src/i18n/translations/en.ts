@@ -645,6 +645,7 @@ export const en: TranslationKeys = {
   seo_section_spiritual: "Inner message",
   seo_section_advice: "Advice",
   seo_section_personality: "Personality",
+  zodiac_monthly_energy_label: "Energy of the month",
   seo_section_money: "Money",
   seo_section_health: "Health",
   seo_section_sensual: "Sensual energy",
