@@ -104,7 +104,11 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
             muted
             playsInline
             controls={false}
-            onEnded={() => setUnlocked(true)}
+            onEnded={() => {
+              setUnlocked(true);
+              // Auto-reveal full reading when video finishes naturally.
+              handleContinue();
+            }}
             style={{
               position: "absolute",
               inset: 0,
