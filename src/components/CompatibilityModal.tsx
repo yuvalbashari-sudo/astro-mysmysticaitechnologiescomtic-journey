@@ -427,11 +427,13 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                     >
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
-                        {aiText ? (
-                          <PremiumUnlockOverlay
-                            readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
-                            featureKey="compatibility_reading"
-                          >
+                        <PremiumUnlockOverlay
+                          readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
+                          featureKey="compatibility_reading"
+                          onUnlockStart={() => startAIRef.current?.()}
+                          isReady={!!aiText && !aiLoading}
+                        >
+                          {aiText ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
                               {isMobile && (<div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>)}
                               <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
@@ -444,23 +446,27 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                                 </motion.div>
                               )}
                             </motion.div>
-                          </PremiumUnlockOverlay>
-                        ) : aiError ? (
-                          <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                            <p className="text-foreground/50 font-body text-sm" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{aiError}</p>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center py-16">
-                            <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                            <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
-                          </div>
-                        )}
+                          ) : aiError ? (
+                            <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                              <p className="text-foreground/50 font-body text-sm" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{aiError}</p>
+                            </div>
+                          ) : aiLoading ? (
+                            <div className="flex flex-col items-center justify-center py-16">
+                              <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
+                              <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
+                            </div>
+                          ) : (
+                            // Pre-unlock teaser. Blurred by overlay.
+                            <div className="text-center py-10 font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
+                              <p className="text-gold/70">{t.compat_loading}</p>
+                              <p className="opacity-70 mt-3">✦ ✦ ✦</p>
+                            </div>
+                          )}
 
-                        {!aiLoading && (aiText || aiError) && compatUnlocked && (
-                          <>
+                          {!aiLoading && (aiText || aiError) && compatUnlocked && (
                             <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
-                          </>
-                        )}
+                          )}
+                        </PremiumUnlockOverlay>
                       </div>
                     </motion.div>
 
