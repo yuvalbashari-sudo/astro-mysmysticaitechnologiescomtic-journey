@@ -20,6 +20,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
