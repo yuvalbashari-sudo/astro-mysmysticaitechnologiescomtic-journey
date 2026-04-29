@@ -33,8 +33,10 @@ function persist(set: Set<string>) {
 
 function isUnlocked(readingId: string): boolean {
   if (!readingId) return false;
-  // Admin tier bypasses gating entirely.
-  if (subscriptionManager.isAdmin()) return true;
+  // Real authenticated admin email bypasses gating. Preview-only admin
+  // override does NOT bypass — otherwise testers cannot see the flow.
+  const email = subscriptionManager.getUserEmail();
+  if (email && email === "yuvalbashari@gmail.com") return true;
   return getUnlockedSet().has(readingId);
 }
 
