@@ -9,7 +9,6 @@
  */
 
 import { useEffect, useState } from "react";
-import { subscriptionManager } from "./subscriptionManager";
 
 const STORAGE_KEY = "astrologai_unlocked_readings_v1";
 const EVENT_NAME = "astrologai:unlock-changed";
@@ -38,10 +37,10 @@ function persist(set: Set<string>) {
 
 function isUnlocked(readingId: string): boolean {
   if (!readingId) return false;
-  // Real authenticated admin email bypasses gating. Preview-only admin
-  // override does NOT bypass — otherwise testers cannot see the flow.
-  const email = subscriptionManager.getUserEmail();
-  if (email && email === "yuvalbashari@gmail.com") return true;
+  // No automatic bypass — gating must be passed for every reading.
+  // Admin bypass is only available via an explicit `forceUnlock` flag passed
+  // to the PremiumUnlockOverlay component (never inferred from environment,
+  // tier, or email).
   return getUnlockedSet().has(readingId);
 }
 

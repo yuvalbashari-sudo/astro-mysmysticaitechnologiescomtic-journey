@@ -30,6 +30,11 @@ interface Props {
    * have a built-in gating prompt (e.g. monthly forecast, natal chart).
    */
   customGatingMessage?: GatingMessage;
+  /**
+   * Explicit bypass flag. ONLY this flag bypasses the gate — never tier,
+   * email, or environment. Defaults to false. Reserve for support tooling.
+   */
+  forceUnlock?: boolean;
 }
 
 /**
@@ -40,7 +45,7 @@ interface Props {
  * are blurred and an unlock panel sits on top. Admin tier and previously
  * unlocked readings render the children directly.
  */
-const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage }: Props) => {
+const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage, forceUnlock = false }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
 
