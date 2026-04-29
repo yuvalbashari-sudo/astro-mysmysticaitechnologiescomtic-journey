@@ -2,6 +2,39 @@ import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n";
 
+/**
+ * Returns true once the user has unlocked at least one premium reading in
+ * this browser session. Drives the Norielle teaser copy: action-driving
+ * before unlock, neutral/helper after.
+ */
+function useHasUnlockedAny(): boolean {
+  const [has, setHas] = useState<boolean>(() => {
+    try {
+      const raw = sessionStorage.getItem("astrologai_unlocked_readings_v1");
+      if (!raw) return false;
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length > 0;
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    const sync = () => {
+      try {
+        const raw = sessionStorage.getItem("astrologai_unlocked_readings_v1");
+        const arr = raw ? JSON.parse(raw) : [];
+        setHas(Array.isArray(arr) && arr.length > 0);
+      } catch {
+        setHas(false);
+      }
+    };
+    window.addEventListener("astrologai:unlock-changed", sync);
+    return () => window.removeEventListener("astrologai:unlock-changed", sync);
+  }, []);
+  return has;
+}
+
+
 interface AvatarHoverTeaserProps {
   children: React.ReactNode;
   /** Override default headline */
