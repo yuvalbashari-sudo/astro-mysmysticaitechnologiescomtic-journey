@@ -25,6 +25,11 @@ interface Props {
    * streaming or while a question phase hasn't completed. Defaults to false.
    */
   disabled?: boolean;
+  /**
+   * Optional custom gating message override. Used for surfaces that don't
+   * have a built-in gating prompt (e.g. monthly forecast, natal chart).
+   */
+  customGatingMessage?: GatingMessage;
 }
 
 /**
@@ -35,7 +40,7 @@ interface Props {
  * are blurred and an unlock panel sits on top. Admin tier and previously
  * unlocked readings render the children directly.
  */
-const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false }: Props) => {
+const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
 
@@ -59,6 +64,9 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
   }>(() => {
     if (subscriptionManager.isAdmin()) {
       return { gatingMessage: null, resetCycle: "none" };
+    }
+    if (customGatingMessage) {
+      return { gatingMessage: customGatingMessage, resetCycle: "none" };
     }
     const access = entitlements.checkAccess(featureKey);
     // If quota is exhausted, use the real denied message.
@@ -88,7 +96,7 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
       gatingMessage: entitlements.getGatingMessage(promptKey, price),
       resetCycle: rule.resetCycle,
     };
-  }, [featureKey, readingId]);
+  }, [featureKey, readingId, customGatingMessage]);
 
   const handleUnlock = () => {
     premiumUnlock.markUnlocked(readingId);
