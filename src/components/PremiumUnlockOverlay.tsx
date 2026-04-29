@@ -30,6 +30,11 @@ interface Props {
    * have a built-in gating prompt (e.g. monthly forecast, natal chart).
    */
   customGatingMessage?: GatingMessage;
+  /**
+   * Explicit bypass flag. ONLY this flag bypasses the gate — never tier,
+   * email, or environment. Defaults to false. Reserve for support tooling.
+   */
+  forceUnlock?: boolean;
 }
 
 /**
@@ -40,7 +45,7 @@ interface Props {
  * are blurred and an unlock panel sits on top. Admin tier and previously
  * unlocked readings render the children directly.
  */
-const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage }: Props) => {
+const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage, forceUnlock = false }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
 
@@ -66,11 +71,6 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     gatingMessage: GatingMessage | null;
     resetCycle: ResetCycle;
   }>(() => {
-    // Real authenticated admin bypasses gating entirely.
-    const email = subscriptionManager.getUserEmail();
-    if (email && email === "yuvalbashari@gmail.com") {
-      return { gatingMessage: null, resetCycle: "none" };
-    }
     if (customGatingMessage) {
       return { gatingMessage: customGatingMessage, resetCycle: "none" };
     }
@@ -111,8 +111,10 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     setPaymentOpen(false);
   };
 
-  // Admin or already-unlocked: render children straight.
-  if (unlocked || disabled) {
+  // Bypass paths: explicit forceUnlock prop, an already-unlocked reading, or
+  // an externally-controlled `disabled` flag (e.g. while the AI is still
+  // streaming). Nothing else bypasses — not tier, not email, not env.
+  if (forceUnlock || unlocked || disabled) {
     return <>{children}</>;
   }
 

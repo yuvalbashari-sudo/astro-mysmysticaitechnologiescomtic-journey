@@ -23,6 +23,7 @@ import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
@@ -657,6 +658,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     [selectedCardIndices, drawnCards]
   );
 
+  // Mirror PremiumUnlockOverlay readingId so we can hide the share bar before unlock.
+  const immReadingId = `imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`;
+  const immUnlocked = usePremiumUnlocked(immReadingId);
+
   if (!isOpen) return null;
 
   const overlay = (
@@ -1206,11 +1211,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
                       {!aiLoading && aiText && (
                         <motion.div className="mt-6 space-y-4" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                          <ResultShareBar
-                            resultText={aiText}
-                            shareTitle={`${t.readings_type_tarot}`}
-                            compact
-                          />
+                          {immUnlocked && (
+                            <ResultShareBar
+                              resultText={aiText}
+                              shareTitle={`${t.readings_type_tarot}`}
+                              compact
+                            />
+                          )}
                           <div className="text-center">
                             <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
                               {t.imm_tarot_finish}
@@ -1454,10 +1461,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               </motion.p>
 
                               <div className="space-y-5 text-center">
-                                <ResultShareBar
-                                  resultText={aiText}
-                                  shareTitle={`${t.readings_type_tarot}`}
-                                />
+                                {immUnlocked && (
+                                  <ResultShareBar
+                                    resultText={aiText}
+                                    shareTitle={`${t.readings_type_tarot}`}
+                                  />
+                                )}
                                 <motion.button
                                   type="button"
                                   className="font-heading text-sm tracking-[0.2em] cursor-pointer px-8 py-3 rounded-full"

@@ -24,6 +24,7 @@ import type { AuraResult } from "@/lib/auraResultBank";
 import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 
 const CHART_DAILY_KEY = "astrologai_birthchart_daily";
 const CHART_CACHE_KEY = "astrologai_birthchart_cache";
@@ -105,6 +106,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
+  const natalReadingId = `natal:${userName}:${birthDate}:${birthTime}:${birthCity}`;
+  const natalUnlocked = usePremiumUnlocked(natalReadingId);
   const showResult = phase === "chart" || phase === "result";
   const wheelSize = isMobile ? 300 : 460;
 
@@ -767,7 +770,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </PremiumUnlockOverlay>
                 )}
 
-                {phase === "result" && (
+                {phase === "result" && natalUnlocked && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5 pb-8">
                     <ResultShareBar
                       resultText={resultText}

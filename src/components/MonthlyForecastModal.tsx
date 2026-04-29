@@ -339,7 +339,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.forecast_loading}</motion.p>
               </div>
             )}
-            {!aiLoading && (aiText || aiError) && signInfo && (
+            {!aiLoading && (aiText || aiError) && signInfo && forecastUnlocked && (
               <>
                 <ShareResultSection symbol={signInfo.symbol} title={`${t.readings_type_forecast} — ${signInfo.name}`} subtitle={monthName} readingText={aiText || undefined} />
                 <div className="section-divider max-w-[200px] mx-auto my-10" />
