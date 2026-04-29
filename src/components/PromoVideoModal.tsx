@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
+import { analytics } from "@/lib/analytics";
 import promoVideo from "@/assets/promo.mp4";
 
 interface Props {
@@ -69,7 +70,8 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
     if (!next) v.play().catch(() => {});
   };
 
-  const handleContinue = () => {
+  const handleContinue = (source: "ended" | "continue_button" | "skip_button" = "continue_button") => {
+    analytics.track("video_completed", { source });
     onContinue();
     onClose();
   };
@@ -107,7 +109,7 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
             onEnded={() => {
               setUnlocked(true);
               // Auto-reveal full reading when video finishes naturally.
-              handleContinue();
+              handleContinue("ended");
             }}
             style={{
               position: "absolute",
@@ -182,7 +184,7 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
                 className="w-full flex flex-col items-center gap-2"
               >
                 <button
-                  onClick={handleContinue}
+                  onClick={() => handleContinue("continue_button")}
                   className="w-full sm:w-auto sm:min-w-[280px] btn-gold py-3.5 px-8 rounded-xl font-body font-bold text-sm tracking-wider flex items-center justify-center gap-2"
                   style={{
                     boxShadow:
@@ -193,7 +195,7 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
                   {t.promo_video_continue_label ?? "Continue to full reading"}
                 </button>
                 <button
-                  onClick={handleContinue}
+                  onClick={() => handleContinue("skip_button")}
                   className="text-xs text-foreground/60 hover:text-foreground/90 transition-colors font-body px-3 py-1 rounded-full"
                   style={{ background: "hsl(0 0% 0% / 0.4)" }}
                 >

@@ -4,6 +4,7 @@ import { Lock, Sparkles } from "lucide-react";
 import PromoVideoModal from "./PromoVideoModal";
 import PaymentGatingModal from "./PaymentGatingModal";
 import { premiumUnlock } from "@/lib/premiumUnlock";
+import { analytics } from "@/lib/analytics";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { FEATURE_RULES, type FeatureKey, type ResetCycle } from "@/lib/pricingConfig";
 import { subscriptionManager } from "@/lib/subscriptionManager";
@@ -109,6 +110,22 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     setUnlocked(true);
     setPromoOpen(false);
     setPaymentOpen(false);
+    analytics.track("reading_unlocked", { readingId, featureKey });
+  };
+
+  const handleOpenPromo = () => {
+    // If quota is exhausted for this feature, log a blocked event but still
+    // proceed with the video-as-unlock flow (payment is currently disabled).
+    const access = entitlements.checkAccess(featureKey);
+    if (access.allowed === false) {
+      analytics.track("unlock_blocked_due_to_limit", {
+        readingId,
+        featureKey,
+        reason: access.promptKey,
+      });
+    }
+    analytics.track("video_opened", { readingId, featureKey });
+    setPromoOpen(true);
   };
 
   // Bypass paths: explicit forceUnlock prop, an already-unlocked reading, or
@@ -181,7 +198,7 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
         </p>
 
         <button
-          onClick={() => setPromoOpen(true)}
+          onClick={handleOpenPromo}
           className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider flex items-center justify-center gap-2"
         >
           <Sparkles className="w-4 h-4" />
