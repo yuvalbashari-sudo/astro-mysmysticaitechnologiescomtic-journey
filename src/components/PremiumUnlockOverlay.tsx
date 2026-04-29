@@ -198,7 +198,7 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
         </p>
 
         <button
-          onClick={() => setPromoOpen(true)}
+          onClick={handleOpenPromo}
           className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider flex items-center justify-center gap-2"
         >
           <Sparkles className="w-4 h-4" />
