@@ -22,6 +22,7 @@ import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
