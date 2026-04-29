@@ -250,10 +250,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     }
   }, [authReady, birthCity, birthDate, birthTime, dailyLimitReached, gender, isAdmin, t.common_loading, t.chart_daily_limit_toast, t.chart_form_error, userName]);
 
+  // Tracks whether the AI generation has already started for this chart
+  // (avoids double-fire if onUnlockStart is invoked multiple times).
+  const aiStartedRef = useRef(false);
+
   const startAIInterpretation = useCallback(() => {
     if (!chartData) return;
+    if (aiStartedRef.current) return;
+    aiStartedRef.current = true;
 
-    setPhase("chart");
     setResultText("");
     setAiStreaming(true);
 
@@ -337,19 +342,22 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           toast.error(error);
         }
         setAiStreaming(false);
-        setPhase("form");
+        aiStartedRef.current = false;
         setPhase("form");
       },
       language,
     );
   }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
 
-  // When aura reveal is disabled, auto-start AI interpretation from loading phase
+  // When chart data is ready, transition to "chart" phase so the user can see
+  // their natal chart immediately. AI interpretation is deferred until the
+  // user clicks unlock (fired via onUnlockStart on the PremiumUnlockOverlay).
   useEffect(() => {
     if (SHOW_AURA_REVEAL) return;
     if (phase !== "loading" || !chartData || restoredFromCache) return;
-    startAIInterpretation();
-  }, [phase, chartData, restoredFromCache, startAIInterpretation]);
+    aiStartedRef.current = false;
+    setPhase("chart");
+  }, [phase, chartData, restoredFromCache]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
