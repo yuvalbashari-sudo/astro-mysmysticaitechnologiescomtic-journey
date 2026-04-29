@@ -220,7 +220,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!matchInfo) return;
-    const fullContent = aiText ? `\n\n${aiText}` : "";
+    // Block copying the full reading before unlock — only score line allowed.
+    const fullContent = compatUnlocked && aiText ? `\n\n${aiText}` : "";
     await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%${fullContent}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
