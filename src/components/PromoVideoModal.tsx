@@ -109,7 +109,7 @@ const PromoVideoModal = ({ isOpen, onClose, onContinue, unlockAfterSeconds = 4 }
             onEnded={() => {
               setUnlocked(true);
               // Auto-reveal full reading when video finishes naturally.
-              handleContinue();
+              handleContinue("ended");
             }}
             style={{
               position: "absolute",
