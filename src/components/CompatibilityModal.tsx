@@ -442,7 +442,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
-                        {!aiLoading && (aiText || aiError) && (
+                        {!aiLoading && (aiText || aiError) && compatUnlocked && (
                           <>
                             <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                           </>
