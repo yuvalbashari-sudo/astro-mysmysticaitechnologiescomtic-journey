@@ -127,17 +127,17 @@ const DailyHoroscopeCard = () => {
     }
   }, []);
 
-  const fetchHoroscope = useCallback(async () => {
-    if (!zodiacSign) return;
+  // Tracks whether we've already attempted to load (cache or fresh) for this
+  // sign/lang/day combo to avoid double-fetches.
+  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
 
+  // Looks up the cached horoscope for today. Safe to call before unlock —
+  // it does NOT trigger the AI generation, only reads existing rows.
+  const loadCachedHoroscope = useCallback(async () => {
+    if (!zodiacSign) return false;
     const fp = getFingerprint();
     const today = getTodayStr();
-
-    setLoading(true);
-    setError(false);
-
     try {
-      // Check DB cache first
       const { data: cached } = await supabase
         .from("daily_horoscopes")
         .select("content, love_score, career_score, energy_score")
@@ -145,7 +145,6 @@ const DailyHoroscopeCard = () => {
         .eq("horoscope_date", today)
         .eq("language", language)
         .maybeSingle();
-
       if (cached) {
         setData({
           content: cached.content,
@@ -153,12 +152,24 @@ const DailyHoroscopeCard = () => {
           career_score: cached.career_score ?? 3,
           energy_score: cached.energy_score ?? 3,
         });
-        setLoading(false);
         sessionStorage.setItem("_dbg_horoscope_source", "cached");
-        return;
+        return true;
       }
+    } catch (e) {
+      console.warn("[daily-horoscope] cache lookup failed", e);
+    }
+    return false;
+  }, [zodiacSign, language]);
 
-      // Generate new horoscope
+  // Generates a fresh horoscope via the edge function. Called only after the
+  // user passes the unlock gate (or directly when re-loading an unlocked day).
+  const generateHoroscope = useCallback(async () => {
+    if (!zodiacSign) return;
+    const fp = getFingerprint();
+    const today = getTodayStr();
+    setLoading(true);
+    setError(false);
+    try {
       const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/daily-horoscope`;
       const resp = await fetch(url, {
         method: "POST",
@@ -210,11 +221,30 @@ const DailyHoroscopeCard = () => {
     }
   }, [zodiacSign, birthDate, userName, language, gender]);
 
+  // Backwards-compat shim used by the retry button.
+  const fetchHoroscope = useCallback(async () => {
+    const hit = await loadCachedHoroscope();
+    if (!hit) await generateHoroscope();
+  }, [loadCachedHoroscope, generateHoroscope]);
+
+  // On mount / sign change: ALWAYS try the cache (no AI cost). Only generate
+  // a fresh horoscope automatically when the user has already passed the
+  // unlock gate for this day. Otherwise wait for onUnlockStart.
   useEffect(() => {
-    if (zodiacSign) {
-      fetchHoroscope();
-    }
-  }, [fetchHoroscope]);
+    if (!zodiacSign) return;
+    let cancelled = false;
+    setHasAttemptedLoad(false);
+    (async () => {
+      const hit = await loadCachedHoroscope();
+      if (cancelled) return;
+      setHasAttemptedLoad(true);
+      if (!hit && dailyUnlocked) {
+        // Already unlocked for today — fine to regenerate without re-gating.
+        await generateHoroscope();
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [zodiacSign, language, dailyUnlocked, loadCachedHoroscope, generateHoroscope]);
 
   // Format today's date in locale
   const formattedDate = formatFullDate(new Date(), language);
