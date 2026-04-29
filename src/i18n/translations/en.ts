@@ -686,6 +686,7 @@ export const en: TranslationKeys = {
   promo_video_wait_hint: "Continue available in {s}s…",
   promo_video_continue_label: "Continue to full reading",
   promo_video_skip_label: "Skip",
+  promo_video_almost_ready: "Almost ready… preparing your full reading ✨",
   unlock_preview_label: "Preview",
   unlock_cta_label: "Unlock full reading",
   unlock_subtitle: "Watch a short message from us, then unlock your complete reading.",
