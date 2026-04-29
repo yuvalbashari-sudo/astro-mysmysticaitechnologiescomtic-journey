@@ -4,6 +4,7 @@ import { Lock, Sparkles } from "lucide-react";
 import PromoVideoModal from "./PromoVideoModal";
 import PaymentGatingModal from "./PaymentGatingModal";
 import { premiumUnlock } from "@/lib/premiumUnlock";
+import { analytics } from "@/lib/analytics";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { FEATURE_RULES, type FeatureKey, type ResetCycle } from "@/lib/pricingConfig";
 import { subscriptionManager } from "@/lib/subscriptionManager";
