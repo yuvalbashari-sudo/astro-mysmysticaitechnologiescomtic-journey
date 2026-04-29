@@ -131,6 +131,11 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     setIsLoading(true);
   };
 
+  // Lazy AI generation kickoff. Captured at handleOnboardingComplete time,
+  // fired only when the user clicks the unlock CTA.
+  const startAIRef = useRef<null | (() => void)>(null);
+  const aiStartedRef = useRef(false);
+
   const handleOnboardingComplete = () => {
     const s1 = getSignFromDate(new Date(date1));
     const s2 = getSignFromDate(new Date(date2));
@@ -140,60 +145,68 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     const info = { sign1: s1, sign2: s2, sign1Name: getSignNameByKey(s1, language), sign2Name: getSignNameByKey(s2, language), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
     setIsLoading(false);
-    setAiLoading(true);
     aiTextRef.current = "";
+    setAiText("");
+    setAiLoading(false);
+    aiStartedRef.current = false;
 
     mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
     mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
     entitlements.recordFeatureUse("compatibility_reading");
     notifyUsageChanged();
 
-    streamMysticalReading(
-      "compatibility",
-      {
-        sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
-        sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
-        sign1BirthTime: time1 || null,
-        sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
-        sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
-        sign1RisingElement: rising1 ? getSignElement(rising1) : null,
-        sign1Gender: gender1 || null,
-        sign1PersonName: name1 || null,
-        sign1Relation: relation1 || null,
-        sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
-        sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
-        sign2BirthTime: time2 || null,
-        sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
-        sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
-        sign2RisingElement: rising2 ? getSignElement(rising2) : null,
-        sign2Gender: gender2 || null,
-        sign2PersonName: name2 || null,
-        sign2Relation: relation2 || null,
-      },
-      (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-      () => {
-        setAiLoading(false);
-        setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
-        readingsStorage.save({
-          type: "compatibility",
-          title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
-          subtitle: `${t.compat_score_label}: ${info.score}%`,
-          symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
-          data: { ...info, date1, date2, aiReading: aiTextRef.current },
-        });
-        // Save to session cache for reuse on reopen
-        saveCompatCache({
-          date: new Date().toISOString().split("T")[0],
-          language,
-          matchInfo: info,
-          aiText: aiTextRef.current,
-          inputHash: `${date1}-${date2}`,
-        });
-        sessionStorage.setItem("_dbg_compat_source", "fresh");
-      },
-      (err) => { setAiLoading(false); setAiError(err); toast(err); },
-      language,
-    );
+    // Defer the AI request — only fired when the user passes the unlock gate.
+    startAIRef.current = () => {
+      if (aiStartedRef.current) return;
+      aiStartedRef.current = true;
+      setAiLoading(true);
+      streamMysticalReading(
+        "compatibility",
+        {
+          sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
+          sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
+          sign1BirthTime: time1 || null,
+          sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
+          sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
+          sign1RisingElement: rising1 ? getSignElement(rising1) : null,
+          sign1Gender: gender1 || null,
+          sign1PersonName: name1 || null,
+          sign1Relation: relation1 || null,
+          sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
+          sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
+          sign2BirthTime: time2 || null,
+          sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
+          sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
+          sign2RisingElement: rising2 ? getSignElement(rising2) : null,
+          sign2Gender: gender2 || null,
+          sign2PersonName: name2 || null,
+          sign2Relation: relation2 || null,
+        },
+        (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
+        () => {
+          setAiLoading(false);
+          setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
+          readingsStorage.save({
+            type: "compatibility",
+            title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
+            subtitle: `${t.compat_score_label}: ${info.score}%`,
+            symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
+            data: { ...info, date1, date2, aiReading: aiTextRef.current },
+          });
+          // Save to session cache for reuse on reopen
+          saveCompatCache({
+            date: new Date().toISOString().split("T")[0],
+            language,
+            matchInfo: info,
+            aiText: aiTextRef.current,
+            inputHash: `${date1}-${date2}`,
+          });
+          sessionStorage.setItem("_dbg_compat_source", "fresh");
+        },
+        (err) => { setAiLoading(false); aiStartedRef.current = false; setAiError(err); toast(err); },
+        language,
+      );
+    };
   };
 
   const handleClose = () => {
