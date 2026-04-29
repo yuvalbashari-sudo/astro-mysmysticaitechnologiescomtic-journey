@@ -22,6 +22,7 @@ import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
@@ -1180,9 +1181,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             {t.imm_tarot_your_reading}
                           </motion.h3>
                           {aiText ? (
-                            <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-                              {renderMysticalText(aiText)}
-                            </motion.div>
+                            <PremiumUnlockOverlay
+                              readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
+                              featureKey="tarot_reading"
+                            >
+                              <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+                                {renderMysticalText(aiText)}
+                              </motion.div>
+                            </PremiumUnlockOverlay>
                           ) : aiLoading ? (
                             <div className="flex flex-col items-center justify-center py-12 gap-4">
                               <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
@@ -1348,19 +1354,24 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
                           {/* ── The living text ── */}
                           {aiText ? (
-                            <motion.div
-                              className="font-body"
-                              style={{
-                                maxWidth: "420px",
-                                margin: "0 auto",
-                                textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)",
-                              }}
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 1.8, duration: 1 }}
+                            <PremiumUnlockOverlay
+                              readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
+                              featureKey="tarot_reading"
                             >
-                              {renderMysticalText(aiText)}
-                            </motion.div>
+                              <motion.div
+                                className="font-body"
+                                style={{
+                                  maxWidth: "420px",
+                                  margin: "0 auto",
+                                  textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)",
+                                }}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1.8, duration: 1 }}
+                              >
+                                {renderMysticalText(aiText)}
+                              </motion.div>
+                            </PremiumUnlockOverlay>
                           ) : aiLoading ? (
                             <motion.div
                               className="flex flex-col items-center justify-center py-20 gap-7"

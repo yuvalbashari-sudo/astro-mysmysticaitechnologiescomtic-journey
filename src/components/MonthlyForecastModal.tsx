@@ -19,6 +19,7 @@ import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import { isAdminTestMode, getAdminSafeProfile, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -213,24 +214,36 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
               <div className="relative" style={{ padding: "0 16px 60px" }}>
                 {aiText ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="max-w-prose rounded-2xl"
-                    style={{
-                      background: "linear-gradient(145deg, rgba(10, 10, 25, 0.82), rgba(8, 8, 20, 0.9))",
-                      backdropFilter: "blur(24px)",
-                      WebkitBackdropFilter: "blur(24px)",
-                      border: "1px solid hsl(var(--gold) / 0.18)",
-                      boxShadow: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px hsl(var(--gold) / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-                      padding: "36px 32px",
+                  <PremiumUnlockOverlay
+                    readingId={`forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`}
+                    featureKey="monthly_horoscope"
+                    customGatingMessage={{
+                      he: "פתח את התחזית החודשית המלאה תמורת ₪9.",
+                      en: "Unlock your full monthly forecast for ₪9.",
+                      ar: "افتح توقعاتك الشهرية الكاملة مقابل 9 ₪.",
+                      ru: "Откройте ваш полный месячный прогноз за ₪9.",
+                      priceILS: 9,
                     }}
                   >
-                    <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                    <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
-                    {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
-                  </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                      className="max-w-prose rounded-2xl"
+                      style={{
+                        background: "linear-gradient(145deg, rgba(10, 10, 25, 0.82), rgba(8, 8, 20, 0.9))",
+                        backdropFilter: "blur(24px)",
+                        WebkitBackdropFilter: "blur(24px)",
+                        border: "1px solid hsl(var(--gold) / 0.18)",
+                        boxShadow: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px hsl(var(--gold) / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                        padding: "36px 32px",
+                      }}
+                    >
+                      <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                      <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
+                      {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
+                    </motion.div>
+                  </PremiumUnlockOverlay>
                 ) : aiError ? (
                   <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
                 ) : (
@@ -281,24 +294,36 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             </div>
             {aiText ? (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="max-w-prose mx-auto rounded-2xl"
-                style={{
-                  background: "linear-gradient(145deg, rgba(10, 10, 25, 0.82), rgba(8, 8, 20, 0.9))",
-                  backdropFilter: "blur(24px)",
-                  WebkitBackdropFilter: "blur(24px)",
-                  border: "1px solid hsl(var(--gold) / 0.18)",
-                  boxShadow: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px hsl(var(--gold) / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.08)",
-                  padding: "24px 18px",
+              <PremiumUnlockOverlay
+                readingId={`forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`}
+                featureKey="monthly_horoscope"
+                customGatingMessage={{
+                  he: "פתח את התחזית החודשית המלאה תמורת ₪9.",
+                  en: "Unlock your full monthly forecast for ₪9.",
+                  ar: "افتح توقعاتك الشهرية الكاملة مقابل 9 ₪.",
+                  ru: "Откройте ваш полный месячный прогноз за ₪9.",
+                  priceILS: 9,
                 }}
               >
-                <div className="flex justify-end mb-5"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
-                {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
-              </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                  className="max-w-prose mx-auto rounded-2xl"
+                  style={{
+                    background: "linear-gradient(145deg, rgba(10, 10, 25, 0.82), rgba(8, 8, 20, 0.9))",
+                    backdropFilter: "blur(24px)",
+                    WebkitBackdropFilter: "blur(24px)",
+                    border: "1px solid hsl(var(--gold) / 0.18)",
+                    boxShadow: "0 12px 48px rgba(0,0,0,0.5), 0 0 1px hsl(var(--gold) / 0.25), inset 0 1px 0 hsl(var(--gold) / 0.08)",
+                    padding: "24px 18px",
+                  }}
+                >
+                  <div className="flex justify-end mb-5"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                  <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
+                  {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
+                </motion.div>
+              </PremiumUnlockOverlay>
             ) : aiError ? (
               <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
             ) : (

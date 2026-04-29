@@ -799,6 +799,11 @@ export type TranslationKeys = {
   promo_video_continue_label: string;
   promo_video_skip_label: string;
 
+  // Premium unlock overlay (preview → video → payment flow)
+  unlock_preview_label: string;
+  unlock_cta_label: string;
+  unlock_subtitle: string;
+
   // Daily Horoscope
   daily_horoscope_title: string;
   daily_horoscope_subtitle: string;
