@@ -206,7 +206,28 @@ const PromoVideoModal = ({
               bottom: "calc(env(safe-area-inset-bottom, 0px) + 20px)",
             }}
           >
-            {!unlocked ? (
+            {waitingForReady ? (
+              <motion.p
+                key="almost-ready"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="font-body text-sm text-gold/90 px-5 py-2.5 rounded-full backdrop-blur-md flex items-center gap-2"
+                style={{
+                  background: "hsl(0 0% 0% / 0.6)",
+                  border: "1px solid hsl(var(--gold) / 0.3)",
+                  boxShadow: "0 0 24px hsl(var(--gold) / 0.18)",
+                }}
+              >
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="inline-flex"
+                >
+                  <Sparkles className="w-4 h-4" />
+                </motion.span>
+                {t.promo_video_almost_ready ?? "Almost ready… preparing your full reading ✨"}
+              </motion.p>
+            ) : !unlocked ? (
               <motion.p
                 key="waiting"
                 initial={{ opacity: 0 }}
