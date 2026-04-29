@@ -645,6 +645,7 @@ export const ru: TranslationKeys = {
   seo_section_spiritual: "Духовное послание",
   seo_section_advice: "Совет",
   seo_section_personality: "Личность",
+  zodiac_monthly_energy_label: "Энергия месяца",
   seo_section_money: "Деньги и изобилие",
   seo_section_health: "Здоровье",
   seo_section_sensual: "Чувственная энергия",
