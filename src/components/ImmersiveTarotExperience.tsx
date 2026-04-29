@@ -1181,9 +1181,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                             {t.imm_tarot_your_reading}
                           </motion.h3>
                           {aiText ? (
-                            <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-                              {renderMysticalText(aiText)}
-                            </motion.div>
+                            <PremiumUnlockOverlay
+                              readingId={`imm-tarot:${selectedQuestion || "general"}:${selectedCards.map(c => c?.id).join("-")}`}
+                              featureKey="tarot_reading"
+                            >
+                              <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+                                {renderMysticalText(aiText)}
+                              </motion.div>
+                            </PremiumUnlockOverlay>
                           ) : aiLoading ? (
                             <div className="flex flex-col items-center justify-center py-12 gap-4">
                               <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
