@@ -71,11 +71,6 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     gatingMessage: GatingMessage | null;
     resetCycle: ResetCycle;
   }>(() => {
-    // Real authenticated admin bypasses gating entirely.
-    const email = subscriptionManager.getUserEmail();
-    if (email && email === "yuvalbashari@gmail.com") {
-      return { gatingMessage: null, resetCycle: "none" };
-    }
     if (customGatingMessage) {
       return { gatingMessage: customGatingMessage, resetCycle: "none" };
     }
