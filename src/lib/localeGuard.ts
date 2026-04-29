@@ -19,7 +19,17 @@
 import type { Language } from "@/i18n/types";
 import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 import { formatMonthName } from "@/lib/dateTimeFormat";
-import { translations } from "@/i18n";
+import { en } from "@/i18n/translations/en";
+import { he } from "@/i18n/translations/he";
+import { ru } from "@/i18n/translations/ru";
+import { ar } from "@/i18n/translations/ar";
+
+const translationTables: Record<Language, Record<string, string>> = {
+  en: en as unknown as Record<string, string>,
+  he: he as unknown as Record<string, string>,
+  ru: ru as unknown as Record<string, string>,
+  ar: ar as unknown as Record<string, string>,
+};
 
 type ScriptName = "latin" | "hebrew" | "arabic" | "cyrillic";
 
