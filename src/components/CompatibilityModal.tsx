@@ -131,6 +131,11 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     setIsLoading(true);
   };
 
+  // Lazy AI generation kickoff. Captured at handleOnboardingComplete time,
+  // fired only when the user clicks the unlock CTA.
+  const startAIRef = useRef<null | (() => void)>(null);
+  const aiStartedRef = useRef(false);
+
   const handleOnboardingComplete = () => {
     const s1 = getSignFromDate(new Date(date1));
     const s2 = getSignFromDate(new Date(date2));
@@ -140,60 +145,68 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     const info = { sign1: s1, sign2: s2, sign1Name: getSignNameByKey(s1, language), sign2Name: getSignNameByKey(s2, language), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
     setIsLoading(false);
-    setAiLoading(true);
     aiTextRef.current = "";
+    setAiText("");
+    setAiLoading(false);
+    aiStartedRef.current = false;
 
     mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
     mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
     entitlements.recordFeatureUse("compatibility_reading");
     notifyUsageChanged();
 
-    streamMysticalReading(
-      "compatibility",
-      {
-        sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
-        sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
-        sign1BirthTime: time1 || null,
-        sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
-        sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
-        sign1RisingElement: rising1 ? getSignElement(rising1) : null,
-        sign1Gender: gender1 || null,
-        sign1PersonName: name1 || null,
-        sign1Relation: relation1 || null,
-        sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
-        sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
-        sign2BirthTime: time2 || null,
-        sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
-        sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
-        sign2RisingElement: rising2 ? getSignElement(rising2) : null,
-        sign2Gender: gender2 || null,
-        sign2PersonName: name2 || null,
-        sign2Relation: relation2 || null,
-      },
-      (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-      () => {
-        setAiLoading(false);
-        setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
-        readingsStorage.save({
-          type: "compatibility",
-          title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
-          subtitle: `${t.compat_score_label}: ${info.score}%`,
-          symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
-          data: { ...info, date1, date2, aiReading: aiTextRef.current },
-        });
-        // Save to session cache for reuse on reopen
-        saveCompatCache({
-          date: new Date().toISOString().split("T")[0],
-          language,
-          matchInfo: info,
-          aiText: aiTextRef.current,
-          inputHash: `${date1}-${date2}`,
-        });
-        sessionStorage.setItem("_dbg_compat_source", "fresh");
-      },
-      (err) => { setAiLoading(false); setAiError(err); toast(err); },
-      language,
-    );
+    // Defer the AI request — only fired when the user passes the unlock gate.
+    startAIRef.current = () => {
+      if (aiStartedRef.current) return;
+      aiStartedRef.current = true;
+      setAiLoading(true);
+      streamMysticalReading(
+        "compatibility",
+        {
+          sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
+          sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
+          sign1BirthTime: time1 || null,
+          sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
+          sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
+          sign1RisingElement: rising1 ? getSignElement(rising1) : null,
+          sign1Gender: gender1 || null,
+          sign1PersonName: name1 || null,
+          sign1Relation: relation1 || null,
+          sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
+          sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
+          sign2BirthTime: time2 || null,
+          sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
+          sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
+          sign2RisingElement: rising2 ? getSignElement(rising2) : null,
+          sign2Gender: gender2 || null,
+          sign2PersonName: name2 || null,
+          sign2Relation: relation2 || null,
+        },
+        (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
+        () => {
+          setAiLoading(false);
+          setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
+          readingsStorage.save({
+            type: "compatibility",
+            title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
+            subtitle: `${t.compat_score_label}: ${info.score}%`,
+            symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
+            data: { ...info, date1, date2, aiReading: aiTextRef.current },
+          });
+          // Save to session cache for reuse on reopen
+          saveCompatCache({
+            date: new Date().toISOString().split("T")[0],
+            language,
+            matchInfo: info,
+            aiText: aiTextRef.current,
+            inputHash: `${date1}-${date2}`,
+          });
+          sessionStorage.setItem("_dbg_compat_source", "fresh");
+        },
+        (err) => { setAiLoading(false); aiStartedRef.current = false; setAiError(err); toast(err); },
+        language,
+      );
+    };
   };
 
   const handleClose = () => {
@@ -414,11 +427,13 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                     >
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
-                        {aiText ? (
-                          <PremiumUnlockOverlay
-                            readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
-                            featureKey="compatibility_reading"
-                          >
+                        <PremiumUnlockOverlay
+                          readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
+                          featureKey="compatibility_reading"
+                          onUnlockStart={() => startAIRef.current?.()}
+                          isReady={!!aiText && !aiLoading}
+                        >
+                          {aiText ? (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
                               {isMobile && (<div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>)}
                               <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
@@ -431,23 +446,27 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                                 </motion.div>
                               )}
                             </motion.div>
-                          </PremiumUnlockOverlay>
-                        ) : aiError ? (
-                          <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                            <p className="text-foreground/50 font-body text-sm" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{aiError}</p>
-                          </div>
-                        ) : (
-                          <div className="flex flex-col items-center justify-center py-16">
-                            <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                            <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
-                          </div>
-                        )}
+                          ) : aiError ? (
+                            <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                              <p className="text-foreground/50 font-body text-sm" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{aiError}</p>
+                            </div>
+                          ) : aiLoading ? (
+                            <div className="flex flex-col items-center justify-center py-16">
+                              <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
+                              <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
+                            </div>
+                          ) : (
+                            // Pre-unlock teaser. Blurred by overlay.
+                            <div className="text-center py-10 font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
+                              <p className="text-gold/70">{t.compat_loading}</p>
+                              <p className="opacity-70 mt-3">✦ ✦ ✦</p>
+                            </div>
+                          )}
 
-                        {!aiLoading && (aiText || aiError) && compatUnlocked && (
-                          <>
+                          {!aiLoading && (aiText || aiError) && compatUnlocked && (
                             <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
-                          </>
-                        )}
+                          )}
+                        </PremiumUnlockOverlay>
                       </div>
                     </motion.div>
 
@@ -505,11 +524,13 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </motion.div>
                     </div>
 
-                    {aiText ? (
-                      <PremiumUnlockOverlay
-                        readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
-                        featureKey="compatibility_reading"
-                      >
+                    <PremiumUnlockOverlay
+                      readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
+                      featureKey="compatibility_reading"
+                      onUnlockStart={() => startAIRef.current?.()}
+                      isReady={!!aiText && !aiLoading}
+                    >
+                      {aiText ? (
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
                           <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
                           {renderMysticalText(aiText, textSize)}
@@ -520,17 +541,23 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                             </motion.div>
                           )}
                         </motion.div>
-                      </PremiumUnlockOverlay>
-                    ) : aiError ? (
-                      <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                        <p className="text-foreground/50 font-body text-sm">{aiError}</p>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center py-16">
-                        <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                        <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
-                      </div>
-                    )}
+                      ) : aiError ? (
+                        <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                          <p className="text-foreground/50 font-body text-sm">{aiError}</p>
+                        </div>
+                      ) : aiLoading ? (
+                        <div className="flex flex-col items-center justify-center py-16">
+                          <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
+                          <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
+                        </div>
+                      ) : (
+                        // Pre-unlock teaser. Blurred by overlay.
+                        <div className="text-center py-10 font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
+                          <p className="text-gold/70">{t.compat_loading}</p>
+                          <p className="opacity-70 mt-3">✦ ✦ ✦</p>
+                        </div>
+                      )}
+                    </PremiumUnlockOverlay>
 
                     {!aiLoading && (aiText || aiError) && compatUnlocked && (
                       <>

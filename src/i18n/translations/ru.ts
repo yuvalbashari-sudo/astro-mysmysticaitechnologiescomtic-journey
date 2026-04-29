@@ -686,6 +686,7 @@ export const ru: TranslationKeys = {
   promo_video_wait_hint: "Продолжить можно через {s} с…",
   promo_video_continue_label: "Перейти к полному чтению",
   promo_video_skip_label: "Пропустить",
+  promo_video_almost_ready: "Почти готово… готовим ваше полное чтение ✨",
   unlock_preview_label: "Предпросмотр",
   unlock_cta_label: "Открыть полное чтение",
   unlock_subtitle: "Посмотрите короткое сообщение от нас, затем откройте полное чтение.",

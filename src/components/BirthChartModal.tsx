@@ -250,10 +250,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     }
   }, [authReady, birthCity, birthDate, birthTime, dailyLimitReached, gender, isAdmin, t.common_loading, t.chart_daily_limit_toast, t.chart_form_error, userName]);
 
+  // Tracks whether the AI generation has already started for this chart
+  // (avoids double-fire if onUnlockStart is invoked multiple times).
+  const aiStartedRef = useRef(false);
+
   const startAIInterpretation = useCallback(() => {
     if (!chartData) return;
+    if (aiStartedRef.current) return;
+    aiStartedRef.current = true;
 
-    setPhase("chart");
     setResultText("");
     setAiStreaming(true);
 
@@ -337,19 +342,22 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           toast.error(error);
         }
         setAiStreaming(false);
-        setPhase("form");
+        aiStartedRef.current = false;
         setPhase("form");
       },
       language,
     );
   }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
 
-  // When aura reveal is disabled, auto-start AI interpretation from loading phase
+  // When chart data is ready, transition to "chart" phase so the user can see
+  // their natal chart immediately. AI interpretation is deferred until the
+  // user clicks unlock (fired via onUnlockStart on the PremiumUnlockOverlay).
   useEffect(() => {
     if (SHOW_AURA_REVEAL) return;
     if (phase !== "loading" || !chartData || restoredFromCache) return;
-    startAIInterpretation();
-  }, [phase, chartData, restoredFromCache, startAIInterpretation]);
+    aiStartedRef.current = false;
+    setPhase("chart");
+  }, [phase, chartData, restoredFromCache]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(resultText);
@@ -743,17 +751,12 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   <TextSizeControl value={textSize} onChange={setTextSize} />
                 </div>
 
-                {aiStreaming && !resultText && (
-                  <div className="text-center py-8">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3" style={{ color: "hsl(var(--gold))" }} />
-                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.5)" }}>{t.birth_chart_loading}</p>
-                  </div>
-                )}
-
-                {resultText && (
+                {chartData && (phase === "chart" || phase === "result") && (
                   <PremiumUnlockOverlay
                     readingId={`natal:${userName}:${birthDate}:${birthTime}:${birthCity}`}
                     featureKey="monthly_horoscope"
+                    onUnlockStart={() => startAIInterpretation()}
+                    isReady={!!resultText && !aiStreaming}
                     customGatingMessage={{
                       he: "פתח את מפת הלידה השלמה והקריאה המעמיקה תמורת ₪19.",
                       en: "Unlock your full birth chart and deep reading for ₪19.",
@@ -762,11 +765,23 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                       priceILS: 19,
                     }}
                   >
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
-                      <div dir={dir} style={{ textAlign: isRTL ? "right" : "left", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
-                        {renderMysticalText(resultText, textSize)}
+                    {resultText ? (
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
+                        <div dir={dir} style={{ textAlign: isRTL ? "right" : "left", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
+                          {renderMysticalText(resultText, textSize)}
+                        </div>
+                      </motion.div>
+                    ) : aiStreaming ? (
+                      <div className="text-center py-8">
+                        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3" style={{ color: "hsl(var(--gold))" }} />
+                        <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.5)" }}>{t.birth_chart_loading}</p>
                       </div>
-                    </motion.div>
+                    ) : (
+                      // Pre-unlock teaser. Blurred by overlay.
+                      <div className="mystical-card p-5 md:p-8 text-center font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
+                        <p>✦ ✦ ✦</p>
+                      </div>
+                    )}
                   </PremiumUnlockOverlay>
                 )}
 

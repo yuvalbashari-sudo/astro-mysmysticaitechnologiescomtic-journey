@@ -686,6 +686,7 @@ export const he: TranslationKeys = {
   promo_video_wait_hint: "אפשר להמשיך בעוד {s} שניות…",
   promo_video_continue_label: "המשך לקריאה המלאה",
   promo_video_skip_label: "דלג",
+  promo_video_almost_ready: "כמעט מוכן… מכינים לך את הפירוש המלא ✨",
   unlock_preview_label: "תצוגה מקדימה",
   unlock_cta_label: "פתח את הקריאה המלאה",
   unlock_subtitle: "צפה בהודעה קצרה מאיתנו, ולאחר מכן פתח את הקריאה השלמה שלך.",

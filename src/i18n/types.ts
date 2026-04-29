@@ -799,6 +799,7 @@ export type TranslationKeys = {
   promo_video_wait_hint: string;
   promo_video_continue_label: string;
   promo_video_skip_label: string;
+  promo_video_almost_ready: string;
 
   // Premium unlock overlay (preview → video → payment flow)
   unlock_preview_label: string;

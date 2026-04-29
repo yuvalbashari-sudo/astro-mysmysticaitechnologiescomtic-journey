@@ -557,11 +557,18 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     });
   }, []);
 
+  // Holds the lazy AI-generation kickoff that runs when the user clicks unlock.
+  // We capture all the inputs at reveal-time so the closure is stable even if
+  // state shifts mid-flight.
+  const startAIGenerationRef = useRef<null | (() => void)>(null);
+  const aiStartedRef = useRef(false);
+
   const handleRevealComplete = useCallback(() => {
     setPhase("interpretation");
-    setAiLoading(true);
     aiTextRef.current = "";
     setAiText("");
+    setAiLoading(false);
+    aiStartedRef.current = false;
 
     const posLabels = [
       t.tarot_pos_past,
@@ -581,38 +588,45 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     const spreadType = selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
     const selectedQuestionLabel = questionOptions.find((option) => option.key === selectedQuestion)?.label || selectedQuestion || t.imm_tarot_category_general;
 
-    streamTarotReading(
-      spreadType,
-      cardsPayload,
-      (delta) => {
-        aiTextRef.current += delta;
-        setAiText(aiTextRef.current);
-      },
-      () => {
-        setAiLoading(false);
-        setActiveReading({
-          type: "tarot",
-          label: `${t.readings_type_tarot} — ${selectedQuestionLabel}`,
-          summary: aiTextRef.current,
-        });
-        tarotMemory.recordReading(spreadType, cardsPayload);
-        mysticalProfile.recordTarotCards(
-          cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
-          spreadType
-        );
-        // Usage already recorded in handleSelectQuestion — no duplicate recording needed
-        readingsStorage.save({
-          type: "tarot",
-          title: `${t.readings_type_tarot}`,
-          subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
-          symbol: "🔮",
-          data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
-        });
-      },
-      (err) => { setAiLoading(false); toast(err); },
-      selectedQuestion || undefined,
-      language,
-    );
+    // Defer the actual AI request until the user clicks the unlock CTA. The
+    // promo-video flow will fire `onUnlockStart` which invokes this closure.
+    startAIGenerationRef.current = () => {
+      if (aiStartedRef.current) return;
+      aiStartedRef.current = true;
+      setAiLoading(true);
+      streamTarotReading(
+        spreadType,
+        cardsPayload,
+        (delta) => {
+          aiTextRef.current += delta;
+          setAiText(aiTextRef.current);
+        },
+        () => {
+          setAiLoading(false);
+          setActiveReading({
+            type: "tarot",
+            label: `${t.readings_type_tarot} — ${selectedQuestionLabel}`,
+            summary: aiTextRef.current,
+          });
+          tarotMemory.recordReading(spreadType, cardsPayload);
+          mysticalProfile.recordTarotCards(
+            cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
+            spreadType
+          );
+          // Usage already recorded in handleSelectQuestion — no duplicate recording needed
+          readingsStorage.save({
+            type: "tarot",
+            title: `${t.readings_type_tarot}`,
+            subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
+            symbol: "🔮",
+            data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
+          });
+        },
+        (err) => { setAiLoading(false); aiStartedRef.current = false; toast(err); },
+        selectedQuestion || undefined,
+        language,
+      );
+    };
   }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards, questionOptions]);
 
   useEffect(() => {
@@ -1185,23 +1199,33 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           >
                             {t.imm_tarot_your_reading}
                           </motion.h3>
-                          {aiText ? (
-                            <PremiumUnlockOverlay
-                              readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
-                              featureKey="tarot_reading"
-                            >
+                          <PremiumUnlockOverlay
+                            readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
+                            featureKey="tarot_reading"
+                            onUnlockStart={() => startAIGenerationRef.current?.()}
+                            isReady={!!aiText && !aiLoading}
+                          >
+                            {aiText ? (
                               <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
                                 {renderMysticalText(aiText)}
                               </motion.div>
-                            </PremiumUnlockOverlay>
-                          ) : aiLoading ? (
-                            <div className="flex flex-col items-center justify-center py-12 gap-4">
-                              <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-                                <Sparkles className="w-8 h-8 text-gold/50" />
-                              </motion.div>
-                              <p className="text-gold/50 font-body text-lg">{t.imm_tarot_deciphering}</p>
-                            </div>
-                          ) : null}
+                            ) : aiLoading ? (
+                              <div className="flex flex-col items-center justify-center py-12 gap-4">
+                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
+                                  <Sparkles className="w-8 h-8 text-gold/50" />
+                                </motion.div>
+                                <p className="text-gold/50 font-body text-lg">{t.imm_tarot_deciphering}</p>
+                              </div>
+                            ) : (
+                              // Teaser placeholder — shown before unlock click. The overlay
+                              // blurs this so the user sees a hint of upcoming content.
+                              <div className="font-body text-foreground/70 leading-relaxed" style={{ fontSize: "1.05rem", lineHeight: 1.7 }}>
+                                <p>{t.imm_tarot_cards_speak}</p>
+                                <p className="mt-3 opacity-70">{t.imm_tarot_message_right_moment}</p>
+                                <p className="mt-3 opacity-50">✦ ✦ ✦</p>
+                              </div>
+                            )}
+                          </PremiumUnlockOverlay>
                           {aiLoading && aiText && (
                             <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
                           )}
@@ -1360,11 +1384,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           </motion.p>
 
                           {/* ── The living text ── */}
-                          {aiText ? (
-                            <PremiumUnlockOverlay
-                              readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
-                              featureKey="tarot_reading"
-                            >
+                          <PremiumUnlockOverlay
+                            readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
+                            featureKey="tarot_reading"
+                            onUnlockStart={() => startAIGenerationRef.current?.()}
+                            isReady={!!aiText && !aiLoading}
+                          >
+                            {aiText ? (
                               <motion.div
                                 className="font-body"
                                 style={{
@@ -1378,41 +1404,56 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               >
                                 {renderMysticalText(aiText)}
                               </motion.div>
-                            </PremiumUnlockOverlay>
-                          ) : aiLoading ? (
-                            <motion.div
-                              className="flex flex-col items-center justify-center py-20 gap-7"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              transition={{ delay: 1.0, duration: 0.6 }}
-                            >
+                            ) : aiLoading ? (
                               <motion.div
-                                className="relative"
-                                animate={{ scale: [1, 1.06, 1] }}
-                                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                className="flex flex-col items-center justify-center py-20 gap-7"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1.0, duration: 0.6 }}
                               >
-                                <div
-                                  className="w-16 h-16 rounded-full flex items-center justify-center"
-                                  style={{
-                                    background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
-                                  }}
-                                >
-                                  <Sparkles className="w-5 h-5 text-gold/30" />
-                                </div>
                                 <motion.div
-                                  className="absolute inset-0 rounded-full pointer-events-none"
-                                  style={{ border: "1px solid hsl(var(--gold) / 0.08)" }}
-                                  animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0, 0.4] }}
-                                  transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
-                                />
+                                  className="relative"
+                                  animate={{ scale: [1, 1.06, 1] }}
+                                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                                >
+                                  <div
+                                    className="w-16 h-16 rounded-full flex items-center justify-center"
+                                    style={{
+                                      background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
+                                    }}
+                                  >
+                                    <Sparkles className="w-5 h-5 text-gold/30" />
+                                  </div>
+                                  <motion.div
+                                    className="absolute inset-0 rounded-full pointer-events-none"
+                                    style={{ border: "1px solid hsl(var(--gold) / 0.08)" }}
+                                    animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0, 0.4] }}
+                                    transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
+                                  />
+                                </motion.div>
+                                <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic"
+                                  style={{ textShadow: "0 2px 20px hsl(222 47% 6% / 0.9)" }}
+                                >
+                                  {t.imm_tarot_deciphering}
+                                </p>
                               </motion.div>
-                              <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic"
-                                style={{ textShadow: "0 2px 20px hsl(222 47% 6% / 0.9)" }}
+                            ) : (
+                              // Teaser shown pre-unlock. Overlay will blur this so the
+                              // user sees only a hint of the upcoming reading.
+                              <div
+                                className="font-body text-foreground/70 leading-relaxed text-center"
+                                style={{
+                                  maxWidth: "420px",
+                                  margin: "0 auto",
+                                  textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)",
+                                }}
                               >
-                                {t.imm_tarot_deciphering}
-                              </p>
-                            </motion.div>
-                          ) : null}
+                                <p>{t.imm_tarot_cards_speak}</p>
+                                <p className="mt-3 opacity-70">{t.imm_tarot_message_right_moment}</p>
+                                <p className="mt-3 opacity-50">✦ ✦ ✦</p>
+                              </div>
+                            )}
+                          </PremiumUnlockOverlay>
 
                           {/* Streaming cursor */}
                           {aiLoading && aiText && (
