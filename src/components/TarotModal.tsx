@@ -22,6 +22,7 @@ import TarotFanSelectionPhase from "@/components/TarotFanSelectionPhase";
 import TarotQuestionPhase from "@/components/TarotQuestionPhase";
 import TarotAnalysisRitual from "@/components/TarotAnalysisRitual";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
@@ -1073,12 +1074,17 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     )}
 
                     {aiText && (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                        <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                        <div style={{ lineHeight: 2.1, letterSpacing: "0.01em" }}>
-                          {renderMysticalText(aiText, textSize)}
-                        </div>
-                      </motion.div>
+                      <PremiumUnlockOverlay
+                        readingId={`tarot:${selectedSpread.key}:${cards.map(c => c.id ?? c.symbol).join("-")}:${userQuestion || ""}`}
+                        featureKey="tarot_reading"
+                      >
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                          <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
+                          <div style={{ lineHeight: 2.1, letterSpacing: "0.01em" }}>
+                            {renderMysticalText(aiText, textSize)}
+                          </div>
+                        </motion.div>
+                      </PremiumUnlockOverlay>
                     )}
                   </motion.div>
 
