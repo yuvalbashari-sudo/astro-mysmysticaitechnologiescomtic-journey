@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Lock, X, Sparkles } from "lucide-react";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
@@ -5,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import type { GatingMessage } from "@/lib/entitlements";
 import type { ResetCycle } from "@/lib/pricingConfig";
 import UsageCountdown from "./UsageCountdown";
+import PromoVideoModal from "./PromoVideoModal";
 
 interface Props {
   isOpen: boolean;
@@ -20,6 +22,7 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
   const { language, dir } = useLanguage();
   const t = useT();
   const navigate = useNavigate();
+  const [promoOpen, setPromoOpen] = useState(false);
 
   if (!gatingMessage) return null;
 
