@@ -46,6 +46,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   const monthName = formatMonthName(new Date(), language);
 
+  // Mirror PremiumUnlockOverlay readingId so we can hide share/copy before unlock.
+  const forecastReadingId = signInfo
+    ? `forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`
+    : "";
+  const forecastUnlocked = usePremiumUnlocked(forecastReadingId);
+
   const { userName, gender, birthDate, birthTime, birthCity } = details;
   const updateDetails = (patch: Partial<BirthDetails>) => setDetails(prev => ({ ...prev, ...patch }));
 
