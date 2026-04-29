@@ -82,6 +82,12 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
 
+  // Premium unlock id (must mirror PremiumUnlockOverlay's readingId).
+  const compatReadingId = matchInfo
+    ? `compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`
+    : "";
+  const compatUnlocked = usePremiumUnlocked(compatReadingId);
+
   // Restore cached result on open
   useEffect(() => {
     if (!isOpen) return;
