@@ -1,26 +1,41 @@
-Surgical fix to ensure the Norielle avatar no longer overlaps the close (X) button on the mobile/tablet Tarot selection screen, while keeping the result-screen behavior intact.
+אני מבין — השינוי הקודם לא מספיק כי הוא עטף רק חלק מהטקסט, ועדיין יש כמה עקיפות: מצב אדמין בפריוויו יכול לבטל את הנעילה, כפתורי שיתוף/העתקה עדיין מקבלים את הטקסט המלא, חלק ממסכי Astrology/Natal לא עטופים בכלל, וב-`PaymentGatingModal` יש וידאו נוסף שיכול ליצור רצף לא ברור.
 
-## Changes
+התיקון שאבצע עכשיו יהיה יותר חזק ומרכזי:
 
-### 1. `src/components/TarotModal.tsx`
-- Keep `isTarotResultScreen` detection (cards present + not in any pre-result phase).
-- `tarotAvatarStyle` for `(isMobileTarot || isTablet)`:
-  - Selection screen: `top: 84` (below the close button row).
-  - Result screen: `top: 16` (centered in header between X and Free badge).
-  - Common: `position: "absolute"`, `left: "50%"`, `transform: "translateX(-50%)"`, `bottom/right/insetInlineStart/insetInlineEnd: "auto"/"unset"`, `width/height: 56`, `zIndex: 106`, `pointerEvents: "auto"`.
-- Desktop: `tarotAvatarStyle = undefined` → shell default.
+1. לבטל עקיפת gating בפריוויו למשתמש רגיל
+  - להסיר את ה-bypass של `subscriptionManager.isAdmin()` מתוך `premiumUnlock.isUnlocked` ו-`PremiumUnlockOverlay` עבור זרימת הפרימיום החדשה.
+  - אם צריך להשאיר אדמין אמיתי, הוא יוכל להיות מוחרג רק בצורה מפורשת ובטוחה, אבל לא דרך override מקומי בפריוויו שגורם לך לראות “שום שינוי”.
+2. להפוך את ה-Overlay ל-source of truth יחיד
+  - `PremiumUnlockOverlay` יקבל callback כמו `onUnlockedChange`/render prop כדי שכל קומפוננטה תדע אם הקריאה באמת פתוחה.
+  - לא רק blur ויזואלי: נשתמש במצב unlock כדי לחסום גם Share/Copy/Download/CTA שמחזיקים את הטקסט המלא.
+3. לתקן את רצף הווידאו והתשלום
+  - הזרימה תהיה בדיוק:
 
-### 2. `src/components/CinematicModalShell.tsx`
-- Verify the avatar wrapper (`AvatarHoverTeaser`) honors the incoming `avatarStyle` exactly. The existing code already spreads `avatarStyle` and passes through `position: "absolute"`. No structural change unless needed; if the wrapper still defaults to `relative`, ensure `AvatarHoverTeaser` drops the `relative` class when `style.position` is set (already handled per prior edit).
+```text
+Full reading generated -> blurred preview + Unlock CTA -> PromoVideoModal -> PaymentGatingModal -> unlock full reading
+```
 
-## Out of scope (unchanged)
-- Avatar image, size, glow, border, click behavior, advisor chat panel.
-- Tarot cards, buttons, text, translations, reading logic, result content, share buttons, CTA.
-- Desktop avatar position.
-- No publishing.
+- בתוך `PaymentGatingModal` אבטל את פתיחת הווידאו הנוספת כאשר הוא נפתח מתוך `PremiumUnlockOverlay`, כדי שלא תהיה כפילות.
+- כפתור Pay/Unlock במודל התשלום יפתח את הקריאה רק אחרי שלב הווידאו שכבר הושלם.
 
-## Verification
-- Mobile/tablet Tarot selection: avatar centered horizontally, sitting at `top: 84` — does NOT overlap the X button.
-- Mobile/tablet Tarot result: avatar centered horizontally at `top: 16`.
-- Avatar remains tappable and opens the advisor chat.
-- Desktop Tarot: avatar position unchanged (shell default bottom-right).
+4. לחסום עקיפות שיתוף/העתקה לפני unlock
+  - ב-`TarotModal`, `ImmersiveTarotExperience`, `CompatibilityModal`, `MonthlyForecastModal`, `BirthChartModal`:
+    - לא להציג `ShareResultSection` / `ResultShareBar` לפני unlock.
+    - לא לאפשר copy/share/download שמכיל את הטקסט המלא לפני unlock.
+    - להציג אותם רק לאחר שה-`PremiumUnlockOverlay` מסמן שהקריאה נפתחה.
+5. להרחיב את הכיסוי לכל Astrology/Natal הרלוונטיים
+  - בנוסף למה שכבר עטוף: לבדוק ולעטוף גם `RisingSignModal` ו-`AstrocartographyModal`, כי הם מופיעים בתפריט שלך תחת Astrology/Natal ועדיין מציגים תוצאות ישירות.
+  - להשאיר Daily Horoscope ו-Daily Card חופשיים אם הם לא חלק מה-premium gating המבוקש.
+6. לתקן טקסטים כך שלא ירגיש כמו “limit reached”
+  - כרגע המודל מציג “השתמשת בקריאות החינמיות...” גם כשזו נעילה מראש. אעדכן את הטקסט/פרופס כך שיראה כמו unlock/payment choice, לא כמו quota exhausted.
+  - לא אשנה את כל מערך התרגומים מעבר למה שנדרש ל-CTA/מודל הנעילה.
+7. אימות לאחר התיקון
+  - אבדוק בפריוויו מובייל 390x844:
+    - משתמש חדש לא רואה טקסט מלא מיד.
+    - לחיצה על unlock פותחת וידאו.
+    - אחרי הווידאו מופיע מודל תשלום/שדרוג.
+    - אחרי unlock בלבד הטקסט המלא ושיתוף/העתקה מופיעים.
+    - Tarot, Compatibility, Monthly Forecast, Birth Chart, Rising Sign, Astrocartography מכוסים.
+
+לא אפרסם אוטומטית.  
+Approved. Please implement this exactly, but keep the first free reading behavior if it already exists: users may unlock one full reading after watching the promo video, but all full results must still pass through the same PremiumUnlockOverlay flow first.

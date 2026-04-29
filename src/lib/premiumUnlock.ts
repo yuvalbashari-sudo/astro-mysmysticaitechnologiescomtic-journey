@@ -8,9 +8,11 @@
  * the gate.
  */
 
+import { useEffect, useState } from "react";
 import { subscriptionManager } from "./subscriptionManager";
 
 const STORAGE_KEY = "astrologai_unlocked_readings_v1";
+const EVENT_NAME = "astrologai:unlock-changed";
 
 function getUnlockedSet(): Set<string> {
   try {
@@ -29,12 +31,17 @@ function persist(set: Set<string>) {
   } catch {
     /* ignore */
   }
+  try {
+    window.dispatchEvent(new CustomEvent(EVENT_NAME));
+  } catch { /* ignore */ }
 }
 
 function isUnlocked(readingId: string): boolean {
   if (!readingId) return false;
-  // Admin tier bypasses gating entirely.
-  if (subscriptionManager.isAdmin()) return true;
+  // Real authenticated admin email bypasses gating. Preview-only admin
+  // override does NOT bypass — otherwise testers cannot see the flow.
+  const email = subscriptionManager.getUserEmail();
+  if (email && email === "yuvalbashari@gmail.com") return true;
   return getUnlockedSet().has(readingId);
 }
 
@@ -57,6 +64,9 @@ function clearAll(): void {
   } catch {
     /* ignore */
   }
+  try {
+    window.dispatchEvent(new CustomEvent(EVENT_NAME));
+  } catch { /* ignore */ }
 }
 
 export const premiumUnlock = {
@@ -65,3 +75,18 @@ export const premiumUnlock = {
   clearUnlock,
   clearAll,
 };
+
+/**
+ * React hook — returns whether a given reading id is currently unlocked.
+ * Re-renders when unlock state changes anywhere in the app.
+ */
+export function usePremiumUnlocked(readingId: string): boolean {
+  const [unlocked, setUnlocked] = useState<boolean>(() => premiumUnlock.isUnlocked(readingId));
+  useEffect(() => {
+    const sync = () => setUnlocked(premiumUnlock.isUnlocked(readingId));
+    sync();
+    window.addEventListener(EVENT_NAME, sync);
+    return () => window.removeEventListener(EVENT_NAME, sync);
+  }, [readingId]);
+  return unlocked;
+}

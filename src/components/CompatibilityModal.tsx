@@ -20,6 +20,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
@@ -80,6 +81,12 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
+
+  // Premium unlock id (must mirror PremiumUnlockOverlay's readingId).
+  const compatReadingId = matchInfo
+    ? `compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`
+    : "";
+  const compatUnlocked = usePremiumUnlocked(compatReadingId);
 
   // Restore cached result on open
   useEffect(() => {
@@ -213,7 +220,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!matchInfo) return;
-    const fullContent = aiText ? `\n\n${aiText}` : "";
+    // Block copying the full reading before unlock — only score line allowed.
+    const fullContent = compatUnlocked && aiText ? `\n\n${aiText}` : "";
     await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%${fullContent}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
@@ -435,7 +443,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
-                        {!aiLoading && (aiText || aiError) && (
+                        {!aiLoading && (aiText || aiError) && compatUnlocked && (
                           <>
                             <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                           </>
@@ -524,7 +532,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </div>
                     )}
 
-                    {!aiLoading && (aiText || aiError) && (
+                    {!aiLoading && (aiText || aiError) && compatUnlocked && (
                       <>
                         <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                         <div className="section-divider max-w-[200px] mx-auto my-10" />

@@ -48,11 +48,15 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
   const [promoOpen, setPromoOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
 
-  // Re-evaluate unlock state whenever the reading id changes.
+  // Re-evaluate unlock state whenever the reading id changes, and listen
+  // for global unlock events (e.g. another surface unlocked the same id).
   useEffect(() => {
-    setUnlocked(premiumUnlock.isUnlocked(readingId));
+    const sync = () => setUnlocked(premiumUnlock.isUnlocked(readingId));
+    sync();
     setPromoOpen(false);
     setPaymentOpen(false);
+    window.addEventListener("astrologai:unlock-changed", sync);
+    return () => window.removeEventListener("astrologai:unlock-changed", sync);
   }, [readingId]);
 
   // Build the gating message for this feature. We always show the existing
@@ -62,7 +66,9 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     gatingMessage: GatingMessage | null;
     resetCycle: ResetCycle;
   }>(() => {
-    if (subscriptionManager.isAdmin()) {
+    // Real authenticated admin bypasses gating entirely.
+    const email = subscriptionManager.getUserEmail();
+    if (email && email === "yuvalbashari@gmail.com") {
       return { gatingMessage: null, resetCycle: "none" };
     }
     if (customGatingMessage) {
@@ -191,13 +197,14 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
         }}
       />
 
-      {/* Payment / upgrade modal — onPayPerUse unlocks the reading */}
+      {/* Payment / upgrade modal — promo already played, skip its inner video */}
       <PaymentGatingModal
         isOpen={paymentOpen}
         onClose={() => setPaymentOpen(false)}
         gatingMessage={gatingMessage}
         resetCycle={resetCycle}
         onPayPerUse={handleUnlock}
+        skipPromoVideo
       />
     </div>
   );

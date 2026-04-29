@@ -20,6 +20,7 @@ import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
 import { isAdminTestMode, getAdminSafeProfile, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -44,6 +45,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   const [advisorOpen, setAdvisorOpen] = useState(false);
 
   const monthName = formatMonthName(new Date(), language);
+
+  // Mirror PremiumUnlockOverlay readingId so we can hide share/copy before unlock.
+  const forecastReadingId = signInfo
+    ? `forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`
+    : "";
+  const forecastUnlocked = usePremiumUnlocked(forecastReadingId);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
   const updateDetails = (patch: Partial<BirthDetails>) => setDetails(prev => ({ ...prev, ...patch }));
@@ -252,7 +259,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.forecast_loading}</motion.p>
                   </div>
                 )}
-                {!aiLoading && (aiText || aiError) && signInfo && (
+                {!aiLoading && (aiText || aiError) && signInfo && forecastUnlocked && (
                   <ShareResultSection symbol={signInfo.symbol} title={`${t.readings_type_forecast} — ${signInfo.name}`} subtitle={monthName} readingText={aiText || undefined} />
                 )}
               </div>
