@@ -1086,26 +1086,32 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
                     <div className="section-divider max-w-[80px] mx-auto mb-6" />
 
-                    {aiLoading && !aiText && (
-                      <div className="flex items-center justify-center gap-2 py-8">
-                        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}><Sparkles className="w-5 h-5 text-gold" /></motion.div>
-                        <span className="text-gold/70 font-body text-sm">{t.tarot_combined_loading}</span>
-                      </div>
-                    )}
-
-                    {aiText && (
-                      <PremiumUnlockOverlay
-                        readingId={`tarot:${selectedSpread.key}:${cards.map(c => c.id).join("-")}:${userQuestion || ""}`}
-                        featureKey="tarot_reading"
-                      >
+                    <PremiumUnlockOverlay
+                      readingId={`tarot:${selectedSpread.key}:${cards.map(c => c.id).join("-")}:${userQuestion || ""}`}
+                      featureKey="tarot_reading"
+                      onUnlockStart={() => startAIRef.current?.()}
+                      isReady={!!aiText && !aiLoading}
+                    >
+                      {aiLoading && !aiText ? (
+                        <div className="flex items-center justify-center gap-2 py-8">
+                          <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 2, ease: "linear" }}><Sparkles className="w-5 h-5 text-gold" /></motion.div>
+                          <span className="text-gold/70 font-body text-sm">{t.tarot_combined_loading}</span>
+                        </div>
+                      ) : aiText ? (
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
                           <div style={{ lineHeight: 2.1, letterSpacing: "0.01em" }}>
                             {renderMysticalText(aiText, textSize)}
                           </div>
                         </motion.div>
-                      </PremiumUnlockOverlay>
-                    )}
+                      ) : (
+                        // Pre-unlock teaser. Blurred by the overlay.
+                        <div className="text-center py-6 font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
+                          <p className="text-gold/70 mb-3">{t.tarot_combined_loading}</p>
+                          <p className="opacity-70">✦ ✦ ✦</p>
+                        </div>
+                      )}
+                    </PremiumUnlockOverlay>
                   </motion.div>
 
                   {tarotUnlocked && (
