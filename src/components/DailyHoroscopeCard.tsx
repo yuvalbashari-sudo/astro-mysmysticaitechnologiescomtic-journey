@@ -467,37 +467,44 @@ const DailyHoroscopeCard = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
-                  {data.content}
-                </p>
+                <PremiumUnlockOverlay
+                  readingId={dailyReadingId}
+                  featureKey="monthly_horoscope"
+                >
+                  <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
+                    {data.content}
+                  </p>
 
-                {/* Score indicators */}
-                <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
-                  <div className="flex items-center gap-1.5">
-                    <Heart className="w-4 h-4 text-pink-400/70" />
-                    <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_love}</span>
-                    <ScoreValue score={data.love_score} />
+                  {/* Score indicators */}
+                  <div className="flex items-center justify-between pt-3 border-t border-foreground/5">
+                    <div className="flex items-center gap-1.5">
+                      <Heart className="w-4 h-4 text-pink-400/70" />
+                      <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_love}</span>
+                      <ScoreValue score={data.love_score} />
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Briefcase className="w-4 h-4 text-blue-400/70" />
+                      <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_career}</span>
+                      <ScoreValue score={data.career_score} />
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Zap className="w-4 h-4 text-gold/70" />
+                      <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_energy}</span>
+                      <ScoreValue score={data.energy_score} />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Briefcase className="w-4 h-4 text-blue-400/70" />
-                    <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_career}</span>
-                    <ScoreValue score={data.career_score} />
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Zap className="w-4 h-4 text-gold/70" />
-                    <span className="text-foreground/50 text-xs font-body">{t.daily_horoscope_energy}</span>
-                    <ScoreValue score={data.energy_score} />
-                  </div>
-                </div>
+                </PremiumUnlockOverlay>
 
-                {/* Share / Copy bar */}
-                <div className="mt-4 pt-3 border-t border-foreground/5">
-                  <ResultShareBar
-                    resultText={data.content}
-                    shareTitle={`${t.daily_horoscope_title} — ${ZODIAC_SYMBOLS[zodiacSign] || "✦"}`}
-                    compact
-                  />
-                </div>
+                {/* Share / Copy bar — only after unlock */}
+                {dailyUnlocked && (
+                  <div className="mt-4 pt-3 border-t border-foreground/5">
+                    <ResultShareBar
+                      resultText={data.content}
+                      shareTitle={`${t.daily_horoscope_title} — ${ZODIAC_SYMBOLS[zodiacSign] || "✦"}`}
+                      compact
+                    />
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
