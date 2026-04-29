@@ -106,6 +106,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
+  const natalReadingId = `natal:${userName}:${birthDate}:${birthTime}:${birthCity}`;
+  const natalUnlocked = usePremiumUnlocked(natalReadingId);
   const showResult = phase === "chart" || phase === "result";
   const wheelSize = isMobile ? 300 : 460;
 
