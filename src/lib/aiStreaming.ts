@@ -192,7 +192,7 @@ export async function streamMysticalReading(
       strict: true,
       onDelta: (chunk) => { retryBuffered += chunk; },
     });
-    if (!retry.ok) {
+    if (retry.ok === false) {
       onError(retry.error);
       return;
     }
