@@ -75,7 +75,15 @@ serve(async (req) => {
         : lang === "ru" ? "Имя недоступно — используйте тёплое общее приветствие."
         : "الاسم غير متاح — استخدم تحية عامة دافئة.");
 
-    const systemPrompt = `You are a premium mystical astrologer generating a personalized daily horoscope.
+    const LANG_NAMES: Record<string, string> = { he: "Hebrew", en: "English", ru: "Russian", ar: "Arabic" };
+    const langName = LANG_NAMES[lang] || "Hebrew";
+
+    const systemPrompt = `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:
+You MUST respond ONLY in the user's selected language: ${langName} (locale code: "${lang}").
+Never mix languages. Every word, label, and sentence (including the JSON string values) MUST be in ${langName}.
+The JSON KEYS stay in English ("content", "love_score", "career_score", "energy_score") — only the string VALUE of "content" is written in ${langName}.
+
+You are a premium mystical astrologer generating a personalized daily horoscope.
 ${tone}
 ${genderHint}
 ${nameInstruction}
@@ -86,7 +94,7 @@ ${birthDate ? `Birth date: ${birthDate}` : ""}
 
 Generate a personalized daily horoscope. The response MUST be a valid JSON object with this exact structure:
 {
-  "content": "The full daily horoscope text (3-4 paragraphs, rich and personal)",
+  "content": "The full daily horoscope text (3-4 paragraphs, rich and personal) — ENTIRELY in ${langName}",
   "love_score": <number 1-5>,
   "career_score": <number 1-5>,
   "energy_score": <number 1-5>
@@ -99,7 +107,8 @@ Guidelines:
 - Content should be 150-250 words
 - love_score, career_score, energy_score are integers 1-5
 - Respond ONLY with valid JSON, no markdown, no extra text
-- Write ALL content in the specified language natively — do NOT translate from another language`;
+- Write ALL content in ${langName} natively — do NOT translate from another language. Not a single word in any other language.`;
+
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {

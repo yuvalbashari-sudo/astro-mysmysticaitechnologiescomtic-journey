@@ -91,6 +91,70 @@ export function assertNoMixedLanguage(text: string, lang: Language, context = ""
   }
 }
 
+/**
+ * Returns true when `text` belongs to the active locale's script.
+ *
+ * - Empty/whitespace/numeric-only strings are valid (nothing to mismatch).
+ * - Punctuation, digits, emoji, symbols are ignored.
+ * - In non-EN locales we tolerate Latin loanwords (brand names, "AI", proper
+ *   nouns) but reject when they clearly dominate the string.
+ *
+ * Used by `enforceLocale` to BLOCK wrong-language text from rendering.
+ */
+const MAX_FOREIGN_RATIO = 0.15;
+
+export function isValidLanguage(text: string, locale: Language): boolean {
+  if (!text || typeof text !== "string") return true;
+  const expected = EXPECTED_SCRIPT[locale];
+  let expectedCount = 0;
+  let foreignCount = 0;
+  let latinLoanCount = 0;
+  let totalLetters = 0;
+
+  for (const ch of text) {
+    const script = detectScript(ch);
+    if (!script) continue;
+    totalLetters += 1;
+    if (script === expected) { expectedCount += 1; continue; }
+    if (locale !== "en" && script === "latin") { latinLoanCount += 1; continue; }
+    foreignCount += 1;
+  }
+
+  if (totalLetters === 0) return true;
+  // Hard reject: ANY truly foreign-script character (e.g. Hebrew in EN/RU/AR).
+  if (foreignCount > 0) return false;
+  if (locale !== "en") {
+    const loanRatio = latinLoanCount / totalLetters;
+    // Only reject when Latin clearly dominates (e.g. an English sentence
+    // accidentally rendered in a Hebrew UI). Short loanwords are fine.
+    if (loanRatio > 0.5 && expectedCount === 0) return false;
+    if (loanRatio > MAX_FOREIGN_RATIO && expectedCount > 0 && latinLoanCount > 6) return false;
+  }
+  return true;
+}
+
+/**
+ * BLOCKING enforcement helper. If `text` doesn't match the active locale,
+ * log a warning and return a safe localized fallback INSTEAD of the bad text.
+ * Use this for any dynamic value that could leak wrong-language text to UI.
+ */
+export function enforceLocale(
+  text: string | null | undefined,
+  locale: Language,
+  fallback?: string,
+  context = "",
+): string {
+  if (!text) return fallback ?? getLocalizedFallback(locale, "loading");
+  if (isValidLanguage(text, locale)) return text;
+  // eslint-disable-next-line no-console
+  console.warn(
+    `[locale-guard] BLOCKED wrong-language text for locale "${locale}"${context ? ` (${context})` : ""}:`,
+    JSON.stringify(text.slice(0, 120)),
+  );
+  return fallback ?? getLocalizedFallback(locale, "loading");
+}
+
+
 /** Localized zodiac sign by key (`aries`, `taurus`, …). */
 export function getLocalizedZodiacSign(signKey: string, locale: Language): string {
   const out = getSignNameByKey(signKey, locale);
@@ -199,4 +263,7 @@ export const localeGuard = {
   getLocalizedFallback,
   safeErrorText,
   assertNoMixedLanguage,
+  isValidLanguage,
+  enforceLocale,
 };
+

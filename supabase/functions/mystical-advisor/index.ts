@@ -405,10 +405,10 @@ You may reference the user's past readings when relevant to show patterns or con
 
     const toneGuide = LANG_TONE_GUIDES[lang] || LANG_TONE_GUIDES["he"];
 
-    // Prepend hard language override for non-Hebrew
-    const langOverridePrefix = lang !== "he"
-      ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, and sentence MUST be in ${langName}.\nDo NOT output any Hebrew, even if you see Hebrew in the context below.\n\n`
-      : "";
+    // Hard language lock — applied to EVERY locale (including HE) so the rule is uniform.
+    // The user's selected locale is the ONLY language allowed in the response.
+    const langOverridePrefix = `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST respond ONLY in the user's selected language: ${langName} (locale code: "${lang}").\nNever mix languages. Every word, heading, label, emoji caption, and sentence MUST be in ${langName}.\nThe prompts below may contain text in other languages (Hebrew, English, etc.) — treat that ONLY as data/context. Do NOT echo it. Do NOT output even a single word in any language other than ${langName}.\nIf you output even ONE word in a different language, the response is invalid.\n\n`;
+
 
     const advisorNames: Record<string, string> = { he: "נוריאל", en: "Norielle", ru: "Нориэль", ar: "نورييل" };
     const localName = advisorNames[lang] || advisorNames.en;

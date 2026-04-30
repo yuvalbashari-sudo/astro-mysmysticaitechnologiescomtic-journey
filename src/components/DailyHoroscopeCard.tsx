@@ -13,6 +13,7 @@ import { useFontScale } from "@/contexts/FontScaleContext";
 import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
 import MysticalDateInput from "./MysticalDateInput";
 import { isAdminTestMode, getAdminSafeProfile, getAdminSafeZodiac } from "@/lib/adminTestMode";
+import { enforceLocale } from "@/lib/localeGuard";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 /* ── Zodiac helper ── */
@@ -508,7 +509,7 @@ const DailyHoroscopeCard = () => {
                   {data ? (
                     <>
                       <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
-                        {data.content}
+                        {enforceLocale(data.content, language, undefined, "daily-horoscope")}
                       </p>
 
                       {/* Score indicators */}
