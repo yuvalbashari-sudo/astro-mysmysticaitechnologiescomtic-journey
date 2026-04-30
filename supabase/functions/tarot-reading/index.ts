@@ -313,10 +313,9 @@ TONE FOR ENGLISH:
       genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקוראת היא אישה. כתוב את כל הפירוש בלשון נקבה עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "את תחוו", "הכוחות שלך", "את מוזמנת", "עלייך לשים לב", "את עומדת בפני".\nאסור בשום מקום בתשובה להשתמש בלשון זכר, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון נקבה בלבד בכל משפט.\n`;
     }
 
-    // Prepend hard language override for non-Hebrew
-    const langOverridePrefix = language !== "he"
-      ? `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST write your ENTIRE response in ${langName}. Every word, heading, label, and sentence MUST be in ${langName}.\nThe prompts below may contain Hebrew text — treat it ONLY as data/context. Do NOT output any Hebrew.\n\n`
-      : "";
+    // Hard language lock — uniform for EVERY locale (including HE).
+    const langOverridePrefix = `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST respond ONLY in the user's selected language: ${langName} (locale code: "${language}").\nNever mix languages. Every word, heading, label, and sentence MUST be in ${langName}.\nThe prompts below may contain text in other languages — treat that ONLY as data/context. Do NOT echo it. Do NOT output a single word in any language other than ${langName}.\n\n`;
+
 
     const advisorNames: Record<string, string> = { he: "נוריאל", en: "Norielle", ru: "Нориэль", ar: "نورييل" };
     const localAdvisorName = advisorNames[language] || advisorNames.en;
