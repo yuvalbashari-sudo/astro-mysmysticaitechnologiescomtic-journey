@@ -45,7 +45,7 @@ const TarotCardPage = () => {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = `https://mysticaitechnologies.com/tarot/${slug}`;
+    canonical.href = `https://myastrologai.com/tarot/${slug}`;
 
     return () => { document.getElementById("tarot-jsonld")?.remove(); };
   }, [card, cardImage]);

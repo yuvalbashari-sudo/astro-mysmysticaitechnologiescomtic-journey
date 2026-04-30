@@ -29,7 +29,7 @@ const SHARE_HEADER: Record<string, string> = {
   ar: "نتيجتي ✨",
 };
 
-const DOMAIN = "mysticaitechnologies.com";
+const DOMAIN = "myastrologai.com";
 
 /**
  * Unified copy + share bar for all result screens.

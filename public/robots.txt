@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://mysticaitechnologies.com/sitemap.xml
+Sitemap: https://myastrologai.com/sitemap.xml

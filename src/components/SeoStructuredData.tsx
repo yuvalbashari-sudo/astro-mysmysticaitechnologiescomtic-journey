@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLanguage } from "@/i18n";
 
-const SITE_URL = "https://mysticaitechnologies.com";
+const SITE_URL = "https://myastrologai.com";
 
 const SeoStructuredData = () => {
   const { language } = useLanguage();
