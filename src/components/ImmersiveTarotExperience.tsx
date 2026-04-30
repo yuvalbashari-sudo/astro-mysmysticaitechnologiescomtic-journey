@@ -74,12 +74,13 @@ async function streamTarotReading(
         gender,
       }),
     });
+    const lang = (language || "he") as Language;
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: "Error" }));
-      onError(errData.error || "Error");
+      const errData = await resp.json().catch(() => ({}));
+      onError(safeErrorText(errData?.error, lang, "tarot-reading"));
       return;
     }
-    if (!resp.body) { onError("No response body"); return; }
+    if (!resp.body) { onError(safeErrorText(null, lang, "tarot-reading:empty-body")); return; }
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
     let textBuffer = "";
