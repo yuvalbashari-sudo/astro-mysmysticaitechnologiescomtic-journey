@@ -39,7 +39,7 @@ const ZodiacSignPage = () => {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = `https://mysticaitechnologies.com/zodiac/${slug}`;
+    canonical.href = `https://myastrologai.com/zodiac/${slug}`;
 
     return () => { document.getElementById("zodiac-jsonld")?.remove(); };
   }, [sign]);
