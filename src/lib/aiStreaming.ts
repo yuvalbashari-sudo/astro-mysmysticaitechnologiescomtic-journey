@@ -107,7 +107,7 @@ export async function streamMysticalReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "Connection error");
+    onError(safeErrorText(e, language as Language, "mystical-reading:network"));
   }
 }
 
