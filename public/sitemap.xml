@@ -3,6 +3,19 @@
   <url><loc>https://myastrologai.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
   <url><loc>https://myastrologai.com/upgrade</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://myastrologai.com/tarot-gallery</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://myastrologai.com/tarot-guide</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://myastrologai.com/tarot-guides</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://myastrologai.com/astrology-guides</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+
+  <url><loc>https://myastrologai.com/guides/tarot-getting-started</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/tarot-three-card-spread</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/tarot-asking-questions</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/tarot-common-mistakes</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/astro-reading-chart</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/astro-rising-sign</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/astro-houses</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/guides/astro-personal-growth</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
   <url><loc>https://myastrologai.com/tarot/the-fool</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-magician</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-high-priestess</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
@@ -12,15 +25,20 @@
   <url><loc>https://myastrologai.com/tarot/the-lovers</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-chariot</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/strength</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/tarot/the-hermit</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-wheel-of-fortune</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/justice</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-hanged-man</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/death</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/tarot/temperance</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/tarot/the-devil</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://myastrologai.com/tarot/the-tower</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-star</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-moon</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-sun</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/judgement</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/tarot/the-world</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
   <url><loc>https://myastrologai.com/zodiac/aries</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/zodiac/taurus</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/zodiac/gemini</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
@@ -33,5 +51,6 @@
   <url><loc>https://myastrologai.com/zodiac/capricorn</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/zodiac/aquarius</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://myastrologai.com/zodiac/pisces</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
   <url><loc>https://myastrologai.com/accessibility</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>
 </urlset>
