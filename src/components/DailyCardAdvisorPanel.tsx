@@ -105,7 +105,8 @@ const DailyCardAdvisorPanel = ({ isOpen, onClose }: Props) => {
 
       if (!resp.ok) {
         const errData = await resp.json().catch(() => ({ error: "Error" }));
-        setMessages(prev => [...prev, { role: "assistant", content: errData.error || t.advisor_error }]);
+        if (errData?.error) console.warn("[advisor] server error:", errData.error);
+        setMessages(prev => [...prev, { role: "assistant", content: t.advisor_error }]);
         setIsStreaming(false);
         return;
       }
