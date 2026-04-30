@@ -168,7 +168,7 @@ async function streamTarotReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : errorMessages?.connection || "Connection error");
+    onError(errorMessages?.connection || safeErrorText(e, (language || "he") as Language, "tarot-world:network"));
   }
 }
 
