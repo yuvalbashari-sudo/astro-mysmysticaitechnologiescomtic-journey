@@ -194,12 +194,16 @@ export function getLocalizedMonth(month: Date | string | number, locale: Languag
  * missing or when we need to swallow a raw server/runtime error and still
  * show something readable to the user. Each locale has its own copy — we
  * NEVER fall back to English in a non-English UI.
+ *
+ * Production-safe: `loading` uses contextual phrasing ("Content loading...")
+ * rather than the bare "Loading..." token, so users in any locale see a
+ * complete, natural sentence even when something fails to render.
  */
 const LOCALIZED_FALLBACKS: Record<Language, { loading: string; error: string; empty: string }> = {
-  en: { loading: "Loading...", error: "Something went wrong, try again", empty: "—" },
-  he: { loading: "טוען תוכן...", error: "שגיאה בשירות, נסו שוב", empty: "—" },
-  ru: { loading: "Загрузка...", error: "Ошибка сервиса, попробуйте снова", empty: "—" },
-  ar: { loading: "جارٍ التحميل...", error: "خطأ في الخدمة، حاولوا مرة أخرى", empty: "—" },
+  en: { loading: "Content loading...", error: "Something went wrong, try again", empty: "—" },
+  he: { loading: "התוכן בטעינה...", error: "שגיאה בשירות, נסו שוב", empty: "—" },
+  ru: { loading: "Контент загружается...", error: "Ошибка сервиса, попробуйте снова", empty: "—" },
+  ar: { loading: "يتم تحميل المحتوى...", error: "خطأ في الخدمة، حاولوا مرة أخرى", empty: "—" },
 };
 
 /** Returns the localized loading/error/empty fallback for the active locale. */
