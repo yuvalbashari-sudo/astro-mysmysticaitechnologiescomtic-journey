@@ -111,12 +111,15 @@ async function streamTarotReading(
     });
 
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: errorMessages.unexpected }));
-      onError(errData.error || errorMessages.service);
+      // Never surface raw server `error` strings — they may be English / contain
+      // identifiers like `FEATURE_PROMPTS is not defined`. Log + show localized.
+      const errData = await resp.json().catch(() => ({}));
+      if (errData?.error) console.warn("[tarot] server error:", errData.error);
+      onError(errorMessages.service);
       return;
     }
 
-    if (!resp.body) { onError("No response body"); return; }
+    if (!resp.body) { onError(errorMessages.connection); return; }
 
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
