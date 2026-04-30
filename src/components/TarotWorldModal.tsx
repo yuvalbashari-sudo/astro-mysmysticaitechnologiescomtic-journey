@@ -14,6 +14,8 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { renderMysticalText } from "@/lib/aiStreaming";
+import { safeErrorText } from "@/lib/localeGuard";
+import type { Language } from "@/i18n/types";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
