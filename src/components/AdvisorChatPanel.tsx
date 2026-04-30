@@ -170,7 +170,10 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
 
       if (!resp.ok) {
         const errData = await resp.json().catch(() => ({ error: "Error" }));
-        setMessages(prev => [...prev, { role: "assistant", content: errData.error || t.advisor_error }]);
+        // Never show raw server error strings (variable names, stack traces, etc.) to the user.
+        // Surface a localized fallback message; log the raw error for developers only.
+        if (errData?.error) console.warn("[advisor] server error:", errData.error);
+        setMessages(prev => [...prev, { role: "assistant", content: t.advisor_error }]);
         setIsStreaming(false);
         return;
       }
