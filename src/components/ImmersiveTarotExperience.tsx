@@ -122,7 +122,7 @@ async function streamTarotReading(
     }
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "Network error");
+    onError(safeErrorText(e, (language || "he") as Language, "tarot-reading:network"));
   }
 }
 
