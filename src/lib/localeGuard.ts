@@ -263,4 +263,7 @@ export const localeGuard = {
   getLocalizedFallback,
   safeErrorText,
   assertNoMixedLanguage,
+  isValidLanguage,
+  enforceLocale,
 };
+
