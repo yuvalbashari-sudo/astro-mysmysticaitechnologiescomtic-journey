@@ -45,7 +45,7 @@ const TarotCardPage = () => {
       canonical.rel = "canonical";
       document.head.appendChild(canonical);
     }
-    canonical.href = `https://astro-mysmysticaitechnologiescomtic-journey.lovable.app/tarot/${slug}`;
+    canonical.href = `https://mysticaitechnologies.com/tarot/${slug}`;
 
     return () => { document.getElementById("tarot-jsonld")?.remove(); };
   }, [card, cardImage]);
