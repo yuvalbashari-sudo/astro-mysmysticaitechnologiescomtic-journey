@@ -311,7 +311,7 @@ serve(async (req) => {
       else if (type === "compatibility") category = "compatibility";
       else if (type === "palm") category = "palm";
 
-      featureBlock = FEATURE_PROMPTS[category] || "";
+      featureBlock = DOMAIN_PROMPTS[category] || "";
 
       contextBlock = `
 --- CURRENT READING CONTEXT (THIS IS THE ACTUAL RESULT THE USER SEES ON SCREEN) ---
