@@ -16,6 +16,8 @@ import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { renderMysticalText } from "@/lib/aiStreaming";
+import { safeErrorText } from "@/lib/localeGuard";
+import type { Language } from "@/i18n/types";
 import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
@@ -72,12 +74,13 @@ async function streamTarotReading(
         gender,
       }),
     });
+    const lang = (language || "he") as Language;
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: "Error" }));
-      onError(errData.error || "Error");
+      const errData = await resp.json().catch(() => ({}));
+      onError(safeErrorText(errData?.error, lang, "tarot-reading"));
       return;
     }
-    if (!resp.body) { onError("No response body"); return; }
+    if (!resp.body) { onError(safeErrorText(null, lang, "tarot-reading:empty-body")); return; }
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
     let textBuffer = "";
@@ -119,7 +122,7 @@ async function streamTarotReading(
     }
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "Network error");
+    onError(safeErrorText(e, (language || "he") as Language, "tarot-reading:network"));
   }
 }
 

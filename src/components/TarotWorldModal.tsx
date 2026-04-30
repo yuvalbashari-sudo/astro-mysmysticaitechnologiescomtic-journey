@@ -14,6 +14,8 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { renderMysticalText } from "@/lib/aiStreaming";
+import { safeErrorText } from "@/lib/localeGuard";
+import type { Language } from "@/i18n/types";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
@@ -105,13 +107,14 @@ async function streamTarotReading(
       body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext }, language: language || "he", userName }),
     });
 
+    const lang = (language || "he") as Language;
     if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({ error: errorMessages?.unexpected || "Unexpected error" }));
-      onError(errData.error || errorMessages?.service || "Service error");
+      const errData = await resp.json().catch(() => ({}));
+      onError(errorMessages?.service || safeErrorText(errData?.error, lang, "tarot-world"));
       return;
     }
 
-    if (!resp.body) { onError("No response body"); return; }
+    if (!resp.body) { onError(errorMessages?.connection || safeErrorText(null, lang, "tarot-world:empty-body")); return; }
 
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
@@ -165,7 +168,7 @@ async function streamTarotReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : errorMessages?.connection || "Connection error");
+    onError(errorMessages?.connection || safeErrorText(e, (language || "he") as Language, "tarot-world:network"));
   }
 }
 

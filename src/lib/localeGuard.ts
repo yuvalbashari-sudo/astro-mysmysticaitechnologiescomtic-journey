@@ -126,21 +126,69 @@ export function getLocalizedMonth(month: Date | string | number, locale: Languag
 }
 
 /**
- * Localized translation-table label by key. Falls back to the English value
- * when the active locale is missing the key. NEVER falls back to Hebrew.
+ * Hard-coded localized fallback strings used when a translation key is
+ * missing or when we need to swallow a raw server/runtime error and still
+ * show something readable to the user. Each locale has its own copy — we
+ * NEVER fall back to English in a non-English UI.
  */
-export function getLocalizedLabel(labelKey: string, locale: Language): string {
+const LOCALIZED_FALLBACKS: Record<Language, { loading: string; error: string; empty: string }> = {
+  en: { loading: "Loading...", error: "Something went wrong, try again", empty: "—" },
+  he: { loading: "טוען תוכן...", error: "שגיאה בשירות, נסו שוב", empty: "—" },
+  ru: { loading: "Загрузка...", error: "Ошибка сервиса, попробуйте снова", empty: "—" },
+  ar: { loading: "جارٍ التحميل...", error: "خطأ في الخدمة، حاولوا مرة أخرى", empty: "—" },
+};
+
+/** Returns the localized loading/error/empty fallback for the active locale. */
+export function getLocalizedFallback(locale: Language, kind: "loading" | "error" | "empty" = "loading"): string {
+  const bucket = LOCALIZED_FALLBACKS[locale] || LOCALIZED_FALLBACKS.en;
+  return bucket[kind];
+}
+
+/**
+ * Localized translation-table label by key. If the active locale is missing
+ * the key we return the localized fallback for the active locale — we
+ * NEVER cross-language fall back (no English text in HE/RU/AR UI, and no
+ * Hebrew text in EN/RU/AR UI).
+ *
+ * Set `crossFallback = true` only for keys that are guaranteed to be
+ * universally readable (proper nouns, brand names) — defaults to false.
+ */
+export function getLocalizedLabel(labelKey: string, locale: Language, crossFallback = false): string {
   const table = translationTables;
   const localized = table[locale]?.[labelKey];
   if (typeof localized === "string" && localized.length > 0) {
     assertNoMixedLanguage(localized, locale, `label:${labelKey}`);
     return localized;
   }
-  // Strict fallback to English (never Hebrew).
-  const fallback = table.en?.[labelKey];
-  if (typeof fallback === "string") return fallback;
-  // Last resort: surface the key so it's obvious in QA.
-  return labelKey;
+  if (crossFallback) {
+    const fallback = table.en?.[labelKey];
+    if (typeof fallback === "string" && fallback.length > 0) return fallback;
+  }
+  // Strict same-locale fallback. Better an empty-state placeholder than
+  // leaking English text into a Hebrew/Russian/Arabic screen.
+  return getLocalizedFallback(locale, "empty");
+}
+
+/**
+ * Sanitize an unknown server/runtime error message before showing it to the
+ * user. Raw server `error` strings frequently contain English text, code
+ * identifiers (e.g. `FEATURE_PROMPTS is not defined`), or stack traces.
+ * We log them for developers and return a localized fallback instead.
+ */
+export function safeErrorText(rawError: unknown, locale: Language, context = ""): string {
+  if (rawError != null) {
+    const asString =
+      typeof rawError === "string"
+        ? rawError
+        : typeof (rawError as { message?: unknown }).message === "string"
+          ? (rawError as { message: string }).message
+          : "";
+    if (asString) {
+      // eslint-disable-next-line no-console
+      console.warn(`[locale-guard] suppressed raw error${context ? ` (${context})` : ""}:`, asString);
+    }
+  }
+  return getLocalizedFallback(locale, "error");
 }
 
 export const localeGuard = {
@@ -148,5 +196,7 @@ export const localeGuard = {
   getLocalizedElement,
   getLocalizedMonth,
   getLocalizedLabel,
+  getLocalizedFallback,
+  safeErrorText,
   assertNoMixedLanguage,
 };

@@ -4,6 +4,8 @@ import React from "react";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { TEXT_SIZE_CLASSES, type TextSize } from "@/components/TextSizeControl";
 import { supabase } from "@/integrations/supabase/client";
+import { safeErrorText } from "@/lib/localeGuard";
+import type { Language } from "@/i18n/types";
 
 // Stream AI reading from edge function
 export async function streamMysticalReading(
@@ -47,11 +49,11 @@ export async function streamMysticalReading(
 
     if (!resp.ok) {
       const errData = await resp.json().catch(() => ({}));
-      onError(errData.error || "Service error");
+      onError(safeErrorText(errData?.error, language as Language, "mystical-reading"));
       return;
     }
 
-    if (!resp.body) { onError("No response body"); return; }
+    if (!resp.body) { onError(safeErrorText(null, language as Language, "mystical-reading:empty-body")); return; }
 
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
@@ -105,7 +107,7 @@ export async function streamMysticalReading(
 
     onDone();
   } catch (e) {
-    onError(e instanceof Error ? e.message : "Connection error");
+    onError(safeErrorText(e, language as Language, "mystical-reading:network"));
   }
 }
 
