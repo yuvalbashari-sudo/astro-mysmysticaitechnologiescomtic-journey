@@ -47,11 +47,11 @@ export async function streamMysticalReading(
 
     if (!resp.ok) {
       const errData = await resp.json().catch(() => ({}));
-      onError(errData.error || "Service error");
+      onError(safeErrorText(errData?.error, language as Language, "mystical-reading"));
       return;
     }
 
-    if (!resp.body) { onError("No response body"); return; }
+    if (!resp.body) { onError(safeErrorText(null, language as Language, "mystical-reading:empty-body")); return; }
 
     const reader = resp.body.getReader();
     const decoder = new TextDecoder();
