@@ -194,12 +194,16 @@ export function getLocalizedMonth(month: Date | string | number, locale: Languag
  * missing or when we need to swallow a raw server/runtime error and still
  * show something readable to the user. Each locale has its own copy — we
  * NEVER fall back to English in a non-English UI.
+ *
+ * Production-safe: `loading` uses contextual phrasing ("Content loading...")
+ * rather than the bare "Loading..." token, so users in any locale see a
+ * complete, natural sentence even when something fails to render.
  */
 const LOCALIZED_FALLBACKS: Record<Language, { loading: string; error: string; empty: string }> = {
-  en: { loading: "Loading...", error: "Something went wrong, try again", empty: "—" },
-  he: { loading: "טוען תוכן...", error: "שגיאה בשירות, נסו שוב", empty: "—" },
-  ru: { loading: "Загрузка...", error: "Ошибка сервиса, попробуйте снова", empty: "—" },
-  ar: { loading: "جارٍ التحميل...", error: "خطأ في الخدمة، حاولوا مرة أخرى", empty: "—" },
+  en: { loading: "Content loading...", error: "Something went wrong, try again", empty: "—" },
+  he: { loading: "התוכן בטעינה...", error: "שגיאה בשירות, נסו שוב", empty: "—" },
+  ru: { loading: "Контент загружается...", error: "Ошибка сервиса, попробуйте снова", empty: "—" },
+  ar: { loading: "يتم تحميل المحتوى...", error: "خطأ في الخدمة، حاولوا مرة أخرى", empty: "—" },
 };
 
 /** Returns the localized loading/error/empty fallback for the active locale. */
@@ -255,6 +259,327 @@ export function safeErrorText(rawError: unknown, locale: Language, context = "")
   return getLocalizedFallback(locale, "error");
 }
 
+// ─────────────────────────────────────────────────────────────────────
+// Silent auto-correction dictionary
+// ─────────────────────────────────────────────────────────────────────
+//
+// When the AI (or a stray label) leaks a SINGLE common English word into a
+// non-English string we don't want to nuke the entire text — we just patch
+// the offending word in place. Keys are lowercased English source words;
+// values are the localized replacement.
+//
+// Keep this list short and HIGH-CONFIDENCE: only words that have a single
+// unambiguous translation across all reading contexts.
+const AUTOCORRECT_DICTIONARY: Record<Exclude<Language, "en">, Record<string, string>> = {
+  he: {
+    loading: "טוען",
+    error: "שגיאה",
+    yes: "כן",
+    no: "לא",
+    today: "היום",
+    tomorrow: "מחר",
+    love: "אהבה",
+    money: "כסף",
+    career: "קריירה",
+    health: "בריאות",
+    family: "משפחה",
+    home: "בית",
+    work: "עבודה",
+    fire: "אש",
+    water: "מים",
+    earth: "אדמה",
+    air: "אוויר",
+    moon: "ירח",
+    sun: "שמש",
+    star: "כוכב",
+    stars: "כוכבים",
+    next: "הבא",
+    back: "חזרה",
+    close: "סגירה",
+    share: "שיתוף",
+    copy: "העתקה",
+    continue: "המשך",
+    unlock: "פתיחה",
+    reading: "קריאה",
+  },
+  ru: {
+    loading: "загрузка",
+    error: "ошибка",
+    yes: "да",
+    no: "нет",
+    today: "сегодня",
+    tomorrow: "завтра",
+    love: "любовь",
+    money: "деньги",
+    career: "карьера",
+    health: "здоровье",
+    family: "семья",
+    home: "дом",
+    work: "работа",
+    fire: "огонь",
+    water: "вода",
+    earth: "земля",
+    air: "воздух",
+    moon: "Луна",
+    sun: "Солнце",
+    star: "звезда",
+    stars: "звёзды",
+    next: "далее",
+    back: "назад",
+    close: "закрыть",
+    share: "поделиться",
+    copy: "копировать",
+    continue: "продолжить",
+    unlock: "открыть",
+    reading: "чтение",
+  },
+  ar: {
+    loading: "تحميل",
+    error: "خطأ",
+    yes: "نعم",
+    no: "لا",
+    today: "اليوم",
+    tomorrow: "غداً",
+    love: "الحب",
+    money: "المال",
+    career: "المهنة",
+    health: "الصحة",
+    family: "العائلة",
+    home: "المنزل",
+    work: "العمل",
+    fire: "النار",
+    water: "الماء",
+    earth: "الأرض",
+    air: "الهواء",
+    moon: "القمر",
+    sun: "الشمس",
+    star: "نجم",
+    stars: "نجوم",
+    next: "التالي",
+    back: "رجوع",
+    close: "إغلاق",
+    share: "مشاركة",
+    copy: "نسخ",
+    continue: "متابعة",
+    unlock: "فتح",
+    reading: "قراءة",
+  },
+};
+
+/** Count Latin-script letters vs. expected-script letters in a string. */
+function countScripts(text: string, locale: Language): { expected: number; latin: number; total: number } {
+  const expectedScript = EXPECTED_SCRIPT[locale];
+  let expected = 0;
+  let latin = 0;
+  let total = 0;
+  for (const ch of text) {
+    const s = detectScript(ch);
+    if (!s) continue;
+    total += 1;
+    if (s === expectedScript) expected += 1;
+    else if (s === "latin") latin += 1;
+  }
+  return { expected, latin, total };
+}
+
+/**
+ * Silently patch a small English-word leak inside an otherwise localized
+ * string. Returns the corrected text. Only triggers when:
+ *   - locale is not English
+ *   - the string is mostly in the expected script
+ *   - the offending Latin words are present in the dictionary
+ *
+ * If the mismatch is too large (e.g. half the sentence is English) we leave
+ * the text alone so the caller can decide to fall back / retry.
+ */
+export function autoCorrectLocale(text: string, locale: Language): { corrected: string; changed: boolean } {
+  if (!text || locale === "en") return { corrected: text, changed: false };
+  const { expected, latin, total } = countScripts(text, locale);
+  if (total === 0 || latin === 0) return { corrected: text, changed: false };
+  // Only auto-correct when expected language clearly dominates.
+  if (expected === 0 || latin / total > 0.4) return { corrected: text, changed: false };
+
+  const dict = AUTOCORRECT_DICTIONARY[locale as Exclude<Language, "en">];
+  let changed = false;
+  const corrected = text.replace(/[A-Za-z]+/g, (word) => {
+    const replacement = dict[word.toLowerCase()];
+    if (replacement) {
+      changed = true;
+      trackLocaleEvent("autocorrect_applied", { locale, word });
+      return replacement;
+    }
+    return word;
+  });
+  return { corrected, changed };
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Attribute / metadata validation
+// ─────────────────────────────────────────────────────────────────────
+//
+// Use these for the long-tail localization surfaces that don't render as
+// visible body text: tooltips, aria-labels, placeholders, share/copy
+// payloads, meta descriptions, toast messages, etc.
+//
+// The flow is always the same:
+//   1. Try to auto-correct a small leak.
+//   2. If still invalid, log + emit analytics + return localized fallback.
+
+type AttributeKind =
+  | "tooltip"
+  | "aria-label"
+  | "placeholder"
+  | "share"
+  | "copy"
+  | "meta-description"
+  | "error"
+  | "generic";
+
+export function validateAttribute(
+  text: string | null | undefined,
+  locale: Language,
+  kind: AttributeKind = "generic",
+  fallback?: string,
+): string {
+  if (!text) return fallback ?? getLocalizedFallback(locale, "empty");
+  if (isValidLanguage(text, locale)) return text;
+
+  // Try auto-correction first — single-word leaks should self-heal.
+  const { corrected, changed } = autoCorrectLocale(text, locale);
+  if (changed && isValidLanguage(corrected, locale)) {
+    return corrected;
+  }
+
+  trackLocaleEvent("language_validation_failed", { locale, kind, sample: text.slice(0, 80) });
+  // eslint-disable-next-line no-console
+  console.warn(
+    `[locale-guard] BLOCKED ${kind} for locale "${locale}":`,
+    JSON.stringify(text.slice(0, 120)),
+  );
+  trackLocaleEvent("fallback_used", { locale, kind });
+  return fallback ?? (kind === "error" ? getLocalizedFallback(locale, "error") : getLocalizedFallback(locale, "empty"));
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Lightweight analytics hook
+// ─────────────────────────────────────────────────────────────────────
+//
+// We don't want a hard dependency on a specific analytics SDK here — the
+// locale guard runs everywhere. Instead we fan events out to:
+//   1. window.dataLayer (GTM-style) when available
+//   2. window.analytics.track (Segment-style) when available
+//   3. console.info in dev so developers can see them while testing
+//
+// Events:
+//   - language_validation_failed
+//   - retry_triggered
+//   - fallback_used
+//   - autocorrect_applied
+type LocaleAnalyticsEvent =
+  | "language_validation_failed"
+  | "retry_triggered"
+  | "fallback_used"
+  | "autocorrect_applied";
+
+export function trackLocaleEvent(event: LocaleAnalyticsEvent, payload: Record<string, unknown> = {}): void {
+  try {
+    const w = (typeof window !== "undefined" ? window : undefined) as
+      | (Window & {
+          dataLayer?: Array<Record<string, unknown>>;
+          analytics?: { track?: (e: string, p: Record<string, unknown>) => void };
+        })
+      | undefined;
+    if (w?.dataLayer && Array.isArray(w.dataLayer)) {
+      w.dataLayer.push({ event, ...payload });
+    }
+    if (w?.analytics?.track) {
+      w.analytics.track(event, payload);
+    }
+    let isDev = false;
+    try {
+      isDev = Boolean((import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV);
+    } catch {
+      isDev = false;
+    }
+    if (isDev) {
+      // eslint-disable-next-line no-console
+      console.info(`[locale-analytics] ${event}`, payload);
+    }
+  } catch {
+    /* analytics must never throw */
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// AI generation retry helper
+// ─────────────────────────────────────────────────────────────────────
+//
+// Wraps an AI generation call with a single language-validation retry. The
+// caller passes a `generate(strict)` async function that performs the actual
+// AI request — on the retry pass `strict` is `true`, signalling that the
+// caller should add an extra "respond ONLY in <locale>" instruction to the
+// prompt.
+//
+// Returns either a valid (or auto-corrected) string OR the localized
+// fallback when both attempts produce wrong-language text.
+
+export async function generateWithLocaleRetry(
+  generate: (strict: boolean) => Promise<string>,
+  locale: Language,
+  context = "ai-generation",
+): Promise<{ text: string; usedFallback: boolean; usedRetry: boolean; usedAutoCorrect: boolean }> {
+  // First attempt
+  let raw = "";
+  try {
+    raw = (await generate(false)) ?? "";
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn(`[locale-guard] ${context} first attempt threw`, e);
+    raw = "";
+  }
+
+  if (raw && isValidLanguage(raw, locale)) {
+    return { text: raw, usedFallback: false, usedRetry: false, usedAutoCorrect: false };
+  }
+
+  // Try silent auto-correction before retrying — cheaper than a second AI call.
+  if (raw) {
+    const { corrected, changed } = autoCorrectLocale(raw, locale);
+    if (changed && isValidLanguage(corrected, locale)) {
+      return { text: corrected, usedFallback: false, usedRetry: false, usedAutoCorrect: true };
+    }
+  }
+
+  // Retry once with stricter instruction.
+  trackLocaleEvent("retry_triggered", { locale, context });
+  let retryRaw = "";
+  try {
+    retryRaw = (await generate(true)) ?? "";
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn(`[locale-guard] ${context} retry threw`, e);
+    retryRaw = "";
+  }
+
+  if (retryRaw && isValidLanguage(retryRaw, locale)) {
+    return { text: retryRaw, usedFallback: false, usedRetry: true, usedAutoCorrect: false };
+  }
+
+  // Final auto-correct pass on the retry response.
+  if (retryRaw) {
+    const { corrected, changed } = autoCorrectLocale(retryRaw, locale);
+    if (changed && isValidLanguage(corrected, locale)) {
+      return { text: corrected, usedFallback: false, usedRetry: true, usedAutoCorrect: true };
+    }
+  }
+
+  trackLocaleEvent("language_validation_failed", { locale, context, retried: true });
+  trackLocaleEvent("fallback_used", { locale, context });
+  // eslint-disable-next-line no-console
+  console.warn(`[locale-guard] ${context} failed validation after retry — using localized fallback`);
+  return { text: getLocalizedFallback(locale, "loading"), usedFallback: true, usedRetry: true, usedAutoCorrect: false };
+}
+
 export const localeGuard = {
   getLocalizedZodiacSign,
   getLocalizedElement,
@@ -265,5 +590,9 @@ export const localeGuard = {
   assertNoMixedLanguage,
   isValidLanguage,
   enforceLocale,
+  autoCorrectLocale,
+  validateAttribute,
+  trackLocaleEvent,
+  generateWithLocaleRetry,
 };
 
