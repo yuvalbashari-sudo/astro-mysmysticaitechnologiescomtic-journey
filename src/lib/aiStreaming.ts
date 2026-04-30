@@ -160,7 +160,7 @@ export async function streamMysticalReading(
   const locale = language as Language;
   try {
     const first = await runStreamAttempt({ type, data, language, strict: false, onDelta });
-    if (!first.ok) {
+    if (first.ok === false) {
       onError(first.error);
       return;
     }
