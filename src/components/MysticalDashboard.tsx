@@ -33,15 +33,16 @@ const THEME_LABELS: Record<string, string> = {
   "אומץ_והחלטות": "אומץ וקבלת החלטות",
 };
 
+// Lookup keyed by element NAME (any locale) → icon. Keys are NOT rendered.
 const ELEMENT_ICONS: Record<string, typeof Flame> = {
-  "אש": Flame,
-  "מים": Droplets,
-  "אוויר": Wind,
-  "אדמה": Mountain,
-  "Fire": Flame,
-  "Water": Droplets,
-  "Air": Wind,
-  "Earth": Mountain,
+  // Hebrew
+  "אש": Flame, "מים": Droplets, "אוויר": Wind, "אדמה": Mountain,
+  // English
+  "Fire": Flame, "Water": Droplets, "Air": Wind, "Earth": Mountain,
+  // Russian
+  "Огонь": Flame, "Вода": Droplets, "Воздух": Wind, "Земля": Mountain,
+  // Arabic
+  "نار": Flame, "ماء": Droplets, "هواء": Wind, "أرض": Mountain,
 };
 
 interface MysticalDashboardProps {
