@@ -592,7 +592,7 @@ export const he: TranslationKeys = {
   advisor_palm_s4: "מה כדאי לי להבין על העתיד?",
   advisor_limit_reached: "הגעתם למגבלת השאלות החינמיות. שדרגו כדי להמשיך את השיחה עם נוריאל ✨",
   advisor_upgrade_cta: "גלו את החבילה המלאה",
-  advisor_send: "יאללה, שלחו",
+  advisor_send: "שלחו",
   advisor_error: "שגיאה בשירות, נסו שוב",
   advisor_open: "פתיחת נוריאל",
   advisor_close: "סגירת נוריאל",
