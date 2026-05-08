@@ -414,7 +414,7 @@ export const he: TranslationKeys = {
   onboarding_step2_cta: "בואו נמשיך",
   onboarding_step3_title: "התובנות מתחילות להתגלות",
   onboarding_step3_text: "האותות מתפענחים, הסמלים מתחברים לתמונה שלמה. הקריאה האישית שלכם מוכנה.",
-  onboarding_step3_cta: "יאללה, חשפו את התוצאה",
+  onboarding_step3_cta: "חשפו את התוצאה",
   onboarding_skip: "דלגו ←",
 
   lead_modal_title: "התחילו את המסע שלכם",
