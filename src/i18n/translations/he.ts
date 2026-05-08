@@ -480,7 +480,7 @@ export const he: TranslationKeys = {
   tarot_shuffle_desc_idle: "לחצו כדי לערבב את הקלפים ולהתחיל את הטקס",
   tarot_shuffle_desc_shuffling: "האנרגיה הקוסמית בוחרת את הקלפים שלכם...",
   tarot_shuffle_desc_ready: "הקלפים נבחרו עבורכם",
-  tarot_shuffle_cta: "יאללה, ערבבו",
+  tarot_shuffle_cta: "ערבבו את הקלפים",
   tarot_shuffle_status: "הקלפים מתערבבים...",
   tarot_shuffle_done: "✦ הקלפים מוכנים עבורכם ✦",
   tarot_step_label: "שלב",
