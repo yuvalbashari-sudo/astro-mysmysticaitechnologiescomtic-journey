@@ -7,7 +7,7 @@ export const he: TranslationKeys = {
   hero_headline: "מה הכוכבים, הקלפים וכף היד שלכם מגלים עליכם?",
   hero_subheadline: "גלו את המסר שהיקום שולח לכם היום",
   hero_services_line: "קריאת טארוט • התאמה זוגית • מזל עולה • קריאה בכף היד",
-  hero_cta_free: "יאללה, בואו נגלה מה מחכה לכם",
+  hero_cta_free: "פתחו בקריאה האישית שלכם",
   hero_cta_personal: "✦ גלו את המסר האישי שלכם ✦",
   hero_cta_whatsapp: "💬 דברו איתנו בוואטסאפ",
   hero_badge: "✦ חוויה מיסטית בלעדית ומותאמת אישית ✦",
