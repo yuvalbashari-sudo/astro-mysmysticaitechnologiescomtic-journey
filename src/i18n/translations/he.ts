@@ -444,7 +444,7 @@ export const he: TranslationKeys = {
   birth_chart_time_label: "שעת לידה",
   birth_chart_city_label: "מקום לידה",
   birth_chart_city_placeholder: "עיר לידה...",
-  birth_chart_cta: "יאללה, צרו את המפה שלי",
+  birth_chart_cta: "צרו את המפה האישית שלי",
   birth_chart_note: "מפת הלידה מחושבת על בסיס תאריך, שעה ומיקום הלידה שלכם",
   birth_chart_loading: "הכוכבים מתיישרים... מחשבים את מפת הלידה שלכם",
   birth_chart_sun: "שמש",
