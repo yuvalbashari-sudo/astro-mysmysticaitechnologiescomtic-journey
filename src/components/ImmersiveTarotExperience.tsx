@@ -56,7 +56,7 @@ async function streamTarotReading(
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
-  const userName = mysticalProfile.getUserName() || undefined;
+  const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
   const gender = mysticalProfile.getUserGender() || undefined;
   try {
     const resp = await fetch(url, {
