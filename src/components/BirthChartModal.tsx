@@ -513,7 +513,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 style={{ position: showResult ? 'relative' : undefined, zIndex: showResult ? 10 : undefined }}
               >
                 <AstralLightReveal
-                  userName={userName.trim() || undefined}
+                  userName={localizeName(userName.trim(), language) || undefined}
                   chartData={chartData}
                   onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
                   onAuraResult={setAuraResult}
