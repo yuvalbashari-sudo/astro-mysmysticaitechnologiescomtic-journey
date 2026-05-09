@@ -105,7 +105,7 @@ const DailyHoroscopeCard = () => {
   const safeProfile = getAdminSafeProfile();
   const birthDate = safeProfile.birthDate;
   const zodiacSign = birthDate ? getZodiacFromDate(birthDate) : (safeProfile.zodiacSign || null);
-  const userName = safeProfile.userName;
+  const userName = localizeName(safeProfile.userName, language);
   const gender = safeProfile.gender;
 
   // Premium unlock id — one per (sign, day). New day = re-gate.
