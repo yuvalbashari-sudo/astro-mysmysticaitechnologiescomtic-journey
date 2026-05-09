@@ -43,6 +43,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              <RouteSeoTags />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/tarot-gallery" element={<TarotGalleryPage />} />
