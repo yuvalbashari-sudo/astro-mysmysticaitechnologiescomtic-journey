@@ -29,6 +29,11 @@ import MobileAccessibilityFab from "./components/MobileAccessibilityFab";
 
 const queryClient = new QueryClient();
 
+const RouteSeoTags = () => {
+  useHreflangTags();
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
