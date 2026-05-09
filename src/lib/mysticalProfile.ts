@@ -129,6 +129,13 @@ function getUserName(): string | undefined {
   return getProfile().userName;
 }
 
+function getLocalizedUserName(language?: string): string | undefined {
+  // Lazy import to avoid circular deps in older bundlers.
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { localizeName } = require("./nameLocalization") as typeof import("./nameLocalization");
+  return localizeName(getProfile().userName, language);
+}
+
 function recordGender(gender: "male" | "female" | "other" | "prefer_not_to_say"): void {
   const profile = getProfile();
   profile.gender = gender;
