@@ -96,6 +96,7 @@ async function streamTarotReading(
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
+  const gender = mysticalProfile.getEffectiveGender() || undefined;
 
   try {
     const resp = await fetch(url, {
@@ -104,7 +105,7 @@ async function streamTarotReading(
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext }, language: language || "he", userName }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext }, language: language || "he", userName, gender }),
     });
 
     const lang = (language || "he") as Language;
