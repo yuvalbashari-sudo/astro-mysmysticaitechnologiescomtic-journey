@@ -5,6 +5,8 @@
  * Stored in localStorage. Designed for future expansion to user accounts.
  */
 
+import { localizeName } from "./nameLocalization";
+
 export interface MysticalProfileData {
   // Identity
   userName?: string;
@@ -127,6 +129,10 @@ function recordUserName(name: string): void {
 
 function getUserName(): string | undefined {
   return getProfile().userName;
+}
+
+function getLocalizedUserName(language?: string): string | undefined {
+  return localizeName(getProfile().userName, language);
 }
 
 function recordGender(gender: "male" | "female" | "other" | "prefer_not_to_say"): void {
@@ -358,6 +364,7 @@ export const mysticalProfile = {
   getProfile,
   recordUserName,
   getUserName,
+  getLocalizedUserName,
   recordGender,
   getUserGender,
   detectGenderFromText,

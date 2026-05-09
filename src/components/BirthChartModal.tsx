@@ -15,6 +15,7 @@ import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
+import { localizeName } from "@/lib/nameLocalization";
 import { getChartLabels, getPlanetName, getSignNameByKey, getElementName, getAspectName } from "@/lib/astroLocale";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -302,7 +303,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         dominantEnergies: dominantText,
         coordinates: `${chartData.location.latitude.toFixed(4)}, ${chartData.location.longitude.toFixed(4)}`,
         timezone: chartData.location.timezone,
-        userName: userName.trim() || undefined,
+        userName: localizeName(userName.trim(), language) || undefined,
         gender,
       },
       (delta) => setResultText((prev) => prev + delta),
@@ -512,7 +513,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 style={{ position: showResult ? 'relative' : undefined, zIndex: showResult ? 10 : undefined }}
               >
                 <AstralLightReveal
-                  userName={userName.trim() || undefined}
+                  userName={localizeName(userName.trim(), language) || undefined}
                   chartData={chartData}
                   onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
                   onAuraResult={setAuraResult}
@@ -547,7 +548,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                           className="font-body text-sm"
                           style={{ color: "hsl(var(--gold) / 0.7)" }}
                         >
-                          {t.chart_welcome_back.replace("{name}", userName.trim())}
+                          {t.chart_welcome_back.replace("{name}", localizeName(userName.trim(), language) || "")}
                         </motion.p>
                       )}
                     </AnimatePresence>
@@ -618,7 +619,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 >
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                      {t.chart_of_name} {userName.trim()}
+                      {t.chart_of_name} {localizeName(userName.trim(), language)}
                     </p>
                   )}
                   <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2">

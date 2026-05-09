@@ -13,6 +13,7 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
+import { localizeName } from "@/lib/nameLocalization";
 import { useReadingContext } from "@/contexts/ReadingContext";
 
 interface Props {
@@ -314,7 +315,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         spiritualMeaning: selectedCard.name.en,
         advice: selectedCard.name.en,
         gender,
-        userName: userName.trim() || undefined,
+        userName: localizeName(userName.trim(), language) || undefined,
       },
       (delta) => {
         aiTextRef.current += delta;

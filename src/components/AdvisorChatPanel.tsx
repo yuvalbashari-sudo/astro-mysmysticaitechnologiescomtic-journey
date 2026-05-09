@@ -163,7 +163,7 @@ const AdvisorChatPanel = ({ isOpen, onClose, forceRightAnchor = false }: Props) 
             date: r.date,
           })),
           language,
-          userName: mysticalProfile.getUserName() || undefined,
+          userName: mysticalProfile.getLocalizedUserName(language) || undefined,
           userGender: mysticalProfile.autoDetectAndRecordGender(text) || undefined,
         }),
       });
