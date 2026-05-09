@@ -95,7 +95,7 @@ async function streamTarotReading(
 
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
-  const userName = mysticalProfile.getUserName() || undefined;
+  const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
 
   try {
     const resp = await fetch(url, {
