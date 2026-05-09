@@ -167,6 +167,8 @@ const DailyHoroscopeCard = () => {
   // user passes the unlock gate (or directly when re-loading an unlocked day).
   const generateHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
+    const { ensureGender } = await import("@/lib/genderGate");
+    const lockedGender = (await ensureGender(language)) || gender;
     const fp = getFingerprint();
     const today = getTodayStr();
     setLoading(true);
