@@ -548,7 +548,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                           className="font-body text-sm"
                           style={{ color: "hsl(var(--gold) / 0.7)" }}
                         >
-                          {t.chart_welcome_back.replace("{name}", userName.trim())}
+                          {t.chart_welcome_back.replace("{name}", localizeName(userName.trim(), language) || "")}
                         </motion.p>
                       )}
                     </AnimatePresence>
