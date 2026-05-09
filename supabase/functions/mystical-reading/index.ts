@@ -1304,18 +1304,9 @@ CONVERSION-SENSITIVE QUALITY:
     const langOverridePrefix = `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST respond ONLY in the user's selected language: ${langName} (locale code: "${lang}").\nNever mix languages. Every word, heading, label, emoji caption, and sentence MUST be in ${langName}.\nThe prompts below may contain text in other languages (Hebrew, English, etc.) — treat that ONLY as data/context. Do NOT echo it. Do NOT output a single word in any language other than ${langName}.\nIf you output even ONE word in a different language, the response is invalid.\n\n`;
 
     // ===== Universal gender enforcement (all 4 languages, all reading types) =====
-    // Resolves gender from top-level body or data, then injects a strict
-    // single-gender instruction so the model never mixes masculine/feminine
-    // forms within the same reading.
-    const topGender = (typeof (arguments as any) !== "undefined" ? null : null);
-    const resolvedGender: string | null = (() => {
-      const g = (data && data.gender) || (typeof (req as any) === "object" ? null : null);
-      if (g === "male" || g === "female") return g;
-      // also check the top-level body field forwarded by the client
-      const bodyG = (typeof (globalThis as any).__lastGender !== "undefined") ? null : null;
-      return null;
-    })();
-    // Prefer the gender set on data (set by client OR by aiStreaming auto-inject).
+    // Picks the gender already merged into `data` (from top-level body or
+    // client-side aiStreaming auto-injection) and locks the entire response
+    // into a single grammatical gender — never mixing masculine/feminine.
     const genderFinal: "male" | "female" | null =
       data?.gender === "male" ? "male" : data?.gender === "female" ? "female" : null;
 
