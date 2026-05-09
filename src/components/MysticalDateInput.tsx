@@ -1,6 +1,13 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 import { CalendarDays } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import {
+  validateBirthParts,
+  validateBirthIso,
+  getDateErrorMessage,
+  getMaxYear,
+  type DateErrorCode,
+} from "@/lib/dateValidation";
 
 interface Props {
   value: string; // YYYY-MM-DD
@@ -19,25 +26,26 @@ function getTodayISO(): string {
   return `${y}-${m}-${d}`;
 }
 
-/** Check if an ISO date string is in the future */
-function isFutureDate(iso: string): boolean {
-  if (!iso) return false;
-  return iso > getTodayISO();
-}
-
 /**
  * A mobile-friendly date input that shows a visible text field.
  * English → MM/DD/YYYY, others → DD/MM/YYYY.
  * Outputs YYYY-MM-DD for internal consistency.
- * Future dates are blocked.
+ *
+ * Strict birth-date validation:
+ *   - Year between 1900 and current year
+ *   - Month 1–12, Day 1–31
+ *   - Real calendar days per month (incl. leap years)
+ *   - Future dates blocked
+ * Localized error messages (HE / EN / RU / AR).
  */
 const MysticalDateInput = ({ value, onChange, className = "", style, placeholder }: Props) => {
   const { language } = useLanguage();
   const hiddenRef = useRef<HTMLInputElement>(null);
-  const [futureError, setFutureError] = useState(false);
+  const [errorCode, setErrorCode] = useState<DateErrorCode | null>(null);
 
   const isEN = language === "en";
   const todayISO = useMemo(() => getTodayISO(), []);
+  const minDateISO = `${1900}-01-01`;
 
   // Convert YYYY-MM-DD → display string
   const toDisplay = useCallback((iso: string) => {
@@ -47,28 +55,32 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
     return isEN ? `${m}/${d}/${y}` : `${d}/${m}/${y}`;
   }, [isEN]);
 
-  // Convert display string → YYYY-MM-DD
-  // EN: MM/DD/YYYY, others: DD/MM/YYYY
-  const toIso = useCallback((display: string) => {
+  /**
+   * Parse display string → { iso, errorCode }.
+   * Validates only when the user has typed a complete date (DD/MM/YYYY or MM/DD/YYYY).
+   */
+  const parseDisplay = useCallback((display: string): { iso: string; error: DateErrorCode | null } => {
     const cleaned = display.replace(/[^0-9/]/g, "");
     const parts = cleaned.split("/");
-    if (parts.length === 3 && parts[0].length <= 2 && parts[1].length <= 2 && parts[2].length === 4) {
-      const p0 = parts[0].padStart(2, "0");
-      const p1 = parts[1].padStart(2, "0");
-      const y = parts[2];
-
-      const month = isEN ? parseInt(p0, 10) : parseInt(p1, 10);
-      const day = isEN ? parseInt(p1, 10) : parseInt(p0, 10);
-      const year = parseInt(y, 10);
-
-      const m = isEN ? p0 : p1;
-      const d = isEN ? p1 : p0;
-
-      if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900 && year <= 2100) {
-        return `${y}-${m}-${d}`;
-      }
+    if (parts.length !== 3) return { iso: "", error: null };
+    if (parts[0].length === 0 || parts[1].length === 0 || parts[2].length < 4) {
+      return { iso: "", error: null };
     }
-    return "";
+
+    const p0 = parts[0].padStart(2, "0");
+    const p1 = parts[1].padStart(2, "0");
+    const yStr = parts[2];
+
+    const month = isEN ? parseInt(p0, 10) : parseInt(p1, 10);
+    const day = isEN ? parseInt(p1, 10) : parseInt(p0, 10);
+    const year = parseInt(yStr, 10);
+
+    const err = validateBirthParts(year, month, day);
+    if (err) return { iso: "", error: err };
+
+    const m = String(month).padStart(2, "0");
+    const d = String(day).padStart(2, "0");
+    return { iso: `${yStr}-${m}-${d}`, error: null };
   }, [isEN]);
 
   const [displayValue, setDisplayValue] = useState(toDisplay(value));
@@ -80,13 +92,13 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
     prevValueRef.current = value;
     prevLangRef.current = language;
     setDisplayValue(toDisplay(value));
-    setFutureError(false);
+    setErrorCode(null);
   }
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     let digits = e.target.value.replace(/[^0-9]/g, "");
     if (digits.length > 8) digits = digits.slice(0, 8);
-    
+
     // Auto-format with slashes
     let formatted = "";
     if (digits.length <= 2) {
@@ -96,22 +108,30 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
     } else {
       formatted = digits.slice(0, 2) + "/" + digits.slice(2, 4) + "/" + digits.slice(4);
     }
-    
+
     setDisplayValue(formatted);
-    const iso = toIso(formatted);
+
+    if (formatted === "") {
+      setErrorCode(null);
+      onChange("");
+      return;
+    }
+
+    const { iso, error } = parseDisplay(formatted);
+    if (error) {
+      setErrorCode(error);
+      onChange("");
+      return;
+    }
     if (iso) {
-      if (isFutureDate(iso)) {
-        setFutureError(true);
-        onChange("");
-        return;
-      }
-      setFutureError(false);
+      setErrorCode(null);
       onChange(iso);
-    } else if (formatted === "") {
-      setFutureError(false);
+    } else {
+      // Incomplete input — clear any stale error/value silently
+      setErrorCode(null);
       onChange("");
     }
-  }, [onChange, toIso]);
+  }, [onChange, parseDisplay]);
 
   const handleNativePick = useCallback(() => {
     hiddenRef.current?.showPicker?.();
@@ -121,12 +141,13 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
 
   const handleNativeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const v = e.target.value;
-    if (isFutureDate(v)) {
-      setFutureError(true);
+    const err = validateBirthIso(v);
+    if (err) {
+      setErrorCode(err);
       onChange("");
       return;
     }
-    setFutureError(false);
+    setErrorCode(null);
     onChange(v);
     setDisplayValue(toDisplay(v));
   }, [onChange, toDisplay]);
@@ -142,9 +163,10 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
         value={displayValue}
         onChange={handleTextChange}
         placeholder={placeholder || defaultPlaceholder}
-        className={`mystical-input font-body text-center w-full ${className} ${futureError ? "ring-1 ring-crimson/60" : ""}`}
+        className={`mystical-input font-body text-center w-full ${className} ${errorCode ? "ring-1 ring-crimson/60" : ""}`}
         style={{ direction: "ltr", paddingRight: 36, ...style }}
         autoComplete="off"
+        aria-invalid={!!errorCode}
       />
       <button
         type="button"
@@ -156,12 +178,13 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
       >
         <CalendarDays className="w-4 h-4" />
       </button>
-      {/* Hidden native date input for calendar picker — max set to today */}
+      {/* Hidden native date input for calendar picker — bounded to [1900-01-01, today] */}
       <input
         ref={hiddenRef}
         type="date"
         lang={language}
         value={value}
+        min={minDateISO}
         max={todayISO}
         onChange={handleNativeChange}
         className="absolute inset-0 opacity-0 pointer-events-none"
@@ -169,9 +192,13 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
         aria-hidden="true"
         style={{ width: 0, height: 0, overflow: "hidden", position: "absolute" }}
       />
-      {futureError && (
-        <p className="text-xs mt-1 font-body" style={{ color: "hsl(var(--crimson))" }}>
-          ✦ Future dates are not allowed
+      {errorCode && (
+        <p
+          className="text-xs mt-1 font-body"
+          style={{ color: "hsl(var(--crimson))" }}
+          role="alert"
+        >
+          {getDateErrorMessage(errorCode, language)}
         </p>
       )}
     </div>
