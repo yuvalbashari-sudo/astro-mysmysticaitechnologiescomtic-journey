@@ -26,6 +26,7 @@ import FloatingOracleButton from "./components/FloatingOracleButton";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 import AdminDebugBadge from "./components/AdminDebugBadge";
 import MobileAccessibilityFab from "./components/MobileAccessibilityFab";
+import GenderPromptModal from "./components/GenderPromptModal";
 
 const queryClient = new QueryClient();
 
