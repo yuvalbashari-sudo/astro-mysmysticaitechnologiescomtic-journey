@@ -12,6 +12,7 @@ import {
   getLocalizedFallback,
 } from "@/lib/localeGuard";
 import type { Language } from "@/i18n/types";
+import { ensureGender } from "@/lib/genderGate";
 
 type StreamArgs = {
   type: string;
