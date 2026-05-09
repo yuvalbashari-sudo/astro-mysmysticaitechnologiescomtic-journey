@@ -12,6 +12,7 @@ import {
   getLocalizedFallback,
 } from "@/lib/localeGuard";
 import type { Language } from "@/i18n/types";
+import { ensureGender } from "@/lib/genderGate";
 
 type StreamArgs = {
   type: string;
@@ -164,6 +165,8 @@ export async function streamMysticalReading(
 ) {
   const locale = language as Language;
   try {
+    // Gate: ensure we have a locked gender before generating any AI content.
+    await ensureGender(language);
     const first = await runStreamAttempt({ type, data, language, strict: false, onDelta });
     if (first.ok === false) {
       onError(first.error);

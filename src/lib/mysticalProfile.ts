@@ -181,19 +181,12 @@ function inferGenderFromName(rawName?: string): "male" | "female" | undefined {
 }
 
 /**
- * Returns recorded gender; if missing, infers from the user's name and
- * LOCKS it once so the rest of the session stays consistent.
+ * Returns the recorded gender ONLY. Never infers from name here — callers
+ * that need a guaranteed gender should use `ensureGender()` from
+ * `@/lib/genderGate`, which prompts the user when missing.
  */
 function getEffectiveGender(): "male" | "female" | "other" | "prefer_not_to_say" | undefined {
-  const profile = getProfile();
-  if (profile.gender) return profile.gender;
-  const inferred = inferGenderFromName(profile.userName);
-  if (inferred) {
-    profile.gender = inferred;
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); } catch { /* ignore */ }
-    return inferred;
-  }
-  return undefined;
+  return getProfile().gender;
 }
 
 /**
