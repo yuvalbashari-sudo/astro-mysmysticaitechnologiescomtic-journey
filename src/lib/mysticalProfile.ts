@@ -5,6 +5,8 @@
  * Stored in localStorage. Designed for future expansion to user accounts.
  */
 
+import { localizeName } from "./nameLocalization";
+
 export interface MysticalProfileData {
   // Identity
   userName?: string;
