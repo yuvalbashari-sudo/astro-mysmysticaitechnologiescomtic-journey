@@ -14,6 +14,7 @@ import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
 import MysticalDateInput from "./MysticalDateInput";
 import { isAdminTestMode, getAdminSafeProfile, getAdminSafeZodiac } from "@/lib/adminTestMode";
 import { enforceLocale } from "@/lib/localeGuard";
+import { localizeName } from "@/lib/nameLocalization";
 import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
 import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 /* ── Zodiac helper ── */
