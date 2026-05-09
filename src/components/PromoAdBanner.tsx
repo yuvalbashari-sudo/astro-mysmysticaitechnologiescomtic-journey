@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useAutoUnmuteOnInteraction } from "@/hooks/useAutoUnmuteOnInteraction";
 import type { Language } from "@/i18n/types";
 
 /* ═══════════════════════════════════════════════════════
@@ -57,6 +58,7 @@ const PromoAdBanner = ({ videoSrc, onCtaClick, lang, className = "" }: Props) =>
   const t = TRANSLATIONS[activeLang] || TRANSLATIONS.en;
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  useAutoUnmuteOnInteraction(videoRef, !!videoSrc);
 
   // Auto-play video
   useEffect(() => {
