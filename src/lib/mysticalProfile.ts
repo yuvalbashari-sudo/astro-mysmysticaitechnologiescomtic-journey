@@ -364,6 +364,7 @@ export const mysticalProfile = {
   getProfile,
   recordUserName,
   getUserName,
+  getLocalizedUserName,
   recordGender,
   getUserGender,
   detectGenderFromText,
