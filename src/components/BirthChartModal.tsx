@@ -303,7 +303,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         dominantEnergies: dominantText,
         coordinates: `${chartData.location.latitude.toFixed(4)}, ${chartData.location.longitude.toFixed(4)}`,
         timezone: chartData.location.timezone,
-        userName: userName.trim() || undefined,
+        userName: localizeName(userName.trim(), language) || undefined,
         gender,
       },
       (delta) => setResultText((prev) => prev + delta),
