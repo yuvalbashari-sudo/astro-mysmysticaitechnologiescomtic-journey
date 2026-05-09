@@ -1060,30 +1060,37 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
-                        {/* Structured AI reading content */}
-                        <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
-                          {aiText ? (
-                            <div className="text-start space-y-5">
-                              {renderMysticalText(aiText, textSize)}
-                            </div>
-                          ) : aiError ? (
-                            <div className="rounded-2xl px-4 py-3 text-center" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                              <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{aiError}</p>
-                            </div>
-                          ) : (
-                            <div className="flex flex-col items-center gap-3 py-2">
-                              <motion.div
-                                className="h-12 w-12 rounded-full"
-                                style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
-                                animate={{ scale: [1, 1.12, 1], rotate: [0, 180, 360] }}
-                                transition={{ duration: 3, repeat: Infinity }}
-                              />
-                              <motion.p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--gold) / 0.75)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
-                                {t.daily_loading}
-                              </motion.p>
-                            </div>
-                          )}
-                        </div>
+                        {/* Structured AI reading content — gated behind video unlock */}
+                        <PremiumUnlockOverlay
+                          readingId={`daily-card-${getTodayDate()}-${card.name.en}`}
+                          featureKey="tarot_reading"
+                          onUnlockStart={() => { if (!aiTextRef.current && !aiLoading) startAiReading(card); }}
+                          isReady={!aiLoading && !!aiText}
+                        >
+                          <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
+                            {aiText ? (
+                              <div className="text-start space-y-5">
+                                {renderMysticalText(aiText, textSize)}
+                              </div>
+                            ) : aiError ? (
+                              <div className="rounded-2xl px-4 py-3 text-center" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
+                                <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{aiError}</p>
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center gap-3 py-2">
+                                <motion.div
+                                  className="h-12 w-12 rounded-full"
+                                  style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}
+                                  animate={{ scale: [1, 1.12, 1], rotate: [0, 180, 360] }}
+                                  transition={{ duration: 3, repeat: Infinity }}
+                                />
+                                <motion.p className="font-body text-xs md:text-sm" style={{ color: "hsl(var(--gold) / 0.75)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
+                                  {t.daily_loading}
+                                </motion.p>
+                              </div>
+                            )}
+                          </div>
+                        </PremiumUnlockOverlay>
 
                         {/* Advisor CTA — conversion-driven */}
                         {!aiLoading && (aiText || aiError) && (
