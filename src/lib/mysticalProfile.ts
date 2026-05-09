@@ -132,9 +132,6 @@ function getUserName(): string | undefined {
 }
 
 function getLocalizedUserName(language?: string): string | undefined {
-  // Lazy import to avoid circular deps in older bundlers.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { localizeName } = require("./nameLocalization") as typeof import("./nameLocalization");
   return localizeName(getProfile().userName, language);
 }
 
