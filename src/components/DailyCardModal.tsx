@@ -253,21 +253,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     }, 1800);
     // Step 3: card fully revealed, glow burst (3.2s)
     const step3 = setTimeout(() => setRitualStep(3), 3200);
-    // Step 4: transition to result phase
+    // Step 4: transition to result phase (AI starts only after unlock gate)
     const step4 = setTimeout(() => {
       setPhase("result");
-      startAiReading(card);
     }, RITUAL_DURATION_MS);
 
     // Fallback safety: if animation fails, force result after 6s
     const fallback = setTimeout(() => {
-      setPhase((prev) => {
-        if (prev === "ritual") {
-          startAiReading(card);
-          return "result";
-        }
-        return prev;
-      });
+      setPhase((prev) => (prev === "ritual" ? "result" : prev));
     }, 6000);
 
     return () => {
