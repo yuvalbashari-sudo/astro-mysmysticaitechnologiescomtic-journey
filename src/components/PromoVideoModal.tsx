@@ -4,6 +4,7 @@ import { X, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { analytics } from "@/lib/analytics";
+import { hasUserInteracted, markUserInteracted } from "@/lib/userInteraction";
 import promoVideo from "@/assets/promo.mp4";
 
 interface Props {
@@ -53,19 +54,29 @@ const PromoVideoModal = ({
 
   useEffect(() => {
     if (!isOpen) return;
+    // Opening this modal IS a user gesture — record it so any subsequent video
+    // (including this one) is allowed to play with sound on.
+    markUserInteracted();
+    const canUnmute = hasUserInteracted();
     setUnlocked(false);
     setSecondsLeft(unlockAfterSeconds);
-    setMuted(true);
+    setMuted(!canUnmute);
     setWaitingForReady(false);
     completionSourceRef.current = null;
 
     document.body.style.overflow = "hidden";
 
-    // Try autoplay (muted should always succeed)
     const v = videoRef.current;
     if (v) {
-      v.muted = true;
-      v.play().catch(() => {});
+      // Try unmuted first when we have a prior gesture; fall back to muted
+      // autoplay if the browser still rejects it (Safari/iOS edge cases).
+      v.muted = !canUnmute;
+      v.volume = 1;
+      v.play().catch(() => {
+        v.muted = true;
+        setMuted(true);
+        v.play().catch(() => {});
+      });
     }
 
     const tick = setInterval(() => {
