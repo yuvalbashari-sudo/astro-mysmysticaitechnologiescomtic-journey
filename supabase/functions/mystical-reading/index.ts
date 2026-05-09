@@ -1122,7 +1122,11 @@ serve(async (req) => {
   } catch (e) { console.error("Cost logger import failed:", e); }
 
   try {
-    const { type, data, profileContext, language, userName: reqUserName } = await req.json();
+    const { type, data, profileContext, language, userName: reqUserName, gender: topGender } = await req.json();
+    // Forward top-level gender into data so prompt builders + universal lock both see it
+    if (data && typeof data === "object" && data.gender == null && (topGender === "male" || topGender === "female")) {
+      data.gender = topGender;
+    }
 
     // Check if the caller is an admin user
     const adminUser = await isAdminUser(req);
