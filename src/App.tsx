@@ -67,6 +67,7 @@ const App = () => (
               <WhatsAppFloatingButton />
               <MobileAccessibilityFab />
               <AdminDebugBadge />
+              <GenderPromptModal />
             </BrowserRouter>
           </TooltipProvider>
         </FontScaleProvider>
