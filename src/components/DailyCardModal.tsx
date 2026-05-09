@@ -168,6 +168,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       if (saved) {
         setCard(saved.card);
         setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
+        // Any saved AI text means the user already passed the unlock gate today
+        const readingId = `daily-card-${saved.date}-${saved.card.name.en}`;
+        const hasAnyPriorText = !!saved.aiTextByLang || !!saved.aiText;
+        if (hasAnyPriorText) {
+          premiumUnlock.markUnlocked(readingId);
+        }
         // Check per-language cache first
         const cachedForLang = saved.aiTextByLang?.[language];
         if (cachedForLang) {
