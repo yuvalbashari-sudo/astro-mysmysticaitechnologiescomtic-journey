@@ -186,7 +186,7 @@ const DailyHoroscopeCard = () => {
           birthDate,
           userName,
           language,
-          gender,
+          gender: lockedGender,
         }),
       });
 
