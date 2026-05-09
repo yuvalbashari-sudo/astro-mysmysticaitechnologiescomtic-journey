@@ -32,7 +32,7 @@ async function runStreamAttempt({
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/mystical-reading`;
 
   const profileContext = mysticalProfile.buildContextForAI();
-  const userName = mysticalProfile.getUserName() || undefined;
+  const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
 
   let authToken: string | null = null;
   try {
