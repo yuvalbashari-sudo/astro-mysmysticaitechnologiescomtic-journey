@@ -416,7 +416,7 @@ Write a mystical, personal and deep tarot reading. Important:
 3. Adapt the emotional and spiritual message to the reading type (${spreadType})
 4. The reading must feel unique — as if there has never been a reading like this
 5. Speak directly to the reader — as if you're holding their hand and looking into their eyes
-6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.${language === "he" && gender ? `\n7. GENDER REMINDER: Write the ENTIRE response in ${gender === "male" ? "masculine (לשון זכר)" : "feminine (לשון נקבה)"} form. Every verb, adjective, and pronoun must consistently match. Do NOT mix genders.` : ""}`;
+6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.${gender === "male" || gender === "female" ? `\n7. GENDER REMINDER: The reader is ${gender}. Keep the ENTIRE response in a single, consistent ${gender === "male" ? "masculine" : "feminine"} grammatical form. Every verb, adjective, pronoun and address must match. Never mix genders, never use slashes ("he/she", "את/ה"), never hedge into neutral phrasing.` : ""}`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
