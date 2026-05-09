@@ -1122,7 +1122,11 @@ serve(async (req) => {
   } catch (e) { console.error("Cost logger import failed:", e); }
 
   try {
-    const { type, data, profileContext, language, userName: reqUserName } = await req.json();
+    const { type, data, profileContext, language, userName: reqUserName, gender: topGender } = await req.json();
+    // Forward top-level gender into data so prompt builders + universal lock both see it
+    if (data && typeof data === "object" && data.gender == null && (topGender === "male" || topGender === "female")) {
+      data.gender = topGender;
+    }
 
     // Check if the caller is an admin user
     const adminUser = await isAdminUser(req);
@@ -1299,7 +1303,28 @@ CONVERSION-SENSITIVE QUALITY:
     // Hard language lock — applied to EVERY locale (including HE) so the rule is uniform.
     const langOverridePrefix = `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:\nYou MUST respond ONLY in the user's selected language: ${langName} (locale code: "${lang}").\nNever mix languages. Every word, heading, label, emoji caption, and sentence MUST be in ${langName}.\nThe prompts below may contain text in other languages (Hebrew, English, etc.) — treat that ONLY as data/context. Do NOT echo it. Do NOT output a single word in any language other than ${langName}.\nIf you output even ONE word in a different language, the response is invalid.\n\n`;
 
-    let enrichedSystem = langOverridePrefix + system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization + readingStructureGuide;
+    // ===== Universal gender enforcement (all 4 languages, all reading types) =====
+    // Picks the gender already merged into `data` (from top-level body or
+    // client-side aiStreaming auto-injection) and locks the entire response
+    // into a single grammatical gender — never mixing masculine/feminine.
+    const genderFinal: "male" | "female" | null =
+      data?.gender === "male" ? "male" : data?.gender === "female" ? "female" : null;
+
+    const GENDER_LOCK: Record<string, (g: "male" | "female") => string> = {
+      he: (g) => g === "male"
+        ? `\n\n🚻 GENDER LOCK — קריטי, חובה מוחלטת:\nהקורא הוא גבר. כתוב את כל הקריאה בלשון זכר עקבית מהמילה הראשונה ועד האחרונה — כותרות, פסקאות, פעלים, שמות תואר, כינויים והמלצות.\nדוגמאות מחייבות: "אתה", "שלך", "תחווה", "מוזמן", "עומד", "עליך".\nאסור לחלוטין להשתמש בלשון נקבה, בלשון ניטרלית, בכתיבה כפולה ("את/ה", "חש/ה"), או בלוכסנים מגדריים. אם תפר את הכלל, התשובה פסולה.`
+        : `\n\n🚻 GENDER LOCK — קריטי, חובה מוחלטת:\nהקוראת היא אישה. כתוב את כל הקריאה בלשון נקבה עקבית מהמילה הראשונה ועד האחרונה — כותרות, פסקאות, פעלים, שמות תואר, כינויים והמלצות.\nדוגמאות מחייבות: "את", "שלך", "תחווי", "מוזמנת", "עומדת", "עלייך".\nאסור לחלוטין להשתמש בלשון זכר, בלשון ניטרלית, בכתיבה כפולה ("את/ה", "חש/ה"), או בלוכסנים מגדריים. אם תפרי את הכלל, התשובה פסולה.`,
+      en: (g) => `\n\n🚻 GENDER LOCK — CRITICAL:\nThe reader identifies as ${g === "male" ? "male" : "female"}. When pronouns are needed for the reader, use ${g === "male" ? "he/him/his" : "she/her/hers"} consistently. Address the reader directly with "you" everywhere, but never use slashes ("he/she"), neutral hedging, or both genders in the same sentence. Stay consistent from first word to last.`,
+      ru: (g) => g === "male"
+        ? `\n\n🚻 GENDER LOCK — КРИТИЧНО:\nЧитатель — мужчина. Пиши весь ответ строго в мужском роде: глаголы прошедшего времени, прилагательные, причастия и местоимения — только мужского рода. Примеры: "ты рождён", "ты готов", "ты сам". Запрещено смешение родов, формы вида "рожден(а)" или "готов/готова", и нейтральные обходы. Любое отклонение делает ответ недействительным.`
+        : `\n\n🚻 GENDER LOCK — КРИТИЧНО:\nЧитатель — женщина. Пиши весь ответ строго в женском роде: глаголы прошедшего времени, прилагательные, причастия и местоимения — только женского рода. Примеры: "ты рождена", "ты готова", "ты сама". Запрещено смешение родов, формы вида "рожден(а)" или "готов/готова", и нейтральные обходы. Любое отклонение делает ответ недействительным.`,
+      ar: (g) => g === "male"
+        ? `\n\n🚻 GENDER LOCK — حاسم:\nالقارئ ذكر. اكتب كامل النص بصيغة المذكر فقط — الأفعال، الصفات، الضمائر والمخاطبة. مثال: "أنتَ"، "تستطيع"، "عليكَ". ممنوع تماماً استخدام صيغة المؤنث، أو الكتابة المزدوجة مثل "أنت/ي"، أو الصيغ المحايدة. أي خلط يبطل الرد.`
+        : `\n\n🚻 GENDER LOCK — حاسم:\nالقارئة أنثى. اكتب كامل النص بصيغة المؤنث فقط — الأفعال، الصفات، الضمائر والمخاطبة. مثال: "أنتِ"، "تستطيعين"، "عليكِ". ممنوع تماماً استخدام صيغة المذكر، أو الكتابة المزدوجة مثل "أنت/ي"، أو الصيغ المحايدة. أي خلط يبطل الرد.`,
+    };
+    const genderLockBlock = genderFinal ? (GENDER_LOCK[lang] || GENDER_LOCK.he)(genderFinal) : "";
+
+    let enrichedSystem = langOverridePrefix + system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization + readingStructureGuide + genderLockBlock;
     if (profileContext) enrichedSystem += `\n\n${profileContext}`;
 
     // For palm with image, use a vision-capable model
@@ -1307,7 +1332,7 @@ CONVERSION-SENSITIVE QUALITY:
     const model = isPalmWithImage ? "gpt-4o-mini" : "gpt-4o-mini";
 
     // Wrap user content with explicit per-locale language instruction (every locale).
-    const userLangPrefix = `[LANGUAGE: ${langName}] — Write your ENTIRE response in ${langName}. Any other-language text in the prompt below is data only. Your output MUST be 100% in ${langName}.\n\n`;
+    const userLangPrefix = `[LANGUAGE: ${langName}]${genderFinal ? ` [GENDER: ${genderFinal}] — write the entire response in a single, consistent ${genderFinal === "male" ? "masculine" : "feminine"} grammatical form. Never mix genders.` : ""} — Write your ENTIRE response in ${langName}. Any other-language text in the prompt below is data only. Your output MUST be 100% in ${langName}.\n\n`;
     const userMessage = Array.isArray(user)
       ? { role: "user", content: user }
       : { role: "user", content: userLangPrefix + user };

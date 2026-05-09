@@ -44,10 +44,12 @@ serve(async (req) => {
     const isMale = gender === "male";
     const isFemale = gender === "female";
     const genderHint = lang === "he"
-      ? (isMale ? "הקורא הוא גבר — כתוב בלשון זכר עקבית." : isFemale ? "הקוראת היא אישה — כתוב בלשון נקבה עקבית." : "")
+      ? (isMale ? "🚻 GENDER LOCK: הקורא הוא גבר — כתוב את כל הטקסט בלשון זכר עקבית. אסור לשון נקבה, אסור כתיבה כפולה ('את/ה')." : isFemale ? "🚻 GENDER LOCK: הקוראת היא אישה — כתוב את כל הטקסט בלשון נקבה עקבית. אסור לשון זכר, אסור כתיבה כפולה ('את/ה')." : "")
       : lang === "ar"
-      ? (isMale ? "القارئ ذكر — استخدم صيغة المذكر." : isFemale ? "القارئة أنثى — استخدم صيغة المؤنث." : "")
-      : "";
+      ? (isMale ? "🚻 GENDER LOCK: القارئ ذكر — استخدم صيغة المذكر فقط في كل النص." : isFemale ? "🚻 GENDER LOCK: القارئة أنثى — استخدم صيغة المؤنث فقط في كل النص." : "")
+      : lang === "ru"
+      ? (isMale ? "🚻 GENDER LOCK: читатель — мужчина. Весь текст строго в мужском роде, без смешения родов и форм 'готов/готова'." : isFemale ? "🚻 GENDER LOCK: читатель — женщина. Весь текст строго в женском роде, без смешения родов и форм 'готов/готова'." : "")
+      : (isMale || isFemale ? `🚻 GENDER LOCK: the reader identifies as ${isMale ? "male" : "female"}. Use ${isMale ? "he/him" : "she/her"} pronouns where needed and stay consistent — never mix genders or use slashes ("he/she").` : "");
 
     // Detect if the name's script matches the target language
     const isHebrew = (s: string) => /[\u0590-\u05FF]/.test(s);

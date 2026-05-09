@@ -33,6 +33,7 @@ async function runStreamAttempt({
 
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
+  const effectiveGender = mysticalProfile.getEffectiveGender();
 
   let authToken: string | null = null;
   try {
@@ -48,18 +49,22 @@ async function runStreamAttempt({
   };
   if (adminEmail) headers["x-admin-email"] = adminEmail;
 
-  // On a strict retry we ask the edge function to enforce the language even
-  // harder. The edge function ignores unknown fields safely; the prompt-side
-  // ABSOLUTE LANGUAGE RULE is already in place, so the extra hint is purely
-  // additive.
+  // Auto-inject gender into the data payload (without overriding an explicit one)
+  // so every reading type gets consistent gendered grammar.
+  const dataWithGender =
+    effectiveGender && (data as any).gender == null
+      ? { ...data, gender: effectiveGender }
+      : data;
+
   const body = {
     type,
     data: strict
-      ? { ...data, __languageStrict: true, __languageHint: `Respond ONLY in locale "${language}". No other language words.` }
-      : data,
+      ? { ...dataWithGender, __languageStrict: true, __languageHint: `Respond ONLY in locale "${language}". No other language words.` }
+      : dataWithGender,
     profileContext,
     language,
     userName,
+    gender: effectiveGender,
     strict,
   };
 

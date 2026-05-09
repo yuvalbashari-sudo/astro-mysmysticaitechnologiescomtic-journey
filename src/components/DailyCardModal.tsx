@@ -315,7 +315,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         dailyMeaning: selectedCard.name.en,
         spiritualMeaning: selectedCard.name.en,
         advice: selectedCard.name.en,
-        gender,
+        gender: gender || undefined,
         userName: localizeName(userName.trim(), language) || undefined,
       },
       (delta) => {

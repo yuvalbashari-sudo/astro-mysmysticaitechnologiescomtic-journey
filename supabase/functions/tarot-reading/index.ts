@@ -305,12 +305,22 @@ TONE FOR ENGLISH:
     };
     const languageInstruction = TAROT_LANG_TONE[language] || TAROT_LANG_TONE["he"];
 
-    // Hebrew gender consistency instruction
+    // Universal gender consistency instruction (all 4 languages)
     let genderInstruction = "";
-    if (language === "he" && gender === "male") {
-      genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקורא הוא גבר. כתוב את כל הפירוש בלשון זכר עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "אתה תחווה", "הכוחות שלך", "אתה מוזמן", "עליך לשים לב", "אתה עומד בפני".\nאסור בשום מקום בתשובה להשתמש בלשון נקבה, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון זכר בלבד בכל משפט.\n`;
-    } else if (language === "he" && gender === "female") {
-      genderInstruction = `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקוראת היא אישה. כתוב את כל הפירוש בלשון נקבה עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות, המלצות ומשפט הסיכום.\nדוגמאות: "את תחוו", "הכוחות שלך", "את מוזמנת", "עלייך לשים לב", "את עומדת בפני".\nאסור בשום מקום בתשובה להשתמש בלשון זכר, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון נקבה בלבד בכל משפט.\n`;
+    if (gender === "male" || gender === "female") {
+      const G: Record<string, (g: "male" | "female") => string> = {
+        he: (g) => g === "male"
+          ? `\n\n🚻 GENDER LOCK — קריטי:\nהקורא הוא גבר. כתוב את כל הפירוש בלשון זכר עקבית מהמילה הראשונה ועד האחרונה — כותרות, פסקאות, פעלים, שמות תואר, כינויים, עצות וסיכום. דוגמאות: "אתה", "שלך", "תחווה", "מוזמן", "עליך". אסור לחלוטין לשון נקבה, לשון ניטרלית, כתיבה כפולה ("את/ה", "חש/ה") או לוכסנים מגדריים.\n`
+          : `\n\n🚻 GENDER LOCK — קריטי:\nהקוראת היא אישה. כתוב את כל הפירוש בלשון נקבה עקבית מהמילה הראשונה ועד האחרונה — כותרות, פסקאות, פעלים, שמות תואר, כינויים, עצות וסיכום. דוגמאות: "את", "שלך", "תחווי", "מוזמנת", "עלייך". אסור לחלוטין לשון זכר, לשון ניטרלית, כתיבה כפולה ("את/ה", "חש/ה") או לוכסנים מגדריים.\n`,
+        en: (g) => `\n\n🚻 GENDER LOCK — CRITICAL:\nThe reader identifies as ${g === "male" ? "male" : "female"}. Use ${g === "male" ? "he/him/his" : "she/her/hers"} for any third-person reference to the reader. Address them directly with "you", but never use slashes ("he/she"), neutral hedging, or both genders in the same sentence. Stay consistent throughout.\n`,
+        ru: (g) => g === "male"
+          ? `\n\n🚻 GENDER LOCK — КРИТИЧНО:\nЧитатель — мужчина. Весь ответ строго в мужском роде: глаголы прошедшего времени, прилагательные, причастия и местоимения только мужского рода ("ты рождён", "готов", "сам"). Запрещено смешение родов и формы вида "готов/готова".\n`
+          : `\n\n🚻 GENDER LOCK — КРИТИЧНО:\nЧитатель — женщина. Весь ответ строго в женском роде: глаголы прошедшего времени, прилагательные, причастия и местоимения только женского рода ("ты рождена", "готова", "сама"). Запрещено смешение родов и формы вида "готов/готова".\n`,
+        ar: (g) => g === "male"
+          ? `\n\n🚻 GENDER LOCK — حاسم:\nالقارئ ذكر. اكتب النص كاملاً بصيغة المذكر فقط — الأفعال، الصفات، الضمائر والمخاطبة ("أنتَ"، "تستطيع"، "عليكَ"). ممنوع صيغة المؤنث أو الكتابة المزدوجة "أنت/ي".\n`
+          : `\n\n🚻 GENDER LOCK — حاسم:\nالقارئة أنثى. اكتب النص كاملاً بصيغة المؤنث فقط — الأفعال، الصفات، الضمائر والمخاطبة ("أنتِ"، "تستطيعين"، "عليكِ"). ممنوع صيغة المذكر أو الكتابة المزدوجة "أنت/ي".\n`,
+      };
+      genderInstruction = (G[language] || G.he)(gender);
     }
 
     // Hard language lock — uniform for EVERY locale (including HE).
@@ -406,7 +416,7 @@ Write a mystical, personal and deep tarot reading. Important:
 3. Adapt the emotional and spiritual message to the reading type (${spreadType})
 4. The reading must feel unique — as if there has never been a reading like this
 5. Speak directly to the reader — as if you're holding their hand and looking into their eyes
-6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.${language === "he" && gender ? `\n7. GENDER REMINDER: Write the ENTIRE response in ${gender === "male" ? "masculine (לשון זכר)" : "feminine (לשון נקבה)"} form. Every verb, adjective, and pronoun must consistently match. Do NOT mix genders.` : ""}`;
+6. REMEMBER: Write EVERYTHING in ${langName}. Do NOT translate — write natively as if ${langName} is your mother tongue. Not a single word in any other language. All headers, labels, keywords, and content must be in ${langName} only.${gender === "male" || gender === "female" ? `\n7. GENDER REMINDER: The reader is ${gender}. Keep the ENTIRE response in a single, consistent ${gender === "male" ? "masculine" : "feminine"} grammatical form. Every verb, adjective, pronoun and address must match. Never mix genders, never use slashes ("he/she", "את/ה"), never hedge into neutral phrasing.` : ""}`;
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",

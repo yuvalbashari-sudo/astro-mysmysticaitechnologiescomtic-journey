@@ -146,6 +146,57 @@ function getUserGender(): "male" | "female" | "other" | "prefer_not_to_say" | un
 }
 
 /**
+ * Heuristic gender inference from a first name across HE/EN/RU/AR.
+ * Returns "male" | "female" only when reasonably confident.
+ */
+function inferGenderFromName(rawName?: string): "male" | "female" | undefined {
+  if (!rawName) return undefined;
+  const name = rawName.trim().split(/\s+/)[0];
+  if (!name) return undefined;
+  const n = name.toLowerCase();
+
+  // Hebrew
+  if (/[\u0590-\u05FF]/.test(name)) {
+    // Female suffixes: ה, ית, ת (when preceded by vowel-ish), את, ינה
+    if (/(ית|ינה|אלה|לה|נה|רה|יה)$/.test(name)) return "female";
+    if (/ה$/.test(name) && !/[יו]ה$/.test(name)) return "female";
+    if (/(אל|יאל|הו|וב|יב|ון|ים|ן|ר|ם|ק|ד|ב|ש)$/.test(name)) return "male";
+    return undefined;
+  }
+  // Arabic
+  if (/[\u0600-\u06FF]/.test(name)) {
+    if (/(ة|اء|ى)$/.test(name)) return "female";
+    return "male";
+  }
+  // Cyrillic / Russian
+  if (/[\u0400-\u04FF]/.test(name)) {
+    if (/(а|я|ия|на|ла)$/i.test(name)) return "female";
+    if (/(й|н|р|в|г|к|с|т|л|м|д|б)$/i.test(name)) return "male";
+    return undefined;
+  }
+  // Latin (English/transliterated). Limit to clear endings to avoid noise.
+  if (/(a|ah|ia|na|la|ya|ina|ette|elle|een|ine)$/i.test(n)) return "female";
+  if (/(o|us|er|on|an|en|in|ir|el|am|ad|os|ov|ev)$/i.test(n)) return "male";
+  return undefined;
+}
+
+/**
+ * Returns recorded gender; if missing, infers from the user's name and
+ * LOCKS it once so the rest of the session stays consistent.
+ */
+function getEffectiveGender(): "male" | "female" | "other" | "prefer_not_to_say" | undefined {
+  const profile = getProfile();
+  if (profile.gender) return profile.gender;
+  const inferred = inferGenderFromName(profile.userName);
+  if (inferred) {
+    profile.gender = inferred;
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(profile)); } catch { /* ignore */ }
+    return inferred;
+  }
+  return undefined;
+}
+
+/**
  * Detects gender from a free-text user message (Hebrew + light multilingual).
  * Returns "male" | "female" if confidently detected, else undefined.
  * Uses word-boundary matching to avoid false positives inside other words.
@@ -367,6 +418,8 @@ export const mysticalProfile = {
   getLocalizedUserName,
   recordGender,
   getUserGender,
+  inferGenderFromName,
+  getEffectiveGender,
   detectGenderFromText,
   autoDetectAndRecordGender,
   recordZodiac,
