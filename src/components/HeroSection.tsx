@@ -3,6 +3,7 @@ import AstrologerAvatarButton from "./AstrologerAvatarButton";
 import { Sparkles, Star, Eye, Hand, Sun, BookOpen, X, MapPin } from "lucide-react";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { useAutoUnmuteOnInteraction } from "@/hooks/useAutoUnmuteOnInteraction";
 import { createPortal } from "react-dom";
 import MonthlyForecastModal from "./MonthlyForecastModal";
 import AstrologerIntroModal from "./AstrologerIntroModal";
@@ -320,6 +321,7 @@ const EnergyPulse = ({ isMobile, activeColor, isNearBall, clickBurst }: { isMobi
 const CrystalBallEnergy = ({ isMobile }: { isMobile: boolean }) => {
   const s = isMobile ? 232 : 490;
   const videoRef = useRef<HTMLVideoElement>(null);
+  useAutoUnmuteOnInteraction(videoRef);
 
   useEffect(() => {
     const v = videoRef.current;
