@@ -619,7 +619,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 >
                   {userName.trim() && (
                     <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                      {t.chart_of_name} {userName.trim()}
+                      {t.chart_of_name} {localizeName(userName.trim(), language)}
                     </p>
                   )}
                   <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2">
