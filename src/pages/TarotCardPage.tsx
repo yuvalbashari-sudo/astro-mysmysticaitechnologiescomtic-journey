@@ -39,14 +39,6 @@ const TarotCardPage = () => {
     });
     document.head.appendChild(jsonLd);
 
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement;
-    if (!canonical) {
-      canonical = document.createElement("link");
-      canonical.rel = "canonical";
-      document.head.appendChild(canonical);
-    }
-    canonical.href = `https://myastrologai.com/tarot/${slug}`;
-
     return () => { document.getElementById("tarot-jsonld")?.remove(); };
   }, [card, cardImage]);
 
