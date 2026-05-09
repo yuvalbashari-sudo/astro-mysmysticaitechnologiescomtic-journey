@@ -15,6 +15,8 @@ import ShareResultSection from "@/components/ShareResultSection";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { localizeName } from "@/lib/nameLocalization";
 import { useReadingContext } from "@/contexts/ReadingContext";
+import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
+import { premiumUnlock } from "@/lib/premiumUnlock";
 
 interface Props {
   isOpen: boolean;
