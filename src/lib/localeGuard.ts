@@ -23,6 +23,8 @@ import { en } from "@/i18n/translations/en";
 import { he } from "@/i18n/translations/he";
 import { ru } from "@/i18n/translations/ru";
 import { ar } from "@/i18n/translations/ar";
+import { mysticalProfile } from "@/lib/mysticalProfile";
+import { repairGenderGrammar, stripBidiControls } from "@/lib/genderGrammarRepair";
 
 const translationTables: Record<Language, Record<string, string>> = {
   en: en as unknown as Record<string, string>,
