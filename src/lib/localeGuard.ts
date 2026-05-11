@@ -145,11 +145,18 @@ export function enforceLocale(
   context = "",
 ): string {
   if (!text) return fallback ?? getLocalizedFallback(locale, "loading");
-  if (isValidLanguage(text, locale)) return text;
+  // Always try silent autocorrect first — patches single English-word leaks
+  // (e.g. "Guide" inside Hebrew paragraphs) before validation/blocking.
+  let working = text;
+  if (locale !== "en") {
+    const fix = autoCorrectLocale(text, locale);
+    if (fix.changed) working = fix.corrected;
+  }
+  if (isValidLanguage(working, locale)) return working;
   // eslint-disable-next-line no-console
   console.warn(
     `[locale-guard] BLOCKED wrong-language text for locale "${locale}"${context ? ` (${context})` : ""}:`,
-    JSON.stringify(text.slice(0, 120)),
+    JSON.stringify(working.slice(0, 120)),
   );
   return fallback ?? getLocalizedFallback(locale, "loading");
 }
