@@ -178,7 +178,19 @@ const DailyHoroscopeCard = () => {
   const generateHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
     const { ensureGender } = await import("@/lib/genderGate");
-    const lockedGender = (await ensureGender(language)) || gender;
+    const ensured = await ensureGender(language);
+    const candidate = ensured || gender;
+    // Only male/female are honored by the prompt-side GENDER LOCK; anything
+    // else (other / prefer_not_to_say / undefined) → omit so the server
+    // uses elegant neutral phrasing.
+    const lockedGender: "male" | "female" | undefined =
+      candidate === "male" || candidate === "female" ? candidate : undefined;
+    if (import.meta.env.DEV && (language === "he" || language === "ar")) {
+      // eslint-disable-next-line no-console
+      console.log("[ai-debug] daily-horoscope →", {
+        language, zodiacSign, userName, gender: lockedGender, rawGender: gender,
+      });
+    }
     const fp = getFingerprint();
     const today = getTodayStr();
     setLoading(true);
