@@ -171,7 +171,6 @@ const HowItWorksSection = () => {
         {/* steps */}
         <ol className="flex flex-col gap-3" style={{ marginBottom: 28 }}>
           {copy.steps.map((step, idx) => {
-            const Icon = step.icon;
             return (
               <motion.li
                 key={idx}
