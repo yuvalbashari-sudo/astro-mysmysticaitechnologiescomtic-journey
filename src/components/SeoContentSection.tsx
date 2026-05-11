@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Eye, Heart, Star, Sparkles, Sun } from "lucide-react";
+import { Star, Sparkles } from "lucide-react";
 import { useLanguage } from "@/i18n";
+import iconEye from "@/assets/local-eye.png";
+import iconZodiacHeart from "@/assets/local-zodiac-heart.png";
+import iconSunWheel from "@/assets/local-sun-wheel.png";
+
+const SERVICE_ICONS = [iconEye, iconZodiacHeart, iconSunWheel];
 
 const SeoContentSection = () => {
   const { language } = useLanguage();
