@@ -3,6 +3,14 @@
  * Each guide stores translated fields per language (he, en, ru, ar).
  */
 import type { Language } from "@/i18n/types";
+import gatewayTarot from "@/assets/gateway-tarot.png";
+import gatewayDailyCard from "@/assets/gateway-daily-card.png";
+import gatewayBirthchart from "@/assets/gateway-birthchart.png";
+import gatewayRisingStar from "@/assets/gateway-rising-star.png";
+import glyphQuestion from "@/assets/glyph-question.png";
+import glyphWarning from "@/assets/glyph-warning.png";
+import glyphHouses from "@/assets/glyph-houses.png";
+import glyphGrowth from "@/assets/glyph-growth.png";
 
 export interface GuideSection {
   title: string;
@@ -16,6 +24,7 @@ export interface GuideEntry {
   subtitle: string;
   icon: "tarot" | "astrology";
   heroEmoji: string;
+  heroArt: string;
   sections: GuideSection[];
   ctaText: string;
   ctaButton: string;
@@ -36,12 +45,24 @@ interface GuideTranslated {
   }>;
 }
 
+const HERO_ART_BY_SLUG: Record<string, string> = {
+  "tarot-getting-started": gatewayTarot,
+  "tarot-three-card-spread": gatewayDailyCard,
+  "tarot-asking-questions": glyphQuestion,
+  "tarot-common-mistakes": glyphWarning,
+  "astro-reading-chart": gatewayBirthchart,
+  "astro-rising-sign": gatewayRisingStar,
+  "astro-houses": glyphHouses,
+  "astro-personal-growth": glyphGrowth,
+};
+
 function resolve(g: GuideTranslated, lang: Language): GuideEntry {
   const t = g.translations[lang] ?? g.translations.en;
   return {
     slug: g.slug,
     icon: g.icon,
     heroEmoji: g.heroEmoji,
+    heroArt: HERO_ART_BY_SLUG[g.slug] ?? gatewayTarot,
     ctaLink: g.ctaLink,
     title: t.title,
     subtitle: t.subtitle,
@@ -50,6 +71,7 @@ function resolve(g: GuideTranslated, lang: Language): GuideEntry {
     sections: t.sections,
   };
 }
+
 
 // ─── Tarot Guides (raw data) ────────────────────────────
 

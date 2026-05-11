@@ -1,156 +1,109 @@
-## Goal
+## Root cause
 
-Consolidate the Local Version (HE/AR) AI text pipeline behind **one** module so that language enforcement, gender lock, English-leak repair, bidi cleanup, grammar repair, fallback handling, and **version tagging** are guaranteed on every AI response — without redesigning UI or touching the US Version (EN/RU) behavior.
+`src/pages/TarotGuidesPage.tsx` (line 80) and `src/pages/AstrologyGuidesPage.tsx` (line 80) render the guide icon as a raw emoji:
 
-## Current state (where the fragmentation lives)
-
-13 components hit AI through two paths:
-
-- `streamMysticalReading` (`src/lib/aiStreaming.ts`) — used by `DailyCardModal`, `MonthlyForecastModal`, `BirthChartModal`, `CompatibilityModal`, `RisingSignModal`.
-- Direct `fetch()` calls — used by `DailyHoroscopeCard` (one-shot JSON), `AdvisorChatPanel` / `DailyCardAdvisorPanel` / `AstrologerIntroModal` (advisor SSE), `TarotModal` / `ImmersiveTarotExperience` / `TarotWorldModal` (tarot SSE).
-
-Locale/gender helpers live in three files (`localeGuard.ts`, `genderGrammarRepair.ts`, `genderGate.ts`) and are wired only into the `streamMysticalReading` path + the daily-horoscope `enforceLocale` render call. The 6 direct-`fetch` callers run no finalize step → that is the source of most residual leaks.
-
-## Target architecture
-
-### `src/lib/localAiPipeline.ts` (new — only entry point components use)
-
-1. `buildLocalAiContext(language)` → returns a **frozen** `LOCAL_AI_CONTEXT`:
-   ```
-   { language, gender, zodiacSign, userName, tone, astroPrefs, localeRules,
-     pipelineVersion, promptVersion, validatorVersion }
-   ```
-   Built from `mysticalProfile` + `genderGate.ensureGender()`. `gender` filtered to `male|female|undefined`. Returned object is `Object.freeze`d so it cannot mutate mid-request.
-2. `callLocalAi({ endpoint, payload, mode, onDelta?, onDone?, onError?, onReplace?, signal? })` — the only way the app talks to `daily-horoscope`, `mystical-reading`, `tarot-reading`, `mystical-advisor`. Captures a snapshot of `LOCAL_AI_CONTEXT` at call time so language/gender are immutable for the request lifetime.
-3. `finalizeLocalAi(text, ctx)` — the single validator/repair step (HE/AR only; pass-through for EN/RU). **Idempotent and atomic** — guarded by an internal `_finalized` flag so it cannot run twice on the same payload.
-4. `getLocalFallback(kind, language)` — re-exports the existing localized fallback so components stop importing from `localeGuard` directly.
-
-### `src/lib/localAiVersion.ts` (new — version constants)
-
-Single source of truth for version tags, bumped manually on relevant changes:
-
-```ts
-export const PIPELINE_VERSION = "local-ai-v1";   // bump on pipeline shape
-export const PROMPT_VERSION   = "he-ar-lock-v1"; // bump on edge prompt builders
-export const VALIDATOR_VERSION = "grammar-guard-v1"; // bump on validator logic
+```tsx
+<span className="text-4xl shrink-0">{guide.heroEmoji}</span>
 ```
 
-Used by:
-- `buildLocalAiContext` → embedded in the frozen context.
-- `callLocalAi` → injected into every outgoing request body as `__meta: { pipelineVersion, promptVersion, validatorVersion, requestId }`.
-- Edge functions → echoed back in the response for telemetry, and recorded in `cost_logs` / `daily_horoscopes` rows when present.
-- Telemetry counter → bucketed by version triple so dashboards can compare deployments.
-- Dev `[ai-pipeline]` console logs → prefix every line.
+The data source `src/data/guideContent.ts` provides plain Unicode emoji (`🃏 🔮 ❓ ⚠️ 🌌 ⬆️ 🏛️ 🌱`). On Hebrew/Arabic the system emoji font renders these as flat colorful badges that visually break the premium gold-mystical aesthetic — exactly what the user is reporting. The US version uses real PNG artwork (e.g. `gateway-tarot.png`, `gateway-rising-star.png`) inside a glowing orb. The guide pages were never migrated to that treatment.
 
-Bumping is documented inline:
-- Pipeline shape change → bump `PIPELINE_VERSION`.
-- Edge prompt builder edit → bump `PROMPT_VERSION`.
-- Validator algorithm change → bump `VALIDATOR_VERSION`.
+This is purely a rendering fix. I will not redesign the cards, change spacing, structure, RTL, typography, or copy.
 
-### `src/lib/localAiValidators.ts` (new — pure, framework-agnostic, unit-testable)
+## Fix
 
-Extracted from the current scattered code:
+### 1. Add an artwork field for each guide (data layer)
 
-- `isValidLocale(text, locale)`
-- `hasMixedGenderSlashes(text, locale)`
-- `hasRtlIntegrity(text, locale)`
-- `stripBidiControls(text)`
-- `repairSlashForms(text, locale, gender)`
-- `latinLeakRatio(text)`
+In `src/data/guideContent.ts`, extend `GuideEntry` with an optional `heroArt: string` field (imported PNG). Map each of the 8 guide slugs to a premium artwork:
 
-No React, no DOM, no `import.meta` — directly importable from Vitest.
+| slug | artwork |
+|---|---|
+| `tarot-getting-started` | `gateway-tarot.png` |
+| `tarot-three-card-spread` | `gateway-daily-card.png` |
+| `tarot-asking-questions` | new glyph: `glyph-question.png` |
+| `tarot-common-mistakes` | new glyph: `glyph-warning.png` |
+| `astro-reading-chart` | `gateway-birthchart.png` |
+| `astro-rising-sign` | `gateway-rising-star.png` |
+| `astro-houses` | new glyph: `glyph-houses.png` |
+| `astro-personal-growth` | new glyph: `glyph-growth.png` |
 
-### Streaming stabilization (HE/AR only)
+The 4 gateway PNGs already exist in `src/assets/`. The 4 missing ones will be generated as gold-mystical glyph artwork on a transparent background, matching the existing gateway-icon visual language (gold linework, soft glow, no flat color badges).
 
-`callLocalAi({ mode: 'stream' })` adds a chunk stabilizer between SSE parser and `onDelta`:
+`heroEmoji` stays in the type (kept as a non-rendered fallback) to avoid touching anything else that may read it; rendering switches to `heroArt`.
 
-- Token deltas append to `pendingBuffer`; flushed only on stable boundaries (whitespace, `.`, `,`, `\n`, `?`, `!`, `׃`, `؟`, `،`, `…`, em-dash) or after 32 chars.
-- Half-tokens ending with `/` followed by an incomplete grammar suffix (`את/`, `חש/`, `أنت/`) are held until the next boundary so users never see the broken interim form.
-- Final flush on stream end, immediately before `finalizeLocalAi`.
-- EN/RU bypass the stabilizer entirely.
+### 2. Replace the emoji `<span>` in both guide pages
 
-### Atomic finalize
+In both `TarotGuidesPage.tsx` and `AstrologyGuidesPage.tsx` `GuideCard`, replace:
 
-- Each request tagged with a unique `requestId` (also added to `__meta`).
-- `finalizeLocalAi` writes `result._finalized = true` and bails early if seen twice.
-- Strict regenerate uses a new request object → new finalize pass.
-
-### Prompt isolation
-
-Each edge function (`mystical-reading`, `tarot-reading`, `mystical-advisor`, `daily-horoscope`) gets a single in-file helper:
-
-```
-buildSystemPrompt({ lang, gender, userName, zodiac, ... })
-  → if (lang === 'he' || lang === 'ar') return buildLocalSystemPrompt(...)
-  → else                                  return buildUsSystemPrompt(...)
+```tsx
+<span className="text-4xl shrink-0">{guide.heroEmoji}</span>
 ```
 
-`buildLocalSystemPrompt` and `buildUsSystemPrompt` live side-by-side but share **no** string fragments — HE/AR fallbacks are written in HE/AR, EN/RU fallbacks in EN/RU. Prompt version returned alongside the response payload for traceability.
+with the same premium orb wrapper used on `MobileOptionsSheet` gateway cards — scaled down to fit the existing 5-gap row, no card-layout changes:
 
-### Strict locale mode + retry safety
-
-`callLocalAi` runs at most **3 attempts** for HE/AR:
-
-1. Normal stream/json + finalize.
-2. If finalize fails: `__strict: true` → server adds strongest LOCK + Latin-ban prefix.
-3. If still failing: lower temperature + explicit example block.
-4. If attempt 3 fails: stop. Render localized HE/AR fallback (`getLocalFallback("error", language)`). Dev-only log of the failed text under `[ai-pipeline:fallback]` with the version tags so we know which `pipelineVersion`/`promptVersion`/`validatorVersion` produced it.
-
-EN/RU keeps today's single-retry behavior.
-
-### Validation telemetry (dev-only)
-
-In-memory counter, bucketed by `{ endpoint, pipelineVersion, promptVersion, validatorVersion }`:
-
+```tsx
+<span
+  className="shrink-0 flex items-center justify-center rounded-full relative overflow-hidden"
+  style={{
+    width: 64, height: 64,
+    background: "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.34) 0%, hsl(225 50% 6% / 0.55) 70%)",
+    border: "1px solid hsl(var(--gold) / 0.5)",
+    boxShadow: "0 0 24px hsl(var(--gold) / 0.3), inset 0 1px 8px hsl(var(--gold) / 0.2)",
+  }}
+>
+  <img
+    src={guide.heroArt}
+    alt=""
+    aria-hidden
+    style={{
+      width: 52, height: 52,
+      objectFit: "contain",
+      filter: "drop-shadow(0 0 6px hsl(var(--gold) / 0.55)) drop-shadow(0 0 10px hsl(270 70% 55% / 0.25))",
+    }}
+  />
+</span>
 ```
-{ calls, leakRepairs, grammarRepairs, strictRetries, fallbacks }
-```
 
-- Updated by `finalizeLocalAi` and the retry path.
-- Exposed under `window.__lovableAiTelemetry` only when `import.meta.env.DEV`.
-- `[ai-pipeline:telemetry]` console table emitted every 10 finalize calls.
-- Production builds never instantiate the counter.
+Properties enforced per the user requirements:
+- real artwork, not emoji / Lucide / generic SVG
+- `object-fit: contain` → no cropping, fully visible
+- centered via flex
+- soft gold + purple drop-shadow glow
+- circular orb integrated into the card, no badge/color-block look
+- `shrink-0` preserves the existing flex row, RTL stays intact (the row uses `flex items-start gap-5` which already mirrors under `dir="rtl"`)
 
-### Framework-agnostic reusability
+### 3. Generate the 4 missing glyph assets
 
-Pipeline + validators are plain TS — no React imports, no DOM access outside the SSE `fetch`. Future AI features (notifications, embeds, server-rendered emails) can import `finalizeLocalAi`, validators, and the version constants directly.
+Use the agent image tool (`premium`, transparent PNG) at 512×512 to create:
+- `src/assets/glyph-question.png` — gold mystical question-mark glyph, art-nouveau linework, soft glow, transparent bg
+- `src/assets/glyph-warning.png` — gold mystical caution sigil (eye + crescent), transparent bg
+- `src/assets/glyph-houses.png` — gold mystical 12-house wheel glyph, transparent bg
+- `src/assets/glyph-growth.png` — gold mystical sprouting-tree-of-life glyph, transparent bg
 
-## Migration steps (surgical)
+All four follow the same visual language as `gateway-tarot.png` / `gateway-rising-star.png` so the set looks cohesive.
 
-1. Create `src/lib/localAiVersion.ts` (version constants).
-2. Create `src/lib/localAiValidators.ts` (pure functions extracted from `localeGuard.ts` + `genderGrammarRepair.ts`).
-3. Create `src/lib/localAiValidators.test.ts` (Vitest, ≥12 cases: Latin leakage, slash forms, bidi marks, gender male/female/unknown, EN/RU pass-through).
-4. Create `src/lib/localAiPipeline.ts` (`buildLocalAiContext`, `callLocalAi`, `finalizeLocalAi`, telemetry, chunk stabilizer, `__meta` injection).
-5. Refactor `aiStreaming.ts` — `streamMysticalReading` becomes a thin wrapper delegating to `callLocalAi({ endpoint: 'mystical-reading', mode: 'stream' })`. Public signature unchanged.
-6. Refactor `DailyHoroscopeCard.tsx` `generateHoroscope` → `callLocalAi({ endpoint: 'daily-horoscope', mode: 'json' })`.
-7. Refactor advisor SSE callers (`AdvisorChatPanel`, `DailyCardAdvisorPanel`, `AstrologerIntroModal`).
-8. Refactor tarot SSE callers (`TarotModal`, `ImmersiveTarotExperience`, `TarotWorldModal`).
-9. Edge functions — collapse scattered HE/AR + EN/RU strings into per-file `buildLocalSystemPrompt` / `buildUsSystemPrompt`. Echo `__meta` back in responses. Same wording, no behavior change.
-10. Mark old helpers internal — `localeGuard.autoCorrectLocale` / `enforceLocale` keep working but get JSDoc note pointing callers to `localAiPipeline`.
+## Out of scope (explicitly NOT touched)
+
+- Card structure, spacing, padding, border, gradient background
+- Typography, copy, headings
+- RTL layout / `dir` handling
+- Desktop layout
+- AI pipeline, localization logic, prompts, edge functions, backend
+- Any other component (`HowItWorksSection`, `MobileOptionsSheet`, hero overlay) — already correct from prior turns
 
 ## Files touched
 
-- **New**: `src/lib/localAiPipeline.ts`, `src/lib/localAiValidators.ts`, `src/lib/localAiValidators.test.ts`, `src/lib/localAiVersion.ts`.
-- **Edited (logic moved out, no UI change)**: `src/lib/aiStreaming.ts`; `src/components/DailyHoroscopeCard.tsx`, `AdvisorChatPanel.tsx`, `DailyCardAdvisorPanel.tsx`, `AstrologerIntroModal.tsx`, `TarotModal.tsx`, `ImmersiveTarotExperience.tsx`, `TarotWorldModal.tsx`.
-- **Edge functions (prompt-builder consolidation + `__meta` echo)**: `mystical-reading/index.ts`, `tarot-reading/index.ts`, `mystical-advisor/index.ts`, `daily-horoscope/index.ts`.
-- **Untouched**: every component's JSX/markup; all US-only behavior; `mysticalProfile.ts`, `genderGate.ts`, `genderGrammarRepair.ts`, `localeGuard.ts` (kept as primitives).
+- `src/data/guideContent.ts` — add `heroArt` field + 8 imports
+- `src/pages/TarotGuidesPage.tsx` — swap emoji span for orb+img
+- `src/pages/AstrologyGuidesPage.tsx` — swap emoji span for orb+img
+- `src/assets/glyph-question.png` (new)
+- `src/assets/glyph-warning.png` (new)
+- `src/assets/glyph-houses.png` (new)
+- `src/assets/glyph-growth.png` (new)
 
-## Risks & mitigations
+## Verification
 
-- **Large surface area** — 7 components + 4 edge functions. Mitigation: ship in 3 commits (version+validators+tests → pipeline + `streamMysticalReading` wrapper → component migrations + edge consolidation). Telemetry visible between each.
-- **Streaming stabilizer adds latency** — capped to ≤32 chars or one punctuation. Quantified via dev telemetry.
-- **EN/RU regression** — `finalizeLocalAi` and stabilizer no-op for non-HE/AR; signatures unchanged.
-- **Edge prompt rewrites** — limited to consolidating existing blocks per file. No wording or model changes.
-- **Version tag drift** — single source of truth in `localAiVersion.ts`; constants imported, never hardcoded in components.
-
-## Final report (delivered after implementation)
-
-- Duplicated systems removed.
-- New modules created.
-- Every flow now using the shared pipeline.
-- Where each pre-refactor inconsistency originated.
-- Telemetry counters observed in dev runs, bucketed by version triple.
-
----
-
-**Approve this plan and I'll implement it. If you'd prefer a smaller first pass (e.g. version constants + validators + pipeline + `streamMysticalReading` wrapper only, leaving the 6 component migrations and edge consolidation as follow-ups), say so and I'll trim the scope.**
+After implementation, open `/tarot-guides` and `/astrology-guides` in HE and confirm:
+- no emoji visible on any card
+- gold-glowing circular orb with mystical artwork on every card
+- card layout, spacing, RTL alignment unchanged vs. current
