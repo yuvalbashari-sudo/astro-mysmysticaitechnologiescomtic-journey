@@ -208,50 +208,26 @@ const HowItWorksSection = () => {
                     (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--gold) / 0.22)";
                   }}
                 >
-                  {/* icon orb — premium mystical treatment, parity with gateway cards */}
-                  <div
-                    className="shrink-0 flex items-center justify-center relative overflow-hidden"
-                    style={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: "50%",
-                      background:
-                        "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.42) 0%, hsl(225 50% 6% / 0.55) 70%)",
-                      border: "1px solid hsl(var(--gold) / 0.55)",
-                      boxShadow:
-                        "0 0 26px hsl(var(--gold) / 0.32), inset 0 1px 8px hsl(var(--gold) / 0.22), inset 0 0 0 1px hsl(var(--gold) / 0.1)",
-                    }}
-                  >
-                    {/* inner light spread */}
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        background:
-                          "radial-gradient(circle at 50% 50%, hsl(var(--gold) / 0.22) 0%, transparent 70%)",
-                      }}
-                    />
+                  {/* Step artwork — integrated into the card, no floating orb wrapper */}
+                  <div className="shrink-0 relative" style={{ width: 72, height: 72 }}>
                     <img
                       src={STEP_ART[idx]}
                       alt=""
                       aria-hidden
                       loading="lazy"
                       style={{
-                        width: 56,
-                        height: 56,
+                        width: "100%",
+                        height: "100%",
                         objectFit: "contain",
-                        position: "relative",
-                        zIndex: 1,
-                        filter:
-                          "drop-shadow(0 0 6px hsl(var(--gold) / 0.55)) drop-shadow(0 2px 4px hsl(225 60% 2% / 0.6))",
+                        display: "block",
                       }}
                     />
-                    {/* step number */}
+                    {/* step number — small badge sits over the artwork */}
                     <span
                       className="absolute font-heading text-gold/90"
                       style={{
-                        top: -4,
-                        [isRTL ? "left" : "right"]: -4,
+                        top: -2,
+                        [isRTL ? "left" : "right"]: -2,
                         width: 20,
                         height: 20,
                         borderRadius: "50%",
