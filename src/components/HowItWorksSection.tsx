@@ -315,7 +315,29 @@ const HowItWorksSection = () => {
                   padding: "12px 6px",
                 }}
               >
-                <Icon className="w-4 h-4 text-gold" strokeWidth={1.6} />
+                <span
+                  className="flex items-center justify-center rounded-full relative overflow-hidden"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    background:
+                      "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.38) 0%, hsl(225 50% 6% / 0.55) 70%)",
+                    border: "1px solid hsl(var(--gold) / 0.45)",
+                    boxShadow:
+                      "0 0 14px hsl(var(--gold) / 0.22), inset 0 1px 6px hsl(var(--gold) / 0.18)",
+                  }}
+                >
+                  <Icon
+                    className="text-gold"
+                    strokeWidth={1.6}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 0 4px hsl(var(--gold) / 0.5))",
+                    }}
+                  />
+                </span>
                 <span
                   className="font-body text-foreground/75"
                   style={{ fontSize: 11.5, lineHeight: 1.35 }}
