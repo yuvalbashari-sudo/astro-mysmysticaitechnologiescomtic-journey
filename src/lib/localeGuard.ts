@@ -158,9 +158,6 @@ export function enforceLocale(
   // locked profile gender so readers never see mixed grammar.
   if (locale === "he" || locale === "ar") {
     try {
-      // Lazy import to avoid a hard cycle with mysticalProfile.
-      const { mysticalProfile } = require("@/lib/mysticalProfile");
-      const { repairGenderGrammar, stripBidiControls } = require("@/lib/genderGrammarRepair");
       working = stripBidiControls(working);
       const g = mysticalProfile.getEffectiveGender?.();
       const repair = repairGenderGrammar(working, locale, g);
