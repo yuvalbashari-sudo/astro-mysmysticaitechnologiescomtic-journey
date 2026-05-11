@@ -5,8 +5,12 @@ import { useLanguage } from "@/i18n";
 import stepArt1 from "@/assets/local-step-1.png";
 import stepArt2 from "@/assets/local-step-2.png";
 import stepArt3 from "@/assets/local-step-3.png";
+import trustHeart from "@/assets/local-trust-heart.png";
+import trustWand from "@/assets/local-trust-wand.png";
+import trustGlobe from "@/assets/local-trust-globe.png";
 
 const STEP_ART = [stepArt1, stepArt2, stepArt3];
+const TRUST_ART = [trustHeart, trustWand, trustGlobe];
 
 /**
  * Mobile-first "How it works" trust section.
@@ -285,7 +289,6 @@ const HowItWorksSection = () => {
           style={{ marginBottom: 24 }}
         >
           {copy.trust.map((item, idx) => {
-            const Icon = item.icon;
             return (
               <li
                 key={idx}
@@ -297,29 +300,18 @@ const HowItWorksSection = () => {
                   padding: "12px 6px",
                 }}
               >
-                <span
-                  className="flex items-center justify-center rounded-full relative overflow-hidden"
+                <img
+                  src={TRUST_ART[idx]}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
                   style={{
-                    width: 36,
-                    height: 36,
-                    background:
-                      "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.38) 0%, hsl(225 50% 6% / 0.55) 70%)",
-                    border: "1px solid hsl(var(--gold) / 0.45)",
-                    boxShadow:
-                      "0 0 14px hsl(var(--gold) / 0.22), inset 0 1px 6px hsl(var(--gold) / 0.18)",
+                    width: 44,
+                    height: 44,
+                    objectFit: "contain",
+                    display: "block",
                   }}
-                >
-                  <Icon
-                    className="text-gold"
-                    strokeWidth={1.6}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      objectFit: "contain",
-                      filter: "drop-shadow(0 0 4px hsl(var(--gold) / 0.5))",
-                    }}
-                  />
-                </span>
+                />
                 <span
                   className="font-body text-foreground/75"
                   style={{ fontSize: 11.5, lineHeight: 1.35 }}
