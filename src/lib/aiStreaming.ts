@@ -35,7 +35,19 @@ async function runStreamAttempt({
 
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
-  const effectiveGender = mysticalProfile.getEffectiveGender();
+  const rawGender = mysticalProfile.getEffectiveGender();
+  // Only "male" / "female" are honored by the prompt-side GENDER LOCK.
+  // "other" / "prefer_not_to_say" / undefined → omit so the server falls
+  // back to elegant neutral phrasing (no mixed-grammar slashes).
+  const effectiveGender: "male" | "female" | undefined =
+    rawGender === "male" || rawGender === "female" ? rawGender : undefined;
+
+  if (import.meta.env.DEV && (language === "he" || language === "ar")) {
+    // eslint-disable-next-line no-console
+    console.log("[ai-debug] streamMysticalReading →", {
+      type, language, userName, gender: effectiveGender, rawGender,
+    });
+  }
 
   let authToken: string | null = null;
   try {
