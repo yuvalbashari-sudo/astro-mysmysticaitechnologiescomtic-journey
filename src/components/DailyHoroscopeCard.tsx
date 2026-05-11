@@ -148,6 +148,16 @@ const DailyHoroscopeCard = () => {
         .eq("language", language)
         .maybeSingle();
       if (cached) {
+        // Bust the cache if the stored content fails the locale validator
+        // (English leaks in HE/AR) or carries dual-gender slashes — we
+        // prefer to regenerate over showing broken personalization.
+        const looksMixed =
+          (language === "he" || language === "ar") &&
+          (/[A-Za-z]{4,}/.test(cached.content || "") || /\/[הותים]/.test(cached.content || "") || /[\u0590-\u06FF]+\s*\/\s*[\u0590-\u06FF]+/.test(cached.content || ""));
+        if (looksMixed) {
+          if (import.meta.env.DEV) console.log("[ai-debug] cache busted (mixed/leaky content)", { language });
+          return false;
+        }
         setData({
           content: cached.content,
           love_score: cached.love_score ?? 3,
