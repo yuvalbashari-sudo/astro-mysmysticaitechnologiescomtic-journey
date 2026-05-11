@@ -184,7 +184,6 @@ export async function streamMysticalReading(
     onReplace,
   });
 }
-}
 
 // Render mystical markdown text into styled React elements with sacred breathing rhythm
 export function renderMysticalText(text: string, textSize: TextSize = "default"): React.ReactNode {
