@@ -473,7 +473,7 @@ const MobileAiInsightOverlay = () => {
                 whileTap={{ scale: 0.97 }}
                 className="font-heading relative"
                 style={{
-                  marginTop: 36,
+                  marginTop: isRTL ? 24 : 36,
                   width: "100%",
                   maxWidth: 360,
                   minHeight: 64,
