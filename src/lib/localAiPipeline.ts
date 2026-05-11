@@ -503,7 +503,7 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
 
     const res = await runStreamAttempt(args, ctx, requestId, strict, stabilizer.push);
     stabilizer.flush();
-    if (!res.ok) {
+    if (res.ok === false) {
       if (attempt < maxAttempts) continue;
       args.onError(res.error);
       return;
