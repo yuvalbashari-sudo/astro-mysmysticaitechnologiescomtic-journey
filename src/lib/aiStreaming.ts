@@ -220,14 +220,9 @@ export async function streamMysticalReading(
       return;
     }
 
-    if (isValidLanguage(retry.text, locale)) {
-      onReplace?.(retry.text);
-      onDone();
-      return;
-    }
-    const retryFix = autoCorrectLocale(retry.text, locale);
-    if (retryFix.changed && isValidLanguage(retryFix.corrected, locale)) {
-      onReplace?.(retryFix.corrected);
+    const retryFinal = finalize(retry.text);
+    if (isValidLanguage(retryFinal.text, locale)) {
+      onReplace?.(retryFinal.text);
       onDone();
       return;
     }
