@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Compass, Sparkles, MessageCircle, Heart, Sparkle, Globe2, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/i18n";
 import stepArt1 from "@/assets/local-step-1.png";
 import stepArt2 from "@/assets/local-step-2.png";
