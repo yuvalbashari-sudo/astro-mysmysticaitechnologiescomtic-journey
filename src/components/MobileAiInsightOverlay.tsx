@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, BookOpen, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage, useT } from "@/i18n";
+import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import MobileOptionsSheet from "./MobileOptionsSheet";
