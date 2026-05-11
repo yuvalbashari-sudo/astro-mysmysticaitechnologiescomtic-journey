@@ -155,18 +155,15 @@ async function runStreamAttempt({
   return { ok: true, text: accumulated };
 }
 
-// Stream AI reading from edge function with language-validation retry.
+// Stream AI reading from the `mystical-reading` edge function.
 //
-// Flow:
-//   1. Open stream, render tokens as they arrive (no buffering).
-//   2. When the stream ends, validate the FULL accumulated text against the
-//      requested locale.
-//   3. If invalid, try silent auto-correction (single-word leaks).
-//   4. If still invalid, trigger ONE stricter retry — we tell the caller to
-//      replace the rendered text via `onReplace` so the user sees clean
-//      output instead of mixed-language text.
-//   5. If the retry also fails, surface a localized fallback message via
-//      `onReplace`.
+// Thin wrapper around the centralized Local AI Pipeline (callLocalAi).
+// All gender lock, language enforcement, English-leak repair, slash-form
+// repair, retry policy, telemetry, and version tagging live in
+// `src/lib/localAiPipeline.ts`. This wrapper exists only to preserve the
+// existing call signature used by 5 reading modals (DailyCardModal,
+// MonthlyForecastModal, BirthChartModal, CompatibilityModal,
+// RisingSignModal) so we do not have to touch their JSX.
 export async function streamMysticalReading(
   type: string,
   data: Record<string, unknown>,
@@ -176,88 +173,17 @@ export async function streamMysticalReading(
   language: string = "he",
   onReplace?: (fullText: string) => void,
 ) {
-  const locale = language as Language;
-  try {
-    // Gate: ensure we have a locked gender before generating any AI content.
-    await ensureGender(language);
-    const rawGender = mysticalProfile.getEffectiveGender();
-    const effectiveGender: "male" | "female" | undefined =
-      rawGender === "male" || rawGender === "female" ? rawGender : undefined;
-    const first = await runStreamAttempt({ type, data, language, strict: false, onDelta });
-    if (first.ok === false) {
-      onError(first.error);
-      return;
-    }
-
-    // Finalization pipeline (HE/AR personalization safety net):
-    //   1. Strip stray bidi control characters.
-    //   2. Auto-correct single English-word leaks (Guide → מדריך, …).
-    //   3. Repair dual-gender slash forms (את/ה, חש/ה, صديقي/صديقتي)
-    //      using the locked gender so HE/AR readers never see mixed grammar.
-    const finalize = (raw: string): { text: string; changed: boolean } => {
-      let working = stripBidiControls(raw);
-      let changed = working !== raw;
-      if (locale !== "en") {
-        const fix = autoCorrectLocale(working, locale);
-        if (fix.changed) { working = fix.corrected; changed = true; }
-      }
-      if (locale === "he" || locale === "ar") {
-        const grammar = repairGenderGrammar(working, locale, effectiveGender);
-        if (grammar.changed) { working = grammar.repaired; changed = true; }
-      }
-      if (import.meta.env.DEV && (locale === "he" || locale === "ar")) {
-        // eslint-disable-next-line no-console
-        console.log("[ai-debug] finalize", {
-          locale, gender: effectiveGender,
-          autoCorrected: changed,
-          valid: isValidLanguage(working, locale),
-          preview: working.slice(0, 80),
-        });
-      }
-      return { text: working, changed };
-    };
-
-    const firstFinal = finalize(first.text);
-    if (firstFinal.changed) onReplace?.(firstFinal.text);
-    if (isValidLanguage(firstFinal.text, locale)) {
-      onDone();
-      return;
-    }
-
-    // Retry once with stricter instruction.
-    trackLocaleEvent("language_validation_failed", { locale, context: "mystical-reading", phase: "first" });
-    trackLocaleEvent("retry_triggered", { locale, context: "mystical-reading" });
-
-    // Buffer the retry stream and only swap it in at the end so the user
-    // doesn't see two competing token streams.
-    let retryBuffered = "";
-    const retry = await runStreamAttempt({
-      type,
-      data,
-      language,
-      strict: true,
-      onDelta: (chunk) => { retryBuffered += chunk; },
-    });
-    if (retry.ok === false) {
-      onError(retry.error);
-      return;
-    }
-
-    const retryFinal = finalize(retry.text);
-    if (isValidLanguage(retryFinal.text, locale)) {
-      onReplace?.(retryFinal.text);
-      onDone();
-      return;
-    }
-
-    // Both attempts failed validation — show the localized fallback.
-    trackLocaleEvent("language_validation_failed", { locale, context: "mystical-reading", phase: "retry" });
-    trackLocaleEvent("fallback_used", { locale, context: "mystical-reading" });
-    onReplace?.(getLocalizedFallback(locale, "loading"));
-    onDone();
-  } catch (e) {
-    onError(safeErrorText(e, locale, "mystical-reading:network"));
-  }
+  const { callLocalAi } = await import("@/lib/localAiPipeline");
+  return callLocalAi({
+    endpoint: "mystical-reading",
+    mode: "stream",
+    payload: { type, ...data, language },
+    onDelta,
+    onDone,
+    onError,
+    onReplace,
+  });
+}
 }
 
 // Render mystical markdown text into styled React elements with sacred breathing rhythm
