@@ -125,10 +125,19 @@ const SeoContentSection = () => {
                 border: "1px solid rgba(255, 215, 0, 0.1)",
               }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="icon-glow w-10 h-10">
-                  <service.icon className="w-5 h-5 text-gold" />
-                </div>
+              <div className="flex flex-col items-center gap-3 mb-4 text-center">
+                <img
+                  src={SERVICE_ICONS[i]}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  className="w-20 h-20"
+                  style={{
+                    objectFit: "contain",
+                    filter:
+                      "drop-shadow(0 0 14px hsl(var(--gold) / 0.45)) drop-shadow(0 0 26px hsl(280 60% 50% / 0.25))",
+                  }}
+                />
                 <h3 className="font-heading text-base text-gold">{service.title}</h3>
               </div>
               <p className="text-foreground/70 font-body text-sm leading-[2] mb-4">
