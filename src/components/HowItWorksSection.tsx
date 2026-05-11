@@ -204,40 +204,63 @@ const HowItWorksSection = () => {
                     (e.currentTarget as HTMLElement).style.borderColor = "hsl(var(--gold) / 0.22)";
                   }}
                 >
-                  {/* icon circle */}
+                  {/* icon orb — premium mystical treatment, parity with gateway cards */}
                   <div
-                    className="shrink-0 flex items-center justify-center relative"
+                    className="shrink-0 flex items-center justify-center relative overflow-hidden"
                     style={{
-                      width: 46,
-                      height: 46,
+                      width: 64,
+                      height: 64,
                       borderRadius: "50%",
                       background:
-                        "radial-gradient(circle at 30% 30%, hsl(var(--gold) / 0.28), hsl(var(--gold) / 0.06) 70%)",
-                      border: "1px solid hsl(var(--gold) / 0.4)",
+                        "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.42) 0%, hsl(225 50% 6% / 0.55) 70%)",
+                      border: "1px solid hsl(var(--gold) / 0.55)",
                       boxShadow:
-                        "0 0 18px hsl(var(--gold) / 0.18), inset 0 0 8px hsl(var(--gold) / 0.12)",
+                        "0 0 26px hsl(var(--gold) / 0.32), inset 0 1px 8px hsl(var(--gold) / 0.22), inset 0 0 0 1px hsl(var(--gold) / 0.1)",
                     }}
                   >
-                    <Icon className="w-5 h-5 text-gold" strokeWidth={1.6} />
+                    {/* inner light spread */}
+                    <span
+                      aria-hidden
+                      className="absolute inset-0 pointer-events-none"
+                      style={{
+                        background:
+                          "radial-gradient(circle at 50% 50%, hsl(var(--gold) / 0.22) 0%, transparent 70%)",
+                      }}
+                    />
+                    <Icon
+                      className="text-gold"
+                      strokeWidth={1.5}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        objectFit: "contain",
+                        position: "relative",
+                        zIndex: 1,
+                        filter:
+                          "drop-shadow(0 0 6px hsl(var(--gold) / 0.55)) drop-shadow(0 2px 4px hsl(225 60% 2% / 0.6))",
+                      }}
+                    />
                     {/* step number */}
                     <span
                       className="absolute font-heading text-gold/90"
                       style={{
-                        top: -6,
-                        [isRTL ? "left" : "right"]: -6,
-                        width: 18,
-                        height: 18,
+                        top: -4,
+                        [isRTL ? "left" : "right"]: -4,
+                        width: 20,
+                        height: 20,
                         borderRadius: "50%",
                         background: "hsl(225 60% 4%)",
-                        border: "1px solid hsl(var(--gold) / 0.5)",
-                        fontSize: 10,
-                        lineHeight: "16px",
+                        border: "1px solid hsl(var(--gold) / 0.55)",
+                        fontSize: 11,
+                        lineHeight: "18px",
                         textAlign: "center",
+                        zIndex: 2,
                       }}
                     >
                       {idx + 1}
                     </span>
                   </div>
+
 
                   <div className="flex-1 min-w-0">
                     <h3
@@ -292,7 +315,29 @@ const HowItWorksSection = () => {
                   padding: "12px 6px",
                 }}
               >
-                <Icon className="w-4 h-4 text-gold" strokeWidth={1.6} />
+                <span
+                  className="flex items-center justify-center rounded-full relative overflow-hidden"
+                  style={{
+                    width: 36,
+                    height: 36,
+                    background:
+                      "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.38) 0%, hsl(225 50% 6% / 0.55) 70%)",
+                    border: "1px solid hsl(var(--gold) / 0.45)",
+                    boxShadow:
+                      "0 0 14px hsl(var(--gold) / 0.22), inset 0 1px 6px hsl(var(--gold) / 0.18)",
+                  }}
+                >
+                  <Icon
+                    className="text-gold"
+                    strokeWidth={1.6}
+                    style={{
+                      width: 18,
+                      height: 18,
+                      objectFit: "contain",
+                      filter: "drop-shadow(0 0 4px hsl(var(--gold) / 0.5))",
+                    }}
+                  />
+                </span>
                 <span
                   className="font-body text-foreground/75"
                   style={{ fontSize: 11.5, lineHeight: 1.35 }}
