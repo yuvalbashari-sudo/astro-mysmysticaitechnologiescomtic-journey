@@ -80,9 +80,18 @@ serve(async (req) => {
     const LANG_NAMES: Record<string, string> = { he: "Hebrew", en: "English", ru: "Russian", ar: "Arabic" };
     const langName = LANG_NAMES[lang] || "Hebrew";
 
+    const scriptRule = lang === "he"
+      ? "EVERY single word in the \"content\" value MUST be written using HEBREW letters only. Do NOT use any Latin/English letters anywhere in the content — not even one word like \"Guide\", \"Energy\" or \"Love\". Translate every concept into native Hebrew."
+      : lang === "ar"
+        ? "EVERY single word in the \"content\" value MUST be written using ARABIC letters only. Do NOT use any Latin/English letters anywhere in the content — not even one word. Translate every concept into native Arabic."
+        : lang === "ru"
+          ? "EVERY word in the \"content\" value MUST be written using CYRILLIC letters only. Do NOT use any Latin/English letters anywhere in the content."
+          : "Write entirely in English.";
+
     const systemPrompt = `⚠️ ABSOLUTE LANGUAGE RULE — READ THIS FIRST:
 You MUST respond ONLY in the user's selected language: ${langName} (locale code: "${lang}").
 Never mix languages. Every word, label, and sentence (including the JSON string values) MUST be in ${langName}.
+${scriptRule}
 The JSON KEYS stay in English ("content", "love_score", "career_score", "energy_score") — only the string VALUE of "content" is written in ${langName}.
 
 You are a premium mystical astrologer generating a personalized daily horoscope.

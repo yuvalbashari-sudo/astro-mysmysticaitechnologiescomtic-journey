@@ -173,6 +173,13 @@ export async function streamMysticalReading(
       return;
     }
 
+    // Always run silent autocorrect — even when text passes the validator,
+    // a single English leak (e.g. "Guide" inside a Hebrew paragraph) should
+    // still be patched in place.
+    if (locale !== "en") {
+      const fix = autoCorrectLocale(first.text, locale);
+      if (fix.changed) onReplace?.(fix.corrected);
+    }
     if (isValidLanguage(first.text, locale)) {
       onDone();
       return;
