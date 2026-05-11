@@ -3,11 +3,11 @@
  * Each guide stores translated fields per language (he, en, ru, ar).
  */
 import type { Language } from "@/i18n/types";
-import localMandala1 from "@/assets/local-mandala-1.png";
-import localThreeCards from "@/assets/local-three-cards.png";
-import localQuestion from "@/assets/local-question.png";
-import localSunWheel from "@/assets/local-sun-wheel.png";
-import localEye from "@/assets/local-eye.png";
+import glyphTarotMandala from "@/assets/glyph-tarot-mandala.png";
+import glyphThreeCards from "@/assets/glyph-three-cards.png";
+import glyphNatalChart from "@/assets/glyph-natal-chart.png";
+import glyphRisingSun from "@/assets/glyph-rising-sun.png";
+import glyphQuestion from "@/assets/glyph-question.png";
 import glyphWarning from "@/assets/glyph-warning.png";
 import glyphHouses from "@/assets/glyph-houses.png";
 import glyphGrowth from "@/assets/glyph-growth.png";
@@ -46,12 +46,12 @@ interface GuideTranslated {
 }
 
 const HERO_ART_BY_SLUG: Record<string, string> = {
-  "tarot-getting-started": localMandala1,
-  "tarot-three-card-spread": localThreeCards,
-  "tarot-asking-questions": localQuestion,
+  "tarot-getting-started": glyphTarotMandala,
+  "tarot-three-card-spread": glyphThreeCards,
+  "tarot-asking-questions": glyphQuestion,
   "tarot-common-mistakes": glyphWarning,
-  "astro-reading-chart": localSunWheel,
-  "astro-rising-sign": localEye,
+  "astro-reading-chart": glyphNatalChart,
+  "astro-rising-sign": glyphRisingSun,
   "astro-houses": glyphHouses,
   "astro-personal-growth": glyphGrowth,
 };
@@ -62,7 +62,7 @@ function resolve(g: GuideTranslated, lang: Language): GuideEntry {
     slug: g.slug,
     icon: g.icon,
     heroEmoji: g.heroEmoji,
-    heroArt: HERO_ART_BY_SLUG[g.slug] ?? localMandala1,
+    heroArt: HERO_ART_BY_SLUG[g.slug] ?? glyphTarotMandala,
     ctaLink: g.ctaLink,
     title: t.title,
     subtitle: t.subtitle,
