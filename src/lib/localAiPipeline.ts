@@ -379,7 +379,7 @@ async function callJson(
     const strict = attempt > 1;
     if (strict) bumpBucket(args.endpoint, ctx, { strictRetries: 1 });
     const res = await runJsonAttempt(args, ctx, requestId, strict);
-    if (!res.ok) {
+    if (res.ok === false) {
       if (attempt < maxAttempts) continue;
       throw new Error(res.error);
     }
