@@ -76,20 +76,21 @@ function GuideCard({ guide, index, BackArrow }: { guide: GuideEntry; index: numb
           boxShadow: "0 0 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.06)",
         }}
       >
-        <div className="flex items-start gap-5">
+        <div className="flex items-center gap-5">
           <img
             src={guide.heroArt}
             alt=""
             aria-hidden
             loading="lazy"
-            className="shrink-0"
+            className="shrink-0 block border-0"
             style={{
-              width: 48,
-              height: 48,
+              width: 50,
+              height: 50,
               objectFit: "contain",
               background: "transparent",
+              boxShadow: "none",
               filter:
-                "drop-shadow(0 0 8px hsl(var(--gold) / 0.45)) drop-shadow(0 0 2px hsl(var(--gold) / 0.6))",
+                "drop-shadow(0 0 6px hsl(var(--gold) / 0.38)) drop-shadow(0 0 1px hsl(var(--gold) / 0.5))",
             }}
           />
           <div className="flex-1 min-w-0">
