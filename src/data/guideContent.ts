@@ -3,10 +3,10 @@
  * Each guide stores translated fields per language (he, en, ru, ar).
  */
 import type { Language } from "@/i18n/types";
-import gatewayTarot from "@/assets/gateway-tarot.png";
-import gatewayDailyCard from "@/assets/gateway-daily-card.png";
-import gatewayBirthchart from "@/assets/gateway-birthchart.png";
-import gatewayRisingStar from "@/assets/gateway-rising-star.png";
+import glyphTarotMandala from "@/assets/glyph-tarot-mandala.png";
+import glyphThreeCards from "@/assets/glyph-three-cards.png";
+import glyphNatalChart from "@/assets/glyph-natal-chart.png";
+import glyphRisingSun from "@/assets/glyph-rising-sun.png";
 import glyphQuestion from "@/assets/glyph-question.png";
 import glyphWarning from "@/assets/glyph-warning.png";
 import glyphHouses from "@/assets/glyph-houses.png";
