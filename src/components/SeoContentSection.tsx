@@ -119,38 +119,56 @@ const SeoContentSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="rounded-2xl p-5 md:p-8"
+              className="rounded-2xl overflow-hidden"
               style={{
                 background: "rgba(255, 255, 255, 0.03)",
                 border: "1px solid rgba(255, 215, 0, 0.1)",
               }}
             >
-              <div className="flex flex-col items-center gap-3 mb-4 text-center">
+              {/* Integrated hero band — icon is part of the card, not a floating chip */}
+              <div
+                className="relative w-full"
+                style={{
+                  aspectRatio: "16 / 9",
+                  background:
+                    "radial-gradient(ellipse at 50% 60%, hsl(280 50% 18% / 0.55) 0%, hsl(225 60% 5%) 75%)",
+                  borderBottom: "1px solid hsl(var(--gold) / 0.18)",
+                }}
+              >
                 <img
                   src={SERVICE_ICONS[i]}
                   alt=""
                   aria-hidden
                   loading="lazy"
-                  className="w-20 h-20"
+                  className="absolute inset-0 w-full h-full"
+                  style={{ objectFit: "cover", objectPosition: "center" }}
+                />
+                {/* soft bottom fade so the art melts into the card body */}
+                <div
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 pointer-events-none"
                   style={{
-                    objectFit: "contain",
-                    filter:
-                      "drop-shadow(0 0 14px hsl(var(--gold) / 0.45)) drop-shadow(0 0 26px hsl(280 60% 50% / 0.25))",
+                    height: "45%",
+                    background:
+                      "linear-gradient(to bottom, transparent 0%, rgba(10,10,20,0.85) 100%)",
                   }}
                 />
-                <h3 className="font-heading text-base text-gold">{service.title}</h3>
               </div>
-              <p className="text-foreground/70 font-body text-sm leading-[2] mb-4">
-                {service.desc}
-              </p>
-              {service.link && (
-                <Link
-                  to={service.link}
-                  className="text-gold/70 hover:text-gold font-body text-xs transition-colors inline-flex items-center gap-1"
-                >
-                  {service.linkText}
-                </Link>
-              )}
+
+              <div className="p-5 md:p-8">
+                <h3 className="font-heading text-base text-gold mb-3">{service.title}</h3>
+                <p className="text-foreground/70 font-body text-sm leading-[2] mb-4">
+                  {service.desc}
+                </p>
+                {service.link && (
+                  <Link
+                    to={service.link}
+                    className="text-gold/70 hover:text-gold font-body text-xs transition-colors inline-flex items-center gap-1"
+                  >
+                    {service.linkText}
+                  </Link>
+                )}
+              </div>
             </motion.article>
           ))}
         </div>

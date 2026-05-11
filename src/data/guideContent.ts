@@ -4,9 +4,8 @@
  */
 import type { Language } from "@/i18n/types";
 import localMandala1 from "@/assets/local-mandala-1.png";
-import localMandala2 from "@/assets/local-mandala-2.png";
+import localThreeCards from "@/assets/local-three-cards.png";
 import localQuestion from "@/assets/local-question.png";
-import localZodiacHeart from "@/assets/local-zodiac-heart.png";
 import localSunWheel from "@/assets/local-sun-wheel.png";
 import localEye from "@/assets/local-eye.png";
 import glyphWarning from "@/assets/glyph-warning.png";
@@ -48,7 +47,7 @@ interface GuideTranslated {
 
 const HERO_ART_BY_SLUG: Record<string, string> = {
   "tarot-getting-started": localMandala1,
-  "tarot-three-card-spread": localMandala2,
+  "tarot-three-card-spread": localThreeCards,
   "tarot-asking-questions": localQuestion,
   "tarot-common-mistakes": glyphWarning,
   "astro-reading-chart": localSunWheel,
