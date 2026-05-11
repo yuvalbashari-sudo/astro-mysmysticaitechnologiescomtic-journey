@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, BookOpen, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage, useT } from "@/i18n";
+import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import MobileOptionsSheet from "./MobileOptionsSheet";
@@ -49,6 +50,7 @@ const trackEvent = (name: string, variant: Variant) => {
 const MobileAiInsightOverlay = () => {
   const { language, dir } = useLanguage();
   const t = useT();
+  const { scale, setScale } = useFontScale();
   const isRTL = language === "he" || language === "ar";
 
   const [visible, setVisible] = useState(false);
@@ -355,6 +357,58 @@ const MobileAiInsightOverlay = () => {
                     )}
                   </ContactButtonModal>
                 </div>
+              </div>
+
+              {/* Row 3: text-size accessibility control */}
+              <div
+                className="inline-flex items-center gap-0.5 rounded-full px-0.5 py-0.5 shrink-0"
+                style={{
+                  marginTop: 12,
+                  background: "hsl(var(--deep-blue-light) / 0.6)",
+                  border: "1px solid hsl(var(--gold) / 0.18)",
+                }}
+                role="radiogroup"
+                aria-label="Font size"
+                dir="ltr"
+              >
+                {([
+                  { key: "default" as FontScale, label: "A" },
+                  { key: "large" as FontScale, label: "A+" },
+                  { key: "xl" as FontScale, label: "A++" },
+                ]).map(({ key, label }) => {
+                  const isActive = scale === key;
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      role="radio"
+                      aria-checked={isActive}
+                      onClick={() => setScale(key)}
+                      className="relative px-3 py-1.5 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold"
+                      style={{
+                        color: isActive
+                          ? "hsl(var(--primary-foreground))"
+                          : "hsl(var(--gold) / 0.7)",
+                        fontSize: 13,
+                        minWidth: 36,
+                      }}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="mobile-hero-font-pill"
+                          className="absolute inset-0 rounded-full"
+                          style={{
+                            background:
+                              "linear-gradient(135deg, hsl(var(--gold-dark)), hsl(var(--gold)))",
+                            boxShadow: "0 0 10px hsl(var(--gold) / 0.25)",
+                          }}
+                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                        />
+                      )}
+                      <span className="relative z-10">{label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </motion.div>
 
