@@ -1,7 +1,12 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Eye, Heart, Star, Sparkles, Sun } from "lucide-react";
+import { Star, Sparkles } from "lucide-react";
 import { useLanguage } from "@/i18n";
+import iconEye from "@/assets/local-eye.png";
+import iconZodiacHeart from "@/assets/local-zodiac-heart.png";
+import iconSunWheel from "@/assets/local-sun-wheel.png";
+
+const SERVICE_ICONS = [iconEye, iconZodiacHeart, iconSunWheel];
 
 const SeoContentSection = () => {
   const { language } = useLanguage();
@@ -15,9 +20,9 @@ const SeoContentSection = () => {
       mainTitle: "גלו את סודות היקום עם ASTROLOGAI",
       mainDesc: "ASTROLOGAI הוא פלטפורמת האסטרולוגיה והמיסטיקה המתקדמת בישראל, המשלבת בינה מלאכותית עם מסורות רוחניות עתיקות. קבלו קריאת טארוט מותאמת אישית, קריאת כף יד מבוססת AI, בדיקת התאמה זוגית לפי מזלות, מפת לידה מפורטת והורוסקופ חודשי — הכל בחוויה אחת אלגנטית ומרהיבה.",
       services: [
-        { icon: Eye, title: "קריאת טארוט אונליין", desc: "שאלו שאלה וקבלו פריסת טארוט אישית עם פירוש מעמיק של כל קלף.", link: "/tarot-gallery", linkText: "צפו בכל קלפי הטארוט →" },
-        { icon: Heart, title: "בדיקת התאמה זוגית לפי מזלות", desc: "גלו את הכימיה הקוסמית בינכם לבין בן או בת הזוג.", link: "/zodiac/aries", linkText: "גלו את המזל שלכם →" },
-        { icon: Sun, title: "מפת לידה והורוסקופ חודשי", desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית — בחינם.", link: null, linkText: null },
+        { title: "קריאת טארוט אונליין", desc: "שאלו שאלה וקבלו פריסת טארוט אישית עם פירוש מעמיק של כל קלף.", link: "/tarot-gallery", linkText: "צפו בכל קלפי הטארוט →" },
+        { title: "בדיקת התאמה זוגית לפי מזלות", desc: "גלו את הכימיה הקוסמית בינכם לבין בן או בת הזוג.", link: "/zodiac/aries", linkText: "גלו את המזל שלכם →" },
+        { title: "מפת לידה והורוסקופ חודשי", desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית — בחינם.", link: null, linkText: null },
       ],
       trustTitle: "למה לבחור ב-ASTROLOGAI?",
       trustItems: ["חוויה מיסטית פרימיום מותאמת אישית", "טכנולוגיית AI מתקדמת לקריאות מדויקות", "זמין בעברית, אנגלית, ערבית ורוסית", "קלף יומי והורוסקופ חודשי בחינם", "קריאות מותאמות לשם ולתאריך לידה"],
@@ -26,9 +31,9 @@ const SeoContentSection = () => {
       mainTitle: "Astrology, Tarot & More — All in One Place",
       mainDesc: "ASTROLOGAI is the easiest way to get a personal tarot reading, AI palm reading, zodiac compatibility check, full birth chart, and monthly horoscope — all in one simple, beautifully designed app.",
       services: [
-        { icon: Eye, title: "Online Tarot Reading", desc: "Ask a question and get a personal tarot spread with a clear, in-depth take on every card.", link: "/tarot-gallery", linkText: "Browse all tarot cards →" },
-        { icon: Heart, title: "Zodiac Compatibility", desc: "See the chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your zodiac sign →" },
-        { icon: Sun, title: "Birth Chart & Monthly Horoscope", desc: "Add your birth date and time to get a personal birth chart — free.", link: null, linkText: null },
+        { title: "Online Tarot Reading", desc: "Ask a question and get a personal tarot spread with a clear, in-depth take on every card.", link: "/tarot-gallery", linkText: "Browse all tarot cards →" },
+        { title: "Zodiac Compatibility", desc: "See the chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your zodiac sign →" },
+        { title: "Birth Chart & Monthly Horoscope", desc: "Add your birth date and time to get a personal birth chart — free.", link: null, linkText: null },
       ],
       trustTitle: "Why people pick ASTROLOGAI",
       trustItems: ["A personal experience, made for you", "Smart AI for accurate readings", "Available in Hebrew, English, Arabic, and Russian", "Free daily card and monthly horoscope", "Readings built around your name and birth date"],
@@ -37,9 +42,9 @@ const SeoContentSection = () => {
       mainTitle: "Откройте тайны Вселенной с ASTROLOGAI",
       mainDesc: "ASTROLOGAI — ведущая AI-платформа астрологии и мистического руководства. Персональное чтение Таро, анализ ладони, тест совместимости знаков зодиака, натальная карта и ежемесячный гороскоп — всё в одном элегантном опыте.",
       services: [
-        { icon: Eye, title: "Онлайн чтение Таро", desc: "Задайте вопрос и получите персональный расклад Таро с глубокой интерпретацией каждой карты.", link: "/tarot-gallery", linkText: "Все карты Таро →" },
-        { icon: Heart, title: "Тест совместимости знаков", desc: "Откройте космическую химию между вами и вашим партнёром по всем 12 знакам зодиака.", link: "/zodiac/aries", linkText: "Узнайте свой знак →" },
-        { icon: Sun, title: "Натальная карта и гороскоп", desc: "Введите дату и время рождения для персональной натальной карты — совершенно бесплатно.", link: null, linkText: null },
+        { title: "Онлайн чтение Таро", desc: "Задайте вопрос и получите персональный расклад Таро с глубокой интерпретацией каждой карты.", link: "/tarot-gallery", linkText: "Все карты Таро →" },
+        { title: "Тест совместимости знаков", desc: "Откройте космическую химию между вами и вашим партнёром по всем 12 знакам зодиака.", link: "/zodiac/aries", linkText: "Узнайте свой знак →" },
+        { title: "Натальная карта и гороскоп", desc: "Введите дату и время рождения для персональной натальной карты — совершенно бесплатно.", link: null, linkText: null },
       ],
       trustTitle: "Почему ASTROLOGAI?",
       trustItems: ["Премиум персонализированный мистический опыт", "Передовая AI-технология для точных чтений", "Доступно на иврите, английском, арабском и русском", "Бесплатная карта дня и ежемесячный гороскоп", "Чтения персонализированы по имени и дате рождения"],
@@ -48,9 +53,9 @@ const SeoContentSection = () => {
       mainTitle: "اكتشفوا أسرار الكون مع ASTROLOGAI",
       mainDesc: "ASTROLOGAI هي منصة الفلك والإرشاد الروحي الرائدة المدعومة بالذكاء الاصطناعي. احصلوا على قراءة تاروت شخصية، تحليل كف اليد، اختبار توافق الأبراج، خريطة ميلاد مفصلة وتوقعات شهرية — كل ذلك في تجربة واحدة أنيقة.",
       services: [
-        { icon: Eye, title: "قراءة تاروت أونلاين", desc: "اطرح سؤالاً واحصل على توزيع تاروت شخصي مع تفسير عميق لكل بطاقة.", link: "/tarot-gallery", linkText: "تصفح جميع بطاقات التاروت →" },
-        { icon: Heart, title: "اختبار توافق الأبراج", desc: "اكتشفوا الكيمياء الكونية بينكم وبين شريككم عبر جميع الأبراج الـ12.", link: "/zodiac/aries", linkText: "اكتشف برجك →" },
-        { icon: Sun, title: "خريطة ميلاد وتوقعات شهرية", desc: "أدخل تاريخ ووقت ميلادك للحصول على خريطة ميلاد شخصية — مجانًا.", link: null, linkText: null },
+        { title: "قراءة تاروت أونلاين", desc: "اطرح سؤالاً واحصل على توزيع تاروت شخصي مع تفسير عميق لكل بطاقة.", link: "/tarot-gallery", linkText: "تصفح جميع بطاقات التاروت →" },
+        { title: "اختبار توافق الأبراج", desc: "اكتشفوا الكيمياء الكونية بينكم وبين شريككم عبر جميع الأبراج الـ12.", link: "/zodiac/aries", linkText: "اكتشف برجك →" },
+        { title: "خريطة ميلاد وتوقعات شهرية", desc: "أدخل تاريخ ووقت ميلادك للحصول على خريطة ميلاد شخصية — مجانًا.", link: null, linkText: null },
       ],
       trustTitle: "لماذا ASTROLOGAI؟",
       trustItems: ["تجربة روحية متميزة ومخصصة", "تقنية ذكاء اصطناعي متقدمة لقراءات دقيقة", "متاح بالعبرية والإنجليزية والعربية والروسية", "بطاقة يومية وتوقعات شهرية مجانية", "قراءات مخصصة لاسمك وتاريخ ميلادك"],
@@ -120,10 +125,19 @@ const SeoContentSection = () => {
                 border: "1px solid rgba(255, 215, 0, 0.1)",
               }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className="icon-glow w-10 h-10">
-                  <service.icon className="w-5 h-5 text-gold" />
-                </div>
+              <div className="flex flex-col items-center gap-3 mb-4 text-center">
+                <img
+                  src={SERVICE_ICONS[i]}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  className="w-20 h-20"
+                  style={{
+                    objectFit: "contain",
+                    filter:
+                      "drop-shadow(0 0 14px hsl(var(--gold) / 0.45)) drop-shadow(0 0 26px hsl(280 60% 50% / 0.25))",
+                  }}
+                />
                 <h3 className="font-heading text-base text-gold">{service.title}</h3>
               </div>
               <p className="text-foreground/70 font-body text-sm leading-[2] mb-4">

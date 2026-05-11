@@ -2,6 +2,11 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Compass, Sparkles, MessageCircle, Heart, Sparkle, Globe2, ChevronDown } from "lucide-react";
 import { useLanguage } from "@/i18n";
+import stepArt1 from "@/assets/local-step-1.png";
+import stepArt2 from "@/assets/local-step-2.png";
+import stepArt3 from "@/assets/local-step-3.png";
+
+const STEP_ART = [stepArt1, stepArt2, stepArt3];
 
 /**
  * Mobile-first "How it works" trust section.
@@ -166,7 +171,6 @@ const HowItWorksSection = () => {
         {/* steps */}
         <ol className="flex flex-col gap-3" style={{ marginBottom: 28 }}>
           {copy.steps.map((step, idx) => {
-            const Icon = step.icon;
             return (
               <motion.li
                 key={idx}
@@ -227,12 +231,14 @@ const HowItWorksSection = () => {
                           "radial-gradient(circle at 50% 50%, hsl(var(--gold) / 0.22) 0%, transparent 70%)",
                       }}
                     />
-                    <Icon
-                      className="text-gold"
-                      strokeWidth={1.5}
+                    <img
+                      src={STEP_ART[idx]}
+                      alt=""
+                      aria-hidden
+                      loading="lazy"
                       style={{
-                        width: 30,
-                        height: 30,
+                        width: 56,
+                        height: 56,
                         objectFit: "contain",
                         position: "relative",
                         zIndex: 1,
