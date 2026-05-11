@@ -168,6 +168,7 @@ export async function streamMysticalReading(
   try {
     // Gate: ensure we have a locked gender before generating any AI content.
     await ensureGender(language);
+    const effectiveGender = mysticalProfile.getEffectiveGender();
     const first = await runStreamAttempt({ type, data, language, strict: false, onDelta });
     if (first.ok === false) {
       onError(first.error);
