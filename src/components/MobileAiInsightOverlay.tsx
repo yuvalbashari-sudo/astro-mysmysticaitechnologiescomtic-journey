@@ -412,8 +412,18 @@ const MobileAiInsightOverlay = () => {
               </div>
             </motion.div>
 
-            {/* ── Center: headline + supporting + CTA ── */}
-            <div className="relative z-10 flex flex-col items-center text-center w-full" style={{ maxWidth: 420 }}>
+            {/* ── Center: headline + supporting + CTA ──
+                 Local Version (HE/AR): pushed lower so the face, eyes and
+                 crystal ball stay visible above the text cluster.
+                 US Version (EN/RU): unchanged centered position. */}
+            <div
+              className="relative z-10 flex flex-col items-center text-center w-full"
+              style={{
+                maxWidth: 420,
+                marginTop: isRTL ? "auto" : 0,
+                marginBottom: isRTL ? 8 : 0,
+              }}
+            >
               <motion.h1
                 className="font-heading"
                 initial={{ opacity: 0, y: 14 }}
