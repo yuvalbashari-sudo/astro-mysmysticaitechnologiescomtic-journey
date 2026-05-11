@@ -618,7 +618,7 @@ ${data.gender ? `\nתזכורת: כתוב את כל התשובה בלשון ${is
         ? `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקורא הוא גבר. כתוב את כל הפירוש בלשון זכר עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות ומשפט הסיכום.\nדוגמאות: "אתה נושא בתוכך", "הכוחות שלך", "אתה מקרין", "עליך לשים לב".\nאסור בשום מקום בתשובה להשתמש בלשון נקבה, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון זכר בלבד בכל משפט.`
         : isFemale
         ? `\n\nהנחיית מגדר קריטית — חלה על כל מילה בתשובה:\nהקוראת היא אישה. כתוב את כל הפירוש בלשון נקבה עקבית מתחילה ועד הסוף — כולל כותרות, פסקאות, עצות ומשפט הסיכום.\nדוגמאות: "את נושאת בתוכך", "הכוחות שלך", "את מקרינה", "עלייך לשים לב".\nאסור בשום מקום בתשובה להשתמש בלשון זכר, בלשון ניטרלית, או בכתיבה כפולה (כמו "אתה/את"). לשון נקבה בלבד בכל משפט.`
-        : "",
+        : NEUTRAL_HE,
       en: hasGender
         ? `\n\nGender personalization: The reader identifies as ${isMale ? 'male' : 'female'}. Use ${isMale ? 'he/him/his' : 'she/her/hers'} pronouns when referring to the reader in third-person examples. Address them directly with "you" but frame examples, archetypes, and metaphors in a way that resonates with their identity. Do not stereotype — use gender to add warmth and relatability, not to limit the interpretation.`
         : "",
@@ -627,7 +627,7 @@ ${data.gender ? `\nתזכורת: כתוב את כל התשובה בלשון ${is
         : "",
       ar: hasGender
         ? `\n\nتخصيص الجنس: القارئ ${isMale ? 'ذكر' : 'أنثى'}. استخدم ${isMale ? 'صيغة المذكر' : 'صيغة المؤنث'} في جميع الأفعال والصفات والضمائر. مثال: ${isMale ? '"أنتَ تحمل في داخلك"، "قوتك"، "عليك أن"' : '"أنتِ تحملين في داخلك"، "قوتك"، "عليكِ أن"'}. يجب أن يكون النص بالكامل ${isMale ? 'بصيغة المذكر' : 'بصيغة المؤنث'} من البداية إلى النهاية.`
-        : "",
+        : NEUTRAL_AR,
     };
     const genderInstruction = genderInstructions[lang] || genderInstructions["he"] || "";
 
