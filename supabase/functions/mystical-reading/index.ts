@@ -5,6 +5,23 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-email, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Mystical, dignified neutral wording used when the reader's gender is unknown.
+// Forces the model away from "אתה/את" slashes and into Hebrew nominal phrases
+// and warm spiritual address that sounds natural without revealing gender.
+const NEUTRAL_HE = `\n\nהנחיית פנייה ניטרלית — אין מידע על מגדר הקורא/ת:
+דבר/י אל הנשמה בלשון מיסטית, חמה ומכובדת — מבלי לחשוף או להניח מגדר.
+- העדף/י פניות נשגבות וניטרליות מבחינה דקדוקית: "נשמה יקרה", "הלב שלך", "הנפש שלך", "מי שאת/ה בפנים".
+- בנה/י משפטים סביב צורות שאינן דורשות סיומת מגדרית: "יש בך אור", "הלב יודע", "הכוכבים מאירים את דרכך", "המסע שלך נפרש".
+- אסור להשתמש בכתיבה כפולה ("אתה/את", "תחווה/תחווי") או בלוכסנים מגדריים בשום מקום בתשובה.
+- שמור/י על טון מיסטי, חם, רוחני ועוטף — שירי ולא כללי.`;
+
+const NEUTRAL_AR = `\n\nتوجيه محايد — لا تتوفر معلومات عن جنس القارئ:
+خاطب الروح بأسلوب صوفي راقٍ ودافئ دون الإفصاح عن الجنس أو افتراضه.
+- استخدم نداءات روحية محايدة: "أيتها الروح"، "يا قلبًا يصغي"، "يا نفسًا تبحث"، "في داخلك نور".
+- استعن بالجمل الاسمية والصور الكونية بدلًا من الأفعال المُسنَدة إلى مذكر أو مؤنث.
+- يُمنع منعًا باتًا استخدام الصيغة المزدوجة "أنت/أنتِ" أو الشرطة المائلة بين الجنسين.
+- حافظ على نبرة شعرية، صوفية، حانية ومتدفقة.`;
+
 const READING_PROMPTS: Record<string, (data: any) => { system: string; user: string | any[] }> = {
   forecast: (data) => {
     const isMale = data.gender === "male";
