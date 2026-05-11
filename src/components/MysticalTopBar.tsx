@@ -364,10 +364,6 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             </div>
           </div>
 
-          {/* Row 2: text-size accessibility control */}
-          <div className="flex justify-center w-full mt-1.5">
-            {fontSizeControl}
-          </div>
         </div>
       ) : (
         /* ── DESKTOP / TABLET: original single-row layout ── */
