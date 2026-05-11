@@ -77,32 +77,21 @@ function GuideCard({ guide, index, BackArrow }: { guide: GuideEntry; index: numb
         }}
       >
         <div className="flex items-start gap-5">
-          <span
-            className="shrink-0 flex items-center justify-center rounded-full relative overflow-hidden"
+          <img
+            src={guide.heroArt}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="shrink-0"
             style={{
-              width: 64,
-              height: 64,
-              background:
-                "radial-gradient(circle at 30% 28%, hsl(var(--gold) / 0.34) 0%, hsl(225 50% 6% / 0.55) 70%)",
-              border: "1px solid hsl(var(--gold) / 0.5)",
-              boxShadow:
-                "0 0 24px hsl(var(--gold) / 0.3), inset 0 1px 8px hsl(var(--gold) / 0.2)",
+              width: 48,
+              height: 48,
+              objectFit: "contain",
+              background: "transparent",
+              filter:
+                "drop-shadow(0 0 8px hsl(var(--gold) / 0.45)) drop-shadow(0 0 2px hsl(var(--gold) / 0.6))",
             }}
-          >
-            <img
-              src={guide.heroArt}
-              alt=""
-              aria-hidden
-              loading="lazy"
-              style={{
-                width: 52,
-                height: 52,
-                objectFit: "contain",
-                filter:
-                  "drop-shadow(0 0 6px hsl(var(--gold) / 0.55)) drop-shadow(0 0 10px hsl(270 70% 55% / 0.25))",
-              }}
-            />
-          </span>
+          />
           <div className="flex-1 min-w-0">
             <h3 className="font-heading text-xl md:text-2xl font-bold text-gold mb-2 group-hover:text-gold-light transition-colors tracking-wide">{guide.title}</h3>
             <p className="font-body text-sm md:text-base text-foreground/50 leading-[1.8]">{guide.subtitle}</p>
