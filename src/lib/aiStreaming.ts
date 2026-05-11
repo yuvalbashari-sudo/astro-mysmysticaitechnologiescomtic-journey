@@ -180,7 +180,9 @@ export async function streamMysticalReading(
   try {
     // Gate: ensure we have a locked gender before generating any AI content.
     await ensureGender(language);
-    const effectiveGender = mysticalProfile.getEffectiveGender();
+    const rawGender = mysticalProfile.getEffectiveGender();
+    const effectiveGender: "male" | "female" | undefined =
+      rawGender === "male" || rawGender === "female" ? rawGender : undefined;
     const first = await runStreamAttempt({ type, data, language, strict: false, onDelta });
     if (first.ok === false) {
       onError(first.error);
@@ -200,8 +202,17 @@ export async function streamMysticalReading(
         if (fix.changed) { working = fix.corrected; changed = true; }
       }
       if (locale === "he" || locale === "ar") {
-        const grammar = repairGenderGrammar(working, locale, effectiveGender as any);
+        const grammar = repairGenderGrammar(working, locale, effectiveGender);
         if (grammar.changed) { working = grammar.repaired; changed = true; }
+      }
+      if (import.meta.env.DEV && (locale === "he" || locale === "ar")) {
+        // eslint-disable-next-line no-console
+        console.log("[ai-debug] finalize", {
+          locale, gender: effectiveGender,
+          autoCorrected: changed,
+          valid: isValidLanguage(working, locale),
+          preview: working.slice(0, 80),
+        });
       }
       return { text: working, changed };
     };
