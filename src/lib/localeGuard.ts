@@ -160,7 +160,8 @@ export function enforceLocale(
     try {
       working = stripBidiControls(working);
       const g = mysticalProfile.getEffectiveGender?.();
-      const repair = repairGenderGrammar(working, locale, g);
+      const lockedG = g === "male" || g === "female" ? g : undefined;
+      const repair = repairGenderGrammar(working, locale, lockedG);
       if (repair.changed) working = repair.repaired;
     } catch {/* defensive: never crash UI on repair */}
   }
