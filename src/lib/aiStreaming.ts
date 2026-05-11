@@ -13,6 +13,7 @@ import {
 } from "@/lib/localeGuard";
 import type { Language } from "@/i18n/types";
 import { ensureGender } from "@/lib/genderGate";
+import { repairGenderGrammar, stripBidiControls } from "@/lib/genderGrammarRepair";
 
 type StreamArgs = {
   type: string;
