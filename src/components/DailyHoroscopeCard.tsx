@@ -148,6 +148,16 @@ const DailyHoroscopeCard = () => {
         .eq("language", language)
         .maybeSingle();
       if (cached) {
+        // Bust the cache if the stored content fails the locale validator
+        // (English leaks in HE/AR) or carries dual-gender slashes — we
+        // prefer to regenerate over showing broken personalization.
+        const looksMixed =
+          (language === "he" || language === "ar") &&
+          (/[A-Za-z]{4,}/.test(cached.content || "") || /\/[הותים]/.test(cached.content || "") || /[\u0590-\u06FF]+\s*\/\s*[\u0590-\u06FF]+/.test(cached.content || ""));
+        if (looksMixed) {
+          if (import.meta.env.DEV) console.log("[ai-debug] cache busted (mixed/leaky content)", { language });
+          return false;
+        }
         setData({
           content: cached.content,
           love_score: cached.love_score ?? 3,
@@ -168,7 +178,19 @@ const DailyHoroscopeCard = () => {
   const generateHoroscope = useCallback(async () => {
     if (!zodiacSign) return;
     const { ensureGender } = await import("@/lib/genderGate");
-    const lockedGender = (await ensureGender(language)) || gender;
+    const ensured = await ensureGender(language);
+    const candidate = ensured || gender;
+    // Only male/female are honored by the prompt-side GENDER LOCK; anything
+    // else (other / prefer_not_to_say / undefined) → omit so the server
+    // uses elegant neutral phrasing.
+    const lockedGender: "male" | "female" | undefined =
+      candidate === "male" || candidate === "female" ? candidate : undefined;
+    if (import.meta.env.DEV && (language === "he" || language === "ar")) {
+      // eslint-disable-next-line no-console
+      console.log("[ai-debug] daily-horoscope →", {
+        language, zodiacSign, userName, gender: lockedGender, rawGender: gender,
+      });
+    }
     const fp = getFingerprint();
     const today = getTodayStr();
     setLoading(true);
