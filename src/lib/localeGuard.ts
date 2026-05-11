@@ -23,6 +23,8 @@ import { en } from "@/i18n/translations/en";
 import { he } from "@/i18n/translations/he";
 import { ru } from "@/i18n/translations/ru";
 import { ar } from "@/i18n/translations/ar";
+import { mysticalProfile } from "@/lib/mysticalProfile";
+import { repairGenderGrammar, stripBidiControls } from "@/lib/genderGrammarRepair";
 
 const translationTables: Record<Language, Record<string, string>> = {
   en: en as unknown as Record<string, string>,
@@ -151,6 +153,17 @@ export function enforceLocale(
   if (locale !== "en") {
     const fix = autoCorrectLocale(text, locale);
     if (fix.changed) working = fix.corrected;
+  }
+  // HE/AR: repair dual-gender slash forms (את/ה, חש/ה, …) using the
+  // locked profile gender so readers never see mixed grammar.
+  if (locale === "he" || locale === "ar") {
+    try {
+      working = stripBidiControls(working);
+      const g = mysticalProfile.getEffectiveGender?.();
+      const lockedG = g === "male" || g === "female" ? g : undefined;
+      const repair = repairGenderGrammar(working, locale, lockedG);
+      if (repair.changed) working = repair.repaired;
+    } catch {/* defensive: never crash UI on repair */}
   }
   if (isValidLanguage(working, locale)) return working;
   // eslint-disable-next-line no-console

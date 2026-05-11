@@ -13,6 +13,7 @@ import {
 } from "@/lib/localeGuard";
 import type { Language } from "@/i18n/types";
 import { ensureGender } from "@/lib/genderGate";
+import { repairGenderGrammar, stripBidiControls } from "@/lib/genderGrammarRepair";
 
 type StreamArgs = {
   type: string;
@@ -167,28 +168,35 @@ export async function streamMysticalReading(
   try {
     // Gate: ensure we have a locked gender before generating any AI content.
     await ensureGender(language);
+    const effectiveGender = mysticalProfile.getEffectiveGender();
     const first = await runStreamAttempt({ type, data, language, strict: false, onDelta });
     if (first.ok === false) {
       onError(first.error);
       return;
     }
 
-    // Always run silent autocorrect — even when text passes the validator,
-    // a single English leak (e.g. "Guide" inside a Hebrew paragraph) should
-    // still be patched in place.
-    if (locale !== "en") {
-      const fix = autoCorrectLocale(first.text, locale);
-      if (fix.changed) onReplace?.(fix.corrected);
-    }
-    if (isValidLanguage(first.text, locale)) {
-      onDone();
-      return;
-    }
+    // Finalization pipeline (HE/AR personalization safety net):
+    //   1. Strip stray bidi control characters.
+    //   2. Auto-correct single English-word leaks (Guide → מדריך, …).
+    //   3. Repair dual-gender slash forms (את/ה, חש/ה, صديقي/صديقتي)
+    //      using the locked gender so HE/AR readers never see mixed grammar.
+    const finalize = (raw: string): { text: string; changed: boolean } => {
+      let working = stripBidiControls(raw);
+      let changed = working !== raw;
+      if (locale !== "en") {
+        const fix = autoCorrectLocale(working, locale);
+        if (fix.changed) { working = fix.corrected; changed = true; }
+      }
+      if (locale === "he" || locale === "ar") {
+        const grammar = repairGenderGrammar(working, locale, effectiveGender as any);
+        if (grammar.changed) { working = grammar.repaired; changed = true; }
+      }
+      return { text: working, changed };
+    };
 
-    // Try silent auto-correction first.
-    const { corrected, changed } = autoCorrectLocale(first.text, locale);
-    if (changed && isValidLanguage(corrected, locale)) {
-      onReplace?.(corrected);
+    const firstFinal = finalize(first.text);
+    if (firstFinal.changed) onReplace?.(firstFinal.text);
+    if (isValidLanguage(firstFinal.text, locale)) {
       onDone();
       return;
     }
@@ -212,14 +220,9 @@ export async function streamMysticalReading(
       return;
     }
 
-    if (isValidLanguage(retry.text, locale)) {
-      onReplace?.(retry.text);
-      onDone();
-      return;
-    }
-    const retryFix = autoCorrectLocale(retry.text, locale);
-    if (retryFix.changed && isValidLanguage(retryFix.corrected, locale)) {
-      onReplace?.(retryFix.corrected);
+    const retryFinal = finalize(retry.text);
+    if (isValidLanguage(retryFinal.text, locale)) {
+      onReplace?.(retryFinal.text);
       onDone();
       return;
     }
