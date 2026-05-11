@@ -152,6 +152,19 @@ export function enforceLocale(
     const fix = autoCorrectLocale(text, locale);
     if (fix.changed) working = fix.corrected;
   }
+  // HE/AR: repair dual-gender slash forms (את/ה, חש/ה, …) using the
+  // locked profile gender so readers never see mixed grammar.
+  if (locale === "he" || locale === "ar") {
+    try {
+      // Lazy import to avoid a hard cycle with mysticalProfile.
+      const { mysticalProfile } = require("@/lib/mysticalProfile");
+      const { repairGenderGrammar, stripBidiControls } = require("@/lib/genderGrammarRepair");
+      working = stripBidiControls(working);
+      const g = mysticalProfile.getEffectiveGender?.();
+      const repair = repairGenderGrammar(working, locale, g);
+      if (repair.changed) working = repair.repaired;
+    } catch {/* defensive: never crash UI on repair */}
+  }
   if (isValidLanguage(working, locale)) return working;
   // eslint-disable-next-line no-console
   console.warn(
