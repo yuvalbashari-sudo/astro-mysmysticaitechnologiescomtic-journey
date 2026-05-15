@@ -363,7 +363,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      // Only reset state if no saved result exists — preserve stored interpretation
+      // Only reset card/AI state if no saved result exists — preserve stored interpretation
+      // Name and gender are persisted via mysticalProfile and never reset here
       const saved = getSavedDailyCard();
       if (!saved || !saved.aiText) {
         setCard(null);
@@ -371,8 +372,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current = "";
         setAiLoading(false);
         setAiError(null);
-        setUserName("");
-        setGender("");
         setRitualStep(0);
       }
       setShowCardOverlay(false);
