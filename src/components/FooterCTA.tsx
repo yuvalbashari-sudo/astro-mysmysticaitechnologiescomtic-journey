@@ -53,6 +53,9 @@ const FooterCTA = () => {
       <div className="mt-24 pt-8 text-center">
         <div className="section-divider max-w-xs mx-auto mb-8" />
         <p className="font-heading text-xl gold-gradient-text mb-2">ASTROLOGAI</p>
+        <p className="text-[11px] text-gold/60 font-body mb-2">
+          Norielle AI — Personalized Astrology & Tarot Readings
+        </p>
         <p className="text-xs text-muted-foreground font-body mb-4">
           {t.footer_copyright}
         </p>

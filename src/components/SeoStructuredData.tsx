@@ -1,33 +1,58 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { useLanguage } from "@/i18n";
 
 const SITE_URL = "https://myastrologai.com";
+const BRAND = "Norielle AI";
+
+const ROUTE_META: Record<string, { title: string; description: string }> = {
+  "/": {
+    title: "Norielle AI – Personalized Astrology & Tarot Readings",
+    description:
+      "Norielle AI offers personalized astrology, tarot, zodiac compatibility, and spiritual guidance powered by advanced AI.",
+  },
+  "/daily-horoscope": {
+    title: "Daily Horoscope – Norielle AI",
+    description:
+      "Get your free personalized daily horoscope from Norielle AI — accurate astrology forecasts powered by advanced AI.",
+  },
+  "/tarot-reading": {
+    title: "AI Tarot Reading – Norielle AI",
+    description:
+      "Free personalized tarot card readings from Norielle AI. Discover love, career, and spiritual insights powered by AI.",
+  },
+  "/zodiac-compatibility": {
+    title: "Zodiac Compatibility Test – Norielle AI",
+    description:
+      "Check your zodiac compatibility with Norielle AI. Deep romantic and emotional compatibility analysis powered by astrology AI.",
+  },
+  "/birth-chart": {
+    title: "Free Birth Chart Reading – Norielle AI",
+    description:
+      "Generate your personal natal birth chart with Norielle AI. Discover your sun, moon, and rising signs through advanced AI astrology.",
+  },
+};
 
 const SeoStructuredData = () => {
   const { language } = useLanguage();
+  const { pathname } = useLocation();
+  const isHe = language === "he";
 
   useEffect(() => {
-    // Set meta title/description
-    const isHe = language === "he";
-    const title = isHe
-      ? "ASTROLOGAI | פתיחת טארוט אונליין עם AI"
-      : "ASTROLOGAI | AI Tarot Reading Online";
-    const description = isHe
-      ? "ASTROLOGAI היא פלטפורמה לפתיחת טארוט, התאמה זוגית ותובנות אישיות בעזרת AI. חוויה מיסטית, מדויקת ונגישה אונליין."
-      : "ASTROLOGAI is an AI-powered platform for tarot reading, zodiac compatibility and personal insights. A mystical, accurate and accessible online experience.";
-
-    document.title = title;
+    const meta = ROUTE_META[pathname] ?? ROUTE_META["/"];
+    document.title = meta.title;
     const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) metaDesc.setAttribute("content", description);
+    if (metaDesc) metaDesc.setAttribute("content", meta.description);
 
     // Organization schema
     const orgSchema = {
       "@context": "https://schema.org",
       "@type": "Organization",
-      name: "ASTROLOGAI",
+      name: BRAND,
+      alternateName: ["Norielle", "AstrologAI"],
       url: SITE_URL,
       logo: `${SITE_URL}/placeholder.svg`,
-      description: "AI-powered astrology, tarot reading, palm reading, and zodiac compatibility platform.",
+      description: "Norielle AI — personalized astrology, tarot, zodiac compatibility, and spiritual guidance powered by advanced AI.",
       sameAs: [],
     };
 
@@ -35,9 +60,9 @@ const SeoStructuredData = () => {
     const websiteSchema = {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      name: "ASTROLOGAI",
+      name: BRAND,
       url: SITE_URL,
-      description: "AI-powered tarot reading, palm reading, zodiac compatibility test, and spiritual guidance.",
+      description: "Norielle AI — AI-powered tarot reading, daily horoscope, zodiac compatibility, birth chart, and spiritual guidance.",
       inLanguage: ["he", "en", "ar", "ru"],
     };
 
@@ -46,7 +71,7 @@ const SeoStructuredData = () => {
       "@context": "https://schema.org",
       "@type": "Service",
       serviceType: "Spiritual Guidance & Mystical Readings",
-      provider: { "@type": "Organization", name: "ASTROLOGAI" },
+      provider: { "@type": "Organization", name: BRAND },
       areaServed: { "@type": "Country", name: "Israel" },
       hasOfferCatalog: {
         "@type": "OfferCatalog",
@@ -132,7 +157,7 @@ const SeoStructuredData = () => {
     document.head.appendChild(script);
 
     return () => { document.getElementById(scriptId)?.remove(); };
-  }, [language]);
+  }, [language, pathname]);
 
   return null;
 };

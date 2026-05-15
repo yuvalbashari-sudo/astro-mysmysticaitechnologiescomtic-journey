@@ -26,6 +26,7 @@ const Index = () => {
   return (
     <>
       <SeoStructuredData />
+      <h1 className="sr-only">Norielle AI – Personalized Astrology & Tarot Readings</h1>
       <HeroSection cosmicGuideOpen={cosmicGuideOpen} onCosmicGuideChange={setCosmicGuideOpen} />
       <MobileAiInsightOverlay />
 
