@@ -564,7 +564,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           <motion.button
                             key={g}
                             type="button"
-                            onClick={() => setGender(g)}
+                            onClick={() => {
+                              setGender(g);
+                              mysticalProfile.recordGender(g);
+                            }}
                             className="flex-1 py-2.5 rounded-lg font-body text-sm transition-all duration-300"
                             style={{
                               background: gender === g
