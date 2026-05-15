@@ -161,6 +161,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     return () => window.removeEventListener("resize", updateViewport);
   }, []);
 
+  // Preload saved user profile (name + gender) when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const savedName = mysticalProfile.getUserName();
+      const savedGender = mysticalProfile.getUserGender();
+      if (savedName) setUserName(savedName);
+      if (savedGender) setGender(savedGender as "male" | "female" | "");
+    }
+  }, [isOpen]);
+
   // Check for existing daily card on open — also re-check when language changes
   useEffect(() => {
     if (isOpen) {
