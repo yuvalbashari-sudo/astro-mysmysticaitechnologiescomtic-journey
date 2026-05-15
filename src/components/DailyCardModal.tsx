@@ -161,6 +161,16 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     return () => window.removeEventListener("resize", updateViewport);
   }, []);
 
+  // Preload saved user profile (name + gender) when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const savedName = mysticalProfile.getUserName();
+      const savedGender = mysticalProfile.getUserGender();
+      if (savedName) setUserName(savedName);
+      if (savedGender) setGender(savedGender as "male" | "female" | "");
+    }
+  }, [isOpen]);
+
   // Check for existing daily card on open — also re-check when language changes
   useEffect(() => {
     if (isOpen) {
@@ -294,9 +304,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     aiTextRef.current = "";
     setAiText("");
 
-    // Save userName to profile if provided
+    // Persist userName and gender to profile
     if (userName.trim()) {
       mysticalProfile.recordUserName(userName.trim());
+    }
+    if (gender) {
+      mysticalProfile.recordGender(gender);
     }
 
     saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
@@ -353,7 +366,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
   const handleClose = () => {
     onClose();
     setTimeout(() => {
-      // Only reset state if no saved result exists — preserve stored interpretation
+      // Only reset card/AI state if no saved result exists — preserve stored interpretation
+      // Name and gender are persisted via mysticalProfile and never reset here
       const saved = getSavedDailyCard();
       if (!saved || !saved.aiText) {
         setCard(null);
@@ -361,8 +375,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         aiTextRef.current = "";
         setAiLoading(false);
         setAiError(null);
-        setUserName("");
-        setGender("");
         setRitualStep(0);
       }
       setShowCardOverlay(false);
@@ -515,7 +527,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <input
                         type="text"
                         value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        onChange={(e) => {
+                          setUserName(e.target.value);
+                          if (e.target.value.trim()) {
+                            mysticalProfile.recordUserName(e.target.value.trim());
+                          }
+                        }}
                         placeholder={t.daily_name_placeholder}
                         className="w-full py-2.5 px-4 rounded-lg font-body text-sm text-foreground/80 placeholder:text-foreground/25 focus:outline-none transition-all duration-300"
                         style={{
@@ -547,7 +564,10 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           <motion.button
                             key={g}
                             type="button"
-                            onClick={() => setGender(g)}
+                            onClick={() => {
+                              setGender(g);
+                              mysticalProfile.recordGender(g);
+                            }}
                             className="flex-1 py-2.5 rounded-lg font-body text-sm transition-all duration-300"
                             style={{
                               background: gender === g
