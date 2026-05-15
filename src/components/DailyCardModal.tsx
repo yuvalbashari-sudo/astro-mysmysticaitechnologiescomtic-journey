@@ -304,9 +304,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     aiTextRef.current = "";
     setAiText("");
 
-    // Save userName to profile if provided
+    // Persist userName and gender to profile
     if (userName.trim()) {
       mysticalProfile.recordUserName(userName.trim());
+    }
+    if (gender) {
+      mysticalProfile.recordGender(gender);
     }
 
     saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
