@@ -36,6 +36,7 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
 const SeoStructuredData = () => {
   const { language } = useLanguage();
   const { pathname } = useLocation();
+  const isHe = language === "he";
 
   useEffect(() => {
     const meta = ROUTE_META[pathname] ?? ROUTE_META["/"];
