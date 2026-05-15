@@ -527,7 +527,12 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <input
                         type="text"
                         value={userName}
-                        onChange={(e) => setUserName(e.target.value)}
+                        onChange={(e) => {
+                          setUserName(e.target.value);
+                          if (e.target.value.trim()) {
+                            mysticalProfile.recordUserName(e.target.value.trim());
+                          }
+                        }}
                         placeholder={t.daily_name_placeholder}
                         className="w-full py-2.5 px-4 rounded-lg font-body text-sm text-foreground/80 placeholder:text-foreground/25 focus:outline-none transition-all duration-300"
                         style={{
