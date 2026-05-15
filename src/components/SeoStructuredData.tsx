@@ -157,7 +157,7 @@ const SeoStructuredData = () => {
     document.head.appendChild(script);
 
     return () => { document.getElementById(scriptId)?.remove(); };
-  }, [language]);
+  }, [language, pathname]);
 
   return null;
 };
