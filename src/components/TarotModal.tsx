@@ -1073,9 +1073,14 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       boxShadow: "0 0 50px hsl(222 47% 3% / 0.6), 0 4px 24px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.05)",
                     }}
                   >
-                    <div className="flex items-center justify-center gap-3 mb-6">
+                    <div className="flex items-center justify-center gap-3 mb-6 relative">
                       <Layers className="w-5 h-5 text-gold" />
                       <h3 className="font-heading text-lg gold-gradient-text">{t.tarot_mystical_interp}</h3>
+                      {aiText && (
+                        <div className="absolute end-2 top-1/2 -translate-y-1/2">
+                          <TextSizeControl value={textSize} onChange={setTextSize} />
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-center justify-center gap-3 mb-6 flex-wrap max-w-full overflow-hidden px-2">
