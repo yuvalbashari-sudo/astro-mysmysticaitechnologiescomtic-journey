@@ -11,6 +11,7 @@ export interface MysticalProfileData {
   // Identity
   userName?: string;
   gender?: "male" | "female" | "other" | "prefer_not_to_say";
+  compatibilityNonbinary?: boolean;
   zodiacSign?: string;
   zodiacSymbol?: string;
   zodiacElement?: string;
@@ -137,8 +138,28 @@ function getLocalizedUserName(language?: string): string | undefined {
 
 function recordGender(gender: "male" | "female" | "other" | "prefer_not_to_say"): void {
   const profile = getProfile();
+  delete profile.compatibilityNonbinary;
   profile.gender = gender;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+}
+
+function getCompatibilitySelf() {
+  const p = getProfile();
+  const genders = { female: "woman", male: "man", other: p.compatibilityNonbinary ? "nonbinary" : "other", prefer_not_to_say: "prefer_not" };
+  return { name: p.userName || "", date: p.birthDate || "", time: p.birthTime || "", gender: p.gender ? genders[p.gender] : "" };
+}
+
+function rememberCompatibilitySelf(name: string, date: string, time: string, gender: string) {
+  const p = getProfile();
+  const genders: Record<string, MysticalProfileData["gender"]> = {
+    woman: "female", man: "male", nonbinary: "other", other: "other", prefer_not: "prefer_not_to_say",
+  };
+  p.userName = name.trim() || undefined;
+  p.birthDate = date;
+  p.birthTime = time || undefined;
+  p.gender = genders[gender];
+  p.compatibilityNonbinary = gender === "nonbinary" || undefined;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
 }
 
 function getUserGender(): "male" | "female" | "other" | "prefer_not_to_say" | undefined {
@@ -407,6 +428,8 @@ function clearProfile(): void {
 export const mysticalProfile = {
   getProfile,
   recordUserName,
+  getCompatibilitySelf,
+  rememberCompatibilitySelf,
   getUserName,
   getLocalizedUserName,
   recordGender,
