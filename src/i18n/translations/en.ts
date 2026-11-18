@@ -211,7 +211,7 @@ export const en: TranslationKeys = {
   compat_desc: "See how compatible you really are. Add both birth dates and get a deep look at your connection — emotions, chemistry, and growth together.",
   compat_date1_label: "Your birth date",
   compat_date2_label: "Their birth date",
-  compat_time_optional: "Optional — for rising sign",
+  compat_time_optional: "Birth time (optional)",
   compat_gender_label: "Gender",
   compat_gender_woman: "Woman",
   compat_gender_man: "Man",
@@ -236,7 +236,7 @@ export const en: TranslationKeys = {
   compat_premium_cta: "Get a premium reading",
 
   rising_title: "Sun & Rising sign",
-  rising_desc: "Add your birth date and time and we'll read both — your Sun (who you are inside) and your Rising (how you show up).",
+  rising_desc: "Enter your birth date, local birth time and birth city to find your Sun and rising signs.",
   rising_birthdate_label: "Date of birth",
   rising_birthtime_label: "Time of birth",
   rising_cta: "Show my reading",
