@@ -7,9 +7,9 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Heart, Crown, Share2, Copy, Check, Loader2 } from "lucide-react";
-import { getSignFromDate, getSignSymbol, getCompatibility, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
-import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
+import { Sparkles, Heart, Crown, Share2, Copy, Check } from "lucide-react";
+import { getSignFromDate, getSignSymbol, getCompatibility, formatCompatibilityReading, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
+import { getSignNameByKey } from "@/lib/astroLocale";
 
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
@@ -17,7 +17,7 @@ import { renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { callLocalAi, getLocalFallback } from "@/lib/localAiPipeline";
-import { safeErrorText } from "@/lib/localeGuard";
+
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
@@ -31,6 +31,8 @@ const newCheckLabel = {
   he: "בדיקת התאמה חדשה", en: "Check another match",
   ar: "فحص توافق جديد", ru: "Проверить другую пару",
 };
+
+const personalReadingTitle = { he: "קריאה אישית לפי הפרטים שהוזנו", en: "Your personal reading", ru: "Ваш личный разбор", ar: "قراءتكما الشخصية" };
 
 const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () => void }) => {
   const t = useT();
@@ -49,10 +51,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
   const [gender2, setGender2] = useState("");
   const [copied, setCopied] = useState(false);
   const [matchInfo, setMatchInfo] = useState<{ sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number } | null>(null);
-  const [aiText, setAiText] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiError, setAiError] = useState<string | null>(null);
-  const aiTextRef = useRef("");
+  const [readingText, setReadingText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const isMobile = useIsMobile();
@@ -63,7 +62,6 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
 
-  const startReadingRef = useRef<null | (() => void)>(null);
   const requestRef = useRef<AbortController | null>(null);
   const timeoutRef = useRef<number | undefined>();
 
@@ -86,96 +84,90 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
       mysticalProfile.recordZodiac(getSignNameByKey(ownSign, language), getSignSymbol(ownSign), getSignElement(ownSign), date);
       mysticalProfile.recordCompatibility(getSignNameByKey(otherSign, language), getSignSymbol(otherSign), info.score);
     }
+    const pair = `${info.sign1Name} + ${info.sign2Name}`;
+    const signReading = formatCompatibilityReading(compat, language, pair);
+    const label = `${t.readings_type_compatibility} — ${pair}`;
+    setReadingText(signReading);
+    setActiveReading({ type: "compatibility", label, summary: signReading });
+
+    const saveReading = (text: string) => {
+      readingsStorage.save({
+        type: "compatibility",
+        title: label,
+        subtitle: `${t.compat_score_label}: ${info.score}%`,
+        symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
+        data: { ...info, date1, date2, aiReading: text },
+      });
+    };
+
     const access = entitlements.checkAccess("compatibility_reading");
     if (!access.allowed && "promptKey" in access) {
       setGatingMsg(entitlements.getGatingMessage(access.promptKey, access.priceILS));
       setGatingResetCycle(access.resetCycle);
-      if (language === "he") setAiText([compat.overallMatch, compat.emotionalConnection, compat.advice].join("\n\n"));
+      saveReading(signReading);
       return;
     }
     entitlements.recordFeatureUse("compatibility_reading");
     notifyUsageChanged();
 
-    startReadingRef.current = () => {
-      if (requestRef.current) return;
-      const request = new AbortController();
-      requestRef.current = request;
-      aiTextRef.current = "";
-      setAiText("");
-      setAiError(null);
-      setAiLoading(true);
-
-      const showError = (error: unknown) => {
-        if (request.signal.aborted) return;
-        window.clearTimeout(timeoutRef.current);
-        request.abort();
-        requestRef.current = null;
-        setAiLoading(false);
-        setAiError(safeErrorText(error, language, "compatibility"));
-      };
-      const armTimeout = () => {
-        window.clearTimeout(timeoutRef.current);
-        timeoutRef.current = window.setTimeout(() => showError(null), READING_IDLE_TIMEOUT_MS);
-      };
-      const replaceText = (text: string) => {
-        if (request.signal.aborted) return;
-        armTimeout();
-        aiTextRef.current = text;
-        setAiText(text);
-      };
-      armTimeout();
-
-      void callLocalAi({
-        endpoint: "mystical-reading",
-        mode: "stream",
-        signal: request.signal,
-        promptForGender: false,
-        payload: {
-          type: "compatibility",
-          language,
-          sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
-          sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
-          sign1BirthTime: time1 || null,
-          sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
-          sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
-          sign1RisingElement: rising1 ? getSignElement(rising1) : null,
-          sign1Gender: gender1 || null,
-          sign1PersonName: name1 || null,
-          sign1Relation: relation1 || null,
-          sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
-          sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
-          sign2BirthTime: time2 || null,
-          sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
-          sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
-          sign2RisingElement: rising2 ? getSignElement(rising2) : null,
-          sign2Gender: gender2 || null,
-          sign2PersonName: name2 || null,
-          sign2Relation: relation2 || null,
-        },
-        onDelta: (delta) => replaceText(aiTextRef.current + delta),
-        onReplace: replaceText,
-        onDone: () => {
-          if (request.signal.aborted) return;
-          if (!aiTextRef.current.trim() || aiTextRef.current === getLocalFallback("error", language)) {
-            showError(null);
-            return;
-          }
-          window.clearTimeout(timeoutRef.current);
-          requestRef.current = null;
-          setAiLoading(false);
-          setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
-          readingsStorage.save({
-            type: "compatibility",
-            title: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`,
-            subtitle: `${t.compat_score_label}: ${info.score}%`,
-            symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
-            data: { ...info, date1, date2, aiReading: aiTextRef.current },
-          });
-        },
-        onError: showError,
-      }).catch(showError);
+    const request = new AbortController();
+    requestRef.current = request;
+    let personalText = "";
+    const finish = (includePersonal: boolean) => {
+      if (request.signal.aborted) return;
+      window.clearTimeout(timeoutRef.current);
+      request.abort();
+      requestRef.current = null;
+      let finalText = signReading;
+      if (includePersonal && personalText.trim() && personalText.trim() !== getLocalFallback("error", language)) {
+        finalText += `\n\n### ${personalReadingTitle[language]}\n${personalText.trim()}`;
+        setReadingText(finalText);
+        setActiveReading({ type: "compatibility", label, summary: finalText });
+      }
+      saveReading(finalText);
     };
-    startReadingRef.current();
+    const armTimeout = () => {
+      window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => finish(false), READING_IDLE_TIMEOUT_MS);
+    };
+    armTimeout();
+    void callLocalAi({
+      endpoint: "mystical-reading",
+      mode: "stream",
+      signal: request.signal,
+      promptForGender: false,
+      requireComplete: true,
+      payload: {
+        type: "compatibility",
+        language,
+        sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
+        sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
+        sign1BirthTime: time1 || null,
+        sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
+        sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
+        sign1RisingElement: rising1 ? getSignElement(rising1) : null,
+        sign1Gender: gender1 || null,
+        sign1PersonName: name1 || null,
+        sign1Relation: relation1 || null,
+        sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
+        sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
+        sign2BirthTime: time2 || null,
+        sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
+        sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
+        sign2RisingElement: rising2 ? getSignElement(rising2) : null,
+        sign2Gender: gender2 || null,
+        sign2PersonName: name2 || null,
+        sign2Relation: relation2 || null,
+      },
+      onDelta: (delta) => {
+        if (request.signal.aborted) return;
+        personalText += delta;
+        armTimeout();
+      },
+      onReplace: (text) => { personalText = text; },
+      onDone: () => finish(true),
+      onError: () => finish(false),
+    }).catch(() => finish(false));
   };
 
   useEffect(() => () => {
@@ -184,8 +176,8 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
   }, []);
 
   useEffect(() => {
-    if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0;
-  }, [aiText, aiLoading]);
+    if (matchInfo && scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [matchInfo]);
 
   const handleShare = async () => {
     if (!matchInfo) return;
@@ -199,7 +191,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
 
   const handleCopy = async () => {
     if (!matchInfo) return;
-    const fullContent = aiText && !aiError ? `\n\n${aiText}` : "";
+    const fullContent = readingText ? `\n\n${readingText}` : "";
     await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%${fullContent}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
@@ -236,23 +228,9 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
 
   const interpretation = (
     <div className="min-w-0 [overflow-wrap:anywhere]">
-      {aiText && renderMysticalText(aiText, textSize)}
-      {aiLoading && !aiText && (
-        <div role="status" className="flex items-center justify-center gap-2 py-8 text-gold/70">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <span className="font-body text-sm">{t.compat_loading}</span>
-        </div>
-      )}
+      {renderMysticalText(readingText, textSize)}
       {gatingMsg && (
-        <button type="button" className="btn-outline-gold min-h-11" onClick={() => setGatingOpen(true)}>{t.hero_open_full_reading}</button>
-      )}
-      {aiError && (
-        <div className="space-y-3 rounded-xl border border-gold/15 px-4 py-5 text-center">
-          <p role="alert" className="text-sm text-foreground/75">{aiError}</p>
-          <button type="button" className="btn-gold min-h-11" onClick={() => startReadingRef.current?.()}>
-            {t.daily_horoscope_retry}
-          </button>
-        </div>
+        <button type="button" className="btn-outline-gold min-h-11" onClick={() => setGatingOpen(true)}>{t.compat_premium_cta}</button>
       )}
     </div>
   );
@@ -413,8 +391,8 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
                         {interpretation}
-                        {!aiLoading && !aiError && aiText && (
-                          <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText} />
+                        {readingText && (
+                          <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={readingText} />
                         )}
                       </div>
                     </motion.div>
@@ -480,9 +458,9 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
                     </div>
                     {interpretation}
 
-                    {!aiLoading && !aiError && aiText && (
+                    {readingText && (
                       <>
-                        <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
+                        <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={readingText || undefined} />
                         <div className="section-divider max-w-[200px] mx-auto my-10" />
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                           <Crown className="w-7 h-7 text-gold mx-auto mb-4" />

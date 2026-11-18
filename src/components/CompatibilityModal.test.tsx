@@ -22,12 +22,13 @@ vi.mock("@/components/PaymentGatingModal", () => ({ default: () => null }));
 vi.mock("@/components/ShareResultSection", () => ({ default: () => null }));
 
 afterEach(() => {
+  ai.call.mockClear();
   vi.useRealTimers();
   localStorage.clear();
   sessionStorage.clear();
 });
 
-it("starts on submit, shows the score, and retries a stalled interpretation without using another reading", () => {
+it("keeps a complete reading when the AI stalls, including on a second check", () => {
   vi.useFakeTimers();
   localStorage.setItem("astrologai_lang", "en");
   const remaining = entitlements.getRemainingFreeUses("compatibility_reading");
@@ -42,20 +43,25 @@ it("starts on submit, shows the score, and retries a stalled interpretation with
   const first = ai.call.mock.calls[0][0];
   expect(first).toMatchObject({ promptForGender: false, payload: { type: "compatibility", language: "en" } });
   expect(screen.getByText(/^\d+%$/)).toBeInTheDocument();
-  expect(screen.getByRole("status")).toBeInTheDocument();
+  const advice = () => screen.getByRole("heading", { name: "Something to try" });
+  expect(advice()).toBeInTheDocument();
 
   act(() => { vi.advanceTimersByTime(15_000); });
   expect(first.signal.aborted).toBe(true);
-  fireEvent.click(screen.getByRole("button", { name: "Try again" }));
-  expect(ai.call).toHaveBeenCalledTimes(2);
-  const retry = ai.call.mock.calls[1][0];
-  expect(retry.payload).toEqual(first.payload);
+  expect(advice()).toBeInTheDocument();
+  expect(screen.queryByText("Try again")).not.toBeInTheDocument();
+  expect(ai.call).toHaveBeenCalledTimes(1);
   expect(entitlements.getRemainingFreeUses("compatibility_reading")).toBe(remaining - 1);
-
-  act(() => { retry.onDelta("Make time to listen to each other."); });
-  expect(screen.getByText("Make time to listen to each other.")).toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: /unlock full reading/i })).not.toBeInTheDocument();
-  act(() => { retry.onDone(); });
+  fireEvent.click(screen.getByRole("button", { name: "Check another match" }));
+  const partner = screen.getAllByPlaceholderText(/MM\s*\/\s*DD\s*\/\s*YYYY/i)[1];
+  fireEvent.change(partner, { target: { value: "07151992" } });
+  fireEvent.click(screen.getByRole("button", { name: "Check compatibility" }));
+  const second = ai.call.mock.calls[1][0];
+  act(() => { second.onDelta("Partial text"); second.onError("network-error"); second.onDone(); });
+  expect(screen.queryByText("Partial text")).not.toBeInTheDocument();
+  expect(advice()).toBeInTheDocument();
+  expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  expect(JSON.parse(localStorage.getItem("astrologai_readings")!)).toHaveLength(2);
 });
 
 it("opens a new editable check each time, remembering only the visitor, even with an old saved result", () => {
@@ -79,6 +85,9 @@ it("opens a new editable check each time, remembering only the visitor, even wit
   fireEvent.change(dates()[1], { target: { value: "01071994" } });
   submit();
   expect(ai.call.mock.lastCall![0].payload.sign2Name).not.toBe(first.payload.sign2Name);
+  const second = ai.call.mock.lastCall![0];
+  act(() => { second.onDelta("A personal observation."); second.onDone(); });
+  expect(screen.getByText("A personal observation.")).toBeInTheDocument();
   ui.rerender(view(false));
   ui.rerender(view(true));
   expect(dates()[0]).toHaveValue("06/15/1995");
@@ -87,6 +96,7 @@ it("opens a new editable check each time, remembering only the visitor, even wit
   fireEvent.change(dates()[1], { target: { value: "03221990" } });
   submit();
   expect(screen.getByText(/^\d+%$/)).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: "Something to try" })).toBeInTheDocument();
   fireEvent.click(screen.getByRole("button", { name: "Check another match" }));
   expect(dates()[1]).toHaveValue("");
   expect(ai.call).toHaveBeenCalledTimes(calls);
