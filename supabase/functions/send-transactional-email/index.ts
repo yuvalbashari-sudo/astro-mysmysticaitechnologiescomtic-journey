@@ -2,6 +2,8 @@ import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
+import { isPremiumTemplate, renderPremiumHtml } from '../_shared/transactional-email-templates/render-premium.ts'
+import { convert } from 'npm:html-to-text@9.0.5'
 
 // Configuration baked in at scaffold time — do NOT change these manually.
 // To update, re-run the email domain setup flow.
@@ -283,15 +285,12 @@ Deno.serve(async (req) => {
   }
 
   // 4. Render React Email template to HTML and plain text
-  const isPremiumInquiry = templateName === 'premium-confirmation' || templateName === 'premium-new-lead'
-  const html = await renderAsync(
-    React.createElement(template.component, templateData),
-    { pretty: isPremiumInquiry }
-  )
-  const plainText = await renderAsync(
-    React.createElement(template.component, templateData),
-    { plainText: true }
-  )
+  const isPremiumInquiry = isPremiumTemplate(templateName)
+  const element = React.createElement(template.component, templateData)
+  const html = isPremiumInquiry ? renderPremiumHtml(element) : await renderAsync(element)
+  const plainText = isPremiumInquiry
+    ? convert(html, { wordwrap: false, selectors: [{ selector: 'div[data-skip-in-text=true]', format: 'skip' }] })
+    : await renderAsync(element, { plainText: true })
 
   // Resolve subject — supports static string or dynamic function
   const resolvedSubject =
@@ -318,10 +317,7 @@ Deno.serve(async (req) => {
       from: `${isPremiumInquiry ? 'אסטרולוגאי' : SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
       subject: resolvedSubject,
-      // Character references keep Hebrew intact when mail gateways wrap UTF-8 HTML.
-      html: isPremiumInquiry
-        ? html.replace(/[^\x00-\x7F]/gu, char => `&#${char.codePointAt(0)};`)
-        : html,
+      html,
       text: plainText,
       purpose: 'transactional',
       label: templateName,
