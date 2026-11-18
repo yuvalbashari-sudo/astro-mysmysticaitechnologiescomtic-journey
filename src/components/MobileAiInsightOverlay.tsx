@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useLanguage, useT } from "@/i18n";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
+import HomeScreenInstall from "./HomeScreenInstall";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import MobileOptionsSheet from "./MobileOptionsSheet";
 import ContactButtonModal from "./ContactButtonModal";
@@ -520,6 +521,7 @@ const MobileAiInsightOverlay = () => {
                   {copy.cta}
                 </span>
               </motion.button>
+              <HomeScreenInstall />
             </div>
 
             {/* ── Bottom: Norielle floating guide + dismiss cue ── */}
