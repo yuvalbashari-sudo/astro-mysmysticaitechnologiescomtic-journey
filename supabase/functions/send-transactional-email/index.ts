@@ -283,8 +283,10 @@ Deno.serve(async (req) => {
   }
 
   // 4. Render React Email template to HTML and plain text
+  const isPremiumInquiry = templateName === 'premium-confirmation' || templateName === 'premium-new-lead'
   const html = await renderAsync(
-    React.createElement(template.component, templateData)
+    React.createElement(template.component, templateData),
+    { pretty: isPremiumInquiry }
   )
   const plainText = await renderAsync(
     React.createElement(template.component, templateData),
@@ -313,10 +315,13 @@ Deno.serve(async (req) => {
     payload: {
       message_id: messageId,
       to: effectiveRecipient,
-      from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+      from: `${isPremiumInquiry ? 'אסטרולוגאי' : SITE_NAME} <noreply@${FROM_DOMAIN}>`,
       sender_domain: SENDER_DOMAIN,
       subject: resolvedSubject,
-      html,
+      // Character references keep Hebrew intact when mail gateways wrap UTF-8 HTML.
+      html: isPremiumInquiry
+        ? html.replace(/[^\x00-\x7F]/gu, char => `&#${char.codePointAt(0)};`)
+        : html,
       text: plainText,
       purpose: 'transactional',
       label: templateName,
