@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { Crown, Star, Shield, Zap, Lock, Check, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
-import { subscriptionManager } from "@/lib/subscriptionManager";
-import { toast } from "@/components/ui/sonner";
+import { useState } from "react";
+import LeadFormModal from "@/components/LeadFormModal";
 
 type LangText = Record<Language, string>;
 type LangFeatures = Record<Language, { text: string; included: boolean }[]>;
@@ -148,6 +148,14 @@ const FloatingParticles = () => (
 
 const PremiumUpgrade = () => {
   const navigate = useNavigate();
+  const [params, setParams] = useSearchParams();
+  const requested = params.get("interest");
+  const interest = requested && ["premium", "tarot", "compatibility"].includes(requested) ? requested : null;
+  const [selectedPlan, setSelectedPlan] = useState(false);
+  const closeOrder = () => {
+    setSelectedPlan(false);
+    if (interest) setParams({}, { replace: true });
+  };
   const t = useT();
   const { language, dir } = useLanguage();
 
@@ -197,7 +205,7 @@ const PremiumUpgrade = () => {
 
       {/* Plan cards */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 pb-12 md:pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-7">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.id}
@@ -282,8 +290,7 @@ const PremiumUpgrade = () => {
                   if (plan.id === "free") {
                     navigate("/");
                   } else {
-                    // Placeholder — billing not connected yet
-                    toast.info(language === "he" ? "שירות התשלום יהיה זמין בקרוב" : "Payment service coming soon");
+                    setSelectedPlan(true);
                   }
                 }}
                 className={`w-full py-3.5 rounded-lg font-body font-bold text-sm tracking-wider transition-all duration-300 ${
@@ -298,6 +305,8 @@ const PremiumUpgrade = () => {
           ))}
         </div>
       </div>
+
+      {(interest || selectedPlan) && <LeadFormModal isOpen onClose={closeOrder} preselectedInterest={interest || "premium"} />}
 
       {/* Trust / Reassurance */}
       <motion.div
