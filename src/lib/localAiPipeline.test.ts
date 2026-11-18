@@ -41,3 +41,18 @@ describe("localAiPipeline error handling", () => {
     expect(msg).not.toContain("Internal boom");
   });
 });
+
+it.each([
+  ["an interruption", "", false],
+  ["a length cutoff", 'data: {"choices":[{"finish_reason":"length"}]}\n\ndata: [DONE]\n\n', false],
+  ["a completed answer", 'data: {"choices":[{"finish_reason":"stop"}]}\n\ndata: [DONE]\n\n', true],
+])("recognizes %s before attaching personal compatibility text", async (_, end, complete) => {
+  const start = 'data: {"choices":[{"delta":{"content":"A personal reading."}}]}\n\n';
+  vi.stubGlobal("fetch", vi.fn(async () => new Response(start + end)));
+  const onDone = vi.fn(), onError = vi.fn();
+  await callLocalAi({ endpoint: "mystical-reading", mode: "stream", requireComplete: true,
+    promptForGender: false, payload: { type: "compatibility", language: "en" },
+    onDelta: () => {}, onDone, onError });
+  expect(onDone).toHaveBeenCalledTimes(complete ? 1 : 0);
+  expect(onError).toHaveBeenCalledTimes(complete ? 0 : 1);
+});

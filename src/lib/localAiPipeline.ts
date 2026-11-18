@@ -68,6 +68,7 @@ interface CallJson extends CallBase {
 }
 interface CallStream extends CallBase {
   mode: "stream";
+  requireComplete?: boolean;
   onDelta: (chunk: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
@@ -465,6 +466,7 @@ async function runStreamAttempt(
   let textBuffer = "";
   let accumulated = "";
   let streamDone = false;
+  let finishReason: string | undefined;
   while (!streamDone) {
     const { done, value } = await reader.read();
     if (done) break;
@@ -483,6 +485,7 @@ async function runStreamAttempt(
       }
       try {
         const parsed = JSON.parse(jsonStr);
+        if (parsed.choices?.[0]?.finish_reason) finishReason = parsed.choices[0].finish_reason;
         const content = parsed.choices?.[0]?.delta?.content as string | undefined;
         if (content) {
           accumulated += content;
@@ -493,6 +496,9 @@ async function runStreamAttempt(
         break;
       }
     }
+  }
+  if (args.requireComplete && !(finishReason === "stop" || (!finishReason && streamDone))) {
+    return { ok: false, error: "incomplete-stream", retryable: false };
   }
   return { ok: true, text: accumulated };
 }
