@@ -1,3 +1,5 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import RisingSignModal from "./RisingSignModal";
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import AstrologerAvatarButton from "./AstrologerAvatarButton";
 import { Sparkles, Star, Eye, Hand, Sun, BookOpen, X, MapPin } from "lucide-react";
@@ -2167,8 +2169,14 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
   const { language, dir } = useLanguage();
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [hoveredTeaser, setHoveredTeaser] = useState<"left" | "right" | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [isTablet, setIsTablet] = useState(false);
+  const { pathname, search } = useLocation();
+  const navigate = useNavigate();
+  const closeReading = (route: string, close?: (open: boolean) => void) => {
+    close?.(false);
+    if (pathname === route) navigate({ pathname: "/", search }, { replace: true });
+  };
   const [forecastOpen, setForecastOpen] = useState(false);
   
   const [compatibilityOpen, setCompatibilityOpen] = useState(false);
@@ -4213,16 +4221,17 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
           </>
         )}
       </AnimatePresence>
+      <RisingSignModal isOpen={pathname === "/rising-sign"} onClose={() => closeReading("/rising-sign")} />
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
-      <CompatibilityModal isOpen={compatibilityOpen} onClose={() => setCompatibilityOpen(false)} />
-      <TarotModal isOpen={tarotOpen} onClose={() => setTarotOpen(false)} />
+      <CompatibilityModal isOpen={compatibilityOpen || (pathname === "/zodiac-compatibility")} onClose={() => closeReading("/zodiac-compatibility", setCompatibilityOpen)} />
+      <TarotModal isOpen={tarotOpen || (pathname === "/tarot-reading" && isMobile)} onClose={() => closeReading("/tarot-reading", setTarotOpen)} />
       <PalmComingSoonModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
-      <ImmersiveTarotExperience isOpen={immersiveTarotOpen} onClose={() => setImmersiveTarotOpen(false)} />
+      <ImmersiveTarotExperience isOpen={immersiveTarotOpen || (pathname === "/tarot-reading" && !isMobile)} onClose={() => closeReading("/tarot-reading", setImmersiveTarotOpen)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
       <DailyCardModal isOpen={dailyCardOpen} onClose={() => setDailyCardOpen(false)} />
-      <BirthChartModal isOpen={birthChartOpen} onClose={() => setBirthChartOpen(false)} />
-      <DailyHoroscopeModal isOpen={dailyHoroscopeOpen} onClose={() => setDailyHoroscopeOpen(false)} />
+      <BirthChartModal isOpen={birthChartOpen || (pathname === "/birth-chart")} onClose={() => closeReading("/birth-chart", setBirthChartOpen)} />
+      <DailyHoroscopeModal isOpen={dailyHoroscopeOpen || (pathname === "/daily-horoscope")} onClose={() => closeReading("/daily-horoscope", setDailyHoroscopeOpen)} />
       <AstrocartographyModal isOpen={astrocartoOpen} onClose={() => setAstrocartoOpen(false)} />
     </>
   );

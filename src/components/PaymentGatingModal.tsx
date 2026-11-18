@@ -11,13 +11,12 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   gatingMessage: GatingMessage | null;
-  /** Called when user confirms pay-per-use (placeholder until Stripe) */
-  onPayPerUse?: () => void;
+  interest: "tarot" | "compatibility";
   /** Reset cycle for countdown timer display */
   resetCycle?: ResetCycle;
 }
 
-const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, resetCycle = "daily" }: Props) => {
+const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, interest, resetCycle = "daily" }: Props) => {
   const { language, dir } = useLanguage();
   const t = useT();
   const navigate = useNavigate();
@@ -129,13 +128,13 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
                 <button
                   type="button"
                   onClick={() => {
-                    onPayPerUse?.();
                     onClose();
+                    navigate("/upgrade?interest=" + interest);
                   }}
                   className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider mb-3 flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" />
-                  {t.gating_pay_label} ₪{gatingMessage.priceILS}
+                  {t.a11y_statement_contact_title} · ₪{gatingMessage.priceILS}
                 </button>
 
                 {/* Divider */}

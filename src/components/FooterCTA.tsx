@@ -33,7 +33,7 @@ const FooterCTA = () => {
             <Star className="w-4 h-4" aria-hidden="true" />
             {t.footer_cta_free}
           </a>
-          <a href="#premium" className="btn-crimson font-body flex items-center gap-2">
+          <a href="/upgrade?interest=premium" className="btn-crimson font-body flex items-center gap-2">
             <Sparkles className="w-4 h-4" aria-hidden="true" />
             {t.footer_cta_premium}
           </a>

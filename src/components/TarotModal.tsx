@@ -1203,7 +1203,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                         <Crown className="w-10 h-10 text-gold mx-auto mb-5" />
                         <h4 className="font-heading text-2xl text-gold mb-4">{t.tarot_premium_title}</h4>
                         <p className="text-foreground/60 font-body text-lg mb-6 max-w-lg mx-auto leading-relaxed">{t.tarot_premium_desc}</p>
-                        <a href="#premium" onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4"><Sparkles className="w-5 h-5" />{t.tarot_premium_cta}</a>
+                        <a href="/upgrade?interest=premium" onClick={handleClose} className="btn-gold font-body text-lg inline-flex items-center gap-3 px-8 py-4"><Sparkles className="w-5 h-5" />{t.tarot_premium_cta}</a>
                       </motion.div>
                     </>
                   )}
@@ -1219,14 +1219,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       }}
       gatingMessage={gatingMsg || liveGatingMsg}
       resetCycle={gatingOpen ? gatingResetCycle : liveResetCycle}
-      onPayPerUse={() => {
-        setGatingOpen(false);
-        if (needsQuestion) {
-          setIsQuestionPhase(true);
-        } else {
-          setIsLoading(true);
-        }
-      }}
+      interest="tarot"
     />
     </>
   );

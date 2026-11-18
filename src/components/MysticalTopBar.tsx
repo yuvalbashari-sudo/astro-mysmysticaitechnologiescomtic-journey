@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, Clock, Sparkles, BookOpen } from "lucide-react";
+import { Mail, Clock, Sparkles, BookOpen } from "lucide-react";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
@@ -226,7 +226,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
     </div>
   );
 
-  const whatsappBtn = (
+  const emailButton = (
     <ContactButtonModal>
       {({ onClick }) => (
         <motion.button
@@ -239,9 +239,10 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
           }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
-          aria-label={t.a11y_whatsapp_contact}
+          aria-label={t.a11y_statement_contact_title}
+                        title={t.a11y_statement_contact_title}
         >
-          <MessageCircle className="w-[18px] h-[18px] md:w-6 md:h-6 text-white" aria-hidden="true" />
+          <Mail className="w-[18px] h-[18px] md:w-6 md:h-6 text-white" aria-hidden="true" />
         </motion.button>
       )}
     </ContactButtonModal>
@@ -360,7 +361,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
                   )}
                 </AnimatePresence>
               </div>
-              {whatsappBtn}
+              {emailButton}
             </div>
           </div>
 
@@ -376,7 +377,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             {dashboardBtn}
             {fontSizeControl}
             {a11yLink}
-            {whatsappBtn}
+            {emailButton}
+            <a className="font-body text-sm text-gold hover:underline" href="/rising-sign">{t.hero_menu_rising}</a>
           </nav>
 
           {/* Center: logo + subtitle */}

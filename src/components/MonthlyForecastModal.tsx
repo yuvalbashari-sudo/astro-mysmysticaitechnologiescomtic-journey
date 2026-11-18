@@ -13,15 +13,12 @@ import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { formatMonthName } from "@/lib/dateTimeFormat";
 import ShareResultSection from "@/components/ShareResultSection";
-import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
 import AvatarHoverTeaser from "@/components/AvatarHoverTeaser";
 import AdvisorChatPanel from "@/components/AdvisorChatPanel";
-import { isAdminTestMode, getAdminSafeProfile, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
-import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
-import { usePremiumUnlocked } from "@/lib/premiumUnlock";
+import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
@@ -33,7 +30,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "",
   });
   const [attempted, setAttempted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [signInfo, setSignInfo] = useState<{ name: string; symbol: string; dateRange: string; element: string } | null>(null);
   const [aiText, setAiText] = useState("");
@@ -47,32 +43,24 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
 
   const monthName = formatMonthName(new Date(), language);
 
-  // Mirror PremiumUnlockOverlay readingId so we can hide share/copy before unlock.
-  const forecastReadingId = signInfo
-    ? `forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`
-    : "";
-  const forecastUnlocked = usePremiumUnlocked(forecastReadingId);
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
 
-  const { userName, gender, birthDate, birthTime, birthCity } = details;
+  const { userName, birthCity } = details;
   const updateDetails = (patch: Partial<BirthDetails>) => setDetails(prev => ({ ...prev, ...patch }));
 
   const handleSubmit = () => {
+    if (request.current) return;
     setAttempted(true);
     const adminMode = isAdminTestMode();
-    // Admin bypass: auto-fill missing required fields
-    if (adminMode) {
-      if (!gender) updateDetails({ gender: ADMIN_DEFAULTS.gender });
-      if (!birthDate) updateDetails({ birthDate: ADMIN_DEFAULTS.birthDate });
-    } else if (!gender || !birthDate) {
-      return;
-    }
+    const birthDate = details.birthDate || (adminMode ? ADMIN_DEFAULTS.birthDate : "");
+    const gender = details.gender || (adminMode ? ADMIN_DEFAULTS.gender : "");
+    if (!gender || !birthDate) return;
+    const controller = new AbortController();
+    request.current = controller;
     if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
-    if (gender) mysticalProfile.recordGender(gender);
-    setIsLoading(true);
-  };
-
-  const handleOnboardingComplete = () => {
-    const date = new Date(birthDate);
+    mysticalProfile.recordGender(gender);
+    const date = new Date(birthDate + "T12:00:00");
     const sign = getZodiacSign(date);
 
     // Derive locale-aware sign + element from the canonical key (lowercase
@@ -88,14 +76,14 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
     const localizedElement = getElementName(elementKey, language);
 
     setSignInfo({ name: localizedSignName, symbol: sign.symbol, dateRange: sign.dateRange, element: localizedElement });
-    setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
+    setAiLoading(true); aiTextRef.current = "";
     mysticalProfile.recordZodiac(localizedSignName, sign.symbol, localizedElement, birthDate);
 
     streamMysticalReading(
       "forecast",
       {
         signName: localizedSignName, signSymbol: sign.symbol, birthDate, element: localizedElement,
-        dateRange: sign.dateRange, monthName, gender, birthCity: "",
+        dateRange: sign.dateRange, monthName, gender, birthCity,
         risingSign: "", risingSymbol: "", risingElement: "",
         moonSign: "", planetPositions: "", majorAspects: "",
         houseCusps: "", dominantElements: "", dominantHouses: "",
@@ -110,10 +98,12 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
       },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
       language,
+      (fullText) => { aiTextRef.current = fullText; setAiText(fullText); },
+      { signal: controller.signal, promptForGender: false },
     );
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
+  const handleClose = () => { request.current?.abort(); request.current = null; onClose(); setTimeout(() => { setSignInfo(null); setDetails({ userName: "", gender: "", birthDate: "", birthTime: "", birthCity: "" }); setAttempted(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
@@ -158,7 +148,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
   /* ── Shared content: all the AnimatePresence phases ── */
   const sharedContent = (
     <AnimatePresence mode="wait">
-      {!hasResult && !isLoading ? (
+      {!hasResult ? (
         isDesktop ? (
           /* ── Desktop: 3-column — LEFT form + CENTER oracle + RIGHT text ── */
           <div className="absolute inset-0 flex items-start" style={{ paddingTop: "clamp(100px, 14vh, 160px)" }} key="input-desktop">
@@ -215,17 +205,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
             </div>
           </motion.div>
         )
-      ) : isLoading ? (
-        isMobile ? (
-          <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
-        ) : (
-          <div className="absolute inset-0 flex items-start" style={{ paddingTop: "clamp(100px, 14vh, 160px)" }} key="onboarding-desktop">
-            <motion.div className="flex flex-col justify-center pointer-events-auto" style={{ width: "42%", maxWidth: "510px", marginLeft: "calc(4vw + 150px)", marginRight: "10px" }} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
-              <MysticalOnboarding onComplete={handleOnboardingComplete} />
-            </motion.div>
-            <div className="flex-1" />
-          </div>
-        )
       ) : hasResult ? (
         isDesktopResult ? (
           /* ── Desktop 3-zone result ── */
@@ -234,11 +213,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
               <div className="relative" style={{ padding: "0 16px 60px" }}>
                 {aiText ? (
-                  <PremiumUnlockOverlay
-                    readingId={`forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`}
-                    featureKey="monthly_horoscope"
-
-                  >
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -257,7 +231,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
                       {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
                     </motion.div>
-                  </PremiumUnlockOverlay>
                 ) : aiError ? (
                   <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
                 ) : (
@@ -266,7 +239,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                     <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.forecast_loading}</motion.p>
                   </div>
                 )}
-                {!aiLoading && (aiText || aiError) && signInfo && forecastUnlocked && (
+                {!aiLoading && (aiText || aiError) && signInfo && (
                   <ShareResultSection symbol={signInfo.symbol} title={`${t.readings_type_forecast} — ${signInfo.name}`} subtitle={monthName} readingText={aiText || undefined} />
                 )}
               </div>
@@ -308,11 +281,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
               </motion.div>
             </div>
             {aiText ? (
-              <PremiumUnlockOverlay
-                readingId={`forecast:${signInfo?.name || ""}:${details.birthDate}:${monthName}`}
-                featureKey="monthly_horoscope"
-
-              >
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -331,7 +299,6 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   <div style={{ lineHeight: 1.9 }}>{renderMysticalText(aiText, textSize)}</div>
                   {aiLoading && (<motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}><Loader2 className="w-5 h-5 text-gold/60 animate-spin" /><span className="font-body text-sm text-gold/50">{t.forecast_loading}</span></motion.div>)}
                 </motion.div>
-              </PremiumUnlockOverlay>
             ) : aiError ? (
               <div className="text-center rounded-2xl p-6" style={{ background: "hsl(222 40% 10% / 0.75)", backdropFilter: "blur(20px)", border: "1px solid hsl(var(--crimson) / 0.2)" }}><p className="text-foreground/50 font-body text-sm">{aiError}</p></div>
             ) : (
@@ -340,7 +307,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                 <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.forecast_loading}</motion.p>
               </div>
             )}
-            {!aiLoading && (aiText || aiError) && signInfo && forecastUnlocked && (
+            {!aiLoading && (aiText || aiError) && signInfo && (
               <>
                 <ShareResultSection symbol={signInfo.symbol} title={`${t.readings_type_forecast} — ${signInfo.name}`} subtitle={monthName} readingText={aiText || undefined} />
                 <div className="section-divider max-w-[200px] mx-auto my-10" />
@@ -348,7 +315,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                   <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
                   <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.forecast_premium_title}</h4>
                   <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.forecast_premium_desc}</p>
-                  <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.forecast_premium_cta}</a>
+                  <a href="/upgrade?interest=premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.forecast_premium_cta}</a>
                 </motion.div>
               </>
             )}

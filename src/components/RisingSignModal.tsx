@@ -6,14 +6,13 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, Sparkles, Crown, Share2, Copy, Check, Loader2, Calendar } from "lucide-react";
-import { getRisingSign } from "@/data/risingSignData";
-import { getZodiacSign } from "@/data/zodiacData";
+import { calculateNatalChart } from "@/lib/natalChart";
+import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
-import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 
@@ -51,28 +50,51 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  const handleSubmit = () => { if (!birthTime || !birthDate) return; if (userName.trim()) mysticalProfile.recordUserName(userName.trim()); setIsLoading(true); };
+  const request = useRef<AbortController | null>(null);
+  useEffect(() => () => request.current?.abort(), []);
 
-  const handleOnboardingComplete = () => {
-    const [h, m] = birthTime.split(":").map(Number);
-    const rising = getRisingSign(h, m);
-    const sunSign = getZodiacSign(new Date(birthDate));
-    setSignInfo({ name: rising.hebrewName, symbol: rising.symbol, element: rising.element, sunSign: sunSign.hebrewName, sunSymbol: sunSign.symbol, sunElement: sunSign.element });
+  const handleSubmit = async () => {
+    if (!birthTime || !birthDate || !birthCity.trim() || request.current) return;
+    const controller = new AbortController();
+    request.current = controller;
+    setIsLoading(true);
+    setAiError(null);
+    let chart;
+    try {
+      chart = await calculateNatalChart({ birthDate, birthTime, birthPlace: birthCity.trim() });
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      request.current = null;
+      setIsLoading(false);
+      setAiError(error instanceof Error && error.message === "GEOCODE_NOT_FOUND" ? t.geocode_not_found : t.geocode_fetch_failed);
+      return;
+    }
+    if (controller.signal.aborted) return;
+    if (userName.trim()) mysticalProfile.recordUserName(userName.trim());
+    if (gender) mysticalProfile.recordGender(gender);
+    const localize = (sign: typeof chart.risingSign) => ({
+      name: getSignNameByKey(sign.key, language), symbol: sign.symbol, element: getElementName(sign.elementKey, language),
+    });
+    const rising = localize(chart.risingSign);
+    const sunSign = localize(chart.sunSign);
+    setSignInfo({ ...rising, sunSign: sunSign.name, sunSymbol: sunSign.symbol, sunElement: sunSign.element });
     setIsLoading(false); setAiLoading(true); aiTextRef.current = "";
 
-    mysticalProfile.recordZodiac(sunSign.hebrewName, sunSign.symbol, sunSign.element, birthDate);
-    mysticalProfile.recordRising(rising.hebrewName, rising.symbol, rising.element, birthTime);
+    mysticalProfile.recordZodiac(sunSign.name, sunSign.symbol, sunSign.element, birthDate);
+    mysticalProfile.recordRising(rising.name, rising.symbol, rising.element, birthTime);
 
     streamMysticalReading("rising",
-      { signName: rising.hebrewName, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, sunSignName: sunSign.hebrewName, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element, gender },
+      { signName: rising.name, signSymbol: rising.symbol, element: rising.element, birthTime, birthDate, birthCity: chart.location.name, sunSignName: sunSign.name, sunSignSymbol: sunSign.symbol, sunElement: sunSign.element, gender },
       (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-      () => { setAiLoading(false); setActiveReading({ type: "rising", label: `${t.readings_type_rising} — ${rising.hebrewName}`, summary: aiTextRef.current }); readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.hebrewName}`, subtitle: `${t.rising_sun_label}: ${sunSign.hebrewName}`, symbol: rising.symbol, data: { signName: rising.hebrewName, sunSign: sunSign.hebrewName, birthTime, birthDate, aiReading: aiTextRef.current } }); },
+      () => { setAiLoading(false); setActiveReading({ type: "rising", label: `${t.readings_type_rising} — ${rising.name}`, summary: aiTextRef.current }); readingsStorage.save({ type: "rising", title: `${t.readings_type_rising} — ${rising.name}`, subtitle: `${t.rising_sun_label}: ${sunSign.name}`, symbol: rising.symbol, data: { signName: rising.name, sunSign: sunSign.name, birthTime, birthDate, birthCity, aiReading: aiTextRef.current } }); },
       (err) => { setAiLoading(false); setAiError(err); toast(err); },
       language,
+      (fullText) => { aiTextRef.current = fullText; setAiText(fullText); },
+      { signal: controller.signal, promptForGender: false },
     );
   };
 
-  const handleClose = () => { onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setBirthCity(""); setGender(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
+  const handleClose = () => { request.current?.abort(); request.current = null; onClose(); setTimeout(() => { setSignInfo(null); setBirthTime(""); setBirthDate(""); setBirthCity(""); setGender(""); setIsLoading(false); setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = ""; }, 300); };
 
   useEffect(() => { if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0; }, [aiLoading]);
 
@@ -97,9 +119,9 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
               {!signInfo && !isLoading ? (
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
-                  <div className="absolute inset-0" key="input-desktop">
+                  <div className="absolute inset-0 overflow-y-auto" key="input-desktop">
                     <motion.div
-                      className="absolute pointer-events-auto"
+                      className="absolute pointer-events-auto pb-8"
                       style={{ top: "calc(10vh + 50px)", right: "3vw", width: "min(340px, 24vw)" }}
                       initial={{ opacity: 0, x: 40 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -145,11 +167,12 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                             <MysticalTimeInput value={birthTime} onChange={setBirthTime} />
                           </div>
                           <div>
-                            <label className="block text-sm text-gold/70 font-body mb-2 text-start">מקום לידה</label>
-                            <input type="text" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} placeholder="עיר לידה..." className="mystical-input font-body text-center" />
+                            <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.birth_chart_city_label} *</label>
+                            <input type="text" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} required aria-label={t.birth_chart_city_label} placeholder={t.birth_chart_city_placeholder} className="mystical-input font-body text-center" />
                           </div>
                         </div>
-                        <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
+                        {aiError && <p role="alert" className="mb-3 text-gold">{aiError}</p>}
+                    <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate || !birthCity.trim()} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
                       </div>
                     </motion.div>
                   </div>
@@ -195,15 +218,16 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                         <MysticalTimeInput value={birthTime} onChange={setBirthTime} />
                       </div>
                       <div>
-                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">מקום לידה</label>
-                        <input type="text" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} placeholder="עיר לידה..." className="mystical-input font-body text-center" />
+                        <label className="block text-sm text-gold/70 font-body mb-2 text-start">{t.birth_chart_city_label} *</label>
+                        <input type="text" value={birthCity} onChange={(e) => setBirthCity(e.target.value)} required aria-label={t.birth_chart_city_label} placeholder={t.birth_chart_city_placeholder} className="mystical-input font-body text-center" />
                       </div>
                     </div>
-                    <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
+                    {aiError && <p role="alert" className="mb-3 text-gold">{aiError}</p>}
+                    <motion.button onClick={handleSubmit} disabled={!birthTime || !birthDate || !birthCity.trim()} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.rising_cta}</motion.button>
                   </motion.div>
                 )
               ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><MysticalOnboarding onComplete={handleOnboardingComplete} /></motion.div>
+                <div role="status" className="p-8 text-center text-gold">{t.rising_loading}</div>
               ) : signInfo ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone ── */
@@ -305,7 +329,7 @@ const RisingSignModal = ({ isOpen, onClose }: Props) => {
                           <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
                           <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.forecast_premium_title}</h4>
                           <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.forecast_premium_desc}</p>
-                          <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.forecast_premium_cta}</a>
+                          <a href="/upgrade?interest=premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.forecast_premium_cta}</a>
                         </motion.div>
                       </>
                     )}

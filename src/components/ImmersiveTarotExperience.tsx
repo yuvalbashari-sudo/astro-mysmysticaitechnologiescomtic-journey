@@ -1420,9 +1420,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         }}
         gatingMessage={gatingMsg || liveGatingMsg}
         resetCycle={gatingOpen ? gatingResetCycle : liveResetCycle}
-        onPayPerUse={() => {
-          setGatingOpen(false);
-        }}
+        interest="tarot"
       />
     </>,
     document.body

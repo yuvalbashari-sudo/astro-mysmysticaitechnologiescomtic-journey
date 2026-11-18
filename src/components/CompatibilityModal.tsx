@@ -8,7 +8,7 @@ import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Heart, Crown, Share2, Copy, Check } from "lucide-react";
-import { getSignFromDate, getSignSymbol, getCompatibility, formatCompatibilityReading, getSignElement, getSignModality, getSignRuler, getRisingSign } from "@/data/compatibilityData";
+import { getSignFromDate, getSignSymbol, getCompatibility, formatCompatibilityReading, getSignElement, getSignModality, getSignRuler } from "@/data/compatibilityData";
 import { getSignNameByKey } from "@/lib/astroLocale";
 
 import { toast } from "@/components/ui/sonner";
@@ -69,8 +69,6 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
     if (!date1 || !date2 || requestRef.current) return;
     const s1 = getSignFromDate(new Date(`${date1}T12:00:00`));
     const s2 = getSignFromDate(new Date(`${date2}T12:00:00`));
-    const rising1 = getRisingSign(s1, time1);
-    const rising2 = getRisingSign(s2, time2);
     const compat = getCompatibility(s1, s2);
     const info = { sign1: s1, sign2: s2, sign1Name: getSignNameByKey(s1, language), sign2Name: getSignNameByKey(s2, language), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
@@ -143,18 +141,12 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
         sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
         sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
         sign1BirthTime: time1 || null,
-        sign1Rising: rising1 ? getSignNameByKey(rising1, language) : null,
-        sign1RisingSymbol: rising1 ? getSignSymbol(rising1) : null,
-        sign1RisingElement: rising1 ? getSignElement(rising1) : null,
         sign1Gender: gender1 || null,
         sign1PersonName: name1 || null,
         sign1Relation: relation1 || null,
         sign2Name: info.sign2Name, sign2Symbol: info.sign2Symbol,
         sign2Element: getSignElement(s2), sign2Modality: getSignModality(s2), sign2Ruler: getSignRuler(s2),
         sign2BirthTime: time2 || null,
-        sign2Rising: rising2 ? getSignNameByKey(rising2, language) : null,
-        sign2RisingSymbol: rising2 ? getSignSymbol(rising2) : null,
-        sign2RisingElement: rising2 ? getSignElement(rising2) : null,
         sign2Gender: gender2 || null,
         sign2PersonName: name2 || null,
         sign2Relation: relation2 || null,
@@ -391,6 +383,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
                         {interpretation}
+                        <a href="/upgrade?interest=premium" className="btn-gold inline-flex my-4">{t.compat_premium_cta}</a>
                         {readingText && (
                           <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={readingText} />
                         )}
@@ -466,7 +459,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
                           <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
                           <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.compat_premium_title}</h4>
                           <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.compat_premium_desc}</p>
-                          <a href="#premium" onClick={onClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.compat_premium_cta}</a>
+                          <a href="/upgrade?interest=premium" onClick={onClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.compat_premium_cta}</a>
                         </motion.div>
                       </>
                     )}
@@ -482,9 +475,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
       }}
       gatingMessage={gatingMsg}
       resetCycle={gatingResetCycle}
-      onPayPerUse={() => {
-        setGatingOpen(false);
-      }}
+      interest="compatibility"
     />
     </>
   );

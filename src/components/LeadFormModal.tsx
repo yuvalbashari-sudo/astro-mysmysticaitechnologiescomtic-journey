@@ -251,7 +251,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
               <div className="p-8 md:p-10">
                 <div className="text-center mb-8">
                   <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Sparkles className="w-6 h-6 text-gold" /></motion.div>
-                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{isSupport ? supportCopy.title : t.lead_modal_title}</h2>
+                  <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{isSupport ? supportCopy.title : preselectedInterest === "premium" ? t.premium_plan_sub_name : t.lead_modal_title}</h2>
                   <p className="text-foreground/60 font-body text-sm max-w-sm mx-auto leading-relaxed">{isSupport ? supportCopy.subtitle : t.lead_modal_subtitle}</p>
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -274,6 +274,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                       <label className="block text-sm text-gold/80 font-body mb-2">{t.lead_interest}</label>
                       <select className="mystical-input font-body" value={formData.interest} onChange={(e) => setFormData({ ...formData, interest: e.target.value })}>
                         <option value="">{t.lead_interest_placeholder}</option>
+                        <option value="premium">{t.premium_plan_sub_name}</option>
                         <option value="astrology">{t.lead_modal_interest_personal}</option>
                         <option value="compatibility">{t.lead_modal_interest_couple}</option>
                         <option value="full">{t.lead_modal_interest_full}</option>

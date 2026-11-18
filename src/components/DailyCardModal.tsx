@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import DailyCardAdvisorPanel from "@/components/DailyCardAdvisorPanel";
 import AstrologerAvatarButton from "@/components/AstrologerAvatarButton";
@@ -15,8 +15,6 @@ import ShareResultSection from "@/components/ShareResultSection";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { localizeName } from "@/lib/nameLocalization";
 import { useReadingContext } from "@/contexts/ReadingContext";
-import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
-import { premiumUnlock } from "@/lib/premiumUnlock";
 
 interface Props {
   isOpen: boolean;
@@ -178,12 +176,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       if (saved) {
         setCard(saved.card);
         setTimeLeft(getTimeUntilMidnight(t.daily_time_format));
-        // Any saved AI text means the user already passed the unlock gate today
-        const readingId = `daily-card-${saved.date}-${saved.card.name.en}`;
-        const hasAnyPriorText = !!saved.aiTextByLang || !!saved.aiText;
-        if (hasAnyPriorText) {
-          premiumUnlock.markUnlocked(readingId);
-        }
         // Check per-language cache first
         const cachedForLang = saved.aiTextByLang?.[language];
         if (cachedForLang) {
@@ -232,7 +224,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     return () => clearInterval(interval);
   }, [phase]);
 
-  const handleDraw = useCallback(() => {
+  const handleDraw = () => {
     const saved = getSavedDailyCard();
     if (saved) {
       setCard(saved.card);
@@ -253,7 +245,8 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     setShowCardOverlay(false);
     setRitualStep(0);
     setPhase("ritual");
-  }, [t.daily_already_drawn]);
+    startAiReading(selectedCard);
+  };
 
   // Ritual animation sequence — crystal ball → emerge → flip → reveal
   useEffect(() => {
@@ -269,7 +262,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     }, 1800);
     // Step 3: card fully revealed, glow burst (3.2s)
     const step3 = setTimeout(() => setRitualStep(3), 3200);
-    // Step 4: transition to result phase (AI starts only after unlock gate)
+    // Show the card even if the request is still pending.
     const step4 = setTimeout(() => {
       setPhase("result");
     }, RITUAL_DURATION_MS);
@@ -298,7 +291,13 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
     return () => { clearTimeout(step1); clearTimeout(step2); clearTimeout(step3); clearTimeout(finish); };
   }, [phase, card]);
 
+  const currentRequest = useRef<AbortController | null>(null);
+  useEffect(() => () => currentRequest.current?.abort(), [isOpen, language]);
+
   const startAiReading = (selectedCard: ReadingCard) => {
+    currentRequest.current?.abort();
+    const controller = new AbortController();
+    currentRequest.current = controller;
     setAiLoading(true);
     setAiError(null);
     aiTextRef.current = "";
@@ -312,7 +311,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
       mysticalProfile.recordGender(gender);
     }
 
-    saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
+    if (!getSavedDailyCard()) saveDailyCard({ card: selectedCard, date: getTodayDate(), language });
 
     const localizedName = selectedCard.name[language] || selectedCard.name.en;
 
@@ -332,6 +331,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         userName: localizeName(userName.trim(), language) || undefined,
       },
       (delta) => {
+        setPhase("result");
         aiTextRef.current += delta;
         setAiText(aiTextRef.current);
       },
@@ -355,11 +355,14 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
         });
       },
       (err) => {
+        setPhase("result");
         setAiLoading(false);
         setAiError(err);
         toast(err);
       },
       language,
+      (fullText) => { aiTextRef.current = fullText; setAiText(fullText); },
+      { promptForGender: false, signal: controller.signal },
     );
   };
 
@@ -1080,13 +1083,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           </div>
                         )}
 
-                        {/* Structured AI reading content — gated behind video unlock */}
-                        <PremiumUnlockOverlay
-                          readingId={`daily-card-${getTodayDate()}-${card.name.en}`}
-                          featureKey="tarot_reading"
-                          onUnlockStart={() => { if (!aiTextRef.current && !aiLoading) startAiReading(card); }}
-                          isReady={!aiLoading && !!aiText}
-                        >
                           <div className="w-full max-w-[42ch] font-body text-lg leading-relaxed md:text-xl" style={{ color: "hsl(var(--foreground) / 0.72)", lineHeight: 1.8 }}>
                             {aiText ? (
                               <div className="text-start space-y-5">
@@ -1110,7 +1106,6 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                               </div>
                             )}
                           </div>
-                        </PremiumUnlockOverlay>
 
                         {/* Advisor CTA — conversion-driven */}
                         {!aiLoading && (aiText || aiError) && (

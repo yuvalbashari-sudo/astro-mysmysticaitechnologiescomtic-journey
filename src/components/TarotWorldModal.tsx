@@ -654,7 +654,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         <p className="text-foreground/50 font-body text-xs mb-4 leading-relaxed">
                           {t.tarot_world_premium_desc}
                         </p>
-                        <a href="#premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
+                        <a href="/upgrade?interest=premium" onClick={handleClose} className="btn-gold font-body text-xs inline-flex items-center gap-2">
                           <Sparkles className="w-3.5 h-3.5" />{t.tarot_world_premium_cta}
                         </a>
                       </motion.div>
@@ -904,7 +904,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       <p className="text-foreground/50 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">
                         {t.tarot_world_premium_desc}
                       </p>
-                      <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2">
+                      <a href="/upgrade?interest=premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2">
                         <Sparkles className="w-4 h-4" />{t.tarot_premium_cta}
                       </a>
                     </motion.div>

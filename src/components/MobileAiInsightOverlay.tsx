@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, BookOpen, MessageCircle } from "lucide-react";
+import { ChevronDown, BookOpen, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage, useT } from "@/i18n";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
@@ -395,7 +395,8 @@ const MobileAiInsightOverlay = () => {
                       <button
                         type="button"
                         onClick={onClick}
-                        aria-label={t.a11y_whatsapp_contact}
+                        aria-label={t.a11y_statement_contact_title}
+                        title={t.a11y_statement_contact_title}
                         className="flex items-center justify-center rounded-full transition-all"
                         style={{
                           width: 36,
@@ -404,7 +405,7 @@ const MobileAiInsightOverlay = () => {
                           boxShadow: "0 2px 8px hsl(142 70% 35% / 0.3)",
                         }}
                       >
-                        <MessageCircle className="w-[18px] h-[18px] text-white" aria-hidden="true" />
+                        <Mail className="w-[18px] h-[18px] text-white" aria-hidden="true" />
                       </button>
                     )}
                   </ContactButtonModal>
