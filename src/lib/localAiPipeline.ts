@@ -28,7 +28,7 @@ import {
   PROMPT_VERSION,
   VALIDATOR_VERSION,
 } from "@/lib/localAiVersion";
-import { getLocalizedFallback } from "@/lib/localeGuard";
+import { getLocalizedFallback, safeErrorText } from "@/lib/localeGuard";
 
 // ── Types ───────────────────────────────────────────────────────────
 
@@ -281,6 +281,33 @@ function makeStabilizer(locale: Language, sink: (chunk: string) => void): {
 
 // ── Network helpers ─────────────────────────────────────────────────
 
+/**
+ * Normalize a non-2xx edge-function response into a UI-safe error.
+ * - Known machine codes (e.g. DAILY_LIMIT_REACHED) pass through verbatim so
+ *   callers can branch on them.
+ * - Anything else becomes a localized fallback (never raw JSON in the UI).
+ * - 4xx responses are not retryable (limits / bad input won't change on retry).
+ */
+const PASSTHROUGH_ERROR_CODES = new Set(["DAILY_LIMIT_REACHED"]);
+async function readErrorResponse(
+  resp: Response,
+  ctx: LocalAiContext,
+  endpoint: string,
+): Promise<{ ok: false; error: string; retryable: boolean }> {
+  const raw = await resp.text().catch(() => "");
+  let code: unknown = null;
+  try { code = JSON.parse(raw)?.error; } catch { code = raw || null; }
+  const retryable = resp.status >= 500 || resp.status === 0;
+  if (typeof code === "string" && PASSTHROUGH_ERROR_CODES.has(code)) {
+    return { ok: false, error: code, retryable: false };
+  }
+  return {
+    ok: false,
+    error: safeErrorText(code ?? `HTTP ${resp.status}`, ctx.language as Language, endpoint),
+    retryable,
+  };
+}
+
 function newRequestId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -331,7 +358,7 @@ async function runJsonAttempt(
   ctx: LocalAiContext,
   requestId: string,
   strict: boolean,
-): Promise<{ ok: true; raw: any } | { ok: false; error: string }> {
+): Promise<{ ok: true; raw: any } | { ok: false; error: string; retryable?: boolean }> {
   const url = `${(import.meta as any).env?.VITE_SUPABASE_URL}/functions/v1/${args.endpoint}`;
   try {
     const resp = await fetch(url, {
@@ -341,8 +368,7 @@ async function runJsonAttempt(
       signal: args.signal,
     });
     if (!resp.ok) {
-      const errText = await resp.text().catch(() => "");
-      return { ok: false, error: errText || `HTTP ${resp.status}` };
+      return await readErrorResponse(resp, ctx, args.endpoint);
     }
     const raw = await resp.json();
     return { ok: true, raw };
@@ -367,7 +393,7 @@ async function callJson(
     if (strict) bumpBucket(args.endpoint, ctx, { strictRetries: 1 });
     const res = await runJsonAttempt(args, ctx, requestId, strict);
     if (res.ok === false) {
-      if (attempt < maxAttempts) continue;
+      if (res.retryable !== false && attempt < maxAttempts) continue;
       throw new Error(res.error);
     }
     lastRaw = res.raw;
@@ -415,7 +441,7 @@ async function runStreamAttempt(
   requestId: string,
   strict: boolean,
   onDeltaSink: (chunk: string) => void,
-): Promise<{ ok: true; text: string } | { ok: false; error: string }> {
+): Promise<{ ok: true; text: string } | { ok: false; error: string; retryable?: boolean }> {
   const url = `${(import.meta as any).env?.VITE_SUPABASE_URL}/functions/v1/${args.endpoint}`;
   let resp: Response;
   try {
@@ -428,9 +454,11 @@ async function runStreamAttempt(
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : "network-error" };
   }
-  if (!resp.ok || !resp.body) {
-    const errText = await resp.text().catch(() => "");
-    return { ok: false, error: errText || `HTTP ${resp.status}` };
+  if (!resp.ok) {
+    return await readErrorResponse(resp, ctx, args.endpoint);
+  }
+  if (!resp.body) {
+    return { ok: false, error: safeErrorText(null, ctx.language as Language, `${args.endpoint}:empty-body`) };
   }
   const reader = resp.body.getReader();
   const decoder = new TextDecoder();
@@ -493,7 +521,7 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
     if (args.signal?.aborted) return;
     stabilizer.flush();
     if (res.ok === false) {
-      if (attempt < maxAttempts) continue;
+      if (res.retryable !== false && attempt < maxAttempts) continue;
       args.onError(res.error);
       return;
     }
