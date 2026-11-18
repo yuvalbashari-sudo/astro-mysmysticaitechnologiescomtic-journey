@@ -10,75 +10,51 @@ import type { UserTier } from "./pricingConfig";
 import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "astrologai_user_plan";
-const ADMIN_EMAIL_KEY = "astrologai_admin_email";
-const ADMIN_OVERRIDE_KEY = "astrologai_admin_override";
+const ADMIN_EMAILS = ["yuvalbashari@gmail.com"];
 
-// Internal admin accounts — bypass all limits
-const ADMIN_EMAILS = ["yuvalbashari@gmail.com"] as const;
-
-// Preview/dev mode detection
-const IS_PREVIEW = window.location.hostname.includes("preview") ||
-  window.location.hostname.includes("lovableproject.com") ||
-  window.location.hostname === "localhost" ||
-  import.meta.env.DEV;
-
-// Cached auth email — updated via listener
-// On startup, seed from localStorage so admin persists across refreshes
-let _cachedAuthEmail: string | null = localStorage.getItem(ADMIN_EMAIL_KEY);
-let _authReady = _cachedAuthEmail !== null || (IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true");
-const _authReadyCallbacks: Array<() => void> = [];
-// Subscribers that fire on EVERY auth state change (not just the first)
-const _authChangeListeners = new Set<() => void>();
-
-function _setAuthReady(email: string | null) {
-  // If auth returns null but we have a stored admin email, keep using it
-  const storedAdmin = localStorage.getItem(ADMIN_EMAIL_KEY);
-  if (email === null && storedAdmin) {
-    _cachedAuthEmail = storedAdmin;
-  } else {
-    _cachedAuthEmail = email;
-  }
-  // Persist admin email to localStorage so it survives app restarts
-  if (email && (ADMIN_EMAILS as readonly string[]).includes(email)) {
-    localStorage.setItem(ADMIN_EMAIL_KEY, email);
-  }
-  if (!_authReady) {
-    _authReady = true;
-    _authReadyCallbacks.forEach((cb) => cb());
-    _authReadyCallbacks.length = 0;
-  }
-  // Notify all persistent listeners on every auth change
-  _authChangeListeners.forEach((cb) => cb());
+function isConfiguredAdminEmail(email: string | null | undefined): boolean {
+  return !!email && ADMIN_EMAILS.includes(email.trim().toLowerCase());
 }
 
-// Set up listener FIRST (fires INITIAL_SESSION before getSession resolves)
+let authEmail: string | null = null;
+let verifiedAdmin = false;
+let authReady = false;
+let activeToken: string | null | undefined;
+const readyCallbacks: Array<() => void> = [];
+const authListeners = new Set<() => void>();
+
+function updateAuth(email: string | null, admin: boolean) {
+  authEmail = email;
+  verifiedAdmin = admin;
+  if (!authReady) {
+    authReady = true;
+    for (const callback of readyCallbacks.splice(0)) callback();
+  }
+  for (const listener of authListeners) listener();
+}
+
 supabase.auth.onAuthStateChange((_event, session) => {
-  const email = session?.user?.email?.trim().toLowerCase() ?? null;
-  _setAuthReady(email);
+  const token = session?.access_token ?? null;
+  if (activeToken === token) return;
+  activeToken = token;
+  const email = session?.user.email?.trim().toLowerCase() ?? null;
+  if (!token || !isConfiguredAdminEmail(email)) {
+    updateAuth(email, false);
+    return;
+  }
+  if (authEmail !== email && authReady) updateAuth(email, false);
+  // Leave the auth callback before validating the token with Supabase.
+  setTimeout(async () => {
+    try {
+      const { data, error } = await supabase.auth.getUser(token);
+      if (activeToken !== token) return;
+      const user = data?.user;
+      updateAuth(email, !error && !!user?.email_confirmed_at && isConfiguredAdminEmail(user.email));
+    } catch {
+      if (activeToken === token) updateAuth(email, false);
+    }
+  }, 0);
 });
-
-// Fallback: if onAuthStateChange hasn't fired yet, read session directly
-(async () => {
-  const { data } = await supabase.auth.getSession();
-  const email = data?.session?.user?.email?.trim().toLowerCase() ?? null;
-  _setAuthReady(email);
-})();
-
-/**
- * Check if the authenticated user is an admin,
- * OR if preview admin override is active.
- */
-function isAdminEmail(): boolean {
-  // 1. Real auth admin
-  if (_cachedAuthEmail && (ADMIN_EMAILS as readonly string[]).includes(_cachedAuthEmail)) {
-    return true;
-  }
-  // 2. Preview override — only works in preview/dev environments
-  if (IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true") {
-    return true;
-  }
-  return false;
-}
 
 interface PlanData {
   tier: UserTier;
@@ -92,7 +68,7 @@ function loadPlan(): PlanData {
     if (raw) {
       const parsed = JSON.parse(raw) as PlanData;
       // Validate tier
-      if (["admin", "free", "pro", "vip"].includes(parsed.tier)) {
+      if (["free", "pro", "vip"].includes(parsed.tier)) {
         // Check expiration for paid tiers
         if (parsed.expiresAt && new Date(parsed.expiresAt) < new Date()) {
           // Plan expired — revert to free
@@ -115,7 +91,7 @@ function savePlan(data: PlanData): void {
  * Get the current user tier. All entitlement checks should use this.
  */
 function getCurrentTier(): UserTier {
-  if (isAdminEmail()) return "admin";
+  if (verifiedAdmin) return "admin";
   return loadPlan().tier;
 }
 
@@ -130,7 +106,7 @@ function getPlanDetails(): PlanData {
  * Set the user's plan (called when upgrading, or internally for testing).
  * In production, this will be called by the billing webhook handler.
  */
-function setPlan(tier: UserTier, expiresAt?: string | null): void {
+function setPlan(tier: Exclude<UserTier, "admin">, expiresAt?: string | null): void {
   const data: PlanData = {
     tier,
     activatedAt: new Date().toISOString(),
@@ -143,7 +119,7 @@ function setPlan(tier: UserTier, expiresAt?: string | null): void {
  * Check if current user is admin (unlimited access).
  */
 function isAdmin(): boolean {
-  return getCurrentTier() === "admin";
+  return verifiedAdmin;
 }
 
 /**
@@ -169,7 +145,7 @@ async function initiateUpgrade(_targetTier: "pro" | "vip"): Promise<boolean> {
  * Get the currently authenticated user email.
  */
 function getUserEmail(): string | null {
-  return _cachedAuthEmail;
+  return authEmail;
 }
 
 /**
@@ -183,15 +159,15 @@ function clearPlan(): void {
  * Whether auth state has been resolved at least once.
  */
 function isAuthReady(): boolean {
-  return _authReady;
+  return authReady;
 }
 
 /**
  * Register a callback that fires once auth is ready (or immediately if already ready).
  */
 function onAuthReady(cb: () => void): void {
-  if (_authReady) { cb(); return; }
-  _authReadyCallbacks.push(cb);
+  if (authReady) { cb(); return; }
+  readyCallbacks.push(cb);
 }
 
 /**
@@ -199,38 +175,8 @@ function onAuthReady(cb: () => void): void {
  * Fires on every auth change (login, logout, token refresh).
  */
 function onAuthChange(cb: () => void): () => void {
-  _authChangeListeners.add(cb);
-  return () => { _authChangeListeners.delete(cb); };
-}
-
-/**
- * Enable admin override for preview/dev testing.
- * Only works in preview/localhost environments.
- */
-function enableAdminOverride(): boolean {
-  if (!IS_PREVIEW) return false;
-  localStorage.setItem(ADMIN_OVERRIDE_KEY, "true");
-  // Also set admin email so edge functions see the x-admin-email header
-  localStorage.setItem(ADMIN_EMAIL_KEY, ADMIN_EMAILS[0]);
-  _authReady = true;
-  _authChangeListeners.forEach((cb) => cb());
-  return true;
-}
-
-/**
- * Disable admin override.
- */
-function disableAdminOverride(): void {
-  localStorage.removeItem(ADMIN_OVERRIDE_KEY);
-  localStorage.removeItem(ADMIN_EMAIL_KEY);
-  _authChangeListeners.forEach((cb) => cb());
-}
-
-/**
- * Check if admin override is currently active.
- */
-function isAdminOverride(): boolean {
-  return IS_PREVIEW && localStorage.getItem(ADMIN_OVERRIDE_KEY) === "true";
+  authListeners.add(cb);
+  return () => { authListeners.delete(cb); };
 }
 
 export const subscriptionManager = {
@@ -242,10 +188,9 @@ export const subscriptionManager = {
   initiateUpgrade,
   clearPlan,
   getUserEmail,
+  getAccessToken: () => activeToken ?? null,
   isAuthReady,
   onAuthReady,
   onAuthChange,
-  enableAdminOverride,
-  disableAdminOverride,
-  isAdminOverride,
+  isConfiguredAdminEmail,
 };

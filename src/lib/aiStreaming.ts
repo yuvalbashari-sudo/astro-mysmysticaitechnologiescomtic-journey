@@ -1,9 +1,9 @@
+import { readingAuthorization } from "@/lib/readingAuthorization";
 import { toast } from "@/components/ui/sonner";
 import { Sparkles } from "lucide-react";
 import React from "react";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { TEXT_SIZE_CLASSES, type TextSize } from "@/components/TextSizeControl";
-import { supabase } from "@/integrations/supabase/client";
 import {
   safeErrorText,
   isValidLanguage,
@@ -49,19 +49,7 @@ async function runStreamAttempt({
     });
   }
 
-  let authToken: string | null = null;
-  try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    authToken = sessionData?.session?.access_token ?? null;
-  } catch { /* ignore */ }
-
-  const adminEmail = localStorage.getItem("astrologai_admin_email") || undefined;
-
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${authToken || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-  };
-  if (adminEmail) headers["x-admin-email"] = adminEmail;
+  const headers = { "Content-Type": "application/json", Authorization: readingAuthorization() };
 
   // Auto-inject gender into the data payload (without overriding an explicit one)
   // so every reading type gets consistent gendered grammar.

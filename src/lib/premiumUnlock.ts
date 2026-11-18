@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { useSiteAdmin } from "@/hooks/use-site-admin";
 
 const STORAGE_KEY = "astrologai_unlocked_readings_v1";
 const EVENT_NAME = "astrologai:unlock-changed";
@@ -37,10 +38,6 @@ function persist(set: Set<string>) {
 
 function isUnlocked(readingId: string): boolean {
   if (!readingId) return false;
-  // No automatic bypass — gating must be passed for every reading.
-  // Admin bypass is only available via an explicit `forceUnlock` flag passed
-  // to the PremiumUnlockOverlay component (never inferred from environment,
-  // tier, or email).
   return getUnlockedSet().has(readingId);
 }
 
@@ -80,6 +77,7 @@ export const premiumUnlock = {
  * Re-renders when unlock state changes anywhere in the app.
  */
 export function usePremiumUnlocked(readingId: string): boolean {
+  const admin = useSiteAdmin();
   const [unlocked, setUnlocked] = useState<boolean>(() => premiumUnlock.isUnlocked(readingId));
   useEffect(() => {
     const sync = () => setUnlocked(premiumUnlock.isUnlocked(readingId));
@@ -87,5 +85,5 @@ export function usePremiumUnlocked(readingId: string): boolean {
     window.addEventListener(EVENT_NAME, sync);
     return () => window.removeEventListener(EVENT_NAME, sync);
   }, [readingId]);
-  return unlocked;
+  return admin || unlocked;
 }

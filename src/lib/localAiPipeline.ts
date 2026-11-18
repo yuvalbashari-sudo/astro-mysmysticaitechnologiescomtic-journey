@@ -1,3 +1,4 @@
+import { readingAuthorization } from "@/lib/readingAuthorization";
 /**
  * Local AI Pipeline — single entry point for HE/AR AI generation.
  *
@@ -14,7 +15,6 @@
 import type { Language } from "@/i18n/types";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { ensureGender } from "@/lib/genderGate";
-import { supabase } from "@/integrations/supabase/client";
 import {
   isValidLocale,
   hasMixedGenderSlashes,
@@ -285,21 +285,7 @@ function newRequestId(): string {
 }
 
 async function buildHeaders(): Promise<Record<string, string>> {
-  let authToken: string | null = null;
-  try {
-    const { data } = await supabase.auth.getSession();
-    authToken = data?.session?.access_token ?? null;
-  } catch { /* ignore */ }
-  const adminEmail =
-    typeof localStorage !== "undefined"
-      ? localStorage.getItem("astrologai_admin_email") || undefined
-      : undefined;
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${authToken || (import.meta as any).env?.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-  };
-  if (adminEmail) headers["x-admin-email"] = adminEmail;
-  return headers;
+  return { "Content-Type": "application/json", Authorization: readingAuthorization() };
 }
 
 function buildBody(

@@ -3,6 +3,8 @@
  * Works alongside server-side protections in edge functions.
  */
 
+import { subscriptionManager } from "@/lib/subscriptionManager";
+
 const STORAGE_KEY = "astro_abuse_state";
 
 interface AbuseState {
@@ -141,6 +143,8 @@ function fullCheck(action: string, honeypotValue?: string | null): AbuseCheckRes
     return { allowed: false, reason: "honeypot" };
   }
 
+  if (action === "tarot_reading" && subscriptionManager.isAdmin()) return { allowed: true };
+
   // 2. Cooldown
   const cooldown = checkCooldown(action);
   if (!cooldown.allowed) {
@@ -160,6 +164,7 @@ function fullCheck(action: string, honeypotValue?: string | null): AbuseCheckRes
  * Call after a successful action to record usage and start cooldown.
  */
 function recordSuccessfulAction(action: string) {
+  if (action === "tarot_reading" && subscriptionManager.isAdmin()) return;
   recordAction(action);
   startCooldown(action);
 }
