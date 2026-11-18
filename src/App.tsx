@@ -47,6 +47,7 @@ const App = () => (
               <RouteSeoTags />
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/rising-sign" element={<Index />} />
                 <Route path="/daily-horoscope" element={<Index />} />
                 <Route path="/tarot-reading" element={<Index />} />
                 <Route path="/zodiac-compatibility" element={<Index />} />
