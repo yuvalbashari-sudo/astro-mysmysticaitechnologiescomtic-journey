@@ -25,6 +25,7 @@ const CHART_DAILY_KEY = "astrologai_birthchart_daily";
 const CHART_CACHE_KEY = "astrologai_birthchart_cache";
 
 interface CachedChart {
+  calculationVersion?: number;
   chartData: NatalChartResult;
   resultText: string;
   details: BirthDetails;
@@ -48,7 +49,7 @@ function markChartUsedToday(): void {
 
 function saveCachedChart(data: CachedChart): void {
   try {
-    localStorage.setItem(CHART_CACHE_KEY, JSON.stringify(data));
+    localStorage.setItem(CHART_CACHE_KEY, JSON.stringify({ ...data, calculationVersion: 2 }));
   } catch { /* ignore - storage full */ }
 }
 
@@ -134,6 +135,8 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
     const cached = loadCachedChart();
     if (!cached || !cached.resultText) return;
     setDetails(cached.details);
+    // Older interpretations used a second time-zone conversion. Keep the form details.
+    if (cached.calculationVersion !== 2) return;
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
