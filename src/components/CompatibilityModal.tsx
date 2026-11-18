@@ -22,50 +22,30 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
-import { subscriptionManager } from "@/lib/subscriptionManager";
+
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
-const COMPAT_CACHE_KEY = "astrologai_compat_session";
 const READING_IDLE_TIMEOUT_MS = 15_000;
+const newCheckLabel = {
+  he: "בדיקת התאמה חדשה", en: "Check another match",
+  ar: "فحص توافق جديد", ru: "Проверить другую пару",
+};
 
-interface CompatCacheData {
-  date: string;
-  language: string;
-  matchInfo: { sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number };
-  aiText: string;
-  inputHash: string;
-}
-
-function getCompatCache(lang: string): CompatCacheData | null {
-  try {
-    const raw = sessionStorage.getItem(COMPAT_CACHE_KEY);
-    if (!raw) return null;
-    const data = JSON.parse(raw) as CompatCacheData;
-    const today = new Date().toISOString().split("T")[0];
-    if (data.date !== today) { sessionStorage.removeItem(COMPAT_CACHE_KEY); return null; }
-    if (data.language !== lang) return null; // different language, don't reuse
-    return data;
-  } catch { return null; }
-}
-
-function saveCompatCache(data: CompatCacheData) {
-  try { sessionStorage.setItem(COMPAT_CACHE_KEY, JSON.stringify(data)); } catch {}
-}
-
-const CompatibilityModal = ({ isOpen, onClose }: Props) => {
+const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () => void }) => {
   const t = useT();
+  const [self] = useState(mysticalProfile.getCompatibilitySelf);
   const { language, dir } = useLanguage();
   const { setActiveReading } = useReadingContext();
-  const [name1, setName1] = useState("");
+  const [name1, setName1] = useState(self.name);
   const [name2, setName2] = useState("");
   const [relation1, setRelation1] = useState("me");
   const [relation2, setRelation2] = useState("partner");
-  const [date1, setDate1] = useState("");
+  const [date1, setDate1] = useState(self.date);
   const [date2, setDate2] = useState("");
-  const [time1, setTime1] = useState("");
+  const [time1, setTime1] = useState(self.time);
   const [time2, setTime2] = useState("");
-  const [gender1, setGender1] = useState("");
+  const [gender1, setGender1] = useState(self.gender);
   const [gender2, setGender2] = useState("");
   const [copied, setCopied] = useState(false);
   const [matchInfo, setMatchInfo] = useState<{ sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number } | null>(null);
@@ -87,59 +67,32 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const requestRef = useRef<AbortController | null>(null);
   const timeoutRef = useRef<number | undefined>();
 
-  // Restore cached result on open
-  useEffect(() => {
-    if (!isOpen) return;
-    const cached = getCompatCache(language);
-    if (cached) {
-      setMatchInfo(cached.matchInfo);
-      setAiText(cached.aiText);
-      aiTextRef.current = cached.aiText;
-      sessionStorage.setItem("_dbg_compat_source", "cached");
-      return; // skip entitlement check — already used
-    }
-    sessionStorage.setItem("_dbg_compat_source", "pending");
-    // Pre-check entitlements when modal opens — wait for auth before blocking
-    let active = true;
-    const doCheck = () => {
-      if (!active) return;
-      const access = entitlements.checkAccess("compatibility_reading");
-      if (!access.allowed && 'promptKey' in access) {
-        const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-        setGatingMsg(msg);
-        setGatingResetCycle(access.resetCycle);
-        setGatingOpen(true);
-      }
-    };
-    if (subscriptionManager.isAuthReady()) {
-      doCheck();
-    } else {
-      subscriptionManager.onAuthReady(doCheck);
-    }
-    return () => { active = false; };
-  }, [isOpen, language]);
-
   const handleSubmit = () => {
     if (!date1 || !date2 || requestRef.current) return;
-    // Check entitlements before starting reading
-    const access = entitlements.checkAccess("compatibility_reading");
-    if (!access.allowed && 'promptKey' in access) {
-      const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-      setGatingMsg(msg);
-      setGatingResetCycle(access.resetCycle);
-      setGatingOpen(true);
-      return;
-    }
-    const s1 = getSignFromDate(new Date(date1));
-    const s2 = getSignFromDate(new Date(date2));
+    const s1 = getSignFromDate(new Date(`${date1}T12:00:00`));
+    const s2 = getSignFromDate(new Date(`${date2}T12:00:00`));
     const rising1 = getRisingSign(s1, time1);
     const rising2 = getRisingSign(s2, time2);
     const compat = getCompatibility(s1, s2);
     const info = { sign1: s1, sign2: s2, sign1Name: getSignNameByKey(s1, language), sign2Name: getSignNameByKey(s2, language), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
 
-    mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
-    mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
+    if (relation1 === "me" || relation2 === "me") {
+      const firstIsMe = relation1 === "me";
+      const ownSign = firstIsMe ? s1 : s2;
+      const otherSign = firstIsMe ? s2 : s1;
+      const date = firstIsMe ? date1 : date2;
+      mysticalProfile.rememberCompatibilitySelf(firstIsMe ? name1 : name2, date, firstIsMe ? time1 : time2, firstIsMe ? gender1 : gender2);
+      mysticalProfile.recordZodiac(getSignNameByKey(ownSign, language), getSignSymbol(ownSign), getSignElement(ownSign), date);
+      mysticalProfile.recordCompatibility(getSignNameByKey(otherSign, language), getSignSymbol(otherSign), info.score);
+    }
+    const access = entitlements.checkAccess("compatibility_reading");
+    if (!access.allowed && "promptKey" in access) {
+      setGatingMsg(entitlements.getGatingMessage(access.promptKey, access.priceILS));
+      setGatingResetCycle(access.resetCycle);
+      if (language === "he") setAiText([compat.overallMatch, compat.emotionalConnection, compat.advice].join("\n\n"));
+      return;
+    }
     entitlements.recordFeatureUse("compatibility_reading");
     notifyUsageChanged();
 
@@ -218,31 +171,11 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
             symbol: `${info.sign1Symbol}💕${info.sign2Symbol}`,
             data: { ...info, date1, date2, aiReading: aiTextRef.current },
           });
-          // Save to session cache for reuse on reopen
-          saveCompatCache({
-            date: new Date().toISOString().split("T")[0],
-            language,
-            matchInfo: info,
-            aiText: aiTextRef.current,
-            inputHash: `${date1}-${date2}`,
-          });
-          sessionStorage.setItem("_dbg_compat_source", "fresh");
         },
         onError: showError,
       }).catch(showError);
     };
     startReadingRef.current();
-  };
-
-  const handleClose = () => {
-    window.clearTimeout(timeoutRef.current);
-    requestRef.current?.abort();
-    requestRef.current = null;
-    startReadingRef.current = null;
-    setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setGender1(""); setGender2(""); setName1(""); setName2(""); setRelation1("me"); setRelation2("partner");
-    setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
-    setGatingOpen(false);
-    onClose();
   };
 
   useEffect(() => () => {
@@ -297,6 +230,10 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     height: 64,
   } : undefined);
 
+  const newCheck = (
+    <button type="button" className="btn-outline-gold min-h-11 px-5" onClick={onNew}>{newCheckLabel[language]}</button>
+  );
+
   const interpretation = (
     <div className="min-w-0 [overflow-wrap:anywhere]">
       {aiText && renderMysticalText(aiText, textSize)}
@@ -305,6 +242,9 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           <Loader2 className="h-5 w-5 animate-spin" />
           <span className="font-body text-sm">{t.compat_loading}</span>
         </div>
+      )}
+      {gatingMsg && (
+        <button type="button" className="btn-outline-gold min-h-11" onClick={() => setGatingOpen(true)}>{t.hero_open_full_reading}</button>
       )}
       {aiError && (
         <div className="space-y-3 rounded-xl border border-gold/15 px-4 py-5 text-center">
@@ -319,7 +259,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && (!gatingOpen || siteAdmin)} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile} hideFreeBadge={!isMobile}>
+    <CinematicModalShell isOpen={!gatingOpen || siteAdmin} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile} hideFreeBadge={!isMobile}>
       {/* Desktop-only header overlay: TextSizeControl (top-left, beside close) + Free badge (right of avatar with spacing) */}
       {!isMobile && (
         <>
@@ -507,6 +447,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                           <span className="text-5xl md:text-6xl font-heading gold-gradient-text" style={{ textShadow: "0 0 40px hsl(var(--gold) / 0.2)" }}>{matchInfo.score}%</span>
                           <p className="text-gold/60 font-body text-sm mt-2" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{t.compat_score_label}</p>
                         </motion.div>
+                        {newCheck}
                         <motion.div className="flex items-center justify-center gap-3 mt-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
                           <motion.button onClick={handleShare} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-5 h-5" />{t.compat_share}</motion.button>
                           <motion.button onClick={handleCopy} className="flex items-center gap-3 px-6 py-3 rounded-full text-base font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))", backdropFilter: "blur(8px)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}{copied ? t.share_copied : t.share_copy}</motion.button>
@@ -527,6 +468,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         <p className="text-gold/60 font-body text-sm mt-2">{t.compat_score_label}</p>
                       </motion.div>
                       <motion.div className="section-divider max-w-[120px] mx-auto mt-5" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.6 }} />
+                      {newCheck}
                       <motion.div className="flex items-center justify-center gap-3 mt-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
                         <motion.button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(142 70% 35% / 0.2), hsl(142 70% 35% / 0.1))", border: "1px solid hsl(142 70% 45% / 0.3)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}><Share2 className="w-4 h-4" />{t.compat_share}</motion.button>
                         <motion.button onClick={handleCopy} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>{copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}{copied ? t.share_copied : t.share_copy}</motion.button>
@@ -546,7 +488,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                           <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
                           <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.compat_premium_title}</h4>
                           <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.compat_premium_desc}</p>
-                          <a href="#premium" onClick={handleClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.compat_premium_cta}</a>
+                          <a href="#premium" onClick={onClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.compat_premium_cta}</a>
                         </motion.div>
                       </>
                     )}
@@ -559,7 +501,6 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
       isOpen={gatingOpen}
       onClose={() => {
         setGatingOpen(false);
-        handleClose();
       }}
       gatingMessage={gatingMsg}
       resetCycle={gatingResetCycle}
@@ -569,6 +510,11 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     />
     </>
   );
+};
+
+const CompatibilityModal = ({ isOpen, onClose }: Props) => {
+  const [checkNumber, setCheckNumber] = useState(0);
+  return isOpen ? <CompatibilityForm key={checkNumber} onClose={onClose} onNew={() => setCheckNumber(n => n + 1)} /> : null;
 };
 
 export default CompatibilityModal;

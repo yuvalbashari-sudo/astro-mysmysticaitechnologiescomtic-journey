@@ -75,12 +75,15 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
   const chartLabels = getChartLabels(language);
   const isMobile = useIsMobile();
   const [phase, setPhase] = useState<Phase>("form");
-  const [details, setDetails] = useState<BirthDetails>({
-    userName: "",
-    gender: mysticalProfile.getUserGender() || "",
-    birthDate: "",
-    birthTime: "",
-    birthCity: "",
+  const [details, setDetails] = useState<BirthDetails>(() => {
+    const profile = mysticalProfile.getProfile();
+    return {
+      userName: profile.userName || "",
+      gender: profile.gender || "",
+      birthDate: profile.birthDate || "",
+      birthTime: profile.birthTime || "",
+      birthCity: profile.birthLocation || "",
+    };
   });
   const [attempted, setAttempted] = useState(false);
   const [preparingChart, setPreparingChart] = useState(false);

@@ -57,3 +57,37 @@ it("starts on submit, shows the score, and retries a stalled interpretation with
   expect(screen.queryByRole("button", { name: /unlock full reading/i })).not.toBeInTheDocument();
   act(() => { retry.onDone(); });
 });
+
+it("opens a new editable check each time, remembering only the visitor, even with an old saved result", () => {
+  localStorage.setItem("astrologai_lang", "en");
+  sessionStorage.setItem("astrologai_compat_session", JSON.stringify({
+    date: new Date().toISOString().slice(0, 10), language: "en",
+    matchInfo: { sign1Name: "Old sign", score: 80 }, aiText: "Old result",
+  }));
+  const view = (isOpen: boolean) => <LanguageProvider><CompatibilityModal isOpen={isOpen} onClose={() => {}} /></LanguageProvider>;
+  const ui = render(view(true));
+  const dates = () => screen.getAllByPlaceholderText(/MM\s*\/\s*DD\s*\/\s*YYYY/i);
+  const submit = () => fireEvent.click(screen.getByRole("button", { name: "Check compatibility" }));
+  fireEvent.change(dates()[0], { target: { value: "06151995" } });
+  fireEvent.change(dates()[1], { target: { value: "10121996" } });
+  submit();
+  const first = ai.call.mock.lastCall![0];
+  fireEvent.click(screen.getByRole("button", { name: "Check another match" }));
+  expect(first.signal.aborted).toBe(true);
+  expect(dates()[0]).toHaveValue("06/15/1995");
+  expect(dates()[1]).toHaveValue("");
+  fireEvent.change(dates()[1], { target: { value: "01071994" } });
+  submit();
+  expect(ai.call.mock.lastCall![0].payload.sign2Name).not.toBe(first.payload.sign2Name);
+  ui.rerender(view(false));
+  ui.rerender(view(true));
+  expect(dates()[0]).toHaveValue("06/15/1995");
+  expect(dates()[1]).toHaveValue("");
+  const calls = ai.call.mock.calls.length;
+  fireEvent.change(dates()[1], { target: { value: "03221990" } });
+  submit();
+  expect(screen.getByText(/^\d+%$/)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Check another match" }));
+  expect(dates()[1]).toHaveValue("");
+  expect(ai.call).toHaveBeenCalledTimes(calls);
+});
