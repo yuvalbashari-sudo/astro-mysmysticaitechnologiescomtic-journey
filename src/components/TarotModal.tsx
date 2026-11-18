@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import CinematicModalShell from "@/components/CinematicModalShell";
@@ -14,6 +14,7 @@ import { readingsStorage } from "@/lib/readingsStorage";
 import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
+import ResultShareBar from "@/components/ResultShareBar";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
@@ -94,21 +95,25 @@ async function streamTarotReading(
   userQuestion?: string,
   errorMessages?: { unexpected: string; service: string; connection: string },
   language?: string,
+  signal?: AbortSignal,
+  skipGenderPrompt = false,
 ) {
   const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
-  const { ensureGender } = await import("@/lib/genderGate");
-  const gender = (await ensureGender(language || "he")) || undefined;
   try {
+    const gender = skipGenderPrompt
+      ? mysticalProfile.getUserGender()
+      : await (await import("@/lib/genderGate")).ensureGender(language || "he");
     const resp = await fetch(url, {
       method: "POST",
+      signal,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
       },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he", userName, gender }),
+      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he", userName, gender: gender === "male" || gender === "female" ? gender : undefined }),
     });
 
     if (!resp.ok) {
@@ -170,6 +175,7 @@ async function streamTarotReading(
 
     onDone();
   } catch (e) {
+    if (signal?.aborted) return;
     if (e instanceof Error) console.warn("[tarot] network error:", e.message);
     onError(errorMessages.connection);
   }
@@ -210,6 +216,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // AI state
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const mobileReadingAdmitted = useRef(false);
   const aiTextRef = useRef("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
@@ -229,7 +238,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   }, []);
 
   const liveAccess = entitlements.checkAccess("tarot_reading");
-  const isLiveBlocked = isOpen && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const isLiveBlocked = isOpen && authReady && !liveAccess.allowed && 'promptKey' in liveAccess
+    && (!isMobileTarot || (!cards && !mobileReadingAdmitted.current));
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
     : null;
@@ -246,6 +256,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   // handleDraw logic is now inline in the topic selection phase
 
   const handleQuestionSubmit = (question: string) => {
+    if (isMobileTarot && mobileReadingAdmitted.current) {
+      setUserQuestion(question);
+      setIsQuestionPhase(false);
+      setIsShufflePhase(true);
+      return;
+    }
     // Check entitlements before proceeding to reading
     const abuseCheck = antiAbuse.fullCheck("tarot_reading");
     if (!abuseCheck.allowed) {
@@ -290,8 +306,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     }
   };
 
-  // Lazy AI generation kickoff. Captured at card-selection time, fired only
-  // when the user clicks the unlock CTA so the model isn't called prematurely.
   const startAIRef = useRef<null | (() => void)>(null);
   const aiStartedRef = useRef(false);
 
@@ -350,8 +364,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   };
 
 
-  // Stages the AI request without firing it. The actual streamTarotReading
-  // call happens inside startAIRef.current(), invoked by the unlock overlay.
   const prepareAIReading = (drawnCards: ReadingCard[]) => {
     aiTextRef.current = "";
     setAiText("");
@@ -368,15 +380,35 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     startAIRef.current = () => {
       if (aiStartedRef.current) return;
       aiStartedRef.current = true;
+      const controller = new AbortController();
+      requestRef.current = controller;
+      aiTextRef.current = "";
+      setAiText("");
+      setAiError(null);
       setAiLoading(true);
-      streamTarotReading(
+      const showError = (error: string) => {
+        if (controller.signal.aborted) return;
+        requestRef.current = null;
+        aiStartedRef.current = false;
+        setAiLoading(false);
+        if (isMobileTarot) setAiError(error);
+        else toast(error);
+      };
+      void streamTarotReading(
         selectedSpread.key,
         cardsPayload,
         (delta) => {
+          if (controller.signal.aborted) return;
           aiTextRef.current += delta;
           setAiText(aiTextRef.current);
         },
         () => {
+          if (controller.signal.aborted) return;
+          if (!aiTextRef.current.trim()) {
+            showError(t.tarot_error_unexpected);
+            return;
+          }
+          requestRef.current = null;
           setAiLoading(false);
           const cardsLines = drawnCards
             .map((c, i) => `${selectedSpread.positionLabels[i]}: ${c.symbol} ${c.name[language] || c.name.en}`)
@@ -398,12 +430,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           });
           sessionStorage.setItem("_dbg_tarot_source", "fresh");
         },
-        (err) => { setAiLoading(false); aiStartedRef.current = false; toast(err); },
+        showError,
         userQuestion,
         { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
         language,
-      );
+        controller.signal,
+        isMobileTarot,
+      ).catch(() => showError(t.tarot_error_connection));
     };
+    if (isMobileTarot) startAIRef.current();
   };
 
   // Scroll to top when results appear
@@ -414,6 +449,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   }, [cards]);
 
   const handleClose = () => {
+    requestRef.current?.abort();
+    requestRef.current = null;
+    mobileReadingAdmitted.current = false;
+    startAIRef.current = null;
     onClose();
     setTimeout(() => {
       setCards(null);
@@ -429,6 +468,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setCopied(false);
       setAiText("");
       setAiLoading(false);
+      setAiError(null);
       aiTextRef.current = "";
       setSelectedSpreadKey("timeline");
       setMobileTopicPhase(false);
@@ -436,6 +476,8 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       setGatingMsg(null);
     }, 300);
   };
+
+  useEffect(() => () => requestRef.current?.abort(), []);
 
   // Pre-check entitlements when modal opens — restore cached result if available
   useEffect(() => {
@@ -507,12 +549,13 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       }
     : undefined;
 
+  const PhaseTransition = isMobileTarot ? Fragment : AnimatePresence;
   return (
     <>
     <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={tarotAvatarStyle}>
             <MysticalReadingAtmosphere theme="tarot" />
 
-            <AnimatePresence mode="wait">
+            <PhaseTransition {...(isMobileTarot ? {} : { mode: "wait" as const })}>
               {/* ── Mobile Topic Selection Phase ── */}
               {mobileTopicPhase && !cards && !isLoading && !isTablePhase && !isShufflePhase && !isQuestionPhase && !isAnalysisPhase ? (
                 <motion.div
@@ -624,10 +667,12 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                           }
                           // Record usage NOW — before any reading UI starts
                           entitlements.recordFeatureUse("tarot_reading");
+                          if (isMobileTarot) mobileReadingAdmitted.current = true;
                           notifyUsageChanged();
                           antiAbuse.recordSuccessfulAction("tarot_reading");
                           // Set next phase BEFORE clearing topic phase to prevent fan layout flash
-                          setIsQuestionPhase(true);
+                          if (isMobileTarot && spread.key === "timeline") setIsShufflePhase(true);
+                          else setIsQuestionPhase(true);
                           setMobileTopicPhase(false);
                         }}
                       >
@@ -651,30 +696,6 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
               ) : isQuestionPhase ? (
                 <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
                   <TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} />
-                  {isMobileTarot && (
-                    <motion.div className="flex justify-center -mt-4 pb-6">
-                      <motion.button
-                        type="button"
-                        className="px-5 py-2 rounded-full font-body text-sm tracking-wide"
-                        style={{
-                          background: "hsl(222 32% 12% / 0.7)",
-                          border: "1px solid hsl(var(--gold) / 0.15)",
-                          color: "hsl(var(--gold) / 0.55)",
-                          backdropFilter: "blur(8px)",
-                        }}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.5 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          setIsQuestionPhase(false);
-                          setIsShufflePhase(true);
-                        }}
-                      >
-                        {t.tarot_skip_to_reading} ›
-                      </motion.button>
-                    </motion.div>
-                  )}
                 </motion.div>
               ) : isAnalysisPhase ? (
                 <motion.div key="analysis" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
@@ -1020,6 +1041,52 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       : `${flippedIndices.size} / ${tableCards.length} ${t.tarot_table_progress}`}
                   </motion.p>
                 </motion.div>
+              ) : cards && isMobileTarot ? (
+                <section key="mobile-result" className="relative mx-auto max-w-lg space-y-4 px-4 pb-6 pt-12">
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {cards.map((card, index) => (
+                      <figure key={card.id} className="min-w-0 text-center">
+                        <img
+                          src={card.image || cardBack}
+                          alt={localizedName(card)}
+                          className="mx-auto aspect-[2/3] w-full max-w-[5.5rem] rounded-lg border border-gold/25 object-cover"
+                        />
+                        <figcaption className="mt-1.5 break-words font-heading text-sm leading-tight text-gold">
+                          {localizedName(card)}
+                          <span className="block text-xs text-foreground/75">{selectedSpread.positionLabels[index]}</span>
+                        </figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                  <div className="rounded-2xl border border-gold/20 bg-background/95 p-4 shadow-xl">
+                    <h3 className="text-center font-heading text-lg text-gold">{t.tarot_mystical_interp}</h3>
+                    <div className="my-3 flex justify-center [&_button]:min-h-11 [&_button]:min-w-11" dir="ltr">
+                      <TextSizeControl value={textSize} onChange={setTextSize} />
+                    </div>
+                    {aiLoading && !aiText && (
+                      <p role="status" className="py-6 text-center text-gold/70">{t.tarot_combined_loading}</p>
+                    )}
+                    <div className="min-w-0 [overflow-wrap:anywhere]">
+                      {aiText && renderMysticalText(aiText, textSize)}
+                    </div>
+                    {aiError && (
+                      <div className="mt-4 space-y-3 text-center">
+                        <p role="alert">{aiError}</p>
+                        <button type="button" className="btn-gold min-h-11 font-heading" onClick={() => startAIRef.current?.()}>
+                          {t.daily_horoscope_retry}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  {aiText && !aiLoading && !aiError && (
+                    <div className="space-y-3 text-center [&_button]:min-h-11">
+                      <ResultShareBar resultText={aiText} shareTitle={t.readings_type_tarot} compact />
+                      <button type="button" className="btn-gold font-heading text-sm" onClick={handleClose}>
+                        {t.imm_tarot_finish}
+                      </button>
+                    </div>
+                  )}
+                </section>
               ) : cards ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>
                   {/* Strong dark overlay for text readability */}
@@ -1139,7 +1206,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   )}
                 </motion.div>
               ) : null}
-            </AnimatePresence>
+            </PhaseTransition>
     </CinematicModalShell>
     <PaymentGatingModal
       isOpen={gatingOpen || isLiveBlocked}

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
 import { cardBack } from "@/data/tarotCardImages";
@@ -21,21 +21,54 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
   const [pool] = useState<ReadingCard[]>(() => drawReadingCards(POOL_SIZE));
   const [selected, setSelected] = useState<number[]>([]);
   const [done, setDone] = useState(false);
+  const selectedRef = useRef<number[]>([]);
 
   const handleSelect = useCallback(
     (idx: number) => {
-      if (done || selected.includes(idx)) return;
-      const next = [...selected, idx];
+      if (selectedRef.current.length >= cardCount || selectedRef.current.includes(idx)) return;
+      const next = [...selectedRef.current, idx];
+      selectedRef.current = next;
       setSelected(next);
       if (next.length >= cardCount) {
         setDone(true);
+        if (isMobile) {
+          onComplete(next.map((index) => pool[index]));
+          return;
+        }
         setTimeout(() => {
           onComplete(next.map((i) => pool[i]));
         }, 1200);
       }
     },
-    [selected, done, cardCount, onComplete, pool],
+    [isMobile, cardCount, onComplete, pool],
   );
+
+  if (isMobile) {
+    return (
+      <div className="relative mx-auto max-w-sm px-4 pb-6 pt-4 text-center">
+        <h2 className="font-heading text-xl text-gold">
+          {t.imm_tarot_choose_cards.replace("{n}", String(cardCount - selected.length))}
+        </h2>
+        <div className="mt-4 grid grid-cols-5 gap-2" dir="ltr">
+          {pool.map((card, index) => {
+            const revealed = selected.includes(index);
+            return (
+              <button
+                key={card.id}
+                type="button"
+                aria-label={revealed ? card.name[language] || card.name.en : `${t.tarot_card_label} ${index + 1}`}
+                aria-pressed={revealed}
+                className="aspect-[2/3] min-h-11 min-w-0 touch-manipulation overflow-hidden rounded-md border border-gold/25 bg-background aria-pressed:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+                onClick={() => handleSelect(index)}
+              >
+                <img src={revealed ? card.image || cardBack : cardBack} alt="" className="h-full w-full object-cover" />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   const totalCards = POOL_SIZE;
   const arcDeg = isMobile ? 60 : 80;

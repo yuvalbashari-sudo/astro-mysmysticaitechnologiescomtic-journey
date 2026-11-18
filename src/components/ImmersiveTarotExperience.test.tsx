@@ -1,12 +1,16 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, expect, it, vi } from "vitest";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
+import TarotModal from "./TarotModal";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { entitlements } from "@/lib/entitlements";
 
 vi.mock("./AdvisorChatPanel", () => ({ default: () => null }));
 vi.mock("./AstrologerAvatarButton", () => ({ default: () => null }));
 vi.mock("./ResultShareBar", () => ({ default: () => null }));
+vi.mock("@/components/CinematicModalShell", () => ({
+  default: ({ isOpen, children }: { isOpen: boolean; children: React.ReactNode }) => isOpen ? children : null,
+}));
 vi.mock("@/integrations/supabase/client", () => ({ supabase: {} }));
 vi.mock("@/components/PaymentGatingModal", () => ({
   default: ({ isOpen }: { isOpen: boolean }) => isOpen ? <div>Quota exhausted</div> : null,
@@ -23,6 +27,40 @@ vi.mock("@/lib/subscriptionManager", () => ({
 afterEach(() => {
   vi.unstubAllGlobals();
   localStorage.clear();
+  sessionStorage.clear();
+});
+
+it("uses the same immediate result for the tarot modal opened from the mobile menu", async () => {
+  vi.stubGlobal("innerWidth", 375);
+  vi.stubGlobal("IntersectionObserver", class {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  });
+  localStorage.setItem("astrologai_lang", "en");
+  const available = entitlements.getRemainingFreeUses("tarot_reading");
+  for (let used = 1; used < available; used++) {
+    entitlements.recordFeatureUse("tarot_reading");
+  }
+  const request = vi.fn().mockResolvedValue(new Response(
+    'data: {"choices":[{"delta":{"content":"Your mobile interpretation."}}]}\n\ndata: [DONE]\n\n',
+  ));
+  vi.stubGlobal("fetch", request);
+  render(<LanguageProvider><TarotModal isOpen onClose={() => {}} /></LanguageProvider>);
+
+  fireEvent.click(screen.getByRole("button", { name: /past.*present.*future/i }));
+  const picks = screen.getAllByRole("button", { name: /^Card \d+$/ });
+  fireEvent.click(picks[0]);
+  fireEvent.click(picks[1]);
+  expect(request).not.toHaveBeenCalled();
+  fireEvent.click(picks[2]);
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(request.mock.calls[0][1].body).spreadType).toBe("timeline");
+  expect(screen.getByRole("status")).toBeInTheDocument();
+  expect(screen.queryByText("Quota exhausted")).not.toBeInTheDocument();
+  expect(await screen.findByText("Your mobile interpretation.")).toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /unlock|continue/i })).not.toBeInTheDocument();
+  await waitFor(() => expect(sessionStorage.getItem("astrologai_tarot_session")).toContain("Your mobile interpretation."));
 });
 
 it.each([1024, 320])("starts at the third card at %i px and streams without reopening the quota gate", async (width) => {
