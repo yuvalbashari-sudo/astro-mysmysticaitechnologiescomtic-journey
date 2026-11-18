@@ -13,21 +13,21 @@ import { getSignNameByKey, getElementName } from "@/lib/astroLocale";
 
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
-import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
-import MysticalOnboarding from "@/components/MysticalOnboarding";
+import { callLocalAi, getLocalFallback } from "@/lib/localAiPipeline";
+import { safeErrorText } from "@/lib/localeGuard";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
-import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
-import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
 interface Props { isOpen: boolean; onClose: () => void; }
 
 const COMPAT_CACHE_KEY = "astrologai_compat_session";
+const READING_IDLE_TIMEOUT_MS = 15_000;
 
 interface CompatCacheData {
   date: string;
@@ -67,7 +67,6 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [time2, setTime2] = useState("");
   const [gender1, setGender1] = useState("");
   const [gender2, setGender2] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [matchInfo, setMatchInfo] = useState<{ sign1: string; sign2: string; sign1Name: string; sign2Name: string; sign1Symbol: string; sign2Symbol: string; score: number } | null>(null);
   const [aiText, setAiText] = useState("");
@@ -84,11 +83,9 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
 
-  // Premium unlock id (must mirror PremiumUnlockOverlay's readingId).
-  const compatReadingId = matchInfo
-    ? `compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`
-    : "";
-  const compatUnlocked = usePremiumUnlocked(compatReadingId);
+  const startReadingRef = useRef<null | (() => void)>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const timeoutRef = useRef<number | undefined>();
 
   // Restore cached result on open
   useEffect(() => {
@@ -103,7 +100,9 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     }
     sessionStorage.setItem("_dbg_compat_source", "pending");
     // Pre-check entitlements when modal opens — wait for auth before blocking
+    let active = true;
     const doCheck = () => {
+      if (!active) return;
       const access = entitlements.checkAccess("compatibility_reading");
       if (!access.allowed && 'promptKey' in access) {
         const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
@@ -117,10 +116,11 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     } else {
       subscriptionManager.onAuthReady(doCheck);
     }
-  }, [isOpen]);
+    return () => { active = false; };
+  }, [isOpen, language]);
 
   const handleSubmit = () => {
-    if (!date1 || !date2) return;
+    if (!date1 || !date2 || requestRef.current) return;
     // Check entitlements before starting reading
     const access = entitlements.checkAccess("compatibility_reading");
     if (!access.allowed && 'promptKey' in access) {
@@ -130,15 +130,6 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
       setGatingOpen(true);
       return;
     }
-    setIsLoading(true);
-  };
-
-  // Lazy AI generation kickoff. Captured at handleOnboardingComplete time,
-  // fired only when the user clicks the unlock CTA.
-  const startAIRef = useRef<null | (() => void)>(null);
-  const aiStartedRef = useRef(false);
-
-  const handleOnboardingComplete = () => {
     const s1 = getSignFromDate(new Date(date1));
     const s2 = getSignFromDate(new Date(date2));
     const rising1 = getRisingSign(s1, time1);
@@ -146,25 +137,49 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     const compat = getCompatibility(s1, s2);
     const info = { sign1: s1, sign2: s2, sign1Name: getSignNameByKey(s1, language), sign2Name: getSignNameByKey(s2, language), sign1Symbol: getSignSymbol(s1), sign2Symbol: getSignSymbol(s2), score: compat.score };
     setMatchInfo(info);
-    setIsLoading(false);
-    aiTextRef.current = "";
-    setAiText("");
-    setAiLoading(false);
-    aiStartedRef.current = false;
 
     mysticalProfile.recordZodiac(info.sign1Name, info.sign1Symbol, getSignElement(s1), date1);
     mysticalProfile.recordCompatibility(info.sign2Name, info.sign2Symbol, info.score);
     entitlements.recordFeatureUse("compatibility_reading");
     notifyUsageChanged();
 
-    // Defer the AI request — only fired when the user passes the unlock gate.
-    startAIRef.current = () => {
-      if (aiStartedRef.current) return;
-      aiStartedRef.current = true;
+    startReadingRef.current = () => {
+      if (requestRef.current) return;
+      const request = new AbortController();
+      requestRef.current = request;
+      aiTextRef.current = "";
+      setAiText("");
+      setAiError(null);
       setAiLoading(true);
-      streamMysticalReading(
-        "compatibility",
-        {
+
+      const showError = (error: unknown) => {
+        if (request.signal.aborted) return;
+        window.clearTimeout(timeoutRef.current);
+        request.abort();
+        requestRef.current = null;
+        setAiLoading(false);
+        setAiError(safeErrorText(error, language, "compatibility"));
+      };
+      const armTimeout = () => {
+        window.clearTimeout(timeoutRef.current);
+        timeoutRef.current = window.setTimeout(() => showError(null), READING_IDLE_TIMEOUT_MS);
+      };
+      const replaceText = (text: string) => {
+        if (request.signal.aborted) return;
+        armTimeout();
+        aiTextRef.current = text;
+        setAiText(text);
+      };
+      armTimeout();
+
+      void callLocalAi({
+        endpoint: "mystical-reading",
+        mode: "stream",
+        signal: request.signal,
+        promptForGender: false,
+        payload: {
+          type: "compatibility",
+          language,
           sign1Name: info.sign1Name, sign1Symbol: info.sign1Symbol,
           sign1Element: getSignElement(s1), sign1Modality: getSignModality(s1), sign1Ruler: getSignRuler(s1),
           sign1BirthTime: time1 || null,
@@ -184,8 +199,16 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           sign2PersonName: name2 || null,
           sign2Relation: relation2 || null,
         },
-        (delta) => { aiTextRef.current += delta; setAiText(aiTextRef.current); },
-        () => {
+        onDelta: (delta) => replaceText(aiTextRef.current + delta),
+        onReplace: replaceText,
+        onDone: () => {
+          if (request.signal.aborted) return;
+          if (!aiTextRef.current.trim() || aiTextRef.current === getLocalFallback("error", language)) {
+            showError(null);
+            return;
+          }
+          window.clearTimeout(timeoutRef.current);
+          requestRef.current = null;
           setAiLoading(false);
           setActiveReading({ type: "compatibility", label: `${t.readings_type_compatibility} — ${info.sign1Name} + ${info.sign2Name}`, summary: aiTextRef.current });
           readingsStorage.save({
@@ -205,19 +228,27 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           });
           sessionStorage.setItem("_dbg_compat_source", "fresh");
         },
-        (err) => { setAiLoading(false); aiStartedRef.current = false; setAiError(err); toast(err); },
-        language,
-      );
+        onError: showError,
+      }).catch(showError);
     };
+    startReadingRef.current();
   };
 
   const handleClose = () => {
+    window.clearTimeout(timeoutRef.current);
+    requestRef.current?.abort();
+    requestRef.current = null;
+    startReadingRef.current = null;
+    setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setGender1(""); setGender2(""); setName1(""); setName2(""); setRelation1("me"); setRelation2("partner");
+    setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
+    setGatingOpen(false);
     onClose();
-    setTimeout(() => {
-      setMatchInfo(null); setDate1(""); setDate2(""); setTime1(""); setTime2(""); setGender1(""); setGender2(""); setName1(""); setName2(""); setRelation1("me"); setRelation2("partner"); setIsLoading(false);
-      setAiText(""); setAiLoading(false); setAiError(null); aiTextRef.current = "";
-    }, 300);
   };
+
+  useEffect(() => () => {
+    window.clearTimeout(timeoutRef.current);
+    requestRef.current?.abort();
+  }, []);
 
   useEffect(() => {
     if (aiLoading && scrollRef.current && !aiTextRef.current) scrollRef.current.scrollTop = 0;
@@ -235,15 +266,14 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   const handleCopy = async () => {
     if (!matchInfo) return;
-    // Block copying the full reading before unlock — only score line allowed.
-    const fullContent = compatUnlocked && aiText ? `\n\n${aiText}` : "";
+    const fullContent = aiText && !aiError ? `\n\n${aiText}` : "";
     await navigator.clipboard.writeText(`💕 ${matchInfo.sign1Name} + ${matchInfo.sign2Name} — ${matchInfo.score}%${fullContent}`);
     setCopied(true); toast(t.share_copy_toast); setTimeout(() => setCopied(false), 2000);
   };
 
   // Desktop 3-zone result
   const isDesktopResult = !isMobile && !!matchInfo;
-  const isDesktopInput = !isMobile && !matchInfo && !isLoading;
+  const isDesktopInput = !isMobile && !matchInfo;
 
   const isLtr = dir === "ltr";
   // Desktop: force the advisor avatar to the modal's visual left, below the top-left controls.
@@ -266,6 +296,26 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
     width: 64,
     height: 64,
   } : undefined);
+
+  const interpretation = (
+    <div className="min-w-0 [overflow-wrap:anywhere]">
+      {aiText && renderMysticalText(aiText, textSize)}
+      {aiLoading && !aiText && (
+        <div role="status" className="flex items-center justify-center gap-2 py-8 text-gold/70">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          <span className="font-body text-sm">{t.compat_loading}</span>
+        </div>
+      )}
+      {aiError && (
+        <div className="space-y-3 rounded-xl border border-gold/15 px-4 py-5 text-center">
+          <p role="alert" className="text-sm text-foreground/75">{aiError}</p>
+          <button type="button" className="btn-gold min-h-11" onClick={() => startReadingRef.current?.()}>
+            {t.daily_horoscope_retry}
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <>
@@ -290,8 +340,8 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
           </div>
         </>
       )}
-            <AnimatePresence mode="wait">
-              {!matchInfo && !isLoading ? (
+            <AnimatePresence>
+              {!matchInfo ? (
                 isDesktopInput ? (
                   /* ── Desktop: form on RIGHT side ── */
                   <div className="absolute inset-0" key="input-desktop">
@@ -405,10 +455,6 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                     <motion.button onClick={handleSubmit} disabled={!date1 || !date2} className="btn-gold font-body flex items-center justify-center gap-2 mx-auto disabled:opacity-40 disabled:cursor-not-allowed" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}><Sparkles className="w-4 h-4" />{t.compat_cta}</motion.button>
                   </motion.div>
                 )
-              ) : isLoading ? (
-                <motion.div key="onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <MysticalOnboarding onComplete={handleOnboardingComplete} />
-                </motion.div>
               ) : matchInfo ? (
                 isDesktopResult ? (
                   /* ── Desktop 3-zone: LEFT=text, CENTER=oracle, RIGHT=score panel ── */
@@ -423,52 +469,13 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                         width: "min(720px, 50vw)",
                         maxHeight: "calc(90vh - 56px)",
                       }}
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5, duration: 1, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
-                        <PremiumUnlockOverlay
-                          readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
-                          featureKey="compatibility_reading"
-                          onUnlockStart={() => startAIRef.current?.()}
-                          isReady={!!aiText && !aiLoading}
-                        >
-                          {aiText ? (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose">
-                              {isMobile && (<div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>)}
-                              <div style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}>
-                                {renderMysticalText(aiText, textSize)}
-                              </div>
-                              {aiLoading && (
-                                <motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
-                                  <Loader2 className="w-5 h-5 text-gold/60 animate-spin" />
-                                  <span className="font-body text-sm text-gold/50">{t.compat_loading}</span>
-                                </motion.div>
-                              )}
-                            </motion.div>
-                          ) : aiError ? (
-                            <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                              <p className="text-foreground/50 font-body text-sm" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }}>{aiError}</p>
-                            </div>
-                          ) : aiLoading ? (
-                            <div className="flex flex-col items-center justify-center py-16">
-                              <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                              <motion.p className="font-body text-gold/70 text-base" style={{ textShadow: "0 2px 15px hsl(222 47% 6%)" }} animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
-                            </div>
-                          ) : (
-                            // Pre-unlock teaser. Blurred by overlay.
-                            <div className="text-center py-10 font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
-                              <p className="text-gold/70">{t.compat_loading}</p>
-                              <p className="opacity-70 mt-3">✦ ✦ ✦</p>
-                            </div>
-                          )}
-
-                          {!aiLoading && (aiText || aiError) && compatUnlocked && (
-                            <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
-                          )}
-                        </PremiumUnlockOverlay>
+                        {interpretation}
+                        {!aiLoading && !aiError && aiText && (
+                          <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText} />
+                        )}
                       </div>
                     </motion.div>
 
@@ -509,7 +516,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 ) : (
                   /* ── Mobile: stacked layout ── */
-                  <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 overflow-y-auto scrollbar-hide px-4 pt-16 pb-10 md:p-12 lg:p-14" style={{ direction: dir }}>
+                  <motion.div key="result" className="absolute inset-0 overflow-y-auto scrollbar-hide px-4 pt-16 pb-10 md:p-12 lg:p-14" style={{ direction: dir }}>
                     <div className="text-center mb-10">
                       <motion.div className="text-5xl mb-4 flex items-center justify-center gap-3" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.2 }}>
                         <span>{matchInfo.sign1Symbol}</span><span className="text-gold">💕</span><span>{matchInfo.sign2Symbol}</span>
@@ -526,42 +533,12 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
                       </motion.div>
                     </div>
 
-                    <PremiumUnlockOverlay
-                      readingId={`compat:${matchInfo.sign1Name}+${matchInfo.sign2Name}:${date1}:${date2}`}
-                      featureKey="compatibility_reading"
-                      onUnlockStart={() => startAIRef.current?.()}
-                      isReady={!!aiText && !aiLoading}
-                    >
-                      {aiText ? (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-prose mx-auto">
-                          <div className="flex justify-end mb-6"><TextSizeControl value={textSize} onChange={setTextSize} /></div>
-                          {renderMysticalText(aiText, textSize)}
-                          {aiLoading && (
-                            <motion.div className="flex items-center justify-center gap-2 mt-8" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
-                              <Loader2 className="w-5 h-5 text-gold/60 animate-spin" />
-                              <span className="font-body text-sm text-gold/50">{t.compat_loading}</span>
-                            </motion.div>
-                          )}
-                        </motion.div>
-                      ) : aiError ? (
-                        <div className="text-center rounded-xl p-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                          <p className="text-foreground/50 font-body text-sm">{aiError}</p>
-                        </div>
-                      ) : aiLoading ? (
-                        <div className="flex flex-col items-center justify-center py-16">
-                          <motion.div className="w-16 h-16 rounded-full mb-6" style={{ background: "radial-gradient(circle, hsl(var(--crimson) / 0.15), transparent)", border: "1px solid hsl(var(--crimson) / 0.2)" }} animate={{ scale: [1, 1.15, 1], rotate: [0, 180, 360] }} transition={{ duration: 3, repeat: Infinity }} />
-                          <motion.p className="font-body text-gold/70 text-base" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>{t.compat_loading}</motion.p>
-                        </div>
-                      ) : (
-                        // Pre-unlock teaser. Blurred by overlay.
-                        <div className="text-center py-10 font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
-                          <p className="text-gold/70">{t.compat_loading}</p>
-                          <p className="opacity-70 mt-3">✦ ✦ ✦</p>
-                        </div>
-                      )}
-                    </PremiumUnlockOverlay>
+                    <div className="mb-3 flex justify-center [&_button]:min-h-11">
+                      <TextSizeControl value={textSize} onChange={setTextSize} />
+                    </div>
+                    {interpretation}
 
-                    {!aiLoading && (aiText || aiError) && compatUnlocked && (
+                    {!aiLoading && !aiError && aiText && (
                       <>
                         <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={aiText || undefined} />
                         <div className="section-divider max-w-[200px] mx-auto my-10" />
