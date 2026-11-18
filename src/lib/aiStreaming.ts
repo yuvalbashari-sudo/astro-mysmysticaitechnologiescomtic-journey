@@ -160,6 +160,7 @@ export async function streamMysticalReading(
   onError: (err: string) => void,
   language: string = "he",
   onReplace?: (fullText: string) => void,
+  options?: { promptForGender?: boolean; signal?: AbortSignal },
 ) {
   const { callLocalAi } = await import("@/lib/localAiPipeline");
   return callLocalAi({
@@ -170,6 +171,7 @@ export async function streamMysticalReading(
     onDone,
     onError,
     onReplace,
+    ...options,
   });
 }
 
