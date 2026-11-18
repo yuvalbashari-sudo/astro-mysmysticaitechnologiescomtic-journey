@@ -55,6 +55,7 @@ interface CallBase {
   endpoint: LocalAiEndpoint;
   payload: Record<string, unknown>;
   signal?: AbortSignal;
+  promptForGender?: boolean;
 }
 interface CallJson extends CallBase {
   mode: "json";
@@ -143,8 +144,8 @@ function tonePreference(): "mystical-warm" {
  * request. Filters gender to `male|female|undefined` — the prompt-side
  * GENDER LOCK only handles those two values.
  */
-export async function buildLocalAiContext(language: Language): Promise<LocalAiContext> {
-  await ensureGender(language).catch(() => undefined);
+export async function buildLocalAiContext(language: Language, promptForGender = true): Promise<LocalAiContext> {
+  if (promptForGender) await ensureGender(language).catch(() => undefined);
   const rawGender = mysticalProfile.getEffectiveGender?.();
   const gender: LockedGender =
     rawGender === "male" || rawGender === "female" ? rawGender : undefined;
@@ -477,6 +478,7 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
   // Attempt 1 streams to the user via the stabilizer; subsequent
   // attempts buffer silently and replace the visible text via onReplace.
   while (attempt < maxAttempts) {
+    if (args.signal?.aborted) return;
     attempt += 1;
     const strict = attempt > 1;
     if (strict) bumpBucket(args.endpoint, ctx, { strictRetries: 1 });
@@ -488,6 +490,7 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
       : { push: (c: string) => { bufferedRetry += c; }, flush: () => {} };
 
     const res = await runStreamAttempt(args, ctx, requestId, strict, stabilizer.push);
+    if (args.signal?.aborted) return;
     stabilizer.flush();
     if (res.ok === false) {
       if (attempt < maxAttempts) continue;
@@ -529,7 +532,7 @@ export async function callLocalAi(
   args: LocalAiCallArgs,
 ): Promise<LocalAiResult | void> {
   const language = ((args.payload as any).language as Language) || "he";
-  const ctx = await buildLocalAiContext(language);
+  const ctx = await buildLocalAiContext(language, args.promptForGender);
   if (isDev && (language === "he" || language === "ar")) {
     // eslint-disable-next-line no-console
     console.log("[ai-pipeline:call]", {
