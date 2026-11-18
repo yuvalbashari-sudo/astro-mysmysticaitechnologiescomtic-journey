@@ -72,7 +72,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
       // Send confirmation email to the user
       supabase.functions.invoke('send-transactional-email', {
         body: {
-          templateName: 'contact-confirmation',
+          templateName: interestValue === 'premium' ? 'premium-confirmation' : 'contact-confirmation',
           recipientEmail: formData.email.trim(),
           idempotencyKey: `contact-confirm-${submissionId}`,
           templateData: { name: formData.name.trim() },
@@ -82,7 +82,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
       // Notify support of the new lead
       supabase.functions.invoke('send-transactional-email', {
         body: {
-          templateName: 'support-new-lead',
+          templateName: interestValue === 'premium' ? 'premium-new-lead' : 'support-new-lead',
           recipientEmail: 'support@myastrologai.com',
           idempotencyKey: `support-new-lead-${submissionId}`,
           templateData: {
@@ -91,7 +91,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
             phone: isSupport ? '' : (formData.phone.trim() || ''),
             interest: isSupport ? supportCopy.interestTag : (formData.interest || ''),
             message: formData.message.trim() || '',
-            submittedAt,
+            submittedAt: interestValue === 'premium' ? new Date().toISOString() : submittedAt,
           },
         },
       }).catch(() => { /* non-critical */ });
