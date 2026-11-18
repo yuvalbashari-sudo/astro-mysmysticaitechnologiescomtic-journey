@@ -24,8 +24,6 @@ import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import { toast } from "@/components/ui/sonner";
 import PaymentGatingModal from "@/components/PaymentGatingModal";
-import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
-import { usePremiumUnlocked } from "@/lib/premiumUnlock";
 import { entitlements, type GatingMessage } from "@/lib/entitlements";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 
@@ -34,7 +32,7 @@ interface Props {
   onClose: () => void;
 }
 
-type Phase = "question" | "drawing" | "reveal" | "interpretation";
+type Phase = "question" | "drawing" | "interpretation";
 
 interface QuestionOption {
   key: string;
@@ -50,6 +48,7 @@ async function streamTarotReading(
   onDelta: (text: string) => void,
   onDone: () => void,
   onError: (err: string) => void,
+  signal: AbortSignal,
   userQuestion?: string,
   language?: string,
 ) {
@@ -57,11 +56,11 @@ async function streamTarotReading(
   const memoryContext = tarotMemory.buildMemoryContext(cards);
   const profileContext = mysticalProfile.buildContextForAI();
   const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
-  const { ensureGender } = await import("@/lib/genderGate");
-  const gender = (await ensureGender(language || "he")) || undefined;
+  const gender = mysticalProfile.getUserGender();
   try {
     const resp = await fetch(url, {
       method: "POST",
+      signal,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
@@ -72,7 +71,7 @@ async function streamTarotReading(
         context: { memoryContext, profileContext, userQuestion: userQuestion || undefined },
         language: language || "he",
         userName,
-        gender,
+        gender: gender === "male" || gender === "female" ? gender : undefined,
       }),
     });
     const lang = (language || "he") as Language;
@@ -123,6 +122,7 @@ async function streamTarotReading(
     }
     onDone();
   } catch (e) {
+    if (signal.aborted) return;
     onError(safeErrorText(e, (language || "he") as Language, "tarot-reading:network"));
   }
 }
@@ -422,12 +422,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [drawnCards, setDrawnCards] = useState<ReadingCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
-  const [flippedIndices, setFlippedIndices] = useState<Set<number>>(new Set());
-  const [revealedCard, setRevealedCard] = useState<ReadingCard | null>(null);
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
-  const aiTextRef = useRef("");
+  const [aiError, setAiError] = useState<string | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const selectedIndicesRef = useRef<Set<number>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [advisorOpen, setAdvisorOpen] = useState(false);
@@ -446,30 +446,11 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   }, []);
 
   const liveAccess = entitlements.checkAccess("tarot_reading");
-  const isLiveBlocked = isOpen && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const isLiveBlocked = isOpen && phase === "question" && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
     : null;
   const liveResetCycle = isLiveBlocked && 'resetCycle' in liveAccess ? liveAccess.resetCycle : "daily";
-  // Pre-check entitlements when modal opens — wait for auth before blocking
-  useEffect(() => {
-    if (!isOpen) return;
-    const doCheck = () => {
-      const access = entitlements.checkAccess("tarot_reading");
-      if (!access.allowed && 'promptKey' in access) {
-        const msg = entitlements.getGatingMessage(access.promptKey, access.priceILS);
-        setGatingMsg(msg);
-        setGatingResetCycle(access.resetCycle);
-        setGatingOpen(true);
-      }
-    };
-    if (subscriptionManager.isAuthReady()) {
-      doCheck();
-    } else {
-      subscriptionManager.onAuthReady(doCheck);
-    }
-  }, [isOpen]);
-
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
@@ -533,152 +514,146 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
     setSelectedQuestion(key);
-    setTimeout(() => {
-      setDrawnCards(drawReadingCards(7));
-      setPhase("drawing");
-    }, 600);
+    setDrawnCards(drawReadingCards(7));
+    setPhase("drawing");
   }, [t]);
 
   const [burstIndices, setBurstIndices] = useState<Set<number>>(new Set());
 
-  const handleCardSelect = useCallback((index: number) => {
-    setSelectedCardIndices(prev => {
-      if (prev.has(index)) return prev; // no deselection
-      if (prev.size >= 3) return prev;
-      const next = new Set(prev);
-      next.add(index);
+  const startReading = (cards: ReadingCard[]) => {
+    if (requestRef.current) return;
 
-      // Flip immediately
-      setFlippedIndices(fi => new Set(fi).add(index));
-      // Light burst
-      setBurstIndices(bi => new Set(bi).add(index));
-      setTimeout(() => setBurstIndices(bi => { const n = new Set(bi); n.delete(index); return n; }), 900);
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setAiText("");
+    setAiError(null);
+    setAiLoading(true);
 
-      if (next.size === 3) {
-        setTimeout(() => setPhase("reveal"), 2000);
-      }
-      return next;
-    });
-  }, []);
+    const positions = [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future];
+    const cardsPayload = cards.map((card, index) => ({
+      hebrewName: card.name.he,
+      symbol: card.symbol,
+      name: card.name.en,
+      localizedName: card.name[language] || card.name.en || card.name.he,
+      positionLabel: positions[index],
+    }));
+    const spreadType = selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
+    const questionLabel = questionOptions.find((option) => option.key === selectedQuestion)?.label || t.imm_tarot_category_general;
+    let text = "";
 
-  // Holds the lazy AI-generation kickoff that runs when the user clicks unlock.
-  // We capture all the inputs at reveal-time so the closure is stable even if
-  // state shifts mid-flight.
-  const startAIGenerationRef = useRef<null | (() => void)>(null);
-  const aiStartedRef = useRef(false);
+    const showError = (message: string) => {
+      if (controller.signal.aborted) return;
+      requestRef.current = null;
+      setAiLoading(false);
+      setAiError(message);
+    };
 
-  const handleRevealComplete = useCallback(() => {
-    setPhase("interpretation");
-    aiTextRef.current = "";
+    void streamTarotReading(
+      spreadType,
+      cardsPayload,
+      (delta) => {
+        if (controller.signal.aborted) return;
+        text += delta;
+        setAiText(text);
+      },
+      () => {
+        if (controller.signal.aborted) return;
+        if (!text.trim()) {
+          showError(safeErrorText(null, language, "tarot-reading:empty-result"));
+          return;
+        }
+        requestRef.current = null;
+        setAiLoading(false);
+        setActiveReading({
+          type: "tarot",
+          label: `${t.readings_type_tarot} — ${questionLabel}`,
+          summary: text,
+        });
+        tarotMemory.recordReading(spreadType, cardsPayload);
+        mysticalProfile.recordTarotCards(
+          cardsPayload.map(({ name, hebrewName, symbol }) => ({ name, hebrewName, symbol })),
+          spreadType,
+        );
+        readingsStorage.save({
+          type: "tarot",
+          title: t.readings_type_tarot,
+          subtitle: cards.map((card) => cardName(card.name.en, card.name.he)).join(" • "),
+          symbol: "🔮",
+          data: { spread: spreadType, cards: cards.map((card) => ({ name: card.name.en, id: card.id })) },
+        });
+      },
+      showError,
+      controller.signal,
+      selectedQuestion || undefined,
+      language,
+    ).catch((error) => showError(safeErrorText(error, language, "tarot-reading")));
+  };
+
+  const handleCardSelect = (index: number) => {
+    const previous = selectedIndicesRef.current;
+    if (previous.has(index) || previous.size >= 3) return;
+
+    const next = new Set(previous).add(index);
+    selectedIndicesRef.current = next;
+    setSelectedCardIndices(next);
+
+    if (next.size === 3) {
+      setPhase("interpretation");
+      startReading(Array.from(next, (selectedIndex) => drawnCards[selectedIndex]));
+      return;
+    }
+
+    setBurstIndices((indices) => new Set(indices).add(index));
+    setTimeout(() => setBurstIndices((indices) => {
+      const remaining = new Set(indices);
+      remaining.delete(index);
+      return remaining;
+    }), 900);
+  };
+
+  const resetSelection = () => {
+    setPhase("question");
+    setSelectedQuestion(null);
+    setDrawnCards([]);
+    selectedIndicesRef.current = new Set();
+    setSelectedCardIndices(new Set());
+    setBurstIndices(new Set());
+  };
+
+  const handleClose = () => {
+    requestRef.current?.abort();
+    requestRef.current = null;
+    resetSelection();
+    setAdvisorOpen(false);
     setAiText("");
     setAiLoading(false);
-    aiStartedRef.current = false;
-
-    const posLabels = [
-      t.tarot_pos_past,
-      t.tarot_pos_present,
-      t.tarot_pos_future,
-    ];
-
-    const cards = Array.from(selectedCardIndices).map(i => drawnCards[i]);
-    const cardsPayload = cards.map((c, i) => ({
-      hebrewName: c.name.he,
-      symbol: c.symbol,
-      name: c.name.en,
-      localizedName: c.name[language] || c.name.en || c.name.he,
-      positionLabel: posLabels[i] || "",
-    }));
-
-    const spreadType = selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
-    const selectedQuestionLabel = questionOptions.find((option) => option.key === selectedQuestion)?.label || selectedQuestion || t.imm_tarot_category_general;
-
-    // Defer the actual AI request until the user clicks the unlock CTA. The
-    // promo-video flow will fire `onUnlockStart` which invokes this closure.
-    startAIGenerationRef.current = () => {
-      if (aiStartedRef.current) return;
-      aiStartedRef.current = true;
-      setAiLoading(true);
-      streamTarotReading(
-        spreadType,
-        cardsPayload,
-        (delta) => {
-          aiTextRef.current += delta;
-          setAiText(aiTextRef.current);
-        },
-        () => {
-          setAiLoading(false);
-          setActiveReading({
-            type: "tarot",
-            label: `${t.readings_type_tarot} — ${selectedQuestionLabel}`,
-            summary: aiTextRef.current,
-          });
-          tarotMemory.recordReading(spreadType, cardsPayload);
-          mysticalProfile.recordTarotCards(
-            cardsPayload.map(c => ({ name: c.name, hebrewName: c.hebrewName, symbol: c.symbol })),
-            spreadType
-          );
-          // Usage already recorded in handleSelectQuestion — no duplicate recording needed
-          readingsStorage.save({
-            type: "tarot",
-            title: `${t.readings_type_tarot}`,
-            subtitle: cards.map(c => cardName(c.name.en, c.name.he)).join(" • "),
-            symbol: "🔮",
-            data: { spread: spreadType, cards: cards.map(c => ({ name: c.name.en, id: c.id })) },
-          });
-        },
-        (err) => { setAiLoading(false); aiStartedRef.current = false; toast(err); },
-        selectedQuestion || undefined,
-        language,
-      );
-    };
-  }, [selectedQuestion, language, t, setActiveReading, selectedCardIndices, drawnCards, questionOptions]);
-
-  useEffect(() => {
-    if (phase === "reveal") {
-      const timer = setTimeout(handleRevealComplete, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [phase, handleRevealComplete]);
-
-  const handleClose = useCallback(() => {
+    setAiError(null);
+    setGatingOpen(false);
+    setGatingMsg(null);
     onClose();
-    setAdvisorOpen(false);
-    setTimeout(() => {
-      setPhase("question");
-      setSelectedQuestion(null);
-      setDrawnCards([]);
-      setSelectedCardIndices(new Set());
-      setFlippedIndices(new Set());
-      setBurstIndices(new Set());
-      setRevealedCard(null);
-      setAiText("");
-      setAiLoading(false);
-      aiTextRef.current = "";
-      setGatingOpen(false);
-      setGatingMsg(null);
-    }, 500);
-  }, [onClose]);
+  };
 
-  const handleBack = useCallback(() => {
-    if (phase === "interpretation" || phase === "reveal") {
-      handleClose();
-    } else if (phase === "drawing") {
-      setPhase("question");
-      setSelectedQuestion(null);
-      setDrawnCards([]);
-      setSelectedCardIndices(new Set());
-      setFlippedIndices(new Set());
-    }
-  }, [phase, handleClose]);
+  useEffect(() => () => requestRef.current?.abort(), []);
 
-  const chosenCards = useMemo(
-    () => Array.from(selectedCardIndices).map(i => drawnCards[i]),
-    [selectedCardIndices, drawnCards]
+  const chosenCards = Array.from(selectedCardIndices, (index) => drawnCards[index]);
+  const readingText = (
+    <>
+      {aiText && renderMysticalText(aiText)}
+      {aiLoading && !aiText && (
+        <p role="status" className="py-12 text-center text-gold/60">
+          {t.imm_tarot_deciphering}
+        </p>
+      )}
+      {aiError && (
+        <div className="space-y-3 py-4 text-center">
+          <p role="alert">{aiError}</p>
+          <button type="button" className="btn-gold font-heading" onClick={() => startReading(chosenCards)}>
+            {t.daily_horoscope_retry}
+          </button>
+        </div>
+      )}
+    </>
   );
-
-  // Mirror PremiumUnlockOverlay readingId so we can hide the share bar before unlock.
-  const immReadingId = `imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`;
-  const immUnlocked = usePremiumUnlocked(immReadingId);
 
   if (!isOpen) return null;
 
@@ -705,7 +680,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               className="w-full h-full object-cover"
               style={{
                 objectPosition: isMobile ? "center calc(0% + 70px)" : "center calc(0% + 100px)",
-                filter: `brightness(${phase === "reveal" ? 0.55 : phase === "drawing" ? 0.45 : 0.4})`,
+                filter: `brightness(${phase === "drawing" ? 0.45 : 0.4})`,
                 transition: "filter 1s ease-out",
               }}
             />
@@ -727,7 +702,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Subtle ambient glow from hands area ── */}
           <AnimatePresence>
-            {(phase === "drawing" || phase === "reveal") && (
+            {phase === "drawing" && (
               <motion.div
                 className="absolute pointer-events-none"
                 style={{
@@ -775,7 +750,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Phase Content ── */}
           <div className={`absolute inset-0 z-[92] pointer-events-none ${phase === "interpretation" ? "" : "flex items-center justify-center"}`}>
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
               {/* ─── PHASE 1: Question Selection ─── */}
               {phase === "question" && (
                 <motion.div
@@ -916,7 +891,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         card={card}
                         index={i}
                         isSelected={selectedCardIndices.has(i)}
-                        isFlipped={flippedIndices.has(i)}
+                        isFlipped={selectedCardIndices.has(i)}
                         onClick={() => handleCardSelect(i)}
                         totalCards={drawnCards.length}
                         isMobile={isMobile}
@@ -955,148 +930,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               )}
 
-              {/* ─── PHASE 3: Reveal ─── */}
-              {phase === "reveal" && (
-                <motion.div
-                  key="reveal"
-                  className="pointer-events-none text-center"
-                  initial={{ opacity: 0, scale: 0.8, filter: "blur(12px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div className="flex items-end justify-center gap-5 md:gap-8">
-                    {chosenCards.map((card, i) => {
-                      const isCenter = i === 1;
-                      const w = isMobile ? (isCenter ? 105 : 90) : (isCenter ? 170 : 150);
-                      const h = w * 1.55;
-                      return (
-                        <motion.div
-                          key={card.name.en}
-                          className="relative"
-                          style={{ width: w, height: h }}
-                          initial={{ opacity: 0, y: 40, rotateY: 180 }}
-                          animate={{ opacity: 1, y: 0, rotateY: 0 }}
-                          transition={{ delay: i * 0.4 + 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                          {/* Shadow on table */}
-                          <div
-                            className="absolute pointer-events-none"
-                            style={{
-                              width: "85%",
-                              height: "10%",
-                              bottom: -10,
-                              left: "7.5%",
-                              background: "radial-gradient(ellipse, hsl(0 0% 0% / 0.5) 0%, transparent 70%)",
-                              filter: "blur(8px)",
-                            }}
-                          />
-                          <div className="relative w-full h-full">
-                            <img
-                              src={tarotCardImages[card.name.en] || cardBack}
-                              alt={cardName(card.name.en, card.name.he)}
-                              className="w-full h-full object-cover rounded-lg"
-                              style={{
-                                imageRendering: "-webkit-optimize-contrast" as any,
-                                backfaceVisibility: "hidden",
-                                transform: "translateZ(0)",
-                                boxShadow: isCenter
-                                  ? "0 0 50px hsl(var(--gold) / 0.4), 0 12px 40px hsl(var(--deep-blue) / 0.7)"
-                                  : "0 0 30px hsl(var(--gold) / 0.2), 0 8px 28px hsl(var(--deep-blue) / 0.5)",
-                                filter: isCenter
-                                  ? "contrast(1.1) saturate(1.08)"
-                                  : "brightness(0.85) contrast(1.06)",
-                                willChange: "transform",
-                              }}
-                            />
-                            <img
-                              src={cardFrameImg}
-                              alt=""
-                              className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-lg"
-                              style={{ opacity: 0.85, mixBlendMode: "screen" }}
-                            />
-                            <div
-                              className="absolute inset-0 pointer-events-none rounded-lg"
-                              style={{ background: "linear-gradient(135deg, hsl(0 0% 100% / 0.06) 0%, transparent 40%)" }}
-                            />
-                            <div
-                              className="absolute inset-0 rounded-lg pointer-events-none"
-                              style={{
-                                boxShadow: `inset 0 0 ${isCenter ? 12 : 7}px 1px hsl(var(--gold) / ${isCenter ? 0.18 : 0.1}), inset 0 1px 0 hsl(var(--gold) / 0.15)`,
-                              }}
-                            />
-                          </div>
-                          <motion.div
-                            className="absolute -inset-2 rounded-xl pointer-events-none"
-                            style={{ border: `1px solid hsl(var(--gold) / ${isCenter ? 0.35 : 0.15})` }}
-                            animate={{
-                              boxShadow: isCenter
-                                ? [
-                                    "0 0 20px hsl(var(--gold) / 0.15)",
-                                    "0 0 40px hsl(var(--gold) / 0.35)",
-                                    "0 0 20px hsl(var(--gold) / 0.15)",
-                                  ]
-                                : [
-                                    "0 0 10px hsl(var(--gold) / 0.06)",
-                                    "0 0 20px hsl(var(--gold) / 0.12)",
-                                    "0 0 10px hsl(var(--gold) / 0.06)",
-                                  ],
-                            }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
-                          />
-                          <motion.div
-                            className="absolute -bottom-7 left-0 right-0 text-center"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: i * 0.4 + 1 }}
-                          >
-                            <span className="font-heading text-sm md:text-base text-gold/85">
-                              {cardName(card.name.en, card.name.he)}
-                            </span>
-                          </motion.div>
-                        </motion.div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Burst particles */}
-                  {[...Array(12)].map((_, i) => {
-                    const angle = (i / 12) * Math.PI * 2;
-                    return (
-                      <motion.div
-                        key={`burst-${i}`}
-                        className="absolute rounded-full pointer-events-none"
-                        style={{
-                          width: 3,
-                          height: 3,
-                          left: "50%",
-                          top: "50%",
-                          background: i % 2 === 0 ? "hsl(var(--gold))" : "hsl(var(--celestial))",
-                        }}
-                        initial={{ x: 0, y: 0, opacity: 0 }}
-                        animate={{
-                          x: Math.cos(angle) * 120,
-                          y: Math.sin(angle) * 120,
-                          opacity: [0, 0.8, 0],
-                          scale: [0, 2, 0],
-                        }}
-                        transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
-                      />
-                    );
-                  })}
-                </motion.div>
-              )}
-
-              {/* ─── PHASE 4: Interpretation ─── */}
+              {/* ─── PHASE 3: Interpretation ─── */}
               {phase === "interpretation" && (
                 <motion.div
                   key="interpretation"
                   className="pointer-events-auto w-full overflow-hidden"
                   style={{ maxHeight: isMobile ? "92vh" : "90vh" }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.6 }}
                 >
                   {isMobile ? (
                     /* ── Mobile: stacked layout (unchanged) ── */
@@ -1162,9 +1001,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           border: "1px solid hsl(var(--gold) / 0.12)",
                           boxShadow: "0 0 40px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.06)",
                         }}
-                        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{ delay: 0.5, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       >
                         <div className="p-6">
                           {/* Text size control — mobile */}
@@ -1203,33 +1039,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           >
                             {t.imm_tarot_your_reading}
                           </motion.h3>
-                          <PremiumUnlockOverlay
-                            readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
-                            featureKey="tarot_reading"
-                            onUnlockStart={() => startAIGenerationRef.current?.()}
-                            isReady={!!aiText && !aiLoading}
-                          >
-                            {aiText ? (
-                              <motion.div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-                                {renderMysticalText(aiText)}
-                              </motion.div>
-                            ) : aiLoading ? (
-                              <div className="flex flex-col items-center justify-center py-12 gap-4">
-                                <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
-                                  <Sparkles className="w-8 h-8 text-gold/50" />
-                                </motion.div>
-                                <p className="text-gold/50 font-body text-lg">{t.imm_tarot_deciphering}</p>
-                              </div>
-                            ) : (
-                              // Teaser placeholder — shown before unlock click. The overlay
-                              // blurs this so the user sees a hint of upcoming content.
-                              <div className="font-body text-foreground/70 leading-relaxed" style={{ fontSize: "1.05rem", lineHeight: 1.7 }}>
-                                <p>{t.imm_tarot_cards_speak}</p>
-                                <p className="mt-3 opacity-70">{t.imm_tarot_message_right_moment}</p>
-                                <p className="mt-3 opacity-50">✦ ✦ ✦</p>
-                              </div>
-                            )}
-                          </PremiumUnlockOverlay>
+                          <div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }}>
+                            {readingText}
+                          </div>
                           {aiLoading && aiText && (
                             <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
                           )}
@@ -1237,15 +1049,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         </div>
                       </motion.div>
 
-                      {!aiLoading && aiText && (
+                      {!aiLoading && !aiError && aiText && (
                         <motion.div className="mt-6 space-y-4" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                          {immUnlocked && (
-                            <ResultShareBar
-                              resultText={aiText}
-                              shareTitle={`${t.readings_type_tarot}`}
-                              compact
-                            />
-                          )}
+                          <ResultShareBar
+                            resultText={aiText}
+                            shareTitle={`${t.readings_type_tarot}`}
+                            compact
+                          />
                           <div className="text-center">
                             <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
                               {t.imm_tarot_finish}
@@ -1269,9 +1079,6 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           maxHeight: "80vh",
                           /* No background, no box — pure transparent overlay */
                         }}
-                        initial={{ opacity: 0, y: 40 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6, duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
                       >
                         {/* Subtle radiance behind text for legibility — NOT a box */}
                         <div
@@ -1388,76 +1195,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           </motion.p>
 
                           {/* ── The living text ── */}
-                          <PremiumUnlockOverlay
-                            readingId={`imm-tarot:${selectedQuestion || "general"}:${chosenCards.map(c => c?.id).join("-")}`}
-                            featureKey="tarot_reading"
-                            onUnlockStart={() => startAIGenerationRef.current?.()}
-                            isReady={!!aiText && !aiLoading}
+                          <div
+                            className="font-body mx-auto max-w-[420px]"
+                            style={{ textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)" }}
                           >
-                            {aiText ? (
-                              <motion.div
-                                className="font-body"
-                                style={{
-                                  maxWidth: "420px",
-                                  margin: "0 auto",
-                                  textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85), 0 0 10px hsl(222 47% 6%)",
-                                }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1.8, duration: 1 }}
-                              >
-                                {renderMysticalText(aiText)}
-                              </motion.div>
-                            ) : aiLoading ? (
-                              <motion.div
-                                className="flex flex-col items-center justify-center py-20 gap-7"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1.0, duration: 0.6 }}
-                              >
-                                <motion.div
-                                  className="relative"
-                                  animate={{ scale: [1, 1.06, 1] }}
-                                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                                >
-                                  <div
-                                    className="w-16 h-16 rounded-full flex items-center justify-center"
-                                    style={{
-                                      background: "radial-gradient(circle, hsl(var(--gold) / 0.1) 0%, transparent 70%)",
-                                    }}
-                                  >
-                                    <Sparkles className="w-5 h-5 text-gold/30" />
-                                  </div>
-                                  <motion.div
-                                    className="absolute inset-0 rounded-full pointer-events-none"
-                                    style={{ border: "1px solid hsl(var(--gold) / 0.08)" }}
-                                    animate={{ scale: [1, 1.6, 1], opacity: [0.4, 0, 0.4] }}
-                                    transition={{ duration: 3, repeat: Infinity, ease: "easeOut" }}
-                                  />
-                                </motion.div>
-                                <p className="text-gold/30 font-body text-sm tracking-[0.25em] italic"
-                                  style={{ textShadow: "0 2px 20px hsl(222 47% 6% / 0.9)" }}
-                                >
-                                  {t.imm_tarot_deciphering}
-                                </p>
-                              </motion.div>
-                            ) : (
-                              // Teaser shown pre-unlock. Overlay will blur this so the
-                              // user sees only a hint of the upcoming reading.
-                              <div
-                                className="font-body text-foreground/70 leading-relaxed text-center"
-                                style={{
-                                  maxWidth: "420px",
-                                  margin: "0 auto",
-                                  textShadow: "0 2px 30px hsl(222 47% 6%), 0 0 60px hsl(222 47% 6% / 0.85)",
-                                }}
-                              >
-                                <p>{t.imm_tarot_cards_speak}</p>
-                                <p className="mt-3 opacity-70">{t.imm_tarot_message_right_moment}</p>
-                                <p className="mt-3 opacity-50">✦ ✦ ✦</p>
-                              </div>
-                            )}
-                          </PremiumUnlockOverlay>
+                            {readingText}
+                          </div>
 
                           {/* Streaming cursor */}
                           {aiLoading && aiText && (
@@ -1470,7 +1213,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                           )}
 
                           {/* ── Closing ritual ── */}
-                          {!aiLoading && aiText && (
+                          {!aiLoading && !aiError && aiText && (
                             <motion.div
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
@@ -1506,12 +1249,10 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                               </motion.p>
 
                               <div className="space-y-5 text-center">
-                                {immUnlocked && (
-                                  <ResultShareBar
-                                    resultText={aiText}
-                                    shareTitle={`${t.readings_type_tarot}`}
-                                  />
-                                )}
+                                <ResultShareBar
+                                  resultText={aiText}
+                                  shareTitle={`${t.readings_type_tarot}`}
+                                />
                                 <motion.button
                                   type="button"
                                   className="font-heading text-sm tracking-[0.2em] cursor-pointer px-8 py-3 rounded-full"
@@ -1661,14 +1402,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Back button ── */}
           <AnimatePresence>
-            {phase !== "question" && phase !== "interpretation" && (
+            {phase === "drawing" && (
               <motion.button
                 className="fixed top-5 left-16 z-[200] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer pointer-events-auto"
                 style={{
                   background: "hsl(var(--deep-blue) / 0.6)",
                   border: "1px solid hsl(var(--gold) / 0.2)",
                 }}
-                onClick={handleBack}
+                onClick={resetSelection}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
