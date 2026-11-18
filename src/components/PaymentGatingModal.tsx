@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Crown, Lock, X, Sparkles } from "lucide-react";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
@@ -6,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import type { GatingMessage } from "@/lib/entitlements";
 import type { ResetCycle } from "@/lib/pricingConfig";
 import UsageCountdown from "./UsageCountdown";
-import PromoVideoModal from "./PromoVideoModal";
+import { useSiteAdmin } from "@/hooks/use-site-admin";
 
 interface Props {
   isOpen: boolean;
@@ -16,17 +15,15 @@ interface Props {
   onPayPerUse?: () => void;
   /** Reset cycle for countdown timer display */
   resetCycle?: ResetCycle;
-  /** When true, the inner promo video is skipped and pay CTA fires onPayPerUse directly. */
-  skipPromoVideo?: boolean;
 }
 
-const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, resetCycle = "daily", skipPromoVideo = false }: Props) => {
+const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, resetCycle = "daily" }: Props) => {
   const { language, dir } = useLanguage();
   const t = useT();
   const navigate = useNavigate();
-  const [promoOpen, setPromoOpen] = useState(false);
+  const admin = useSiteAdmin();
 
-  if (!gatingMessage) return null;
+  if (admin || !gatingMessage) return null;
 
   return (
     <>
@@ -129,15 +126,11 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
                   <div className="flex-1 h-px bg-gold/10" />
                 </div>
 
-                {/* Pay-per-use CTA — opens promo video first, unless skipped */}
                 <button
+                  type="button"
                   onClick={() => {
-                    if (skipPromoVideo) {
-                      onPayPerUse?.();
-                      onClose();
-                    } else {
-                      setPromoOpen(true);
-                    }
+                    onPayPerUse?.();
+                    onClose();
                   }}
                   className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider mb-3 flex items-center justify-center gap-2"
                 >
@@ -181,16 +174,6 @@ const PaymentGatingModal = ({ isOpen, onClose, gatingMessage, onPayPerUse, reset
         )}
       </AnimatePresence>
 
-      {/* Promotional video — sibling of AnimatePresence to avoid breaking
-          framer-motion's child tracking on language dropdown / overlays. */}
-      <PromoVideoModal
-        isOpen={promoOpen}
-        onClose={() => setPromoOpen(false)}
-        onContinue={() => {
-          onPayPerUse?.();
-          onClose();
-        }}
-      />
     </>
   );
 };

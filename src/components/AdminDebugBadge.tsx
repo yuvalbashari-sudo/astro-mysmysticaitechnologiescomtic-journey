@@ -1,139 +1,103 @@
-import { useState, useEffect } from "react";
-import { Shield, ShieldOff } from "lucide-react";
+import { useState, useSyncExternalStore, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { subscriptionManager } from "@/lib/subscriptionManager";
-import { logAdminDebugState } from "@/lib/adminTestMode";
-import { usageTracker } from "@/lib/usageTracker";
 
-const IS_PREVIEW =
-  window.location.hostname.includes("preview") ||
-  window.location.hostname.includes("lovableproject.com") ||
-  window.location.hostname === "localhost" ||
-  import.meta.env.DEV;
+export default function AdminDebugBadge() {
+  const [params, setParams] = useSearchParams();
+  const admin = useSiteAdmin();
+  const ready = useSyncExternalStore(subscriptionManager.onAuthChange, subscriptionManager.isAuthReady, () => false);
+  const [email, setEmail] = useState("");
+  const [code, setCode] = useState("");
+  const [sent, setSent] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
 
-/**
- * ADMIN TEST MODE toggle + indicator.
- * In preview/dev: shows a clickable toggle that enables real admin bypass.
- * Toggling forces a page reload so ALL components pick up the new state.
- */
-const AdminDebugBadge = () => {
-  // Visually hidden — debug overlay disabled to keep hero clean.
-  // Code preserved for future opt-in via ?admin_debug=1 if needed.
-  return null;
-  // eslint-disable-next-line no-unreachable
-  const [isAdmin, setIsAdmin] = useState(subscriptionManager.isAdmin());
-  const [isOverride, setIsOverride] = useState(subscriptionManager.isAdminOverride());
+  if (params.get("admin") !== "1") return null;
 
-  useEffect(() => {
-    const sync = () => {
-      setIsAdmin(subscriptionManager.isAdmin());
-      setIsOverride(subscriptionManager.isAdminOverride());
-    };
-    sync();
-    const unsubscribe = subscriptionManager.onAuthChange(sync);
-    return unsubscribe;
-  }, []);
-
-  // Log debug state on mount and when state changes
-  useEffect(() => {
-    if (IS_PREVIEW) {
-      logAdminDebugState();
+  const leave = () => {
+    const next = new URLSearchParams(params);
+    next.delete("admin");
+    setParams(next, { replace: true });
+  };
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (pending) return;
+    const address = email.trim().toLowerCase();
+    if (!subscriptionManager.isConfiguredAdminEmail(address)) {
+      setError("יש להזין את המייל שמוגדר לחשבון המנהל.");
+      return;
     }
-  }, [isAdmin, isOverride]);
 
-  const handleEnable = () => {
-    subscriptionManager.enableAdminOverride();
-    // Force full page reload so every component re-initializes with admin state
-    window.location.reload();
+    setPending(true);
+    setError("");
+    try {
+      if (sent) {
+        const { error } = await supabase.auth.verifyOtp({ email: address, token: code.trim(), type: "email" });
+        if (error) setError("לא הצלחנו לאמת את הקוד. אפשר לבדוק את הקוד או לבקש הודעה חדשה.");
+      } else {
+        const redirect = new URL("/", window.location.origin);
+        redirect.searchParams.set("admin", "1");
+        const { error } = await supabase.auth.signInWithOtp({
+          email: address,
+          options: { emailRedirectTo: redirect.href },
+        });
+        if (error) setError("לא הצלחנו לשלוח הודעת התחברות. אפשר לנסות שוב בעוד רגע.");
+        else setSent(true);
+      }
+    } catch {
+      setError("לא הצלחנו להתחבר כרגע. אפשר לנסות שוב בעוד רגע.");
+    } finally {
+      setPending(false);
+    }
   };
 
-  const handleDisable = () => {
-    subscriptionManager.disableAdminOverride();
-    window.location.reload();
-  };
-
-  // Not preview and not admin — hide completely
-  if (!IS_PREVIEW && !isAdmin) return null;
-
-  // ACTIVE admin mode (either real auth or override)
-  if (isAdmin) {
-    return (
-      <div
-        className="fixed top-3 left-3 z-[99999] flex flex-col gap-1 select-none"
-        style={{ maxWidth: 220 }}
-      >
-        {/* Main badge */}
-        <div
-          className="flex items-center gap-1.5 rounded-full"
-          style={{
-            background: "linear-gradient(135deg, hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.06))",
-            border: "1px solid hsl(var(--gold) / 0.3)",
-            backdropFilter: "blur(10px)",
-            boxShadow: "0 2px 12px hsl(var(--gold) / 0.12)",
-          }}
-        >
-          <div className="flex items-center gap-1.5 px-3 py-1.5 pointer-events-none">
-            <Shield className="w-3.5 h-3.5 text-gold" />
-            <span className="text-gold text-[10px] font-heading tracking-[0.15em] uppercase leading-none font-semibold">
-              Admin Test Mode Active
-            </span>
-          </div>
-          {isOverride && (
-            <button
-              onClick={handleDisable}
-              className="pr-2.5 text-gold/50 hover:text-gold transition-colors text-xs font-heading cursor-pointer"
-              title="Disable Admin Test Mode"
-            >
-              ✕
+  return (
+    <div className="fixed inset-0 z-[11000] grid place-items-center overflow-y-auto bg-background/95 p-4" dir="rtl" lang="he">
+      <section aria-labelledby="admin-sign-in-title" className="w-full max-w-sm space-y-4 rounded-2xl border border-gold/30 bg-background p-5 text-foreground shadow-xl">
+        <div className="flex items-center justify-between gap-3">
+          <h2 id="admin-sign-in-title" className="font-heading text-xl text-gold">התחברות למנהל האתר</h2>
+          <button type="button" onClick={leave} className="min-h-11 px-2 text-sm">סגירה</button>
+        </div>
+        {!ready ? (
+          <p role="status">בודק את ההתחברות…</p>
+        ) : admin ? (
+          <>
+            <p role="status">התחברת כמנהל האתר.</p>
+            <button type="button" onClick={leave} className="btn-gold min-h-11 w-full">המשך לאתר</button>
+            <button type="button" className="min-h-11 w-full" onClick={async () => {
+              const { error } = await supabase.auth.signOut({ scope: "local" });
+              if (error) setError("ההתנתקות לא הושלמה. אפשר לנסות שוב.");
+            }}>התנתקות</button>
+          </>
+        ) : (
+          <form className="space-y-4" onSubmit={submit}>
+            <label className="block">
+              מייל מנהל
+              <input required type="email" autoComplete="email" dir="ltr" value={email} disabled={sent}
+                onChange={event => setEmail(event.target.value)}
+                className="mt-1 block min-h-11 w-full rounded-md border border-gold/30 bg-background px-3 text-base" />
+            </label>
+            {sent && (
+              <>
+                <p role="status">בדוק את תיבת המייל. אפשר לפתוח את קישור ההתחברות או להזין את הקוד אם קיבלת קוד.</p>
+                <label className="block">
+                  קוד אימות
+                  <input required inputMode="numeric" autoComplete="one-time-code" dir="ltr" value={code}
+                    onChange={event => setCode(event.target.value)}
+                    className="mt-1 block min-h-11 w-full rounded-md border border-gold/30 bg-background px-3 text-base" />
+                </label>
+              </>
+            )}
+            <button type="submit" disabled={pending} className="btn-gold min-h-11 w-full disabled:opacity-50">
+              {pending ? "רגע…" : sent ? "אימות קוד" : "שליחת התחברות במייל"}
             </button>
-          )}
-        </div>
-
-        {/* Debug line — preview only */}
-        {IS_PREVIEW && (
-          <div
-            className="text-[8px] font-mono text-foreground/30 px-2 leading-tight pointer-events-none"
-          >
-            override: {isOverride ? "ON" : "off"} | tier: {subscriptionManager.getCurrentTier()} | bypass: active
-            <br />
-            lang: {document.documentElement.lang} | dir: {document.documentElement.dir}
-            <br />
-            tarot: {usageTracker.getUsageCount("tarot_reading", "daily")}/day | compat: {usageTracker.getUsageCount("compatibility_reading", "daily")}/day
-            <br />
-            src: card={sessionStorage.getItem("_dbg_dailycard_source") || "—"} | horo={sessionStorage.getItem("_dbg_horoscope_source") || "—"} | tarot={sessionStorage.getItem("_dbg_tarot_source") || "—"} | compat={sessionStorage.getItem("_dbg_compat_source") || "—"}
-          </div>
+            {sent && <button type="button" className="min-h-11 w-full" onClick={() => { setSent(false); setCode(""); setError(""); }}>בקשת הודעה חדשה</button>}
+          </form>
         )}
-      </div>
-    );
-  }
-
-  // Preview mode, NOT admin — show enable button
-  if (IS_PREVIEW) {
-    return (
-      <div className="fixed top-3 left-3 z-[99999] flex flex-col gap-1 select-none" style={{ maxWidth: 220 }}>
-        <button
-          onClick={handleEnable}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
-          style={{
-            background: "linear-gradient(135deg, hsl(0 0% 50% / 0.15), hsl(0 0% 50% / 0.05))",
-            border: "1px solid hsl(0 0% 50% / 0.25)",
-            backdropFilter: "blur(10px)",
-          }}
-          title="Enable Admin Test Mode for preview testing"
-        >
-          <ShieldOff className="w-3.5 h-3.5 text-foreground/40" />
-          <span className="text-foreground/50 text-[10px] font-heading tracking-[0.12em] uppercase leading-none">
-            Admin Test Mode Off
-          </span>
-        </button>
-
-        <div className="text-[8px] font-mono text-foreground/20 px-2 leading-tight pointer-events-none">
-          override: off | tier: {subscriptionManager.getCurrentTier()} | bypass: inactive
-        </div>
-      </div>
-    );
-  }
-
-  return null;
-};
-
-export default AdminDebugBadge;
+        {error && <p role="alert" className="text-sm text-foreground">{error}</p>}
+      </section>
+    </div>
+  );
+}

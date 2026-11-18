@@ -1,3 +1,5 @@
+import { useSiteAdmin } from "@/hooks/use-site-admin";
+import { readingAuthorization } from "@/lib/readingAuthorization";
 import { Fragment, useState, useEffect, useRef } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
@@ -111,7 +113,7 @@ async function streamTarotReading(
       signal,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        Authorization: readingAuthorization(),
       },
       body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he", userName, gender: gender === "male" || gender === "female" ? gender : undefined }),
     });
@@ -224,6 +226,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const [textSize, setTextSize] = useState<TextSize>("default");
 
   // Entitlements gating state
+  const siteAdmin = useSiteAdmin();
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
@@ -552,7 +555,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const PhaseTransition = isMobileTarot ? Fragment : AnimatePresence;
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={tarotAvatarStyle}>
+    <CinematicModalShell isOpen={isOpen && (!gatingOpen || siteAdmin) && !isLiveBlocked} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen avatarStyle={tarotAvatarStyle}>
             <MysticalReadingAtmosphere theme="tarot" />
 
             <PhaseTransition {...(isMobileTarot ? {} : { mode: "wait" as const })}>

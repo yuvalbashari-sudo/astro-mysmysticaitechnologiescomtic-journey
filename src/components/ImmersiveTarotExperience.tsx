@@ -1,3 +1,5 @@
+import { useSiteAdmin } from "@/hooks/use-site-admin";
+import { readingAuthorization } from "@/lib/readingAuthorization";
 import { Fragment, useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
@@ -63,7 +65,7 @@ async function streamTarotReading(
       signal,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        Authorization: readingAuthorization(),
       },
       body: JSON.stringify({
         spreadType,
@@ -433,6 +435,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const mobileScrollRef = useRef<HTMLDivElement>(null);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   // Entitlements gating state
+  const siteAdmin = useSiteAdmin();
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("daily");
@@ -674,7 +677,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const PhaseTransition = isMobile ? Fragment : AnimatePresence;
   const overlay = (
     <AnimatePresence>
-      {isOpen && !gatingOpen && !isLiveBlocked && (
+      {isOpen && (!gatingOpen || siteAdmin) && !isLiveBlocked && (
         <motion.div
           className={`fixed inset-0 z-[140] ${isMobile ? "pointer-events-auto overflow-hidden" : "pointer-events-none"}`}
           initial={{ opacity: 0 }}

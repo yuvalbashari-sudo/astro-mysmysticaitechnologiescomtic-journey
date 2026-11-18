@@ -1,3 +1,4 @@
+import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { useState, useEffect, useRef } from "react";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import MysticalDateInput from "@/components/MysticalDateInput";
@@ -78,6 +79,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
   const isMobile = useIsMobile();
 
   // Entitlements gating state
+  const siteAdmin = useSiteAdmin();
   const [gatingOpen, setGatingOpen] = useState(false);
   const [gatingMsg, setGatingMsg] = useState<GatingMessage | null>(null);
   const [gatingResetCycle, setGatingResetCycle] = useState<import("@/lib/pricingConfig").ResetCycle>("monthly");
@@ -267,7 +269,7 @@ const CompatibilityModal = ({ isOpen, onClose }: Props) => {
 
   return (
     <>
-    <CinematicModalShell isOpen={isOpen && !gatingOpen} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile} hideFreeBadge={!isMobile}>
+    <CinematicModalShell isOpen={isOpen && (!gatingOpen || siteAdmin)} onClose={handleClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile} hideFreeBadge={!isMobile}>
       {/* Desktop-only header overlay: TextSizeControl (top-left, beside close) + Free badge (right of avatar with spacing) */}
       {!isMobile && (
         <>

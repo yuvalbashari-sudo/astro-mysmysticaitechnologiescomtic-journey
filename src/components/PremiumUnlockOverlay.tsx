@@ -1,155 +1,50 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
 import { Lock, Sparkles } from "lucide-react";
-import PromoVideoModal from "./PromoVideoModal";
-import PaymentGatingModal from "./PaymentGatingModal";
 import { premiumUnlock } from "@/lib/premiumUnlock";
 import { analytics } from "@/lib/analytics";
-import { entitlements, type GatingMessage } from "@/lib/entitlements";
-import { FEATURE_RULES, type FeatureKey, type ResetCycle } from "@/lib/pricingConfig";
-import { subscriptionManager } from "@/lib/subscriptionManager";
+import type { FeatureKey } from "@/lib/pricingConfig";
+import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 
 interface Props {
-  /**
-   * Stable per-reading id. A new id (e.g. new tarot draw, new compatibility
-   * pair, new natal chart) re-triggers the gate. Same id stays unlocked for
-   * the rest of the session.
-   */
   readingId: string;
-  /** Which feature this gate represents (drives price + reset cycle copy). */
   featureKey: FeatureKey;
-  /** The full reading content. Hidden behind blur until unlocked. */
   children: ReactNode;
-  /**
-   * If true, the overlay is suspended — used while the reading is still
-   * streaming or while a question phase hasn't completed. Defaults to false.
-   */
   disabled?: boolean;
-  /**
-   * Optional custom gating message override. Used for surfaces that don't
-   * have a built-in gating prompt (e.g. monthly forecast, natal chart).
-   */
-  customGatingMessage?: GatingMessage;
-  /**
-   * Explicit bypass flag. ONLY this flag bypasses the gate — never tier,
-   * email, or environment. Defaults to false. Reserve for support tooling.
-   */
   forceUnlock?: boolean;
-  /**
-   * Fires the moment the user clicks the unlock CTA — i.e. right before the
-   * promo video opens. Hosts use this hook to lazily kick off AI generation
-   * so the model isn't called until the user has actually committed to the
-   * unlock. Called at most once per gate cycle.
-   */
   onUnlockStart?: () => void;
-  /**
-   * When false, the overlay refuses to flip to the unlocked state until the
-   * host signals readiness. The promo video keeps the user occupied with the
-   * "almost ready" message until both the video step AND the AI generation
-   * are complete. Defaults to true (legacy synchronous unlock).
-   */
   isReady?: boolean;
 }
 
-/**
- * PremiumUnlockOverlay
- *
- * Wraps a full premium reading. Until the user passes the unlock flow
- * (preview → unlock CTA → promo video → payment/upgrade modal) the children
- * are blurred and an unlock panel sits on top. Admin tier and previously
- * unlocked readings render the children directly.
- */
-const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, customGatingMessage, forceUnlock = false, onUnlockStart, isReady = true }: Props) => {
+const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = false, forceUnlock = false, onUnlockStart, isReady = true }: Props) => {
   const t = useT();
   const { dir } = useLanguage();
+  const admin = useSiteAdmin();
+  const [unlocked, setUnlocked] = useState(() => premiumUnlock.isUnlocked(readingId));
+  const startedReading = useRef<string | null>(null);
 
-  const [unlocked, setUnlocked] = useState<boolean>(() => premiumUnlock.isUnlocked(readingId));
-  const [promoOpen, setPromoOpen] = useState(false);
-  const [paymentOpen, setPaymentOpen] = useState(false);
-
-  // Re-evaluate unlock state whenever the reading id changes, and listen
-  // for global unlock events (e.g. another surface unlocked the same id).
   useEffect(() => {
     const sync = () => setUnlocked(premiumUnlock.isUnlocked(readingId));
     sync();
-    setPromoOpen(false);
-    setPaymentOpen(false);
     window.addEventListener("astrologai:unlock-changed", sync);
     return () => window.removeEventListener("astrologai:unlock-changed", sync);
   }, [readingId]);
 
-  // Build the gating message for this feature. We always show the existing
-  // PaymentGatingModal so the user gets pay-per-use + upgrade options, even
-  // for their very first reading.
-  const { gatingMessage, resetCycle } = useMemo<{
-    gatingMessage: GatingMessage | null;
-    resetCycle: ResetCycle;
-  }>(() => {
-    if (customGatingMessage) {
-      return { gatingMessage: customGatingMessage, resetCycle: "none" };
-    }
-    const access = entitlements.checkAccess(featureKey);
-    // If quota is exhausted, use the real denied message.
-    if (access.allowed === false) {
-      return {
-        gatingMessage: entitlements.getGatingMessage(access.promptKey, access.priceILS),
-        resetCycle: access.resetCycle,
-      };
-    }
-    // Otherwise synthesize a message based on the feature's pay-per-use price.
-    const tier = subscriptionManager.getCurrentTier();
-    const rule = FEATURE_RULES[tier][featureKey];
-    const price = rule.payPerUsePrice || 0;
-    let promptKey: import("@/lib/entitlements").GatingPromptKey;
-    switch (featureKey) {
-      case "compatibility_reading":
-        promptKey = tier === "free" ? "compatibility_free_exhausted" : "compatibility_sub_exhausted";
-        break;
-      case "palm_reading":
-        promptKey = tier === "free" ? "palm_free" : "palm_sub_full";
-        break;
-      case "tarot_reading":
-      default:
-        promptKey = tier === "free" ? "tarot_free_exhausted" : "tarot_sub_exhausted";
-    }
-    return {
-      gatingMessage: entitlements.getGatingMessage(promptKey, price),
-      resetCycle: rule.resetCycle,
-    };
-  }, [featureKey, readingId, customGatingMessage]);
+  useEffect(() => {
+    if (!admin || !readingId || isReady || !onUnlockStart || startedReading.current === readingId) return;
+    startedReading.current = readingId;
+    onUnlockStart();
+  }, [admin, readingId, isReady, onUnlockStart]);
 
   const handleUnlock = () => {
+    onUnlockStart?.();
     premiumUnlock.markUnlocked(readingId);
     setUnlocked(true);
-    setPromoOpen(false);
-    setPaymentOpen(false);
     analytics.track("reading_unlocked", { readingId, featureKey });
   };
 
-  const handleOpenPromo = () => {
-    // If quota is exhausted for this feature, log a blocked event but still
-    // proceed with the video-as-unlock flow (payment is currently disabled).
-    const access = entitlements.checkAccess(featureKey);
-    if (access.allowed === false) {
-      analytics.track("unlock_blocked_due_to_limit", {
-        readingId,
-        featureKey,
-        reason: access.promptKey,
-      });
-    }
-    analytics.track("video_opened", { readingId, featureKey });
-    // Notify the host to begin generating the full AI reading in the
-    // background. We deliberately fire this BEFORE opening the video so
-    // generation overlaps with playback.
-    try { onUnlockStart?.(); } catch (e) { console.warn("[unlock] onUnlockStart threw", e); }
-    setPromoOpen(true);
-  };
-
-  // Bypass paths: explicit forceUnlock prop, an already-unlocked reading, or
-  // an externally-controlled `disabled` flag (e.g. while the AI is still
-  // streaming). Nothing else bypasses — not tier, not email, not env.
-  if (forceUnlock || unlocked || disabled) {
+  if (admin || forceUnlock || unlocked || disabled) {
     return <>{children}</>;
   }
 
@@ -211,12 +106,9 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
 
         <h3 className="font-heading text-2xl text-gold mb-3">{t.unlock_cta_label}</h3>
 
-        <p className="font-body text-sm text-foreground/70 leading-relaxed mb-6 max-w-sm mx-auto">
-          {t.unlock_subtitle}
-        </p>
-
         <button
-          onClick={handleOpenPromo}
+          type="button"
+          onClick={handleUnlock}
           className="w-full btn-gold py-3.5 rounded-xl font-body font-bold text-sm tracking-wider flex items-center justify-center gap-2"
         >
           <Sparkles className="w-4 h-4" />
@@ -224,21 +116,6 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
         </button>
       </motion.div>
 
-      {/*
-        Promo video IS the unlock mechanism (payment disabled for now).
-        Continuing or finishing the video unlocks the full reading directly.
-        PaymentGatingModal kept imported for future re-enablement.
-      */}
-      <PromoVideoModal
-        isOpen={promoOpen}
-        onClose={() => setPromoOpen(false)}
-        onContinue={() => {
-          setPromoOpen(false);
-          handleUnlock();
-        }}
-        holdUntilReady={!isReady}
-        isReady={isReady}
-      />
     </div>
   );
 };

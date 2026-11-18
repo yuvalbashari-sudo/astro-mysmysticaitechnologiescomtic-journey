@@ -758,13 +758,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                     featureKey="monthly_horoscope"
                     onUnlockStart={() => startAIInterpretation()}
                     isReady={!!resultText && !aiStreaming}
-                    customGatingMessage={{
-                      he: "פתח את מפת הלידה השלמה והקריאה המעמיקה תמורת ₪19.",
-                      en: "Unlock your full birth chart and deep reading for ₪19.",
-                      ar: "افتح خريطتك الفلكية الكاملة وقراءتك العميقة مقابل 19 ₪.",
-                      ru: "Откройте вашу полную натальную карту и глубокое чтение за ₪19.",
-                      priceILS: 19,
-                    }}
+
                   >
                     {resultText ? (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>

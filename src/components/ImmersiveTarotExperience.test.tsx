@@ -18,6 +18,8 @@ vi.mock("@/components/PaymentGatingModal", () => ({
 vi.mock("@/lib/subscriptionManager", () => ({
   subscriptionManager: {
     getCurrentTier: () => "free",
+    isAdmin: () => false,
+    getAccessToken: () => null,
     isAuthReady: () => true,
     onAuthReady: (callback: () => void) => callback(),
     onAuthChange: () => () => {},
