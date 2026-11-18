@@ -219,7 +219,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
   );
 
   const interpretation = (
-    <div className="min-w-0 [overflow-wrap:anywhere]">
+    <div className="mobile-reading-surface mobile-reading-inset min-w-0 [overflow-wrap:anywhere]">
       {renderMysticalText(readingText, textSize)}
       {gatingMsg && (
         <button type="button" className="btn-outline-gold min-h-11" onClick={() => setGatingOpen(true)}>{t.compat_premium_cta}</button>

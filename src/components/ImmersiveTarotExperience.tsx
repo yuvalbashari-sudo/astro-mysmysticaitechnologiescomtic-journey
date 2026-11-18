@@ -1008,7 +1008,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                         })}
                       </div>
 
-                      <div className="rounded-2xl border border-gold/20 bg-background/95 p-4 shadow-xl">
+                      <div className="mobile-reading-surface rounded-2xl border border-gold/20 bg-background/95 p-4 shadow-xl">
                         <h3 className="font-heading text-center text-lg text-gold">
                           {t.imm_tarot_your_reading}
                         </h3>

@@ -371,7 +371,7 @@ const DailyHoroscopeCard = () => {
       className="w-full max-w-lg mx-auto"
     >
       <div
-        className="relative rounded-2xl overflow-hidden backdrop-blur-xl border border-gold/15"
+        className="mobile-reading-surface relative rounded-2xl overflow-hidden backdrop-blur-xl border border-gold/15"
         style={{
           background: "linear-gradient(145deg, hsl(222 40% 8% / 0.88), hsl(222 47% 6% / 0.92))",
           boxShadow: "0 8px 40px hsl(0 0% 0% / 0.3), inset 0 1px 0 hsl(var(--gold) / 0.08)",

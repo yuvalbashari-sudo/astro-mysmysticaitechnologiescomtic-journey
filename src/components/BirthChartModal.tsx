@@ -518,7 +518,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
                 </div>
 
                 {resultText && (
-                  <div className="mystical-card p-5 md:p-8" style={{ textAlign: isRTL ? "right" : "left" }}>
+                  <div className="mobile-reading-surface mystical-card p-5 md:p-8" style={{ textAlign: isRTL ? "right" : "left" }}>
                     {renderMysticalText(resultText, textSize)}
                   </div>
                 )}

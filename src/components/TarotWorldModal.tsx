@@ -785,7 +785,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
               {/* PHASE 4: AI Results */}
               {phase === "result" && selectedSpread && drawnCards.length > 0 && (
-                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative p-6 md:p-12 lg:p-14">
+                <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mobile-reading-surface relative p-6 md:p-12 lg:p-14">
                   {/* Header */}
                   <div className="text-center mb-10">
                     <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", damping: 12 }}>

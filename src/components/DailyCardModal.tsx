@@ -1000,7 +1000,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                 >
                   <div className="mx-auto w-full max-w-[620px]">
                     <motion.div
-                      className="relative rounded-[28px] overflow-visible"
+                      className="mobile-reading-surface relative rounded-[28px] overflow-visible"
                       style={{
                         background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.84), hsl(var(--deep-blue) / 0.92))",
                         border: "1px solid hsl(var(--gold) / 0.18)",

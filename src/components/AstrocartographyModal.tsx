@@ -344,7 +344,7 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="pt-2 md:pt-3 space-y-3 md:space-y-4 pb-6"
+            className="mobile-reading-surface mobile-reading-inset pt-2 md:pt-3 space-y-3 md:space-y-4 pb-6"
           >
             {/* TextSizeControl — anchored top-right */}
             <div className="flex justify-end">

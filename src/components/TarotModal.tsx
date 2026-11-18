@@ -1061,7 +1061,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       </figure>
                     ))}
                   </div>
-                  <div className="rounded-2xl border border-gold/20 bg-background/95 p-4 shadow-xl">
+                  <div className="mobile-reading-surface rounded-2xl border border-gold/20 bg-background/95 p-4 shadow-xl">
                     <h3 className="text-center font-heading text-lg text-gold">{t.tarot_mystical_interp}</h3>
                     <div className="my-3 flex justify-center [&_button]:min-h-11 [&_button]:min-w-11" dir="ltr">
                       <TextSizeControl value={textSize} onChange={setTextSize} />

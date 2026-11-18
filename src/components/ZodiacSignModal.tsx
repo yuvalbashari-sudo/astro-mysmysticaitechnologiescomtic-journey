@@ -188,7 +188,7 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
         </motion.div>
 
         {/* Reading sections */}
-        <div className="space-y-4">
+        <div className="mobile-reading-surface mobile-reading-inset space-y-4">
           {sections.map((s, i) => (
             <ReadingSection key={i} {...s} accentHue={elHue} />
           ))}
