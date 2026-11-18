@@ -1,31 +1,25 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
-import { Check, Copy, Image as ImageIcon, Loader2, Sparkles, Star, Clock, Shield, Pencil, Share2 } from "lucide-react";
+import { Image as ImageIcon, Loader2, Sparkles, Clock, Shield, Pencil } from "lucide-react";
 import ResultShareBar from "./ResultShareBar";
 
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
-import { PLANETS } from "@/components/NatalChartWheel";
-import SimpleNatalChart from "@/components/SimpleNatalChart";
-import AstralLightReveal from "@/components/AstralLightReveal";
-import { SHOW_AURA_REVEAL } from "@/lib/auraVisualMode";
-import AuraResultCard from "@/components/AuraResultCard";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { localizeName } from "@/lib/nameLocalization";
 import { getChartLabels, getPlanetName, getSignNameByKey, getElementName, getAspectName } from "@/lib/astroLocale";
-import { streamMysticalReading, renderMysticalText } from "@/lib/aiStreaming";
+import { renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
-import type { AuraResult } from "@/lib/auraResultBank";
 import { toast } from "@/components/ui/sonner";
 import { isAdminTestMode, ADMIN_DEFAULTS } from "@/lib/adminTestMode";
-import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
-import { usePremiumUnlocked } from "@/lib/premiumUnlock";
+import { callLocalAi, getLocalFallback } from "@/lib/localAiPipeline";
+import { safeErrorText } from "@/lib/localeGuard";
 
 const CHART_DAILY_KEY = "astrologai_birthchart_daily";
 const CHART_CACHE_KEY = "astrologai_birthchart_cache";
@@ -33,7 +27,7 @@ const CHART_CACHE_KEY = "astrologai_birthchart_cache";
 interface CachedChart {
   chartData: NatalChartResult;
   resultText: string;
-  details: { userName: string; gender: string; birthDate: string; birthTime: string; birthCity: string };
+  details: BirthDetails;
   savedAt: string;
 }
 
@@ -63,7 +57,7 @@ function loadCachedChart(): CachedChart | null {
     const raw = localStorage.getItem(CHART_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CachedChart;
-    if (parsed.chartData && parsed.resultText && parsed.details) return parsed;
+    if (parsed.chartData && typeof parsed.resultText === "string" && /\p{L}/u.test(parsed.resultText) && parsed.details) return parsed;
   } catch { /* ignore */ }
   return null;
 }
@@ -73,11 +67,9 @@ interface Props {
   onClose: () => void;
 }
 
-type Phase = "form" | "loading" | "chart" | "result";
+type Phase = "form" | "reading" | "result" | "error" | "limit";
 
-const PLANET_COLOR_BY_KEY = Object.fromEntries(PLANETS.map((planet) => [planet.key, planet.color]));
-
-const BirthChartModal = ({ isOpen, onClose }: Props) => {
+const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
   const { language, dir, isRTL } = useLanguage();
   const t = useT();
   const chartLabels = getChartLabels(language);
@@ -94,34 +86,20 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
   const [preparingChart, setPreparingChart] = useState(false);
   const [chartData, setChartData] = useState<NatalChartResult | null>(null);
   const [resultText, setResultText] = useState("");
-  const [aiStreaming, setAiStreaming] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [readingError, setReadingError] = useState("");
+  const requestRef = useRef<AbortController | null>(null);
+  useEffect(() => () => requestRef.current?.abort(), []);
   const [downloading, setDownloading] = useState(false);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [dailyLimitReached, setDailyLimitReached] = useState(false);
   const [authReady, setAuthReady] = useState(subscriptionManager.isAuthReady());
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const [restoredFromCache, setRestoredFromCache] = useState(false);
-  const [auraResult, setAuraResult] = useState<AuraResult | null>(null);
   const chartContentRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
 
   const { userName, gender, birthDate, birthTime, birthCity } = details;
-  const natalReadingId = `natal:${userName}:${birthDate}:${birthTime}:${birthCity}`;
-  const natalUnlocked = usePremiumUnlocked(natalReadingId);
-  const showResult = phase === "chart" || phase === "result";
-  const wheelSize = isMobile ? 300 : 460;
-
-  const houseSummary = useMemo(
-    () => (chartData?.dominantHouses || []).slice(0, 3).map(({ house, count }) => `${chartLabels.house} ${house} (${count})`).join(" • "),
-    [chartData, chartLabels],
-  );
-
-  const elementSummary = useMemo(
-    () => (chartData?.dominantElements || []).slice(0, 3).map(({ elementKey, count }) => `${getElementName(elementKey, language)} (${count})`).join(" • "),
-    [chartData, language],
-  );
-
+  const showResult = phase !== "form";
   const isAdmin = subscriptionManager.isAdmin();
 
   useEffect(() => {
@@ -129,7 +107,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       const ready = subscriptionManager.isAuthReady();
       const admin = subscriptionManager.isAdmin();
       setAuthReady(ready);
-      if (!isOpen) return;
       setDailyLimitReached(ready ? (admin ? false : hasUsedChartToday()) : false);
     };
 
@@ -137,10 +114,9 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     const unsubscribe = subscriptionManager.onAuthChange(syncAdminState);
     subscriptionManager.onAuthReady(syncAdminState);
     return unsubscribe;
-  }, [isOpen]);
+  }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
 
     const frame = requestAnimationFrame(() => {
       if (modalScrollRef.current) {
@@ -149,49 +125,25 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     });
 
     return () => cancelAnimationFrame(frame);
-  }, [isOpen, phase]);
+  }, [phase]);
 
-
-  // Auto-restore cached chart for returning users — play shortened animation
   useEffect(() => {
-    if (!isOpen || phase !== "form") return;
     const cached = loadCachedChart();
     if (!cached || !cached.resultText) return;
-    setDetails(cached.details as BirthDetails);
+    setDetails(cached.details);
     setChartData(cached.chartData);
     setResultText(cached.resultText);
     setRestoredFromCache(true);
-    // Go through loading phase so astral animation plays (shortened) — or skip to result if reveal disabled
-    setPhase(SHOW_AURA_REVEAL ? "loading" : "result");
+    setPhase("result");
     if (cached.details.userName?.trim()) {
       setShowWelcomeBack(true);
-      setTimeout(() => setShowWelcomeBack(false), 4000);
+      const timer = window.setTimeout(() => setShowWelcomeBack(false), 4000);
+      return () => window.clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, []);
 
-  const handleClose = useCallback(() => {
-    onClose();
-    setTimeout(() => {
-      setPhase("form");
-      setDetails({
-        userName: "",
-        gender: mysticalProfile.getUserGender() || "",
-        birthDate: "",
-        birthTime: "",
-        birthCity: "",
-      });
-      setAttempted(false);
-      setPreparingChart(false);
-      setChartData(null);
-      setResultText("");
-      setAiStreaming(false);
-      setCopied(false);
-      setTextSize("default");
-      setAuraResult(null);
-    }, 300);
-  }, [onClose]);
-
-  const handleSubmit = useCallback(async () => {
+  async function handleSubmit() {
+    if (requestRef.current) return;
     setAttempted(true);
 
     if (!authReady) {
@@ -220,6 +172,8 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     if (effectiveGender) mysticalProfile.recordGender(effectiveGender);
     if (effectiveBirthCity) mysticalProfile.recordBirthLocation(effectiveBirthCity);
 
+    const request = new AbortController();
+    requestRef.current = request;
     setPreparingChart(true);
 
     try {
@@ -229,16 +183,16 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         birthPlace: effectiveBirthCity,
       });
 
+      if (request.signal.aborted) return;
+      const submitted = { userName, gender: effectiveGender, birthDate: effectiveBirthDate, birthTime: effectiveBirthTime, birthCity: effectiveBirthCity };
+      setDetails(submitted);
       setChartData(natalChart);
-      mysticalProfile.recordZodiac(getSignNameByKey(natalChart.sunSign.key, language), natalChart.sunSign.symbol, natalChart.sunSign.element, birthDate);
-      mysticalProfile.recordRising(`${getSignNameByKey(natalChart.risingSign.key, language)} ${chartLabels.rising}`, natalChart.risingSign.symbol, natalChart.risingSign.element, birthTime);
-      if (SHOW_AURA_REVEAL) {
-        setPhase("loading");
-      } else {
-        // Skip aura reveal — set phase to trigger direct interpretation
-        setPhase("loading");
-      }
+      mysticalProfile.recordZodiac(getSignNameByKey(natalChart.sunSign.key, language), natalChart.sunSign.symbol, natalChart.sunSign.element, effectiveBirthDate);
+      mysticalProfile.recordRising(`${getSignNameByKey(natalChart.risingSign.key, language)} ${chartLabels.rising}`, natalChart.risingSign.symbol, natalChart.risingSign.element, effectiveBirthTime);
+      startInterpretation(natalChart, submitted, request);
     } catch (error) {
+      if (request.signal.aborted) return;
+      requestRef.current = null;
       const msg = error instanceof Error ? error.message : "";
       const geocodeErrors: Record<string, string> = {
         GEOCODE_EMPTY: t.geocode_empty,
@@ -249,19 +203,40 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     } finally {
       setPreparingChart(false);
     }
-  }, [authReady, birthCity, birthDate, birthTime, dailyLimitReached, gender, isAdmin, t.common_loading, t.chart_daily_limit_toast, t.chart_form_error, userName]);
+  }
 
-  // Tracks whether the AI generation has already started for this chart
-  // (avoids double-fire if onUnlockStart is invoked multiple times).
-  const aiStartedRef = useRef(false);
-
-  const startAIInterpretation = useCallback(() => {
-    if (!chartData) return;
-    if (aiStartedRef.current) return;
-    aiStartedRef.current = true;
-
+  function startInterpretation(chartData: NatalChartResult, submitted: BirthDetails, request: AbortController) {
+    const { birthDate, birthTime, userName, gender } = submitted;
+    setPhase("reading");
     setResultText("");
-    setAiStreaming(true);
+    setReadingError("");
+    let text = "";
+    let timer: number;
+    const fail = (error?: unknown) => {
+      if (request.signal.aborted) return;
+      request.abort();
+      requestRef.current = null;
+      if (error === "DAILY_LIMIT_REACHED") {
+        setPhase("limit");
+        setReadingError(t.chart_daily_limit_toast);
+      } else {
+        setPhase("error");
+        setReadingError(safeErrorText(error, language, "birth-chart"));
+      }
+    };
+    const armTimeout = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => fail(), 30_000);
+    };
+    request.signal.addEventListener("abort", () => window.clearTimeout(timer), { once: true });
+    const replaceText = (value: string) => {
+      if (request.signal.aborted) return;
+      armTimeout();
+      text = value;
+      if (text !== getLocalFallback("error", language)) setResultText(text);
+    };
+    const elementSummary = chartData.dominantElements.map(({ elementKey, count }) => `${getElementName(elementKey, language)} (${count})`).join(" • ");
+    const houseSummary = chartData.dominantHouses.map(({ house, count }) => `${chartLabels.house} ${house} (${count})`).join(" • ");
 
     const planetLines = chartData.planetPlacements
       .map((planet) => `${planet.symbol} ${getPlanetName(planet.key, language)}: ${getSignNameByKey(planet.signKey, language)} ${planet.degree}° — ${chartLabels.house} ${planet.house}`)
@@ -284,9 +259,15 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
       `${chartLabels.dominantHouses}: ${houseSummary || chartLabels.notDetected}`,
     ].join("\n");
 
-    streamMysticalReading(
-      "birthChart",
-      {
+    armTimeout();
+    void callLocalAi({
+      mode: "stream",
+      endpoint: "mystical-reading",
+      promptForGender: false,
+      signal: request.signal,
+      payload: {
+        type: "birthChart",
+        language,
         birthDate,
         birthTime,
         birthCity: chartData.location.name,
@@ -306,9 +287,17 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
         userName: localizeName(userName.trim(), language) || undefined,
         gender,
       },
-      (delta) => setResultText((prev) => prev + delta),
-      () => {
-        setAiStreaming(false);
+      onDelta: (delta) => replaceText(text + delta),
+      onReplace: replaceText,
+      onError: fail,
+      onDone: () => {
+        if (request.signal.aborted) return;
+        if (!/\p{L}/u.test(text) || text === getLocalFallback("error", language)) {
+          fail();
+          return;
+        }
+        window.clearTimeout(timer);
+        requestRef.current = null;
         setPhase("result");
         if (!isAdmin) {
           markChartUsedToday();
@@ -321,51 +310,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
         });
-        // Cache chart + result for instant restore on return
-        setResultText((finalText) => {
-          saveCachedChart({
-            chartData,
-            resultText: finalText,
-            details: { userName, gender, birthDate, birthTime, birthCity },
-            savedAt: new Date().toISOString(),
-          });
-          return finalText;
-        });
+        saveCachedChart({ chartData, resultText: text, details: submitted, savedAt: new Date().toISOString() });
       },
-      (error) => {
-        if (error === "DAILY_LIMIT_REACHED") {
-          if (!isAdmin) {
-            markChartUsedToday();
-            setDailyLimitReached(true);
-          }
-          toast.error(t.chart_daily_limit_toast);
-        } else {
-          toast.error(error);
-        }
-        setAiStreaming(false);
-        aiStartedRef.current = false;
-        setPhase("form");
-      },
-      language,
-    );
-  }, [authReady, birthCity, birthDate, birthTime, chartData, chartLabels, dailyLimitReached, elementSummary, gender, houseSummary, isAdmin, language, t.chart_daily_limit_toast, t.chart_form_error, t.common_loading, userName]);
-
-  // When chart data is ready, transition to "chart" phase so the user can see
-  // their natal chart immediately. AI interpretation is deferred until the
-  // user clicks unlock (fired via onUnlockStart on the PremiumUnlockOverlay).
-  useEffect(() => {
-    if (SHOW_AURA_REVEAL) return;
-    if (phase !== "loading" || !chartData || restoredFromCache) return;
-    aiStartedRef.current = false;
-    setPhase("chart");
-  }, [phase, chartData, restoredFromCache]);
-
-  const handleCopy = useCallback(async () => {
-    await navigator.clipboard.writeText(resultText);
-    setCopied(true);
-    toast.success(t.chart_copied);
-    setTimeout(() => setCopied(false), 2000);
-  }, [resultText]);
+    }).catch(fail);
+  }
 
   const handleDownloadImage = useCallback(async () => {
     if (!chartContentRef.current) return;
@@ -388,12 +336,10 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     }
   }, [birthDate]);
 
-  if (!isOpen) return null;
-
   return (
     <CinematicModalShell
-      isOpen={isOpen}
-      onClose={handleClose}
+      isOpen
+      onClose={onClose}
       scrollRef={modalScrollRef}
       fullscreen={isMobile}
       hideAdvisor={isMobile}
@@ -438,7 +384,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </motion.div>
                   <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{t.chart_title}</h2>
                   <p className="font-body text-sm max-w-md mx-auto leading-relaxed" style={{ color: "hsl(var(--foreground) / 0.6)" }}>
-                    {t.chart_subtitle}
+                    {t.chart_full_interp_desc}
                   </p>
                 </div>
 
@@ -502,33 +448,13 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                 )}
               </motion.div>
             )}
-
-            {SHOW_AURA_REVEAL && (phase === "loading" || showResult) && chartData && (
-              <motion.div
-                key="loading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.6 }}
-                className="pointer-events-none"
-                style={{ position: showResult ? 'relative' : undefined, zIndex: showResult ? 10 : undefined }}
-              >
-                <AstralLightReveal
-                  userName={localizeName(userName.trim(), language) || undefined}
-                  chartData={chartData}
-                  onComplete={restoredFromCache ? () => setPhase("result") : startAIInterpretation}
-                  onAuraResult={setAuraResult}
-                  fastMode={restoredFromCache}
-                />
-              </motion.div>
-            )}
-
               {showResult && (
               <motion.div
                 key="result"
                 className="space-y-8"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: restoredFromCache ? 0.4 : 0.6, delay: restoredFromCache ? 0 : 1.5 }}
+                transition={{ duration: 0.15 }}
               >
 
                 {/* Welcome back + edit for cached results */}
@@ -574,173 +500,6 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   </motion.div>
                 )}
 
-                {/* Chart wheel emerges from below */}
-                <motion.div
-                  className="w-full -mt-20"
-                  initial={{ opacity: 0, y: 100, scale: 0.8 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 1.4, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    minHeight: wheelSize + 48,
-                    display: "block",
-                    overflow: "visible",
-                    position: "relative",
-                    zIndex: 2,
-                  }}
-                >
-                  <div
-                    className="mx-auto w-full rounded-[2rem]"
-                    style={{
-                      maxWidth: wheelSize + (isMobile ? 28 : 64),
-                      minHeight: wheelSize + 32,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      background: "radial-gradient(ellipse 80% 70% at 50% 45%, hsl(var(--deep-blue-light) / 0.5), hsl(var(--deep-blue) / 0.96))",
-                      border: "1px solid hsl(var(--gold) / 0.14)",
-                      boxShadow: "0 0 60px hsl(var(--deep-blue) / 0.55), inset 0 1px 0 hsl(var(--gold) / 0.05)",
-                      padding: isMobile ? 10 : 24,
-                      overflow: "visible",
-                    }}
-                  >
-                    <SimpleNatalChart
-                      planetPositions={chartData?.planetPositions}
-                      ascendantAngle={chartData?.ascendantAngle}
-                      size={wheelSize}
-                    />
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 2.0, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  {userName.trim() && (
-                    <p className="font-body text-sm mb-2" style={{ color: "hsl(var(--gold) / 0.5)" }}>
-                      {t.chart_of_name} {localizeName(userName.trim(), language)}
-                    </p>
-                  )}
-                  <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mb-2">
-                    {t.chart_personal_title}
-                  </h2>
-                  <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.4)" }}>
-                      {chartData ? `${chartData.location.name} • ${birthDate} • ${birthTime}` : t.chart_computing}
-                  </p>
-                </motion.div>
-
-                {chartData && (
-                <motion.div
-                  className="grid md:grid-cols-3 gap-3 w-full"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.7, delay: 1.1, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.sun}</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.sunSign.symbol} {getSignNameByKey(chartData.sunSign.key, language)}</div>
-                  </div>
-                  <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{t.chart_asc_horizon}</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>{chartData.risingSign.symbol} {getSignNameByKey(chartData.risingSign.key, language)}</div>
-                  </div>
-                  <div className="mystical-card p-4 text-center">
-                    <div className="text-xs font-body mb-2" style={{ color: "hsl(var(--gold) / 0.55)" }}>{chartLabels.moon}</div>
-                    <div className="font-heading text-lg" style={{ color: "hsl(var(--gold))" }}>☽ {chartData.moonSignKey ? getSignNameByKey(chartData.moonSignKey, language) : chartData.moonSign}</div>
-                  </div>
-                </motion.div>
-                )}
-
-                {SHOW_AURA_REVEAL && auraResult && (
-                  <AuraResultCard result={auraResult} />
-                )}
-
-
-                {chartData && (
-                <div className="grid xl:grid-cols-3 gap-4 w-full">
-                  <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_birth_location}</div>
-                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartData.location.name}</p>
-                    <p className="font-body text-xs mt-2" style={{ color: "hsl(var(--foreground) / 0.45)" }}>
-                      {chartData.location.latitude.toFixed(4)}°, {chartData.location.longitude.toFixed(4)}° • {chartData.location.timezone}
-                    </p>
-                  </div>
-                  <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_dominance}</div>
-                    <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartLabels.elements}: {elementSummary}</p>
-                    <p className="font-body text-sm mt-2" style={{ color: "hsl(var(--foreground) / 0.78)" }}>{chartLabels.houses}: {houseSummary}</p>
-                  </div>
-                  {!!chartData.aspects.length && (
-                    <div className="mystical-card p-4">
-                      <div className="font-heading text-base mb-2" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_key_aspects}</div>
-                      <div className="space-y-2">
-                        {chartData.aspects.slice(0, 4).map((aspect) => (
-                          <p key={`${aspect.planet1Key}-${aspect.planet2Key}`} className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.74)" }}>
-                            {aspect.planet1Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet1Key, language)} • {getAspectName(aspect.type, language)} • {aspect.planet2Key === "ascendant" ? chartLabels.ascendant : getPlanetName(aspect.planet2Key, language)}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                )}
-
-                {chartData && (
-                <motion.div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                  {chartData.planetPlacements.map((planet) => (
-                    <div
-                      key={planet.key}
-                      className="px-3 py-3 rounded-xl text-center"
-                      style={{
-                        background: "linear-gradient(145deg, hsl(222 40% 10% / 0.6), hsl(222 47% 6% / 0.8))",
-                        border: `1px solid ${(PLANET_COLOR_BY_KEY[planet.key] || "#E8B84B")}22`,
-                        backdropFilter: "blur(8px)",
-                      }}
-                    >
-                      <span className="text-lg block" style={{ color: PLANET_COLOR_BY_KEY[planet.key] || "#E8B84B" }}>{planet.symbol}</span>
-                      <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.9)" }}>{getPlanetName(planet.key, language)}</span>
-                      <span className="text-xs font-body block" style={{ color: "hsl(var(--foreground) / 0.6)" }}>{getSignNameByKey(planet.signKey, language)} {planet.degree}°</span>
-                      <span className="text-[10px] font-body block" style={{ color: "hsl(var(--foreground) / 0.35)" }}>{chartLabels.house} {planet.house}</span>
-                    </div>
-                  ))}
-                </motion.div>
-                )}
-
-                {chartData && (
-                <motion.div className="grid md:grid-cols-2 gap-3" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                  <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_house_cusps}</div>
-                    <div className="grid grid-cols-2 gap-2">
-                      {chartData.houseCusps.map((house) => (
-                        <div key={house.house} className="rounded-lg px-3 py-2" style={{ background: "hsl(var(--deep-blue-light) / 0.35)" }}>
-                          <div className="text-xs font-body" style={{ color: "hsl(var(--foreground) / 0.5)" }}>{chartLabels.house} {house.house}</div>
-                          <div className="text-sm font-body" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{getSignNameByKey(house.signKey, language)} {house.degree}°</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mystical-card p-4">
-                    <div className="font-heading text-base mb-3" style={{ color: "hsl(var(--gold) / 0.85)" }}>{t.chart_gravity_center}</div>
-                    <div className="space-y-2">
-                      {(chartData.dominantElements || []).slice(0, 4).map((entry) => (
-                        <div key={entry.element} className="flex items-center justify-between rounded-lg px-3 py-2" style={{ background: "hsl(var(--deep-blue-light) / 0.35)" }}>
-                          <span className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.82)" }}>{getElementName(entry.elementKey, language)}</span>
-                          <span className="font-body text-xs" style={{ color: "hsl(var(--gold) / 0.7)" }}>{entry.count}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-                )}
-
-                <div className="flex items-center justify-center gap-3 py-4">
-                  <div className="h-px flex-1 max-w-[80px]" style={{ background: "linear-gradient(to right, transparent, hsl(var(--gold) / 0.2))" }} />
-                  <Star className="w-4 h-4" style={{ color: "hsl(var(--gold) / 0.25)" }} />
-                  <div className="h-px flex-1 max-w-[80px]" style={{ background: "linear-gradient(to left, transparent, hsl(var(--gold) / 0.2))" }} />
-                </div>
-
                 <motion.div className="text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <h3 className="font-heading text-lg md:text-xl mb-1" style={{ color: "hsl(var(--gold) / 0.8)" }}>{t.chart_full_interp_title}</h3>
                   <p className="font-body text-xs" style={{ color: "hsl(var(--foreground) / 0.35)" }}>
@@ -752,35 +511,31 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
                   <TextSizeControl value={textSize} onChange={setTextSize} />
                 </div>
 
-                {chartData && (phase === "chart" || phase === "result") && (
-                  <PremiumUnlockOverlay
-                    readingId={`natal:${userName}:${birthDate}:${birthTime}:${birthCity}`}
-                    featureKey="monthly_horoscope"
-                    onUnlockStart={() => startAIInterpretation()}
-                    isReady={!!resultText && !aiStreaming}
-
-                  >
-                    {resultText ? (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mystical-card p-5 md:p-8" style={{ boxShadow: "0 0 40px hsl(222 47% 6% / 0.5), inset 0 1px 0 hsl(var(--gold) / 0.06)" }}>
-                        <div dir={dir} style={{ textAlign: isRTL ? "right" : "left", textShadow: "0 2px 20px hsl(222 47% 6%), 0 0 40px hsl(222 47% 6% / 0.6)" }}>
-                          {renderMysticalText(resultText, textSize)}
-                        </div>
-                      </motion.div>
-                    ) : aiStreaming ? (
-                      <div className="text-center py-8">
-                        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3" style={{ color: "hsl(var(--gold))" }} />
-                        <p className="font-body text-sm" style={{ color: "hsl(var(--foreground) / 0.5)" }}>{t.birth_chart_loading}</p>
-                      </div>
-                    ) : (
-                      // Pre-unlock teaser. Blurred by overlay.
-                      <div className="mystical-card p-5 md:p-8 text-center font-body text-foreground/70" style={{ lineHeight: 1.9 }}>
-                        <p>✦ ✦ ✦</p>
-                      </div>
-                    )}
-                  </PremiumUnlockOverlay>
+                {resultText && (
+                  <div className="mystical-card p-5 md:p-8" style={{ textAlign: isRTL ? "right" : "left" }}>
+                    {renderMysticalText(resultText, textSize)}
+                  </div>
                 )}
-
-                {phase === "result" && natalUnlocked && (
+                {phase === "reading" && !resultText && (
+                  <div role="status" className="text-center py-8">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-gold" />
+                    <p>{t.birth_chart_loading}</p>
+                  </div>
+                )}
+                {readingError && (
+                  <div className="text-center space-y-3">
+                    <p role="alert">{readingError}</p>
+                    {phase === "error" && chartData && (
+                      <button className="btn-gold" onClick={() => {
+                        if (requestRef.current) return;
+                        const request = new AbortController();
+                        requestRef.current = request;
+                        startInterpretation(chartData, details, request);
+                      }}>{t.daily_horoscope_retry}</button>
+                    )}
+                  </div>
+                )}
+                {phase === "result" && resultText && (
                   <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-5 pb-8">
                     <ResultShareBar
                       resultText={resultText}
@@ -802,5 +557,7 @@ const BirthChartModal = ({ isOpen, onClose }: Props) => {
     </CinematicModalShell>
   );
 };
+
+const BirthChartModal = ({ isOpen, onClose }: Props) => isOpen ? <BirthChartReading onClose={onClose} /> : null;
 
 export default BirthChartModal;
