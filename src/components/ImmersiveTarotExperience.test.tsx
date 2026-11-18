@@ -25,7 +25,8 @@ afterEach(() => {
   localStorage.clear();
 });
 
-it("starts at the third card and displays partial text without reopening the quota gate", async () => {
+it.each([1024, 320])("starts at the third card at %i px and streams without reopening the quota gate", async (width) => {
+  vi.stubGlobal("innerWidth", width);
   localStorage.setItem("astrologai_lang", "en");
   const available = entitlements.getRemainingFreeUses("tarot_reading");
   for (let used = 1; used < available; used++) {
@@ -39,7 +40,9 @@ it("starts at the third card and displays partial text without reopening the quo
 
   render(<LanguageProvider><ImmersiveTarotExperience isOpen onClose={() => {}} /></LanguageProvider>);
   fireEvent.click(screen.getByRole("button", { name: "General" }));
-  const cards = document.querySelectorAll(".absolute.cursor-pointer");
+  const cards = width < 768
+    ? screen.getAllByRole("button", { name: /^Card [1-7]$/ })
+    : Array.from(document.querySelectorAll(".absolute.cursor-pointer"));
   expect(cards).toHaveLength(7);
   expect(entitlements.getRemainingFreeUses("tarot_reading")).toBe(0);
   fireEvent.click(cards[4]);
@@ -71,6 +74,11 @@ it("starts at the third card and displays partial text without reopening the quo
     streamController.enqueue(encoder.encode("data: [DONE]\n\n"));
     streamController.close();
   });
-  expect(screen.getByRole("button", { name: "A++" })).toBeInTheDocument();
+  const largest = screen.getByRole("button", { name: "A++" });
+  if (width < 768) {
+    fireEvent.click(largest);
+    expect(largest).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("First interpretation.")).toHaveClass("text-[1.75rem]");
+  }
   await waitFor(() => expect(localStorage.getItem("astrologai_readings")).toContain('"type":"tarot"'));
 });

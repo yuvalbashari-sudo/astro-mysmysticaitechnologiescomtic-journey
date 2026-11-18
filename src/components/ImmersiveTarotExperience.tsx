@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { Fragment, useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
 import AvatarHoverTeaser from "./AvatarHoverTeaser";
@@ -429,7 +429,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const requestRef = useRef<AbortController | null>(null);
   const selectedIndicesRef = useRef<Set<number>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 768);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
   const [advisorOpen, setAdvisorOpen] = useState(false);
   // Entitlements gating state
   const [gatingOpen, setGatingOpen] = useState(false);
@@ -461,25 +462,25 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const questionOptions = useMemo((): QuestionOption[] => [
     {
       key: "love",
-      icon: <Heart className="w-12 h-12" />,
+      icon: <Heart className="h-8 w-8 md:h-12 md:w-12" />,
       label: t.imm_tarot_category_love,
       color: "340 60% 55%",
     },
     {
       key: "career",
-      icon: <Briefcase className="w-12 h-12" />,
+      icon: <Briefcase className="h-8 w-8 md:h-12 md:w-12" />,
       label: t.imm_tarot_category_career,
       color: "215 60% 55%",
     },
     {
       key: "money",
-      icon: <DollarSign className="w-12 h-12" />,
+      icon: <DollarSign className="h-8 w-8 md:h-12 md:w-12" />,
       label: t.imm_tarot_category_money,
       color: "43 80% 55%",
     },
     {
       key: "general",
-      icon: <Sparkles className="w-12 h-12" />,
+      icon: <Sparkles className="h-8 w-8 md:h-12 md:w-12" />,
       label: t.imm_tarot_category_general,
       color: "270 50% 60%",
     },
@@ -635,10 +636,23 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
   useEffect(() => () => requestRef.current?.abort(), []);
 
+  useEffect(() => {
+    if (!isOpen || !isMobile) return;
+    const page = document.documentElement;
+    const previousOverflow = page.style.overflow;
+    page.style.overflow = "hidden";
+    return () => { page.style.overflow = previousOverflow; };
+  }, [isOpen, isMobile]);
+
+  useEffect(() => {
+    if (mobileScrollRef.current) mobileScrollRef.current.scrollTop = 0;
+  }, [phase, isMobile]);
+
   const chosenCards = Array.from(selectedCardIndices, (index) => drawnCards[index]);
+  const readingSize = isMobile ? (["default", "large", "xl"] as const)[textSizeLevel] : "default";
   const readingText = (
     <>
-      {aiText && renderMysticalText(aiText)}
+      {aiText && renderMysticalText(aiText, readingSize)}
       {aiLoading && !aiText && (
         <p role="status" className="py-12 text-center text-gold/60">
           {t.imm_tarot_deciphering}
@@ -657,11 +671,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
   if (!isOpen) return null;
 
+  const PhaseTransition = isMobile ? Fragment : AnimatePresence;
   const overlay = (
     <AnimatePresence>
       {isOpen && !gatingOpen && !isLiveBlocked && (
         <motion.div
-          className="fixed inset-0 z-[140] pointer-events-none"
+          className={`fixed inset-0 z-[140] ${isMobile ? "pointer-events-auto overflow-hidden" : "pointer-events-none"}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -749,21 +764,26 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           
 
           {/* ── Phase Content ── */}
-          <div className={`absolute inset-0 z-[92] pointer-events-none ${phase === "interpretation" ? "" : "flex items-center justify-center"}`}>
-            <AnimatePresence>
+          <div
+            ref={mobileScrollRef}
+            className={`absolute z-[92] ${isMobile
+              ? "inset-x-0 bottom-0 top-[calc(4.5rem+env(safe-area-inset-top))] overflow-x-hidden overflow-y-auto overscroll-contain pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+              : `inset-0 pointer-events-none ${phase === "interpretation" ? "" : "flex items-center justify-center"}`}`}
+          >
+            <PhaseTransition>
               {/* ─── PHASE 1: Question Selection ─── */}
               {phase === "question" && (
                 <motion.div
                   key="question"
-                  className="pointer-events-auto text-center w-full max-w-lg px-6"
-                  style={{ marginTop: isMobile ? "30vh" : "25vh" }}
+                  className="pointer-events-auto mx-auto w-full max-w-lg px-4 py-4 text-center md:px-6 md:py-0"
+                  style={{ marginTop: isMobile ? undefined : "25vh" }}
                   initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
                   transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <motion.div
-                    className="text-gold/50 text-[22px] tracking-[0.3em] uppercase font-body mb-4"
+                    className="mb-3 font-body text-base uppercase tracking-wider text-gold/70 md:mb-4 md:text-[22px] md:tracking-[0.3em]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
@@ -772,7 +792,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     <RemainingReadingsBadge feature="tarot_reading" className="ms-2 align-middle" />
                   </motion.div>
                   <motion.h2
-                    className="font-heading text-4xl md:text-5xl mb-10"
+                    className="mb-5 font-heading text-3xl md:mb-10 md:text-5xl"
                     style={{
                       color: "hsl(var(--gold))",
                       textShadow: "0 0 20px hsl(var(--gold) / 0.3)",
@@ -785,12 +805,12 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {t.imm_tarot_question_title}
                   </motion.h2>
 
-                  <div className="grid grid-cols-2 gap-5 md:gap-6">
+                  <div className="grid grid-cols-2 gap-3 md:gap-6">
                     {questionOptions.map((opt, i) => (
                       <motion.button
                         key={opt.key}
                         type="button"
-                        className="relative rounded-xl p-8 md:p-10 backdrop-blur-xl cursor-pointer border-0 appearance-none outline-none group"
+                        className="group relative touch-manipulation cursor-pointer appearance-none rounded-xl p-4 backdrop-blur-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold md:p-10"
                         style={{
                           background: selectedQuestion === opt.key
                             ? `linear-gradient(145deg, hsl(${opt.color} / 0.2), hsl(${opt.color} / 0.08))`
@@ -835,8 +855,8 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               {phase === "drawing" && (
                 <motion.div
                   key="drawing"
-                  className="pointer-events-auto text-center w-full px-4"
-                  style={{ marginTop: isMobile ? "32vh" : "28vh" }}
+                  className="pointer-events-auto w-full px-4 py-4 text-center md:py-0"
+                  style={{ marginTop: isMobile ? undefined : "28vh" }}
                   initial={{ opacity: 0, filter: "blur(8px)" }}
                   animate={{ opacity: 1, filter: "blur(0px)" }}
                   exit={{ opacity: 0, filter: "blur(8px)" }}
@@ -856,7 +876,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   <motion.div
                     className="font-heading font-bold tracking-wider"
                     style={{
-                      fontSize: isMobile ? "1.5rem" : "2.2rem",
+                      fontSize: isMobile ? "1rem" : "2.2rem",
                       color: "hsl(var(--gold))",
                       textShadow: "0 0 30px hsl(var(--gold) / 0.4), 0 0 60px hsl(var(--gold) / 0.15)",
                       letterSpacing: "0.08em",
@@ -876,7 +896,31 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {t.imm_tarot_listen_intuition}
                   </motion.div>
 
-                  {/* Card fan — cinematic arc */}
+                  {isMobile ? (
+                    <div className="mx-auto mt-5 grid max-w-[20rem] grid-cols-4 gap-2.5" dir="ltr">
+                      {drawnCards.map((card, index) => {
+                        const isSelected = selectedCardIndices.has(index);
+                        const name = cardName(card.name.en, card.name.he);
+                        return (
+                          <button
+                            key={card.id}
+                            type="button"
+                            aria-label={isSelected ? name : `${t.tarot_card_label} ${index + 1}`}
+                            aria-pressed={isSelected}
+                            className="aspect-[2/3] min-h-11 min-w-0 touch-manipulation overflow-hidden rounded-lg border border-gold/25 bg-background/75 opacity-95 transition-colors aria-pressed:border-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+                            onClick={() => handleCardSelect(index)}
+                          >
+                            <img
+                              src={isSelected ? (tarotCardImages[card.name.en] || card.image || cardBack) : cardBack}
+                              alt=""
+                              className="h-full w-full object-cover"
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                  /* Desktop card fan */
                   <div
                     className="relative flex items-center justify-center mx-auto"
                     style={{
@@ -899,6 +943,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       />
                     ))}
                   </div>
+                  )}
 
                   {/* Minimal progress dots */}
                   <motion.div
@@ -934,134 +979,64 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
               {phase === "interpretation" && (
                 <motion.div
                   key="interpretation"
-                  className="pointer-events-auto w-full overflow-hidden"
-                  style={{ maxHeight: isMobile ? "92vh" : "90vh" }}
+                  className={`pointer-events-auto w-full ${isMobile ? "" : "overflow-hidden"}`}
+                  style={{ maxHeight: isMobile ? undefined : "90vh" }}
                 >
                   {isMobile ? (
-                    /* ── Mobile: stacked layout (unchanged) ── */
-                    <div className="px-4" style={{ marginTop: "3vh" }}>
-                      {/* Cards row */}
-                      <motion.div
-                        className="flex items-end justify-center gap-3 mb-6"
-                        initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        {chosenCards.map((card, i) => {
-                          const isCenter = i === 1;
-                          const w = isCenter ? 166 : 137;
-                          const h = w * 1.55;
+                    <div className="mx-auto max-w-lg space-y-4 px-4 pt-3">
+                      <div className="mx-auto grid max-w-xs grid-cols-3 items-start gap-2.5">
+                        {chosenCards.map((card) => {
+                          const name = cardName(card.name.en, card.name.he);
                           return (
-                            <motion.div
-                              key={card.name.en}
-                              className="relative flex flex-col items-center"
-                              initial={{ opacity: 0, y: 30, scale: 0.85 }}
-                              animate={{ opacity: 1, y: 0, scale: 1 }}
-                              transition={{ delay: 0.2 + i * 0.15, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                            >
-                              <div className="relative" style={{ width: w, height: h }}>
+                            <figure key={card.id} className="min-w-0 text-center">
+                              <div className="relative mx-auto aspect-[2/3] w-full max-w-[5.5rem] overflow-hidden rounded-lg border border-gold/25 bg-background">
                                 <img
                                   src={tarotCardImages[card.name.en] || cardBack}
-                                  alt={cardName(card.name.en, card.name.he)}
-                                  className="w-full h-full object-cover rounded-xl"
-                                  style={{
-                                    imageRendering: "-webkit-optimize-contrast" as any,
-                                    backfaceVisibility: "hidden",
-                                    transform: "translateZ(0)",
-                                    boxShadow: isCenter
-                                      ? "0 0 60px hsl(var(--gold) / 0.35), 0 16px 48px hsl(0 0% 0% / 0.6)"
-                                      : "0 0 30px hsl(var(--gold) / 0.18), 0 10px 32px hsl(0 0% 0% / 0.5)",
-                                    filter: isCenter ? "contrast(1.1) saturate(1.08)" : "brightness(0.85) contrast(1.06)",
-                                    willChange: "transform",
-                                  }}
+                                  alt={name}
+                                  className="h-full w-full object-cover"
                                 />
-                                <img src={cardFrameImg} alt="" className="absolute inset-0 w-full h-full object-cover pointer-events-none rounded-xl" style={{ opacity: 0.85, mixBlendMode: "screen" }} />
+                                <img src={cardFrameImg} alt="" className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-75" />
                               </div>
-                              <motion.span
-                                className="font-heading mt-3 text-center"
-                                style={{ fontSize: isCenter ? 26 : 22, color: isCenter ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.7)" }}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.6 + i * 0.15 }}
-                              >
-                                {cardName(card.name.en, card.name.he)}
-                              </motion.span>
-                            </motion.div>
+                              <figcaption className="mt-1.5 break-words font-heading text-sm leading-tight text-gold">
+                                {name}
+                              </figcaption>
+                            </figure>
                           );
                         })}
-                      </motion.div>
+                      </div>
 
-                      {/* Interpretation text */}
-                      <motion.div
-                        ref={scrollRef}
-                        className="rounded-2xl overflow-y-auto"
-                        style={{
-                          maxHeight: "42vh",
-                          background: "linear-gradient(165deg, hsl(222 45% 8% / 0.92), hsl(222 50% 5% / 0.95))",
-                          border: "1px solid hsl(var(--gold) / 0.12)",
-                          boxShadow: "0 0 40px hsl(0 0% 0% / 0.4), inset 0 1px 0 hsl(var(--gold) / 0.06)",
-                        }}
-                      >
-                        <div className="p-6">
-                          {/* Text size control — mobile */}
-                          <div className="flex items-center gap-1.5 mb-4" style={{ direction: "ltr" }}>
-                            {([0, 1, 2] as const).map((level) => {
-                              const labels = ["A", "A+", "A++"];
-                              const active = textSizeLevel === level;
-                              return (
-                                <button
-                                  key={level}
-                                  type="button"
-                                  onClick={() => setTextSizeLevel(level)}
-                                  className="font-heading cursor-pointer transition-all duration-200"
-                                  style={{
-                                    fontSize: `${0.6 + level * 0.07}rem`,
-                                    padding: "3px 8px",
-                                    borderRadius: "999px",
-                                    background: active ? "hsl(var(--gold) / 0.12)" : "transparent",
-                                    border: `1px solid ${active ? "hsl(var(--gold) / 0.3)" : "hsl(var(--gold) / 0.08)"}`,
-                                    color: active ? "hsl(var(--gold))" : "hsl(var(--gold) / 0.4)",
-                                    boxShadow: active ? "0 0 10px hsl(var(--gold) / 0.08)" : "none",
-                                  }}
-                                >
-                                  {labels[level]}
-                                </button>
-                              );
-                            })}
-                          </div>
-                          <div style={{ zoom: [1, 1.15, 1.3][textSizeLevel], transition: "zoom 0.25s ease" }}>
-                          <motion.h3
-                            className="font-heading text-center mb-6"
-                            style={{ fontSize: "1.15rem", color: "hsl(var(--gold))", textShadow: "0 0 20px hsl(var(--gold) / 0.25)", letterSpacing: "0.08em" }}
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.7, duration: 0.5 }}
-                          >
-                            {t.imm_tarot_your_reading}
-                          </motion.h3>
-                          <div className="font-body text-foreground/90" style={{ fontSize: "1.05rem", lineHeight: 1.7 }}>
-                            {readingText}
-                          </div>
-                          {aiLoading && aiText && (
-                            <motion.span className="inline-block w-1.5 h-5 bg-gold/50 rounded-full ml-1 align-middle" animate={{ opacity: [1, 0, 1] }} transition={{ duration: 0.8, repeat: Infinity }} />
-                          )}
-                          </div>{/* end mobile zoom wrapper */}
+                      <div className="rounded-2xl border border-gold/20 bg-background/95 p-4 shadow-xl">
+                        <h3 className="font-heading text-center text-lg text-gold">
+                          {t.imm_tarot_your_reading}
+                        </h3>
+                        <div className="my-3 flex flex-wrap justify-center gap-2" dir="ltr">
+                          {([0, 1, 2] as const).map((level) => (
+                            <button
+                              key={level}
+                              type="button"
+                              aria-pressed={textSizeLevel === level}
+                              className="min-h-11 min-w-11 touch-manipulation rounded-full border border-gold/25 px-3 font-heading text-sm text-gold/80 aria-pressed:border-gold aria-pressed:bg-gold/15 aria-pressed:text-gold focus-visible:outline focus-visible:outline-2 focus-visible:outline-gold"
+                              onClick={() => setTextSizeLevel(level)}
+                            >
+                              {["A", "A+", "A++"][level]}
+                            </button>
+                          ))}
                         </div>
-                      </motion.div>
+                        <div className="min-w-0 font-body text-foreground/90 [overflow-wrap:anywhere]">
+                          {readingText}
+                          {aiLoading && aiText && (
+                            <span aria-hidden="true" className="inline-block h-5 w-1 rounded-full bg-gold/60 align-middle motion-safe:animate-pulse" />
+                          )}
+                        </div>
+                      </div>
 
                       {!aiLoading && !aiError && aiText && (
-                        <motion.div className="mt-6 space-y-4" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                          <ResultShareBar
-                            resultText={aiText}
-                            shareTitle={`${t.readings_type_tarot}`}
-                            compact
-                          />
-                          <div className="text-center">
-                            <motion.button type="button" className="btn-gold font-heading text-sm tracking-wider cursor-pointer" onClick={handleClose} whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }}>
-                              {t.imm_tarot_finish}
-                            </motion.button>
-                          </div>
-                        </motion.div>
+                        <div className="space-y-3 text-center [&_button]:min-h-11">
+                          <ResultShareBar resultText={aiText} shareTitle={t.readings_type_tarot} compact />
+                          <button type="button" className="btn-gold font-heading text-sm" onClick={handleClose}>
+                            {t.imm_tarot_finish}
+                          </button>
+                        </div>
                       )}
                     </div>
                   ) : (
@@ -1357,7 +1332,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                   )}
                 </motion.div>
               )}
-            </AnimatePresence>
+            </PhaseTransition>
 
           </div>
 
@@ -1370,13 +1345,14 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
             anchor="left"
             className="fixed flex items-center justify-center pointer-events-auto"
             style={{
-              bottom: 5,
+              top: isMobile ? "calc(env(safe-area-inset-top) + 4px)" : undefined,
+              bottom: isMobile ? undefined : 5,
               right: isMobile ? 8 : 10,
               zIndex: 200,
             }}
           >
             <AstrologerAvatarButton
-              size={isMobile ? 80 : 140}
+              size={isMobile ? 60 : 140}
               onClick={() => setAdvisorOpen(true)}
               entranceDelay={1.2}
               className="relative"
@@ -1388,7 +1364,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
           {/* ── Close button — rendered last to sit on top of everything ── */}
           <motion.button
-            className="fixed top-5 left-5 z-[200] w-[60px] h-[60px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer pointer-events-auto"
+            type="button"
+            aria-label={t.common_close}
+            className="fixed left-3 top-[calc(env(safe-area-inset-top)+0.75rem)] z-[200] flex size-11 cursor-pointer items-center justify-center rounded-full backdrop-blur-md pointer-events-auto md:left-5 md:top-5 md:size-[60px]"
             style={{
               background: "hsl(var(--deep-blue) / 0.6)",
               border: "1px solid hsl(var(--gold) / 0.2)",
@@ -1404,7 +1382,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
           <AnimatePresence>
             {phase === "drawing" && (
               <motion.button
-                className="fixed top-5 left-16 z-[200] w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer pointer-events-auto"
+                type="button"
+                aria-label={t.premium_back}
+                className="fixed left-16 top-[calc(env(safe-area-inset-top)+0.75rem)] z-[200] flex size-11 cursor-pointer items-center justify-center rounded-full backdrop-blur-md pointer-events-auto md:top-5 md:size-10"
                 style={{
                   background: "hsl(var(--deep-blue) / 0.6)",
                   border: "1px solid hsl(var(--gold) / 0.2)",
