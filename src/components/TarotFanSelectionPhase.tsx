@@ -45,7 +45,7 @@ const TarotFanSelectionPhase = ({ cardCount, onComplete }: Props) => {
 
   if (isMobile) {
     return (
-      <div className="relative mx-auto max-w-sm px-4 pb-6 pt-4 text-center">
+      <div className="relative mx-auto max-w-sm px-4 pb-6 pt-[calc(5rem+env(safe-area-inset-top))] text-center">
         <h2 className="font-heading text-xl text-gold">
           {t.imm_tarot_choose_cards.replace("{n}", String(cardCount - selected.length))}
         </h2>

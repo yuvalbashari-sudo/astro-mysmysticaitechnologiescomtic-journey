@@ -535,15 +535,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
   const tarotAvatarStyle = (isMobileTarot || isTablet)
     ? {
         position: "fixed" as const,
-        top: isTarotResultScreen ? 16 : 84,
+        top: isMobileTarot ? "calc(env(safe-area-inset-top) + 0.75rem)" : isTarotResultScreen ? 16 : 84,
         left: "50%",
         right: "auto" as const,
         bottom: "auto" as const,
         marginInlineStart: 0,
         marginInlineEnd: 0,
         transform: "translateX(-50%)",
-        width: 56,
-        height: 56,
+        width: isMobileTarot ? 48 : 56,
+        height: isMobileTarot ? 48 : 56,
         zIndex: 106,
         pointerEvents: "auto" as const,
       }
@@ -694,7 +694,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </motion.div>
               ) : isQuestionPhase ? (
-                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative">
+                <motion.div key="question" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="relative pt-16 md:pt-0">
                   <TarotQuestionPhase spreadType={selectedSpreadKey} spreadLabel={SPREAD_LABELS[selectedSpreadKey]} onSubmit={handleQuestionSubmit} />
                 </motion.div>
               ) : isAnalysisPhase ? (
@@ -1042,7 +1042,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                   </motion.p>
                 </motion.div>
               ) : cards && isMobileTarot ? (
-                <section key="mobile-result" className="relative mx-auto max-w-lg space-y-4 px-4 pb-6 pt-12">
+                <section key="mobile-result" className="relative mx-auto max-w-lg space-y-4 px-4 pb-6 pt-[calc(5rem+env(safe-area-inset-top))]">
                   <div className="grid grid-cols-3 gap-2.5">
                     {cards.map((card, index) => (
                       <figure key={card.id} className="min-w-0 text-center">
