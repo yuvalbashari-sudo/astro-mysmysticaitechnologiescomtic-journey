@@ -1,3 +1,5 @@
+import type { Language } from "@/i18n/types";
+
 export interface CompatibilityResult {
   score: number; // 1-100
   overallMatch: string;
@@ -89,7 +91,7 @@ function pairHash(a: string, b: string): number {
   return Math.abs(h);
 }
 
-export function getCompatibility(sign1: string, sign2: string): CompatibilityResult {
+export function getCompatibility(sign1: string, sign2: string) {
   const elements: Record<string, string> = {
     aries: "fire", taurus: "earth", gemini: "air", cancer: "water",
     leo: "fire", virgo: "earth", libra: "air", scorpio: "water",
@@ -107,16 +109,16 @@ export function getCompatibility(sign1: string, sign2: string): CompatibilityRes
   const hash = pairHash(sign1, sign2);
   const variation = (hash % 11) - 5; // -5 to +5
 
-  let base: CompatibilityResult;
+  let pattern: "sameSign" | "sameElement" | "complementary" | "contrasting" | "mixed";
   let baseScore: number;
 
-  if (same) { base = sameSignResult; baseScore = 62 + (hash % 12); }          // 57–73
-  else if (sameElement) { base = sameElementResult; baseScore = 68 + (hash % 10); } // 63–77
-  else if (compatible) { base = compatibleResult; baseScore = 72 + (hash % 12); }   // 67–83
-  else if (opposite) { base = oppositeResult; baseScore = 42 + (hash % 14); }       // 37–55
-  else { base = neutralResult; baseScore = 50 + (hash % 16); }                      // 45–65
+  if (same) { pattern = "sameSign"; baseScore = 62 + (hash % 12); }
+  else if (sameElement) { pattern = "sameElement"; baseScore = 68 + (hash % 10); }
+  else if (compatible) { pattern = "complementary"; baseScore = 72 + (hash % 12); }
+  else if (opposite) { pattern = "contrasting"; baseScore = 42 + (hash % 14); }
+  else { pattern = "mixed"; baseScore = 50 + (hash % 16); }
 
-  return { ...base, score: Math.min(98, Math.max(38, baseScore + variation)) };
+  return { ...hebrewReadings[pattern], score: Math.min(98, Math.max(38, baseScore + variation)), pattern };
 }
 
 const sameSignResult: CompatibilityResult = {
@@ -168,3 +170,47 @@ const neutralResult: CompatibilityResult = {
   challengesAndGrowth: "האתגר הוא למצוא שפה משותפת. אתם מגיעים מעולמות שונים, ולפעמים צריך גשר ביניהם. הצמיחה מגיעה כשאתם בונים את הגשר הזה יחד — אבן אחר אבן.",
   advice: "היו פתוחים להפתעות. הקשר הזה יכול ללמד אתכם דברים שלא ציפיתם להם. תנו מרחב, תנו זמן, ותנו לאהבה לבנות את הדרך שלה.",
 };
+
+const hebrewReadings = { sameSign: sameSignResult, sameElement: sameElementResult, complementary: compatibleResult, contrasting: oppositeResult, mixed: neutralResult };
+
+type Sections = readonly [string, string, string, string, string, string];
+const titles: Record<Language, Sections> = {
+  he: ["החיבור בין המזלות", "קשר רגשי", "תקשורת", "משיכה וקרבה", "אתגרים וצמיחה", "עצה לקשר"],
+  en: ["Your signs together", "Emotional connection", "Communication", "Attraction and closeness", "Challenges and growth", "Something to try"],
+  ru: ["Сочетание знаков", "Эмоциональная связь", "Общение", "Притяжение и близость", "Трудности и рост", "Совет для пары"],
+  ar: ["العلاقة بين البرجين", "التواصل العاطفي", "الحوار", "الانجذاب والقرب", "التحديات والنمو", "خطوة عملية"],
+};
+
+const readings: Record<Exclude<Language, "he">, Record<keyof typeof hebrewReadings, Sections>> = {
+  en: {
+    sameSign: ["Sharing a sign can make a first conversation feel familiar. The same habits that draw you together may also surface in disagreements.", "You may recognize each other’s moods quickly. Ask what the other person needs before assuming it is what you would want.", "Shared shorthand is a strength until it leaves something unsaid. Spell out what matters when making plans.", "Familiar rituals build closeness. Taking turns choosing a new activity keeps room for surprise.", "When you both dig in or both withdraw, a short pause can break the pattern.", "This week, each choose one thing you want to do together and one you want to do independently."],
+    sameElement: ["Your signs share an element, suggesting a similar pace and a common starting point for decisions.", "An easy sense of trust can make it tempting to skip check-ins. Ask how the week actually felt.", "Similar priorities make planning easier. Give the quieter voice a turn before settling on a decision.", "Small, reliable gestures can carry more weight than elaborate plans.", "Comfort can turn into routine. Explore an interest that only one of you knows well.", "Trade roles for one outing: let the person who usually follows plan the day."],
+    complementary: ["Your elements complement each other. One person’s suggestion can give the other the spark or support to act.", "Different ways of showing care can work together once you recognize them.", "Invite both an idea and a practical next step into the same conversation.", "A shared project can bring out your chemistry because each person contributes something distinct.", "The same person need not always start things or keep them going. Exchange roles occasionally.", "Choose a small shared goal and let each person pick the part they want to lead."],
+    contrasting: ["Your elements point to different instincts. That contrast can be intriguing, especially when you let each other set a pace.", "One of you may want to talk immediately while the other needs time. Agree on when to come back to the conversation.", "Describe one concrete situation before arguing about what it means.", "Curiosity about an unfamiliar interest can open a route to closeness.", "A difference in timing can feel like a difference in commitment. Ask before drawing that conclusion.", "Each name one gesture that feels supportive and try the other person’s suggestion."],
+    mixed: ["This pairing may find its rhythm through experience. Notice which settings bring out the best in both of you.", "Everyday gestures can reveal a need that is hard to put into words.", "Ask one follow-up question before offering advice. You may be solving different problems.", "A new shared activity lets the connection grow without prescribing where it should go.", "Different priorities can coexist if you make space for each in the calendar.", "Plan something familiar for one of you and new to the other, then swap next time."],
+  },
+  ru: {
+    sameSign: ["Одинаковый знак даёт много знакомых черт. Сходные привычки заметны и в радости, и в споре.", "Вы можете быстро уловить настроение друг друга. Уточните, какая поддержка нужна сейчас.", "Общий язык упрощает беседу, но важные ожидания стоит произносить вслух.", "Знакомые ритуалы сближают. По очереди предлагайте новое занятие.", "Если оба замыкаются или настаивают на своём, помогает заранее согласованная пауза.", "Назовите по одному делу для двоих и по одному занятию, для которого нужно личное пространство."],
+    sameElement: ["Общая стихия указывает на близкий ритм и схожий подход к решениям.", "Доверие растёт, когда вы замечаете даже небольшие перемены в настроении.", "Принимая решение, дайте каждому высказаться отдельно.", "Привычные знаки внимания помогают сохранять тепло.", "Привычный уклад может надоесть. Познакомьте друг друга со своими увлечениями.", "Пусть следующую встречу организует тот, кто обычно принимает приглашение."],
+    complementary: ["Ваши стихии дополняют друг друга. Идея одного может получить развитие благодаря другому.", "Забота проявляется по-разному. Обсудите, какие поступки помогают её почувствовать.", "Соедините в разговоре новую идею с одним конкретным шагом.", "Совместное дело помогает увидеть привлекательные стороны друг друга.", "Меняйтесь ролями, чтобы инициатива и ответственность распределялись поровну.", "Выберите небольшую общую цель и разделите задачи по интересам."],
+    contrasting: ["Различия стихий указывают на разный темп. Именно он может вызвать взаимный интерес.", "Одному может хотеться немедленного разговора, другому нужно время. Договоритесь, когда вернётесь к теме.", "Начинайте с конкретного случая и спросите, как его воспринял другой.", "Интерес к непривычному занятию партнёра помогает сблизиться.", "Разные сроки принятия решений легко спутать с равнодушием. Спросите о причинах.", "Пусть каждый назовёт один желанный жест поддержки и попробует выполнить просьбу другого."],
+    mixed: ["Ритм этой пары раскрывается в совместном опыте. Отмечайте ситуации, в которых обоим легко.", "Повседневные поступки иногда лучше слов показывают, что человеку важно.", "Задайте уточняющий вопрос, прежде чем давать совет.", "Новое совместное занятие позволяет сблизиться естественно.", "Разные приоритеты легче согласовать, если заранее выделить время для каждого.", "Попробуйте занятие, знакомое одному из вас, а в следующий раз поменяйтесь ролями."],
+  },
+  ar: {
+    sameSign: ["قد يمنحكما البرج المشترك شعوراً بالألفة منذ اللقاء الأول. وقد تتكرر العادات نفسها عند الاختلاف.", "يسهل أحياناً فهم مزاج الآخر، لكن السؤال عن نوع الدعم المطلوب يترك مساحة للاختلاف.", "اللغة المشتركة تسهّل الحوار. عبّرا بوضوح عن التوقعات عند وضع الخطط.", "الطقوس اليومية تعزز القرب، وتجربة نشاط جديد تضيف شيئاً من المفاجأة.", "إذا أصرّ كل طرف على رأيه فقد تساعد استراحة قصيرة قبل متابعة النقاش.", "ليختر كل منكما نشاطاً مشتركاً وآخر يستمتع به وحده."],
+    sameElement: ["يشير العنصر المشترك إلى إيقاع متقارب وطريقة مألوفة لاتخاذ القرارات.", "يساعد الاطمئنان على التعبير عن المشاعر. اسألا بعضكما كيف مرّ الأسبوع فعلاً.", "قبل الاتفاق على خطة، اتركا لكل طرف فرصة لطرح رأيه.", "قد تحمل لفتة صغيرة منتظمة معنى أكبر من موعد استثنائي.", "الراحة قد تتحول إلى روتين. جرّبا اهتماماً يعرفه أحدكما أكثر من الآخر.", "ليخطط للقاء المقبل الطرف الذي يترك اختيار المكان عادةً للآخر."],
+    complementary: ["يتكامل العنصران في هذا اللقاء، فقد تمنح فكرة أحدكما الآخر الحافز أو الدعم لبدء خطوة جديدة.", "تتخذ العناية أشكالاً مختلفة. تحدّثا عن اللفتات التي تجعل كلاً منكما يشعر بها.", "اجمعا في الحوار بين الفكرة الجديدة وخطوة عملية واحدة.", "يمكن لمشروع مشترك أن يكشف جانباً جذاباً عند كل طرف.", "تبادلا الأدوار كي لا تقع المبادرة أو المتابعة دائماً على شخص واحد.", "اختارا هدفاً صغيراً وحدّدا ما يرغب كل طرف في قيادته."],
+    contrasting: ["يشير اختلاف العنصرين إلى إيقاعين مختلفين. وقد يكون هذا الاختلاف نفسه مصدر فضول متبادل.", "قد يرغب أحدكما في الحديث فوراً ويحتاج الآخر إلى وقت. حدّدا موعداً للعودة إلى الموضوع.", "ابدآ بموقف محدد واسألا كيف فهمه كل طرف.", "الاهتمام بهواية غير مألوفة لدى الآخر قد يفتح باباً للقرب.", "تفاوت سرعة اتخاذ القرار قد يبدو فتوراً. اسألا عن السبب قبل الحكم.", "ليذكر كل طرف لفتة تشعره بالدعم وليجرّب ما اقترحه الآخر."],
+    mixed: ["يتضح إيقاع العلاقة عبر التجربة. لاحظا المواقف التي يشعر فيها كلاكما بالراحة.", "اللفتات اليومية قد تعبّر عن احتياجات يصعب وصفها بالكلام.", "اطرَحا سؤالاً إضافياً قبل تقديم النصيحة للتأكد من فهم المشكلة.", "يسمح نشاط جديد بمزيد من القرب دون فرض توقعات مسبقة.", "يمكن التوفيق بين الأولويات المختلفة إذا خُصص وقت لكل منها.", "اختارا نشاطاً مألوفاً لأحدكما وجديداً للآخر، ثم تبادلا الاختيار في المرة المقبلة."],
+  },
+};
+
+export function formatCompatibilityReading(match: ReturnType<typeof getCompatibility>, language: Language, pair: string): string {
+  const body: Sections = language === "he"
+    ? [match.overallMatch, match.emotionalConnection, match.communicationStyle, match.passionLevel, match.challengesAndGrowth, match.advice]
+    : readings[language][match.pattern];
+  return titles[language].map((title, index) => {
+    const heading = index === 0 ? `${pair} — ${title}` : title;
+    return `### ${heading}\n${body[index]}`;
+  }).join("\n\n");
+}
