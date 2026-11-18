@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sun, Heart, Briefcase, Zap, RefreshCw, Sparkles, Star } from "lucide-react";
+import { Sun, Heart, Briefcase, Zap, RefreshCw, Star } from "lucide-react";
 import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n";
 import { formatFullDate } from "@/lib/dateTimeFormat";
@@ -12,11 +12,11 @@ import TextSizeControl from "./TextSizeControl";
 import { useFontScale } from "@/contexts/FontScaleContext";
 import { TEXT_SIZE_CLASSES } from "./TextSizeControl";
 import MysticalDateInput from "./MysticalDateInput";
-import { isAdminTestMode, getAdminSafeProfile, getAdminSafeZodiac } from "@/lib/adminTestMode";
+import { getAdminSafeProfile } from "@/lib/adminTestMode";
 import { enforceLocale } from "@/lib/localeGuard";
 import { localizeName } from "@/lib/nameLocalization";
-import PremiumUnlockOverlay from "@/components/PremiumUnlockOverlay";
-import { usePremiumUnlocked } from "@/lib/premiumUnlock";
+import { readingAuthorization } from "@/lib/readingAuthorization";
+import { useSiteAdmin } from "@/hooks/use-site-admin";
 /* ── Zodiac helper ── */
 const ZODIAC_DATES = [
   { sign: "Capricorn", start: [1, 1], end: [1, 19] },
@@ -90,6 +90,95 @@ interface HoroscopeData {
   energy_score: number;
 }
 
+interface HoroscopeRequest {
+  zodiacSign: string;
+  birthDate: string | null;
+  userName: string | null;
+  language: string;
+  gender?: "male" | "female";
+}
+
+const dailyRequests = new Map<string, Promise<HoroscopeData>>();
+let requestDay = "";
+
+function requestHoroscope(profile: HoroscopeRequest, today: string): Promise<HoroscopeData> {
+  if (requestDay !== today) {
+    dailyRequests.clear();
+    requestDay = today;
+  }
+  const key = JSON.stringify(profile);
+  const existing = dailyRequests.get(key);
+  if (existing) return existing;
+
+  const request = loadHoroscope(profile, today).catch((error) => {
+    if (dailyRequests.get(key) === request) dailyRequests.delete(key);
+    throw error;
+  });
+  dailyRequests.set(key, request);
+  return request;
+}
+
+async function loadHoroscope(profile: HoroscopeRequest, today: string): Promise<HoroscopeData> {
+  const hadFingerprint = !!localStorage.getItem("astrologai_device_fp");
+  const fingerprint = getFingerprint();
+
+  if (hadFingerprint) {
+    try {
+      const { data: cached } = await supabase
+        .from("daily_horoscopes")
+        .select("content, love_score, career_score, energy_score, zodiac_sign, birth_date, user_name")
+        .eq("user_fingerprint", fingerprint)
+        .eq("horoscope_date", today)
+        .eq("language", profile.language)
+        .maybeSingle();
+      if (cached && cached.content?.trim() && cached.zodiac_sign === profile.zodiacSign
+        && cached.birth_date === profile.birthDate && cached.user_name === profile.userName) {
+        const mixedLocale = (profile.language === "he" || profile.language === "ar")
+          && (/[A-Za-z]{4,}/.test(cached.content) || /\/[\u05d4\u05d5\u05ea\u05d9\u05dd]/.test(cached.content)
+            || /[\u0590-\u06FF]+\s*\/\s*[\u0590-\u06FF]+/.test(cached.content));
+        if (!mixedLocale) {
+          sessionStorage.setItem("_dbg_horoscope_source", "cached");
+          return {
+            content: cached.content,
+            love_score: cached.love_score ?? 3,
+            career_score: cached.career_score ?? 3,
+            energy_score: cached.energy_score ?? 3,
+          };
+        }
+      }
+    } catch (error) {
+      console.warn("[daily-horoscope] cache lookup failed", error);
+    }
+  }
+
+  const url = import.meta.env.VITE_SUPABASE_URL + "/functions/v1/daily-horoscope";
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: readingAuthorization() },
+    body: JSON.stringify(profile),
+  });
+  if (!response.ok) throw new Error("Daily horoscope generation failed");
+
+  const result = await response.json() as HoroscopeData;
+  if (typeof result.content !== "string" || !result.content.trim()) {
+    throw new Error("Daily horoscope response is empty");
+  }
+  sessionStorage.setItem("_dbg_horoscope_source", "fresh");
+  void supabase.from("daily_horoscopes").insert({
+    user_fingerprint: fingerprint,
+    horoscope_date: today,
+    language: profile.language,
+    zodiac_sign: profile.zodiacSign,
+    content: result.content,
+    love_score: result.love_score,
+    career_score: result.career_score,
+    energy_score: result.energy_score,
+    birth_date: profile.birthDate,
+    user_name: profile.userName,
+  }).then(() => {});
+  return result;
+}
+
 const DailyHoroscopeCard = () => {
   const t = useT();
   const { language, dir } = useLanguage();
@@ -101,17 +190,15 @@ const DailyHoroscopeCard = () => {
   const { scale, setScale } = useFontScale();
   const ts = TEXT_SIZE_CLASSES[scale];
 
-  const adminMode = isAdminTestMode();
+  const adminMode = useSiteAdmin();
   const safeProfile = getAdminSafeProfile();
   const birthDate = safeProfile.birthDate;
   const zodiacSign = birthDate ? getZodiacFromDate(birthDate) : (safeProfile.zodiacSign || null);
   const userName = localizeName(safeProfile.userName, language);
   const gender = safeProfile.gender;
 
-  // Premium unlock id — one per (sign, day). New day = re-gate.
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const dailyReadingId = `daily-horoscope:${zodiacSign || "unknown"}:${todayKey}`;
-  const dailyUnlocked = usePremiumUnlocked(dailyReadingId);
+  const today = getTodayStr();
+  const [attempt, setAttempt] = useState(0);
 
   // Inline setup form state
   const [setupName, setSetupName] = useState("");
@@ -129,153 +216,34 @@ const DailyHoroscopeCard = () => {
     }
   }, []);
 
-  // Tracks whether we've already attempted to load (cache or fresh) for this
-  // sign/lang/day combo to avoid double-fetches.
-  const [hasAttemptedLoad, setHasAttemptedLoad] = useState(false);
-
-  // Looks up the cached horoscope for today. Safe to call before unlock —
-  // it does NOT trigger the AI generation, only reads existing rows.
-  const loadCachedHoroscope = useCallback(async () => {
-    if (!zodiacSign) return false;
-    const fp = getFingerprint();
-    const today = getTodayStr();
-    try {
-      const { data: cached } = await supabase
-        .from("daily_horoscopes")
-        .select("content, love_score, career_score, energy_score")
-        .eq("user_fingerprint", fp)
-        .eq("horoscope_date", today)
-        .eq("language", language)
-        .maybeSingle();
-      if (cached) {
-        // Bust the cache if the stored content fails the locale validator
-        // (English leaks in HE/AR) or carries dual-gender slashes — we
-        // prefer to regenerate over showing broken personalization.
-        const looksMixed =
-          (language === "he" || language === "ar") &&
-          (/[A-Za-z]{4,}/.test(cached.content || "") || /\/[הותים]/.test(cached.content || "") || /[\u0590-\u06FF]+\s*\/\s*[\u0590-\u06FF]+/.test(cached.content || ""));
-        if (looksMixed) {
-          if (import.meta.env.DEV) console.log("[ai-debug] cache busted (mixed/leaky content)", { language });
-          return false;
-        }
-        setData({
-          content: cached.content,
-          love_score: cached.love_score ?? 3,
-          career_score: cached.career_score ?? 3,
-          energy_score: cached.energy_score ?? 3,
-        });
-        sessionStorage.setItem("_dbg_horoscope_source", "cached");
-        return true;
-      }
-    } catch (e) {
-      console.warn("[daily-horoscope] cache lookup failed", e);
-    }
-    return false;
-  }, [zodiacSign, language]);
-
-  // Generates a fresh horoscope via the edge function. Called only after the
-  // user passes the unlock gate (or directly when re-loading an unlocked day).
-  const generateHoroscope = useCallback(async () => {
-    if (!zodiacSign) return;
-    const { ensureGender } = await import("@/lib/genderGate");
-    const ensured = await ensureGender(language);
-    const candidate = ensured || gender;
-    // Only male/female are honored by the prompt-side GENDER LOCK; anything
-    // else (other / prefer_not_to_say / undefined) → omit so the server
-    // uses elegant neutral phrasing.
-    const lockedGender: "male" | "female" | undefined =
-      candidate === "male" || candidate === "female" ? candidate : undefined;
-    if (import.meta.env.DEV && (language === "he" || language === "ar")) {
-      // eslint-disable-next-line no-console
-      console.log("[ai-debug] daily-horoscope →", {
-        language, zodiacSign, userName, gender: lockedGender, rawGender: gender,
-      });
-    }
-    const fp = getFingerprint();
-    const today = getTodayStr();
-    setLoading(true);
-    setError(false);
-    try {
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/daily-horoscope`;
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-        },
-        body: JSON.stringify({
-          zodiacSign,
-          birthDate,
-          userName,
-          language,
-          gender: lockedGender,
-        }),
-      });
-
-      if (!resp.ok) throw new Error("Failed to generate");
-
-      const result = await resp.json();
-      const horoscope: HoroscopeData = {
-        content: result.content,
-        love_score: result.love_score,
-        career_score: result.career_score,
-        energy_score: result.energy_score,
-      };
-
-      setData(horoscope);
-      sessionStorage.setItem("_dbg_horoscope_source", "fresh");
-
-      // Save to DB (fire-and-forget)
-      supabase.from("daily_horoscopes").insert({
-        user_fingerprint: fp,
-        horoscope_date: today,
-        language,
-        zodiac_sign: zodiacSign,
-        content: horoscope.content,
-        love_score: horoscope.love_score,
-        career_score: horoscope.career_score,
-        energy_score: horoscope.energy_score,
-        birth_date: birthDate || null,
-        user_name: userName || null,
-      }).then(() => {});
-
-    } catch (err) {
-      console.error("Daily horoscope error:", err);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [zodiacSign, birthDate, userName, language, gender]);
-
-  // Backwards-compat shim used by the retry button.
-  const fetchHoroscope = useCallback(async () => {
-    const hit = await loadCachedHoroscope();
-    if (!hit) await generateHoroscope();
-  }, [loadCachedHoroscope, generateHoroscope]);
-
-  // On mount / sign change: ALWAYS try the cache (no AI cost). Only generate
-  // a fresh horoscope automatically when the user has already passed the
-  // unlock gate for this day. Otherwise wait for onUnlockStart.
+  const showSetup = needsSetup && !adminMode;
   useEffect(() => {
-    if (!zodiacSign) return;
-    let cancelled = false;
-    setHasAttemptedLoad(false);
-    (async () => {
-      const hit = await loadCachedHoroscope();
-      if (cancelled) return;
-      setHasAttemptedLoad(true);
-      if (!hit && dailyUnlocked) {
-        // Already unlocked for today — fine to regenerate without re-gating.
-        await generateHoroscope();
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [zodiacSign, language, dailyUnlocked, loadCachedHoroscope, generateHoroscope]);
+    if (showSetup || !zodiacSign) return;
+
+    let active = true;
+    setData(null);
+    setError(false);
+    setLoading(true);
+    void requestHoroscope({
+      zodiacSign,
+      birthDate: birthDate || null,
+      userName: userName || null,
+      language,
+      gender: gender === "male" || gender === "female" ? gender : undefined,
+    }, today).then((result) => {
+      if (active) setData(result);
+    }).catch(() => {
+      if (active) setError(true);
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
+  }, [showSetup, zodiacSign, birthDate, userName, language, gender, today, attempt]);
 
   // Format today's date in locale
   const formattedDate = formatFullDate(new Date(), language);
 
-  if (needsSetup) {
+  if (showSetup) {
     const setupZodiac = setupBirthDate ? getZodiacFromDate(setupBirthDate) : null;
     const canSubmit = setupName.trim().length >= 1 && setupZodiac;
 
@@ -477,25 +445,7 @@ const DailyHoroscopeCard = () => {
 
         {/* Content */}
         <div className="px-5 pb-4 min-h-[100px]">
-          <AnimatePresence mode="wait">
-            {!hasAttemptedLoad && loading && (
-              <motion.div
-                key="loading"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center justify-center py-8 gap-3"
-              >
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                >
-                  <Star className="w-5 h-5 text-gold/50" />
-                </motion.div>
-                <p className="text-foreground/50 text-sm font-body">{t.daily_horoscope_loading}</p>
-              </motion.div>
-            )}
-
+          <AnimatePresence>
             {error && !loading && (
               <motion.div
                 key="error"
@@ -506,7 +456,7 @@ const DailyHoroscopeCard = () => {
               >
                 <p className="text-foreground/50 text-sm font-body mb-3">{t.daily_horoscope_error}</p>
                 <button
-                  onClick={fetchHoroscope}
+                  onClick={() => setAttempt((count) => count + 1)}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-body text-gold border border-gold/20 hover:bg-gold/10 transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
@@ -515,7 +465,7 @@ const DailyHoroscopeCard = () => {
               </motion.div>
             )}
 
-            {hasAttemptedLoad && !error && (
+            {!error && (
               <motion.div
                 key="content"
                 initial={{ opacity: 0, y: 10 }}
@@ -523,14 +473,6 @@ const DailyHoroscopeCard = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4 }}
               >
-                <PremiumUnlockOverlay
-                  readingId={dailyReadingId}
-                  featureKey="monthly_horoscope"
-                  onUnlockStart={() => {
-                    if (!data && !loading) generateHoroscope();
-                  }}
-                  isReady={!!data && !loading}
-                >
                   {data ? (
                     <>
                       <p className={`text-foreground/80 font-body leading-relaxed whitespace-pre-wrap mb-4 ${ts.body}`}>
@@ -556,23 +498,16 @@ const DailyHoroscopeCard = () => {
                         </div>
                       </div>
                     </>
-                  ) : loading ? (
-                    <div className="flex items-center justify-center py-8 gap-3">
+                  ) : (
+                    <div role="status" className="flex items-center justify-center py-8 gap-3">
                       <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }}>
                         <Star className="w-5 h-5 text-gold/50" />
                       </motion.div>
                       <p className="text-foreground/50 text-sm font-body">{t.daily_horoscope_loading}</p>
                     </div>
-                  ) : (
-                    // Pre-unlock teaser. Blurred by overlay.
-                    <p className={`text-foreground/70 font-body leading-relaxed mb-4 ${ts.body}`}>
-                      ✦ ✦ ✦
-                    </p>
                   )}
-                </PremiumUnlockOverlay>
 
-                {/* Share / Copy bar — only after unlock */}
-                {dailyUnlocked && data && (
+                {data && (
                   <div className="mt-4 pt-3 border-t border-foreground/5">
                     <ResultShareBar
                       resultText={data.content}
