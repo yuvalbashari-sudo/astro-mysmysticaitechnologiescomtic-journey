@@ -32,7 +32,8 @@ function write(id: string, entry: StoredName) {
 }
 
 function metadataName(data: Record<string, unknown> = {}) {
-  return [data.reading_name, data.full_name, data.name].find(
+  if (typeof data.reading_name === "string") return data.reading_name.trim().slice(0, 100);
+  return [data.full_name, data.name].find(
     (value): value is string => typeof value === "string" && !!value.trim(),
   )?.trim().slice(0, 100);
 }

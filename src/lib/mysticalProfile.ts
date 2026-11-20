@@ -81,7 +81,7 @@ function getProfile(): MysticalProfileData {
     const raw = localStorage.getItem(accountStorageKey(STORAGE_KEY));
     if (raw) {
       const profile: MysticalProfileData = JSON.parse(raw);
-      return { ...profile, userName: accountReadingName() || profile.userName };
+      return { ...profile, userName: accountReadingName() ?? profile.userName };
     }
   } catch { /* ignore */ }
   return {
