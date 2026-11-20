@@ -5,6 +5,7 @@
  * Stored in localStorage. Designed for future expansion to user accounts.
  */
 
+import { accountReadingName, accountStorageKey, rememberAccountName } from "./accountName";
 import { localizeName } from "./nameLocalization";
 
 export interface MysticalProfileData {
@@ -77,10 +78,14 @@ const THEME_KEYWORDS: Record<string, string[]> = {
 
 function getProfile(): MysticalProfileData {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    const raw = localStorage.getItem(accountStorageKey(STORAGE_KEY));
+    if (raw) {
+      const profile: MysticalProfileData = JSON.parse(raw);
+      return { ...profile, userName: accountReadingName() || profile.userName };
+    }
   } catch { /* ignore */ }
   return {
+    userName: accountReadingName(),
     compatibilityHistory: [],
     recentTarotCards: [],
     dailyCards: [],
@@ -100,7 +105,7 @@ function saveProfile(profile: MysticalProfileData): void {
   if (profile.dailyCards.length > 30) profile.dailyCards.length = 30;
   if (profile.compatibilityHistory.length > 20) profile.compatibilityHistory.length = 20;
   
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  localStorage.setItem(accountStorageKey(STORAGE_KEY), JSON.stringify(profile));
 }
 
 function detectThemes(cardName: string, hebrewName: string): string[] {
@@ -124,6 +129,8 @@ function updateThemes(profile: MysticalProfileData, themes: string[]): void {
 
 function recordUserName(name: string): void {
   const profile = getProfile();
+  if (!name.trim()) return;
+  rememberAccountName(name);
   profile.userName = name.trim();
   saveProfile(profile);
 }
@@ -140,7 +147,7 @@ function recordGender(gender: "male" | "female" | "other" | "prefer_not_to_say")
   const profile = getProfile();
   delete profile.compatibilityNonbinary;
   profile.gender = gender;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  localStorage.setItem(accountStorageKey(STORAGE_KEY), JSON.stringify(profile));
 }
 
 function getCompatibilitySelf() {
@@ -154,12 +161,15 @@ function rememberCompatibilitySelf(name: string, date: string, time: string, gen
   const genders: Record<string, MysticalProfileData["gender"]> = {
     woman: "female", man: "male", nonbinary: "other", other: "other", prefer_not: "prefer_not_to_say",
   };
-  p.userName = name.trim() || undefined;
+  if (name.trim()) {
+    rememberAccountName(name);
+    p.userName = name.trim();
+  }
   p.birthDate = date;
   p.birthTime = time || undefined;
   p.gender = genders[gender];
   p.compatibilityNonbinary = gender === "nonbinary" || undefined;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  localStorage.setItem(accountStorageKey(STORAGE_KEY), JSON.stringify(p));
 }
 
 function getUserGender(): "male" | "female" | "other" | "prefer_not_to_say" | undefined {
@@ -276,7 +286,7 @@ function recordRising(sign: string, symbol: string, element: string, birthTime: 
 function recordBirthLocation(location: string): void {
   const profile = getProfile();
   profile.birthLocation = location.trim();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  localStorage.setItem(accountStorageKey(STORAGE_KEY), JSON.stringify(profile));
 }
 
 function getBirthLocation(): string | undefined {
@@ -286,7 +296,7 @@ function getBirthLocation(): string | undefined {
 function recordLanguagePreference(lang: string): void {
   const profile = getProfile();
   profile.languagePreference = lang;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  localStorage.setItem(accountStorageKey(STORAGE_KEY), JSON.stringify(profile));
 }
 
 function getLanguagePreference(): string | undefined {
@@ -422,7 +432,8 @@ ${lines.join("\n")}
 }
 
 function clearProfile(): void {
-  localStorage.removeItem(STORAGE_KEY);
+  rememberAccountName("");
+  localStorage.removeItem(accountStorageKey(STORAGE_KEY));
 }
 
 export const mysticalProfile = {

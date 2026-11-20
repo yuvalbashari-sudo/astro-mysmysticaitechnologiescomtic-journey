@@ -6,6 +6,7 @@
  * All tier checks across the app should go through this module.
  */
 
+import { setReadingSession } from "./accountName";
 import type { UserTier } from "./pricingConfig";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -34,6 +35,7 @@ function updateAuth(email: string | null, admin: boolean) {
 }
 
 supabase.auth.onAuthStateChange((_event, session) => {
+  setReadingSession(session);
   const token = session?.access_token ?? null;
   if (activeToken === token) return;
   activeToken = token;
