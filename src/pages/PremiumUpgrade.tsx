@@ -5,6 +5,7 @@ import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
 import { useState } from "react";
 import LeadFormModal from "@/components/LeadFormModal";
+import AccountLink from "@/components/AccountLink";
 
 type LangText = Record<Language, string>;
 type LangFeatures = Record<Language, { text: string; included: boolean }[]>;
@@ -170,7 +171,7 @@ const PremiumUpgrade = () => {
       </div>
 
       {/* Back button */}
-      <div className="relative z-10 p-4 md:p-6">
+      <div className="relative z-10 flex items-center justify-between gap-2 p-4 md:p-6">
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 text-foreground/50 hover:text-gold transition-colors font-body text-sm"
@@ -178,6 +179,7 @@ const PremiumUpgrade = () => {
           <ArrowLeft className="w-4 h-4" />
           {t.premium_back}
         </button>
+        <AccountLink />
       </div>
 
       {/* Header */}
