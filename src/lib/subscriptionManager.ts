@@ -6,7 +6,7 @@
  * All tier checks across the app should go through this module.
  */
 
-import { setReadingSession } from "./accountName";
+import { accountStorageKey, setReadingSession } from "./accountName";
 import type { UserTier } from "./pricingConfig";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -66,7 +66,7 @@ interface PlanData {
 
 function loadPlan(): PlanData {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(accountStorageKey(STORAGE_KEY));
     if (raw) {
       const parsed = JSON.parse(raw) as PlanData;
       // Validate tier
@@ -86,7 +86,7 @@ function loadPlan(): PlanData {
 }
 
 function savePlan(data: PlanData): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(accountStorageKey(STORAGE_KEY), JSON.stringify(data));
 }
 
 /**
@@ -154,7 +154,7 @@ function getUserEmail(): string | null {
  * Clear plan data (for testing or logout).
  */
 function clearPlan(): void {
-  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(accountStorageKey(STORAGE_KEY));
 }
 
 /**

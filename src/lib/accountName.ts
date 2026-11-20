@@ -5,7 +5,7 @@ type StoredName = { name: string; pending?: boolean };
 let session: Session | null = null;
 let initialized = false;
 const listeners = new Set<() => void>();
-const saving = new Set<string>();
+const saving = new Map<string, Promise<void>>();
 
 export function accountScope() {
   return session?.user.id || (initialized ? "guest" : "loading");
@@ -43,10 +43,17 @@ export function accountReadingName() {
   return stored ? stored.name : metadataName(session.user.user_metadata);
 }
 
-async function flush() {
+function flush() {
   const id = session?.user.id;
-  if (!id || saving.has(id) || !read(id)?.pending) return;
-  saving.add(id);
+  if (!id || !read(id)?.pending) return Promise.resolve();
+  const running = saving.get(id);
+  if (running) return running;
+  const job = sendPendingName(id).finally(() => saving.delete(id));
+  saving.set(id, job);
+  return job;
+}
+
+async function sendPendingName(id: string) {
   try {
     while (session?.user.id === id) {
       const entry = read(id);
@@ -65,14 +72,14 @@ async function flush() {
       if (read(id)?.name === entry.name) write(id, { name: entry.name });
     }
   } catch { /* The saved entry remains pending until reconnection. */ }
-  finally { saving.delete(id); }
 }
 
-export function rememberAccountName(name: string) {
+export async function rememberAccountName(name: string) {
   const id = session?.user.id;
-  if (!id) return;
+  if (!id) return false;
   if (accountReadingName() !== name.trim()) write(id, { name: name.trim(), pending: true });
-  void flush();
+  await flush();
+  return session?.user.id === id && accountReadingName() === name.trim() && !read(id)?.pending;
 }
 
 async function refreshName(active: Session, previousName?: string) {
