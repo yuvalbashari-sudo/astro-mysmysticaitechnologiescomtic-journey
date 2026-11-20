@@ -13,7 +13,7 @@ vi.mock("@/integrations/supabase/client", () => ({ supabase: { auth } }));
 vi.mock("@/i18n", () => ({ useLanguage: () => ({ language: "he", dir: "rtl" }) }));
 const page = () => render(<MemoryRouter><MemberAccount /></MemoryRouter>);
 const session = (id: string, data = {}) => ({ user: { id, user_metadata: data }, access_token: id + "-token" }) as Session;
-afterEach(() => { cleanup(); setReadingSession(null); localStorage.clear(); vi.unstubAllGlobals(); vi.clearAllMocks(); });
+afterEach(() => { cleanup(); setReadingSession(null); localStorage.clear(); sessionStorage.clear(); vi.unstubAllGlobals(); vi.clearAllMocks(); });
 
 it("sends and verifies an email code and lets a reader correct an invalid code", async () => {
   setReadingSession(null);
@@ -22,7 +22,10 @@ it("sends and verifies an email code and lets a reader correct an invalid code",
   page();
   fireEvent.change(screen.getByLabelText("כתובת מייל"), { target: { value: "Demo@Example.com" } });
   fireEvent.click(screen.getByRole("button", { name: "שלחו לי קוד" }));
-  const input = await screen.findByLabelText("קוד חד־פעמי");
+  await screen.findByLabelText("קוד חד־פעמי");
+  cleanup();
+  page();
+  const input = screen.getByLabelText("קוד חד־פעמי");
   expect(auth.signInWithOtp).toHaveBeenCalledWith({ email: "demo@example.com", options: {
     shouldCreateUser: true, emailRedirectTo: window.location.origin + "/account",
   } });

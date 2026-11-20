@@ -44,6 +44,23 @@ const copy = {
 };
 
 const field = "mt-2 block min-h-12 w-full rounded-lg border border-gold/40 bg-background px-3 text-base text-foreground";
+const pendingKey = "astrologai_pending_email_signin";
+
+// Preserve the address, never the code, if the browser reloads while the reader opens their email.
+function readChallenge(): { address: string; sentAt: number } | null {
+  try {
+    const item = JSON.parse(sessionStorage.getItem(pendingKey) || "null");
+    if (typeof item?.address === "string" && Date.now() - item.sentAt < 3600000) return item;
+  } catch { /* Start with a fresh challenge. */ }
+  return null;
+}
+
+function storeChallenge(address?: string) {
+  try {
+    if (address) sessionStorage.setItem(pendingKey, JSON.stringify({ address, sentAt: Date.now() }));
+    else sessionStorage.removeItem(pendingKey);
+  } catch { /* Verification still works in the current tab. */ }
+}
 
 export default function MemberAccount() {
   const { language, dir } = useLanguage();
@@ -51,14 +68,16 @@ export default function MemberAccount() {
   const scope = useSyncExternalStore(subscribeAccount, accountScope);
   const knownName = useSyncExternalStore(subscribeAccount, accountReadingName);
   const signedIn = scope !== "guest" && scope !== "loading";
-  const [email, setEmail] = useState("");
-  const [sentTo, setSentTo] = useState("");
+  const [challenge] = useState(readChallenge);
+  const [email, setEmail] = useState(challenge?.address || "");
+  const [sentTo, setSentTo] = useState(challenge?.address || "");
   const [code, setCode] = useState("");
   const [draft, setDraft] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState(false);
-  const [remaining, setRemaining] = useState(0);
+  const [remaining, setRemaining] = useState(() => challenge ? Math.max(0, 60 - Math.floor((Date.now() - challenge.sentAt) / 1000)) : 0);
+  useEffect(() => { if (signedIn) storeChallenge(); }, [signedIn]);
   useEffect(() => {
     if (!remaining) return;
     const timer = window.setTimeout(() => setRemaining(remaining - 1), 1000);
@@ -76,6 +95,7 @@ export default function MemberAccount() {
       setError(error.status === 429 ? t.limited : t.failure);
       return;
     }
+    storeChallenge(address);
     setSentTo(address);
     setCode("");
     setRemaining(60);
@@ -112,7 +132,7 @@ export default function MemberAccount() {
           {!signedIn && <p>{sentTo ? <>{t.sent} <bdi>{sentTo}</bdi></> : t.intro}</p>}
           <form className="space-y-4" onSubmit={submit}>
             {signedIn ? <label className="block">{t.name}
-              <input required maxLength={50} autoComplete="given-name" dir="auto" className={field}
+              <input maxLength={50} autoComplete="given-name" dir="auto" className={field}
                 value={draft ?? knownName ?? ""} onChange={e => { setDraft(e.target.value); setSaved(false); }} />
             </label> : sentTo ? <label className="block">{t.code}
               <input required autoFocus dir="ltr" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}"
@@ -121,15 +141,15 @@ export default function MemberAccount() {
               <input required type="email" autoComplete="email" dir="ltr" className={field}
                 value={email} onChange={e => setEmail(e.target.value)} />
             </label>}
-            <button type="submit" disabled={busy || (signedIn ? !(draft ?? knownName)?.trim() : !sentTo && remaining > 0)}
+            <button type="submit" disabled={busy || (signedIn ? !(draft ?? knownName)?.trim() && !knownName : !sentTo && remaining > 0)}
               className="btn-gold min-h-12 w-full disabled:opacity-50">{busy ? t.busy : signedIn ? t.save : sentTo ? t.verify : t.send}</button>
           </form>
-          {saved && <p role="status">{t.saved}</p>}
+          {saved && <p role="status">{(draft ?? knownName)?.trim() ? t.saved : { he: "השם הוסר מהחשבון.", en: "Name removed from your account.", ar: "تم حذف الاسم من الحساب.", ru: "Имя удалено из аккаунта." }[language]}</p>}
           {error && <p role="alert">{error}</p>}
           {!signedIn && remaining > 0 && <p className="text-sm">{t.wait} {remaining} {t.seconds}</p>}
           {sentTo && !signedIn && <div className="flex justify-between gap-2">
             <button disabled={busy || remaining > 0} className="min-h-11 text-gold disabled:opacity-50" onClick={() => void run(send)}>{t.resend}</button>
-            <button disabled={busy} className="min-h-11" onClick={() => { setSentTo(""); setCode(""); setRemaining(0); setError(""); }}>{t.change}</button>
+            <button disabled={busy} className="min-h-11" onClick={() => { storeChallenge(); setSentTo(""); setCode(""); setRemaining(0); setError(""); }}>{t.change}</button>
           </div>}
           {signedIn && <button disabled={busy} className="min-h-11" onClick={() => void run(async () => {
             const { error } = await supabase.auth.signOut({ scope: "local" });
