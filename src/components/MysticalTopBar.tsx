@@ -5,6 +5,7 @@ import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { Link, useLocation } from "react-router-dom";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "@/components/MysticalLanguageDropdown";
+import AccountLink from "./AccountLink";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ContactButtonModal from "@/components/ContactButtonModal";
 
@@ -362,6 +363,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
                 </AnimatePresence>
               </div>
               {emailButton}
+              <AccountLink />
             </div>
           </div>
 
@@ -378,6 +380,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             {fontSizeControl}
             {a11yLink}
             {emailButton}
+            <AccountLink />
             <a className="font-body text-sm text-gold hover:underline" href="/rising-sign">{t.hero_menu_rising}</a>
           </nav>
 

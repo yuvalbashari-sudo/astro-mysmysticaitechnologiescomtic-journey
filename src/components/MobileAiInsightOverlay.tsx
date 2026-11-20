@@ -6,6 +6,7 @@ import { useLanguage, useT } from "@/i18n";
 import { useFontScale, type FontScale } from "@/contexts/FontScaleContext";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import HomeScreenInstall from "./HomeScreenInstall";
+import AccountLink from "./AccountLink";
 import AdvisorChatPanel from "./AdvisorChatPanel";
 import MobileOptionsSheet from "./MobileOptionsSheet";
 import ContactButtonModal from "./ContactButtonModal";
@@ -522,6 +523,7 @@ const MobileAiInsightOverlay = () => {
                 </span>
               </motion.button>
               <HomeScreenInstall />
+              <AccountLink />
             </div>
 
             {/* ── Bottom: Norielle floating guide + dismiss cue ── */}
