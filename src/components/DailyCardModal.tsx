@@ -530,12 +530,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                       <input
                         type="text"
                         value={userName}
-                        onChange={(e) => {
-                          setUserName(e.target.value);
-                          if (e.target.value.trim()) {
-                            mysticalProfile.recordUserName(e.target.value.trim());
-                          }
-                        }}
+                        onChange={(e) => setUserName(e.target.value)}
                         placeholder={t.daily_name_placeholder}
                         className="w-full py-2.5 px-4 rounded-lg font-body text-sm text-foreground/80 placeholder:text-foreground/25 focus:outline-none transition-all duration-300"
                         style={{
@@ -547,6 +542,7 @@ const DailyCardModal = ({ isOpen, onClose }: Props) => {
                           e.currentTarget.style.boxShadow = "0 0 12px hsl(var(--gold) / 0.08)";
                         }}
                         onBlur={(e) => {
+                          if (userName.trim()) mysticalProfile.recordUserName(userName);
                           e.currentTarget.style.borderColor = "hsl(var(--gold) / 0.08)";
                           e.currentTarget.style.boxShadow = "none";
                         }}

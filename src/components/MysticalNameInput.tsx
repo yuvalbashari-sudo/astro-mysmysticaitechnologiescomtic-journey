@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { subscribeAccount } from "@/lib/accountName";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { useT } from "@/i18n/LanguageContext";
@@ -14,6 +15,12 @@ const MysticalNameInput = ({ value, onChange, delay = 0.28, className = "" }: Pr
   const t = useT();
   const [focused, setFocused] = useState(false);
   const [greeting, setGreeting] = useState("");
+
+  const edited = useRef(false);
+  const saved = useSyncExternalStore(subscribeAccount, mysticalProfile.getUserName);
+  useEffect(() => {
+    if (!edited.current && !value && saved) onChange(saved);
+  }, [value, onChange, saved]);
 
   const handleBlur = () => {
     setFocused(false);
@@ -53,7 +60,7 @@ const MysticalNameInput = ({ value, onChange, delay = 0.28, className = "" }: Pr
         <input
           type="text"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => { edited.current = true; onChange(e.target.value); }}
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={t.daily_name_placeholder}

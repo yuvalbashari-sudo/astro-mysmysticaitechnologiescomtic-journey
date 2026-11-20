@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Sparkles, Eye } from "lucide-react";
 import { useLanguage, type Language } from "@/i18n";
 import { mysticalProfile } from "@/lib/mysticalProfile";
@@ -137,8 +137,6 @@ const UI_COPY: Record<Language, {
   guidance: string;
   continueCta: string;
   skipCta: string;
-  validation: string;
-  freeTextFallback: string;
   selectHint: string;
 }> = {
   he: {
@@ -148,8 +146,6 @@ const UI_COPY: Record<Language, {
     guidance: "ככל שהשאלה תהיה ברורה ואישית יותר, כך הקריאה תהיה מדויקת יותר.",
     continueCta: "המשיכו לפתיחת הקלפים",
     skipCta: "דלגו והמשיכו ללא שאלה",
-    validation: "כדי שהקלפים יוכלו להעניק מסר מדויק יותר, נסחו שאלה מעט מפורטת יותר.",
-    freeTextFallback: "כדי לקבל תובנות מדויקות, בחרו אחת מהשאלות המומלצות ✨",
     selectHint: "בחרו שאלה:",
   },
   en: {
@@ -159,8 +155,6 @@ const UI_COPY: Record<Language, {
     guidance: "The clearer and more personal your question is, the more accurate the reading will be.",
     continueCta: "Continue to reveal the cards",
     skipCta: "Skip and continue without a question",
-    validation: "For a more precise message, please write a slightly more detailed question.",
-    freeTextFallback: "To receive accurate insights, please select one of the guided questions ✨",
     selectHint: "Choose a question:",
   },
   ru: {
@@ -170,8 +164,6 @@ const UI_COPY: Record<Language, {
     guidance: "Чем яснее и личнее вопрос, тем точнее будет чтение.",
     continueCta: "Продолжить к открытию карт",
     skipCta: "Пропустить и продолжить без вопроса",
-    validation: "Чтобы получить более точное послание, сформулируйте вопрос чуть подробнее.",
-    freeTextFallback: "Для точных предсказаний выберите один из рекомендованных вопросов ✨",
     selectHint: "Выберите вопрос:",
   },
   ar: {
@@ -181,8 +173,6 @@ const UI_COPY: Record<Language, {
     guidance: "كلما كان السؤال أوضح وأكثر شخصية، كانت القراءة أدق.",
     continueCta: "تابع لكشف البطاقات",
     skipCta: "تخطَّ وتابع بدون سؤال",
-    validation: "للحصول على رسالة أدق، يُرجى صياغة سؤال أكثر تفصيلاً قليلاً.",
-    freeTextFallback: "للحصول على رؤى دقيقة، يرجى اختيار أحد الأسئلة الموجّهة ✨",
     selectHint: "اختر سؤالاً:",
   },
 };
@@ -191,20 +181,14 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
   const { language, dir } = useLanguage();
   const copy = UI_COPY[language];
   const [question, setQuestion] = useState("");
-  const [userName, setUserName] = useState("");
-  const [validationMsg, setValidationMsg] = useState("");
-  const [showFallback, setShowFallback] = useState(false);
+  const [userName, setUserName] = useState(() => mysticalProfile.getUserName() || "");
   const [isFocused, setIsFocused] = useState(false);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const placeholdersBySpread = PLACEHOLDERS[language];
   const placeholders = placeholdersBySpread[spreadType] || placeholdersBySpread["timeline"];
   const spreadIcon = SPREAD_ICONS[spreadType] || "🔮";
-
-  // All predefined questions across all spreads for the current language
-  const allPredefined = Object.values(placeholdersBySpread).flat();
 
   // Rotate placeholder
   useEffect(() => {
@@ -216,32 +200,14 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
 
   const handleSelectQuestion = (q: string) => {
     setQuestion(q);
-    setShowFallback(false);
-    setValidationMsg("");
   };
 
   const handleSubmit = () => {
     const trimmed = question.trim();
-    if (trimmed.length > 0 && trimmed.length < 5) {
-      setValidationMsg(copy.validation);
-      return;
-    }
-    // Check if question matches any predefined question
-    if (trimmed.length > 0 && !allPredefined.includes(trimmed)) {
-      setShowFallback(true);
-      setValidationMsg("");
-      // Scroll to suggestion chips
-      setTimeout(() => {
-        suggestionsRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }, 200);
-      return;
-    }
-    setValidationMsg("");
-    setShowFallback(false);
     if (userName.trim()) {
       mysticalProfile.recordUserName(userName.trim());
     }
-    onSubmit(question);
+    onSubmit(trimmed);
   };
 
   return (
@@ -442,11 +408,10 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
 
           <textarea
             ref={textareaRef}
+            aria-label={copy.questionLabel}
             value={question}
             onChange={(e) => {
               setQuestion(e.target.value);
-              if (validationMsg) setValidationMsg("");
-              if (showFallback) setShowFallback(false);
             }}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
@@ -484,96 +449,42 @@ const TarotQuestionPhase = ({ spreadType, spreadLabel, onSubmit }: Props) => {
         </motion.p>
       </motion.div>
 
-      {/* Validation message */}
-      <AnimatePresence>
-        {validationMsg && (
-          <motion.div
-            className="relative z-10 max-w-sm mx-auto mb-3 px-4 py-2.5 rounded-xl text-center"
-            style={{
-              background: "hsl(var(--gold) / 0.06)",
-              border: "1px solid hsl(var(--gold) / 0.12)",
-            }}
-            initial={{ opacity: 0, y: -5, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={{ opacity: 0, y: -5, height: 0 }}
-          >
-            <p className="text-foreground/50 font-body text-[11px] leading-relaxed" dir={dir}>
-              {validationMsg}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      {/* Fallback message + guided question chips */}
-      <AnimatePresence>
-        {showFallback && (
-          <motion.div
-            ref={suggestionsRef}
-            className="relative z-10 max-w-md mx-auto mb-5"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.4 }}
-          >
-            {/* Fallback message */}
-            <motion.div
-              className="px-5 py-3.5 rounded-2xl text-center mb-4"
+      <div className="relative z-10 w-full max-w-md mx-auto mb-5">
+        <p className="text-[11px] text-gold/40 font-body mb-3 text-center" dir={dir}>
+          {copy.selectHint}
+        </p>
+
+        {/* Clickable question chips */}
+        <div className="flex flex-col gap-2">
+          {placeholders.map((q, i) => (
+            <motion.button
+              key={i}
+              onClick={() => handleSelectQuestion(q)}
+              className="w-full text-start px-4 py-3 rounded-xl font-body text-[12px] leading-relaxed transition-all duration-300"
               style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.08), hsl(var(--gold) / 0.03))",
-                border: "1px solid hsl(var(--gold) / 0.15)",
-                boxShadow: "0 0 20px hsl(var(--gold) / 0.05)",
+                background: question === q
+                  ? "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))"
+                  : "hsl(var(--gold) / 0.03)",
+                border: `1px solid hsl(var(--gold) / ${question === q ? "0.25" : "0.08"})`,
+                color: question === q ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
               }}
-              animate={{
-                boxShadow: [
-                  "0 0 20px hsl(43 80% 55% / 0.05)",
-                  "0 0 30px hsl(43 80% 55% / 0.1)",
-                  "0 0 20px hsl(43 80% 55% / 0.05)",
-                ],
+              dir={dir}
+              initial={{ opacity: 0, x: dir === "rtl" ? 10 : -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 + i * 0.08 }}
+              whileHover={{
+                background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
+                borderColor: "hsl(var(--gold) / 0.2)",
               }}
-              transition={{ duration: 2.5, repeat: Infinity }}
+              whileTap={{ scale: 0.98 }}
             >
-              <p className="text-gold/80 font-body text-[13px] leading-relaxed" dir={dir}>
-                {copy.freeTextFallback}
-              </p>
-            </motion.div>
-
-            {/* Guided question hint */}
-            <p className="text-[11px] text-gold/40 font-body mb-3 text-center" dir={dir}>
-              {copy.selectHint}
-            </p>
-
-            {/* Clickable question chips */}
-            <div className="flex flex-col gap-2">
-              {placeholders.map((q, i) => (
-                <motion.button
-                  key={i}
-                  onClick={() => handleSelectQuestion(q)}
-                  className="w-full text-start px-4 py-3 rounded-xl font-body text-[12px] leading-relaxed transition-all duration-300"
-                  style={{
-                    background: question === q
-                      ? "linear-gradient(135deg, hsl(var(--gold) / 0.12), hsl(var(--gold) / 0.06))"
-                      : "hsl(var(--gold) / 0.03)",
-                    border: `1px solid hsl(var(--gold) / ${question === q ? "0.25" : "0.08"})`,
-                    color: question === q ? "hsl(var(--gold))" : "hsl(var(--foreground) / 0.5)",
-                  }}
-                  dir={dir}
-                  initial={{ opacity: 0, x: dir === "rtl" ? 10 : -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.08 }}
-                  whileHover={{
-                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.1), hsl(var(--gold) / 0.05))",
-                    borderColor: "hsl(var(--gold) / 0.2)",
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <span className="opacity-60 mr-2">✦</span>
-                  {q}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <span className="opacity-60 mr-2">✦</span>
+              {q}
+            </motion.button>
+          ))}
+        </div>
+      </div>
 
       {/* CTA Button */}
       <motion.button

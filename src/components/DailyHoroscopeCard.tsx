@@ -201,7 +201,7 @@ const DailyHoroscopeCard = () => {
   const [attempt, setAttempt] = useState(0);
 
   // Inline setup form state
-  const [setupName, setSetupName] = useState("");
+  const [setupName, setSetupName] = useState(() => mysticalProfile.getUserName() || "");
   const [setupBirthDate, setSetupBirthDate] = useState("");
   // Admin users skip setup entirely
   const isReturning = mysticalProfile.isReturningUser();

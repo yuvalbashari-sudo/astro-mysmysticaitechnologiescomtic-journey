@@ -1,3 +1,4 @@
+import TarotQuestionPhase from "./TarotQuestionPhase";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { readingAuthorization } from "@/lib/readingAuthorization";
 import { Fragment, useState, useEffect, useRef, useCallback, useMemo } from "react";
@@ -34,7 +35,7 @@ interface Props {
   onClose: () => void;
 }
 
-type Phase = "question" | "drawing" | "interpretation";
+type Phase = "personal" | "question" | "drawing" | "interpretation";
 
 interface QuestionOption {
   key: string;
@@ -421,6 +422,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const cardName = useCardName();
   const { setActiveReading } = useReadingContext();
   const [phase, setPhase] = useState<Phase>("question");
+  const [personalQuestion, setPersonalQuestion] = useState("");
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [drawnCards, setDrawnCards] = useState<ReadingCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
@@ -450,7 +452,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   }, []);
 
   const liveAccess = entitlements.checkAccess("tarot_reading");
-  const isLiveBlocked = isOpen && phase === "question" && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const isLiveBlocked = isOpen && (phase === "question" || phase === "personal") && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
     : null;
@@ -489,7 +491,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     },
   ], [language, t]);
 
-  const handleQuestionSelect = useCallback((key: string) => {
+  const handleQuestionSelect = useCallback((key: string, question = "") => {
     // Anti-abuse cooldown check
     const abuseCheck = antiAbuse.fullCheck("tarot_reading");
     if (!abuseCheck.allowed) {
@@ -517,6 +519,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     entitlements.recordFeatureUse("tarot_reading");
     notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
+    setPersonalQuestion(question);
     setSelectedQuestion(key);
     setDrawnCards(drawReadingCards(7));
     setPhase("drawing");
@@ -533,7 +536,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     setAiError(null);
     setAiLoading(true);
 
-    const positions = [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future];
+    const positions = personalQuestion
+      ? [t.tarot_world_pos_hidden_influence, t.tarot_world_pos_current_energy, t.tarot_world_pos_possible_direction]
+      : [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future];
     const cardsPayload = cards.map((card, index) => ({
       hebrewName: card.name.he,
       symbol: card.symbol,
@@ -541,7 +546,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       localizedName: card.name[language] || card.name.en || card.name.he,
       positionLabel: positions[index],
     }));
-    const spreadType = selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
+    const spreadType = personalQuestion ? "question" : selectedQuestion === "love" ? "love" : selectedQuestion === "career" ? "career" : "timeline";
     const questionLabel = questionOptions.find((option) => option.key === selectedQuestion)?.label || t.imm_tarot_category_general;
     let text = "";
 
@@ -588,7 +593,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       },
       showError,
       controller.signal,
-      selectedQuestion || undefined,
+      personalQuestion || selectedQuestion || undefined,
       language,
     ).catch((error) => showError(safeErrorText(error, language, "tarot-reading")));
   };
@@ -617,6 +622,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
 
   const resetSelection = () => {
     setPhase("question");
+    setPersonalQuestion("");
     setSelectedQuestion(null);
     setDrawnCards([]);
     selectedIndicesRef.current = new Set();
@@ -808,6 +814,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     {t.imm_tarot_question_title}
                   </motion.h2>
 
+                  <button type="button" onClick={() => setPhase("personal")} className="mb-3 min-h-12 w-full rounded-xl border border-gold/40 bg-slate-950/90 px-4 py-3 font-heading text-gold">
+                    {t.tarot_world_spread_question_name}
+                  </button>
                   <div className="grid grid-cols-2 gap-3 md:gap-6">
                     {questionOptions.map((opt, i) => (
                       <motion.button
@@ -852,6 +861,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                     ))}
                   </div>
                 </motion.div>
+              )}
+
+              {phase === "personal" && (
+                <div key="personal" className="pointer-events-auto mx-auto max-h-[85dvh] w-full max-w-xl overflow-y-auto rounded-2xl bg-slate-950">
+                  <TarotQuestionPhase spreadType="timeline" spreadLabel={t.tarot_world_spread_question_name}
+                    onSubmit={(question) => handleQuestionSelect("general", question)} />
+                </div>
               )}
 
               {/* ─── PHASE 2: Card Drawing ─── */}

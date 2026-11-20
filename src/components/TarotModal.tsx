@@ -1,3 +1,4 @@
+import { accountStorageKey } from "@/lib/accountName";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { readingAuthorization } from "@/lib/readingAuthorization";
 import { Fragment, useState, useEffect, useRef } from "react";
@@ -38,27 +39,28 @@ interface TarotCacheData {
   date: string;
   language: string;
   spreadKey: string;
+  question?: string;
   cards: ReadingCard[];
   aiText: string;
 }
 
 function getTarotCache(lang: string): TarotCacheData | null {
   try {
-    const raw = sessionStorage.getItem(TAROT_CACHE_KEY);
+    const raw = sessionStorage.getItem(accountStorageKey(TAROT_CACHE_KEY));
     if (!raw) return null;
     const data = JSON.parse(raw) as TarotCacheData;
     const today = new Date().toISOString().split("T")[0];
-    if (data.date !== today) { sessionStorage.removeItem(TAROT_CACHE_KEY); return null; }
+    if (data.date !== today) { sessionStorage.removeItem(accountStorageKey(TAROT_CACHE_KEY)); return null; }
     if (data.language !== lang) return null;
     return data;
   } catch { return null; }
 }
 
 function saveTarotCache(data: TarotCacheData) {
-  try { sessionStorage.setItem(TAROT_CACHE_KEY, JSON.stringify(data)); } catch {}
+  try { sessionStorage.setItem(accountStorageKey(TAROT_CACHE_KEY), JSON.stringify(data)); } catch {}
 }
 
-type SpreadType = "love" | "career" | "decision" | "timeline";
+type SpreadType = "question" | "love" | "career" | "decision" | "timeline";
 
 interface SpreadOption {
   key: SpreadType;
@@ -71,6 +73,7 @@ interface SpreadOption {
 // These will be populated with translations inside the component
 function getSpreadOptions(t: ReturnType<typeof useT>): SpreadOption[] {
   return [
+    { key: "question", icon: <Sparkles className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_world_pos_hidden_influence, t.tarot_world_pos_current_energy, t.tarot_world_pos_possible_direction], descKey: "tarot_world_spread_question_desc" },
     { key: "timeline", icon: <Compass className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future], descKey: "tarot_spread_timeline_desc" },
     { key: "love", icon: <Heart className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_heart, t.tarot_pos_energy, t.tarot_pos_direction], descKey: "tarot_spread_love_desc" },
     { key: "career", icon: <Briefcase className="w-7 h-7" />, cardCount: 3, positionLabels: [t.tarot_pos_current, t.tarot_pos_challenge, t.tarot_pos_opportunity], descKey: "tarot_spread_career_desc" },
@@ -80,6 +83,7 @@ function getSpreadOptions(t: ReturnType<typeof useT>): SpreadOption[] {
 
 function getSpreadLabels(t: ReturnType<typeof useT>): Record<SpreadType, string> {
   return {
+    question: t.tarot_world_spread_question_name,
     timeline: t.tarot_spread_timeline,
     love: t.tarot_spread_love,
     career: t.tarot_spread_career,
@@ -428,6 +432,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             date: new Date().toISOString().split("T")[0],
             language,
             spreadKey: selectedSpread.key,
+            question: userQuestion,
             cards: drawnCards,
             aiText: aiTextRef.current,
           });
@@ -489,6 +494,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     const cached = getTarotCache(language);
     if (cached && cached.aiText) {
       setCards(cached.cards);
+      setUserQuestion(cached.question || "");
       setAiText(cached.aiText);
       aiTextRef.current = cached.aiText;
       setSelectedSpreadKey(cached.spreadKey as SpreadType);
@@ -1046,6 +1052,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                 </motion.div>
               ) : cards && isMobileTarot ? (
                 <section key="mobile-result" className="relative mx-auto max-w-lg space-y-4 px-4 pb-6 pt-[calc(5rem+env(safe-area-inset-top))]">
+                  {userQuestion && <p className="mobile-reading-surface rounded-xl p-3 text-center text-foreground" dir="auto">{userQuestion}</p>}
                   <div className="grid grid-cols-3 gap-2.5">
                     {cards.map((card, index) => (
                       <figure key={card.id} className="min-w-0 text-center">
@@ -1089,6 +1096,15 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       </button>
                     </div>
                   )}
+                {!aiLoading && <button type="button" className="btn-gold min-h-11 w-full" onClick={() => {
+                    mobileReadingAdmitted.current = false;
+                    setUserQuestion("");
+                    setCards(null);
+                    setAiText("");
+                    setAiError(null);
+                    setMobileTopicPhase(true);
+                    startAIRef.current = null;
+                  }}>{t.tarot_world_spread_question_name}</button>}
                 </section>
               ) : cards ? (
                 <motion.div key="result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-4 md:p-10 min-h-screen relative overflow-hidden" style={{ maxWidth: "100vw" }}>

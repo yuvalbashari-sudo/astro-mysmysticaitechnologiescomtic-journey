@@ -32,6 +32,34 @@ afterEach(() => {
   sessionStorage.clear();
 });
 
+it.each([375, 1100])("sends the edited personal question exactly once after card three at %i px", async width => {
+  vi.stubGlobal("innerWidth", width);
+  vi.stubGlobal("IntersectionObserver", class { observe() {} unobserve() {} disconnect() {} });
+  localStorage.setItem("astrologai_lang", "en");
+  const request = vi.fn().mockResolvedValue(new Response(
+    'data: {"choices":[{"delta":{"content":"Consider the new teaching role."}}]}\n\ndata: [DONE]\n\n',
+  ));
+  vi.stubGlobal("fetch", request);
+  const Reading = width < 768 ? TarotModal : ImmersiveTarotExperience;
+  render(<LanguageProvider><Reading isOpen onClose={() => {}} /></LanguageProvider>);
+  fireEvent.click(screen.getByRole("button", { name: /ask a question/i }));
+  const field = await screen.findByRole("textbox", { name: "What is your question?" });
+  fireEvent.click(screen.getByRole("button", { name: /what story is unfolding around me/i }));
+  expect(field).toHaveValue("What story is unfolding around me?");
+  const question = "How can I prepare for my new teaching role?";
+  fireEvent.change(field, { target: { value: question } });
+  fireEvent.click(screen.getByRole("button", { name: /continue to reveal/i }));
+  const picks = width < 768 ? screen.getAllByRole("button", { name: /^Card \d+$/ })
+    : Array.from(document.querySelectorAll(".absolute.cursor-pointer"));
+  fireEvent.click(picks[0]);
+  fireEvent.click(picks[1]);
+  expect(request).not.toHaveBeenCalled();
+  fireEvent.click(picks[2]);
+  expect(request).toHaveBeenCalledTimes(1);
+  expect(JSON.parse(request.mock.calls[0][1].body)).toMatchObject({ spreadType: "question", context: { userQuestion: question } });
+  expect(await screen.findByText("Consider the new teaching role.")).toBeInTheDocument();
+});
+
 it("uses the same immediate result for the tarot modal opened from the mobile menu", async () => {
   vi.stubGlobal("innerWidth", 375);
   vi.stubGlobal("IntersectionObserver", class {
