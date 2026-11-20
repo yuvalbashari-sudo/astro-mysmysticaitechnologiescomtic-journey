@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from "react";
+import { accountScope, subscribeAccount } from "./lib/accountName";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -35,8 +37,10 @@ const RouteSeoTags = () => {
   return null;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+  const scope = useSyncExternalStore(subscribeAccount, accountScope);
+  return (
+  <QueryClientProvider key={scope} client={queryClient}>
     <LanguageProvider>
       <ReadingProvider>
         <FontScaleProvider>
@@ -79,6 +83,7 @@ const App = () => (
       </ReadingProvider>
     </LanguageProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;
