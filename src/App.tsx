@@ -16,6 +16,7 @@ import ZodiacSignPage from "./pages/ZodiacSignPage";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import TarotGalleryPage from "./pages/TarotGalleryPage";
 import PremiumUpgrade from "./pages/PremiumUpgrade";
+import MemberAccount from "./pages/MemberAccount";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NatalTest from "./pages/NatalTest";
@@ -61,6 +62,7 @@ const App = () => {
                 <Route path="/zodiac/:slug" element={<ZodiacSignPage />} />
                 <Route path="/accessibility" element={<AccessibilityStatement />} />
                 <Route path="/upgrade" element={<PremiumUpgrade />} />
+                <Route path="/account" element={<MemberAccount />} />
                 <Route path="/admin/costs" element={<AdminCostAnalytics />} />
                 <Route path="/unsubscribe" element={<Unsubscribe />} />
                 <Route path="/natal-test" element={<NatalTest />} />
