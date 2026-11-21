@@ -143,7 +143,6 @@ const AstrocartographyModal = ({ isOpen, onClose }: Props) => {
       isOpen={isOpen}
       onClose={onClose}
       avatarStyle={avatarStyle}
-      hideFreeBadge
       topOverlay
       hideAdvisor={phase === "form"}
     >

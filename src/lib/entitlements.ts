@@ -127,10 +127,10 @@ export interface GatingMessage {
 
 const GATING_MESSAGES: Record<GatingPromptKey, (priceILS: number) => GatingMessage> = {
   tarot_free_exhausted: (p) => ({
-    he: `השתמשת בקריאת הטארוט החינמית להיום. פתח קריאה נוספת תמורת ${p} ₪.`,
-    en: `You've used your free tarot reading for today. Unlock another reading for ₪${p}.`,
-    ar: `لقد استخدمت قراءة التارو المجانية لليوم. افتح قراءة أخرى مقابل ${p} ₪.`,
-    ru: `Вы использовали бесплатное чтение Таро на сегодня. Разблокируйте ещё одно за ₪${p}.`,
+    he: `השתמשת בקריאת הטארוט להיום. פתח קריאה נוספת תמורת ${p} ₪.`,
+    en: `You've used your tarot reading for today. Unlock another reading for ₪${p}.`,
+    ar: `لقد استخدمت قراءة التارو لليوم. افتح قراءة أخرى مقابل ${p} ₪.`,
+    ru: `Вы использовали чтение Таро на сегодня. Разблокируйте ещё одно за ₪${p}.`,
     priceILS: p,
   }),
   tarot_sub_exhausted: (p) => ({
@@ -141,10 +141,10 @@ const GATING_MESSAGES: Record<GatingPromptKey, (priceILS: number) => GatingMessa
     priceILS: p,
   }),
   compatibility_free_exhausted: (p) => ({
-    he: `השתמשת ב-2 קריאות ההתאמה החינמיות להיום. פתח קריאה נוספת תמורת ${p} ₪.`,
-    en: `You've used your 2 free compatibility readings for today. Unlock another reading for ₪${p}.`,
-    ar: `لقد استخدمت قراءتي التوافق المجانيتين لليوم. افتح قراءة أخرى مقابل ${p} ₪.`,
-    ru: `Вы использовали 2 бесплатных чтения совместимости на сегодня. Разблокируйте ещё одно за ₪${p}.`,
+    he: `השתמשת ב-2 קריאות ההתאמה להיום. פתח קריאה נוספת תמורת ${p} ₪.`,
+    en: `You've used your 2 compatibility readings for today. Unlock another reading for ₪${p}.`,
+    ar: `لقد استخدمت قراءتي التوافق لليوم. افتح قراءة أخرى مقابل ${p} ₪.`,
+    ru: `Вы использовали 2 чтения совместимости на сегодня. Разблокируйте ещё одно за ₪${p}.`,
     priceILS: p,
   }),
   compatibility_sub_exhausted: (p) => ({

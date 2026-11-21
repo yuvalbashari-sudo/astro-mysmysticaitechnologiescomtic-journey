@@ -14,12 +14,12 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
   "/daily-horoscope": {
     title: "Daily Horoscope – Norielle AI",
     description:
-      "Get your free personalized daily horoscope from Norielle AI — accurate astrology forecasts powered by advanced AI.",
+      "Get your personalized daily horoscope from Norielle AI — accurate astrology forecasts powered by advanced AI.",
   },
   "/tarot-reading": {
     title: "AI Tarot Reading – Norielle AI",
     description:
-      "Free personalized tarot card readings from Norielle AI. Discover love, career, and spiritual insights powered by AI.",
+      "Personalized tarot card readings from Norielle AI. Discover love, career, and spiritual insights powered by AI.",
   },
   "/zodiac-compatibility": {
     title: "Zodiac Compatibility Test – Norielle AI",
@@ -27,7 +27,7 @@ const ROUTE_META: Record<string, { title: string; description: string }> = {
       "Check your zodiac compatibility with Norielle AI. Deep romantic and emotional compatibility analysis powered by astrology AI.",
   },
   "/birth-chart": {
-    title: "Free Birth Chart Reading – Norielle AI",
+    title: "Birth Chart Reading – Norielle AI",
     description:
       "Generate your personal natal birth chart with Norielle AI. Discover your sun, moon, and rising signs through advanced AI astrology.",
   },
@@ -81,7 +81,7 @@ const SeoStructuredData = () => {
           { "@type": "Offer", itemOffered: { "@type": "Service", name: "Palm Reading Online", description: "Upload hand photos for AI palm reading analysis" } },
           { "@type": "Offer", itemOffered: { "@type": "Service", name: "Zodiac Compatibility Test", description: "Check romantic compatibility by zodiac signs" } },
           { "@type": "Offer", itemOffered: { "@type": "Service", name: "Birth Chart Analysis", description: "Personal astrology birth chart with planet placements" } },
-          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Monthly Horoscope", description: "Free personalized monthly horoscope forecast" } },
+          { "@type": "Offer", itemOffered: { "@type": "Service", name: "Monthly Horoscope", description: "Personalized monthly horoscope forecast" } },
         ],
       },
     };
@@ -93,12 +93,12 @@ const SeoStructuredData = () => {
       mainEntity: [
         {
           "@type": "Question",
-          name: isHe ? "האם השירות חינמי?" : "Is the service free?",
+          name: isHe ? "אילו קריאות זמינות באתר?" : "Which readings are available?",
           acceptedAnswer: {
             "@type": "Answer",
             text: isHe
-              ? "כן! קריאת טארוט יומית, הורוסקופ חודשי וקלף יומי הם בחינם. ניתן לשדרג לחוויה מורחבת עם מנוי פרימיום."
-              : "Yes! Daily tarot reading, monthly horoscope and daily card are free. You can upgrade for extended experiences with a premium subscription.",
+              ? "באתר זמינים קריאת טארוט יומית, הורוסקופ חודשי וקלף יומי. ניתן לשדרג לחוויה מורחבת עם מנוי פרימיום."
+              : "The site offers a daily tarot reading, a monthly horoscope and a daily card. You can upgrade for extended experiences with a premium subscription.",
           },
         },
         {

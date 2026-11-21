@@ -228,7 +228,6 @@ export type TranslationKeys = {
   forecast_gender_required: string;
   forecast_birthdate_required: string;
   forecast_cta: string;
-  forecast_free_badge: string;
   forecast_note: string;
   forecast_month_label: string;
   forecast_element_label: string;
@@ -332,7 +331,6 @@ export type TranslationKeys = {
   // Tarot World Modal
   tarot_world_title: string;
   tarot_world_desc: string;
-  tarot_world_free: string;
   tarot_world_premium: string;
   tarot_world_shuffle: string;
   tarot_world_shuffle_focus: string;
@@ -520,7 +518,6 @@ export type TranslationKeys = {
   dashboard_compatibility: string;
 
   // Common
-  common_free: string;
   common_close: string;
   common_loading: string;
 
@@ -724,7 +721,6 @@ export type TranslationKeys = {
   seo_arcana_number: string;
 
   // Common UI
-  free_badge_label: string;
   astrologer_chat_title: string;
   astrologer_chat_desc: string;
   astrologer_chat_label: string;

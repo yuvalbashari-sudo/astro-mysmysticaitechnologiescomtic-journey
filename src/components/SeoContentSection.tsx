@@ -22,10 +22,10 @@ const SeoContentSection = () => {
       services: [
         { title: "קריאת טארוט אונליין", desc: "שאלו שאלה וקבלו פריסת טארוט אישית עם פירוש מעמיק של כל קלף.", link: "/tarot-gallery", linkText: "צפו בכל קלפי הטארוט →" },
         { title: "בדיקת התאמה זוגית לפי מזלות", desc: "גלו את הכימיה הקוסמית בינכם לבין בן או בת הזוג.", link: "/zodiac/aries", linkText: "גלו את המזל שלכם →" },
-        { title: "מפת לידה והורוסקופ חודשי", desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית — בחינם.", link: null, linkText: null },
+        { title: "מפת לידה והורוסקופ חודשי", desc: "הזינו את תאריך ושעת הלידה לקבלת מפת לידה אישית.", link: null, linkText: null },
       ],
       trustTitle: "למה לבחור ב-ASTROLOGAI?",
-      trustItems: ["חוויה מיסטית פרימיום מותאמת אישית", "טכנולוגיית AI מתקדמת לקריאות מדויקות", "זמין בעברית, אנגלית, ערבית ורוסית", "קלף יומי והורוסקופ חודשי בחינם", "קריאות מותאמות לשם ולתאריך לידה"],
+      trustItems: ["חוויה מיסטית פרימיום מותאמת אישית", "טכנולוגיית AI מתקדמת לקריאות מדויקות", "זמין בעברית, אנגלית, ערבית ורוסית", "קלף יומי והורוסקופ חודשי", "קריאות מותאמות לשם ולתאריך לידה"],
     },
     en: {
       mainTitle: "Astrology, Tarot & More — All in One Place",
@@ -33,10 +33,10 @@ const SeoContentSection = () => {
       services: [
         { title: "Online Tarot Reading", desc: "Ask a question and get a personal tarot spread with a clear, in-depth take on every card.", link: "/tarot-gallery", linkText: "Browse all tarot cards →" },
         { title: "Zodiac Compatibility", desc: "See the chemistry between you and your partner across all 12 zodiac signs.", link: "/zodiac/aries", linkText: "Explore your zodiac sign →" },
-        { title: "Birth Chart & Monthly Horoscope", desc: "Add your birth date and time to get a personal birth chart — free.", link: null, linkText: null },
+        { title: "Birth Chart & Monthly Horoscope", desc: "Add your birth date and time to get a personal birth chart.", link: null, linkText: null },
       ],
       trustTitle: "Why people pick ASTROLOGAI",
-      trustItems: ["A personal experience, made for you", "Smart AI for accurate readings", "Available in Hebrew, English, Arabic, and Russian", "Free daily card and monthly horoscope", "Readings built around your name and birth date"],
+      trustItems: ["A personal experience, made for you", "Smart AI for accurate readings", "Available in Hebrew, English, Arabic, and Russian", "Daily card and monthly horoscope", "Readings built around your name and birth date"],
     },
     ru: {
       mainTitle: "Откройте тайны Вселенной с ASTROLOGAI",
@@ -44,10 +44,10 @@ const SeoContentSection = () => {
       services: [
         { title: "Онлайн чтение Таро", desc: "Задайте вопрос и получите персональный расклад Таро с глубокой интерпретацией каждой карты.", link: "/tarot-gallery", linkText: "Все карты Таро →" },
         { title: "Тест совместимости знаков", desc: "Откройте космическую химию между вами и вашим партнёром по всем 12 знакам зодиака.", link: "/zodiac/aries", linkText: "Узнайте свой знак →" },
-        { title: "Натальная карта и гороскоп", desc: "Введите дату и время рождения для персональной натальной карты — совершенно бесплатно.", link: null, linkText: null },
+        { title: "Натальная карта и гороскоп", desc: "Введите дату и время рождения для персональной натальной карты.", link: null, linkText: null },
       ],
       trustTitle: "Почему ASTROLOGAI?",
-      trustItems: ["Премиум персонализированный мистический опыт", "Передовая AI-технология для точных чтений", "Доступно на иврите, английском, арабском и русском", "Бесплатная карта дня и ежемесячный гороскоп", "Чтения персонализированы по имени и дате рождения"],
+      trustItems: ["Премиум персонализированный мистический опыт", "Передовая AI-технология для точных чтений", "Доступно на иврите, английском, арабском и русском", "Карта дня и ежемесячный гороскоп", "Чтения персонализированы по имени и дате рождения"],
     },
     ar: {
       mainTitle: "اكتشفوا أسرار الكون مع ASTROLOGAI",
@@ -55,10 +55,10 @@ const SeoContentSection = () => {
       services: [
         { title: "قراءة تاروت أونلاين", desc: "اطرح سؤالاً واحصل على توزيع تاروت شخصي مع تفسير عميق لكل بطاقة.", link: "/tarot-gallery", linkText: "تصفح جميع بطاقات التاروت →" },
         { title: "اختبار توافق الأبراج", desc: "اكتشفوا الكيمياء الكونية بينكم وبين شريككم عبر جميع الأبراج الـ12.", link: "/zodiac/aries", linkText: "اكتشف برجك →" },
-        { title: "خريطة ميلاد وتوقعات شهرية", desc: "أدخل تاريخ ووقت ميلادك للحصول على خريطة ميلاد شخصية — مجانًا.", link: null, linkText: null },
+        { title: "خريطة ميلاد وتوقعات شهرية", desc: "أدخل تاريخ ووقت ميلادك للحصول على خريطة ميلاد شخصية.", link: null, linkText: null },
       ],
       trustTitle: "لماذا ASTROLOGAI؟",
-      trustItems: ["تجربة روحية متميزة ومخصصة", "تقنية ذكاء اصطناعي متقدمة لقراءات دقيقة", "متاح بالعبرية والإنجليزية والعربية والروسية", "بطاقة يومية وتوقعات شهرية مجانية", "قراءات مخصصة لاسمك وتاريخ ميلادك"],
+      trustItems: ["تجربة روحية متميزة ومخصصة", "تقنية ذكاء اصطناعي متقدمة لقراءات دقيقة", "متاح بالعبرية والإنجليزية والعربية والروسية", "بطاقة يومية وتوقعات شهرية", "قراءات مخصصة لاسمك وتاريخ ميلادك"],
     },
   });
   return (
