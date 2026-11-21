@@ -4,26 +4,14 @@ import { Star, Heart, Briefcase, Coins, Sparkles, Activity, Flame } from "lucide
 import CinematicModalShell from "./CinematicModalShell";
 import { zodiacData, type ZodiacSign } from "@/data/zodiacData";
 import { useT, useLanguage } from "@/i18n";
-import { getSignName, getElementName } from "@/lib/astroLocale";
+import { signLabels, signReading } from "@/data/interpretations";
 
 const ZODIAC_KEYS = [
   "aries", "taurus", "gemini", "cancer", "leo", "virgo",
   "libra", "scorpio", "sagittarius", "capricorn", "aquarius", "pisces",
 ];
 
-/**
- * Element key (English) → element accent hue. Element on `zodiacData` is
- * stored in Hebrew, so we first map the literal to a stable English key,
- * then look up both the color and the localized label.
- */
-const ELEMENT_KEY_FROM_HE: Record<string, "fire" | "earth" | "air" | "water"> = {
-  אש: "fire",
-  אדמה: "earth",
-  אוויר: "air",
-  מים: "water",
-};
-
-const ELEMENT_COLORS: Record<"fire" | "earth" | "air" | "water", string> = {
+const ELEMENT_COLORS: Record<string, string> = {
   fire: "20 80% 55%",
   earth: "85 50% 45%",
   air: "270 60% 60%",
@@ -87,19 +75,18 @@ const ZodiacSignModal = ({ isOpen, onClose, signIndex }: Props) => {
   if (!sign) return null;
 
   // Locale-aware sign label and element label/color.
-  const localizedSignName = getSignName(signIndex, language);
-  const elementKey = ELEMENT_KEY_FROM_HE[sign.element] ?? "fire";
-  const localizedElement = getElementName(elementKey, language);
+  const { name: localizedSignName, element: localizedElement, elementKey } = signLabels(key, sign, language);
+  const reading = signReading(key, sign, language);
   const elHue = ELEMENT_COLORS[elementKey];
 
   const sections = [
-    { icon: <Star className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_personality, content: sign.personality, delay: 0.2 },
-    { icon: <Sparkles className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.zodiac_monthly_energy_label, content: sign.monthlyEnergy, delay: 0.3 },
-    { icon: <Heart className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_love, content: sign.love, delay: 0.4 },
-    { icon: <Coins className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_money, content: sign.money, delay: 0.5 },
-    { icon: <Briefcase className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_career, content: sign.career, delay: 0.6 },
-    { icon: <Activity className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_health, content: sign.health, delay: 0.7 },
-    { icon: <Flame className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_spiritual, content: sign.spiritual, delay: 0.8 },
+    { icon: <Star className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_personality, content: reading.personality, delay: 0.2 },
+    { icon: <Sparkles className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.zodiac_monthly_energy_label, content: reading.monthlyEnergy, delay: 0.3 },
+    { icon: <Heart className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_love, content: reading.love, delay: 0.4 },
+    { icon: <Coins className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_money, content: reading.money, delay: 0.5 },
+    { icon: <Briefcase className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_career, content: reading.career, delay: 0.6 },
+    { icon: <Activity className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_health, content: reading.health, delay: 0.7 },
+    { icon: <Flame className="w-4 h-4" style={{ color: `hsl(${elHue})` }} />, title: t.seo_section_spiritual, content: reading.spiritual, delay: 0.8 },
   ];
 
   if (!isMobile) {

@@ -39,7 +39,7 @@ function getTodayISO(): string {
  * Localized error messages (HE / EN / RU / AR).
  */
 const MysticalDateInput = ({ value, onChange, className = "", style, placeholder }: Props) => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const hiddenRef = useRef<HTMLInputElement>(null);
   const [errorCode, setErrorCode] = useState<DateErrorCode | null>(null);
 
@@ -173,7 +173,7 @@ const MysticalDateInput = ({ value, onChange, className = "", style, placeholder
         onClick={handleNativePick}
         className="absolute top-1/2 -translate-y-1/2 p-1.5 rounded-full transition-colors"
         style={{ right: 6, color: "hsl(var(--gold) / 0.5)" }}
-        aria-label="Open calendar"
+        aria-label={t.a11y_calendar}
         tabIndex={-1}
       >
         <CalendarDays className="w-4 h-4" />

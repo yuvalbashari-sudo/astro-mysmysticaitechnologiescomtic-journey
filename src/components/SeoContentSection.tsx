@@ -62,7 +62,7 @@ const SeoContentSection = () => {
     },
   });
   return (
-    <section className="py-12 md:py-20 px-3 md:px-4 relative cosmic-section-bg overflow-hidden" aria-label="SEO Content">
+    <section className="py-12 md:py-20 px-3 md:px-4 relative cosmic-section-bg overflow-hidden" aria-label={content.mainTitle}>
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/3 w-64 h-64 rounded-full bg-gold/3 blur-[120px]" />
         <div className="absolute bottom-1/3 right-1/4 w-48 h-48 rounded-full bg-crimson/3 blur-[100px]" />

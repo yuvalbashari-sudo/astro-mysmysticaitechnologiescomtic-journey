@@ -1,3 +1,4 @@
+import { useT } from "@/i18n";
 import { motion } from "framer-motion";
 
 export type TextSize = "default" | "large" | "xl";
@@ -14,6 +15,7 @@ const OPTIONS: { key: TextSize; label: string }[] = [
 ];
 
 const TextSizeControl = ({ value, onChange }: Props) => {
+  const t = useT();
   return (
     <div
       className="inline-flex items-center gap-1 rounded-full px-1.5 py-1"
@@ -22,7 +24,7 @@ const TextSizeControl = ({ value, onChange }: Props) => {
         border: "1px solid hsl(var(--gold) / 0.15)",
       }}
       role="radiogroup"
-      aria-label="Text size"
+      aria-label={t.a11y_text_size}
     >
       {OPTIONS.map(({ key, label }) => {
         const isActive = value === key;
@@ -31,7 +33,7 @@ const TextSizeControl = ({ value, onChange }: Props) => {
             key={key}
             role="radio"
             aria-checked={isActive}
-            aria-label={`Text size ${label}`}
+            aria-label={t[`a11y_text_${key}` as const]}
             onClick={() => onChange(key)}
             className="relative px-3 py-1.5 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-1"
             style={{

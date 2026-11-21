@@ -333,7 +333,7 @@ const MobileAiInsightOverlay = () => {
                     height: 36,
                   }}
                   role="radiogroup"
-                  aria-label="Font size"
+                  aria-label={t.a11y_text_size}
                   dir="ltr"
                 >
                   {([
@@ -348,6 +348,7 @@ const MobileAiInsightOverlay = () => {
                         type="button"
                         role="radio"
                         aria-checked={isActive}
+                        aria-label={t[`a11y_text_${key}` as const]}
                         onClick={() => setScale(key)}
                         className="relative px-2 py-1 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold"
                         style={{
