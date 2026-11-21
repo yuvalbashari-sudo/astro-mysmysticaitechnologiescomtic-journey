@@ -100,12 +100,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
 
   const handleClose = () => { onClose(); setTimeout(() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", interest: preselectedInterest || "", message: "" }); }, 300); };
 
-  // For the support modal we lower the advisor avatar on mobile so it visually
-  // clears the "Free" badge / title strip area, and we expose A/A+/A++ text
-  // size controls just under the close button (matching the wider site UX).
-  // Push the avatar 24px lower on mobile so it sits well below the top-right
-  // "Free" badge area and never overlaps the badge, logo, title, or text controls.
-  // Default mobile position is { bottom: 16 }; we shift down by 24px → bottom: -8.
+  // Keep the mobile support avatar below the header controls.
   const supportAvatarStyle: React.CSSProperties | undefined = isSupport && isMobile
     ? { top: 60, right: 8, bottom: "auto", left: "auto", width: 96, height: 96 }
     : undefined;
@@ -120,7 +115,6 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
       avatarStyle={supportAvatarStyle}
       hideAdvisor={isDesktopSupport}
       hideClose={isDesktopSupport}
-      hideFreeBadge={isDesktopSupport}
       wide={isDesktopSupport}
     >
       {isSupport && !isDesktopSupport && (
@@ -160,18 +154,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                   <X className="w-5 h-5 text-gold/80" />
                 </button>
               </div>
-              {/* Right cluster: free badge + avatar */}
               <div className="absolute top-4 right-4 flex items-center gap-3">
-                <span
-                  className="px-4 py-1.5 rounded-full text-sm font-bold font-body tracking-wider"
-                  style={{
-                    background: "linear-gradient(135deg, hsl(var(--gold) / 0.18), hsl(var(--gold) / 0.08))",
-                    border: "1px solid hsl(var(--gold) / 0.25)",
-                    color: "hsl(var(--gold))",
-                  }}
-                >
-                  {t.free_badge_label}
-                </span>
                 <button
                   onClick={() => setAdvisorOpen(true)}
                   aria-label={t.astrologer_aria_label}

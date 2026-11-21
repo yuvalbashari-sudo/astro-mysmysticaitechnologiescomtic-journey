@@ -231,26 +231,11 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
 
   return (
     <>
-    <CinematicModalShell isOpen={!gatingOpen || siteAdmin} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile} hideFreeBadge={!isMobile}>
-      {/* Desktop-only header overlay: TextSizeControl (top-left, beside close) + Free badge (right of avatar with spacing) */}
+    <CinematicModalShell isOpen={!gatingOpen || siteAdmin} onClose={onClose} scrollRef={scrollRef as React.RefObject<HTMLDivElement>} fullscreen={true} avatarStyle={compatAvatarStyle} hideAdvisor={isMobile}>
       {!isMobile && (
-        <>
-          <div className="fixed top-5 left-[80px] z-[107] pointer-events-auto">
-            <TextSizeControl value={textSize} onChange={setTextSize} />
-          </div>
-          <div className="fixed top-[42px] z-[105] pointer-events-auto" style={{ right: 180 }}>
-            <span
-              className="px-6 py-2 rounded-full text-[20px] font-bold font-body tracking-wider"
-              style={{
-                background: "linear-gradient(135deg, hsl(var(--gold) / 0.15), hsl(var(--gold) / 0.08))",
-                border: "1px solid hsl(var(--gold) / 0.2)",
-                color: "hsl(var(--gold))",
-              }}
-            >
-              {t.free_badge_label}
-            </span>
-          </div>
-        </>
+        <div className="fixed top-5 left-[80px] z-[107] pointer-events-auto">
+          <TextSizeControl value={textSize} onChange={setTextSize} />
+        </div>
       )}
             <AnimatePresence>
               {!matchInfo ? (
