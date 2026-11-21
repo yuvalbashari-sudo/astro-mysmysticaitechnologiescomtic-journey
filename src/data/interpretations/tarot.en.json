@@ -124,5 +124,33 @@
     "career": "Finish the work and acknowledge your achievement before moving to the next project.",
     "spiritual": "See how different parts of your experience fit together. Even the detours belong to your story.",
     "advice": "Mark the completion of this chapter and take its lessons with you."
+  },
+  "the-hermit": {
+    "general": "The Hermit carries a lantern that lights only a few steps of the path. This card invites you to step away from the noise long enough to hear your own judgment.",
+    "love": "Time alone can clarify what you need from a relationship. Tell the other person when you would like to reconnect.",
+    "career": "Set aside a quiet hour for a difficult problem. An experienced colleague may help you frame a better question.",
+    "spiritual": "The lantern is a symbol of insight earned through experience. Let one lesson from your own life guide your reflection.",
+    "advice": "Take a short walk without distractions. Name the next step that still feels right when you return."
+  },
+  "temperance": {
+    "general": "Temperance shows water passing between two cups. It asks how two different needs might work together and what proportion of each feels right.",
+    "love": "Make room for both people's rhythms. A small agreement about time together can ease a recurring disagreement.",
+    "career": "Combine the strongest parts of two approaches. A small trial can reveal which mix works for your team.",
+    "spiritual": "Pouring between the cups calls for attention and a steady hand. Bring that same care to the transition between effort and rest.",
+    "advice": "Pick one imbalance you can influence today and make a modest adjustment."
+  },
+  "the-devil": {
+    "general": "The Devil depicts two figures held by loose chains. It invites a closer look at a habit, attachment or bargain that seems harder to leave than it really is.",
+    "love": "Look for a pattern that leaves either person feeling pressured. Naming a boundary can open an honest conversation.",
+    "career": "Examine an incentive that keeps you saying yes. Consider what each extra commitment costs you.",
+    "spiritual": "The loose chains raise a question about freedom. Where do you have a choice that you rarely exercise?",
+    "advice": "Choose one manageable boundary and decide how you will communicate it."
+  },
+  "the-tower": {
+    "general": "Lightning strikes the crown of The Tower, exposing a structure that looked secure. The card asks which assumptions still hold when circumstances change.",
+    "love": "An unexpected truth can shake an agreement. Give each person time to explain what has changed and what still matters.",
+    "career": "When a plan breaks down, check its underlying assumptions before rebuilding the same process.",
+    "spiritual": "A broken structure can reveal the values that supported it. Which of those values still deserves a place in what comes next?",
+    "advice": "Write down what changed, what remains dependable and whom you can ask for support."
   }
 }

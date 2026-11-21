@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { TAROT_SLUG_MAP, ZODIAC_SLUG_MAP } from "../seoData";
+import { minorArcanaCards } from "../minorArcanaCards";
 import { majorArcana } from "../tarotWorldData";
 import { zodiacData } from "../zodiacData";
 import { cardReading, signLabels, signReading } from ".";
@@ -16,7 +17,13 @@ for (const language of ["he", "en", "ru", "ar"] as const) {
     }
 
     it.each(Object.entries(TAROT_SLUG_MAP))("localizes all interpretations for %s", (slug, name) => {
-      const card = majorArcana.find(c => c.name === name)!;
+      const card = majorArcana.find(c => c.name === name);
+      if (!card) {
+        const minor = minorArcanaCards.find(c => c.slug === slug);
+        expect(minor).toBeDefined();
+        check(minor!.shortMeaning[language]);
+        return;
+      }
       const reading = cardReading(slug, card, language);
       for (const field of cardFields) check(reading[field]);
     });
