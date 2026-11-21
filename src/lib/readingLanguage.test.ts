@@ -1,6 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 import { callLocalAi } from "./localAiPipeline";
-import { isLocalizedReading, matchesReadingScript } from "./readingLanguage";
+import { isLocalizedReading, localizeChartNotation, matchesReadingScript } from "./readingLanguage";
 import { streamTarotReading } from "./streamTarotReading";
 
 const samples = {
@@ -39,3 +39,8 @@ for (const locale of ["he", "en", "ru", "ar"] as const) {
     expect(isLocalizedReading("✨ 12°", locale)).toBe(false);
   });
 }
+
+it("localizes chart notation without disguising foreign prose", () => {
+  expect(localizeChartNotation("Дома I и XII, ASC.", "ru")).toBe("Дома 1 и 12, Асцендент.");
+  expect(localizeChartNotation("Дом MIX, weaving.", "ru")).toBe("Дом MIX, weaving.");
+});

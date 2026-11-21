@@ -1,4 +1,4 @@
-import { isLocalizedReading, matchesReadingScript, readingLanguageInstruction } from "@/lib/readingLanguage";
+import { isLocalizedReading, localizeChartNotation, matchesReadingScript, readingLanguageInstruction } from "@/lib/readingLanguage";
 import { readReadingStream } from "@/lib/readingStream";
 import { readingAuthorization } from "@/lib/readingAuthorization";
 /**
@@ -318,17 +318,21 @@ function buildBody(
     ctx.gender && (payload as any).gender == null
       ? { ...payload, gender: ctx.gender }
       : payload;
+  const suppliedName = dataWithGender.userName;
+  const namedData = suppliedName && !isLocalizedReading(suppliedName, ctx.language)
+    ? { ...dataWithGender, userName: undefined } : dataWithGender;
   const data = strict
     ? {
-        ...dataWithGender,
+        ...namedData,
         __languageStrict: true,
         __languageHint: `Respond ONLY in locale "${ctx.language}". No other language words. Use a single consistent gender form throughout.`,
       }
-    : dataWithGender;
+    : namedData;
+  const chartOrMatch = payload.type === "birthChart" || payload.type === "compatibility";
   return {
     type: (payload as any).type, // for mystical-reading callers; ignored by others
     data,
-    profileContext: [mysticalProfile.buildContextForAI?.(), readingLanguageInstruction(ctx.language)].filter(Boolean).join("\n"),
+    profileContext: [chartOrMatch ? undefined : mysticalProfile.buildContextForAI?.(), readingLanguageInstruction(ctx.language)].filter(Boolean).join("\n"),
     language: ctx.language,
     userName: isLocalizedReading(ctx.userName, ctx.language) ? ctx.userName : undefined,
     gender: ctx.gender,
@@ -489,9 +493,10 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
       args.onError(res.error);
       return;
     }
-    const outcome = finalizeLocalAi(res.text, ctx);
+    const source = args.payload.type === "birthChart" ? localizeChartNotation(res.text, ctx.language) : res.text;
+    const outcome = finalizeLocalAi(source, ctx);
     if (outcome.valid) {
-      if (visible && outcome.changed) args.onReplace?.(outcome.text);
+      if (visible && (outcome.changed || mixed)) args.onReplace?.(outcome.text);
       if (!visible) (args.onReplace ?? args.onDelta)(outcome.text);
       args.onDone();
       return;

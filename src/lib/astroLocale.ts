@@ -65,7 +65,7 @@ const CHART_LABELS: Record<Language, {
   ru: {
     birthChart: "Натальная карта",
     astroWheel: "Астрологическое колесо",
-    ascendant: "ASC",
+    ascendant: "Асцендент",
     rising: "Восходящий",
     sun: "Солнце",
     moon: "Луна",
