@@ -1,6 +1,6 @@
 import TarotQuestionPhase from "./TarotQuestionPhase";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
-import { readingAuthorization } from "@/lib/readingAuthorization";
+import { streamTarotReading } from "@/lib/streamTarotReading";
 import { Fragment, useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
@@ -20,7 +20,6 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { renderMysticalText } from "@/lib/aiStreaming";
 import { safeErrorText } from "@/lib/localeGuard";
-import type { Language } from "@/i18n/types";
 import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
@@ -45,90 +44,6 @@ interface QuestionOption {
 }
 
 /* ── AI streaming ───────────────── */
-async function streamTarotReading(
-  spreadType: string,
-  cards: { hebrewName: string; symbol: string; positionLabel: string; name: string }[],
-  onDelta: (text: string) => void,
-  onDone: () => void,
-  onError: (err: string) => void,
-  signal: AbortSignal,
-  userQuestion?: string,
-  language?: string,
-) {
-  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
-  const memoryContext = tarotMemory.buildMemoryContext(cards);
-  const profileContext = mysticalProfile.buildContextForAI();
-  const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
-  const gender = mysticalProfile.getUserGender();
-  try {
-    const resp = await fetch(url, {
-      method: "POST",
-      signal,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: readingAuthorization(),
-      },
-      body: JSON.stringify({
-        spreadType,
-        cards,
-        context: { memoryContext, profileContext, userQuestion: userQuestion || undefined },
-        language: language || "he",
-        userName,
-        gender: gender === "male" || gender === "female" ? gender : undefined,
-      }),
-    });
-    const lang = (language || "he") as Language;
-    if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({}));
-      onError(safeErrorText(errData?.error, lang, "tarot-reading"));
-      return;
-    }
-    if (!resp.body) { onError(safeErrorText(null, lang, "tarot-reading:empty-body")); return; }
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let textBuffer = "";
-    let streamDone = false;
-    while (!streamDone) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      textBuffer += decoder.decode(value, { stream: true });
-      let newlineIndex: number;
-      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-        let line = textBuffer.slice(0, newlineIndex);
-        textBuffer = textBuffer.slice(newlineIndex + 1);
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (line.startsWith(":") || line.trim() === "") continue;
-        if (!line.startsWith("data: ")) continue;
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === "[DONE]") { streamDone = true; break; }
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch { textBuffer = line + "\n" + textBuffer; break; }
-      }
-    }
-    if (textBuffer.trim()) {
-      for (let raw of textBuffer.split("\n")) {
-        if (!raw) continue;
-        if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-        if (raw.startsWith(":") || raw.trim() === "") continue;
-        if (!raw.startsWith("data: ")) continue;
-        const jsonStr = raw.slice(6).trim();
-        if (jsonStr === "[DONE]") continue;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch { /* ignore */ }
-      }
-    }
-    onDone();
-  } catch (e) {
-    if (signal.aborted) return;
-    onError(safeErrorText(e, (language || "he") as Language, "tarot-reading:network"));
-  }
-}
 
 /* ── (removed: EnergyParticle and MysticalTable — clean scene) ── */
 
@@ -562,7 +477,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
       cardsPayload,
       (delta) => {
         if (controller.signal.aborted) return;
-        text += delta;
+        text = delta;
         setAiText(text);
       },
       () => {
@@ -592,9 +507,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         });
       },
       showError,
-      controller.signal,
-      personalQuestion || selectedQuestion || undefined,
       language,
+      personalQuestion || selectedQuestion || undefined,
+      controller.signal,
     ).catch((error) => showError(safeErrorText(error, language, "tarot-reading")));
   };
 

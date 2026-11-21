@@ -64,3 +64,25 @@ it("offers a retry for an empty result and ignores callbacks after close", async
   act(() => { retry.onDelta("Stale reading."); retry.onDone(); });
   expect(localStorage.getItem("astrologai_birthchart_cache")).toBeNull();
 });
+
+it.each([375, 1100])("reopens the same chart in each selected language at %i px", async width => {
+  vi.stubGlobal("innerWidth", width);
+  const initial = await submit();
+  act(() => { const req = ai.mock.lastCall![0]; req.onReplace("Your original reading."); req.onDone(); });
+  initial.unmount();
+  for (const [language, expected] of [["he", "המפה שלך."], ["ru", "Ваша карта."], ["ar", "خريطتك الشخصية."]]) {
+    localStorage.setItem("astrologai_lang", language);
+    const ui = render(view(true));
+    expect(screen.queryByText("Your original reading.")).toBeNull();
+    const req = ai.mock.lastCall![0];
+    expect(req.payload.language).toBe(language);
+    act(() => { req.onReplace(expected); req.onDone(); });
+    expect(screen.getByText(expected)).toBeInTheDocument();
+    ui.unmount();
+  }
+  localStorage.setItem("astrologai_lang", "en");
+  render(view(true));
+  expect(screen.getByText("Your original reading.")).toBeInTheDocument();
+  expect(ai).toHaveBeenCalledTimes(4);
+  vi.unstubAllGlobals();
+});

@@ -1,4 +1,6 @@
-import { readingAuthorization } from "@/lib/readingAuthorization";
+import { cardReading } from "@/data/interpretations";
+import { cardSlug } from "@/data/seoData";
+import { streamTarotReading } from "@/lib/streamTarotReading";
 import { useState, useEffect, useCallback, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import MysticalReadingAtmosphere from "@/components/MysticalReadingAtmosphere";
@@ -15,8 +17,6 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import DailyCardModal from "@/components/DailyCardModal";
 import { renderMysticalText } from "@/lib/aiStreaming";
-import { safeErrorText } from "@/lib/localeGuard";
-import type { Language } from "@/i18n/types";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useCardName } from "@/hooks/useCardName";
 import { useReadingContext } from "@/contexts/ReadingContext";
@@ -82,98 +82,6 @@ const SmokeEffect = () => (
 );
 
 // Stream AI reading
-async function streamTarotReading(
-  spreadType: string,
-  cards: { hebrewName: string; symbol: string; positionLabel: string; name?: string }[],
-  onDelta: (text: string) => void,
-  onDone: () => void,
-  onError: (err: string) => void,
-  userQuestion?: string,
-  errorMessages?: { unexpected: string; service: string; connection: string },
-  language?: string,
-) {
-  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
-
-  const memoryContext = tarotMemory.buildMemoryContext(cards);
-  const profileContext = mysticalProfile.buildContextForAI();
-  const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
-  const { ensureGender } = await import("@/lib/genderGate");
-  const gender = (await ensureGender(language || "he")) || undefined;
-
-  try {
-    const resp = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: readingAuthorization(),
-      },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, userQuestion: userQuestion || undefined, profileContext }, language: language || "he", userName, gender }),
-    });
-
-    const lang = (language || "he") as Language;
-    if (!resp.ok) {
-      const errData = await resp.json().catch(() => ({}));
-      onError(errorMessages?.service || safeErrorText(errData?.error, lang, "tarot-world"));
-      return;
-    }
-
-    if (!resp.body) { onError(errorMessages?.connection || safeErrorText(null, lang, "tarot-world:empty-body")); return; }
-
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let textBuffer = "";
-    let streamDone = false;
-
-    while (!streamDone) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      textBuffer += decoder.decode(value, { stream: true });
-
-      let newlineIndex: number;
-      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-        let line = textBuffer.slice(0, newlineIndex);
-        textBuffer = textBuffer.slice(newlineIndex + 1);
-
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (line.startsWith(":") || line.trim() === "") continue;
-        if (!line.startsWith("data: ")) continue;
-
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === "[DONE]") { streamDone = true; break; }
-
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch {
-          textBuffer = line + "\n" + textBuffer;
-          break;
-        }
-      }
-    }
-
-    // Flush remaining
-    if (textBuffer.trim()) {
-      for (let raw of textBuffer.split("\n")) {
-        if (!raw) continue;
-        if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-        if (raw.startsWith(":") || raw.trim() === "") continue;
-        if (!raw.startsWith("data: ")) continue;
-        const jsonStr = raw.slice(6).trim();
-        if (jsonStr === "[DONE]") continue;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch { /* ignore */ }
-      }
-    }
-
-    onDone();
-  } catch (e) {
-    onError(errorMessages?.connection || safeErrorText(e, (language || "he") as Language, "tarot-world:network"));
-  }
-}
 
 
 // Helper to get translated spread info
@@ -226,11 +134,14 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
   const aiTextRef = useRef("");
+  const requestRef = useRef<AbortController | null>(null);
+  useEffect(() => () => requestRef.current?.abort(), []);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [textSize, setTextSize] = useState<TextSize>("default");
   const [userQuestion, setUserQuestion] = useState("");
 
   const handleClose = () => {
+    requestRef.current?.abort();
     onClose();
     setTimeout(() => {
       setPhase("select");
@@ -308,14 +219,13 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   // Trigger AI when entering result phase
   useEffect(() => {
-    if (phase === "result" && selectedSpread && drawnCards.length > 0 && !aiText && !aiLoading) {
+    if (isOpen && phase === "result" && selectedSpread && drawnCards.length > 0 && !aiText && !aiLoading && !aiError) {
       setAiLoading(true);
       setAiError(null);
       aiTextRef.current = "";
 
       const cards = drawnCards.map((c, i) => {
-        const majorCard = findMajorArcanaByEnglishName(c.name);
-        const localizedName = majorCard ? getMajorCardName(majorCard, language) : c.hebrewName;
+        const localizedName = cardName(c.name, c.hebrewName);
         return {
           hebrewName: c.hebrewName,
           name: c.name,
@@ -325,11 +235,13 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
         };
       });
 
-      streamTarotReading(
+      const controller = new AbortController();
+      requestRef.current = controller;
+      void streamTarotReading(
         selectedSpread.key,
         cards,
         (delta) => {
-          aiTextRef.current += delta;
+          aiTextRef.current = delta;
           setAiText(aiTextRef.current);
         },
         () => {
@@ -365,12 +277,13 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
           setAiError(err);
           toast(err);
         },
-        userQuestion || undefined,
-        { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
         language,
+        userQuestion || undefined,
+        controller.signal,
+        true,
       );
     }
-  }, [phase, selectedSpread, drawnCards, aiText, aiLoading]);
+  }, [isOpen, phase, selectedSpread, drawnCards, aiText, aiLoading, aiError]);
 
   // Auto-scroll during streaming
   useEffect(() => {
@@ -381,13 +294,13 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
 
   const handleShare = () => {
     if (!drawnCards.length || !selectedSpread) return;
-    const text = `🔮 ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("\n")}\n\n✨ ${window.location.origin}`;
+    const text = `🔮 ${nameMap[selectedSpread.key] || selectedSpread.hebrewName}:\n${drawnCards.map(c => `${c.symbol} ${cardName(c.name, c.hebrewName)}`).join("\n")}\n\n✨ ${window.location.origin}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const handleCopy = async () => {
     if (!drawnCards.length) return;
-    const textToCopy = aiText || drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join(" • ");
+    const textToCopy = aiText || drawnCards.map(c => `${c.symbol} ${cardName(c.name, c.hebrewName)}`).join(" • ");
     await navigator.clipboard.writeText(`🔮 ${textToCopy}`);
     setCopied(true);
     toast(t.share_copy_toast);
@@ -778,7 +691,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     onClick={() => setPhase("result")}
                   >
                     <Sparkles className="w-4 h-4" />
-                    גלו את הפירוש המלא
+                    {t.tarot_world_full_reading}
                   </motion.button>
                 </motion.div>
               )}
@@ -792,7 +705,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                       <span className="text-4xl">{selectedSpread.icon}</span>
                     </motion.div>
                     <h2 className="font-heading text-2xl md:text-4xl gold-gradient-text mt-4 mb-3">{nameMap[selectedSpread.key] || selectedSpread.hebrewName}</h2>
-                    <p className="text-foreground/50 font-body text-sm md:text-base">{drawnCards.map(c => `${c.symbol} ${c.hebrewName}`).join("  •  ")}</p>
+                    <p className="text-foreground/50 font-body text-sm md:text-base">{drawnCards.map(c => `${c.symbol} ${cardName(c.name, c.hebrewName)}`).join("  •  ")}</p>
                     
                     <div className="flex items-center justify-center gap-3 mt-6">
                       <motion.button onClick={handleShare} className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-body" style={{ background: "hsl(142 70% 35% / 0.15)", border: "1px solid hsl(142 70% 45% / 0.25)", color: "hsl(142 70% 60%)" }} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
@@ -824,11 +737,16 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                     /* Fallback to static content on error */
                     <div className="space-y-8">
                       <div className="text-center rounded-xl p-4 mb-6" style={{ background: "hsl(var(--crimson) / 0.08)", border: "1px solid hsl(var(--crimson) / 0.15)" }}>
-                        <p className="text-foreground/50 font-body text-xs">{aiError} — מציג פירוש קלאסי</p>
+                        <p className="text-foreground/50 font-body text-xs">{aiError}</p>
                       </div>
                       {drawnCards.map((card, i) => {
                         const isFreeLocked = !selectedSpread.isFree && i >= selectedSpread.freeRevealCount;
-                        const interp = getInterpretation(card, selectedSpread.key, posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i]);
+                        const positionLabel = posMap[selectedSpread.key]?.[i] || selectedSpread.positionLabels[i];
+                        const meanings = cardReading(cardSlug(card.name), card, language);
+                        const interp = language === "he" ? getInterpretation(card, selectedSpread.key, positionLabel) : {
+                          positionLabel, mainMeaning: meanings.general, advice: meanings.advice,
+                          spreadMeaning: selectedSpread.key === "love" ? meanings.love : selectedSpread.key === "career" ? meanings.career : meanings.spiritual,
+                        };
                         return (
                           <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.3 }}>
                             <div className="flex items-center gap-4 mb-5">
@@ -844,7 +762,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                               <div className="rounded-xl p-6 text-center" style={{ background: "linear-gradient(135deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 8% / 0.3))", border: "1px solid hsl(var(--gold) / 0.08)" }}>
                                 <p className="text-foreground/40 font-body text-base leading-relaxed mb-4" style={{ filter: "blur(3px)", userSelect: "none" }}>{interp.spreadMeaning.substring(0, 80)}...</p>
                                 <Lock className="w-5 h-5 text-gold/30 mx-auto mb-2" />
-                                <p className="text-foreground/40 font-body text-sm">הקלף הזה מחכה לכם בקריאה המלאה ✦</p>
+                                <p className="text-foreground/40 font-body text-sm">{t.tarot_world_locked}</p>
                               </div>
                             ) : (
                               <div className="space-y-4">
@@ -874,9 +792,8 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         transition={{ duration: 3, repeat: Infinity }}
                       />
                       <motion.p className="font-body text-gold/70 text-base mb-1" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity }}>
-                        הקלפים מגלים את המסר שלהם...
+                        {t.tarot_world_ai_loading}
                       </motion.p>
-                      <p className="font-body text-foreground/30 text-sm">פירוש אישי נוצר עבורכם</p>
                     </div>
                   )}
 
@@ -918,7 +835,7 @@ const TarotWorldModal = ({ isOpen, onClose }: Props) => {
                         className="font-body text-sm text-gold/50 hover:text-gold transition-colors"
                         whileHover={{ scale: 1.05 }}
                       >
-                        ← קריאה חדשה
+                        {t.tarot_world_title}
                       </motion.button>
                     </div>
                   )}

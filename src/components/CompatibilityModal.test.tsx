@@ -101,3 +101,30 @@ it("opens a new editable check each time, remembering only the visitor, even wit
   expect(dates()[1]).toHaveValue("");
   expect(ai.call).toHaveBeenCalledTimes(calls);
 });
+
+it.each([375, 1100])("keeps both the score reading and the personal interpretation in the selected script at %i px", width => {
+  vi.stubGlobal("innerWidth", width);
+  const cases = { he: ["הפרטים שלכם.", /[A-Za-zА-Яа-я\u0600-\u06ff]/],
+    en: ["Your personal details.", /[\u0590-\u06ffА-Яа-я]/],
+    ru: ["Ваши личные данные.", /[A-Za-z\u0590-\u06ff]/], ar: ["تفاصيلكما الشخصية.", /[A-Za-zА-Яа-я\u0590-\u05ff]/] } as const;
+  for (const [lang, [personal, other]] of Object.entries(cases)) {
+    localStorage.clear();
+    localStorage.setItem("astrologai_lang", lang);
+    const ui = render(<LanguageProvider><CompatibilityModal isOpen onClose={() => {}} /></LanguageProvider>);
+    const inputs = Array.from(ui.container.querySelectorAll<HTMLInputElement>("input")).filter(input => input.placeholder.includes("/"));
+    expect(inputs.length).toBeGreaterThanOrEqual(2);
+    for (const input of inputs.slice(0, 2)) fireEvent.change(input, { target: { value: "12122000" } });
+    const submit = Array.from(ui.container.querySelectorAll("button")).find(button => button.className.includes("btn-gold"));
+    expect(submit).toBeDefined();
+    fireEvent.click(submit!);
+    const req = ai.call.mock.lastCall![0];
+    expect(req.payload.language).toBe(lang);
+    act(() => { req.onDelta(personal); req.onDone(); });
+    expect(screen.getByText(personal)).toBeInTheDocument();
+    const saved = JSON.parse(localStorage.getItem("astrologai_readings")!)[0].data.aiReading;
+    expect(saved).toContain(personal);
+    expect(saved).not.toMatch(other);
+    ui.unmount();
+  }
+  vi.unstubAllGlobals();
+});

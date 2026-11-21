@@ -1,3 +1,4 @@
+import { isLocalizedReading } from "@/lib/readingLanguage";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { useState, useEffect, useRef } from "react";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
@@ -117,7 +118,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
       request.abort();
       requestRef.current = null;
       let finalText = signReading;
-      if (includePersonal && personalText.trim() && personalText.trim() !== getLocalFallback("error", language)) {
+      if (includePersonal && isLocalizedReading(personalText, language) && personalText.trim() !== getLocalFallback("error", language)) {
         finalText += `\n\n### ${personalReadingTitle[language]}\n${personalText.trim()}`;
         setReadingText(finalText);
         setActiveReading({ type: "compatibility", label, summary: finalText });
@@ -135,6 +136,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
       signal: request.signal,
       promptForGender: false,
       requireComplete: true,
+      onProgress: armTimeout,
       payload: {
         type: "compatibility",
         language,
