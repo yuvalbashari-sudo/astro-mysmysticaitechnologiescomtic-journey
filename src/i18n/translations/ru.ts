@@ -1,6 +1,15 @@
 import { TranslationKeys } from "../types";
 
 export const ru: TranslationKeys = {
+  a11y_calendar: "Открыть календарь",
+  a11y_time_picker: "Выбрать время",
+  a11y_text_size: "Размер текста",
+  a11y_text_default: "Обычный размер текста",
+  a11y_text_large: "Крупный текст",
+  a11y_text_xl: "Очень крупный текст",
+  a11y_unmute: "Включить звук",
+  a11y_mute: "Выключить звук",
+  a11y_explore: "Разделы ASTROLOGAI",
   meta_title: "ASTROLOGAI — Астрология, Таро и совместимость по звёздам",
   meta_description: "Загляните туда, куда смотрят звёзды. ASTROLOGAI — астрология, совместимость, Таро и хиромантия в живом, тонко настроенном на вас опыте.",
 

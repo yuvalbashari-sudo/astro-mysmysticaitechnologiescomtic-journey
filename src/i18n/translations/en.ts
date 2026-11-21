@@ -1,6 +1,15 @@
 import { TranslationKeys } from "../types";
 
 export const en: TranslationKeys = {
+  a11y_calendar: "Open calendar",
+  a11y_time_picker: "Open time picker",
+  a11y_text_size: "Text size",
+  a11y_text_default: "Standard text size",
+  a11y_text_large: "Large text",
+  a11y_text_xl: "Extra large text",
+  a11y_unmute: "Unmute",
+  a11y_mute: "Mute",
+  a11y_explore: "Explore ASTROLOGAI",
   meta_title: "ASTROLOGAI — Astrology, Tarot & Compatibility",
   meta_description: "Get personal astrology, tarot, compatibility, and palm readings — all in one beautifully simple app.",
 

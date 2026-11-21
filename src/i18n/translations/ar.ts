@@ -1,6 +1,15 @@
 import { TranslationKeys } from "../types";
 
 export const ar: TranslationKeys = {
+  a11y_calendar: "فتح التقويم",
+  a11y_time_picker: "اختيار الوقت",
+  a11y_text_size: "حجم النص",
+  a11y_text_default: "حجم النص العادي",
+  a11y_text_large: "نص كبير",
+  a11y_text_xl: "نص كبير جداً",
+  a11y_unmute: "تشغيل الصوت",
+  a11y_mute: "كتم الصوت",
+  a11y_explore: "استكشف ASTROLOGAI",
   meta_title: "ASTROLOGAI — علم الفلك، التاروت وتوافق الأبراج",
   meta_description: "أصغِ إلى ما تهمس به النجوم. ASTROLOGAI تجمع علم الفلك والتوافق والتاروت وقراءة الكفّ في تجربة شخصية، أنيقة، ودافئة كأنها كُتبت من أجلك.",
 
