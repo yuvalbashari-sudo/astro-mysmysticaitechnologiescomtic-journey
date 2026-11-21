@@ -1,9 +1,8 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { allTarotCards, filterBySuit, getAvailableFilters, tarotGalleryTranslations, type TarotSuitFilter, type UnifiedTarotCard } from "@/data/allTarotCards";
+import { filterBySuit, getAvailableFilters, tarotGalleryTranslations, type TarotSuitFilter } from "@/data/allTarotCards";
 import TarotGalleryCard from "@/components/TarotGalleryCard";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,13 +11,7 @@ export default function TarotGalleryPage() {
   const navigate = useNavigate();
   const availableFilters = useMemo(() => getAvailableFilters(), []);
   const [activeFilter, setActiveFilter] = useState<TarotSuitFilter>("all");
-  const [selectedCard, setSelectedCard] = useState<UnifiedTarotCard | null>(null);
-
   const cards = useMemo(() => filterBySuit(activeFilter), [activeFilter]);
-
-  const handleSelect = useCallback((card: UnifiedTarotCard) => {
-    setSelectedCard(card);
-  }, []);
 
   return (
     <div dir={dir} className="min-h-screen bg-background relative overflow-y-auto">
@@ -89,40 +82,12 @@ export default function TarotGalleryPage() {
                 key={card.id}
                 card={card}
                 index={i}
-                onSelect={handleSelect}
               />
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
 
-      {/* Placeholder modal for card detail */}
-      <Dialog open={!!selectedCard} onOpenChange={(open) => !open && setSelectedCard(null)}>
-        <DialogContent className="bg-card border-border/50 max-w-md">
-          {selectedCard && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="font-heading text-xl text-center text-foreground">
-                  {selectedCard.name[language]}
-                </DialogTitle>
-                <DialogDescription className="text-center text-muted-foreground text-sm">
-                  {selectedCard.shortMeaning[language]}
-                </DialogDescription>
-              </DialogHeader>
-              <div className="flex justify-center py-4">
-                <img
-                  src={selectedCard.image}
-                  alt={selectedCard.name[language]}
-                  className="w-48 rounded-lg shadow-lg ring-1 ring-border/30"
-                />
-              </div>
-              <p className="text-center text-xs text-muted-foreground">
-                {tarotGalleryTranslations.modalComingSoon[language]}
-              </p>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

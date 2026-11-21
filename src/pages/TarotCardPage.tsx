@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Heart, Briefcase, Eye, Star, MessageCircle } from "lucide-react";
 import { TAROT_SLUG_MAP } from "@/data/seoData";
+import { minorArcanaCards } from "@/data/minorArcanaCards";
 import { majorArcana } from "@/data/tarotWorldData";
 import { tarotCardImages } from "@/data/tarotCardImages";
 import { cardReading } from "@/data/interpretations";
@@ -18,15 +19,17 @@ const TarotCardPage = () => {
 
   const cardEnglishName = slug ? TAROT_SLUG_MAP[slug] : undefined;
   const card = cardEnglishName ? majorArcana.find(c => c.name === cardEnglishName) : undefined;
+  const minor = minorArcanaCards.find(c => c.slug === slug);
   const cardImage = cardEnglishName ? tarotCardImages[cardEnglishName] : undefined;
 
-  const name = card && localizeCardName(card.name, card.hebrewName);
+  const name = cardEnglishName && localizeCardName(cardEnglishName, card?.hebrewName);
   const m = card && cardReading(slug, card, language);
+  const general = m?.general ?? minor?.shortMeaning[language];
   const pageTitle = name + " · " + t.seo_breadcrumb_tarot + " | ASTROLOGAI";
 
   useEffect(() => {
-    if (!card) return;
-    const meta = { title: pageTitle, description: m.general };
+    if (!general) return;
+    const meta = { title: pageTitle, description: general };
     document.title = meta.title;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", meta.description);
@@ -45,9 +48,9 @@ const TarotCardPage = () => {
     document.head.appendChild(jsonLd);
 
     return () => { document.getElementById("tarot-jsonld")?.remove(); };
-  }, [card, cardImage, pageTitle, m]);
+  }, [general, cardImage, pageTitle]);
 
-  if (!card) {
+  if (!general || !name) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center" dir={dir}>
         <div className="text-center">
@@ -58,13 +61,13 @@ const TarotCardPage = () => {
     );
   }
 
-  const sections = [
+  const sections = m ? [
     { emoji: "🔮", label: t.seo_section_general, content: m.general },
     { emoji: "❤️", label: t.seo_section_love, content: m.love },
     { emoji: "💼", label: t.seo_section_career, content: m.career },
     { emoji: "✨", label: t.seo_section_spiritual, content: m.spiritual },
     { emoji: "🌟", label: t.seo_section_advice, content: m.advice },
-  ];
+  ] : [{ emoji: "🔮", label: t.seo_section_general, content: general }];
 
   const allSlugs = Object.keys(TAROT_SLUG_MAP);
   const currentIdx = allSlugs.indexOf(slug || "");
@@ -80,7 +83,7 @@ const TarotCardPage = () => {
         <nav className="mb-8 flex items-center gap-2 text-foreground/40 font-body text-xs">
           <Link to="/" className="hover:text-gold transition-colors">ASTROLOGAI</Link>
           <span>/</span>
-          <span className="text-gold/60">{t.seo_breadcrumb_tarot}</span>
+          <Link to="/tarot-gallery" className="text-gold/60">{t.seo_breadcrumb_tarot}</Link>
           <span>/</span>
           <span className="text-gold">{name}</span>
         </nav>
@@ -98,13 +101,13 @@ const TarotCardPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <img src={cardImage} alt={name} className="w-full h-full object-cover" loading="lazy" />
+              <img src={cardImage} alt={name} className="w-full h-full object-contain" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
             </motion.div>
           )}
-          <span className="text-4xl block mb-3">{card.symbol}</span>
+          {card && <span className="text-4xl block mb-3">{card.symbol}</span>}
           <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{name}</h1>
-          <p className="font-body text-foreground/30 text-sm">{t.seo_arcana_number} {card.number}</p>
+          {card && <p className="font-body text-foreground/30 text-sm">{t.seo_arcana_number} {card.number}</p>}
         </motion.div>
 
         <div className="section-divider max-w-[100px] mx-auto mb-12" />
