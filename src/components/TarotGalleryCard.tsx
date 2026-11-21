@@ -1,15 +1,16 @@
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { cardSlug } from "@/data/seoData";
 import type { UnifiedTarotCard } from "@/data/allTarotCards";
 import { useLanguage } from "@/i18n/LanguageContext";
 
 interface Props {
   card: UnifiedTarotCard;
   index: number;
-  onSelect: (card: UnifiedTarotCard) => void;
 }
 
 
-export default function TarotGalleryCard({ card, index, onSelect }: Props) {
+export default function TarotGalleryCard({ card, index }: Props) {
   const { language } = useLanguage();
 
   return (
@@ -21,8 +22,8 @@ export default function TarotGalleryCard({ card, index, onSelect }: Props) {
       transition={{ duration: 0.35, delay: index * 0.03 }}
       className="group relative flex flex-col items-center"
     >
-      <button
-        onClick={() => onSelect(card)}
+      <Link
+        to={`/tarot/${cardSlug(card.name.en)}`}
         className="w-full flex flex-col items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl"
         aria-label={card.name[language]}
       >
@@ -57,7 +58,7 @@ export default function TarotGalleryCard({ card, index, onSelect }: Props) {
         <span className="inline-flex items-center justify-center text-xs font-medium px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary">
           {card.ctaLabel[language]}
         </span>
-      </button>
+      </Link>
     </motion.div>
   );
 }
