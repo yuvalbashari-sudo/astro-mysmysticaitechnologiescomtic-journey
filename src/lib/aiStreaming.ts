@@ -213,7 +213,7 @@ export function renderMysticalText(text: string, textSize: TextSize = "default")
               textShadow: "0 0 25px hsl(var(--gold) / 0.15)",
               letterSpacing: "0.1em",
             },
-          }, trimmed.replace(/### [✨🌟]\s?/, ""))
+          }, trimmed.replace(/^### [✨🌟]\s?/u, ""))
         )
       );
       return;
@@ -223,8 +223,10 @@ export function renderMysticalText(text: string, textSize: TextSize = "default")
     if (trimmed.startsWith("### ")) {
       sectionIndex++;
       sections[sectionIndex] = [];
-      const emoji = trimmed.match(/[\p{Emoji}]/u)?.[0] || "✦";
-      const title = trimmed.replace("### ", "");
+      const titleText = trimmed.slice(4).trim();
+      const symbol = titleText.match(/^\p{Extended_Pictographic}\uFE0F?\s*/u);
+      const emoji = symbol?.[0].trim() || "✦";
+      const title = titleText.slice(symbol?.[0].length ?? 0);
       sections[sectionIndex].push(
         React.createElement("div", { key: `sh-${i}`, className: "flex items-center gap-3 mb-4" },
           React.createElement("div", {

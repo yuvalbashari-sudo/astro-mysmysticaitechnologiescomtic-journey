@@ -1,6 +1,8 @@
+import { isLocalizedReading, matchesReadingScript, readingLanguageInstruction } from "@/lib/readingLanguage";
+import { readReadingStream } from "@/lib/readingStream";
 import { readingAuthorization } from "@/lib/readingAuthorization";
 /**
- * Local AI Pipeline — single entry point for HE/AR AI generation.
+ * Shared pipeline for localized readings in Hebrew, English, Russian and Arabic.
  *
  * Provides:
  *   - buildLocalAiContext(language)  — frozen, immutable context per request
@@ -8,15 +10,13 @@ import { readingAuthorization } from "@/lib/readingAuthorization";
  *   - finalizeLocalAi(text, ctx)     — atomic, idempotent finalize
  *   - getLocalFallback(kind, lang)   — re-export of localized fallback
  *
- * EN/RU pass through every HE/AR-specific helper unchanged so the US
- * Version behaviour is preserved.
+ * All locales validate generated prose. Hebrew and Arabic also repair gender forms.
  */
 
 import type { Language } from "@/i18n/types";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { ensureGender } from "@/lib/genderGate";
 import {
-  isValidLocale,
   hasMixedGenderSlashes,
   stripBidiControls,
   repairSlashForms,
@@ -69,6 +69,7 @@ interface CallJson extends CallBase {
 interface CallStream extends CallBase {
   mode: "stream";
   requireComplete?: boolean;
+  onProgress?: () => void;
   onDelta: (chunk: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
@@ -167,7 +168,7 @@ export async function buildLocalAiContext(language: Language, promptForGender = 
     astroPrefs: FROZEN_EMPTY,
     localeRules: Object.freeze({
       rtl: language === "he" || language === "ar",
-      latinLoanThreshold: 0.15,
+      latinLoanThreshold: 0,
     }),
     pipelineVersion: PIPELINE_VERSION,
     promptVersion: PROMPT_VERSION,
@@ -178,7 +179,7 @@ export async function buildLocalAiContext(language: Language, promptForGender = 
 
 // ── Finalize (atomic, idempotent) ───────────────────────────────────
 
-const FINALIZED = new WeakSet<object>();
+
 
 export interface FinalizeOutcome {
   text: string;
@@ -189,22 +190,13 @@ export interface FinalizeOutcome {
 
 /**
  * Sanitizes a raw AI response. Bidi cleanup → slash repair (HE/AR) →
- * locale validation. Pass-through for EN/RU. Idempotent: if the same
- * carrier object is finalized twice, the second call is a no-op.
+ * locale validation for every supported language.
  */
 export function finalizeLocalAi(
   text: string,
   ctx: LocalAiContext,
-  carrier?: object,
 ): FinalizeOutcome {
-  if (carrier && FINALIZED.has(carrier)) {
-    return { text, changed: false, valid: true, reason: "ok" };
-  }
   const locale = ctx.language;
-  if (locale !== "he" && locale !== "ar") {
-    if (carrier) FINALIZED.add(carrier);
-    return { text, changed: false, valid: true, reason: "ok" };
-  }
   let working = stripBidiControls(text);
   let changed = working !== text;
 
@@ -215,7 +207,7 @@ export function finalizeLocalAi(
     bumpBucket("__finalize", ctx, { grammarRepairs: 1 });
   }
 
-  const valid = isValidLocale(working, locale) && !hasMixedGenderSlashes(working, locale);
+  const valid = isLocalizedReading(working, locale) && !hasMixedGenderSlashes(working, locale);
   const leak = latinLeakRatio(working);
 
   if (isDev) {
@@ -229,10 +221,8 @@ export function finalizeLocalAi(
       changed,
       valid,
       leak: Number(leak.toFixed(3)),
-      preview: working.slice(0, 80),
     });
   }
-  if (carrier) FINALIZED.add(carrier);
   flushTelemetryEveryN();
 
   if (!valid) {
@@ -338,9 +328,9 @@ function buildBody(
   return {
     type: (payload as any).type, // for mystical-reading callers; ignored by others
     data,
-    profileContext: mysticalProfile.buildContextForAI?.() ?? "",
+    profileContext: [mysticalProfile.buildContextForAI?.(), readingLanguageInstruction(ctx.language)].filter(Boolean).join("\n"),
     language: ctx.language,
-    userName: ctx.userName,
+    userName: isLocalizedReading(ctx.userName, ctx.language) ? ctx.userName : undefined,
     gender: ctx.gender,
     strict,
     __meta: {
@@ -386,7 +376,6 @@ async function callJson(
   bumpBucket(args.endpoint, ctx, { calls: 1 });
   const maxAttempts = ctx.language === "he" || ctx.language === "ar" ? 3 : 2;
   let attempt = 0;
-  let lastText = "";
   let lastRaw: any = null;
   while (attempt < maxAttempts) {
     attempt += 1;
@@ -400,9 +389,7 @@ async function callJson(
     lastRaw = res.raw;
     const field = args.textField ?? "content";
     const text = typeof res.raw?.[field] === "string" ? (res.raw[field] as string) : "";
-    const carrier = { id: `${requestId}-${attempt}` };
-    const outcome = finalizeLocalAi(text, ctx, carrier);
-    lastText = outcome.text;
+    const outcome = finalizeLocalAi(text, ctx);
     if (outcome.valid) {
       return {
         text: outcome.text,
@@ -421,7 +408,6 @@ async function callJson(
       pipelineVersion: ctx.pipelineVersion,
       promptVersion: ctx.promptVersion,
       validatorVersion: ctx.validatorVersion,
-      lastTextPreview: lastText.slice(0, 200),
     });
   }
   const fallback = getLocalizedFallback(ctx.language, "error");
@@ -461,46 +447,13 @@ async function runStreamAttempt(
   if (!resp.body) {
     return { ok: false, error: safeErrorText(null, ctx.language as Language, `${args.endpoint}:empty-body`) };
   }
-  const reader = resp.body.getReader();
-  const decoder = new TextDecoder();
-  let textBuffer = "";
-  let accumulated = "";
-  let streamDone = false;
-  let finishReason: string | undefined;
-  while (!streamDone) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    textBuffer += decoder.decode(value, { stream: true });
-    let nl: number;
-    while ((nl = textBuffer.indexOf("\n")) !== -1) {
-      let line = textBuffer.slice(0, nl);
-      textBuffer = textBuffer.slice(nl + 1);
-      if (line.endsWith("\r")) line = line.slice(0, -1);
-      if (line.startsWith(":") || line.trim() === "") continue;
-      if (!line.startsWith("data: ")) continue;
-      const jsonStr = line.slice(6).trim();
-      if (jsonStr === "[DONE]") {
-        streamDone = true;
-        break;
-      }
-      try {
-        const parsed = JSON.parse(jsonStr);
-        if (parsed.choices?.[0]?.finish_reason) finishReason = parsed.choices[0].finish_reason;
-        const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-        if (content) {
-          accumulated += content;
-          onDeltaSink(content);
-        }
-      } catch {
-        textBuffer = line + "\n" + textBuffer;
-        break;
-      }
-    }
+  try {
+    const result = await readReadingStream(resp.body, onDeltaSink);
+    if (args.requireComplete && !result.complete) return { ok: false, error: "incomplete-stream", retryable: false };
+    return { ok: true, text: result.text };
+  } catch {
+    return { ok: false, error: getLocalizedFallback(ctx.language, "error") };
   }
-  if (args.requireComplete && !(finishReason === "stop" || (!finishReason && streamDone))) {
-    return { ok: false, error: "incomplete-stream", retryable: false };
-  }
-  return { ok: true, text: accumulated };
 }
 
 async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> {
@@ -517,29 +470,33 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
     const strict = attempt > 1;
     if (strict) bumpBucket(args.endpoint, ctx, { strictRetries: 1 });
 
-    let visible = attempt === 1;
-    let bufferedRetry = "";
-    const stabilizer = visible
-      ? makeStabilizer(ctx.language, args.onDelta)
-      : { push: (c: string) => { bufferedRetry += c; }, flush: () => {} };
-
-    const res = await runStreamAttempt(args, ctx, requestId, strict, stabilizer.push);
+    const visible = attempt === 1 && !!args.onReplace;
+    let mixed = false;
+    const stabilizer = makeStabilizer(ctx.language, chunk => {
+      if (visible && !mixed) args.onDelta(chunk);
+    });
+    const res = await runStreamAttempt(args, ctx, requestId, strict, chunk => {
+      if (args.signal?.aborted) return;
+      args.onProgress?.();
+      if (!matchesReadingScript(chunk, ctx.language)) mixed = true;
+      if (visible && !mixed) stabilizer.push(chunk);
+    });
     if (args.signal?.aborted) return;
     stabilizer.flush();
     if (res.ok === false) {
+      args.onReplace?.("");
       if (res.retryable !== false && attempt < maxAttempts) continue;
       args.onError(res.error);
       return;
     }
-    const carrier = { id: `${requestId}-${attempt}` };
-    const outcome = finalizeLocalAi(res.text, ctx, carrier);
+    const outcome = finalizeLocalAi(res.text, ctx);
     if (outcome.valid) {
       if (visible && outcome.changed) args.onReplace?.(outcome.text);
-      if (!visible) args.onReplace?.(outcome.text);
+      if (!visible) (args.onReplace ?? args.onDelta)(outcome.text);
       args.onDone();
       return;
     }
-    // Invalid → loop to next stricter attempt (if any).
+    args.onReplace?.("");
   }
 
   bumpBucket(args.endpoint, ctx, { fallbacks: 1 });
@@ -552,8 +509,7 @@ async function callStream(args: CallStream, ctx: LocalAiContext): Promise<void> 
       validatorVersion: ctx.validatorVersion,
     });
   }
-  args.onReplace?.(getLocalizedFallback(ctx.language, "error"));
-  args.onDone();
+  args.onError(getLocalizedFallback(ctx.language, "error"));
 }
 
 // ── Public entry point ──────────────────────────────────────────────
