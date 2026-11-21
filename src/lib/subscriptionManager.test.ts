@@ -50,3 +50,17 @@ it("rejects a session that Supabase does not verify", async () => {
   await vi.waitFor(() => expect(subscriptionManager.isAuthReady()).toBe(true));
   expect(subscriptionManager.getCurrentTier()).toBe("free");
 });
+
+it("shows the current membership after a grant or expiry without requiring another sign-in", async () => {
+  const { subscriptionManager } = await import("./subscriptionManager");
+  const member = { email: "preview@example.test", email_confirmed_at: "2026-01-01", app_metadata: {} };
+  auth.listener?.("SIGNED_IN", { access_token: "member-session", user: member });
+  expect(subscriptionManager.getCurrentTier()).toBe("free");
+  auth.getUser.mockResolvedValue({ data: { user: { ...member, app_metadata: { tier: "pro", expires_at: "2099-01-01" } } } });
+  await subscriptionManager.refreshMembership();
+  expect(subscriptionManager.isPaidTier()).toBe(true);
+  expect(subscriptionManager.isAdmin()).toBe(false);
+  auth.getUser.mockResolvedValue({ data: { user: member } });
+  await subscriptionManager.refreshMembership();
+  expect(subscriptionManager.getCurrentTier()).toBe("free");
+});

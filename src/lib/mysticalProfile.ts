@@ -431,11 +431,6 @@ ${lines.join("\n")}
 הנחיה: שלב את המידע הזה בפירוש באופן טבעי ומיסטי. אם יש נושאים חוזרים, ציין שהאנרגיה הזו ממשיכה ללוות. אם מזל השמש או העולה ידועים, קשר את הפירוש לאישיות האסטרולוגית. אל תציין שזה "מידע מהמערכת" — דבר כאילו אתה פשוט רואה ויודע.`;
 }
 
-function clearProfile(): void {
-  rememberAccountName("");
-  localStorage.removeItem(accountStorageKey(STORAGE_KEY));
-}
-
 export const mysticalProfile = {
   getProfile,
   recordUserName,
@@ -461,5 +456,4 @@ export const mysticalProfile = {
   recordDailyCard,
   recordPalmReading,
   buildContextForAI,
-  clearProfile,
 };

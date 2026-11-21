@@ -20,6 +20,40 @@ export function accountStorageKey(base: string) {
   return session?.user.id ? base + ":" + session.user.id : base;
 }
 
+const resetKey = "astrologai_profile_reset";
+
+export function profileRevision() {
+  return localStorage.getItem(accountStorageKey(resetKey)) || "";
+}
+
+function applyReset(stamp: number) {
+  if (!Number.isSafeInteger(stamp) || stamp <= Number(profileRevision())) return;
+  for (const base of ["astrologai_mystical_profile", "astrologai_birthchart_cache", "astrologai_last_daily_horoscope", "astrologai_device_fp"]) {
+    localStorage.removeItem(accountStorageKey(base));
+  }
+  sessionStorage.removeItem(accountStorageKey("astrologai_tarot_session"));
+  localStorage.setItem(accountStorageKey(resetKey), String(stamp));
+  if (session) write(session.user.id, { name: "" });
+  listeners.forEach(listener => listener());
+}
+
+export async function resetReadingProfile() {
+  if (!initialized) throw new Error("Account is loading");
+  const owner = session;
+  const stamp = Math.max(Date.now(), Number(profileRevision()) + 1);
+  if (owner) {
+    await saving.get(owner.user.id);
+    if (owner.user.id !== session?.user.id) throw new Error("Account changed");
+    const response = await fetch(import.meta.env.VITE_SUPABASE_URL + "/auth/v1/user", {
+      method: "PUT",
+      headers: { Authorization: "Bearer " + session.access_token, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY, "Content-Type": "application/json" },
+      body: JSON.stringify({ data: { reading_name: "", reading_profile_reset: stamp } }),
+    });
+    if (!response.ok || owner.user.id !== session?.user.id) throw new Error("Reset not confirmed");
+  }
+  applyReset(stamp);
+}
+
 function read(id: string): StoredName | null {
   try { return JSON.parse(localStorage.getItem("astrologai_name:" + id) || "null"); }
   catch { return null; }
@@ -84,18 +118,28 @@ export async function rememberAccountName(name: string) {
 }
 
 async function refreshName(active: Session, previousName?: string) {
+  const initialRevision = profileRevision();
   try {
     const response = await fetch(import.meta.env.VITE_SUPABASE_URL + "/auth/v1/user", {
       headers: { Authorization: "Bearer " + active.access_token, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY },
     });
-    if (!response.ok) return;
+    if (!response.ok) return false;
     const user = await response.json();
+    if (user.id !== active.user.id || session?.user.id !== user.id) return false;
+    const revision = user.user_metadata?.reading_profile_reset;
+    if (Number.isSafeInteger(revision) && revision > Number(profileRevision())) {
+      applyReset(revision);
+      if (typeof user.user_metadata.reading_name === "string") write(user.id, { name: user.user_metadata.reading_name });
+      return true;
+    }
+    if (initialRevision !== profileRevision() || Number(revision || 0) < Number(profileRevision())) return false;
     const stored = read(active.user.id);
     if (user.id === active.user.id && session?.user.id === user.id && !stored?.pending &&
         stored?.name === previousName && typeof user.user_metadata?.reading_name === "string") {
       write(user.id, { name: user.user_metadata.reading_name });
     }
-  } catch { /* Keep the cached account name when offline. */ }
+    return true;
+  } catch { return false; }
 }
 
 export function setReadingSession(next: Session | null) {
@@ -104,13 +148,31 @@ export function setReadingSession(next: Session | null) {
   initialized = true;
   const id = next?.user.id;
   if (id) {
+    const tokenReset = next.user.user_metadata?.reading_profile_reset;
+    if (Number.isSafeInteger(tokenReset) && tokenReset > Number(profileRevision())) {
+      applyReset(tokenReset);
+      if (typeof next.user.user_metadata.reading_name === "string") write(id, { name: next.user.user_metadata.reading_name });
+    }
     const existing = read(id);
     const remote = metadataName(next.user.user_metadata);
     if (!existing && remote) write(id, { name: remote });
-    if (!existing?.pending && previous !== id && (existing || !remote)) void refreshName(next, existing?.name);
-    void flush();
+    if (previous !== id || read(id)?.pending) reconcile();
   }
   if (accountScope() !== previous) listeners.forEach(listener => listener());
 }
 
-window.addEventListener("online", () => { void flush(); });
+function reconcile() {
+  const owner = session;
+  if (!owner) return;
+  void refreshName(owner, read(owner.user.id)?.name).then(current => {
+    if (current && session?.user.id === owner.user.id) void flush();
+  });
+}
+window.addEventListener("online", reconcile);
+window.addEventListener("focus", reconcile);
+window.addEventListener("storage", event => {
+  if (event.key === accountStorageKey(resetKey)) {
+    sessionStorage.removeItem(accountStorageKey("astrologai_tarot_session"));
+    listeners.forEach(listener => listener());
+  }
+});

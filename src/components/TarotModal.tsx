@@ -21,7 +21,7 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import ResultShareBar from "@/components/ResultShareBar";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
-import { renderMysticalText } from "@/lib/aiStreaming";
+import TarotAnswer from "./tarot/TarotAnswer";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import TarotFanSelectionPhase from "@/components/TarotFanSelectionPhase";
@@ -41,6 +41,7 @@ interface TarotCacheData {
   date: string;
   language: string;
   spreadKey: string;
+  readingId?: string;
   question?: string;
   cards: ReadingCard[];
   aiText: string;
@@ -128,6 +129,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
    const [copied, setCopied] = useState(false);
 
   // AI state
+  const [readingId, setReadingId] = useState<string>();
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -280,6 +282,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
 
 
   const prepareAIReading = (drawnCards: ReadingCard[]) => {
+    setReadingId(undefined);
     aiTextRef.current = "";
     setAiText("");
     setAiLoading(false);
@@ -318,8 +321,9 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           aiTextRef.current = delta;
           setAiText(aiTextRef.current);
         },
-        () => {
+        (id) => {
           if (controller.signal.aborted) return;
+          setReadingId(id);
           if (!aiTextRef.current.trim()) {
             showError(t.tarot_error_unexpected);
             return;
@@ -341,6 +345,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
             date: new Date().toISOString().split("T")[0],
             language,
             spreadKey: selectedSpread.key,
+            readingId: id,
             question: userQuestion,
             cards: drawnCards,
             aiText: aiTextRef.current,
@@ -402,6 +407,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
     const cached = getTarotCache(language);
     if (cached && cached.aiText) {
       setCards(cached.cards);
+      setReadingId(cached.readingId);
       setUserQuestion(cached.question || "");
       setAiText(cached.aiText);
       aiTextRef.current = cached.aiText;
@@ -985,7 +991,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       <p role="status" className="py-6 text-center text-gold/70">{t.tarot_combined_loading}</p>
                     )}
                     <div className="min-w-0 [overflow-wrap:anywhere]">
-                      {aiText && renderMysticalText(aiText, textSize)}
+                      {aiText && <TarotAnswer text={aiText} size={textSize} readingId={readingId} complete={!aiLoading && !aiError} />}
                     </div>
                     {aiError && (
                       <div className="mt-4 space-y-3 text-center">
@@ -1104,7 +1110,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                       ) : aiText ? (
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <div style={{ lineHeight: 2.1, letterSpacing: "0.01em" }}>
-                            {renderMysticalText(aiText, textSize)}
+                            {<TarotAnswer text={aiText} size={textSize} readingId={readingId} complete={!aiLoading && !aiError} />}
                           </div>
                         </motion.div>
                       ) : (

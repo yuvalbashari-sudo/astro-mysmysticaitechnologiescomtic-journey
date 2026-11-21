@@ -19,6 +19,22 @@ function isConfiguredAdminEmail(email: string | null | undefined): boolean {
 
 let authEmail: string | null = null;
 let verifiedAdmin = false;
+let serverPlan: { tier: "pro" | "vip"; expiresAt?: string } | null = null;
+function readServerPlan(user?: { email_confirmed_at?: string; app_metadata?: Record<string, unknown> }) {
+  const metadata = user?.app_metadata;
+  serverPlan = user?.email_confirmed_at && (metadata?.tier === "pro" || metadata?.tier === "vip")
+    ? { tier: metadata.tier, expiresAt: typeof metadata.expires_at === "string" ? metadata.expires_at : undefined } : null;
+}
+async function refreshMembership() {
+  const token = activeToken;
+  if (!token) return;
+  try {
+    const { data, error } = await supabase.auth.getUser(token);
+    if (token !== activeToken || error || !data.user) return;
+    readServerPlan(data.user);
+    for (const listener of authListeners) listener();
+  } catch { /* Keep the session's last confirmed plan while offline. */ }
+}
 let authReady = false;
 let activeToken: string | null | undefined;
 const readyCallbacks: Array<() => void> = [];
@@ -38,6 +54,7 @@ supabase.auth.onAuthStateChange((_event, session) => {
   setReadingSession(session);
   const token = session?.access_token ?? null;
   if (activeToken === token) return;
+  readServerPlan(session?.user);
   activeToken = token;
   const email = session?.user.email?.trim().toLowerCase() ?? null;
   if (!token || !isConfiguredAdminEmail(email)) {
@@ -94,6 +111,7 @@ function savePlan(data: PlanData): void {
  */
 function getCurrentTier(): UserTier {
   if (verifiedAdmin) return "admin";
+  if (serverPlan && (!serverPlan.expiresAt || Date.parse(serverPlan.expiresAt) > Date.now())) return serverPlan.tier;
   return loadPlan().tier;
 }
 
@@ -182,6 +200,7 @@ function onAuthChange(cb: () => void): () => void {
 }
 
 export const subscriptionManager = {
+  refreshMembership,
   getCurrentTier,
   getPlanDetails,
   setPlan,

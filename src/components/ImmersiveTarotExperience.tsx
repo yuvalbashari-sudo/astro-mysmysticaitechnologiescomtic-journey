@@ -1,5 +1,5 @@
-import { majorArcana } from "@/data/tarotWorldData";
-import { cardReading } from "@/data/interpretations";
+import TarotAnswer from "./tarot/TarotAnswer";
+import CampaignReading from "./tarot/CampaignReading";
 import TarotQuestionPhase from "./TarotQuestionPhase";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { streamTarotReading } from "@/lib/streamTarotReading";
@@ -13,14 +13,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import { tarotGalleryTranslations, drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
+import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
 
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import cardFrameImg from "@/assets/tarot/card-frame.png";
 import { tarotMemory } from "@/lib/tarotMemory";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingsStorage } from "@/lib/readingsStorage";
-import { renderMysticalText } from "@/lib/aiStreaming";
 import { safeErrorText } from "@/lib/localeGuard";
 import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
@@ -34,6 +33,7 @@ import { subscriptionManager } from "@/lib/subscriptionManager";
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  campaign?: boolean;
 }
 
 type Phase = "personal" | "question" | "drawing" | "interpretation";
@@ -333,7 +333,7 @@ const FloatingCard = ({
 };
 
 /* ── Main Component ─────────────── */
-const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
+const ImmersiveTarotExperience = ({ isOpen, onClose, campaign = false }: Props) => {
   const t = useT();
   const { language } = useLanguage();
   const cardName = useCardName();
@@ -343,6 +343,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [drawnCards, setDrawnCards] = useState<ReadingCard[]>([]);
   const [selectedCardIndices, setSelectedCardIndices] = useState<Set<number>>(new Set());
+  const [readingId, setReadingId] = useState<string>();
   const [aiText, setAiText] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [textSizeLevel, setTextSizeLevel] = useState<0 | 1 | 2>(0);
@@ -369,7 +370,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   }, []);
 
   const liveAccess = entitlements.checkAccess("tarot_reading");
-  const isLiveBlocked = isOpen && (phase === "question" || phase === "personal") && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
+  const isLiveBlocked = !campaign && isOpen && (phase === "question" || phase === "personal") && authReady && !liveAccess.allowed && 'promptKey' in liveAccess;
   const liveGatingMsg = isLiveBlocked && 'promptKey' in liveAccess
     ? entitlements.getGatingMessage(liveAccess.promptKey, liveAccess.priceILS)
     : null;
@@ -408,7 +409,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     },
   ], [language, t]);
 
-  const handleQuestionSelect = useCallback((key: string, question = "") => {
+  const admitReading = useCallback(() => {
     // Anti-abuse cooldown check
     const abuseCheck = antiAbuse.fullCheck("tarot_reading");
     if (!abuseCheck.allowed) {
@@ -436,19 +437,26 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     entitlements.recordFeatureUse("tarot_reading");
     notifyUsageChanged();
     antiAbuse.recordSuccessfulAction("tarot_reading");
+    return true;
+  }, [t]);
+
+  const handleQuestionSelect = useCallback((key: string, question = "") => {
+    if (!campaign && !admitReading()) return;
     setPersonalQuestion(question);
     setSelectedQuestion(key);
     setDrawnCards(drawReadingCards(7));
     setPhase("drawing");
-  }, [t]);
+  }, [campaign, admitReading]);
 
   const [burstIndices, setBurstIndices] = useState<Set<number>>(new Set());
+  const burstTimers = useRef(new Set<number>());
 
   const startReading = (cards: ReadingCard[]) => {
     if (requestRef.current) return;
 
     const controller = new AbortController();
     requestRef.current = controller;
+    setReadingId(undefined);
     setAiText("");
     setAiError(null);
     setAiLoading(true);
@@ -482,8 +490,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
         text = delta;
         setAiText(text);
       },
-      () => {
+      (id) => {
         if (controller.signal.aborted) return;
+        setReadingId(id);
         if (!text.trim()) {
           showError(safeErrorText(null, language, "tarot-reading:empty-result"));
           return;
@@ -518,6 +527,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   const handleCardSelect = (index: number) => {
     const previous = selectedIndicesRef.current;
     if (previous.has(index) || previous.size >= 3) return;
+    if (campaign && previous.size === 2 && !admitReading()) return;
 
     const next = new Set(previous).add(index);
     selectedIndicesRef.current = next;
@@ -530,11 +540,15 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     }
 
     setBurstIndices((indices) => new Set(indices).add(index));
-    setTimeout(() => setBurstIndices((indices) => {
-      const remaining = new Set(indices);
-      remaining.delete(index);
-      return remaining;
-    }), 900);
+    const timer = window.setTimeout(() => {
+      burstTimers.current.delete(timer);
+      setBurstIndices(indices => {
+        const remaining = new Set(indices);
+        remaining.delete(index);
+        return remaining;
+      });
+    }, 900);
+    burstTimers.current.add(timer);
   };
 
   const resetSelection = () => {
@@ -552,6 +566,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     requestRef.current = null;
     resetSelection();
     setAdvisorOpen(false);
+    setReadingId(undefined);
     setAiText("");
     setAiLoading(false);
     setAiError(null);
@@ -560,31 +575,30 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
     onClose();
   };
 
-  useEffect(() => () => requestRef.current?.abort(), []);
+  useEffect(() => () => {
+    requestRef.current?.abort();
+    burstTimers.current.forEach(timer => window.clearTimeout(timer));
+    burstTimers.current.clear();
+  }, []);
 
   useEffect(() => {
-    if (!isOpen || !isMobile) return;
+    if (!isOpen || !isMobile || campaign) return;
     const page = document.documentElement;
     const previousOverflow = page.style.overflow;
     page.style.overflow = "hidden";
     return () => { page.style.overflow = previousOverflow; };
-  }, [isOpen, isMobile]);
+  }, [isOpen, isMobile, campaign]);
 
   useEffect(() => {
     if (mobileScrollRef.current) mobileScrollRef.current.scrollTop = 0;
   }, [phase, isMobile]);
 
   const chosenCards = Array.from(selectedCardIndices, (index) => drawnCards[index]);
-  const firstReading = chosenCards.map((card, index) => {
-    const entry = majorArcana.find(item => item.name === card.name.en);
-    const position = [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future][index];
-    const meaning = (entry && cardReading(entry.name.toLowerCase().replace(/ /g, "-"), entry, language)?.general) || tarotGalleryTranslations.shortMeaningBySuit[card.suit][language];
-    return `### ${position} · ${card.name[language]}\n${meaning}`;
-  }).join("\n\n");
+
   const readingSize = isMobile ? (["default", "large", "xl"] as const)[textSizeLevel] : "default";
   const readingText = (
     <>
-      {renderMysticalText(aiText || firstReading, readingSize)}
+      {aiText && <TarotAnswer text={aiText} size={readingSize} readingId={readingId} complete={!aiLoading && !aiError} />}
       {aiLoading && !aiText && (
         <p role="status" className="py-12 text-center text-gold/60">
           {t.imm_tarot_deciphering}
@@ -602,6 +616,15 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   );
 
   if (!isOpen) return null;
+
+  if (campaign) return <>
+    <CampaignReading phase={phase} question={personalQuestion} cards={drawnCards} selected={selectedCardIndices}
+      onSubmit={question => handleQuestionSelect("question", question)} onPick={handleCardSelect}
+      onClearCards={() => { selectedIndicesRef.current = new Set(); setSelectedCardIndices(new Set()); }}
+      onReset={() => { requestRef.current?.abort(); requestRef.current = null; resetSelection(); setAiLoading(false); setAiText(""); setAiError(null); setReadingId(undefined); }}
+      result={readingText} />
+    <PaymentGatingModal isOpen={gatingOpen} onClose={() => setGatingOpen(false)} gatingMessage={gatingMsg} resetCycle={gatingResetCycle} interest="tarot" />
+  </>;
 
   const PhaseTransition = isMobile ? Fragment : AnimatePresence;
   const overlay = (

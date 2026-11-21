@@ -15,6 +15,23 @@ const page = () => render(<MemoryRouter><MemberAccount /></MemoryRouter>);
 const session = (id: string, data = {}) => ({ user: { id, user_metadata: data }, access_token: id + "-token" }) as Session;
 afterEach(() => { cleanup(); setReadingSession(null); localStorage.clear(); sessionStorage.clear(); vi.unstubAllGlobals(); vi.clearAllMocks(); });
 
+it("lets a guest cancel or confirm a profile reset while preserving archived readings and the plan", async () => {
+  setReadingSession(null);
+  localStorage.setItem("astrologai_mystical_profile", JSON.stringify({ userName: "Preview" }));
+  localStorage.setItem("astrologai_readings", "archived");
+  subscriptionManager.setPlan("vip");
+  page();
+  fireEvent.click(screen.getByRole("button", { name: "איפוס הפרופיל שלי" }));
+  fireEvent.click(screen.getByRole("button", { name: "ביטול" }));
+  expect(localStorage.getItem("astrologai_mystical_profile")).toContain("Preview");
+  fireEvent.click(screen.getByRole("button", { name: "איפוס הפרופיל שלי" }));
+  fireEvent.click(screen.getByRole("button", { name: "כן, לאפס את הפרופיל" }));
+  await screen.findByText("הפרופיל אופס.");
+  expect(localStorage.getItem("astrologai_mystical_profile")).toBeNull();
+  expect(localStorage.getItem("astrologai_readings")).toBe("archived");
+  expect(subscriptionManager.getCurrentTier()).toBe("vip");
+});
+
 it("sends and verifies an email code and lets a reader correct an invalid code", async () => {
   setReadingSession(null);
   auth.signInWithOtp.mockResolvedValue({ error: null });

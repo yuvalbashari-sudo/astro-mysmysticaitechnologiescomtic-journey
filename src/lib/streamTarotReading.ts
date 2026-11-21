@@ -4,12 +4,13 @@ import { mysticalProfile } from "@/lib/mysticalProfile";
 import { readingAuthorization } from "@/lib/readingAuthorization";
 import { isLocalizedReading, matchesReadingScript, readingLanguageInstruction } from "@/lib/readingLanguage";
 import { readReadingStream } from "@/lib/readingStream";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 import { tarotMemory } from "@/lib/tarotMemory";
 
 type Card = { name: string; hebrewName: string; localizedName: string; positionLabel: string; symbol: string };
 
 export async function streamTarotReading(
-  spreadType: string, cards: Card[], onText: (text: string) => void, onDone: () => void,
+  spreadType: string, cards: Card[], onText: (text: string) => void, onDone: (readingId?: string) => void,
   onError: (message: string) => void, language: Language, userQuestion?: string,
   signal?: AbortSignal, promptForGender = false,
 ) {
@@ -27,11 +28,11 @@ export async function streamTarotReading(
         method: "POST", signal,
         headers: { "Content-Type": "application/json", Authorization: readingAuthorization() },
         body: JSON.stringify({
-          spreadType, language, gender: gender === "male" || gender === "female" ? gender : undefined,
+          spreadType, language, includeFollowup: !!subscriptionManager.getAccessToken(), gender: gender === "male" || gender === "female" ? gender : undefined,
           userName: isLocalizedReading(name, language) ? name : undefined,
           cards: cards.map(({ localizedName, symbol, positionLabel }) => ({ hebrewName: localizedName, symbol, positionLabel })),
           context: { memoryContext: tarotMemory.buildMemoryContext(cards), userQuestion,
-            profileContext: [profile, rule, attempt ? "Review each word before returning the corrected reading." : ""].filter(Boolean).join("\n") },
+            profileContext: [profile, rule, "Start with one concrete answer to the question, no more than two short sentences. Answer before explaining: name the action or insight suggested by the cards. Do not restate the question or describe what the reading will cover. Then a blank line and all usual sections with markdown headings.", attempt ? "Review each word before returning the corrected reading." : ""].filter(Boolean).join("\n") },
         }),
       });
       if (!response.ok || !response.body) break;
@@ -44,7 +45,7 @@ export async function streamTarotReading(
         onText(visible);
       });
       if (signal?.aborted) return;
-      if (result.complete && isLocalizedReading(result.text, language)) { onDone(); return; }
+      if (result.complete && isLocalizedReading(result.text, language)) { onDone(response.headers.get("X-Tarot-Reading") || undefined); return; }
       onText("");
       if (!mixed) break;
     }

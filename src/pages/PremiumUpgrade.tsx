@@ -5,6 +5,7 @@ import { useT, useLanguage } from "@/i18n";
 import type { Language } from "@/i18n";
 import { useState } from "react";
 import LeadFormModal from "@/components/LeadFormModal";
+import PremiumReadingExample from "@/components/tarot/PremiumReadingExample";
 import AccountLink from "@/components/AccountLink";
 import { SUBSCRIPTION_PLANS } from "@/lib/pricingConfig";
 
@@ -295,6 +296,7 @@ const PremiumUpgrade = () => {
                 ))}
               </ul>
 
+              {plan.id === "pro" && <PremiumReadingExample />}
               {/* CTA */}
               <button
                 onClick={() => {

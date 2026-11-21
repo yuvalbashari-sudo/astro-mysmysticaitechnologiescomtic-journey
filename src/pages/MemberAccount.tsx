@@ -1,5 +1,7 @@
 import { useEffect, useState, useSyncExternalStore, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import ProfileReset from "@/components/ProfileReset";
+import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useLanguage } from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { accountReadingName, accountScope, rememberAccountName, subscribeAccount } from "@/lib/accountName";
@@ -45,6 +47,12 @@ const copy = {
 
 const field = "mt-2 block min-h-12 w-full rounded-lg border border-gold/40 bg-background px-3 text-base text-foreground";
 const pendingKey = "astrologai_pending_email_signin";
+const planText = {
+  he: { label: "המנוי שלי", free: "בסיסי", pro: "פרימיום", vip: "VIP", admin: "מנהל" },
+  en: { label: "My plan", free: "Basic", pro: "Premium", vip: "VIP", admin: "Administrator" },
+  ru: { label: "Моя подписка", free: "Базовая", pro: "Премиум", vip: "VIP", admin: "Администратор" },
+  ar: { label: "اشتراكي", free: "أساسي", pro: "مميز", vip: "VIP", admin: "المشرف" },
+};
 
 // Preserve the address, never the code, if the browser reloads while the reader opens their email.
 function readChallenge(): { address: string; sentAt: number } | null {
@@ -68,6 +76,13 @@ export default function MemberAccount() {
   const scope = useSyncExternalStore(subscribeAccount, accountScope);
   const knownName = useSyncExternalStore(subscribeAccount, accountReadingName);
   const signedIn = scope !== "guest" && scope !== "loading";
+  const tier = useSyncExternalStore(subscriptionManager.onAuthChange, subscriptionManager.getCurrentTier);
+  useEffect(() => {
+    if (!signedIn) return;
+    void subscriptionManager.refreshMembership();
+    window.addEventListener("focus", subscriptionManager.refreshMembership);
+    return () => window.removeEventListener("focus", subscriptionManager.refreshMembership);
+  }, [scope, signedIn]);
   const [challenge] = useState(readChallenge);
   const [email, setEmail] = useState(challenge?.address || "");
   const [sentTo, setSentTo] = useState(challenge?.address || "");
@@ -128,6 +143,7 @@ export default function MemberAccount() {
     <main dir={dir} className="min-h-dvh bg-background px-4 py-12 text-foreground">
       <section className="mx-auto max-w-md space-y-5 rounded-2xl border border-gold/30 bg-slate-950 p-6 shadow-xl">
         <h1 className="font-heading text-2xl text-gold">{signedIn ? t.account : t.login}</h1>
+        {signedIn && <p>{planText[language].label} · <strong>{planText[language][tier]}</strong></p>}
         {scope === "loading" ? <p role="status">{t.busy}</p> : <>
           {!signedIn && <p>{sentTo ? <>{t.sent} <bdi>{sentTo}</bdi></> : t.intro}</p>}
           <form className="space-y-4" onSubmit={submit}>
@@ -156,6 +172,7 @@ export default function MemberAccount() {
             if (error) setError(t.failure);
           })}>{t.logout}</button>}
         </>}
+        {scope !== "loading" && <ProfileReset onComplete={() => { setDraft(null); setSaved(false); }} />}
         <Link className="block min-h-11 py-2 text-gold underline" to="/">{t.back}</Link>
       </section>
     </main>

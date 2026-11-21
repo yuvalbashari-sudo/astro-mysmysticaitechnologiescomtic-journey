@@ -1,4 +1,8 @@
-import { zodiacData } from "@/data/zodiacData";
+import { zodiacData, getZodiacSign } from "@/data/zodiacData";
+import EntryLayout, { resetCopy } from "./EntryLayout";
+import { Link } from "react-router-dom";
+import { getSignNameByKey } from "@/lib/astroLocale";
+import { accountStorageKey, profileRevision } from "@/lib/accountName";
 import { signReading } from "@/data/interpretations";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,36 +24,17 @@ import { localizeName } from "@/lib/nameLocalization";
 import { readingAuthorization } from "@/lib/readingAuthorization";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 /* ── Zodiac helper ── */
-const ZODIAC_DATES = [
-  { sign: "Capricorn", start: [1, 1], end: [1, 19] },
-  { sign: "Aquarius", start: [1, 20], end: [2, 18] },
-  { sign: "Pisces", start: [2, 19], end: [3, 20] },
-  { sign: "Aries", start: [3, 21], end: [4, 19] },
-  { sign: "Taurus", start: [4, 20], end: [5, 20] },
-  { sign: "Gemini", start: [5, 21], end: [6, 20] },
-  { sign: "Cancer", start: [6, 21], end: [7, 22] },
-  { sign: "Leo", start: [7, 23], end: [8, 22] },
-  { sign: "Virgo", start: [8, 23], end: [9, 22] },
-  { sign: "Libra", start: [9, 23], end: [10, 22] },
-  { sign: "Scorpio", start: [10, 23], end: [11, 21] },
-  { sign: "Sagittarius", start: [11, 22], end: [12, 21] },
-  { sign: "Capricorn", start: [12, 22], end: [12, 31] },
-];
+const signArt = import.meta.glob<string>("../assets/zodiac-icons/*.png", { eager: true, import: "default" });
 
-function getZodiacFromDate(dateStr: string): string | null {
-  try {
-    const d = new Date(dateStr + "T12:00:00");
-    const month = d.getMonth() + 1;
-    const day = d.getDate();
-    for (const z of ZODIAC_DATES) {
-      const [sm, sd] = z.start;
-      const [em, ed] = z.end;
-      if ((month === sm && day >= sd) || (month === em && day <= ed)) {
-        return z.sign;
-      }
-    }
-  } catch {}
-  return null;
+function getZodiacFromDate(value: string): string | null {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+  const date = new Date(value + "T12:00:00");
+  if (!Number.isFinite(+date) || date.getDate() !== Number(value.slice(-2))) return null;
+  return getZodiacSign(date).name;
+}
+
+export function resolveHoroscopeSign(profile: { birthDate?: string; zodiacSign?: string }) {
+  return getZodiacFromDate(profile.birthDate || "") || zodiacData[(profile.zodiacSign || "").toLowerCase()]?.name || null;
 }
 
 const ZODIAC_SYMBOLS: Record<string, string> = {
@@ -60,7 +45,7 @@ const ZODIAC_SYMBOLS: Record<string, string> = {
 
 /* ── Device fingerprint ── */
 function getFingerprint(): string {
-  const KEY = "astrologai_device_fp";
+  const KEY = accountStorageKey("astrologai_device_fp");
   let fp = localStorage.getItem(KEY);
   if (!fp) {
     fp = crypto.randomUUID();
@@ -70,7 +55,8 @@ function getFingerprint(): string {
 }
 
 function getTodayStr(): string {
-  return new Date().toISOString().split("T")[0];
+  const d = new Date();
+  return [d.getFullYear(), String(d.getMonth()+1).padStart(2,"0"), String(d.getDate()).padStart(2,"0")].join("-");
 }
 
 /* ── Score indicator ── */
@@ -108,11 +94,27 @@ function requestHoroscope(profile: HoroscopeRequest, today: string): Promise<Hor
     dailyRequests.clear();
     requestDay = today;
   }
-  const key = JSON.stringify(profile);
+  const revision = profileRevision();
+  const key = accountStorageKey(JSON.stringify([revision, profile]));
   const existing = dailyRequests.get(key);
   if (existing) return existing;
 
-  const request = loadHoroscope(profile, today).catch((error) => {
+  const storageKey = accountStorageKey("astrologai_last_daily_horoscope");
+  try {
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+    if (saved?.key === key && saved.day === today && typeof saved.result?.content === "string" && saved.result.content.trim()) {
+      return Promise.resolve(saved.result);
+    }
+  } catch { /* A fresh reading is available if local storage is unavailable. */ }
+
+  const request = loadHoroscope(profile, today).then(result => {
+    try {
+      if (storageKey === accountStorageKey("astrologai_last_daily_horoscope") && revision === profileRevision()) {
+        localStorage.setItem(storageKey, JSON.stringify({key, day: today, result}));
+      }
+    } catch { /* Optional cache. */ }
+    return result;
+  }).catch((error) => {
     if (dailyRequests.get(key) === request) dailyRequests.delete(key);
     throw error;
   });
@@ -121,7 +123,7 @@ function requestHoroscope(profile: HoroscopeRequest, today: string): Promise<Hor
 }
 
 async function loadHoroscope(profile: HoroscopeRequest, today: string): Promise<HoroscopeData> {
-  const hadFingerprint = !!localStorage.getItem("astrologai_device_fp");
+  const hadFingerprint = !!localStorage.getItem(accountStorageKey("astrologai_device_fp"));
   const fingerprint = getFingerprint();
 
   if (hadFingerprint) {
@@ -181,7 +183,7 @@ async function loadHoroscope(profile: HoroscopeRequest, today: string): Promise<
   return result;
 }
 
-const DailyHoroscopeCard = () => {
+const DailyHoroscopeCard = ({ home = false }: { home?: boolean } = {}) => {
   const t = useT();
   const { language, dir } = useLanguage();
   const [data, setData] = useState<HoroscopeData | null>(null);
@@ -193,9 +195,9 @@ const DailyHoroscopeCard = () => {
   const ts = TEXT_SIZE_CLASSES[scale];
 
   const adminMode = useSiteAdmin();
-  const safeProfile = getAdminSafeProfile();
+  const safeProfile = home ? mysticalProfile.getProfile() : getAdminSafeProfile();
   const birthDate = safeProfile.birthDate;
-  const zodiacSign = birthDate ? getZodiacFromDate(birthDate) : (safeProfile.zodiacSign || null);
+  const zodiacSign = resolveHoroscopeSign(safeProfile);
   const signKey = zodiacSign?.toLowerCase() || "";
   const sign = zodiacData[signKey];
   const signOverview = sign && signReading(signKey, sign, language)?.personality;
@@ -208,6 +210,7 @@ const DailyHoroscopeCard = () => {
   // Inline setup form state
   const [setupName, setSetupName] = useState(() => mysticalProfile.getUserName() || "");
   const [setupBirthDate, setSetupBirthDate] = useState("");
+  const [editingHome, setEditingHome] = useState(false);
   // Admin users skip setup entirely
   const isReturning = mysticalProfile.isReturningUser();
   const [needsSetup, setNeedsSetup] = useState(!zodiacSign && !adminMode);
@@ -221,7 +224,7 @@ const DailyHoroscopeCard = () => {
     }
   }, []);
 
-  const showSetup = needsSetup && !adminMode;
+  const showSetup = editingHome || (needsSetup && !adminMode);
   useEffect(() => {
     if (showSetup || !zodiacSign) return;
 
@@ -248,6 +251,32 @@ const DailyHoroscopeCard = () => {
   // Format today's date in locale
   const formattedDate = formatFullDate(new Date(), language);
 
+  if (home && zodiacSign && !editingHome) return <EntryLayout>
+    <div className="entry-grid entry-return">
+      <div className="entry-content">
+        <p className="entry-date">{getSignNameByKey(zodiacSign, language)} · {formattedDate}</p>
+        <h1>{t.daily_horoscope_title}</h1>
+        <article className="entry-forecast" aria-busy={loading}>
+          {data ? <>
+            <p className={ts.body}>{enforceLocale(data.content, language, undefined, "daily-horoscope")}</p>
+            <div className="entry-scores">
+              <span>{t.daily_horoscope_love} <ScoreValue score={data.love_score}/></span>
+              <span>{t.daily_horoscope_career} <ScoreValue score={data.career_score}/></span>
+              <span>{t.daily_horoscope_energy} <ScoreValue score={data.energy_score}/></span>
+            </div>
+          </> : error ? <><p role="alert">{t.daily_horoscope_error}</p><button className="entry-action" onClick={()=>setAttempt(n=>n+1)}>{t.daily_horoscope_retry}</button></> : <p role="status">{t.daily_horoscope_loading}</p>}
+        </article>
+        <Link className="entry-action" to="/tarot-start">{t.tarot_world_spread_question_name}</Link>
+        <button className="entry-reset" onClick={() => {
+          setSetupName("");
+          setSetupBirthDate("");
+          setEditingHome(true);
+        }}>{resetCopy[language].details}</button>
+      </div>
+      <div className="entry-art" aria-hidden="true"><div className="entry-orbit"/><img className="entry-sky" src={signArt["../assets/zodiac-icons/"+signKey+".png"]} alt=""/></div>
+    </div>
+  </EntryLayout>;
+
   if (showSetup) {
     const setupZodiac = setupBirthDate ? getZodiacFromDate(setupBirthDate) : null;
     const canSubmit = setupName.trim().length >= 1 && setupZodiac;
@@ -268,9 +297,10 @@ const DailyHoroscopeCard = () => {
         setupBirthDate
       );
       setNeedsSetup(false);
+      setEditingHome(false);
     };
 
-    return (
+    const form = (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -361,10 +391,12 @@ const DailyHoroscopeCard = () => {
             >
               {t.daily_horoscope_setup_cta}
             </motion.button>
+            {editingHome && <button className="entry-reset" onClick={() => setEditingHome(false)}>{resetCopy[language].cancel}</button>}
           </div>
         </div>
       </motion.div>
     );
+    return editingHome ? <EntryLayout><div className="px-4 py-10">{form}</div></EntryLayout> : form;
   }
 
   return (

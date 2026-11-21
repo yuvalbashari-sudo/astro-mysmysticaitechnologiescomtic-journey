@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import CinematicModalShell from "@/components/CinematicModalShell";
+import PremiumReadingExample from "@/components/tarot/PremiumReadingExample";
 import TextSizeControl from "@/components/TextSizeControl";
 import { useFontScale } from "@/contexts/FontScaleContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -236,6 +237,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
                   <motion.div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, hsl(var(--gold) / 0.15), transparent)", border: "1px solid hsl(var(--gold) / 0.2)" }}><Sparkles className="w-6 h-6 text-gold" /></motion.div>
                   <h2 className="font-heading text-2xl md:text-3xl gold-gradient-text mb-3">{isSupport ? supportCopy.title : preselectedInterest === "premium" ? t.premium_plan_sub_name : t.lead_modal_title}</h2>
                   <p className="text-foreground/60 font-body text-sm max-w-sm mx-auto leading-relaxed">{isSupport ? supportCopy.subtitle : t.lead_modal_subtitle}</p>
+                  {!isSupport && formData.interest === "premium" && <div className="mt-4"><PremiumReadingExample /></div>}
                 </div>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
