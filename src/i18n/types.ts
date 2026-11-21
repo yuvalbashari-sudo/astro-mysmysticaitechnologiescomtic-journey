@@ -10,6 +10,16 @@ export const languageConfig: Record<Language, { label: string; dir: Direction; f
 };
 
 export type TranslationKeys = {
+  a11y_calendar: string;
+  a11y_time_picker: string;
+  a11y_text_size: string;
+  a11y_text_default: string;
+  a11y_text_large: string;
+  a11y_text_xl: string;
+  a11y_unmute: string;
+  a11y_mute: string;
+  a11y_explore: string;
+
   // Meta / SEO
   meta_title: string;
   meta_description: string;
