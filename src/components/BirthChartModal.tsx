@@ -1,3 +1,6 @@
+import type { Language } from "@/i18n/types";
+import { isLocalizedReading } from "@/lib/readingLanguage";
+import { accountStorageKey } from "@/lib/accountName";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import html2canvas from "html2canvas";
@@ -26,6 +29,7 @@ const CHART_CACHE_KEY = "astrologai_birthchart_cache";
 
 interface CachedChart {
   calculationVersion?: number;
+  readings?: Partial<Record<Language, string>>;
   chartData: NatalChartResult;
   resultText: string;
   details: BirthDetails;
@@ -47,15 +51,26 @@ function markChartUsedToday(): void {
   } catch { /* ignore */ }
 }
 
-function saveCachedChart(data: CachedChart): void {
+function saveCachedChart(data: CachedChart, language: Language): void {
   try {
-    localStorage.setItem(CHART_CACHE_KEY, JSON.stringify({ ...data, calculationVersion: 2 }));
+    if (!isLocalizedReading(data.resultText, language)) return;
+    const previous = loadCachedChart();
+    const sameChart = previous?.calculationVersion === 2 && (Object.keys(data.details) as (keyof BirthDetails)[])
+      .every(key => previous.details[key] === data.details[key]);
+    const readings = sameChart ? { ...previous.readings } : {};
+    if (sameChart) {
+      for (const lang of ["he", "en", "ru", "ar"] as const) {
+        if (isLocalizedReading(previous.resultText, lang)) readings[lang] = previous.resultText;
+      }
+    }
+    readings[language] = data.resultText;
+    localStorage.setItem(accountStorageKey(CHART_CACHE_KEY), JSON.stringify({ ...data, readings, calculationVersion: 2 }));
   } catch { /* ignore - storage full */ }
 }
 
 function loadCachedChart(): CachedChart | null {
   try {
-    const raw = localStorage.getItem(CHART_CACHE_KEY);
+    const raw = localStorage.getItem(accountStorageKey(CHART_CACHE_KEY));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CachedChart;
     if (parsed.chartData && typeof parsed.resultText === "string" && /\p{L}/u.test(parsed.resultText) && parsed.details) return parsed;
@@ -132,21 +147,29 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
   }, [phase]);
 
   useEffect(() => {
+    if (!authReady) return;
     const cached = loadCachedChart();
     if (!cached || !cached.resultText) return;
     setDetails(cached.details);
     // Older interpretations used a second time-zone conversion. Keep the form details.
     if (cached.calculationVersion !== 2) return;
     setChartData(cached.chartData);
-    setResultText(cached.resultText);
+    const localized = cached.readings?.[language] ?? cached.resultText;
+    if (!isLocalizedReading(localized, language)) {
+      const request = new AbortController();
+      requestRef.current = request;
+      startInterpretation(cached.chartData, cached.details, request);
+      return () => request.abort();
+    }
+    setResultText(localized);
     setRestoredFromCache(true);
     setPhase("result");
-    if (cached.details.userName?.trim()) {
+    if (isLocalizedReading(localizeName(cached.details.userName, language), language)) {
       setShowWelcomeBack(true);
       const timer = window.setTimeout(() => setShowWelcomeBack(false), 4000);
       return () => window.clearTimeout(timer);
     }
-  }, []);
+  }, [language, authReady]);
 
   async function handleSubmit() {
     if (requestRef.current) return;
@@ -239,7 +262,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
       if (request.signal.aborted) return;
       armTimeout();
       text = value;
-      if (text !== getLocalFallback("error", language)) setResultText(text);
+      if (!text || isLocalizedReading(text, language) && text !== getLocalFallback("error", language)) setResultText(text);
     };
     const elementSummary = chartData.dominantElements.map(({ elementKey, count }) => `${getElementName(elementKey, language)} (${count})`).join(" • ");
     const houseSummary = chartData.dominantHouses.map(({ house, count }) => `${chartLabels.house} ${house} (${count})`).join(" • ");
@@ -252,7 +275,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
       ? chartData.aspects.map((aspect) => {
           const left = aspect.planet1Key === "ascendant" ? chartLabels.ascendant : `${getPlanetName(aspect.planet1Key, language)}`;
           const right = aspect.planet2Key === "ascendant" ? chartLabels.ascendant : `${getPlanetName(aspect.planet2Key, language)}`;
-          return `${left} • ${getAspectName(aspect.type, language)} • ${right} — orb ${aspect.orb}°`;
+          return `${left} • ${getAspectName(aspect.type, language)} • ${right} — ${aspect.orb}°`;
         }).join("\n")
       : chartLabels.noStrongAspects;
 
@@ -270,6 +293,8 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
       mode: "stream",
       endpoint: "mystical-reading",
       promptForGender: false,
+      requireComplete: true,
+      onProgress: armTimeout,
       signal: request.signal,
       payload: {
         type: "birthChart",
@@ -298,7 +323,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
       onError: fail,
       onDone: () => {
         if (request.signal.aborted) return;
-        if (!/\p{L}/u.test(text) || text === getLocalFallback("error", language)) {
+        if (!isLocalizedReading(text, language) || text === getLocalFallback("error", language)) {
           fail();
           return;
         }
@@ -316,7 +341,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
           symbol: "🌌",
           data: { birthDate, birthTime, birthCity: chartData.location.name },
         });
-        saveCachedChart({ chartData, resultText: text, details: submitted, savedAt: new Date().toISOString() });
+        saveCachedChart({ chartData, resultText: text, details: submitted, savedAt: new Date().toISOString() }, language);
       },
     }).catch(fail);
   }

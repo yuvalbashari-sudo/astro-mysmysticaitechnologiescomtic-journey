@@ -3,6 +3,10 @@ import { afterEach, expect, it, vi } from "vitest";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
 import TarotModal from "./TarotModal";
 import { LanguageProvider } from "@/i18n/LanguageContext";
+import { he } from "@/i18n/translations/he";
+import { en } from "@/i18n/translations/en";
+import { ru } from "@/i18n/translations/ru";
+import { ar } from "@/i18n/translations/ar";
 import { entitlements } from "@/lib/entitlements";
 
 vi.mock("./AdvisorChatPanel", () => ({ default: () => null }));
@@ -150,3 +154,29 @@ it.each([1024, 320])("starts at the third card at %i px and streams without reop
   }
   await waitFor(() => expect(localStorage.getItem("astrologai_readings")).toContain('"type":"tarot"'));
 });
+
+for (const [locale, t, sample] of [["he", he, "הפירוש האישי שלך."], ["en", en, "Your personal reading."],
+  ["ru", ru, "Ваш личный расклад."], ["ar", ar, "قراءتك الشخصية."]] as const) {
+  it.each([375, 1100])("opens a clean " + locale + " spread at %i px after a mixed response", async width => {
+    vi.stubGlobal("innerWidth", width);
+    vi.stubGlobal("IntersectionObserver", class { observe() {} unobserve() {} disconnect() {} });
+    localStorage.setItem("astrologai_lang", locale);
+    const body = (content: string) => new Response("data: " + JSON.stringify({ choices: [{ delta: { content } }] }) + "\n\ndata: [DONE]\n");
+    const mixed = sample + (locale === "en" ? " שלום" : " The Hanged Man");
+    const request = vi.fn().mockResolvedValueOnce(body(mixed)).mockResolvedValueOnce(body(sample));
+    vi.stubGlobal("fetch", request);
+    const Reading = width < 768 ? TarotModal : ImmersiveTarotExperience;
+    render(<LanguageProvider><Reading isOpen onClose={() => {}} /></LanguageProvider>);
+    const category = width < 768 ? t.tarot_spread_timeline : t.imm_tarot_category_general;
+    fireEvent.click(screen.getByText(category, { exact: true }));
+    const cards = width < 768 ? [1, 2, 3].map(n => screen.getByRole("button", { name: t.tarot_card_label + " " + n }))
+      : Array.from(document.querySelectorAll(".absolute.cursor-pointer"));
+    for (const card of cards.slice(0, 3)) fireEvent.click(card);
+    expect(await screen.findByText(sample)).toBeInTheDocument();
+    expect(screen.queryByText(mixed)).toBeNull();
+    expect(request).toHaveBeenCalledTimes(2);
+    const payload = JSON.parse(request.mock.calls[0][1].body);
+    expect(payload.language).toBe(locale);
+    expect(payload.cards).toHaveLength(3);
+  });
+}

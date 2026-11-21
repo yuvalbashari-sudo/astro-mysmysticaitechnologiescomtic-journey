@@ -1,6 +1,8 @@
+import type { Language } from "@/i18n/types";
+import { isLocalizedReading } from "@/lib/readingLanguage";
 import { accountStorageKey } from "@/lib/accountName";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
-import { readingAuthorization } from "@/lib/readingAuthorization";
+import { streamTarotReading } from "@/lib/streamTarotReading";
 import { Fragment, useState, useEffect, useRef } from "react";
 import { antiAbuse } from "@/lib/antiAbuse";
 import RemainingReadingsBadge, { notifyUsageChanged } from "@/components/RemainingReadingsBadge";
@@ -44,14 +46,14 @@ interface TarotCacheData {
   aiText: string;
 }
 
-function getTarotCache(lang: string): TarotCacheData | null {
+function getTarotCache(lang: Language): TarotCacheData | null {
   try {
     const raw = sessionStorage.getItem(accountStorageKey(TAROT_CACHE_KEY));
     if (!raw) return null;
     const data = JSON.parse(raw) as TarotCacheData;
     const today = new Date().toISOString().split("T")[0];
     if (data.date !== today) { sessionStorage.removeItem(accountStorageKey(TAROT_CACHE_KEY)); return null; }
-    if (data.language !== lang) return null;
+    if (data.language !== lang || !isLocalizedReading(data.aiText, lang)) return null;
     return data;
   } catch { return null; }
 }
@@ -92,100 +94,6 @@ function getSpreadLabels(t: ReturnType<typeof useT>): Record<SpreadType, string>
 }
 
 // Stream AI tarot reading
-async function streamTarotReading(
-  spreadType: string,
-  cards: { hebrewName: string; symbol: string; positionLabel: string; name: string }[],
-  onDelta: (text: string) => void,
-  onDone: () => void,
-  onError: (err: string) => void,
-  userQuestion?: string,
-  errorMessages?: { unexpected: string; service: string; connection: string },
-  language?: string,
-  signal?: AbortSignal,
-  skipGenderPrompt = false,
-) {
-  const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tarot-reading`;
-  const memoryContext = tarotMemory.buildMemoryContext(cards);
-  const profileContext = mysticalProfile.buildContextForAI();
-  const userName = mysticalProfile.getLocalizedUserName(language) || undefined;
-  try {
-    const gender = skipGenderPrompt
-      ? mysticalProfile.getUserGender()
-      : await (await import("@/lib/genderGate")).ensureGender(language || "he");
-    const resp = await fetch(url, {
-      method: "POST",
-      signal,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: readingAuthorization(),
-      },
-      body: JSON.stringify({ spreadType, cards, context: { memoryContext, profileContext, userQuestion: userQuestion || undefined }, language: language || "he", userName, gender: gender === "male" || gender === "female" ? gender : undefined }),
-    });
-
-    if (!resp.ok) {
-      // Never surface raw server `error` strings — they may be English / contain
-      // identifiers like `FEATURE_PROMPTS is not defined`. Log + show localized.
-      const errData = await resp.json().catch(() => ({}));
-      if (errData?.error) console.warn("[tarot] server error:", errData.error);
-      onError(errorMessages.service);
-      return;
-    }
-
-    if (!resp.body) { onError(errorMessages.connection); return; }
-
-    const reader = resp.body.getReader();
-    const decoder = new TextDecoder();
-    let textBuffer = "";
-    let streamDone = false;
-
-    while (!streamDone) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      textBuffer += decoder.decode(value, { stream: true });
-
-      let newlineIndex: number;
-      while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
-        let line = textBuffer.slice(0, newlineIndex);
-        textBuffer = textBuffer.slice(newlineIndex + 1);
-        if (line.endsWith("\r")) line = line.slice(0, -1);
-        if (line.startsWith(":") || line.trim() === "") continue;
-        if (!line.startsWith("data: ")) continue;
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === "[DONE]") { streamDone = true; break; }
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch {
-          textBuffer = line + "\n" + textBuffer;
-          break;
-        }
-      }
-    }
-
-    if (textBuffer.trim()) {
-      for (let raw of textBuffer.split("\n")) {
-        if (!raw) continue;
-        if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-        if (raw.startsWith(":") || raw.trim() === "") continue;
-        if (!raw.startsWith("data: ")) continue;
-        const jsonStr = raw.slice(6).trim();
-        if (jsonStr === "[DONE]") continue;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const content = parsed.choices?.[0]?.delta?.content as string | undefined;
-          if (content) onDelta(content);
-        } catch { /* ignore */ }
-      }
-    }
-
-    onDone();
-  } catch (e) {
-    if (signal?.aborted) return;
-    if (e instanceof Error) console.warn("[tarot] network error:", e.message);
-    onError(errorMessages.connection);
-  }
-}
 
 const TarotModal = ({ isOpen, onClose }: Props) => {
   const t = useT();
@@ -381,6 +289,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
       hebrewName: c.name.he,
       symbol: c.symbol,
       name: c.name.en,
+      localizedName: c.name[language],
       positionLabel: selectedSpread.positionLabels[i],
     }));
 
@@ -406,7 +315,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
         cardsPayload,
         (delta) => {
           if (controller.signal.aborted) return;
-          aiTextRef.current += delta;
+          aiTextRef.current = delta;
           setAiText(aiTextRef.current);
         },
         () => {
@@ -439,11 +348,10 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
           sessionStorage.setItem("_dbg_tarot_source", "fresh");
         },
         showError,
-        userQuestion,
-        { unexpected: t.tarot_error_unexpected, service: t.tarot_error_service, connection: t.tarot_error_connection },
         language,
+        userQuestion,
         controller.signal,
-        isMobileTarot,
+        !isMobileTarot,
       ).catch(() => showError(t.tarot_error_connection));
     };
     if (isMobileTarot) startAIRef.current();
