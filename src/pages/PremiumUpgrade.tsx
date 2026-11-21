@@ -6,9 +6,13 @@ import type { Language } from "@/i18n";
 import { useState } from "react";
 import LeadFormModal from "@/components/LeadFormModal";
 import AccountLink from "@/components/AccountLink";
+import { SUBSCRIPTION_PLANS } from "@/lib/pricingConfig";
 
 type LangText = Record<Language, string>;
 type LangFeatures = Record<Language, { text: string; included: boolean }[]>;
+
+const premiumMonthlyPrice = SUBSCRIPTION_PLANS.pro.monthlyPriceILS;
+const dailyAgorot = Math.round(premiumMonthlyPrice * 12 * 100 / 365);
 
 const plans: {
   id: string;
@@ -16,7 +20,7 @@ const plans: {
   popular: boolean;
   priceLabel: LangText;
   priceSubtext: LangText;
-  yearlyNote?: LangText;
+  dailyEquivalent?: LangText;
   features: LangFeatures;
 }[] = [
   {
@@ -68,9 +72,14 @@ const plans: {
     id: "pro",
     icon: Crown,
     popular: true,
-    priceLabel: { he: "₪39", en: "₪39", ar: "₪39", ru: "₪39" },
-    priceSubtext: { he: "/חודש", en: "/month", ar: "/شهر", ru: "/месяц" },
-    yearlyNote: { he: "או ₪29/חודש בתשלום שנתי", en: "or ₪29/mo billed annually", ar: "أو ₪29/شهر بالدفع السنوي", ru: "или ₪29/мес при годовой оплате" },
+    priceLabel: { he: `${premiumMonthlyPrice} ₪`, en: `₪${premiumMonthlyPrice}`, ar: `${premiumMonthlyPrice} ₪`, ru: `${premiumMonthlyPrice} ₪` },
+    priceSubtext: { he: "לחודש", en: "per month", ar: "شهريًا", ru: "в месяц" },
+    dailyEquivalent: {
+      he: `כ־${dailyAgorot} אגורות ליום בממוצע שנתי`,
+      en: `About ${dailyAgorot} agorot per day, averaged over a year`,
+      ar: `نحو ${dailyAgorot} أغورة يوميًا في المتوسط على مدار السنة`,
+      ru: `Около ${dailyAgorot} агорот в день в среднем за год`,
+    },
     features: {
       he: [
         { text: "קלף יומי", included: true },
@@ -261,9 +270,9 @@ const PremiumUpgrade = () => {
                   {plan.priceSubtext[language]}
                 </span>
               </div>
-              {plan.yearlyNote && (
+              {plan.dailyEquivalent && (
                 <p className="text-center font-body text-xs text-gold/60 mb-5">
-                  {plan.yearlyNote[language]}
+                  {plan.dailyEquivalent[language]}
                 </p>
               )}
 
