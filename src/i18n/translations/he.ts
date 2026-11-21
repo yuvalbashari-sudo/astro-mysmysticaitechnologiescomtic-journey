@@ -1,6 +1,15 @@
 import { TranslationKeys } from "../types";
 
 export const he: TranslationKeys = {
+  a11y_calendar: "פתיחת לוח השנה",
+  a11y_time_picker: "בחירת שעה",
+  a11y_text_size: "גודל הטקסט",
+  a11y_text_default: "גודל רגיל",
+  a11y_text_large: "גודל מוגדל",
+  a11y_text_xl: "גודל מוגדל במיוחד",
+  a11y_unmute: "הפעלת קול",
+  a11y_mute: "השתקה",
+  a11y_explore: "גלו את ASTROLOGAI",
   meta_title: "ASTROLOGAI | פתיחת טארוט אונליין עם AI",
   meta_description: "ASTROLOGAI היא פלטפורמה לפתיחת טארוט, התאמה זוגית ותובנות אישיות בעזרת AI. חוויה מיסטית, מדויקת ונגישה אונליין.",
 

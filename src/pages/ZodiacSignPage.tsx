@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Sparkles, Heart, ArrowRight, MessageCircle } from "lucide-react";
-import { ZODIAC_SLUG_MAP, zodiacSeoMeta } from "@/data/seoData";
-import { zodiacData, getZodiacSign } from "@/data/zodiacData";
+import { ZODIAC_SLUG_MAP } from "@/data/seoData";
+import { zodiacData } from "@/data/zodiacData";
+import { signReading, signLabels } from "@/data/interpretations";
+import { getSignNameByKey } from "@/lib/astroLocale";
 import StarField from "@/components/StarField";
 import { useT, useLanguage } from "@/i18n";
 
@@ -12,11 +14,15 @@ const ZodiacSignPage = () => {
   const t = useT();
   const { language, dir } = useLanguage();
 
-  const sign = slug && zodiacData[slug] ? zodiacData[slug] : undefined;
+  const sign = slug && Object.prototype.hasOwnProperty.call(ZODIAC_SLUG_MAP, slug) ? zodiacData[slug] : undefined;
+
+  const reading = sign && signReading(slug, sign, language);
+  const labels = sign && signLabels(slug, sign, language);
+  const pageTitle = sign && labels.name + " " + sign.symbol + " · " + t.seo_breadcrumb_zodiac + " | ASTROLOGAI";
 
   useEffect(() => {
     if (!sign) return;
-    const meta = zodiacSeoMeta(sign);
+    const meta = { title: pageTitle, description: reading.personality };
     document.title = meta.title;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", meta.description);
@@ -42,7 +48,7 @@ const ZodiacSignPage = () => {
     canonical.href = `https://myastrologai.com/zodiac/${slug}`;
 
     return () => { document.getElementById("zodiac-jsonld")?.remove(); };
-  }, [sign]);
+  }, [sign, slug, pageTitle, reading]);
 
   if (!sign) {
     return (
@@ -56,13 +62,13 @@ const ZodiacSignPage = () => {
   }
 
   const sections = [
-    { emoji: "🌟", label: t.seo_section_personality, content: sign.personality },
-    { emoji: "❤️", label: t.seo_section_love, content: sign.love },
-    { emoji: "💼", label: t.seo_section_career, content: sign.career },
-    { emoji: "💰", label: t.seo_section_money, content: sign.money },
-    { emoji: "🏥", label: t.seo_section_health, content: sign.health },
-    { emoji: "✨", label: t.seo_section_spiritual, content: sign.spiritual },
-    { emoji: "🔥", label: t.seo_section_sensual, content: sign.sensual },
+    { emoji: "🌟", label: t.seo_section_personality, content: reading.personality },
+    { emoji: "❤️", label: t.seo_section_love, content: reading.love },
+    { emoji: "💼", label: t.seo_section_career, content: reading.career },
+    { emoji: "💰", label: t.seo_section_money, content: reading.money },
+    { emoji: "🏥", label: t.seo_section_health, content: reading.health },
+    { emoji: "✨", label: t.seo_section_spiritual, content: reading.spiritual },
+    { emoji: "🔥", label: t.seo_section_sensual, content: reading.sensual },
   ];
 
   const allSlugs = Object.keys(ZODIAC_SLUG_MAP);
@@ -81,7 +87,7 @@ const ZodiacSignPage = () => {
           <span>/</span>
           <span className="text-gold/60">{t.seo_breadcrumb_zodiac}</span>
           <span>/</span>
-          <span className="text-gold">{sign.hebrewName}</span>
+          <span className="text-gold">{labels.name}</span>
         </nav>
 
         {/* Hero */}
@@ -99,14 +105,13 @@ const ZodiacSignPage = () => {
             <span className="text-5xl">{sign.symbol}</span>
           </motion.div>
 
-          <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{sign.hebrewName}</h1>
-          <p className="font-body text-foreground/50 text-lg mb-1">{sign.name}</p>
+          <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{labels.name}</h1>
           <div className="flex items-center justify-center gap-4 mt-3">
             <span className="px-3 py-1 rounded-full font-body text-xs" style={{ background: "hsl(var(--gold) / 0.1)", border: "1px solid hsl(var(--gold) / 0.2)", color: "hsl(var(--gold))" }}>
               {sign.dateRange}
             </span>
             <span className="px-3 py-1 rounded-full font-body text-xs" style={{ background: "hsl(var(--crimson) / 0.1)", border: "1px solid hsl(var(--crimson) / 0.2)", color: "hsl(var(--crimson-light))" }}>
-              {sign.element}
+              {labels.element}
             </span>
           </div>
         </motion.div>
@@ -144,12 +149,12 @@ const ZodiacSignPage = () => {
         <div className="flex justify-between items-center mb-12">
           {prevSlug ? (
             <Link to={`/zodiac/${prevSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              <ArrowRight className="w-4 h-4 rotate-180" /> {prevSlug.charAt(0).toUpperCase() + prevSlug.slice(1)}
+              <ArrowRight className="w-4 h-4 rotate-180" /> {getSignNameByKey(prevSlug, language)}
             </Link>
           ) : <div />}
           {nextSlug ? (
             <Link to={`/zodiac/${nextSlug}`} className="text-gold/50 hover:text-gold transition-colors font-body text-sm flex items-center gap-1">
-              {nextSlug.charAt(0).toUpperCase() + nextSlug.slice(1)} <ArrowRight className="w-4 h-4" />
+              {getSignNameByKey(nextSlug, language)} <ArrowRight className="w-4 h-4" />
             </Link>
           ) : <div />}
         </div>
@@ -194,8 +199,7 @@ const ZodiacSignPage = () => {
                   }}
                 >
                   <span className="text-2xl block mb-1">{sd.symbol}</span>
-                  <p className="font-body text-[10px] text-foreground/50">{sd.hebrewName}</p>
-                  <p className="font-body text-[9px] text-foreground/30">{s}</p>
+                  <p className="font-body text-[10px] text-foreground/50">{getSignNameByKey(s, language)}</p>
                 </Link>
               );
             })}

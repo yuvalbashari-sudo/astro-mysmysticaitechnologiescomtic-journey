@@ -127,7 +127,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
         <div
           className="fixed z-[106] flex flex-col items-center gap-1 pointer-events-auto"
           style={{ top: 68, left: 12 }}
-          aria-label="Text size controls"
+          aria-label={t.a11y_text_size}
         >
           <TextSizeControl value={scale} onChange={setScale} />
         </div>
@@ -150,7 +150,7 @@ const LeadFormModal = ({ isOpen, onClose, preselectedInterest, mode = "lead" }: 
               <div className="absolute top-4 left-4 flex flex-col items-start gap-2">
                 <button
                   onClick={handleClose}
-                  aria-label="Close"
+                  aria-label={t.common_close}
                   className="w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
                   style={{
                     background: "hsl(var(--deep-blue) / 0.65)",

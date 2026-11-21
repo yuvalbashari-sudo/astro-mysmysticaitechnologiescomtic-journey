@@ -24,7 +24,7 @@ function to24h(hour12: number, period: "AM" | "PM"): number {
 }
 
 const MysticalTimeInput = ({ value, onChange, className = "", style }: Props) => {
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const is12h = language === "en";
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -162,7 +162,7 @@ const MysticalTimeInput = ({ value, onChange, className = "", style }: Props) =>
         onClick={() => setIsPickerOpen(!isPickerOpen)}
         className="absolute top-1/2 -translate-y-1/2 p-1.5 rounded-full transition-colors"
         style={{ right: 6, color: "hsl(var(--gold) / 0.5)" }}
-        aria-label="Open time picker"
+        aria-label={t.a11y_time_picker}
         tabIndex={-1}
       >
         <Clock className="w-4 h-4" />

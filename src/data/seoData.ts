@@ -1,5 +1,3 @@
-import { TarotWorldCard } from "./tarotWorldData";
-
 /**
  * SEO slug mappings for tarot cards and zodiac signs.
  */
@@ -48,18 +46,3 @@ export const ZODIAC_SLUG_MAP: Record<string, string> = {
   aquarius: "aquarius",
   pisces: "pisces",
 };
-
-// SEO meta data per card (English)
-export function tarotSeoMeta(card: { name: string; hebrewName: string; number: number }) {
-  return {
-    title: `${card.name} Tarot Card Meaning — ${card.hebrewName} | ASTROLOGAI`,
-    description: `Discover the meaning of ${card.name} (${card.hebrewName}) tarot card. Love, career, spiritual interpretation and symbolism. Free tarot reading at ASTROLOGAI.`,
-  };
-}
-
-export function zodiacSeoMeta(sign: { name: string; hebrewName: string; symbol: string }) {
-  return {
-    title: `${sign.name} ${sign.symbol} Zodiac Sign — ${sign.hebrewName} | ASTROLOGAI`,
-    description: `Everything about ${sign.name} (${sign.hebrewName}): personality, love, career, compatibility, spiritual traits. Get your personal reading at ASTROLOGAI.`,
-  };
-}

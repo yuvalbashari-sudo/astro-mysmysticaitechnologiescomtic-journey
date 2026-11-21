@@ -8,7 +8,7 @@ import { useLanguage } from "@/i18n";
 import { useFontScale } from "@/contexts/FontScaleContext";
 
 const TarotGuidesPage = () => {
-  const { language, dir, isRTL } = useLanguage();
+  const { language, dir, isRTL, t } = useLanguage();
   const { scale, setScale } = useFontScale();
   const navigate = useNavigate();
   const guides = getTarotGuides(language);
@@ -35,7 +35,7 @@ const TarotGuidesPage = () => {
         }}
         whileHover={{ scale: 1.1, backgroundColor: "hsl(var(--deep-blue) / 0.7)" }}
         whileTap={{ scale: 0.92 }}
-        aria-label="Close"
+        aria-label={t.common_close}
       >
         <X className="w-6 h-6 text-gold/80" />
       </motion.button>

@@ -26,7 +26,7 @@ const Index = () => {
   return (
     <>
       <SeoStructuredData />
-      <h1 className="sr-only">Norielle AI – Personalized Astrology & Tarot Readings</h1>
+      <h1 className="sr-only">{t.meta_title}</h1>
       <HeroSection cosmicGuideOpen={cosmicGuideOpen} onCosmicGuideChange={setCosmicGuideOpen} />
       <MobileAiInsightOverlay />
 
@@ -45,7 +45,7 @@ const Index = () => {
         />
         <div className="md:hidden pointer-events-none">
           <section
-            aria-label="Explore ASTROLOGAI"
+            aria-label={t.a11y_explore}
             className="pointer-events-auto relative"
             style={{
               background: "hsl(225 60% 3%)",

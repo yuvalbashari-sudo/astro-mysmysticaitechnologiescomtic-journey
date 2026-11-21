@@ -95,7 +95,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
         border: "1px solid hsl(var(--gold) / 0.15)",
       }}
       role="radiogroup"
-      aria-label="Font size"
+      aria-label={t.a11y_text_size}
     >
       {([
         { key: "default" as FontScale, label: "A", size: isMobile ? 11 : 12 },
@@ -108,6 +108,7 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
             key={key}
             role="radio"
             aria-checked={isActive}
+            aria-label={t[`a11y_text_${key}` as const]}
             onClick={() => setScale(key)}
             className="relative px-1.5 sm:px-2 py-1 rounded-full font-heading transition-colors focus-visible:outline-2 focus-visible:outline-gold"
             style={{

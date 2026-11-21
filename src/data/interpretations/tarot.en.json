@@ -1,0 +1,128 @@
+{
+  "the-fool": {
+    "general": "The Fool marks a new beginning. Curiosity and trust can carry you into unfamiliar territory before you know exactly where the path leads.",
+    "love": "Let someone see you as you are. An unexpected encounter may take on meaning when you feel safe enough to let your guard down.",
+    "career": "A different direction or an unconventional project deserves a look. Consider the risks, then give yourself permission to try.",
+    "spiritual": "The Fool stands for faith that can coexist with doubt. Explore what trust feels like when there is no guarantee.",
+    "advice": "Take the first step. You can learn more from a small experiment than from waiting for certainty."
+  },
+  "the-magician": {
+    "general": "The Magician brings focus, imagination and the ability to turn an idea into something real. The tools are already within reach.",
+    "love": "Your presence can draw someone closer. Use that influence thoughtfully and show genuine interest in the other person.",
+    "career": "Speak up for your ideas and take the lead on one of them. Give the project a practical first step.",
+    "spiritual": "Notice the link between what you imagine and what you do. Your choices help shape the world you experience.",
+    "advice": "Choose one goal and give it your full attention."
+  },
+  "the-high-priestess": {
+    "general": "The High Priestess represents intuition, hidden knowledge and the life of the subconscious.",
+    "love": "Listen for what remains unsaid. Intimacy grows when both people feel able to show something of themselves.",
+    "career": "Take a persistent hunch seriously. Give yourself time to understand what feels wrong before committing.",
+    "spiritual": "Quiet reflection, dreams and meditation can help you notice patterns you might otherwise miss.",
+    "advice": "Pause before acting. A little silence may help you hear your own answer."
+  },
+  "the-empress": {
+    "general": "The Empress evokes abundance, beauty and unconditional care. An idea or relationship is ready to grow.",
+    "love": "Make room for tenderness. A bond can deepen, and someone new may enter your life unexpectedly.",
+    "career": "Give a creative project the attention it needs to take shape. Work rooted in genuine interest has room to flourish.",
+    "spiritual": "Reconnect with nature and its rhythms through your senses. Notice how the seasons show up in everyday life.",
+    "advice": "Practise receiving care as readily as you offer it."
+  },
+  "the-emperor": {
+    "general": "The Emperor represents structure, authority and the stability that comes from building something carefully.",
+    "love": "Talk about what commitment means to each of you. Clear expectations can make a relationship feel safer.",
+    "career": "Take responsibility, set a goal and turn it into a workable plan. Be clear about who will do what.",
+    "spiritual": "A small regular practice can deepen your spiritual life. Choose a rhythm you can sustain.",
+    "advice": "Give your ambition a structure. Put the next step on the calendar."
+  },
+  "the-hierophant": {
+    "general": "The Hierophant points to inherited wisdom and the search for meaning through study, ritual and tradition.",
+    "love": "Shared values can give a bond lasting strength. Discuss what matters most beneath the initial excitement.",
+    "career": "Seek a mentor with experience of the path you are considering. A good question can save you a long detour.",
+    "spiritual": "Explore a tradition that speaks to you. Consider what its teachings mean in the life you lead today.",
+    "advice": "Stay open to what others have learned. You can follow an established path and still make it your own."
+  },
+  "the-lovers": {
+    "general": "The Lovers represents a heartfelt choice and the meeting of complementary forces.",
+    "love": "An honest conversation can deepen an existing bond or give a new relationship a beginning. Allow yourself to be seen.",
+    "career": "Two paths may appeal for different reasons. Include your values and feelings when weighing the practical details.",
+    "spiritual": "Make space for both intuition and reason. Each can reveal something the other overlooks.",
+    "advice": "Choose what you can stand behind with an open heart."
+  },
+  "the-chariot": {
+    "general": "The Chariot represents determination and the ability to give competing impulses a common direction.",
+    "love": "If a relationship matters to you, take a considered step towards it. An obstacle may call for a conversation rather than retreat.",
+    "career": "A project or negotiation needs a clear direction. Steady effort gives your plans a better chance of moving forward.",
+    "spiritual": "Willpower can be calm. Holding a course quietly is its own kind of strength.",
+    "advice": "Keep the destination in sight and take the next manageable step."
+  },
+  "strength": {
+    "general": "Strength pairs courage with gentleness. Its power lies in self-command and patience.",
+    "love": "Give affection room to grow. A gentle response can open a conversation that pressure would close.",
+    "career": "Meet a difficult situation with composure. Leading by example can be more persuasive than raising your voice.",
+    "spiritual": "Acknowledge your instincts with compassion. Understanding them gives you more freedom to choose your response.",
+    "advice": "Take a breath. Try the kindest response that still honours your boundaries."
+  },
+  "the-wheel-of-fortune": {
+    "general": "The Wheel of Fortune marks a turning point. Circumstances shift, sometimes before their significance is clear.",
+    "love": "A chance meeting or a change in routine can alter the direction of a relationship. Stay curious about what unfolds.",
+    "career": "A new opening may arrive unexpectedly. Keep your plans flexible enough to recognise it.",
+    "spiritual": "Life moves in cycles. Looking back at an earlier transition may bring perspective to this one.",
+    "advice": "Work with the change and notice the opportunities it brings."
+  },
+  "justice": {
+    "general": "Justice asks for honesty, balance and accountability for the consequences of a choice.",
+    "love": "Listen to both sides. Fair agreements and an honest acknowledgement of hurt can help restore trust.",
+    "career": "Read the details of an agreement and weigh the evidence before making a decision that affects others.",
+    "spiritual": "Consider how your actions reflect your values. Fairness begins with the choices you make yourself.",
+    "advice": "Check the facts and take responsibility for your part."
+  },
+  "the-hanged-man": {
+    "general": "The Hanged Man suggests a pause that allows a familiar situation to look different.",
+    "love": "Leave room for the other person's perspective. Giving a relationship time can reveal what pushing ahead would miss.",
+    "career": "A delay may offer a useful chance to reconsider your approach. Try looking at the problem from another role.",
+    "spiritual": "Letting go of control creates space for insight. Sit with uncertainty for a little while.",
+    "advice": "Stop pushing for an immediate answer and change your viewpoint."
+  },
+  "death": {
+    "general": "Death symbolises the end of a chapter and the possibility of renewal.",
+    "love": "A familiar pattern may have run its course. Letting it go can make space for a different way of relating.",
+    "career": "An old role or working method may no longer fit. Consider what you want to carry into the next chapter.",
+    "spiritual": "Change involves letting something end. Honour what it gave you as you release it.",
+    "advice": "Name one thing you are ready to leave behind."
+  },
+  "the-star": {
+    "general": "The Star brings hope, recovery and a sense of direction after difficulty.",
+    "love": "Gentleness and openness can restore trust. Allow a hopeful connection to develop at its own pace.",
+    "career": "Reconnect with a project that genuinely inspires you. Its promise may become clearer as you return to it.",
+    "spiritual": "Quiet moments can bring you back to what gives your life meaning. Let hope be part of that practice.",
+    "advice": "Protect a little time for what renews you."
+  },
+  "the-moon": {
+    "general": "The Moon points to dreams, uncertainty and feelings that are not yet easy to explain.",
+    "love": "Mixed signals can stir anxiety. Ask a gentle question before treating an impression as a fact.",
+    "career": "If the picture is unclear, gather more information. Give an important commitment time.",
+    "spiritual": "Dreams and images may help you explore an underlying feeling. Be curious about their personal meaning.",
+    "advice": "Listen to intuition and check your assumptions before acting."
+  },
+  "the-sun": {
+    "general": "The Sun represents vitality, joy and the clarity of seeing things in daylight.",
+    "love": "Share your happiness openly. Simple moments of warmth can bring you closer than an elaborate gesture.",
+    "career": "Let others see what you have achieved and recognise the people who helped. A success is worth enjoying.",
+    "spiritual": "Joy and play can be spiritual practices too. Notice what makes you feel fully present.",
+    "advice": "Celebrate something real, however small."
+  },
+  "judgement": {
+    "general": "Judgement marks an awakening and an opportunity to answer a call with fresh understanding.",
+    "love": "An old issue can be revisited with more honesty. Forgiveness may make a different conversation possible.",
+    "career": "Look back at what your work has taught you. A new calling may build on experience you already have.",
+    "spiritual": "Listen for the values you want to live by now. Reflection can turn regret into a new beginning.",
+    "advice": "Choose one concrete way to answer the call you feel."
+  },
+  "the-world": {
+    "general": "The World symbolises completion, integration and the perspective gained at the end of a journey.",
+    "love": "A relationship may reach a meaningful milestone. Recognise what you have built together.",
+    "career": "Finish the work and acknowledge your achievement before moving to the next project.",
+    "spiritual": "See how different parts of your experience fit together. Even the detours belong to your story.",
+    "advice": "Mark the completion of this chapter and take its lessons with you."
+  }
+}

@@ -182,7 +182,7 @@ const PromoVideoModal = ({
           {/* Close (top, safe-area aware) */}
           <button
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t.common_close}
             className="absolute z-20 w-11 h-11 rounded-full flex items-center justify-center text-foreground/80 hover:text-gold transition-colors backdrop-blur-md"
             style={{
               top: "calc(env(safe-area-inset-top, 0px) + 16px)",
@@ -197,7 +197,7 @@ const PromoVideoModal = ({
           {/* Mute toggle (top-start, safe-area aware) */}
           <button
             onClick={toggleMute}
-            aria-label={muted ? "Unmute" : "Mute"}
+            aria-label={muted ? t.a11y_unmute : t.a11y_mute}
             className="absolute z-20 w-11 h-11 rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
             style={{
               top: "calc(env(safe-area-inset-top, 0px) + 16px)",
