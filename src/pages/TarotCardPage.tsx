@@ -119,7 +119,7 @@ const TarotCardPage = () => {
               transition={{ delay: 0.3 + i * 0.1 }}
               className="rounded-xl p-6 md:p-8"
               style={{
-                background: "linear-gradient(145deg, hsl(var(--deep-blue-light) / 0.4), hsl(0 20% 10% / 0.2))",
+                background: "linear-gradient(145deg, rgb(17 23 39 / 97%), rgb(13 18 32 / 98%))",
                 border: "1px solid hsl(var(--gold) / 0.1)",
               }}
             >
