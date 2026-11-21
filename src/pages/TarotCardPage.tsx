@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Heart, Briefcase, Eye, Star, MessageCircle } from "lucide-react";
-import { TAROT_SLUG_MAP, tarotSeoMeta } from "@/data/seoData";
+import { TAROT_SLUG_MAP } from "@/data/seoData";
 import { majorArcana } from "@/data/tarotWorldData";
 import { tarotCardImages } from "@/data/tarotCardImages";
+import { cardReading } from "@/data/interpretations";
 import StarField from "@/components/StarField";
 import { useCardName } from "@/hooks/useCardName";
 import { useT, useLanguage } from "@/i18n";
@@ -19,9 +20,13 @@ const TarotCardPage = () => {
   const card = cardEnglishName ? majorArcana.find(c => c.name === cardEnglishName) : undefined;
   const cardImage = cardEnglishName ? tarotCardImages[cardEnglishName] : undefined;
 
+  const name = card && localizeCardName(card.name, card.hebrewName);
+  const m = card && cardReading(slug, card, language);
+  const pageTitle = name + " · " + t.seo_breadcrumb_tarot + " | ASTROLOGAI";
+
   useEffect(() => {
     if (!card) return;
-    const meta = tarotSeoMeta(card);
+    const meta = { title: pageTitle, description: m.general };
     document.title = meta.title;
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute("content", meta.description);
@@ -40,7 +45,7 @@ const TarotCardPage = () => {
     document.head.appendChild(jsonLd);
 
     return () => { document.getElementById("tarot-jsonld")?.remove(); };
-  }, [card, cardImage]);
+  }, [card, cardImage, pageTitle, m]);
 
   if (!card) {
     return (
@@ -53,7 +58,6 @@ const TarotCardPage = () => {
     );
   }
 
-  const m = card.meanings;
   const sections = [
     { emoji: "🔮", label: t.seo_section_general, content: m.general },
     { emoji: "❤️", label: t.seo_section_love, content: m.love },
@@ -78,7 +82,7 @@ const TarotCardPage = () => {
           <span>/</span>
           <span className="text-gold/60">{t.seo_breadcrumb_tarot}</span>
           <span>/</span>
-          <span className="text-gold">{localizeCardName(card.name, card.hebrewName)}</span>
+          <span className="text-gold">{name}</span>
         </nav>
 
         {/* Hero */}
@@ -94,13 +98,12 @@ const TarotCardPage = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <img src={cardImage} alt={`${card.name} Tarot Card`} className="w-full h-full object-cover" loading="lazy" />
+              <img src={cardImage} alt={name} className="w-full h-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent" />
             </motion.div>
           )}
           <span className="text-4xl block mb-3">{card.symbol}</span>
-          <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{localizeCardName(card.name, card.hebrewName)}</h1>
-          <p className="font-body text-foreground/50 text-lg mb-1">{card.name}</p>
+          <h1 className="font-heading text-3xl md:text-5xl gold-gradient-text mb-2">{name}</h1>
           <p className="font-body text-foreground/30 text-sm">{t.seo_arcana_number} {card.number}</p>
         </motion.div>
 
@@ -194,7 +197,7 @@ const TarotCardPage = () => {
                 }}
               >
                 {tarotCardImages[name] && (
-                  <img src={tarotCardImages[name]} alt={name} className="w-full aspect-[2/3] object-cover rounded-md mb-1" loading="lazy" />
+                  <img src={tarotCardImages[name]} alt="" className="w-full aspect-[2/3] object-cover rounded-md mb-1" loading="lazy" />
                 )}
                 <p className="font-body text-[10px] text-foreground/50 truncate">{localizeCardName(name)}</p>
               </Link>
