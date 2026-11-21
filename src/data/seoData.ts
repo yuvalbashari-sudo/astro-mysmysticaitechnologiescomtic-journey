@@ -1,3 +1,6 @@
+import { majorArcana } from "./tarotWorldData";
+import { allTarotCards } from "./allTarotCards";
+
 /**
  * SEO slug mappings for tarot cards and zodiac signs.
  */
@@ -11,26 +14,12 @@ export function zodiacSlug(name: string): string {
 }
 
 // Reverse lookup: slug → English name
-export const TAROT_SLUG_MAP: Record<string, string> = {
-  "the-fool": "The Fool",
-  "the-magician": "The Magician",
-  "the-high-priestess": "The High Priestess",
-  "the-empress": "The Empress",
-  "the-emperor": "The Emperor",
-  "the-hierophant": "The Hierophant",
-  "the-lovers": "The Lovers",
-  "the-chariot": "The Chariot",
-  "strength": "Strength",
-  "the-wheel-of-fortune": "The Wheel of Fortune",
-  "justice": "Justice",
-  "the-hanged-man": "The Hanged Man",
-  "death": "Death",
-  "the-star": "The Star",
-  "the-moon": "The Moon",
-  "the-sun": "The Sun",
-  "judgement": "Judgement",
-  "the-world": "The World",
-};
+export const TAROT_SLUG_MAP: Record<string, string> = Object.fromEntries(
+  [
+    ...majorArcana.map(card => [cardSlug(card.name), card.name]),
+    ...allTarotCards.filter(card => card.suit !== "major").map(card => [card.slug, card.name.en])
+  ]
+);
 
 export const ZODIAC_SLUG_MAP: Record<string, string> = {
   aries: "aries",
