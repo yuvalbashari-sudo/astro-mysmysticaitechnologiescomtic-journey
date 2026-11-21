@@ -421,7 +421,8 @@ const MysticalTopBar = ({ onOpenHistory, onOpenDashboard, onOpenCosmicGuide, has
                 textShadow: "0 0 14px hsl(40 25% 70% / 0.18), 0 0 28px hsl(40 20% 60% / 0.08)",
               }}
             >
-              תובנות שמחברות בין הכוכבים לחיים שלכם
+              {{ he: "תובנות שמחברות בין הכוכבים לחיים שלכם", en: "Insights that connect the stars to your everyday life",
+                ru: "Как звёзды связаны с вашей повседневной жизнью", ar: "رؤى تربط النجوم بحياتك اليومية" }[language]}
             </p>
           </div>
 
