@@ -32,7 +32,7 @@ export interface SubscriptionPlan {
 // ─── Subscription pricing ───────────────────────────────
 
 export const SUBSCRIPTION_PLANS: Record<"pro" | "vip", SubscriptionPlan> = {
-  pro: { monthlyPriceILS: 39, yearlyPricePerMonthILS: 29 },
+  pro: { monthlyPriceILS: 29, yearlyPricePerMonthILS: 29 },
   vip: { monthlyPriceILS: 69, yearlyPricePerMonthILS: 49 },
 };
 
