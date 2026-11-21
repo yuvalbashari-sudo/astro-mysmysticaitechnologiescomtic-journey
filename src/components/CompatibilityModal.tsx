@@ -1,3 +1,4 @@
+import { openReadingAccess } from "../../supabase/functions/_shared/readingAccess";
 import { isLocalizedReading } from "@/lib/readingLanguage";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { useState, useEffect, useRef } from "react";
@@ -370,7 +371,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
                       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 100% 80% at 50% 35%, hsl(222 47% 6% / 0.7), transparent 85%)", filter: "blur(50px)" }} />
                       <div className="relative" style={{ padding: "0 16px 60px" }}>
                         {interpretation}
-                        <a href="/upgrade?interest=premium" className="btn-gold inline-flex my-4">{t.compat_premium_cta}</a>
+                        {!openReadingAccess && <a href="/upgrade?interest=premium" className="btn-gold inline-flex my-4">{t.compat_premium_cta}</a>}
                         {readingText && (
                           <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={readingText} />
                         )}
@@ -441,13 +442,13 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
                     {readingText && (
                       <>
                         <ShareResultSection symbol={`${matchInfo.sign1Symbol}💕${matchInfo.sign2Symbol}`} title={`${matchInfo.sign1Name} + ${matchInfo.sign2Name}`} subtitle={`${matchInfo.score}%`} readingText={readingText || undefined} />
-                        <div className="section-divider max-w-[200px] mx-auto my-10" />
+                        {!openReadingAccess && <><div className="section-divider max-w-[200px] mx-auto my-10" />
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center rounded-xl p-8" style={{ background: "linear-gradient(135deg, hsl(var(--crimson) / 0.08), hsl(var(--gold) / 0.05))", border: "1px solid hsl(var(--gold) / 0.12)" }}>
                           <Crown className="w-7 h-7 text-gold mx-auto mb-4" />
                           <h4 className="font-heading text-lg md:text-xl text-gold mb-3">{t.compat_premium_title}</h4>
                           <p className="text-foreground/60 font-body text-sm md:text-base mb-5 max-w-sm mx-auto leading-relaxed">{t.compat_premium_desc}</p>
                           <a href="/upgrade?interest=premium" onClick={onClose} className="btn-gold font-body text-sm inline-flex items-center gap-2"><Sparkles className="w-4 h-4" />{t.compat_premium_cta}</a>
-                        </motion.div>
+                        </motion.div></>}
                       </>
                     )}
                   </motion.div>

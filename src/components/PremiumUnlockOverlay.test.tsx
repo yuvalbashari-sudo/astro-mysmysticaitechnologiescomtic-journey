@@ -2,14 +2,25 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, expect, it, vi } from "vitest";
 import PremiumUnlockOverlay from "./PremiumUnlockOverlay";
 
-const role = vi.hoisted(() => ({ admin: false }));
+const role = vi.hoisted(() => ({ admin: false, beta: false }));
+vi.mock("../../supabase/functions/_shared/readingAccess", () => ({ get openReadingAccess() { return role.beta; } }));
 vi.mock("@/hooks/use-site-admin", () => ({ useSiteAdmin: () => role.admin }));
 vi.mock("@/integrations/supabase/client", () => ({ supabase: {} }));
 vi.mock("@/lib/analytics", () => ({ analytics: { track: vi.fn() } }));
 
 beforeEach(() => {
   role.admin = false;
+  role.beta = false;
   sessionStorage.clear();
+});
+
+it("starts the full reading for a guest during the open launch", () => {
+  role.beta = true;
+  const start = vi.fn();
+  render(<PremiumUnlockOverlay readingId="guest-launch" featureKey="tarot_reading" isReady={false} onUnlockStart={start}><p>Full guest reading</p></PremiumUnlockOverlay>);
+  expect(screen.getByText("Full guest reading")).toBeVisible();
+  expect(start).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole("button")).toBeNull();
 });
 
 it("starts the administrator's reading once and skips the unlock screen", () => {

@@ -126,7 +126,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
       const ready = subscriptionManager.isAuthReady();
       const admin = subscriptionManager.isAdmin();
       setAuthReady(ready);
-      setDailyLimitReached(ready ? (admin ? false : hasUsedChartToday()) : false);
+      setDailyLimitReached(ready && !openReadingAccess && !admin && hasUsedChartToday());
     };
 
     syncAdminState();
@@ -329,7 +329,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
         window.clearTimeout(timer);
         requestRef.current = null;
         setPhase("result");
-        if (!isAdmin) {
+        if (!isAdmin && !openReadingAccess) {
           markChartUsedToday();
           setDailyLimitReached(true);
         }
@@ -452,7 +452,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
                       showTime
                     />
 
-                    {!isAdmin && (
+                    {!isAdmin && !openReadingAccess && (
                       <div className="text-center">
                         <p className="text-xs font-body mb-3" style={{ color: "hsl(var(--gold) / 0.5)" }}>
                           {t.chart_daily_available}
@@ -591,3 +591,4 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
 const BirthChartModal = ({ isOpen, onClose }: Props) => isOpen ? <BirthChartReading onClose={onClose} /> : null;
 
 export default BirthChartModal;
+import { openReadingAccess } from "../../supabase/functions/_shared/readingAccess";

@@ -12,6 +12,7 @@ import {
   type ResetCycle,
 } from "./pricingConfig";
 import { usageTracker } from "./usageTracker";
+import { openReadingAccess } from "../../supabase/functions/_shared/readingAccess";
 import { subscriptionManager } from "./subscriptionManager";
 
 export type AccessResult =
@@ -33,6 +34,7 @@ export type GatingPromptKey =
  * If no tier is provided, uses the current tier from subscriptionManager.
  */
 function checkAccess(feature: FeatureKey, tier?: UserTier): AccessResult {
+  if (openReadingAccess) return { allowed: true, isFree: true, limitedDepth: false };
   const resolvedTier = tier ?? subscriptionManager.getCurrentTier();
   const rule = FEATURE_RULES[resolvedTier][feature];
 
@@ -93,6 +95,7 @@ function getPromptKey(feature: FeatureKey, tier: UserTier): GatingPromptKey {
  * If no tier is provided, uses the current tier from subscriptionManager.
  */
 function recordFeatureUse(feature: FeatureKey, tier?: UserTier): void {
+  if (openReadingAccess) return;
   const resolvedTier = tier ?? subscriptionManager.getCurrentTier();
   // Admin usage is not tracked
   if (resolvedTier === "admin") return;
@@ -105,6 +108,7 @@ function recordFeatureUse(feature: FeatureKey, tier?: UserTier): void {
  * If no tier is provided, uses the current tier from subscriptionManager.
  */
 function getRemainingFreeUses(feature: FeatureKey, tier?: UserTier): number {
+  if (openReadingAccess) return Infinity;
   const resolvedTier = tier ?? subscriptionManager.getCurrentTier();
   // Admin has unlimited
   if (resolvedTier === "admin") return Infinity;

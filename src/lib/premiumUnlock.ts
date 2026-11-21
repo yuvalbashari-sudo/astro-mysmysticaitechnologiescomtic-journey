@@ -10,6 +10,7 @@
 
 import { useEffect, useState } from "react";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
+import { openReadingAccess } from "../../supabase/functions/_shared/readingAccess";
 
 const STORAGE_KEY = "astrologai_unlocked_readings_v1";
 const EVENT_NAME = "astrologai:unlock-changed";
@@ -85,5 +86,5 @@ export function usePremiumUnlocked(readingId: string): boolean {
     window.addEventListener(EVENT_NAME, sync);
     return () => window.removeEventListener(EVENT_NAME, sync);
   }, [readingId]);
-  return admin || unlocked;
+  return openReadingAccess || admin || unlocked;
 }

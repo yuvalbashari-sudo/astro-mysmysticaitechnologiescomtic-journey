@@ -32,7 +32,7 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
   }, [readingId]);
 
   useEffect(() => {
-    if (!admin || !readingId || isReady || !onUnlockStart || startedReading.current === readingId) return;
+    if (!(openReadingAccess || admin) || !readingId || isReady || !onUnlockStart || startedReading.current === readingId) return;
     startedReading.current = readingId;
     onUnlockStart();
   }, [admin, readingId, isReady, onUnlockStart]);
@@ -44,7 +44,7 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
     analytics.track("reading_unlocked", { readingId, featureKey });
   };
 
-  if (admin || forceUnlock || unlocked || disabled) {
+  if (openReadingAccess || admin || forceUnlock || unlocked || disabled) {
     return <>{children}</>;
   }
 
@@ -121,3 +121,4 @@ const PremiumUnlockOverlay = ({ readingId, featureKey, children, disabled = fals
 };
 
 export default PremiumUnlockOverlay;
+import { openReadingAccess } from "../../supabase/functions/_shared/readingAccess";

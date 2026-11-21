@@ -1055,7 +1055,7 @@ async function isAdminUser(req: Request): Promise<boolean> {
 }
 
 async function checkDailyLimit(clientIp: string, action: string): Promise<{ allowed: boolean; remaining: number }> {
-  const maxDaily = DAILY_LIMIT_FEATURES[action];
+  const maxDaily = openReadingAccess ? undefined : DAILY_LIMIT_FEATURES[action];
   if (!maxDaily) return { allowed: true, remaining: 99 };
 
   try {
@@ -1416,3 +1416,4 @@ CONVERSION-SENSITIVE QUALITY:
     });
   }
 });
+import { openReadingAccess } from "../_shared/readingAccess.ts";

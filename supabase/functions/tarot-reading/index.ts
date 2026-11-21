@@ -1,6 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
+import { answerFollowup, registerSpread } from "./followup.ts";
+
 const corsHeaders = {
+  "Access-Control-Expose-Headers": "X-Tarot-Reading",
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
@@ -198,9 +201,10 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const body = await req.json();
     // Server-side rate limiting
     const clientIp = getClientIp(req);
-    const rateCheck = await checkServerRateLimit(clientIp, "tarot_reading");
+    const rateCheck = await checkServerRateLimit(clientIp, body.action === "followup" ? "tarot_followup" : "tarot_reading");
     if (!rateCheck.allowed) {
       return new Response(JSON.stringify({ error: "Too many requests. Please try again later." }), {
         status: 429,
@@ -208,7 +212,8 @@ serve(async (req) => {
       });
     }
 
-    const { spreadType, cards, context, language: rawLang, userName: reqUserName, gender } = await req.json();
+    if (body.action === "followup") return await answerFollowup(req, body, corsHeaders);
+    const { spreadType, cards, context, language: rawLang, userName: reqUserName, gender } = body;
     const language = (rawLang && ["he", "en", "ru", "ar"].includes(rawLang)) ? rawLang : "he";
     
     // Resolve userName from explicit param or context
@@ -377,7 +382,8 @@ The reader's name is "${userName}".
 
 Central rule: The reading must feel like a deep symbolic conversation — not a card description. The cards speak to each other, and you translate their conversation.
 
-Response structure (you MUST follow this structure exactly):
+Response structure (follow this order):
+First answer the actual question in one or two short sentences grounded in the chosen cards. Name a concrete insight or action. Do not echo the question, summarize the process, or start with a heading or salutation. Then a blank line followed by the first heading and all six detailed sections.
 
 ${headers.cards}
 For each card, write a short paragraph explaining its symbolism in the specific context of this reading. Don't repeat standard descriptions — adapt the meaning to the card's position and the reading type.
@@ -477,8 +483,11 @@ Write a mystical, personal and deep tarot reading. Important:
       logCostFn({ clientIp, feature: "tarotSpread", status: "success", userTier: "free", aiCost: costs.aiCost, imageCost: costs.imageCost, model: "gpt-4o-mini" }).catch(() => {});
     }
 
+    const readingId = cards.length === 3 && body.includeFollowup
+      ? await registerSpread(req, { cards, language, spreadType, question: context?.userQuestion, gender }).catch(() => null)
+      : null;
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: { ...corsHeaders, "Content-Type": "text/event-stream", ...(readingId ? { "X-Tarot-Reading": readingId } : {}) },
     });
   } catch (e) {
     console.error("tarot-reading error:", e);

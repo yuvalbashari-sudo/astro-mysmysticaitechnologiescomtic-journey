@@ -3,6 +3,7 @@ import { afterEach, expect, it, vi } from "vitest";
 import CompatibilityModal from "./CompatibilityModal";
 import { LanguageProvider } from "@/i18n/LanguageContext";
 import { entitlements } from "@/lib/entitlements";
+vi.mock("../../supabase/functions/_shared/readingAccess", () => ({ openReadingAccess: false }));
 
 const ai = vi.hoisted(() => ({ call: vi.fn().mockResolvedValue(undefined) }));
 vi.mock("@/lib/localAiPipeline", () => ({ callLocalAi: ai.call, getLocalFallback: () => "fallback" }));

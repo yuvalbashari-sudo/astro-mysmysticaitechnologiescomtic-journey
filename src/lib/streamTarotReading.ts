@@ -28,7 +28,7 @@ export async function streamTarotReading(
         method: "POST", signal,
         headers: { "Content-Type": "application/json", Authorization: readingAuthorization() },
         body: JSON.stringify({
-          spreadType, language, includeFollowup: !!subscriptionManager.getAccessToken(), gender: gender === "male" || gender === "female" ? gender : undefined,
+          spreadType, language, includeFollowup: openReadingAccess || !!subscriptionManager.getAccessToken(), gender: gender === "male" || gender === "female" ? gender : undefined,
           userName: isLocalizedReading(name, language) ? name : undefined,
           cards: cards.map(({ localizedName, symbol, positionLabel }) => ({ hebrewName: localizedName, symbol, positionLabel })),
           context: { memoryContext: tarotMemory.buildMemoryContext(cards), userQuestion,
@@ -52,3 +52,4 @@ export async function streamTarotReading(
   } catch { /* The UI displays a message in the requested language. */ }
   if (!signal?.aborted) { onText(""); onError(message); }
 }
+import { openReadingAccess } from "../../supabase/functions/_shared/readingAccess";

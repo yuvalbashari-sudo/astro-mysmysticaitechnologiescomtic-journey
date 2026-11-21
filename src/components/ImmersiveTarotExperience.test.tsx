@@ -8,6 +8,8 @@ import { en } from "@/i18n/translations/en";
 import { ru } from "@/i18n/translations/ru";
 import { ar } from "@/i18n/translations/ar";
 import { entitlements } from "@/lib/entitlements";
+// Exercise the last available reading with the launch promotion switched off.
+vi.mock("../../supabase/functions/_shared/readingAccess", () => ({ openReadingAccess: false }));
 
 vi.mock("./AdvisorChatPanel", () => ({ default: () => null }));
 vi.mock("./AstrologerAvatarButton", () => ({ default: () => null }));
