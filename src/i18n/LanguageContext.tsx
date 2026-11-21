@@ -99,6 +99,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <LanguageContext.Provider
+      key={language}
       value={{
         language,
         setLanguage,
