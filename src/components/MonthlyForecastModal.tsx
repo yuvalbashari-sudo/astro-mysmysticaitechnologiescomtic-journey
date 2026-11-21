@@ -217,7 +217,7 @@ const MonthlyForecastModal = ({ isOpen, onClose }: Props) => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                      className="max-w-prose rounded-2xl"
+                      className="reading-panel max-w-prose rounded-2xl"
                       style={{
                         background: "linear-gradient(145deg, rgba(10, 10, 25, 0.82), rgba(8, 8, 20, 0.9))",
                         backdropFilter: "blur(24px)",

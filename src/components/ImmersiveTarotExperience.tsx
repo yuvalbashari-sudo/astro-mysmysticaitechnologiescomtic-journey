@@ -1,3 +1,5 @@
+import { majorArcana } from "@/data/tarotWorldData";
+import { cardReading } from "@/data/interpretations";
 import TarotQuestionPhase from "./TarotQuestionPhase";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
 import { streamTarotReading } from "@/lib/streamTarotReading";
@@ -11,7 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Heart, Briefcase, DollarSign, Sparkles, ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import heroFigure from "@/assets/hero-mystic-figure.jpg";
-import { drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
+import { tarotGalleryTranslations, drawReadingCards, type ReadingCard } from "@/data/allTarotCards";
 
 import { tarotCardImages, cardBack } from "@/data/tarotCardImages";
 import cardFrameImg from "@/assets/tarot/card-frame.png";
@@ -573,10 +575,16 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
   }, [phase, isMobile]);
 
   const chosenCards = Array.from(selectedCardIndices, (index) => drawnCards[index]);
+  const firstReading = chosenCards.map((card, index) => {
+    const entry = majorArcana.find(item => item.name === card.name.en);
+    const position = [t.tarot_pos_past, t.tarot_pos_present, t.tarot_pos_future][index];
+    const meaning = (entry && cardReading(entry.name.toLowerCase().replace(/ /g, "-"), entry, language)?.general) || tarotGalleryTranslations.shortMeaningBySuit[card.suit][language];
+    return `### ${position} · ${card.name[language]}\n${meaning}`;
+  }).join("\n\n");
   const readingSize = isMobile ? (["default", "large", "xl"] as const)[textSizeLevel] : "default";
   const readingText = (
     <>
-      {aiText && renderMysticalText(aiText, readingSize)}
+      {renderMysticalText(aiText || firstReading, readingSize)}
       {aiLoading && !aiText && (
         <p role="status" className="py-12 text-center text-gold/60">
           {t.imm_tarot_deciphering}
@@ -979,7 +987,7 @@ const ImmersiveTarotExperience = ({ isOpen, onClose }: Props) => {
                       {/* LEFT: Transparent overlay — text floats over the oracle */}
                       <motion.div
                         ref={scrollRef}
-                        className="absolute overflow-y-auto pointer-events-auto scrollbar-hide"
+                        className="reading-panel absolute overflow-y-auto pointer-events-auto scrollbar-hide"
                         style={{
                           top: "calc(12vh + 50px)",
                           left: "3vw",

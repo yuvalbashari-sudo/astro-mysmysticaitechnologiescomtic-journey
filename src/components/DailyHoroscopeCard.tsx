@@ -1,3 +1,5 @@
+import { zodiacData } from "@/data/zodiacData";
+import { signReading } from "@/data/interpretations";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Heart, Briefcase, Zap, RefreshCw, Star } from "lucide-react";
@@ -36,7 +38,7 @@ const ZODIAC_DATES = [
 
 function getZodiacFromDate(dateStr: string): string | null {
   try {
-    const d = new Date(dateStr);
+    const d = new Date(dateStr + "T12:00:00");
     const month = d.getMonth() + 1;
     const day = d.getDate();
     for (const z of ZODIAC_DATES) {
@@ -194,6 +196,9 @@ const DailyHoroscopeCard = () => {
   const safeProfile = getAdminSafeProfile();
   const birthDate = safeProfile.birthDate;
   const zodiacSign = birthDate ? getZodiacFromDate(birthDate) : (safeProfile.zodiacSign || null);
+  const signKey = zodiacSign?.toLowerCase() || "";
+  const sign = zodiacData[signKey];
+  const signOverview = sign && signReading(signKey, sign, language)?.personality;
   const userName = localizeName(safeProfile.userName, language);
   const gender = safeProfile.gender;
 
@@ -446,6 +451,12 @@ const DailyHoroscopeCard = () => {
         {/* Content */}
         <div className="px-5 pb-4 min-h-[100px]">
           <AnimatePresence>
+          {!data && signOverview && (
+            <section className="px-5 py-3 text-start">
+              <h4 className="font-heading text-gold">{t.seo_section_personality}</h4>
+              <p className="font-body text-foreground">{signOverview}</p>
+            </section>
+          )}
             {error && !loading && (
               <motion.div
                 key="error"
