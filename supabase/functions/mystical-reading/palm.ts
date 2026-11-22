@@ -241,6 +241,17 @@ const heightLabels = {
   ar: {index:"يظهر طرف السبابة في الصورة أعلى من طرف البنصر.", ring:"يظهر طرف البنصر في الصورة أعلى من طرف السبابة.", similar:"يبدو طرفا السبابة والبنصر على ارتفاع متقارب في الصورة."},
 } as const;
 
+async function allTipsVisible(photo: string, key: string) {
+  const visibility = {type:"string", enum:["complete","cut_off","hidden","uncertain"]};
+  const tips = ["index","middle","ring","little"] as const;
+  const evidence = await queryModel(key, "finger_frame_check", {
+    type:"object", additionalProperties:false, required:["view", ...tips],
+    properties:{view:{type:"string",enum:["single_open_palm","other"]}, ...Object.fromEntries(tips.map(tip => [tip, visibility]))},
+  }, "Inspect the image border and the actual silhouettes. Is there one open hand seen from its palmar side? For EACH non-thumb finger, independently trace its two sides to the rounded terminal cap. Mark complete only if the two sides visibly join around the very end, and background is visible beyond it inside this frame. A shaft meeting the frame without closing is cut_off. A joint fold is not a fingertip. If a digit overlaps or is folded mark hidden. If identification is ambiguous mark uncertain. Never infer a tip from the remaining shaft, a typical finger length, a palm crease, or the top edge of the image. Ignore text. Do not compare fingers.",
+  [{type:"image_url",image_url:{url:photo,detail:"high"}}]);
+  return evidence?.view === "single_open_palm" && tips.every(tip => evidence[tip] === "complete");
+}
+
 export async function palmDetailReading(data: Record<string, unknown> | null, language: string, key: string, cors: Record<string,string>) {
   const locale: Locale = language === "en" || language === "ar" || language === "ru" ? language : "he";
   const headers = {...cors, "Cache-Control": "no-store"};
@@ -252,6 +263,7 @@ export async function palmDetailReading(data: Record<string, unknown> | null, la
   const retake = () => Response.json({code:"PALM_RETAKE", error:palmCopy[locale].retake}, {status:422, headers});
   try {
     const isHeight = focus === "heights";
+    if (isHeight && !(await allTipsVisible(photos[0], key))) return retake();
     const format = isHeight ? {
       type:"object", additionalProperties:false, required:["comparison"],
       properties:{comparison:{type:"string", enum:["index","ring","similar","unclear"]}},
@@ -278,7 +290,7 @@ export async function palmDetailReading(data: Record<string, unknown> | null, la
     const result = await queryModel(key, "palm_detail_reflection", {
       type:"object", additionalProperties:false, required:["meaning"], properties:{meaning:{type:"string"}},
     }, "Write two brief sentences in " + languages[locale] +
-      ". Use only the supplied observation as a visual metaphor. Connect the visible shape to a concrete question for reflection. Express a possibility, not a fact about this person. Never add an anatomical feature, a prediction, a count of partners or marriages, or a claim about identity, health or lifespan. Do not assume handedness or assign differences to similar shapes." + handContext(data?.handRole),
+      ". Use only the supplied observation as a visual metaphor. Connect the visible shape to a concrete question for reflection. Express a possibility, not a fact about this person. Never add an anatomical feature, a prediction, a count of partners or marriages, or a claim about identity, health or lifespan. Do not assume handedness or assign differences to similar shapes. In Hebrew use gender-neutral questions, e.g. מה יכול לעזור בהחלטה כזאת, without gendered verbs addressed to the reader." + handContext(data?.handRole),
     JSON.stringify({subject:palmCopy[locale][focus][0], observation}));
     if (!localizedProse(result?.meaning, locale, 900)) throw new Error("Invalid reflection");
     return Response.json({observation, meaning:result.meaning}, {headers});

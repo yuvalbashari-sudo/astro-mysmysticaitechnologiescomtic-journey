@@ -27,14 +27,18 @@ it.each(["joints", "edge"])("requires visible evidence before interpreting %s", 
 });
 
 it("accepts only a comparison of the two fingertips for the height reading", async () => {
-  const fetcher = vi.fn().mockResolvedValueOnce(model({clear:true,observation:"יש טבעת על האצבע"}))
-    .mockResolvedValueOnce(model({comparison:"similar"})).mockResolvedValueOnce(model({meaning:"הדמיון מזמין לחשוב על איזון"}));
+  const frame = {view:"single_open_palm",index:"complete",middle:"complete",ring:"complete",little:"complete"};
+  const fetcher = vi.fn().mockResolvedValueOnce(model({...frame, index:"cut_off"}))
+    .mockResolvedValueOnce(model(frame)).mockResolvedValueOnce(model({clear:true,observation:"יש טבעת על האצבע"}))
+    .mockResolvedValueOnce(model(frame)).mockResolvedValueOnce(model({comparison:"similar"})).mockResolvedValueOnce(model({meaning:"הדמיון מזמין לחשוב על איזון"}));
   vi.stubGlobal("fetch", fetcher);
   const run = () => palmDetailReading({palmImage:photo,focus:"heights"}, "he", "test", {});
   expect((await run()).status).toBe(422);
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect((await run()).status).toBe(422);
   const result = await (await run()).json();
   expect(result.observation).toContain("לגובה דומה");
-  expect(fetcher.mock.calls[2][1].body).not.toContain("טבעת");
+  expect(fetcher.mock.calls[5][1].body).not.toContain("טבעת");
 });
 
 it("rejects an invalid focus or a pair of detail photos before calling vision", async () => {
