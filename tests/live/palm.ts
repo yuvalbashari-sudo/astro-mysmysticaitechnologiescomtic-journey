@@ -24,9 +24,10 @@ for (const {label,mime,bytes} of fixtures) {
   const positive = label === "open" || label === "second-open";
   const description: string | null = positive && r.ok
     ? JSON.parse(body.split("\n")[0].slice(6)).choices[0].delta.content : null;
-  const reflection = description?.split("### פירוש סמלי")[1]?.trim();
+  const reflection = description?.split("\n\n").filter(p => p.startsWith("פירוש סמלי — ")).join("\n");
   const ok = positive
-    ? r.ok && !!description && /הקפל העליון|הקפל שחוצה/.test(description)
+    ? r.ok && !!description && ["קו הלב", "קו הראש", "קו החיים"].every(label => description.includes("### " + label))
+      && (reflection?.split("\n").length ?? 0) >= 2
       && !!reflection && !readings.has(reflection) && !/[a-z\u0400-\u04ff\u0600-\u06ff]/i.test(description)
     : r.status === 422 && JSON.parse(body).code === "PALM_RETAKE";
   console.log(JSON.stringify({label,status:r.status,seconds:(Date.now()-start)/1000,ok,output:description ?? body}));

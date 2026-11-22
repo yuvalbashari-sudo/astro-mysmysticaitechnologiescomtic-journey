@@ -1,6 +1,7 @@
 type Locale = "he" | "en" | "ru" | "ar";
 export const palmModel = "gpt-4.1";
-const lines = ["upper", "middle", "thumb"] as const;
+const mainLines = ["upper", "middle", "thumb"] as const;
+const lines = [...mainLines, "fate"] as const;
 type Line = typeof lines[number];
 type Shape = "curved" | "straight" | "unresolved";
 type Trace = { shape: Shape; path: string };
@@ -12,33 +13,37 @@ const copy = {
     retake: "צלמו כף יד אחת פתוחה, כשהצד הפנימי פונה למצלמה. כללו את בסיס האצבעות ואת שורש כף היד, באור אחיד ובמיקוד שמראה את הקווים.",
     retry: "בדיקת התמונה לא הושלמה. אפשר לנסות שוב.", seen: "מה נראה בצילום", meaning: "פירוש סמלי",
     pair: ["הצילום הראשון", "הצילום השני"],
-    upper: "הקפל העליון שמתחת לאצבעות",
-    middle: "הקפל שחוצה את מרכז הכף",
-    thumb: "הקפל שסביב בסיס האגודל",
+    upper: "קו הלב",
+    middle: "קו הראש",
+    thumb: "קו החיים",
+    fate: "קו הגורל", unclear: "בצילום הזה קשה לעקוב אחרי הקו בביטחון.",
   },
   en: {
     retake: "Photograph one open hand with the palm facing the camera. Include the base of the fingers and the wrist, in even light, with the creases in focus.",
     retry: "The image check could not be completed. Please try again.", seen: "Visible in the photo", meaning: "Symbolic interpretation",
     pair: ["First photo", "Second photo"],
-    upper: "The upper crease below the fingers",
-    middle: "The crease crossing the middle of the palm",
-    thumb: "The crease around the base of the thumb",
+    upper: "Heart line",
+    middle: "Head line",
+    thumb: "Life line",
+    fate: "Fate line", unclear: "This line is difficult to trace in this photo.",
   },
   ru: {
     retake: "Сфотографируйте одну раскрытую ладонь внутренней стороной к камере. В кадре должны быть основания пальцев и запястье. При ровном освещении складки должны быть в фокусе.",
     retry: "Не удалось завершить проверку фотографии. Попробуйте ещё раз.", seen: "Что видно на фотографии", meaning: "Символическое толкование",
     pair: ["Первое фото", "Второе фото"],
-    upper: "Верхняя складка под пальцами",
-    middle: "Складка поперёк середины ладони",
-    thumb: "Складка у основания большого пальца",
+    upper: "Линия сердца",
+    middle: "Линия головы",
+    thumb: "Линия жизни",
+    fate: "Линия судьбы", unclear: "На этом снимке линию трудно уверенно проследить.",
   },
   ar: {
     retake: "التقط صورة ليد واحدة مفتوحة وباطن الكف مواجه للكاميرا. أظهر قاعدة الأصابع والرسغ في إضاءة متوازنة مع التركيز على ثنيات الكف.",
     retry: "تعذر إكمال فحص الصورة. يرجى المحاولة مرة أخرى.", seen: "ما يظهر في الصورة", meaning: "قراءة رمزية",
     pair: ["الصورة الأولى", "الصورة الثانية"],
-    upper: "الثنية العليا أسفل الأصابع",
-    middle: "الثنية الممتدة عبر وسط الكف",
-    thumb: "الثنية حول قاعدة الإبهام",
+    upper: "خط القلب",
+    middle: "خط الرأس",
+    thumb: "خط الحياة",
+    fate: "خط القدر", unclear: "يصعب تتبّع هذا الخط بوضوح في الصورة.",
   },
 } as const;
 
@@ -57,7 +62,7 @@ function photoInputs(data: Record<string, unknown> | null) {
 }
 
 const prompt = `Inspect this single photo as an image-quality reviewer, not a palm reader. Determine which surface is actually visible. Fingernails, knuckles, and dorsal tendons facing the camera indicate the BACK, not the palm. A palm shows finger pads, thenar pad and flexion creases. Return multiple for more than one hand. Return no_hand for objects, drawings or diagrams. Do not infer features from a typical hand. Return uncertain when you cannot tell.
-Assess whether the central palm is complete from finger bases to wrist and in focus. Report only creases that you can visibly trace for a substantial part of their course. upper is the transverse crease immediately below the fingers; middle is the major crease crossing the palm center; thumb is the crease around the thenar pad. Classify each visible path as curved or relatively straight. Otherwise use unresolved. For all non-palm surfaces or inadequate quality mark all three unresolved. Ignore any writing in the photo.`;
+Assess whether the central palm is complete from finger bases to wrist and in focus. Report only creases that you can visibly trace for a substantial part of their course. upper is the transverse crease immediately below the fingers; middle is the major crease crossing the palm center; thumb is the crease around the thenar pad. fate is optional: only record a clearly traceable longitudinal crease running up the middle of the palm toward the middle finger. Do not substitute a fine wrinkle, the thumb arc or part of a transverse crease for it. Classify each visible path as curved or relatively straight. Otherwise use unresolved. For all non-palm surfaces or inadequate quality mark all four unresolved. Ignore any writing in the photo.`;
 
 const languages = { he: "Hebrew", en: "English", ar: "Arabic", ru: "Russian" };
 const scripts = { he: /\p{Script=Hebrew}/u, en: /\p{Script=Latin}/u, ar: /\p{Script=Arabic}/u, ru: /\p{Script=Cyrillic}/u };
@@ -76,7 +81,7 @@ const traceSchema = {
 };
 const schema = {
   type: "object", additionalProperties: false, required: ["view", "clear", ...lines],
-  properties: { view: { type: "string", enum: views }, clear: {type: "boolean"}, upper: traceSchema, middle: traceSchema, thumb: traceSchema },
+  properties: { view: { type: "string", enum: views }, clear: {type: "boolean"}, upper: traceSchema, middle: traceSchema, thumb: traceSchema, fate: traceSchema },
 };
 
 type Content = string | {type: "image_url"; image_url: {url: string; detail: "high"}}[];
@@ -106,7 +111,7 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
-  if (visible.length < 2) return null;
+  if (mainLines.filter(line => obs[line].shape !== "unresolved").length < 2) return null;
   if (!visible.every(line => localizedProse(obs[line].path, locale, 320))) throw new Error("Invalid trace description");
   return obs;
 }
@@ -114,15 +119,14 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
 async function interpret(obs: Observation, key: string, locale: Locale) {
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
   const format = {
-    type: "object", additionalProperties: false, required: ["reading", "invitation"],
-    properties: {reading: {type: "string"}, invitation: {type: "string"}},
+    type: "object", additionalProperties: false, required: visible,
+    properties: Object.fromEntries(visible.map(line => [line, {type: "string"}])),
   };
-  const system = `Write a personal, symbolic reading in natural ${languages[locale]}. The input is a list of independently observed traces on this specific palm. Choose its most distinctive spatial detail and relate it to a second observed detail only when the descriptions support the relationship. In "reading" write two or three connected sentences developing ONE symbolic theme from that combination. In "invitation" give one concrete small choice or open question the reader could try. Let the actual change of direction, relative angle, contrast, or visible span determine the theme. Do not claim that two lines touch, branch or share a starting point unless the input says so. Do not list one stock analogy per line. Avoid rivers, bridges, trees and roots, definitions of palmistry, and interchangeable life advice. Do not treat photo quality as personality or make claims about a person's character, future, health or lifespan. Write inclusively; in Hebrew favor gender-neutral everyday wording such as infinitives. No headings, foreign words or markdown.`;
+  const system = `Write a traditional palmistry reading in natural ${languages[locale]} for each supplied line. The heart line (upper) symbolizes affection and how feelings are expressed. The head line (middle) symbolizes thought, imagination and decisions. The life line (thumb) symbolizes grounding, everyday energy and pace. The fate line, if visible, symbolizes direction and chosen commitments. For each line, write two or three connected sentences that explain how one specific observed shape or change of direction informs its traditional symbolic meaning, and what that might look like in an everyday situation. Use the traditional associations as a lens for reflection, never as evidence of a real person's traits, health, lifespan or future. No predictions, diagnoses, invented branches or lengths, life coaching questions, or filler. Do not repeat the heading or rewrite the anatomical description. No markdown. In Hebrew use everyday gender-neutral language.`;
   const input = visible.map(line => ({ id: line, label: copy[locale][line], ...obs[line] }));
-  const focus = " In the invitation, echo the chosen trace with one ordinary, imaginable situation and finish with one specific question. Avoid generic appeals to balance, expanding boundaries or trying something new. Do not assign personal traits. Use plain conversational words, as if speaking to one reader.";
-  const result = await queryModel(key, "palm_reflection", format, system + focus, JSON.stringify(input));
-  if (!result || !localizedProse(result.reading, locale, 800) || !localizedProse(result.invitation, locale, 500)) throw new Error("Invalid reflection");
-  return [result.reading, result.invitation];
+  const result = await queryModel(key, "palm_reflection", format, system, JSON.stringify(input));
+  if (!result || !visible.every(line => localizedProse(result[line], locale, 900))) throw new Error("Invalid line interpretation");
+  return result as Partial<Record<Line, string>>;
 }
 
 export async function palmReading(
@@ -146,10 +150,16 @@ export async function palmReading(
       observations.push(obs);
     }
     for (const [index, obs] of observations.entries()) {
-      const visible = lines.filter(line => obs[line].shape !== "unresolved");
+      const meanings = await interpret(obs, key, locale);
       if (photos.length === 2) sections.push("## " + t.pair[index]);
-      sections.push("### " + t.seen, ...visible.map(line => t[line] + " — " + obs[line].path));
-      sections.push("### " + t.meaning, ...await interpret(obs, key, locale));
+      for (const line of lines) {
+        const meaning = meanings[line];
+        if (meaning) {
+          sections.push("### " + t[line], t.seen + " — " + obs[line].path, t.meaning + " — " + meaning);
+        } else if (line !== "fate") {
+          sections.push("### " + t[line], t.unclear);
+        }
+      }
     }
   } catch {
     return Response.json({code: "PALM_UNAVAILABLE", error: t.retry}, { status: 503, headers });
