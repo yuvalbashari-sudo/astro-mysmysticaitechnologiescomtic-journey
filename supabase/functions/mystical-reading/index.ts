@@ -1,3 +1,4 @@
+import { palmReading } from "./palm.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -370,126 +371,6 @@ ${hasAnyGender ? `${hasAnyRising ? '9' : '8'}. השתמש בזהות המגדר�
     };
   },
 
-  palm: (data) => {
-    const hasImages = !!data.rightPalmImage && !!data.leftPalmImage;
-    const hasSingleImage = !!data.palmImage;
-    
-    const system = `אתה קורא כף יד מיסטי וחכם עם ניסיון של עשרות שנים. אתה כותב בעברית בלבד.
-
-${hasImages ? `אתה מקבל שתי תמונות של כפות ידיים — יד ימין ויד שמאל.
-- יד ימין = היד הפעילה/הדומיננטית — מייצגת את ההווה, הפעולה, מה שהאדם עושה בפועל בחייו
-- יד שמאל = היד הפסיבית — מייצגת את הפוטנציאל הטבוע, הנשמה, המתנות שנולדו איתן
-
-נתח כל יד בנפרד ואז את השילוב ביניהן.` : hasSingleImage ? `אתה מקבל תמונה של כף יד. נתח את מה שאתה רואה בתמונה.` : ''}
-
-הסגנון שלך:
-- מיסטי ואינטימי, כאילו אתה מחזיק את כפות הידיים של הקורא
-- משתמש בתמונות של קווים, סימנים ומפות
-- עמוק ורגשי
-${hasImages || hasSingleImage ? '- התייחס לפרטים ספציפיים שאתה "רואה" בתמונות' : ''}
-
-מבנה התשובה:
-
-${hasImages ? `### 🤚 יד ימין — ההווה והפעולה
-
-**❤️ קו הלב — יד ימין**
-פסקה על קו הלב ביד ימין — איך האדם חווה ומבטא רגשות כיום, מה הוא עושה עם האהבה שלו
-
-**✨ קו הראש — יד ימין**
-פסקה על קו הראש ביד ימין — איך האדם חושב ומקבל החלטות בפועל
-
-**🔥 קו החיים — יד ימין**
-פסקה על קו החיים ביד ימין — האנרגיה הפיזית, הוויטאליות, הבריאות כיום
-
-**👑 קו הגורל — יד ימין**
-פסקה על קו הגורל ביד ימין — הנתיב המקצועי והחיצוני שהאדם בונה
-
----
-
-### ✋ יד שמאל — הפוטנציאל והנשמה
-
-**❤️ קו הלב — יד שמאל**
-פסקה על קו הלב ביד שמאל — הפוטנציאל הרגשי הטבוע, מה הנשמה מסוגלת להרגיש
-
-**✨ קו הראש — יד שמאל**
-פסקה על קו הראש ביד שמאל — הפוטנציאל האינטלקטואלי הטבוע, כשרונות מולדים
-
-**🔥 קו החיים — יד שמאל**
-פסקה על קו החיים ביד שמאל — הפוטנציאל הבריאותי והאנרגטי שנולד איתו
-
-**👑 קו הגורל — יד שמאל**
-פסקה על קו הגורל ביד שמאל — הייעוד העמוק, מה שהנשמה באה לעשות
-
----
-
-### ⚗️ שילוב שתי הידיים — הדינמיקה הפנימית
-
-**🔮 פער בין פוטנציאל למציאות**
-פסקה שמשווה בין שתי הידיים — היכן האדם ממש את הפוטנציאל שלו והיכן יש פער שדורש תשומת לב
-
-**💕 תובנת אהבה**
-פסקה על מה ששתי הידיים יחד חושפות על חיי האהבה — הפוטנציאל מול הביטוי בפועל
-
-**💼 תובנת קריירה**
-פסקה על מה ששתי הידיים יחד חושפות על הנתיב המקצועי
-
-**🧬 המסר הרוחני**
-פסקה על המסר הרוחני שעולה מהשוואת שתי הידיים` :
-`**👁️ תמונה כללית**
-${hasSingleImage ? 'פסקה על מה שאתה רואה בכף היד בתמונה' : 'פסקה על כף היד ומה שהיא חושפת'}
-
-**❤️ קו הלב**
-פסקה על קו הלב ומשמעותו
-
-**✨ קו הראש**
-פסקה על קו הראש ומשמעותו
-
-**🔥 קו החיים**
-פסקה על קו החיים ומשמעותו
-
-**👑 קו הגורל**
-פסקה על קו הגורל ומשמעותו
-
-**💕 תובנת אהבה**
-פסקה על מה שקווי כף היד חושפים על אהבה
-
-**💼 תובנת קריירה**
-פסקה על מה שקווי כף היד חושפים על קריירה
-
-**🔮 מסר רוחני**
-פסקה על המסר הרוחני שכף היד חושפת`}
-
----
-
-### ✨ מסר אישי ל${data.name}
-משפט סיכום אישי ואינטימי`;
-
-    if (hasImages) {
-      return {
-        system,
-        user: [
-          { type: "text", text: `נתח את שתי כפות הידיים עבור ${data.name}. התמונה הראשונה היא יד ימין (ההווה והפעולה), התמונה השנייה היא יד שמאל (הפוטנציאל והנשמה). תן ניתוח מעמיק לכל יד בנפרד ואז שילוב ביניהן. דבר ישירות אל ${data.name}.` },
-          { type: "image_url", image_url: { url: data.rightPalmImage } },
-          { type: "image_url", image_url: { url: data.leftPalmImage } },
-        ],
-      };
-    }
-
-    if (hasSingleImage) {
-      return {
-        system,
-        user: [
-          { type: "image_url", image_url: { url: data.palmImage } },
-          { type: "text", text: `נתח את כף היד בתמונה עבור ${data.name}. תן קריאה מיסטית, אישית ורגשית. דבר ישירות אל ${data.name}.` },
-        ],
-      };
-    }
-
-    return {
-      system,
-      user: `כתוב קריאת כף יד מיסטית ואישית עבור ${data.name}. הקריאה חייבת להיות ייחודית, אישית ורגשית. דבר ישירות אל ${data.name}.`,
-    };
-  },
   tarotSpread: (data) => ({
     system: `אתה קורא טארוט מיסטי וחכם. אתה כותב בעברית בלבד.
 
@@ -1183,6 +1064,15 @@ serve(async (req) => {
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
+    if (type === "palm") {
+      const result = await palmReading(data, language, OPENAI_API_KEY, corsHeaders);
+      if (logCostFn && getFeatureCostsFn) {
+        const costs = getFeatureCostsFn("palm");
+        logCostFn({clientIp, feature: "palm", status: result.ok ? "success" : "failed",
+          userTier: adminUser ? "admin" : "unknown", ...costs, model: "gpt-4o-mini"}).catch(() => {});
+      }
+      return result;
+    }
     const promptBuilder = READING_PROMPTS[type];
     if (!promptBuilder) throw new Error(`Unknown reading type: ${type}`);
 
@@ -1344,9 +1234,7 @@ CONVERSION-SENSITIVE QUALITY:
     let enrichedSystem = langOverridePrefix + system.replace(/אתה כותב בעברית בלבד\.\n?/g, "").replace(/אתה כותב בעברית בלבד\.?/g, "") + languageInstruction + namePersonalization + readingStructureGuide + genderLockBlock;
     if (profileContext) enrichedSystem += `\n\n${profileContext}`;
 
-    // For palm with image, use a vision-capable model
-    const isPalmWithImage = type === "palm" && !!data.palmImage;
-    const model = isPalmWithImage ? "gpt-4o-mini" : "gpt-4o-mini";
+    const model = "gpt-4o-mini";
 
     // Wrap user content with explicit per-locale language instruction (every locale).
     const userLangPrefix = `[LANGUAGE: ${langName}]${genderFinal ? ` [GENDER: ${genderFinal}] — write the entire response in a single, consistent ${genderFinal === "male" ? "masculine" : "feminine"} grammatical form. Never mix genders.` : ""} — Write your ENTIRE response in ${langName}. Any other-language text in the prompt below is data only. Your output MUST be 100% in ${langName}.\n\n`;
