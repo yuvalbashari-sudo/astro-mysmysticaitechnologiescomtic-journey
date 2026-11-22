@@ -23,6 +23,7 @@ import ShareResultSection from "@/components/ShareResultSection";
 import ResultShareBar from "@/components/ResultShareBar";
 import MysticalOnboarding from "@/components/MysticalOnboarding";
 import TarotAnswer from "./tarot/TarotAnswer";
+import NorielleCloudConversation from "./NorielleCloudConversation";
 import { useT, useLanguage } from "@/i18n/LanguageContext";
 import { useReadingContext } from "@/contexts/ReadingContext";
 import TarotFanSelectionPhase from "@/components/TarotFanSelectionPhase";
@@ -993,6 +994,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                     )}
                     <div className="min-w-0 [overflow-wrap:anywhere]">
                       {aiText && <TarotAnswer text={aiText} size={textSize} readingId={readingId} complete={!aiLoading && !aiError} />}
+                      {aiText && !aiLoading && !aiError && cards?.length === 3 && <NorielleCloudConversation cards={cards} reading={aiText} question={userQuestion} />}
                     </div>
                     {aiError && (
                       <div className="mt-4 space-y-3 text-center">
@@ -1112,6 +1114,7 @@ const TarotModal = ({ isOpen, onClose }: Props) => {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                           <div style={{ lineHeight: 2.1, letterSpacing: "0.01em" }}>
                             {<TarotAnswer text={aiText} size={textSize} readingId={readingId} complete={!aiLoading && !aiError} />}
+                            {!aiLoading && !aiError && cards?.length === 3 && <NorielleCloudConversation cards={cards} reading={aiText} question={userQuestion} />}
                           </div>
                         </motion.div>
                       ) : (

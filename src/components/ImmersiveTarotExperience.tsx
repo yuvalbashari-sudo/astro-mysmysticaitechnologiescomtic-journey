@@ -1,4 +1,5 @@
 import TarotAnswer from "./tarot/TarotAnswer";
+import NorielleCloudConversation from "./NorielleCloudConversation";
 import { useFontScale } from "@/contexts/FontScaleContext";
 import CampaignReading from "./tarot/CampaignReading";
 import TarotQuestionPhase from "./TarotQuestionPhase";
@@ -601,6 +602,9 @@ const ImmersiveTarotExperience = ({ isOpen, onClose, campaign = false }: Props) 
   const readingText = (
     <>
       {aiText && <TarotAnswer text={aiText} size={readingSize} readingId={readingId} complete={!aiLoading && !aiError} />}
+      {aiText && !aiLoading && !aiError && chosenCards.length === 3 && <NorielleCloudConversation
+        key={readingId || chosenCards.map(card => card.id).join("-")} cards={chosenCards} reading={aiText}
+        question={personalQuestion.trim() || selectedQuestion || ""} />}
       {aiLoading && aiText && <p role="status" className="mt-4 text-sm text-gold">
         {{ he: "הפירוש המלא ממשיך להיכתב…", en: "Writing the rest of your reading…", ru: "Продолжаем писать полный расклад…", ar: "جارٍ إكمال قراءتك…" }[language]}
       </p>}
