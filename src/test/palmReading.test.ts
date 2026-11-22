@@ -2,7 +2,8 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { palmReading } from "../../supabase/functions/mystical-reading/palm";
 
 const photo = "data:image/jpeg;base64,/9j/2Q==";
-const valid = { view: "palm", clear: true, upper: "straight", middle: "unresolved", thumb: "curved" };
+const absent = {shape: "unresolved", path: ""};
+const valid = {view: "palm", clear: true, upper: {shape:"straight",path:"עובר לרוחב הכף"}, middle: absent, thumb:{shape:"curved",path:"מתעקל סביב האגודל"}};
 function model(obs: unknown) {
   return Response.json({choices: [{finish_reason: "stop", message: {content: JSON.stringify(obs)}}]});
 }
@@ -19,28 +20,44 @@ it.each([{}, {rightPalmImage: photo}, {palmImage: 54}, {palmImage: "https://exam
 });
 
 it.each([{...valid, view:"back"}, {...valid, view:"no_hand"}, {...valid, clear:false},
-  {...valid, thumb:"unresolved"}, {...valid, upper:"guessed"}])("returns only a retake for inadequate evidence", async obs => {
+  {...valid, thumb:absent}])("returns only a retake for inadequate evidence", async obs => {
   vi.stubGlobal("fetch", vi.fn().mockResolvedValue(model(obs)));
   const res = await palmReading({palmImage: photo}, "he", "test", {});
   expect(res.status).toBe(422);
   expect(await res.json()).toMatchObject({code:"PALM_RETAKE",photoIndex:0});
 });
 
-it.each([["he","מה נראה בצילום"], ["ar","ما يظهر في الصورة"], ["en","Visible in the photo"], ["ru","Что видно на фотографии"]])("formats only the observed lines in %s", async (lang,title) => {
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValue(model(valid)));
+it.each([["he","מה נראה בצילום","נמשך לצד הכף","העיקול מזמין מחשבה"], ["ar","ما يظهر في الصورة","يمتد عبر الكف","يمكن التأمل في هذا القوس"], ["en","Visible in the photo","runs across the palm","The arc suggests a pause"], ["ru","Что видно на фотографии","поперёк ладони","Дуга напоминает о паузе"]])("interprets only the observed traces in %s", async (lang,title,path,reflection) => {
+  const observation = {...valid, upper:{shape:"straight",path},thumb:{shape:"curved",path}};
+  const fetcher = vi.fn().mockResolvedValueOnce(model(observation)).mockResolvedValueOnce(model({upper:reflection,thumb:reflection}));
+  vi.stubGlobal("fetch", fetcher);
   const res = await palmReading({palmImage:photo}, lang, "test", {});
   expect(res.status).toBe(200);
   const text = await res.text();
   expect(text).toContain(title);
+  expect(text).toContain(reflection);
+  const request = JSON.parse(fetcher.mock.calls[1][1].body);
+  const traces = JSON.parse(request.messages[1].content);
+  expect(traces.map((trace: {id: string}) => trace.id)).toEqual(["upper","thumb"]);
+  expect(traces[0]).toMatchObject({shape:"straight",path});
+  expect(request.messages[1].content).not.toContain("data:image");
   expect(text).toContain("data: [DONE]");
   expect(text).not.toMatch(/head line|קו הראש|линия головы|خط الرأس/);
 });
 
+it("does not substitute a canned reading when the generated prose mixes languages", async () => {
+  const fetcher = vi.fn().mockResolvedValueOnce(model(valid)).mockResolvedValueOnce(model({upper:"הקו ישר and long",thumb:"עיקול בכף"}));
+  vi.stubGlobal("fetch", fetcher);
+  expect((await palmReading({palmImage:photo}, "he", "test", {})).status).toBe(503);
+});
+
 it("discards the first reading if the second photo fails", async () => {
-  vi.stubGlobal("fetch", vi.fn().mockResolvedValueOnce(model(valid)).mockResolvedValueOnce(model({...valid, view:"back"})));
-  const res = await palmReading({rightPalmImage:photo,leftPalmImage:photo}, "en", "test", {});
+  const fetcher = vi.fn().mockResolvedValueOnce(model(valid)).mockResolvedValueOnce(model({...valid, view:"back"}));
+  vi.stubGlobal("fetch", fetcher);
+  const res = await palmReading({rightPalmImage:photo,leftPalmImage:photo}, "he", "test", {});
   expect(res.status).toBe(422);
   expect(await res.json()).toMatchObject({code:"PALM_RETAKE",photoIndex:1});
+  expect(fetcher).toHaveBeenCalledTimes(2);
 });
 
 it("keeps a provider outage distinct from a bad photo", async () => {
