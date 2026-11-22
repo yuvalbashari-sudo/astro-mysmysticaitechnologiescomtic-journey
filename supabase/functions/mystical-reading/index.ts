@@ -1,4 +1,4 @@
-import { palmModel, palmReading } from "./palm.ts";
+import { palmDetailReading, palmModel, palmReading } from "./palm.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -890,6 +890,7 @@ const RATE_LIMIT_MAX: Record<string, number> = {
   rising: 10,
   compatibility: 8,
   palm: 3,       // strict: 3 per hour per IP (expensive AI + vision)
+  palmDetail: 9, // Three optional detail photos per main reading.
   dailyCard: 20,
   birthChart: 10,
   tarotSpread: 15,
@@ -1064,8 +1065,9 @@ serve(async (req) => {
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
-    if (type === "palm") {
-      const result = await palmReading(data, language, OPENAI_API_KEY, corsHeaders);
+    if (type === "palm" || type === "palmDetail") {
+      const read = type === "palm" ? palmReading : palmDetailReading;
+      const result = await read(data, language, OPENAI_API_KEY, corsHeaders);
       if (logCostFn && getFeatureCostsFn) {
         const costs = getFeatureCostsFn("palm");
         logCostFn({clientIp, feature: "palm", status: result.ok ? "success" : "failed",

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { palmReading } from "../../supabase/functions/mystical-reading/palm";
+import { palmDetailReading, palmReading } from "../../supabase/functions/mystical-reading/palm";
 
 const photo = "data:image/jpeg;base64,/9j/2Q==";
 const absent = {shape: "unresolved", path: ""};
@@ -10,6 +10,30 @@ function model(obs: unknown) {
 // The Edge runtime has AbortSignal.timeout; the project's jsdom environment does not.
 beforeEach(() => vi.stubGlobal("AbortSignal", { timeout: () => new AbortController().signal }));
 afterEach(() => vi.unstubAllGlobals());
+
+it.each(["heights", "joints", "edge"])("requires visible evidence before interpreting %s", async focus => {
+  const observation = "נראים שני קפלים סמוכים";
+  const meaning = "אפשר לחשוב על שתי אפשרויות";
+  const fetcher = vi.fn().mockResolvedValueOnce(model({clear:false,observation:""}))
+    .mockResolvedValueOnce(model({clear:true,observation})).mockResolvedValueOnce(model({meaning}));
+  vi.stubGlobal("fetch", fetcher);
+  const run = () => palmDetailReading({palmImage:photo,focus}, "he", "test", {});
+  expect((await run()).status).toBe(422);
+  expect(fetcher).toHaveBeenCalledTimes(1);
+  expect(await (await run()).json()).toEqual({observation,meaning});
+  const reflection = JSON.parse(fetcher.mock.calls[2][1].body);
+  expect(JSON.parse(reflection.messages[1].content).observation).toBe(observation);
+  expect(reflection.messages[1].content).not.toContain("data:image");
+});
+
+it("rejects an invalid focus or a pair of detail photos before calling vision", async () => {
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  for (const data of [{palmImage:photo,focus:"unknown"},{rightPalmImage:photo,leftPalmImage:photo,focus:"edge"}]) {
+    expect((await palmDetailReading(data,"he","test",{})).status).toBe(422);
+  }
+  expect(fetcher).not.toHaveBeenCalled();
+});
 
 it.each([{}, {rightPalmImage: photo}, {palmImage: 54}, {palmImage: "https://example.com/a.jpg"},
   {palmImage: photo, rightPalmImage: photo, leftPalmImage: photo}])("rejects missing or ambiguous input before calling vision", async data => {

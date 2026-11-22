@@ -23,6 +23,7 @@ import MemberAccount from "./pages/MemberAccount";
 import AdminCostAnalytics from "./pages/AdminCostAnalytics";
 import Unsubscribe from "./pages/Unsubscribe";
 import NatalTest from "./pages/NatalTest";
+import PalmReader from "./components/PalmReader";
 
 import TarotGuidePage from "./pages/TarotGuidePage";
 import TarotGuidesPage from "./pages/TarotGuidesPage";
@@ -44,6 +45,11 @@ function HomeEntry() {
     return <DailyHoroscopeCard home />;
   }
   return <Index />;
+}
+
+function PalmPage() {
+  const navigate = useNavigate();
+  return <PalmReader isOpen onClose={() => navigate("/")} />;
 }
 
 function TarotCampaign() {
@@ -72,6 +78,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<HomeEntry />} />
                 <Route path="/tarot-start" element={<TarotCampaign />} />
+                <Route path="/palm-reading" element={<PalmPage />} />
                 <Route path="/rising-sign" element={<Index />} />
                 <Route path="/daily-horoscope" element={<Index />} />
                 <Route path="/tarot-reading" element={<Index />} />

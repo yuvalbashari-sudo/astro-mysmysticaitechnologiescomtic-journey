@@ -14,7 +14,7 @@ import astrologerAvatarCta from "@/assets/astrologer-avatar-cta.png";
 import CompatibilityModal from "./CompatibilityModal";
 import TarotModal from "./TarotModal";
 import ImmersiveTarotExperience from "./ImmersiveTarotExperience";
-import PalmComingSoonModal from "./PalmComingSoonModal";
+import PalmReader from "./PalmReader";
 import BirthChartModal from "./BirthChartModal";
 import AstrocartographyModal from "./AstrocartographyModal";
 import DailyCardModal from "./DailyCardModal";
@@ -4225,7 +4225,7 @@ const HeroSection = ({ cosmicGuideOpen, onCosmicGuideChange }: { cosmicGuideOpen
       <MonthlyForecastModal isOpen={forecastOpen} onClose={() => setForecastOpen(false)} />
       <CompatibilityModal isOpen={compatibilityOpen || (pathname === "/zodiac-compatibility")} onClose={() => closeReading("/zodiac-compatibility", setCompatibilityOpen)} />
       <TarotModal isOpen={tarotOpen || (pathname === "/tarot-reading" && isMobile)} onClose={() => closeReading("/tarot-reading", setTarotOpen)} />
-      <PalmComingSoonModal isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
+      <PalmReader isOpen={palmOpen} onClose={() => setPalmOpen(false)} />
       <AstrologerIntroModal isOpen={astrologerOpen} onClose={() => setAstrologerOpen(false)} />
       <ImmersiveTarotExperience isOpen={immersiveTarotOpen || (pathname === "/tarot-reading" && !isMobile)} onClose={() => closeReading("/tarot-reading", setImmersiveTarotOpen)} />
       <ZodiacSignModal isOpen={zodiacSignIndex !== null} onClose={() => setZodiacSignIndex(null)} signIndex={zodiacSignIndex} />
