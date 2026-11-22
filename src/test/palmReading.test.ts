@@ -55,13 +55,28 @@ it.each([
 ])("grounds the head interpretation in its observed %s direction and %s bend", async (direction, bend, theme) => {
   const middle = {shape:"curved", path:"נמשך מהאגודל אל מרכז הכף", direction, bend};
   const response = {upper:"פירוש הלב", middle:"פירוש מותאם לצורת קו הראש", thumb:"פירוש החיים"};
-  const fetcher = vi.fn().mockResolvedValueOnce(model({...valid, middle})).mockResolvedValueOnce(model(response));
+  const fetcher = vi.fn().mockResolvedValueOnce(model({...valid, middle}))
+    .mockResolvedValueOnce(model({direction, bend})).mockResolvedValueOnce(model(response));
   vi.stubGlobal("fetch", fetcher);
   const result = await palmReading({palmImage:photo}, "he", "test", {});
   expect(await result.text()).toContain(response.middle);
-  const request = JSON.parse(fetcher.mock.calls[1][1].body);
+  const request = JSON.parse(fetcher.mock.calls[2][1].body);
   const head = JSON.parse(request.messages[1].content).find((trace: {id: string}) => trace.id === "middle");
-  expect(head).toMatchObject({...middle, symbolicTheme: expect.stringContaining(theme)});
+  expect(head).toMatchObject({direction, bend, symbolicTheme: expect.stringContaining(theme)});
+});
+
+it("discards an uncorroborated turn before either describing or interpreting it", async () => {
+  const middle = {shape:"curved", path:"מתעקל בחדות", direction:"toward_wrist", bend:"distinct_turn"};
+  const fetcher = vi.fn().mockResolvedValueOnce(model({...valid, middle}))
+    .mockResolvedValueOnce(model({direction:"toward_wrist", bend:"even"}))
+    .mockResolvedValueOnce(model({upper:"פירוש הלב", middle:"פירוש הכיוון", thumb:"פירוש החיים"}));
+  vi.stubGlobal("fetch", fetcher);
+  const result = await palmReading({palmImage:photo}, "he", "test", {});
+  const text = await result.text();
+  expect(text).toContain("נוטה לעבר שורש כף היד");
+  expect(text).not.toContain(middle.path);
+  const traces = JSON.parse(JSON.parse(fetcher.mock.calls[2][1].body).messages[1].content);
+  expect(traces.find((t: {id:string}) => t.id === "middle")).toMatchObject({shape:"uncertain", bend:"uncertain", direction:"toward_wrist"});
 });
 
 it("does not substitute a canned reading when the generated prose mixes languages", async () => {
