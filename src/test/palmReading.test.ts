@@ -48,9 +48,9 @@ it.each([["he","מה נראה בצילום","נמשך לצד הכף","העיקו
 });
 
 it.each([
-  ["toward_wrist", "gradual", "a thought turning inward"],
-  ["across", "even", "step by step"],
-  ["toward_fingers", "distinct_turn", "actionable aim"],
+  ["toward_wrist", "gradual", "mentally rehearse"],
+  ["across", "even", "practical steps"],
+  ["toward_fingers", "distinct_turn", "observable first action"],
   ["uncertain", "gradual", "do not ascribe meaning to a slope"],
 ])("grounds the head interpretation in its observed %s direction and %s bend", async (direction, bend, theme) => {
   const middle = {shape:"curved", path:"נמשך מהאגודל אל מרכז הכף", direction, bend};

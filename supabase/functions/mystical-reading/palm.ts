@@ -6,9 +6,9 @@ type Line = typeof lines[number];
 type Shape = "curved" | "straight" | "unresolved";
 type Trace = { shape: Shape; path: string };
 const directionThemes = {
-  toward_wrist: "a thought turning inward to explore a possibility",
-  toward_fingers: "bringing a thought toward an actionable aim",
-  across: "following a train of thought step by step",
+  toward_wrist: "mentally rehearse one concrete outcome and notice a detail within it",
+  toward_fingers: "turn an intention into an observable first action",
+  across: "order the practical steps of a task from beginning to end",
   uncertain: "use only the clearly described segment; do not ascribe meaning to a slope",
 } as const;
 const bends = ["even", "gradual", "distinct_turn", "uncertain"] as const;
@@ -124,7 +124,8 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   const evidence = " Prefer a plainly visible local segment over an inferred whole arc. Do not specify its start or endpoint relative to a particular finger unless the crease is continuous and clearly visible up to that landmark. Where glare interrupts a trace, stop at the interruption.";
   const terminology = locale === "he" ? " Use אגודל for the thumb and כרית האגודל for the thenar pad. בוהן means a toe." : "";
   const headDirection = " For middle, follow the central transverse crease FROM the thumb side TOWARD the little-finger side irrespective of camera rotation or mirroring. Compare it with the palm's own transverse axis. Report whether the visible path slopes toward the wrist, toward the fingers, or runs across the palm. Independently report whether its tangent stays even, bends gradually, or makes a distinct turn. Include the same slope and bend in the localized path with landmarks; an even diagonal is not a bend. Stop where visibility ends. Use uncertain for any descriptor you cannot see. Do not follow the neighboring crease that wraps around the thumb.";
-  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + terminology, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
+  const separateTraces = " Locate the heart and life creases first. If two segments leave the thumb side close together, inspect the more TRANSVERSE segment as the head line; the steeper segment hugging the thumb mound is the life line. Only report a curve if the crease itself changes angle along the portion you see. A slope caused by the hand being tilted in the picture is not a turn. Describe the first and last visible segments of this particular central crease.";
+  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
   if (obs.middle.shape !== "unresolved" && (!Object.hasOwn(directionThemes, obs.middle.direction) || !bends.includes(obs.middle.bend))) throw new Error("Invalid head line geometry");
@@ -146,7 +147,8 @@ async function interpret(obs: Observation, key: string, locale: Locale) {
     ...(line === "middle" && { symbolicTheme: directionThemes[obs.middle.direction] }),
   }));
   const headMeaning = " For the head line use its supplied directional theme as a symbolic starting point. Explain the part played by its actual bend: a steady course, a gradual change of approach, or a discernible pivot. Anchor both details in ONE specific example of thinking through a decision. If the direction or bend is uncertain, interpret only what is visible. Avoid generic trait labels such as 'vivid imagination', 'creative thinking' or their translations. Write fresh prose, never translate the theme verbatim.";
-  const result = await queryModel(key, "palm_reflection", format, system + headMeaning, JSON.stringify(input));
+  const headExample = " Make the example enact the directional theme: show what the reader pictures, orders, or acts on, depending on the observed direction. Let the degree of curvature determine how that scene unfolds. State the visible course using anatomical landmarks in the meaning. Never default to exploring options, changing one's mind, flexibility or a list of traits. An essentially straight but inclined line retains its slope; do not invent a turn. Two lines with similar geometry may share a theme.";
+  const result = await queryModel(key, "palm_reflection", format, system + headMeaning + headExample, JSON.stringify(input));
   if (!result || !visible.every(line => localizedProse(result[line], locale, 900))) throw new Error("Invalid line interpretation");
   return result as Partial<Record<Line, string>>;
 }
