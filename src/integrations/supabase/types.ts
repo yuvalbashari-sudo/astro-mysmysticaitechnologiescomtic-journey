@@ -296,6 +296,42 @@ export type Database = {
         }
         Relationships: []
       }
+      tarot_followups: {
+        Row: {
+          answer: string | null
+          claim: string | null
+          claimed_at: string | null
+          created_at: string
+          guest_key_hash: string | null
+          id: string
+          question: string | null
+          spread: Json
+          user_id: string | null
+        }
+        Insert: {
+          answer?: string | null
+          claim?: string | null
+          claimed_at?: string | null
+          created_at?: string
+          guest_key_hash?: string | null
+          id?: string
+          question?: string | null
+          spread: Json
+          user_id?: string | null
+        }
+        Update: {
+          answer?: string | null
+          claim?: string | null
+          claimed_at?: string | null
+          created_at?: string
+          guest_key_hash?: string | null
+          id?: string
+          question?: string | null
+          spread?: Json
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_language_preferences: {
         Row: {
           created_at: string
