@@ -18,14 +18,30 @@ const fixtures = [
 let passed = true;
 const readings = new Set<string>();
 const headMeanings = new Set<string>();
-const originalHeadPaths = new Map<string,string>();
 const mirrorDirectory = process.env.PALM_MIRROR_FIXTURES;
 if (mirrorDirectory) {
   for (const label of ["open", "second-open"]) {
     fixtures.push({label: label + "-mirror", mime:"image/jpeg", bytes:await readFile(join(mirrorDirectory, label + ".jpg"))});
   }
 }
+// Compare anatomical tags, independent of the wording generated for the reader.
+const originalTraces = new Map<string,string>();
+let observedTrace = "";
+const realFetch = globalThis.fetch;
+globalThis.fetch = async (input, init) => {
+  const response = await realFetch(input, init);
+  if (typeof init?.body === "string" && response.ok) {
+    const schema = JSON.parse(init.body).response_format?.json_schema?.name;
+    if (schema === "palm_observation") {
+      const message = (await response.clone().json()).choices?.[0]?.message?.content;
+      const head = message && JSON.parse(message).middle;
+      if (head && head.shape !== "unresolved") observedTrace = [head.direction, head.bend].join("/");
+    }
+  }
+  return response;
+};
 for (const {label,mime,bytes} of fixtures) {
+  observedTrace = "";
   const start = Date.now();
   const image = "data:" + mime + ";base64," + bytes.toString("base64");
   const r = await palmReading({palmImage:image}, "he", key, {});
@@ -35,11 +51,9 @@ for (const {label,mime,bytes} of fixtures) {
   const description: string | null = positive && r.ok
     ? JSON.parse(body.split("\n")[0].slice(6)).choices[0].delta.content : null;
   const reflection = description?.split("\n\n").filter(p => p.startsWith("פירוש סמלי — ")).join("\n");
-  const headSection = description?.match(/### קו הראש\n\nמה נראה בצילום — ([^\n]+)\n\nפירוש סמלי — ([^\n]+)/);
-  const head = headSection?.[2];
-  const path = headSection?.[1];
-  if (path && !mirror) originalHeadPaths.set(label, path);
-  const sameTrace = mirror ? !!path && path === originalHeadPaths.get(label.slice(0,-7)) : undefined;
+  const head = description?.match(/### קו הראש\n\nמה נראה בצילום — [^\n]+\n\nפירוש סמלי — ([^\n]+)/)?.[1];
+  if (positive && !mirror) originalTraces.set(label, observedTrace);
+  const sameTrace = mirror ? !!observedTrace && observedTrace === originalTraces.get(label.slice(0,-7)) : undefined;
   const ok = positive
     ? r.ok && !!description && ["קו הלב", "קו הראש", "קו החיים"].every(label => description.includes("### " + label))
       && (reflection?.split("\n").length ?? 0) >= 2
@@ -47,7 +61,7 @@ for (const {label,mime,bytes} of fixtures) {
       && !!reflection && (mirror || !readings.has(reflection)) && sameTrace !== false
       && !/[a-z\u0400-\u04ff\u0600-\u06ff]/i.test(description)
     : r.status === 422 && JSON.parse(body).code === "PALM_RETAKE";
-  console.log(JSON.stringify({label,status:r.status,seconds:(Date.now()-start)/1000,ok,sameTrace,output:mirror ? path : description ?? body}));
+  console.log(JSON.stringify({label,status:r.status,seconds:(Date.now()-start)/1000,ok,observedTrace,sameTrace,output:mirror ? head : description ?? body}));
   passed &&= ok;
   if (reflection) readings.add(reflection);
   if (head) headMeanings.add(head);
