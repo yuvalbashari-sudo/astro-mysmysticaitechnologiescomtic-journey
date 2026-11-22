@@ -1,5 +1,5 @@
 type Locale = "he" | "en" | "ru" | "ar";
-export const palmModel = "gpt-4.1";
+export const palmModel = "gpt-5.4";
 const mainLines = ["upper", "middle", "thumb"] as const;
 const lines = [...mainLines, "fate"] as const;
 type Line = typeof lines[number];
@@ -124,8 +124,8 @@ const geometryCopy = {
 
 async function verifyHead(photo: string, first: Trace & Samples, key: string, locale: Locale): Promise<HeadTrace> {
   const format = {type: "object", additionalProperties: false, required: sampleSites, properties: sampleProperties};
-  const instruction = "Independently trace only the central transverse flexion crease of this palm, between the distal transverse crease and the arc embracing the thumb pad. Start on the thumb side and follow the same groove toward the little-finger side. Compare the visible segment with the transverse axis perpendicular to the wrist-to-middle-finger axis. Classify its overall slope and its change of tangent separately. A steady oblique segment can have an even course. If reflections, overlap or blur obscure a detail, return uncertain for that detail. If the crease cannot be located reliably, return uncertain for both. No symbolism. Ignore writing in the image.";
-  const review: Samples | null = await queryModel(key, "verify_head_line", format, instruction + sampleInstructions, [{type:"image_url", image_url:{url:photo, detail:"high"}}]);
+  const instruction = "Independently locate the central transverse flexion crease between the distal transverse crease and the arc embracing the thumb pad. Start on the thumb side and follow the same groove toward the little-finger side. Do not measure a neighboring crease. Ignore writing in the image.";
+  const review: Samples | null = await queryModel(key, "verify_head_line", format, instruction + sampleInstructions, [{type:"image_url", image_url:{url:photo, detail:"original"}}]);
   if (!review) throw new Error("Missing independent head trace");
   const samples = sampleSites.map(site => {
     const a = first[site], b = review[site];
@@ -151,21 +151,23 @@ async function verifyHead(photo: string, first: Trace & Samples, key: string, lo
   }
   const t = geometryCopy[locale];
   const path = [direction !== "uncertain" && t[direction], bend !== "uncertain" && t[bend]].filter(Boolean).join(" ");
-  return {direction, bend, path, shape: !path ? "unresolved" : bend === "uncertain" ? first.shape : bend === "even" ? "straight" : "curved"};
+  const partial = {he:"הזיהוי מתייחס רק לחלק מהקו.", en:"Only part of the line could be traced.", ru:"Удалось проследить лишь часть линии.", ar:"أمكن تتبّع جزء من الخط فقط."};
+  const limited = start === null || end === null;
+  return {direction, bend, path: path && limited ? partial[locale] + " " + path : path, shape: !path ? "unresolved" : bend === "uncertain" ? first.shape : bend === "even" ? "straight" : "curved"};
 }
 const schema = {
   type: "object", additionalProperties: false, required: ["view", "clear", ...lines],
   properties: { view: { type: "string", enum: views }, clear: {type: "boolean"}, upper: traceSchema, middle: headSchema, thumb: traceSchema, fate: traceSchema },
 };
 
-type Content = string | {type: "image_url"; image_url: {url: string; detail: "high"}}[];
+type Content = string | {type: "image_url"; image_url: {url: string; detail: "original"}}[];
 
 async function queryModel(key: string, name: string, format: object, system: string, content: Content) {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     signal: AbortSignal.timeout(35000),
     body: JSON.stringify({
-      model: palmModel, temperature: 0, max_tokens: 1000, store: false,
+      model: palmModel, reasoning_effort: "low", max_completion_tokens: 3500, store: false,
       response_format: {type: "json_schema", json_schema: {name, strict: true, schema: format}},
       messages: [{role: "system", content: system}, {role: "user", content}],
     }),
@@ -183,7 +185,7 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   const terminology = locale === "he" ? " Use אגודל for the thumb and כרית האגודל for the thenar pad. בוהן means a toe." : "";
   const headDirection = " For middle, follow the central transverse crease FROM the thumb side TOWARD the little-finger side irrespective of camera rotation or mirroring. Compare it with the palm's own transverse axis. Report whether the visible path slopes toward the wrist, toward the fingers, or runs across the palm. Independently report whether its tangent stays even, bends gradually, or makes a distinct turn. Include the same slope and bend in the localized path with landmarks; an even diagonal is not a bend. Stop where visibility ends. Use uncertain for any descriptor you cannot see. Do not follow the neighboring crease that wraps around the thumb.";
   const separateTraces = " Locate the heart and life creases first. If two segments leave the thumb side close together, inspect the more TRANSVERSE segment as the head line; the steeper segment hugging the thumb mound is the life line. Only report a curve if the crease itself changes angle along the portion you see. A slope caused by the hand being tilted in the picture is not a turn. Describe the first and last visible segments of this particular central crease.";
-  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology + sampleInstructions, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
+  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology + sampleInstructions, [{type: "image_url", image_url: {url: photo, detail: "original"}}]);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
