@@ -87,14 +87,14 @@ const traceSchema = {
   type: "object", additionalProperties: false, required: ["shape", "path"],
   properties: { shape: shapeEnum, path: { type: "string" } },
 };
+const sampleSites = ["nearThumb", "center", "fartherAcross"] as const;
+type Samples = Record<typeof sampleSites[number], number | null>;
+const sampleProperties = Object.fromEntries(sampleSites.map(site => [site, {type:["integer","null"]}]));
 const headSchema = {
-  ...traceSchema, required: [...traceSchema.required, "direction", "bend"],
-  properties: {
-    ...traceSchema.properties,
-    direction: {type: "string", enum: Object.keys(directionThemes)},
-    bend: {type: "string", enum: bends},
-  },
+  ...traceSchema, required: [...traceSchema.required, ...sampleSites],
+  properties: {...traceSchema.properties, ...sampleProperties},
 };
+const sampleInstructions = " Use a palm-fixed frame: wrist crease is height 0, the base of the middle finger is height 100. Measure palm width across the palm excluding the thumb. At 25%, 45% and 65% of that width, from the thumb side towards the little finger, estimate the height (0..100) of the SAME central transverse crease. Return those heights as nearThumb, center, fartherAcross. Use null wherever you cannot trace the groove. Do not fill gaps or estimate the height of any other crease.";
 const geometryCopy = {
   he: {
     toward_wrist: "מצד האגודל לכיוון הזרת, הקו נוטה לעבר שורש כף היד.",
@@ -122,14 +122,33 @@ const geometryCopy = {
   },
 } as const;
 
-async function verifyHead(photo: string, first: HeadTrace, key: string, locale: Locale): Promise<HeadTrace> {
-  const properties = {direction: headSchema.properties.direction, bend: headSchema.properties.bend};
-  const format = {type: "object", additionalProperties: false, required: Object.keys(properties), properties};
+async function verifyHead(photo: string, first: Trace & Samples, key: string, locale: Locale): Promise<HeadTrace> {
+  const format = {type: "object", additionalProperties: false, required: sampleSites, properties: sampleProperties};
   const instruction = "Independently trace only the central transverse flexion crease of this palm, between the distal transverse crease and the arc embracing the thumb pad. Start on the thumb side and follow the same groove toward the little-finger side. Compare the visible segment with the transverse axis perpendicular to the wrist-to-middle-finger axis. Classify its overall slope and its change of tangent separately. A steady oblique segment can have an even course. If reflections, overlap or blur obscure a detail, return uncertain for that detail. If the crease cannot be located reliably, return uncertain for both. No symbolism. Ignore writing in the image.";
-  const review = await queryModel(key, "verify_head_line", format, instruction, [{type:"image_url", image_url:{url:photo, detail:"high"}}]);
-  if (!review || !Object.hasOwn(directionThemes, review.direction) || !bends.includes(review.bend)) throw new Error("Invalid independent head trace");
-  const direction = first.direction === review.direction ? first.direction : "uncertain";
-  const bend = first.bend === review.bend ? first.bend : "uncertain";
+  const review: Samples | null = await queryModel(key, "verify_head_line", format, instruction + sampleInstructions, [{type:"image_url", image_url:{url:photo, detail:"high"}}]);
+  if (!review) throw new Error("Missing independent head trace");
+  const samples = sampleSites.map(site => {
+    const a = first[site], b = review[site];
+    if (a === null || b === null) return null;
+    if (![a,b].every(n => Number.isInteger(n) && n >= 0 && n <= 100)) throw new Error("Invalid palm landmark");
+    // Heights are approximate percentages. Discard points the two observations place far apart.
+    return Math.abs(a-b) <= 8 ? (a+b)/2 : null;
+  });
+  const [start, middle, end] = samples;
+  let direction: HeadTrace["direction"] = "uncertain";
+  let bend: HeadTrace["bend"] = "uncertain";
+  if (start !== null && end !== null) {
+    const rise = end-start;
+    direction = Math.abs(rise) <= 5 ? "across" : rise > 0 ? "toward_fingers" : "toward_wrist";
+    if (middle !== null) {
+      const deviation = Math.abs(middle - (start+end)/2);
+      // Three samples support overall curvature, not an exact corner or an endpoint.
+      bend = deviation <= 3 ? "even" : "gradual";
+    }
+  } else if (middle !== null && (start !== null || end !== null)) {
+    const rise = start !== null ? middle - start : end! - middle;
+    if (Math.abs(rise) >= 6) direction = rise > 0 ? "toward_fingers" : "toward_wrist";
+  }
   const t = geometryCopy[locale];
   const path = [direction !== "uncertain" && t[direction], bend !== "uncertain" && t[bend]].filter(Boolean).join(" ");
   return {direction, bend, path, shape: !path ? "unresolved" : bend === "uncertain" ? first.shape : bend === "even" ? "straight" : "curved"};
@@ -164,10 +183,9 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   const terminology = locale === "he" ? " Use אגודל for the thumb and כרית האגודל for the thenar pad. בוהן means a toe." : "";
   const headDirection = " For middle, follow the central transverse crease FROM the thumb side TOWARD the little-finger side irrespective of camera rotation or mirroring. Compare it with the palm's own transverse axis. Report whether the visible path slopes toward the wrist, toward the fingers, or runs across the palm. Independently report whether its tangent stays even, bends gradually, or makes a distinct turn. Include the same slope and bend in the localized path with landmarks; an even diagonal is not a bend. Stop where visibility ends. Use uncertain for any descriptor you cannot see. Do not follow the neighboring crease that wraps around the thumb.";
   const separateTraces = " Locate the heart and life creases first. If two segments leave the thumb side close together, inspect the more TRANSVERSE segment as the head line; the steeper segment hugging the thumb mound is the life line. Only report a curve if the crease itself changes angle along the portion you see. A slope caused by the hand being tilted in the picture is not a turn. Describe the first and last visible segments of this particular central crease.";
-  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
+  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology + sampleInstructions, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
-  if (obs.middle.shape !== "unresolved" && (!Object.hasOwn(directionThemes, obs.middle.direction) || !bends.includes(obs.middle.bend))) throw new Error("Invalid head line geometry");
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
   if (mainLines.filter(line => obs[line].shape !== "unresolved").length < 2) return null;
   if (!visible.every(line => localizedProse(obs[line].path, locale, 320))) throw new Error("Invalid trace description");

@@ -48,15 +48,16 @@ it.each([["he","מה נראה בצילום","נמשך לצד הכף","העיקו
 });
 
 it.each([
-  ["toward_wrist", "gradual", "mentally rehearse"],
-  ["across", "even", "practical steps"],
-  ["toward_fingers", "distinct_turn", "observable first action"],
-  ["uncertain", "gradual", "do not ascribe meaning to a slope"],
-])("grounds the head interpretation in its observed %s direction and %s bend", async (direction, bend, theme) => {
-  const middle = {shape:"curved", path:"נמשך מהאגודל אל מרכז הכף", direction, bend};
+  ["toward_wrist", "gradual", "mentally rehearse", [67,65,48]],
+  ["across", "even", "practical steps", [58,59,57]],
+  ["toward_fingers", "gradual", "observable first action", [45,47,60]],
+  ["toward_wrist", "uncertain", "mentally rehearse", [null,55,46]],
+] as const)("grounds the head interpretation in its observed %s direction and %s bend", async (direction, bend, theme, heights) => {
+  const points = {nearThumb:heights[0], center:heights[1], fartherAcross:heights[2]};
+  const middle = {shape:"curved", path:"נמשך מהאגודל אל מרכז הכף", ...points};
   const response = {upper:"פירוש הלב", middle:"פירוש מותאם לצורת קו הראש", thumb:"פירוש החיים"};
   const fetcher = vi.fn().mockResolvedValueOnce(model({...valid, middle}))
-    .mockResolvedValueOnce(model({direction, bend})).mockResolvedValueOnce(model(response));
+    .mockResolvedValueOnce(model(points)).mockResolvedValueOnce(model(response));
   vi.stubGlobal("fetch", fetcher);
   const result = await palmReading({palmImage:photo}, "he", "test", {});
   expect(await result.text()).toContain(response.middle);
@@ -66,9 +67,9 @@ it.each([
 });
 
 it("discards an uncorroborated turn before either describing or interpreting it", async () => {
-  const middle = {shape:"curved", path:"מתעקל בחדות", direction:"toward_wrist", bend:"distinct_turn"};
+  const middle = {shape:"curved", path:"מתעקל בחדות", nearThumb:70, center:68, fartherAcross:50};
   const fetcher = vi.fn().mockResolvedValueOnce(model({...valid, middle}))
-    .mockResolvedValueOnce(model({direction:"toward_wrist", bend:"even"}))
+    .mockResolvedValueOnce(model({nearThumb:69, center:50, fartherAcross:51}))
     .mockResolvedValueOnce(model({upper:"פירוש הלב", middle:"פירוש הכיוון", thumb:"פירוש החיים"}));
   vi.stubGlobal("fetch", fetcher);
   const result = await palmReading({palmImage:photo}, "he", "test", {});
