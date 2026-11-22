@@ -1,4 +1,28 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+function cacheClient() {
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  return url && key ? createClient(url, key, { auth: { persistSession: false } }) : null;
+}
+
+// Accept the device's local date only when it is within one day of the server date.
+function validHoroscopeDate(value: unknown): string | null {
+  if (typeof value !== "string" || !DATE_RE.test(value)) return null;
+  const time = Date.parse(value + "T00:00:00Z");
+  if (!Number.isFinite(time)) return null;
+  return Math.abs(time - Date.now()) <= 2 * 86_400_000 ? value : null;
+}
+
+function hasMixedLocale(lang: string, content: string): boolean {
+  return (lang === "he" || lang === "ar")
+    && (/[A-Za-z]{4,}/.test(content) || /\/[\u05d4\u05d5\u05ea\u05d9\u05dd]/.test(content)
+      || /[\u0590-\u06FF]+\s*\/\s*[\u0590-\u06FF]+/.test(content));
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -26,7 +50,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { zodiacSign, birthDate, userName, language = "he", gender } = body;
+    const { zodiacSign, birthDate, userName, language = "he", gender, fingerprint, horoscopeDate } = body;
 
     if (!zodiacSign && !birthDate) {
       return new Response(JSON.stringify({ error: "Missing zodiac sign or birth date" }), {
@@ -36,6 +60,35 @@ serve(async (req) => {
     }
 
     const lang = ["he", "en", "ru", "ar"].includes(language) ? language : "he";
+
+    // Saved horoscopes are only reachable here, keyed by the device's private random ID.
+    const cacheDate = validHoroscopeDate(horoscopeDate);
+    const cacheKey = typeof fingerprint === "string" && UUID_RE.test(fingerprint) && cacheDate ? fingerprint : null;
+    const db = cacheKey ? cacheClient() : null;
+    const profileName = typeof userName === "string" ? userName.slice(0, 200) : null;
+    const profileBirth = typeof birthDate === "string" ? birthDate.slice(0, 40) : null;
+    const profileSign = typeof zodiacSign === "string" ? zodiacSign.slice(0, 40) : null;
+    if (db && cacheKey) {
+      const { data: cached, error: cacheError } = await db
+        .from("daily_horoscopes")
+        .select("content, love_score, career_score, energy_score, zodiac_sign, birth_date, user_name")
+        .eq("user_fingerprint", cacheKey)
+        .eq("horoscope_date", cacheDate)
+        .eq("language", lang)
+        .maybeSingle();
+      if (cacheError) console.warn("daily-horoscope cache lookup failed:", cacheError.message);
+      if (cached?.content?.trim() && cached.zodiac_sign === profileSign
+        && cached.birth_date === profileBirth && cached.user_name === profileName
+        && !hasMixedLocale(lang, cached.content)) {
+        return new Response(JSON.stringify({
+          content: cached.content,
+          love_score: cached.love_score ?? 3,
+          career_score: cached.career_score ?? 3,
+          energy_score: cached.energy_score ?? 3,
+          cached: true,
+        }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
     const tone = LANG_TONE[lang];
     
     const today = new Date();
@@ -182,12 +235,30 @@ Guidelines:
       };
     }
 
-    return new Response(JSON.stringify({
+    const result = {
       content: parsed.content || rawContent,
       love_score: Math.min(5, Math.max(1, Number(parsed.love_score) || 3)),
       career_score: Math.min(5, Math.max(1, Number(parsed.career_score) || 3)),
       energy_score: Math.min(5, Math.max(1, Number(parsed.energy_score) || 3)),
-    }), {
+    };
+
+    if (db && cacheKey && typeof result.content === "string" && result.content.trim()) {
+      const { error: saveError } = await db.from("daily_horoscopes").upsert({
+        user_fingerprint: cacheKey,
+        horoscope_date: cacheDate,
+        language: lang,
+        zodiac_sign: profileSign,
+        content: result.content,
+        love_score: result.love_score,
+        career_score: result.career_score,
+        energy_score: result.energy_score,
+        birth_date: profileBirth,
+        user_name: profileName,
+      }, { onConflict: "user_fingerprint,horoscope_date,language" });
+      if (saveError) console.warn("daily-horoscope cache save failed:", saveError.message);
+    }
+
+    return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 

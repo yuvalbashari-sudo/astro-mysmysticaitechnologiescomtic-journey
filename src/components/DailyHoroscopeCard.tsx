@@ -10,7 +10,6 @@ import { Sun, Heart, Briefcase, Zap, RefreshCw, Star } from "lucide-react";
 import ResultShareBar from "./ResultShareBar";
 import { useT, useLanguage } from "@/i18n";
 import { formatFullDate } from "@/lib/dateTimeFormat";
-import { supabase } from "@/integrations/supabase/client";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import astrologerAvatar from "@/assets/astrologer-avatar-cta.png";
 import AdvisorChatPanel from "./AdvisorChatPanel";
@@ -123,64 +122,28 @@ function requestHoroscope(profile: HoroscopeRequest, today: string): Promise<Hor
 }
 
 async function loadHoroscope(profile: HoroscopeRequest, today: string): Promise<HoroscopeData> {
-  const hadFingerprint = !!localStorage.getItem(accountStorageKey("astrologai_device_fp"));
   const fingerprint = getFingerprint();
 
-  if (hadFingerprint) {
-    try {
-      const { data: cached } = await supabase
-        .from("daily_horoscopes")
-        .select("content, love_score, career_score, energy_score, zodiac_sign, birth_date, user_name")
-        .eq("user_fingerprint", fingerprint)
-        .eq("horoscope_date", today)
-        .eq("language", profile.language)
-        .maybeSingle();
-      if (cached && cached.content?.trim() && cached.zodiac_sign === profile.zodiacSign
-        && cached.birth_date === profile.birthDate && cached.user_name === profile.userName) {
-        const mixedLocale = (profile.language === "he" || profile.language === "ar")
-          && (/[A-Za-z]{4,}/.test(cached.content) || /\/[\u05d4\u05d5\u05ea\u05d9\u05dd]/.test(cached.content)
-            || /[\u0590-\u06FF]+\s*\/\s*[\u0590-\u06FF]+/.test(cached.content));
-        if (!mixedLocale) {
-          sessionStorage.setItem("_dbg_horoscope_source", "cached");
-          return {
-            content: cached.content,
-            love_score: cached.love_score ?? 3,
-            career_score: cached.career_score ?? 3,
-            energy_score: cached.energy_score ?? 3,
-          };
-        }
-      }
-    } catch (error) {
-      console.warn("[daily-horoscope] cache lookup failed", error);
-    }
-  }
-
+  // The horoscope service reads and saves today's horoscope for this device.
   const url = import.meta.env.VITE_SUPABASE_URL + "/functions/v1/daily-horoscope";
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: readingAuthorization() },
-    body: JSON.stringify(profile),
+    body: JSON.stringify({ ...profile, fingerprint, horoscopeDate: today }),
   });
   if (!response.ok) throw new Error("Daily horoscope generation failed");
 
-  const result = await response.json() as HoroscopeData;
+  const result = await response.json() as HoroscopeData & { cached?: boolean };
   if (typeof result.content !== "string" || !result.content.trim()) {
     throw new Error("Daily horoscope response is empty");
   }
-  sessionStorage.setItem("_dbg_horoscope_source", "fresh");
-  void supabase.from("daily_horoscopes").insert({
-    user_fingerprint: fingerprint,
-    horoscope_date: today,
-    language: profile.language,
-    zodiac_sign: profile.zodiacSign,
+  sessionStorage.setItem("_dbg_horoscope_source", result.cached ? "cached" : "fresh");
+  return {
     content: result.content,
     love_score: result.love_score,
     career_score: result.career_score,
     energy_score: result.energy_score,
-    birth_date: profile.birthDate,
-    user_name: profile.userName,
-  }).then(() => {});
-  return result;
+  };
 }
 
 const DailyHoroscopeCard = ({ home = false }: { home?: boolean } = {}) => {

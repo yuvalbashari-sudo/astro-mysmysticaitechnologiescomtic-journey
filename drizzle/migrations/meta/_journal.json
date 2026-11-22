@@ -8,6 +8,13 @@
       "when": 1795305725850,
       "tag": "0000_tarot_followups",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795329937147,
+      "tag": "0001_lock_daily_horoscopes",
+      "breakpoints": true
     }
   ]
 }
