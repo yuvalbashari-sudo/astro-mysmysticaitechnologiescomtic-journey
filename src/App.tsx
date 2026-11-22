@@ -4,9 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import { mysticalProfile } from "./lib/mysticalProfile";
-import DailyHoroscopeCard, { resolveHoroscopeSign } from "./components/DailyHoroscopeCard";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import ImmersiveTarotExperience from "./components/ImmersiveTarotExperience";
 import { useHreflangTags } from "@/hooks/useHreflangTags";
 import { LanguageProvider } from "@/i18n";
@@ -36,16 +34,6 @@ import GenderPromptModal from "./components/GenderPromptModal";
 
 const queryClient = new QueryClient();
 
-function HomeEntry() {
-  const { search } = useLocation();
-  const scope = useSyncExternalStore(subscribeAccount, accountScope);
-  const profile = mysticalProfile.getProfile();
-  if (scope !== "loading" && new URLSearchParams(search).get("view") !== "services" && resolveHoroscopeSign(profile)) {
-    return <DailyHoroscopeCard home />;
-  }
-  return <Index />;
-}
-
 function TarotCampaign() {
   const navigate = useNavigate();
   return <ImmersiveTarotExperience campaign isOpen onClose={() => navigate("/")} />;
@@ -70,7 +58,7 @@ const App = () => {
             <BrowserRouter>
               <RouteSeoTags />
               <Routes>
-                <Route path="/" element={<HomeEntry />} />
+                <Route path="/" element={<Index />} />
                 <Route path="/tarot-start" element={<TarotCampaign />} />
                 <Route path="/rising-sign" element={<Index />} />
                 <Route path="/daily-horoscope" element={<Index />} />
