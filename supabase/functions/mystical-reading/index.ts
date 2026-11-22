@@ -1,4 +1,4 @@
-import { palmReading } from "./palm.ts";
+import { palmModel, palmReading } from "./palm.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
@@ -1069,7 +1069,7 @@ serve(async (req) => {
       if (logCostFn && getFeatureCostsFn) {
         const costs = getFeatureCostsFn("palm");
         logCostFn({clientIp, feature: "palm", status: result.ok ? "success" : "failed",
-          userTier: adminUser ? "admin" : "unknown", ...costs, model: "gpt-4o-mini"}).catch(() => {});
+          userTier: adminUser ? "admin" : "unknown", ...costs, model: palmModel}).catch(() => {});
       }
       return result;
     }

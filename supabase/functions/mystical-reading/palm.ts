@@ -1,4 +1,5 @@
 type Locale = "he" | "en" | "ru" | "ar";
+export const palmModel = "gpt-4.1";
 const lines = ["upper", "middle", "thumb"] as const;
 type Line = typeof lines[number];
 type Shape = "curved" | "straight" | "unresolved";
@@ -85,7 +86,7 @@ async function queryModel(key: string, name: string, format: object, system: str
     method: "POST", headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     signal: AbortSignal.timeout(35000),
     body: JSON.stringify({
-      model: "gpt-4o-mini", temperature: 0, max_tokens: 1000, store: false,
+      model: palmModel, temperature: 0, max_tokens: 1000, store: false,
       response_format: {type: "json_schema", json_schema: {name, strict: true, schema: format}},
       messages: [{role: "system", content: system}, {role: "user", content}],
     }),
@@ -98,7 +99,7 @@ async function queryModel(key: string, name: string, format: object, system: str
 }
 
 async function inspectPhoto(photo: string, key: string, locale: Locale): Promise<Observation | null> {
-  const system = prompt + ` For each visible crease describe its observable course in ONE short, natural sentence in ${languages[locale]}: an actual starting region, direction, change of direction, or visible endpoint. Only report details visible here; never fill in a missing endpoint. Use anatomical landmarks (thumb, fingers, wrist) instead of image left/right. Describe shape rather than skin color, accessories or identity. For unresolved lines return an empty path. Give no symbolic interpretation.`;
+  const system = prompt + ` Trace the crease itself, not the finger, thumb or hand outline. Finger joints, reflections and the wrist fold are not the transverse palm creases. Describe what distinguishes this particular visible segment: its angle across the palm or the width of its bow, and where its direction changes or the trace fades. "From the palm towards the palm/wrist" conveys no geometry. If you cannot follow an individual crease, mark it unresolved and leave its path empty. Trace each independently, even if a different line is clear. Write one short natural sentence per trace in ${languages[locale]}, with anatomical landmarks rather than screen coordinates. Do not infer line endings beyond what is visible, or mention accessories, identity or symbolism.`;
   const obs = await queryModel(key, "palm_observation", schema, system, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
@@ -111,14 +112,14 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
 async function interpret(obs: Observation, key: string, locale: Locale) {
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
   const format = {
-    type: "object", additionalProperties: false, required: visible,
-    properties: Object.fromEntries(visible.map(line => [line, {type: "string"}])),
+    type: "object", additionalProperties: false, required: ["reading", "invitation"],
+    properties: {reading: {type: "string"}, invitation: {type: "string"}},
   };
-  const system = `Write a fresh symbolic palm reading in ${languages[locale]}. Your ONLY evidence is a list of crease labels, their shapes and their visible paths. For each supplied line, write a short paragraph of two connected sentences. Anchor a metaphor in a specific detail of THAT trace (its actual sweep, angle or direction), then relate the metaphor to an everyday choice or a question the reader can use. Vary structure, imagery and phrasing across lines. In Hebrew use natural gender-neutral phrasing and address the reader warmly. A curved line is not proof of a personality trait. Do not invent any geometry, diagnosis, lifespan, past event or prediction. No conventional canned line definitions. No headings or markdown. Respond only in the requested language.`;
+  const system = `Write a personal, symbolic reading in natural ${languages[locale]}. The input is a list of independently observed traces on this specific palm. Choose its most distinctive spatial detail and relate it to a second observed detail only when the descriptions support the relationship. In "reading" write two or three connected sentences developing ONE symbolic theme from that combination. In "invitation" give one concrete small choice or open question the reader could try. Let the actual change of direction, relative angle, contrast, or visible span determine the theme. Do not claim that two lines touch, branch or share a starting point unless the input says so. Do not list one stock analogy per line. Avoid rivers, bridges, trees and roots, definitions of palmistry, and interchangeable life advice. Do not treat photo quality as personality or make claims about a person's character, future, health or lifespan. Write inclusively; in Hebrew favor gender-neutral everyday wording such as infinitives. No headings, foreign words or markdown.`;
   const input = visible.map(line => ({ id: line, label: copy[locale][line], ...obs[line] }));
   const result = await queryModel(key, "palm_reflection", format, system, JSON.stringify(input));
-  if (!result || !visible.every(line => localizedProse(result[line], locale, 800))) throw new Error("Invalid reflection");
-  return visible.map(line => result[line] as string);
+  if (!result || !localizedProse(result.reading, locale, 800) || !localizedProse(result.invitation, locale, 500)) throw new Error("Invalid reflection");
+  return [result.reading, result.invitation];
 }
 
 export async function palmReading(

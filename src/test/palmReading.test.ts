@@ -29,7 +29,7 @@ it.each([{...valid, view:"back"}, {...valid, view:"no_hand"}, {...valid, clear:f
 
 it.each([["he","מה נראה בצילום","נמשך לצד הכף","העיקול מזמין מחשבה"], ["ar","ما يظهر في الصورة","يمتد عبر الكف","يمكن التأمل في هذا القوس"], ["en","Visible in the photo","runs across the palm","The arc suggests a pause"], ["ru","Что видно на фотографии","поперёк ладони","Дуга напоминает о паузе"]])("interprets only the observed traces in %s", async (lang,title,path,reflection) => {
   const observation = {...valid, upper:{shape:"straight",path},thumb:{shape:"curved",path}};
-  const fetcher = vi.fn().mockResolvedValueOnce(model(observation)).mockResolvedValueOnce(model({upper:reflection,thumb:reflection}));
+  const fetcher = vi.fn().mockResolvedValueOnce(model(observation)).mockResolvedValueOnce(model({reading:reflection,invitation:reflection}));
   vi.stubGlobal("fetch", fetcher);
   const res = await palmReading({palmImage:photo}, lang, "test", {});
   expect(res.status).toBe(200);
@@ -46,7 +46,7 @@ it.each([["he","מה נראה בצילום","נמשך לצד הכף","העיקו
 });
 
 it("does not substitute a canned reading when the generated prose mixes languages", async () => {
-  const fetcher = vi.fn().mockResolvedValueOnce(model(valid)).mockResolvedValueOnce(model({upper:"הקו ישר and long",thumb:"עיקול בכף"}));
+  const fetcher = vi.fn().mockResolvedValueOnce(model(valid)).mockResolvedValueOnce(model({reading:"הקו ישר and long",invitation:"עיקול בכף"}));
   vi.stubGlobal("fetch", fetcher);
   expect((await palmReading({palmImage:photo}, "he", "test", {})).status).toBe(503);
 });
