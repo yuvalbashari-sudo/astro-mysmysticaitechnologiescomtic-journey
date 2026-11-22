@@ -100,7 +100,9 @@ async function queryModel(key: string, name: string, format: object, system: str
 
 async function inspectPhoto(photo: string, key: string, locale: Locale): Promise<Observation | null> {
   const system = prompt + ` Trace the crease itself, not the finger, thumb or hand outline. Finger joints, reflections and the wrist fold are not the transverse palm creases. Describe what distinguishes this particular visible segment: its angle across the palm or the width of its bow, and where its direction changes or the trace fades. "From the palm towards the palm/wrist" conveys no geometry. If you cannot follow an individual crease, mark it unresolved and leave its path empty. Trace each independently, even if a different line is clear. Write one short natural sentence per trace in ${languages[locale]}, with anatomical landmarks rather than screen coordinates. Do not infer line endings beyond what is visible, or mention accessories, identity or symbolism.`;
-  const obs = await queryModel(key, "palm_observation", schema, system, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
+  const evidence = " Prefer a plainly visible local segment over an inferred whole arc. Do not specify its start or endpoint relative to a particular finger unless the crease is continuous and clearly visible up to that landmark. Where glare interrupts a trace, stop at the interruption.";
+  const terminology = locale === "he" ? " Use אגודל for the thumb and כרית האגודל for the thenar pad. בוהן means a toe." : "";
+  const obs = await queryModel(key, "palm_observation", schema, system + evidence + terminology, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
@@ -117,7 +119,8 @@ async function interpret(obs: Observation, key: string, locale: Locale) {
   };
   const system = `Write a personal, symbolic reading in natural ${languages[locale]}. The input is a list of independently observed traces on this specific palm. Choose its most distinctive spatial detail and relate it to a second observed detail only when the descriptions support the relationship. In "reading" write two or three connected sentences developing ONE symbolic theme from that combination. In "invitation" give one concrete small choice or open question the reader could try. Let the actual change of direction, relative angle, contrast, or visible span determine the theme. Do not claim that two lines touch, branch or share a starting point unless the input says so. Do not list one stock analogy per line. Avoid rivers, bridges, trees and roots, definitions of palmistry, and interchangeable life advice. Do not treat photo quality as personality or make claims about a person's character, future, health or lifespan. Write inclusively; in Hebrew favor gender-neutral everyday wording such as infinitives. No headings, foreign words or markdown.`;
   const input = visible.map(line => ({ id: line, label: copy[locale][line], ...obs[line] }));
-  const result = await queryModel(key, "palm_reflection", format, system, JSON.stringify(input));
+  const focus = " In the invitation, echo the chosen trace with one ordinary, imaginable situation and finish with one specific question. Avoid generic appeals to balance, expanding boundaries or trying something new. Do not assign personal traits. Use plain conversational words, as if speaking to one reader.";
+  const result = await queryModel(key, "palm_reflection", format, system + focus, JSON.stringify(input));
   if (!result || !localizedProse(result.reading, locale, 800) || !localizedProse(result.invitation, locale, 500)) throw new Error("Invalid reflection");
   return [result.reading, result.invitation];
 }
