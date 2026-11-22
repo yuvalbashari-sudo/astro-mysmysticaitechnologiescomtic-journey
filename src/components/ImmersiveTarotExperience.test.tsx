@@ -141,13 +141,14 @@ it.each([1024, 320])("starts at the third card at %i px and streams without reop
     streamController.enqueue(encoder.encode('data: {"choices":[{"delta":{"content":"First interpretation."}}]}\n\n'));
   });
   expect(await screen.findByText("First interpretation.")).toBeInTheDocument();
-  expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  expect(screen.getByRole("status")).toHaveTextContent("Writing the rest of your reading");
   expect(screen.queryByRole("button", { name: /unlock|continue/i })).not.toBeInTheDocument();
 
   await act(async () => {
     streamController.enqueue(encoder.encode("data: [DONE]\n\n"));
     streamController.close();
   });
+  expect(screen.queryByRole("status")).not.toBeInTheDocument();
   const largest = screen.getByRole("button", { name: "A++" });
   if (width < 768) {
     fireEvent.click(largest);
