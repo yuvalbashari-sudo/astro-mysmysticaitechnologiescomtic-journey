@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { palmDetailReading, palmReading } from "../../supabase/functions/mystical-reading/palm";
+import { hasTopMargin } from "../../supabase/functions/_shared/palmDetail";
 
 const photo = "data:image/jpeg;base64,/9j/2Q==";
 const absent = {shape: "unresolved", path: ""};
@@ -26,13 +27,31 @@ it.each(["joints", "edge"])("requires visible evidence before interpreting %s", 
   expect(reflection.messages[1].content).not.toContain("data:image");
 });
 
+function frameSample(cutOff = false) {
+  const pixels = new Uint8Array(48 * 32 * 3).fill(200);
+  for (let y = cutOff ? 0 : 5; y < 32; y++) {
+    for (let x = 12; x < 35; x++) pixels.fill(75, (y * 48 + x) * 3, (y * 48 + x + 1) * 3);
+  }
+  return btoa(String.fromCharCode(...pixels));
+}
+
+it("stops cut-off, blank and missing framing evidence before asking vision", async () => {
+  expect(hasTopMargin(btoa("a".repeat(48 * 32 * 3)))).toBe(false);
+  const fetcher = vi.fn();
+  vi.stubGlobal("fetch", fetcher);
+  for (const sample of [undefined,frameSample(true)]) {
+    expect((await palmDetailReading({palmImage:photo,focus:"heights",frameSample:sample},"he","test",{})).status).toBe(422);
+  }
+  expect(fetcher).not.toHaveBeenCalled();
+});
+
 it("accepts only a comparison of the two fingertips for the height reading", async () => {
   const frame = {view:"single_open_palm",index:"complete",middle:"complete",ring:"complete",little:"complete"};
   const fetcher = vi.fn().mockResolvedValueOnce(model({...frame, index:"cut_off"}))
     .mockResolvedValueOnce(model(frame)).mockResolvedValueOnce(model({clear:true,observation:"יש טבעת על האצבע"}))
     .mockResolvedValueOnce(model(frame)).mockResolvedValueOnce(model({comparison:"similar"})).mockResolvedValueOnce(model({meaning:"הדמיון מזמין לחשוב על איזון"}));
   vi.stubGlobal("fetch", fetcher);
-  const run = () => palmDetailReading({palmImage:photo,focus:"heights"}, "he", "test", {});
+  const run = () => palmDetailReading({palmImage:photo,focus:"heights",frameSample:frameSample()}, "he", "test", {});
   expect((await run()).status).toBe(422);
   expect(fetcher).toHaveBeenCalledTimes(1);
   expect((await run()).status).toBe(422);

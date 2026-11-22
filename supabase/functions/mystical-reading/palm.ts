@@ -1,4 +1,4 @@
-import { isPalmFocus, palmCopy, type PalmFocus } from "../_shared/palmDetail.ts";
+import { hasTopMargin, isPalmFocus, palmCopy, type PalmFocus } from "../_shared/palmDetail.ts";
 
 type Locale = "he" | "en" | "ru" | "ar";
 const observationModel = "gpt-4.1";
@@ -263,7 +263,7 @@ export async function palmDetailReading(data: Record<string, unknown> | null, la
   const retake = () => Response.json({code:"PALM_RETAKE", error:palmCopy[locale].retake}, {status:422, headers});
   try {
     const isHeight = focus === "heights";
-    if (isHeight && !(await allTipsVisible(photos[0], key))) return retake();
+    if (isHeight && (!hasTopMargin(data?.frameSample) || !(await allTipsVisible(photos[0], key)))) return retake();
     const format = isHeight ? {
       type:"object", additionalProperties:false, required:["comparison"],
       properties:{comparison:{type:"string", enum:["index","ring","similar","unclear"]}},

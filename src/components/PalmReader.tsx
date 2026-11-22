@@ -35,12 +35,13 @@ function PalmForm() {
     const localUrl = URL.createObjectURL(file);
     try {
       let palmImage: string;
-      try { palmImage = await compressImage(localUrl); }
+      let frameSample: string | undefined;
+      try { palmImage = await compressImage(localUrl, focus === "heights" ? sample => { frameSample = sample; } : undefined); }
       catch { setError(t.palm_upload_error); return; }
       const response = await fetch(import.meta.env.VITE_SUPABASE_URL + "/functions/v1/mystical-reading", {
         method:"POST", signal:controller.signal,
         headers:{"Content-Type":"application/json", Authorization:readingAuthorization(), apikey:import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY},
-        body:JSON.stringify({type:focus ? "palmDetail" : "palm", language, data:{palmImage, ...(focus && {focus}), ...(handRole && {handRole})}}),
+        body:JSON.stringify({type:focus ? "palmDetail" : "palm", language, data:{palmImage, frameSample, ...(focus && {focus}), ...(handRole && {handRole})}}),
       });
       if (!response.ok) {
         setError(response.status === 422 ? copy.retake : response.status === 429 ? copy.limited : copy.unavailable);
