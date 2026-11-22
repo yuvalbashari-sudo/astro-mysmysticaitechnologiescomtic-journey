@@ -125,7 +125,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-[120] md:hidden"
+          className="fixed inset-0 z-[120]"
           dir={dir}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -178,7 +178,7 @@ const MobileOptionsSheet = ({ isOpen, onClose }: Props) => {
 
           {/* Sheet content */}
           <motion.div
-            className="absolute inset-x-0 bottom-0 top-0 flex flex-col"
+            className="absolute inset-x-0 bottom-0 top-0 mx-auto flex max-w-2xl flex-col"
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}

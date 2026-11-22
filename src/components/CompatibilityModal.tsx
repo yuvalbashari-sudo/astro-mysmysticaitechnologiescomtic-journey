@@ -8,6 +8,7 @@ import MysticalTimeInput from "@/components/MysticalTimeInput";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
+import ReadingNarrative from "./ReadingNarrative";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Heart, Crown, Share2, Copy, Check } from "lucide-react";
 import { getSignFromDate, getSignSymbol, getCompatibility, formatCompatibilityReading, getSignElement, getSignModality, getSignRuler } from "@/data/compatibilityData";
@@ -15,7 +16,6 @@ import { getSignNameByKey } from "@/lib/astroLocale";
 
 import { toast } from "@/components/ui/sonner";
 import { readingsStorage } from "@/lib/readingsStorage";
-import { renderMysticalText } from "@/lib/aiStreaming";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import ShareResultSection from "@/components/ShareResultSection";
 import { callLocalAi, getLocalFallback } from "@/lib/localAiPipeline";
@@ -223,7 +223,7 @@ const CompatibilityForm = ({ onClose, onNew }: { onClose: () => void; onNew: () 
 
   const interpretation = (
     <div className="mobile-reading-surface mobile-reading-inset min-w-0 [overflow-wrap:anywhere]">
-      {renderMysticalText(readingText, textSize)}
+      <ReadingNarrative text={readingText} size={textSize} />
       {gatingMsg && (
         <button type="button" className="btn-outline-gold min-h-11" onClick={() => setGatingOpen(true)}>{t.compat_premium_cta}</button>
       )}

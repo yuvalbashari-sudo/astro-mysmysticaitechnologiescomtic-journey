@@ -7,6 +7,15 @@ import { cardBack } from "@/data/tarotCardImages";
 import star from "@/assets/tarot/major-arcana/star/star.png";
 import moon from "@/assets/tarot/major-arcana/moon/moon.png";
 import sun from "@/assets/tarot/major-arcana/sun/sun.png";
+import TextSizeControl from "../TextSizeControl";
+import { useFontScale } from "@/contexts/FontScaleContext";
+
+const suggestions = {
+  he: ["מה יעזור לי להתקדם בקשר?", "מה הצעד הבא בעבודה?", "במה כדאי להתמקד עכשיו?"],
+  en: ["What could help my relationship grow?", "What is my next step at work?", "What should I focus on now?"],
+  ru: ["Что поможет развитию моих отношений?", "Какой следующий шаг сделать в работе?", "На чём сосредоточиться сейчас?"],
+  ar: ["ما الذي يساعد علاقتي على النمو؟", "ما خطوتي التالية في العمل؟", "على ماذا أركّز الآن؟"],
+};
 
 interface Props {
   phase: "question" | "personal" | "drawing" | "interpretation";
@@ -23,6 +32,7 @@ interface Props {
 export default function CampaignReading({phase,question,cards,selected,onSubmit,onPick,onReset,onClearCards,result}:Props) {
   const {language, isRTL} = useLanguage();
   const t = useT();
+  const { scale, setScale } = useFontScale();
   const c = entryCopy[language];
   const [draft,setDraft] = useState("");
   const Arrow = isRTL ? ArrowLeft : ArrowRight;
@@ -34,6 +44,7 @@ export default function CampaignReading({phase,question,cards,selected,onSubmit,
         <form onSubmit={e=>{e.preventDefault();if(draft.trim())onSubmit(draft.trim());}}>
           <label htmlFor="entry-question">{c.label}</label>
           <textarea id="entry-question" rows={3} maxLength={500} value={draft} onChange={e=>setDraft(e.target.value)} placeholder={c.hint} dir="auto" />
+          <div className="entry-suggestions">{suggestions[language].map(question => <button key={question} type="button" onClick={() => setDraft(question)}>{question}</button>)}</div>
           <button className="entry-action" disabled={!draft.trim()}>{c.pick}<Arrow size={18}/></button>
           {draft && <button type="button" className="entry-reset" onClick={()=>setDraft("")}>{resetCopy[language].clear}</button>}
         </form>
@@ -56,9 +67,10 @@ export default function CampaignReading({phase,question,cards,selected,onSubmit,
         <button className="entry-reset" onClick={onReset}>{resetCopy[language].edit}</button>
         <button className="entry-reset" onClick={onClearCards} disabled={!selected.size}>{resetCopy[language].cards}</button>
       </> : <>
-        <div className="entry-selected">{Array.from(selected,i=>cards[i]).map(card=><figure key={card.id}>
-          <img src={card.image || cardBack} alt=""/><figcaption>{card.name[language]}</figcaption>
+        <div className="entry-selected">{Array.from(selected,i=>cards[i]).map((card,index)=><figure key={card.id}>
+          <img src={card.image || cardBack} alt=""/><figcaption><span>{[t.tarot_world_pos_hidden_influence, t.tarot_world_pos_current_energy, t.tarot_world_pos_possible_direction][index]}</span>{card.name[language]}</figcaption>
         </figure>)}</div>
+        <div className="entry-result-tools"><TextSizeControl value={scale} onChange={setScale} /></div>
         <div className="entry-answer">{result}</div>
         <button className="entry-action" onClick={()=>{setDraft("");onReset();}}>{c.another}</button>
       </>}

@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { Sun } from "lucide-react";
 import MysticalLanguageDropdown from "./MysticalLanguageDropdown";
 import ProfileReset from "./ProfileReset";
-import { useLanguage } from "@/i18n";
+import AccountLink from "./AccountLink";
+import { useLanguage, useT } from "@/i18n";
 import "./entryLayout.css";
 
 const homeUrl = "/?view=services";
@@ -22,14 +23,16 @@ export const resetCopy = {
   ar: { clear: "مسح السؤال", cards: "إعادة اختيار البطاقات", edit: "تعديل السؤال", details: "إعادة ضبط بيانات الأبراج", cancel: "إلغاء والعودة إلى التوقعات" },
 };
 
-export default function EntryLayout({children}: {children: ReactNode}) {
+export default function EntryLayout({children, home = false}: {children: ReactNode; home?: boolean}) {
   const {language, dir} = useLanguage();
+  const t = useT();
   return <div className="entry-page" dir={dir}>
+    <a href="#entry-main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-slate-950 focus:p-3 focus:text-gold">{t.a11y_skip_to_content}</a>
     <header className="entry-nav">
       <Link className="entry-brand" to={homeUrl} aria-label="ASTROLOGAI" dir="ltr"><Sun aria-hidden="true" size={24}/>ASTROLOGAI</Link>
-      <nav><Link to={homeUrl}>{entryCopy[language].home}</Link><MysticalLanguageDropdown /></nav>
+      <nav>{home ? <AccountLink /> : <Link to={homeUrl}>{entryCopy[language].home}</Link>}<MysticalLanguageDropdown /></nav>
     </header>
-    <main className="entry-main">{children}</main>
+    <main id="entry-main" className="entry-main">{children}</main>
     <footer className="entry-main pt-6"><ProfileReset /></footer>
   </div>;
 }

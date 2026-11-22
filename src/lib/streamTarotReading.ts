@@ -32,7 +32,7 @@ export async function streamTarotReading(
           userName: isLocalizedReading(name, language) ? name : undefined,
           cards: cards.map(({ localizedName, symbol, positionLabel }) => ({ hebrewName: localizedName, symbol, positionLabel })),
           context: { memoryContext: tarotMemory.buildMemoryContext(cards), userQuestion,
-            profileContext: [profile, rule, "Start with one concrete answer to the question, no more than two short sentences. Answer before explaining: name the action or insight suggested by the cards. Do not restate the question or describe what the reading will cover. Then a blank line and all usual sections with markdown headings.", attempt ? "Review each word before returning the corrected reading." : ""].filter(Boolean).join("\n") },
+            profileContext: [profile, rule, "Start with one concrete answer to the question, no more than two short sentences. Answer before explaining: name the action or insight suggested by the cards. Do not restate the question or describe what the reading will cover. Then a blank line and all usual sections with markdown headings. Connect each selected card and its assigned position to this specific question, then explain how the three cards work together. End with one practical, proportionate next step suggested by this spread. Use only the supplied personal context and acknowledge uncertainty instead of inventing facts about the person.", attempt ? "Review each word before returning the corrected reading." : ""].filter(Boolean).join("\n") },
         }),
       });
       if (!response.ok || !response.body) break;

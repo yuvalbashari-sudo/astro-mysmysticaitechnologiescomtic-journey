@@ -33,10 +33,8 @@ interface Props {
 /**
  * Cinematic scene shell — NOT a modal.
  *
- * The oracle is the scene. Content floats over her as translucent layers
- * without any visible container boundary. No box, no border, no card.
- * Children scroll naturally over a rising fog gradient that provides
- * text legibility without hiding the figure.
+ * The oracle frames the scene while an opaque panel keeps the reading legible.
+ * Children scroll inside the scene and keep their own text-size controls.
  */
 const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen = false, wide = false, hideAdvisor = false, transparent = false, avatarStyle, hideClose = false, topOverlay = false }: Props) => {
   const isMobile = useIsMobile();
@@ -183,6 +181,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
           {!hideClose && (
           <motion.button
             className="fixed top-5 left-5 z-[105] w-[52px] h-[52px] min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center backdrop-blur-md cursor-pointer transition-colors duration-200"
+            aria-label={t.a11y_close_modal}
             style={{
               background: "hsl(var(--deep-blue) / 0.55)",
               border: "1px solid hsl(var(--gold) / 0.2)",
@@ -274,15 +273,14 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 Scene composition:
                 1. Oracle fills the viewport — always visible
                 2. Content starts below her face (spacer)
-                3. A rising fog gradient sits BEHIND the content for legibility
-                4. No container box — children float directly in the scene
+                3. A gradient separates the portrait from the reading panel
               */}
 
               {/* Spacer: oracle's face and upper body remain unobscured (skip in wide mode — content fills viewport) */}
               {!wide && (
                 <div
                   className="pointer-events-none"
-                  style={{ height: isMobile ? "18vh" : "38vh" }}
+                  style={{ height: isMobile ? "88px" : "18vh" }}
                   aria-hidden="true"
                 />
               )}
@@ -302,7 +300,7 @@ const CinematicModalShell = ({ isOpen, onClose, children, scrollRef, fullscreen 
                 />
 
                 <motion.div
-                  className="relative pointer-events-auto"
+                  className="relative pointer-events-auto reading-panel"
                   style={{
                     maxWidth: wide ? "92%" : (isMobile ? "100%" : "560px"),
                     margin: "0 auto",

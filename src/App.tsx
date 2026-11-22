@@ -11,6 +11,7 @@ import { LanguageProvider } from "@/i18n";
 import { ReadingProvider } from "@/contexts/ReadingContext";
 import { FontScaleProvider } from "@/contexts/FontScaleContext";
 import Index from "./pages/Index";
+import HomeWelcome from "./components/HomeWelcome";
 import NotFound from "./pages/NotFound";
 import TarotCardPage from "./pages/TarotCardPage";
 import ZodiacSignPage from "./pages/ZodiacSignPage";
@@ -64,7 +65,7 @@ const App = () => {
             <BrowserRouter>
               <RouteSeoTags />
               <Routes>
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<HomeWelcome />} />
                 <Route path="/tarot-start" element={<TarotCampaign />} />
                 <Route path="/palm-reading" element={<PalmPage />} />
                 <Route path="/rising-sign" element={<Index />} />

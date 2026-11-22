@@ -34,6 +34,11 @@
 .entry-selected figure{width:clamp(68px,9vw,98px);margin:0;color:#e3cc9e;font-size:.9rem}.entry-selected img{border-radius:5px;margin-bottom:6px}
 .entry-answer,.entry-forecast {margin:auto;max-width:720px;color:#f4eee5;background:#171d2e;border:1px solid #cbb78152;border-radius:14px;padding:clamp(18px,3vw,35px);line-height:1.75;text-align:start}
 .entry-forecast {margin:16px 0 0;max-width:none}.entry-forecast p{white-space:pre-line;overflow-wrap:anywhere}
+.entry-suggestions { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 4px; }
+.entry-suggestions button { color:#e4d3b2; background:#1c2335; border:1px solid #b39b694f; border-radius:20px; min-height:44px; padding:7px 14px; font:inherit; font-size:.9rem; text-align:start; }
+.entry-suggestions button:hover { border-color:#d5ba80; }
+.entry-selected figcaption span { display:block; color:#e5e0d5; font-size:.8rem; margin-bottom:4px; }
+.entry-result-tools { display:flex; justify-content:flex-end; max-width:720px; margin:0 auto 14px; }
 .entry-sky { width:66%;aspect-ratio:1;object-fit:contain;filter:drop-shadow(0 1rem 2rem #02030a80); }
 .entry-date {color:#eed39b;margin:0 0 13px;font-size:1rem}
 .entry-return {align-items:start}
@@ -41,6 +46,7 @@
 .entry-scores {display:flex;flex-wrap:wrap;gap:8px 20px;border-top:1px solid #cbb78149;padding-top:12px;margin-top:16px;color:#e2c893;font-size:.9rem}
 @media(max-width:767px){
 .entry-page{padding-bottom:30px}.entry-nav{height:60px}.entry-nav nav{gap:12px}
+.entry-selected figure{width:88px}
 .entry-grid{grid-template-columns:1fr;min-height:0;gap:12px;padding:25px 0;align-items:start}
 .entry-grid .entry-content{grid-row:2}.entry-art{grid-row:1;width:100%;height:clamp(116px,21svh,180px);aspect-ratio:auto}
 .entry-fan{width:210px;height:100%}.entry-fan img{height:87%;top:5%;width:37%}.entry-orbit{height:98%;width:auto}

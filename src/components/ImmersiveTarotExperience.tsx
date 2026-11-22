@@ -1,4 +1,5 @@
 import TarotAnswer from "./tarot/TarotAnswer";
+import { useFontScale } from "@/contexts/FontScaleContext";
 import CampaignReading from "./tarot/CampaignReading";
 import TarotQuestionPhase from "./TarotQuestionPhase";
 import { useSiteAdmin } from "@/hooks/use-site-admin";
@@ -334,6 +335,7 @@ const FloatingCard = ({
 
 /* ── Main Component ─────────────── */
 const ImmersiveTarotExperience = ({ isOpen, onClose, campaign = false }: Props) => {
+  const { scale } = useFontScale();
   const t = useT();
   const { language } = useLanguage();
   const cardName = useCardName();
@@ -595,10 +597,13 @@ const ImmersiveTarotExperience = ({ isOpen, onClose, campaign = false }: Props) 
 
   const chosenCards = Array.from(selectedCardIndices, (index) => drawnCards[index]);
 
-  const readingSize = isMobile ? (["default", "large", "xl"] as const)[textSizeLevel] : "default";
+  const readingSize = campaign ? scale : isMobile ? (["default", "large", "xl"] as const)[textSizeLevel] : "default";
   const readingText = (
     <>
       {aiText && <TarotAnswer text={aiText} size={readingSize} readingId={readingId} complete={!aiLoading && !aiError} />}
+      {aiLoading && aiText && <p role="status" className="mt-4 text-sm text-gold">
+        {{ he: "הפירוש המלא ממשיך להיכתב…", en: "Writing the rest of your reading…", ru: "Продолжаем писать полный расклад…", ar: "جارٍ إكمال قراءتك…" }[language]}
+      </p>}
       {aiLoading && !aiText && (
         <p role="status" className="py-12 text-center text-gold/60">
           {t.imm_tarot_deciphering}

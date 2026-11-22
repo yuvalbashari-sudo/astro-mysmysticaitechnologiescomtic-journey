@@ -10,12 +10,12 @@ import ResultShareBar from "./ResultShareBar";
 import CinematicModalShell from "@/components/CinematicModalShell";
 import BirthDetailsForm, { type BirthDetails } from "@/components/BirthDetailsForm";
 import TextSizeControl, { type TextSize } from "@/components/TextSizeControl";
+import ReadingNarrative from "./ReadingNarrative";
 import { subscriptionManager } from "@/lib/subscriptionManager";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage, useT } from "@/i18n/LanguageContext";
 import { localizeName } from "@/lib/nameLocalization";
 import { getChartLabels, getPlanetName, getSignNameByKey, getElementName, getAspectName } from "@/lib/astroLocale";
-import { renderMysticalText } from "@/lib/aiStreaming";
 import { readingsStorage } from "@/lib/readingsStorage";
 import { mysticalProfile } from "@/lib/mysticalProfile";
 import { calculateNatalChart, type NatalChartResult } from "@/lib/natalChart";
@@ -543,7 +543,7 @@ const BirthChartReading = ({ onClose }: Pick<Props, "onClose">) => {
 
                 {resultText && (
                   <div className="mobile-reading-surface mystical-card p-5 md:p-8" style={{ textAlign: isRTL ? "right" : "left" }}>
-                    {renderMysticalText(resultText, textSize)}
+                    <ReadingNarrative text={resultText} size={textSize} />
                   </div>
                 )}
                 {phase === "reading" && !resultText && (

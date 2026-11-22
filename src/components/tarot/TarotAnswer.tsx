@@ -5,6 +5,7 @@ import { readingAuthorization } from "@/lib/readingAuthorization";
 import { isLocalizedReading } from "@/lib/readingLanguage";
 import { accountStorageKey } from "@/lib/accountName";
 import type { TextSize } from "@/components/TextSizeControl";
+import ReadingNarrative from "../ReadingNarrative";
 
 const labels = {
   he: ["תשובה קצרה", "הפירוש המלא", "שאלת המשך על אותם קלפים", "מה עוד רצית להבין מהפתיחה?", "שליחת השאלה", "הפירוש נכתב…", "שליחת השאלה לא הושלמה. אפשר לנסות שוב."],
@@ -62,15 +63,8 @@ function Followup({ readingId, reading, size }: { readingId: string; reading: st
 export default function TarotAnswer({ text, size, readingId, complete }: { text: string; size: TextSize; readingId?: string; complete: boolean }) {
   const { language } = useLanguage();
   const c = labels[language];
-  // Older saved readings start with a heading and have no separate short answer.
-  const firstHeading = text.search(/^#{1,4}\s/m);
-  const lead = firstHeading === -1 ? text : text.slice(0, firstHeading);
-  const full = firstHeading === -1 ? "" : text.slice(firstHeading);
   return <div className="min-w-0 space-y-4 text-start [overflow-wrap:anywhere]">
-    {lead.trim() && <section className="rounded-xl border-s-2 border-gold bg-gold/5 p-4">
-      <h4 className="mb-2 font-heading text-gold">{c[0]}</h4>{renderMysticalText(lead, size)}
-    </section>}
-    {full && <section><h4 className="mb-3 font-heading text-xl text-gold">{c[1]}</h4>{renderMysticalText(full, size)}</section>}
+    <ReadingNarrative text={text} size={size} summaryLabel={c[0]} fullLabel={c[1]} />
     {complete && readingId && <Followup key={readingId} readingId={readingId} reading={text} size={size}/>}
   </div>;
 }
