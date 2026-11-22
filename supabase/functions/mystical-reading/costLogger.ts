@@ -7,7 +7,7 @@ interface CostLogEntry {
   clientIp: string;
   userIdentifier?: string;
   feature: string;
-  status: "success" | "blocked" | "failed" | "rate_limited";
+  status: "success" | "blocked" | "failed" | "rate_limited" | "daily_limit_exceeded";
   userTier: string;
   aiCost: number;
   imageCost: number;
