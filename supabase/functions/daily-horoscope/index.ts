@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 function cacheClient() {
@@ -50,7 +50,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { zodiacSign, birthDate, userName, language = "he", gender, fingerprint, horoscopeDate } = body;
+    const { zodiacSign, birthDate, userName, language = "he", gender, deviceToken, horoscopeDate } = body;
 
     if (!zodiacSign && !birthDate) {
       return new Response(JSON.stringify({ error: "Missing zodiac sign or birth date" }), {
@@ -63,23 +63,24 @@ serve(async (req) => {
 
     // Saved horoscopes are only reachable here, keyed by the device's private random ID.
     const cacheDate = validHoroscopeDate(horoscopeDate);
-    const cacheKey = typeof fingerprint === "string" && UUID_RE.test(fingerprint) && cacheDate ? fingerprint : null;
+    // Legacy fingerprints appeared in the formerly public table. Never accept them as credentials.
+    let cacheKey: string | null = null;
+    if (cacheDate && typeof deviceToken === "string" && UUID_RE.test(deviceToken)) {
+      const identity = JSON.stringify([deviceToken, zodiacSign, birthDate, userName, gender, lang]);
+      const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(identity));
+      cacheKey = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+    }
     const db = cacheKey ? cacheClient() : null;
-    const profileName = typeof userName === "string" ? userName.slice(0, 200) : null;
-    const profileBirth = typeof birthDate === "string" ? birthDate.slice(0, 40) : null;
-    const profileSign = typeof zodiacSign === "string" ? zodiacSign.slice(0, 40) : null;
     if (db && cacheKey) {
       const { data: cached, error: cacheError } = await db
         .from("daily_horoscopes")
-        .select("content, love_score, career_score, energy_score, zodiac_sign, birth_date, user_name")
+        .select("content, love_score, career_score, energy_score")
         .eq("user_fingerprint", cacheKey)
         .eq("horoscope_date", cacheDate)
         .eq("language", lang)
         .maybeSingle();
       if (cacheError) console.warn("daily-horoscope cache lookup failed:", cacheError.message);
-      if (cached?.content?.trim() && cached.zodiac_sign === profileSign
-        && cached.birth_date === profileBirth && cached.user_name === profileName
-        && !hasMixedLocale(lang, cached.content)) {
+      if (cached?.content?.trim() && !hasMixedLocale(lang, cached.content)) {
         return new Response(JSON.stringify({
           content: cached.content,
           love_score: cached.love_score ?? 3,
@@ -247,13 +248,10 @@ Guidelines:
         user_fingerprint: cacheKey,
         horoscope_date: cacheDate,
         language: lang,
-        zodiac_sign: profileSign,
         content: result.content,
         love_score: result.love_score,
         career_score: result.career_score,
         energy_score: result.energy_score,
-        birth_date: profileBirth,
-        user_name: profileName,
       }, { onConflict: "user_fingerprint,horoscope_date,language" });
       if (saveError) console.warn("daily-horoscope cache save failed:", saveError.message);
     }

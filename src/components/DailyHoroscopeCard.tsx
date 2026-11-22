@@ -42,15 +42,17 @@ const ZODIAC_SYMBOLS: Record<string, string> = {
   Sagittarius: "♐", Capricorn: "♑", Aquarius: "♒", Pisces: "♓",
 };
 
-/* ── Device fingerprint ── */
-function getFingerprint(): string {
-  const KEY = accountStorageKey("astrologai_device_fp");
-  let fp = localStorage.getItem(KEY);
-  if (!fp) {
-    fp = crypto.randomUUID();
-    localStorage.setItem(KEY, fp);
+function getHoroscopeToken(): string | undefined {
+  const key = accountStorageKey("astrologai_private_horoscope_token");
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved) return saved;
+    const token = crypto.randomUUID();
+    localStorage.setItem(key, token);
+    return token;
+  } catch {
+    return undefined;
   }
-  return fp;
 }
 
 function getTodayStr(): string {
@@ -122,14 +124,14 @@ function requestHoroscope(profile: HoroscopeRequest, today: string): Promise<Hor
 }
 
 async function loadHoroscope(profile: HoroscopeRequest, today: string): Promise<HoroscopeData> {
-  const fingerprint = getFingerprint();
+  const deviceToken = getHoroscopeToken();
 
   // The horoscope service reads and saves today's horoscope for this device.
   const url = import.meta.env.VITE_SUPABASE_URL + "/functions/v1/daily-horoscope";
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: readingAuthorization() },
-    body: JSON.stringify({ ...profile, fingerprint, horoscopeDate: today }),
+    body: JSON.stringify({ ...profile, deviceToken, horoscopeDate: today }),
   });
   if (!response.ok) throw new Error("Daily horoscope generation failed");
 

@@ -28,7 +28,7 @@ export function profileRevision() {
 
 function applyReset(stamp: number) {
   if (!Number.isSafeInteger(stamp) || stamp <= Number(profileRevision())) return;
-  for (const base of ["astrologai_mystical_profile", "astrologai_birthchart_cache", "astrologai_last_daily_horoscope", "astrologai_device_fp"]) {
+  for (const base of ["astrologai_mystical_profile", "astrologai_birthchart_cache", "astrologai_last_daily_horoscope", "astrologai_device_fp", "astrologai_private_horoscope_token"]) {
     localStorage.removeItem(accountStorageKey(base));
   }
   sessionStorage.removeItem(accountStorageKey("astrologai_tarot_session"));

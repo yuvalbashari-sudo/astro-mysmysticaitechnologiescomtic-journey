@@ -23,6 +23,7 @@ afterEach(() => {
 
 it("starts after the first form submission and reuses the result on reopen", async () => {
   localStorage.setItem("astrologai_lang", "en");
+  localStorage.setItem("astrologai_device_fp", "13657cea-704a-494a-83c4-3ea979ea43d1");
   const fetchReading = vi.fn().mockResolvedValue(Response.json({
     content: "Make time for a useful conversation today.",
     love_score: 4,
@@ -45,7 +46,11 @@ it("starts after the first form submission and reuses the result on reopen", asy
     birthDate: "1995-06-15",
     zodiacSign: "Gemini",
     language: "en",
+    deviceToken: expect.any(String),
   });
+  const body = JSON.parse(fetchReading.mock.calls[0][1].body);
+  expect(body.deviceToken).not.toBe(localStorage.getItem("astrologai_device_fp"));
+  expect(body).not.toHaveProperty("fingerprint");
   expect(screen.queryByRole("button", { name: /unlock full reading/i })).not.toBeInTheDocument();
   expect(await screen.findByText("Make time for a useful conversation today.")).toBeInTheDocument();
 
