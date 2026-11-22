@@ -197,7 +197,13 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   return obs;
 }
 
-async function interpret(obs: Observation, key: string, locale: Locale) {
+function handContext(role: unknown) {
+  if (role === "dominant") return " The reader identified the photographed hand as dominant. Frame the symbolic reflection around everyday choices and practiced habits.";
+  if (role === "other") return " The reader identified this as their non-dominant hand. Frame the symbolic reflection around a possibility they might explore.";
+  return "";
+}
+
+async function interpret(obs: Observation, key: string, locale: Locale, handRole?: unknown) {
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
   const format = {
     type: "object", additionalProperties: false, required: visible,
@@ -214,7 +220,7 @@ For the head line, middle.direction and middle.bend are the admitted evidence. U
     id: line, label: copy[locale][line], ...obs[line],
     ...(line === "middle" && { shape: obs.middle.bend === "uncertain" ? "uncertain" : obs.middle.shape, symbolicTheme: directionThemes[obs.middle.direction] }),
   }));
-  const result = await queryModel(key, "palm_reflection", format, system, JSON.stringify(input));
+  const result = await queryModel(key, "palm_reflection", format, system + handContext(handRole), JSON.stringify(input));
   if (!result || !visible.every(line => localizedProse(result[line], locale, 900))) throw new Error("Invalid line interpretation");
   if (obs.middle.direction === "uncertain" && obs.middle.bend !== "uncertain" && result.middle && slopeTerms[locale].test(result.middle)) {
     result.middle = bendMeaning[locale][obs.middle.bend];
@@ -249,7 +255,7 @@ export async function palmDetailReading(data: Record<string, unknown> | null, la
     const result = await queryModel(key, "palm_detail_reflection", {
       type:"object", additionalProperties:false, required:["meaning"], properties:{meaning:{type:"string"}},
     }, "Write two brief sentences in " + languages[locale] +
-      ". Use only the supplied observation as a visual metaphor. Connect the visible shape to a concrete question for reflection. Express a possibility, not a fact about this person. Never add an anatomical feature, a prediction, a count of partners or marriages, or a claim about identity, health or lifespan. Do not assume handedness or assign differences to similar shapes.",
+      ". Use only the supplied observation as a visual metaphor. Connect the visible shape to a concrete question for reflection. Express a possibility, not a fact about this person. Never add an anatomical feature, a prediction, a count of partners or marriages, or a claim about identity, health or lifespan. Do not assume handedness or assign differences to similar shapes." + handContext(data?.handRole),
     JSON.stringify({subject:palmCopy[locale][focus][0], observation:evidence.observation}));
     if (!localizedProse(result?.meaning, locale, 900)) throw new Error("Invalid reflection");
     return Response.json({observation:evidence.observation, meaning:result.meaning}, {headers});
@@ -279,7 +285,7 @@ export async function palmReading(
       observations.push(obs);
     }
     for (const [index, obs] of observations.entries()) {
-      const meanings = await interpret(obs, key, locale);
+      const meanings = await interpret(obs, key, locale, photos.length === 1 ? data?.handRole : undefined);
       if (photos.length === 2) sections.push("## " + t.pair[index]);
       for (const line of lines) {
         const meaning = meanings[line];

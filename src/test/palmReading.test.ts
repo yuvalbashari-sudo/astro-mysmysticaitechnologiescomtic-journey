@@ -35,6 +35,16 @@ it("rejects an invalid focus or a pair of detail photos before calling vision", 
   expect(fetcher).not.toHaveBeenCalled();
 });
 
+it.each([["dominant","practiced habits"],["other","possibility they might explore"]])("applies the selected hand role only to reflection (%s)", async (handRole, theme) => {
+  const evidence = {clear:true,observation:"הקפל מתעקל בהדרגה"};
+  const fetcher = vi.fn().mockResolvedValueOnce(model(evidence)).mockResolvedValueOnce(model({meaning:"העיקול מזמין שאלה"}));
+  vi.stubGlobal("fetch", fetcher);
+  const res = await palmDetailReading({palmImage:photo,focus:"joints",handRole}, "he", "test", {});
+  expect(res.status).toBe(200);
+  expect(fetcher.mock.calls[0][1].body).not.toContain(theme);
+  expect(fetcher.mock.calls[1][1].body).toContain(theme);
+});
+
 it.each([{}, {rightPalmImage: photo}, {palmImage: 54}, {palmImage: "https://example.com/a.jpg"},
   {palmImage: photo, rightPalmImage: photo, leftPalmImage: photo}])("rejects missing or ambiguous input before calling vision", async data => {
   const fetcher = vi.fn();

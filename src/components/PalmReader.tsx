@@ -15,6 +15,7 @@ function PalmForm() {
   const { language, dir, t } = useLanguage();
   const copy = palmCopy[language];
   const [main, setMain] = useState("");
+  const [handRole, setHandRole] = useState("");
   const [focus, setFocus] = useState<PalmFocus | null>(null);
   const [details, setDetails] = useState<Partial<Record<PalmFocus, {observation:string; meaning:string}>>>({});
   const [busy, setBusy] = useState(false);
@@ -39,7 +40,7 @@ function PalmForm() {
       const response = await fetch(import.meta.env.VITE_SUPABASE_URL + "/functions/v1/mystical-reading", {
         method:"POST", signal:controller.signal,
         headers:{"Content-Type":"application/json", Authorization:readingAuthorization(), apikey:import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY},
-        body:JSON.stringify({type:focus ? "palmDetail" : "palm", language, data:{palmImage, ...(focus && {focus})}}),
+        body:JSON.stringify({type:focus ? "palmDetail" : "palm", language, data:{palmImage, ...(focus && {focus}), ...(handRole && {handRole})}}),
       });
       if (!response.ok) {
         setError(response.status === 422 ? copy.retake : response.status === 429 ? copy.limited : copy.unavailable);
@@ -78,6 +79,12 @@ function PalmForm() {
   );
   return <section dir={dir} className="mx-auto w-full max-w-2xl rounded-2xl border border-gold/30 bg-slate-950 p-5 text-start text-slate-100 sm:p-9">
     <h1 className="font-heading text-3xl text-gold">{t.palm_title}</h1>
+    {!main && <label className="mt-5 flex flex-wrap items-center gap-3">{copy.hand[0]}
+      <select value={handRole} disabled={busy} onChange={event => setHandRole(event.target.value)}
+        className="rounded-lg border border-gold/40 bg-slate-900 px-3 py-2">
+        <option value="">{copy.hand[1]}</option><option value="dominant">{copy.hand[2]}</option><option value="other">{copy.hand[3]}</option>
+      </select>
+    </label>}
     {main && <div className="mt-5 space-y-3 leading-8">{main.split(/\n\s*\n/).map((line, i) =>
       line.startsWith("### ") ? <h2 className="pt-3 font-heading text-2xl text-gold" key={i}>{line.slice(4)}</h2> : <p key={i}>{line}</p>)}</div>}
     {main && <div className="mt-7 border-t border-gold/30 pt-5">
