@@ -170,7 +170,7 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology + clarity, photoContent);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
-  if (obs.middle.shape !== "unresolved" && (!Object.hasOwn(directionThemes, obs.middle.direction) || !bends.includes(obs.middle.bend))) throw new Error("Invalid head line geometry");
+  if (obs.middle.shape !== "unresolved" && (!Object.prototype.hasOwnProperty.call(directionThemes, obs.middle.direction) || !bends.includes(obs.middle.bend))) throw new Error("Invalid head line geometry");
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
   if (mainLines.filter(line => obs[line].shape !== "unresolved").length < 2) return null;
   if (!visible.every(line => localizedProse(obs[line].path, locale, 320))) throw new Error("Invalid trace description");
