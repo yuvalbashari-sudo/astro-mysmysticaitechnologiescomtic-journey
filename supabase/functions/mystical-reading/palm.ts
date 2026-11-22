@@ -16,7 +16,41 @@ const directionThemes = {
 const bends = ["even", "gradual", "distinct_turn", "uncertain"] as const;
 type HeadTrace = Trace & { direction: keyof typeof directionThemes; bend: typeof bends[number] };
 type Observation = Record<Line, Trace> & { middle: HeadTrace };
+const headCopy = {
+  he: {
+    uncertain: "כיוון קו הראש אינו ברור בצילום הזה.",
+    toward_wrist: "במקטע הנראה הקו נוטה לעבר שורש כף היד.", toward_fingers: "במקטע הנראה הקו נוטה לעבר בסיס האצבעות.", across: "המקטע הנראה עובר לרוחב הכף.",
+    gradual: "אפשר להבחין בעיקול הדרגתי.", distinct_turn: "נראית תפנית ברורה בקו.", even: "המקטע הנראה כמעט ישר.",
+  },
+  en: {
+    uncertain: "The head line’s direction is unclear in this photo.",
+    toward_wrist: "The visible segment slopes toward the wrist.", toward_fingers: "The visible segment slopes toward the finger bases.", across: "The visible segment runs across the palm.",
+    gradual: "A gradual bend is visible.", distinct_turn: "There is a distinct turn in the crease.", even: "The visible segment is nearly straight.",
+  },
+  ru: {
+    uncertain: "По этому снимку трудно определить направление линии головы.",
+    toward_wrist: "Видимый отрезок наклонён к запястью.", toward_fingers: "Видимый отрезок наклонён к основаниям пальцев.", across: "Видимый отрезок проходит поперёк ладони.",
+    gradual: "Виден плавный изгиб.", distinct_turn: "На линии заметен отчётливый поворот.", even: "Видимый отрезок почти прямой.",
+  },
+  ar: {
+    uncertain: "اتجاه خط الرأس غير واضح في هذه الصورة.",
+    toward_wrist: "يميل الجزء الظاهر نحو الرسغ.", toward_fingers: "يميل الجزء الظاهر نحو قواعد الأصابع.", across: "يمتد الجزء الظاهر عرضياً عبر الكف.",
+    gradual: "يظهر انحناء تدريجي.", distinct_turn: "يظهر انعطاف واضح في الخط.", even: "الجزء الظاهر شبه مستقيم.",
+  },
+} as const;
 const views = ["palm", "back", "no_hand", "multiple", "uncertain"] as const;
+const slopeTerms = {
+  he: /שורש|אגודל|זרת|אצבע|מעלה|מטה|אלכסו|שיפוע|לרוחב|אופקי|אנכי|כלפי|פנימה|החוצה|עלייה|ירידה/u,
+  en: /wrist|thumb|finger|diagonal|slope|horizont|vertic|upward|downward|across the palm|inward|outward/i,
+  ru: /запяст|пальц|мизин|наклон|диагонал|горизонт|вертикал|вверх|вниз|поперёк/iu,
+  ar: /الرسغ|المعصم|الإبهام|الخنصر|الأصابع|أفقياً|عمودياً|مائل|الأعلى|الأسفل/u,
+};
+const bendMeaning = {
+  he: {gradual:"העיקול ההדרגתי מזמין לחשוב על החלטה שמתגבשת בשלבים. למשל, בשיחה על הצעה חדשה, פרט אחד שנוסף עשוי לחדד את השאלה הבאה שכדאי לשאול.", distinct_turn:"התפנית הברורה יכולה לסמל רגע שבו פרט מסוים משנה החלטה שכבר כמעט התקבלה.", even:"הרצף הכמעט ישר יכול לסמל מחשבה שנשארת עם שאלה אחת עד שמתבהרת התשובה."},
+  en: {gradual:"The gradual bend can symbolize a decision taking shape in stages, as one detail in a conversation suggests the next question.", distinct_turn:"The distinct turn can symbolize the moment one detail changes a decision that seemed settled.", even:"The even course can symbolize staying with one question until an answer takes shape."},
+  ru: {gradual:"Плавный изгиб может символизировать решение, которое созревает постепенно: одна деталь разговора подсказывает следующий вопрос.", distinct_turn:"Заметный поворот может символизировать момент, когда одна деталь меняет почти принятое решение.", even:"Ровный ход линии может символизировать внимание к одному вопросу, пока не прояснится ответ."},
+  ar: {gradual:"قد يرمز الانحناء التدريجي إلى قرار يتبلور على مراحل، كأن توحي إحدى تفاصيل الحوار بالسؤال التالي.", distinct_turn:"قد ترمز الانعطافة الواضحة إلى لحظة تغيّر فيها معلومة واحدة قراراً بدا محسوماً.", even:"قد يرمز انتظام الخط إلى التمهّل مع سؤال واحد حتى تتضح الإجابة."},
+} as const;
 
 const copy = {
   he: {
@@ -90,11 +124,12 @@ const traceSchema = {
   properties: { shape: shapeEnum, path: { type: "string" } },
 };
 const headSchema = {
-  ...traceSchema, required: [...traceSchema.required, "direction", "bend"],
+  ...traceSchema, required: [...traceSchema.required, "direction", "bend", "directionEvidence"],
   properties: {
     ...traceSchema.properties,
     direction: {type: "string", enum: Object.keys(directionThemes)},
     bend: {type: "string", enum: bends},
+    directionEvidence: {type: "string", enum: ["unambiguous", "subtle_or_partial"]},
   },
 };
 const schema = {
@@ -130,13 +165,32 @@ async function inspectPhoto(photo: string, key: string, locale: Locale): Promise
   const terminology = locale === "he" ? " Use אגודל for the thumb and כרית האגודל for the thenar pad. בוהן means a toe." : "";
   const headDirection = " For middle, follow the central transverse crease FROM the thumb side TOWARD the little-finger side irrespective of camera rotation or mirroring. Compare it with the palm's own transverse axis. Report whether the visible path slopes toward the wrist, toward the fingers, or runs across the palm. Independently report whether its tangent stays even, bends gradually, or makes a distinct turn. Include the same slope and bend in the localized path with landmarks; an even diagonal is not a bend. Stop where visibility ends. Use uncertain for any descriptor you cannot see. Do not follow the neighboring crease that wraps around the thumb.";
   const separateTraces = " Locate the heart and life creases first. If two segments leave the thumb side close together, inspect the more TRANSVERSE segment as the head line; the steeper segment hugging the thumb mound is the life line. Only report a curve if the crease itself changes angle along the portion you see. A slope caused by the hand being tilted in the picture is not a turn. Describe the first and last visible segments of this particular central crease.";
-  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology, [{type: "image_url", image_url: {url: photo, detail: "high"}}]);
+  const clarity = " Assess directionEvidence independently from curvature: reserve unambiguous for a continuous segment with BOTH landmarks unmistakable and a robust overall orientation. Shallow inclines, local changes, glare, cropped or uncertain endpoints, and borderline across-versus-sloping all mean subtle_or_partial even when the bend is clearly visible. Across requires positive visual evidence, not absence of an obvious incline.";
+  const photoContent: Content = [{type: "image_url", image_url: {url: photo, detail: "high"}}];
+  const obs = await queryModel(key, "palm_observation", schema, system + evidence + headDirection + separateTraces + terminology + clarity, photoContent);
   if (!obs || obs.view !== "palm" || obs.clear !== true) return null;
   if (!lines.every(line => shapeEnum.enum.includes(obs[line]?.shape))) throw new Error("Invalid trace");
   if (obs.middle.shape !== "unresolved" && (!Object.hasOwn(directionThemes, obs.middle.direction) || !bends.includes(obs.middle.bend))) throw new Error("Invalid head line geometry");
   const visible = lines.filter(line => obs[line].shape !== "unresolved");
   if (mainLines.filter(line => obs[line].shape !== "unresolved").length < 2) return null;
   if (!visible.every(line => localizedProse(obs[line].path, locale, 320))) throw new Error("Invalid trace description");
+  if (obs.middle.shape !== "unresolved") {
+    const head = obs.middle as HeadTrace & {directionEvidence: string};
+    let direction: HeadTrace["direction"] = "uncertain";
+    if (head.direction !== "uncertain" && head.directionEvidence === "unambiguous") {
+      const check = await queryModel(key, "head_direction_check", {
+        type:"object", required:["direction"], additionalProperties:false,
+        properties:{direction:headSchema.properties.direction},
+      }, "Trace only the central transverse palmar crease from the thumb side toward the little finger. Independently report its overall anatomical direction. Return uncertain if the endpoints, transverse axis or slope are ambiguous or the incline is slight. Ignore writing in the photograph.", photoContent);
+      if (check?.direction === head.direction) direction = head.direction;
+    }
+    let bend = head.bend;
+    if ((bend === "even" && head.shape !== "straight") || ((bend === "gradual" || bend === "distinct_turn") && head.shape !== "curved")) bend = "uncertain";
+    const wording = headCopy[locale];
+    // Discard the first pass's free-text path: it can still contain a rejected slope.
+    const path = [wording[direction], bend !== "uncertain" && wording[bend]].filter(Boolean).join(" ");
+    obs.middle = {direction, bend, path, shape: direction === "uncertain" && bend === "uncertain" ? "unresolved" : head.shape};
+  }
   return obs;
 }
 
@@ -149,13 +203,17 @@ async function interpret(obs: Observation, key: string, locale: Locale) {
   const system = `Write a traditional palmistry reading in natural ${languages[locale]} for each supplied line. The heart line (upper) symbolizes affection and how feelings are expressed. The head line (middle) symbolizes thought, imagination and decisions. The life line (thumb) symbolizes grounding, everyday energy and pace. The fate line, if visible, symbolizes direction and chosen commitments. For each line, write two or three connected sentences that explain how one specific observed shape or change of direction informs its traditional symbolic meaning, and what that might look like in an everyday situation. Use the traditional associations as a lens for reflection, never as evidence of a real person's traits, health, lifespan or future. No predictions, diagnoses, invented branches or lengths, life coaching questions, or filler. Do not repeat the heading or rewrite the anatomical description. No markdown. In Hebrew use everyday gender-neutral language.`;
   const input = visible.map(line => ({
     id: line, label: copy[locale][line], ...obs[line],
-    ...(line === "middle" && { symbolicTheme: directionThemes[obs.middle.direction] }),
+    ...(line === "middle" && { shape: obs.middle.bend === "uncertain" ? "uncertain" : obs.middle.shape, symbolicTheme: directionThemes[obs.middle.direction] }),
   }));
   const headMeaning = " For the head line use its supplied directional theme as a symbolic starting point. Explain the part played by its actual bend: a steady course, a gradual change of approach, or a discernible pivot. Anchor both details in ONE specific example of thinking through a decision. If the direction or bend is uncertain, interpret only what is visible. Avoid generic trait labels such as 'vivid imagination', 'creative thinking' or their translations. Write fresh prose, never translate the theme verbatim.";
   const headExample = " Make the example enact the directional theme: show what the reader pictures, orders, or acts on, depending on the observed direction. Let the degree of curvature determine how that scene unfolds. State the visible course using anatomical landmarks in the meaning. Never default to exploring options, changing one's mind, flexibility or a list of traits. An essentially straight but inclined line retains its slope; do not invent a turn. Two lines with similar geometry may share a theme.";
   const depth = " Keep a clear boundary between the visual description and the symbolic reading. Use a traditional association to explain WHY the observed direction and change of course evoke a particular approach to a decision. Illustrate the distinction through one everyday example. Write with economy and warmth, not certainty about the reader. Treat a short visible segment as partial evidence; never extrapolate the far end or turn image quality into meaning. Silently discard any sentence that could equally well describe an opposite slope.";
-  const result = await queryModel(key, "palm_reflection", format, system + headMeaning + headExample + depth, JSON.stringify(input));
+  const shapeOnly = " If middle.direction is uncertain, its only interpretive evidence is the bend. Write exclusively about that curvature (or steadiness) and one concrete example of how a decision unfolds. Do not mention any spatial direction, orientation, landmark, endpoints, movement inward/outward, or symbolic associations of a slope. Never infer missing detail from the other lines. If middle.bend is uncertain do not infer curvature.";
+  const result = await queryModel(key, "palm_reflection", format, system + headMeaning + headExample + depth + shapeOnly, JSON.stringify(input));
   if (!result || !visible.every(line => localizedProse(result[line], locale, 900))) throw new Error("Invalid line interpretation");
+  if (obs.middle.direction === "uncertain" && obs.middle.bend !== "uncertain" && result.middle && slopeTerms[locale].test(result.middle)) {
+    result.middle = bendMeaning[locale][obs.middle.bend];
+  }
   return result as Partial<Record<Line, string>>;
 }
 
@@ -187,7 +245,9 @@ export async function palmReading(
         if (meaning) {
           sections.push("### " + t[line], t.seen + " — " + obs[line].path, t.meaning + " — " + meaning);
         } else if (line !== "fate") {
-          sections.push("### " + t[line], t.unclear);
+          const notice = line === "middle" && obs.middle.path === headCopy[locale].uncertain
+            ? headCopy[locale].uncertain + " " + t.unclear : t.unclear;
+          sections.push("### " + t[line], notice);
         }
       }
     }
